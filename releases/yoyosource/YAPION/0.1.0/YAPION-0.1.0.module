@@ -1,0 +1,70 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "yoyosource",
+    "module": "YAPION",
+    "version": "0.1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.1.1",
+      "buildId": "z6aqa62v3jesvbhse3mef6gtgy"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "YAPION-0.1.0.jar",
+          "url": "YAPION-0.1.0.jar",
+          "size": 44121,
+          "sha512": "b978fa5564c4a7f761e8552990bebb638890b60fa2ba9e0ca04985d9e2d5d92c1c7e976b61bd986994b240a0373512c0e4361ab8ad8638be0fdaa2b97c5629c5",
+          "sha256": "31f54327a8ecb6df6eb2c65fb991c0511c857e9504eaf451daabdee1df22c0fe",
+          "sha1": "670f5fca3fe23e8701f3fbb6d1d74a655b12a543",
+          "md5": "21b7e7958267cfdd729530507b22bc9b"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.objenesis",
+          "module": "objenesis",
+          "version": {
+            "requires": "3.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "YAPION-0.1.0.jar",
+          "url": "YAPION-0.1.0.jar",
+          "size": 44121,
+          "sha512": "b978fa5564c4a7f761e8552990bebb638890b60fa2ba9e0ca04985d9e2d5d92c1c7e976b61bd986994b240a0373512c0e4361ab8ad8638be0fdaa2b97c5629c5",
+          "sha256": "31f54327a8ecb6df6eb2c65fb991c0511c857e9504eaf451daabdee1df22c0fe",
+          "sha1": "670f5fca3fe23e8701f3fbb6d1d74a655b12a543",
+          "md5": "21b7e7958267cfdd729530507b22bc9b"
+        }
+      ]
+    }
+  ]
+}

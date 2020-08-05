@@ -1,0 +1,24 @@
+# Compiled class file
+*.class
+
+# Package Files
+*.jar
+
+# Gradle
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ IDEA
+.idea
+*.iws
+*.iml
+*.ipr
+/out/
+
+# Releases
+!releases/**/*.jar
+
+# Extra
+.sync/
+Icon\?
