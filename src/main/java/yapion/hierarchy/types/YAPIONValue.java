@@ -62,119 +62,29 @@ public class YAPIONValue<T> extends YAPIONAny {
             return new YAPIONValue<>(s.substring(1, s.length() - 1));
         }
 
-        if (s.matches("-?(0[xX]|#)[0-9A-F]+")) {
-            YAPIONValue<?> value = tryParse(s, 16, ParseType.INTEGER, ParseType.LONG, ParseType.BYTE, ParseType.SHORT, ParseType.BIGINTEGER);;
-            if (value != null) {
-                return value;
-            }
+        if (s.matches(NUMBER_HEX)) {
+            YAPIONValue<?> value = tryParse(s, 16, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER);
+            if (value != null) return value;
         }
-        if (s.matches("-?(0[xX]|#)[0-9A-F]+B")) {
-            try {
-                return new YAPIONValue<>(Byte.parseByte(s, 16));
-            } catch (NumberFormatException e) {}
+        {
+            YAPIONValue<?> value = tryParse(s, 16, NUMBER_HEX, ParseType.BYTE, ParseType.SHORT, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER);
+            if (value != null) return value;
         }
-        if (s.matches("-?(0[xX]|#)[0-9A-F]+S")) {
-            try {
-                return new YAPIONValue<>(Short.parseShort(s, 16));
-            } catch (NumberFormatException e) {}
+        if (s.matches(NUMBER_NORMAL)) {
+            YAPIONValue<?> value = tryParse(s, 10, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER);
+            if (value != null) return value;
         }
-        if (s.matches("-?(0[xX]|#)[0-9A-F]+I")) {
-            try {
-                return new YAPIONValue<>(Integer.parseInt(s.substring(0, s.length() - 1), 16));
-            } catch (NumberFormatException e) {}
+        {
+            YAPIONValue<?> value = tryParse(s, 10, NUMBER_NORMAL, ParseType.BYTE, ParseType.SHORT, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER, ParseType.FLOAT, ParseType.DOUBLE, ParseType.BIGDECIMAL);
+            if (value != null) return value;
         }
-        if (s.matches("-?(0[xX]|#)[0-9A-F]+L")) {
-            try {
-                return new YAPIONValue<>(Long.parseLong(s.substring(0, s.length() - 1), 16));
-            } catch (NumberFormatException e) {}
+        if (s.matches(NUMBER_FLOAT)) {
+            YAPIONValue<?> value = tryParse(s, 10, ParseType.DOUBLE, ParseType.BIGDECIMAL);
+            if (value != null) return value;
         }
-        if (s.matches("-?(0[xX]|#)[0-9A-F]+BI")) {
-            return new YAPIONValue<>(new BigInteger(s.substring(0, s.length() - 2), 16));
-        }
-
-        if (s.matches("-?[0-9]+")) {
-            try {
-                return new YAPIONValue<>(Byte.parseByte(s));
-            } catch (NumberFormatException e) {}
-            try {
-                return new YAPIONValue<>(Short.parseShort(s));
-            } catch (NumberFormatException e) {}
-            try {
-                return new YAPIONValue<>(Integer.parseInt(s));
-            } catch (NumberFormatException e) {}
-            try {
-                return new YAPIONValue<>(Long.parseLong(s));
-            } catch (NumberFormatException e) {}
-            return new YAPIONValue<>(new BigInteger(s));
-        }
-        if (s.matches("-?[0-9]+I")) {
-            try {
-                return new YAPIONValue<>(Integer.parseInt(s.substring(0, s.length() - 1)));
-            } catch (NumberFormatException e) {}
-        }
-        if (s.matches("-?[0-9]+L")) {
-            try {
-                return new YAPIONValue<>(Long.parseLong(s.substring(0, s.length() - 1)));
-            } catch (NumberFormatException e) {}
-        }
-        if (s.matches("-?[0-9]+BI")) {
-            return new YAPIONValue<>(new BigInteger(s.substring(0, s.length() - 2)));
-        }
-        if (s.matches("-?[0-9]+F")) {
-            try {
-                return new YAPIONValue<>(Float.parseFloat(s.substring(0, s.length() - 1)));
-            } catch (NumberFormatException e) {}
-        }
-        if (s.matches("-?[0-9]+D")) {
-            try {
-                return new YAPIONValue<>(Double.parseDouble(s.substring(0, s.length() - 1)));
-            } catch (NumberFormatException e) {}
-        }
-        if (s.matches("-?[0-9]+BD")) {
-            return new YAPIONValue<>(new BigDecimal(s.substring(0, s.length() - 2)));
-        }
-
-        if (s.matches("-?[0-9]+\\.([0-9]+)?")) {
-            try {
-                return new YAPIONValue<>(Double.parseDouble(s));
-            } catch (NumberFormatException e) {}
-            return new YAPIONValue<>(new BigDecimal(s));
-        }
-        if (s.matches("-?[0-9]+\\.([0-9]+)?F")) {
-            try {
-                return new YAPIONValue<>(Float.parseFloat(s.substring(0, s.length() - 1)));
-            } catch (NumberFormatException e) {}
-        }
-        if (s.matches("-?[0-9]+\\.([0-9]+)?D")) {
-            try {
-                return new YAPIONValue<>(Double.parseDouble(s.substring(0, s.length() - 1)));
-            } catch (NumberFormatException e) {}
-        }
-        if (s.matches("-?[0-9]+\\.([0-9]+)?BD")) {
-            return new YAPIONValue<>(new BigDecimal(s.substring(0, s.length() - 2)));
-        }
-
-        if (s.matches("\\.[0-9]+")) {
-            try {
-                return new YAPIONValue<>(Float.parseFloat(s));
-            } catch (NumberFormatException e) {}
-            try {
-                return new YAPIONValue<>(Double.parseDouble(s));
-            } catch (NumberFormatException e) {}
-            return new YAPIONValue<>(new BigDecimal(s));
-        }
-        if (s.matches("\\.[0-9]+F")) {
-            try {
-                return new YAPIONValue<>(Float.parseFloat(s.substring(0, s.length() - 1)));
-            } catch (NumberFormatException e) {}
-        }
-        if (s.matches("\\.[0-9]+D")) {
-            try {
-                return new YAPIONValue<>(Double.parseDouble(s.substring(0, s.length() - 1)));
-            } catch (NumberFormatException e) {}
-        }
-        if (s.matches("\\.[0-9]+BD")) {
-            return new YAPIONValue<>(new BigDecimal(s.substring(0, s.length() - 2)));
+        {
+            YAPIONValue<?> value = tryParse(s, 10, NUMBER_FLOAT, ParseType.FLOAT, ParseType.DOUBLE, ParseType.BIGDECIMAL);
+            if (value != null) return value;
         }
 
         return new YAPIONValue<>(s);
@@ -238,71 +148,48 @@ public class YAPIONValue<T> extends YAPIONAny {
             return assembleOutput('"' + s + '"');
         }
 
-        if (s.matches("-?(0[xX]|#)[0-9A-F]+")) {
+        if (s.matches(NUMBER_HEX)) {
             return assembleOutput('"' + s + '"');
         }
-        if (s.matches("-?(0[xX]|#)[0-9A-F]+I")) {
+        if (s.matches(NUMBER_NORMAL)) {
             return assembleOutput('"' + s + '"');
         }
-        if (s.matches("-?(0[xX]|#)[0-9A-F]+L")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches("-?(0[xX]|#)[0-9A-F]+BI")) {
+        if (s.matches(NUMBER_FLOAT)) {
             return assembleOutput('"' + s + '"');
         }
 
-        if (s.matches("-?[0-9]+")) {
+        if (tryAssemble(s, NUMBER_HEX, ParseType.BYTE, ParseType.SHORT, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER)) {
             return assembleOutput('"' + s + '"');
         }
-        if (s.matches("-?[0-9]+I")) {
+        if (tryAssemble(s, NUMBER_NORMAL, ParseType.BYTE, ParseType.SHORT, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER)) {
             return assembleOutput('"' + s + '"');
         }
-        if (s.matches("-?[0-9]+L")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches("-?[0-9]+BI")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches("-?[0-9]+F")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches("-?[0-9]+D")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches("-?[0-9]+BD")) {
+        if (tryAssemble(s, NUMBER_FLOAT, ParseType.FLOAT, ParseType.DOUBLE, ParseType.BIGDECIMAL)) {
             return assembleOutput('"' + s + '"');
         }
 
-        if (s.matches("-?[0-9]+\\.([0-9]+)?")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches("-?[0-9]+\\.([0-9]+)?F")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches("-?[0-9]+\\.([0-9]+)?D")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches("-?[0-9]+\\.([0-9]+)?BD")) {
-            return assembleOutput('"' + s + '"');
-        }
-
-        if (s.matches("\\.[0-9]+")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches("\\.[0-9]+F")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches("\\.[0-9]+D")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches("\\.[0-9]+BD")) {
-            return assembleOutput('"' + s + '"');
-        }
         return assembleOutput(s);
     }
 
-    private static YAPIONValue<?> tryParse(String s, ParseType... parseOrder) {
-        return tryParse(s, 10, parseOrder);
+    public static boolean tryAssemble(String s, String regex, ParseType... possibleTypes) {
+        for (int i = 0; i < possibleTypes.length; i++) {
+            if (!s.endsWith(possibleTypes[i].getSuffix())) continue;
+            String t = s.substring(0, possibleTypes[i].getSuffix().length());
+            if (!t.matches(regex)) continue;
+            return true;
+        }
+        return false;
+    }
+
+    private static YAPIONValue<?> tryParse(String s, int radix, String regex, ParseType... possibleTypes) {
+        for (int i = 0; i < possibleTypes.length; i++) {
+            if (!s.endsWith(possibleTypes[i].getSuffix())) continue;
+            String t = s.substring(0, possibleTypes[i].getSuffix().length());
+            if (!t.matches(regex)) continue;
+            YAPIONValue<?> value = tryParse(t, radix, possibleTypes[i]);
+            if (value != null) return value;
+        }
+        return null;
     }
 
     private static YAPIONValue<?> tryParse(String s, int radix, ParseType... parseOrder) {
@@ -332,37 +219,26 @@ public class YAPIONValue<T> extends YAPIONAny {
         return null;
     }
 
+    private static final String NUMBER_NORMAL = "-?[0-9]+";
+    private static final String NUMBER_HEX = "-?(0[xX]|#)[0-9A-F]+";
+    private static final String NUMBER_FLOAT = "(-?[0-9]+\\.([0-9]+)?)|(-?\\.[0-9]+)";
+
     private enum ParseType {
 
-        NUMBER("-?[0-9]+", "-?(0[xX]|#)[0-9A-F]+", ""),
-        NUMBER_FLOAT("(-?[0-9]+\\.([0-9]+)?)|(-?\\.[0-9]+)", "", ""),
+        BYTE("B"),
+        SHORT("S"),
+        INTEGER("I"),
+        LONG( "L"),
+        BIGINTEGER("BI"),
 
-        BYTE("", "", "B"),
-        SHORT("", "", "S"),
-        INTEGER("", "", "I"),
-        LONG("", "", "L"),
-        BIGINTEGER("", "", "BI"),
+        FLOAT("F"),
+        DOUBLE("D"),
+        BIGDECIMAL("BD");
 
-        FLOAT("", "", "F"),
-        DOUBLE("", "", "D"),
-        BIGDECIMAL("", "", "BD");
-
-        private String normalRegex;
-        private String hexRegex;
         private String suffix;
 
-        ParseType(String normalRegex, String hexRegex, String suffix) {
-            this.normalRegex = normalRegex;
-            this.hexRegex = hexRegex;
+        ParseType(String suffix) {
             this.suffix = suffix;
-        }
-
-        public String getNormalRegex() {
-            return normalRegex;
-        }
-
-        public String getHexRegex() {
-            return hexRegex;
         }
 
         public String getSuffix() {

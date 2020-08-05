@@ -55,10 +55,16 @@ public class YAPIONMain {
         yapionArray.add(new YAPIONValue<>("17853"));
         yapionArray.add(new YAPIONValue<>(3784));
         yapionArray.add(new YAPIONValue<>(true));
-        //System.out.println(String.format("%016X", yapionObject.referenceValue()));
         System.out.println(yapionObject);
-        //System.out.println(Arrays.toString(yapionObject1.getPath()));
-        System.out.println(YAPIONParser.parse(yapionObject.toString()));
+
+        for (int i = 0; i < 100; i++) {
+            String s = yapionObject.toString();
+            long time = System.currentTimeMillis();
+            YAPIONParser.parse(s);
+            time = System.currentTimeMillis() - time;
+            System.out.println(YAPIONParser.parse(s));
+            System.out.println(time);
+        }
 
         /*
         String s = yapionObject.toString();

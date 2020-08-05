@@ -21,7 +21,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ## Using in other Projects
 YAPION is not published on jcenter or mavenCentral. It is published directly to this GitHub repository. You can declare it as a dependency in your gradle.build with:
-```
+```groovy
 repositories {
     maven {
         url = uri("https://raw.githubusercontent.com/yoyosource/YAPION/master/releases")
@@ -42,17 +42,9 @@ dependencies {
 * [L] License
 
 ## Tasks
-### Datatypes
-- Short
-- Byte
-
 ### Serialization/Deserialization
 - Serialize Java Object
 - Deserialize Java Object
-
-### Annotaion
-- YAPIONInclude (Remove Null)
-- YAPIONExcludeNull? [@JsonInclude(JsonInclude.Include.NON_NULL)]
 
 ## Structure
 YAPION is heavily inspired by JSON and you can see some similarities between those object notations.

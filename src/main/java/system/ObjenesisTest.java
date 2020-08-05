@@ -16,16 +16,33 @@ package system;
 import org.objenesis.ObjenesisBase;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
-public class ASMTest {
+public class ObjenesisTest {
 
-    public ASMTest(int i, String s) {
+    private int i;
+    private String s = "Hello World";
+
+    public ObjenesisTest(int i, String s) {
+
+    }
+
+    private class Test {
 
     }
 
     public static void main(String[] args) {
         ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
-        ASMTest asmTest = objenesisBase.newInstance(ASMTest.class);
-        System.out.println(asmTest);
+        ObjenesisTest objenesisTest = objenesisBase.newInstance(ObjenesisTest.class);
+        ObjenesisTest.Test instance = objenesisBase.newInstance(ObjenesisTest.Test.class);
+        System.out.println(objenesisTest);
+        System.out.println(instance);
+    }
+
+    @Override
+    public String toString() {
+        return "ASMTest{" +
+                "i=" + i +
+                ", s='" + s + '\'' +
+                '}';
     }
 
 }

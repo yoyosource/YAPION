@@ -105,7 +105,7 @@ public class YAPIONParser {
     }
 
     private void parseStep(char lastChar, char c) {
-        System.out.println(typeStack + " " + c);
+        //System.out.println(typeStack + " " + c);
 
         if (typeStack.isEmpty()) {
             initialObject(c);

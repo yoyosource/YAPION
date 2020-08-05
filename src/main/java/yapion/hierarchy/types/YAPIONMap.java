@@ -99,8 +99,8 @@ public class YAPIONMap extends YAPIONAny {
                 continue;
             }
 
-            YAPIONAny key = ((YAPIONObject)mappingVariables.get(strings[0])).getVariable("@").getValue();
-            YAPIONAny value = ((YAPIONObject)mappingVariables.get(strings[1])).getVariable("@").getValue();
+            YAPIONAny key = ((YAPIONObject)mappingVariables.get(strings[0])).getVariable("").getValue();
+            YAPIONAny value = ((YAPIONObject)mappingVariables.get(strings[1])).getVariable("").getValue();
             variables.put(key, value);
         }
 
@@ -134,9 +134,9 @@ public class YAPIONMap extends YAPIONAny {
 
             st.append(id1).append(":").append(id2);
             st.append(",");
-            st.append("#").append(id1).append("{@").append(entry.getKey().toString()).append("}");
+            st.append("#").append(id1).append("{").append(entry.getKey().toString()).append("}");
             st.append(",");
-            st.append("#").append(id2).append("{@").append(entry.getValue().toString()).append("}");
+            st.append("#").append(id2).append("{").append(entry.getValue().toString()).append("}");
         }
         st.append(">");
         return st.toString();
