@@ -64,7 +64,7 @@ public class YAPIONValue<T> extends YAPIONAny {
         }
         if (s.startsWith("'") && s.endsWith("'")) {
             if (s.length() == 3) {
-                return new YAPIONValue<>((char)s.charAt(1));
+                return new YAPIONValue<>(s.charAt(1));
             } else {
                 return new YAPIONValue<>(s.substring(1, s.length() - 1));
             }
