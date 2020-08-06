@@ -13,6 +13,12 @@ import yapion.hierarchy.types.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class YAPIONParser {
 
@@ -78,6 +84,9 @@ public class YAPIONParser {
     private StringBuilder current = new StringBuilder();
     private String key = "";
 
+    private List<YAPIONObject> yapionObjectList = new ArrayList<>();
+    private List<YAPIONPointer> yapionPointerList = new ArrayList<>();
+
     private void parseInternal() throws IOException {
         char lastChar;
         char c = '\u0000';
@@ -102,6 +111,8 @@ public class YAPIONParser {
         } else {
             throw new YAPIONParserException("null input");
         }
+
+        parseFinish();
     }
 
     private void parseStep(char lastChar, char c) {
@@ -132,6 +143,7 @@ public class YAPIONParser {
             if (c == '{') {
                 push(Type.OBJECT);
                 YAPIONObject yapionObject = new YAPIONObject();
+                yapionObjectList.add(yapionObject);
                 add(new YAPIONVariable(key, yapionObject));
                 currentObject = yapionObject;
                 key = "";
@@ -182,6 +194,31 @@ public class YAPIONParser {
         }
     }
 
+    private void parseFinish() {
+        Map<Long, YAPIONObject> yapionObjectMap = new HashMap<>();
+        for (YAPIONObject yapionObject : yapionObjectList) {
+            yapionObjectMap.put(new YAPIONPointer(yapionObject).getPointerID(), yapionObject);
+        }
+        for (YAPIONPointer yapionPointer : yapionPointerList) {
+            long id = yapionPointer.getPointerID();
+            YAPIONObject yapionObject = yapionObjectMap.get(id);
+            if (yapionObject == null) continue;
+            try {
+                Method method = yapionPointer.getClass().getDeclaredMethod("setYAPIONObject", YAPIONObject.class);
+                method.setAccessible(true);
+                method.invoke(yapionPointer, yapionObject);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void push(Type type) {
         typeStack.push(type);
         key = current.toString();
@@ -201,6 +238,7 @@ public class YAPIONParser {
         if (c == '{') {
             typeStack.push(Type.OBJECT);
             result = new YAPIONObject();
+            yapionObjectList.add(result);
             currentObject = result;
         } else {
             throw new YAPIONParserException();
@@ -241,7 +279,9 @@ public class YAPIONParser {
         current.append(c);
         if (current.length() == 16) {
             pop(Type.POINTER);
-            add(new YAPIONVariable(key, new YAPIONPointer(current.toString())));
+            YAPIONPointer yapionPointer = new YAPIONPointer(current.toString());
+            yapionPointerList.add(yapionPointer);
+            add(new YAPIONVariable(key, yapionPointer));
             reset();
         }
     }
@@ -260,6 +300,7 @@ public class YAPIONParser {
         if (!escaped && c == '{') {
             push(Type.OBJECT);
             YAPIONObject yapionObject = new YAPIONObject();
+            yapionObjectList.add(yapionObject);
             add(new YAPIONVariable(key, yapionObject));
             currentObject = yapionObject;
             key = "";
@@ -296,6 +337,7 @@ public class YAPIONParser {
             if (c == '{') {
                 push(Type.OBJECT);
                 YAPIONObject yapionObject = new YAPIONObject();
+                yapionObjectList.add(yapionObject);
                 add(new YAPIONVariable("", yapionObject));
                 currentObject = yapionObject;
                 return;

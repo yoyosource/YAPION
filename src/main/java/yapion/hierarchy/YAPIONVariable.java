@@ -4,12 +4,10 @@
 
 package yapion.hierarchy;
 
-import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONObject;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 import static yapion.utils.ReferenceIDUtils.calc;
 
@@ -18,8 +16,8 @@ public class YAPIONVariable {
     private String name;
     private YAPIONAny value;
 
-    private String pattern = "[({\\[<)}\\]>]";
-    private String replacement = "\\\\$0";
+    private static final String PATTERN = "[({\\[<)}\\]>]";
+    private static final String REPLACEMENT = "\\\\$0";
 
     public YAPIONVariable(String name, YAPIONAny value) {
         this.name = name;
@@ -41,9 +39,9 @@ public class YAPIONVariable {
     @Override
     public String toString() {
         if (name.startsWith(" ")) {
-            return "\\" + name.replaceAll(pattern, replacement) + value.toString();
+            return "\\" + name.replaceAll(PATTERN, REPLACEMENT) + value.toString();
         }
-        return name.replaceAll(pattern, replacement) + value.toString();
+        return name.replaceAll(PATTERN, REPLACEMENT) + value.toString();
     }
 
     public void toOutputStream(OutputStream outputStream) throws IOException {
@@ -51,4 +49,17 @@ public class YAPIONVariable {
         value.toOutputStream(outputStream);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof YAPIONVariable)) return false;
+        YAPIONVariable variable = (YAPIONVariable) o;
+        return Objects.equals(name, variable.name) &&
+                Objects.equals(value, variable.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, value);
+    }
 }

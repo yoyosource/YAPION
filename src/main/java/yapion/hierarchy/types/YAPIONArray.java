@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class YAPIONArray extends YAPIONAny {
 
@@ -77,6 +79,17 @@ public class YAPIONArray extends YAPIONAny {
     }
 
     @Override
+    protected Optional<YAPIONSearch<? extends YAPIONAny>> get(String key) {
+        try {
+            return Optional.of(new YAPIONSearch<>(get(Integer.parseInt(key))));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        } catch (YAPIONArrayIndexOutOfBoundsException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public String toString() {
         StringBuilder st = new StringBuilder();
         st.append("[");
@@ -96,4 +109,16 @@ public class YAPIONArray extends YAPIONAny {
         return st.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof YAPIONArray)) return false;
+        YAPIONArray that = (YAPIONArray) o;
+        return Objects.equals(array, that.array);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(array);
+    }
 }

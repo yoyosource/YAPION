@@ -7,16 +7,14 @@ package yapion.hierarchy.types;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
+import yapion.parser.YAPIONParser;
 import yapion.parser.YAPIONParserMapMapping;
 import yapion.parser.YAPIONParserMapObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class YAPIONMap extends YAPIONAny {
 
@@ -117,6 +115,17 @@ public class YAPIONMap extends YAPIONAny {
     }
 
     @Override
+    protected Optional<YAPIONSearch<? extends YAPIONAny>> get(String key) {
+        YAPIONVariable variable = YAPIONParser.parse("{" + key + "}").getVariable("");
+        if (variable == null) return Optional.empty();
+        YAPIONAny anyKey = variable.getValue();
+        if (anyKey == null) return Optional.empty();
+        YAPIONAny anyValue = get(anyKey);
+        if (anyValue == null) return Optional.empty();
+        return Optional.of(new YAPIONSearch<>(anyValue));
+    }
+
+    @Override
     public String toString() {
         long id = 0;
 
@@ -142,4 +151,16 @@ public class YAPIONMap extends YAPIONAny {
         return st.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof YAPIONMap)) return false;
+        YAPIONMap yapionMap = (YAPIONMap) o;
+        return Objects.equals(variables, yapionMap.variables);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(variables);
+    }
 }

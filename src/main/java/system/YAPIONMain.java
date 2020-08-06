@@ -13,12 +13,14 @@
 
 package system;
 
+import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.*;
 import yapion.parser.YAPIONParser;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Optional;
 
 public class YAPIONMain {
 
@@ -68,6 +70,12 @@ public class YAPIONMain {
 
         System.out.println(YAPIONParser.parse(yapionObject.toString()));
 
+        Optional<YAPIONAny.YAPIONSearch<? extends YAPIONAny>> value = yapionObject.get("test7", "test-MAP", "(hello)");
+        if (value.isPresent()) {
+            System.out.println(value.get());
+        } else {
+            System.out.println("Value Is Empty");
+        }
         /*
         String s = yapionObject.toString();
         long time = System.currentTimeMillis();

@@ -6,8 +6,7 @@ package yapion.hierarchy;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class YAPIONAny {
 
@@ -39,7 +38,7 @@ public class YAPIONAny {
         return path.toArray(new String[0]);
     }
 
-    public String getPath(YAPIONAny yapionAny) {
+    protected String getPath(YAPIONAny yapionAny) {
         return "";
     }
 
@@ -59,7 +58,7 @@ public class YAPIONAny {
         valuePresent = false;
     }
 
-    public final boolean isValuePresent() {
+    protected final boolean isValuePresent() {
         return valuePresent;
     }
 
@@ -68,5 +67,35 @@ public class YAPIONAny {
     }
 
     public void toOutputStream(OutputStream outputStream) throws IOException {}
+
+    public final Optional<YAPIONSearch<? extends YAPIONAny>> get(String... s) {
+        Optional<YAPIONSearch<? extends YAPIONAny>> optional = Optional.of(new YAPIONSearch<>(this));
+        for (int i = 0; i < s.length; i++) {
+            if (!optional.isPresent()) return Optional.empty();
+            optional = optional.get().value.get(s[i]);
+        }
+        return optional;
+    }
+
+    protected Optional<YAPIONSearch<? extends YAPIONAny>> get(String key) {
+        return Optional.ofNullable(null);
+    }
+
+    public class YAPIONSearch<T> {
+
+        public final T value;
+
+        public YAPIONSearch(T value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return "YAPIONSearch{" +
+                    "value=" + value +
+                    '}';
+        }
+
+    }
 
 }

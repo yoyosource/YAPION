@@ -15,6 +15,8 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class YAPIONObject extends YAPIONAny {
 
@@ -178,6 +180,12 @@ public class YAPIONObject extends YAPIONAny {
     }
 
     @Override
+    protected Optional<YAPIONSearch<? extends YAPIONAny>> get(String key) {
+        if (getVariable(key) == null) return Optional.empty();
+        return Optional.of(new YAPIONSearch<>(getVariable(key).getValue()));
+    }
+
+    @Override
     public String toString() {
         StringBuilder st = new StringBuilder();
         st.append("{");
@@ -185,6 +193,19 @@ public class YAPIONObject extends YAPIONAny {
             st.append(yapionVariable.toString());
         }
         return st.append("}").toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof YAPIONObject)) return false;
+        YAPIONObject that = (YAPIONObject) o;
+        return Objects.equals(variables, that.variables);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(variables);
     }
 
 }

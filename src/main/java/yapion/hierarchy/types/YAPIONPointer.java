@@ -11,6 +11,7 @@ import yapion.hierarchy.YAPIONAny;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 public class YAPIONPointer extends YAPIONAny {
 
@@ -37,10 +38,6 @@ public class YAPIONPointer extends YAPIONAny {
         this.yapionObject = yapionObject;
     }
 
-    public YAPIONPointer(long pointerID) {
-        this.pointerID = pointerID;
-    }
-
     public YAPIONPointer(String pointerID) {
         if (!pointerID.matches("[0-9A-F]{16}")) {
             throw new YAPIONPointerException("Invalid pointer id " + pointerID + " needs to be a HEX number");
@@ -48,11 +45,15 @@ public class YAPIONPointer extends YAPIONAny {
         this.pointerID = Long.parseLong(pointerID, 16);
     }
 
+    private void setYAPIONObject(YAPIONObject yapionObject) {
+        this.yapionObject = yapionObject;
+    }
+
     public long getPointerID() {
         if (yapionObject != null) {
-            pointerID = yapionObject.referenceValue() & 0x7FFFFFFFFFFFFFFFL;
+            pointerID = yapionObject.referenceValue();
         }
-        return pointerID;
+        return pointerID & 0x7FFFFFFFFFFFFFFFL;
     }
 
     public String getPointerIDString() {
@@ -64,4 +65,16 @@ public class YAPIONPointer extends YAPIONAny {
         return "->" + getPointerIDString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof YAPIONPointer)) return false;
+        YAPIONPointer that = (YAPIONPointer) o;
+        return toString().equals(that.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(toString());
+    }
 }

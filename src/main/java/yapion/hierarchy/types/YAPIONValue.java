@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 import static yapion.utils.ReferenceIDUtils.calc;
 
@@ -60,6 +61,13 @@ public class YAPIONValue<T> extends YAPIONAny {
         }
         if (s.startsWith("\"") && s.endsWith("\"")) {
             return new YAPIONValue<>(s.substring(1, s.length() - 1));
+        }
+        if (s.startsWith("'") && s.endsWith("'")) {
+            if (s.length() == 3) {
+                return new YAPIONValue<>((char)s.charAt(1));
+            } else {
+                return new YAPIONValue<>(s.substring(1, s.length() - 1));
+            }
         }
 
         if (s.matches(NUMBER_HEX)) {
@@ -224,7 +232,6 @@ public class YAPIONValue<T> extends YAPIONAny {
     private static final String NUMBER_FLOAT = "(-?[0-9]+\\.([0-9]+)?)|(-?\\.[0-9]+)";
 
     private enum ParseType {
-
         BYTE("B"),
         SHORT("S"),
         INTEGER("I"),
@@ -244,6 +251,20 @@ public class YAPIONValue<T> extends YAPIONAny {
         public String getSuffix() {
             return suffix;
         }
-
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof YAPIONValue)) return false;
+        YAPIONValue<?> that = (YAPIONValue<?>) o;
+        return Objects.equals(value, that.value) &&
+                Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, type);
+    }
+
 }
