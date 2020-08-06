@@ -67,7 +67,7 @@ public class YAPIONValue<T> extends YAPIONAny {
             if (value != null) return value;
         }
         {
-            YAPIONValue<?> value = tryParse(s, 16, NUMBER_HEX, ParseType.BYTE, ParseType.SHORT, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER);
+            YAPIONValue<?> value = tryParse(s, 16, NUMBER_HEX, ParseType.BIGINTEGER, ParseType.LONG, ParseType.INTEGER, ParseType.SHORT, ParseType.BYTE);
             if (value != null) return value;
         }
         if (s.matches(NUMBER_NORMAL)) {
@@ -75,7 +75,7 @@ public class YAPIONValue<T> extends YAPIONAny {
             if (value != null) return value;
         }
         {
-            YAPIONValue<?> value = tryParse(s, 10, NUMBER_NORMAL, ParseType.BYTE, ParseType.SHORT, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER, ParseType.FLOAT, ParseType.DOUBLE, ParseType.BIGDECIMAL);
+            YAPIONValue<?> value = tryParse(s, 10, NUMBER_NORMAL, ParseType.BIGINTEGER, ParseType.LONG, ParseType.INTEGER, ParseType.SHORT, ParseType.BYTE, ParseType.BIGDECIMAL, ParseType.DOUBLE, ParseType.FLOAT);
             if (value != null) return value;
         }
         if (s.matches(NUMBER_FLOAT)) {
@@ -83,7 +83,7 @@ public class YAPIONValue<T> extends YAPIONAny {
             if (value != null) return value;
         }
         {
-            YAPIONValue<?> value = tryParse(s, 10, NUMBER_FLOAT, ParseType.FLOAT, ParseType.DOUBLE, ParseType.BIGDECIMAL);
+            YAPIONValue<?> value = tryParse(s, 10, NUMBER_FLOAT, ParseType.BIGDECIMAL, ParseType.DOUBLE, ParseType.FLOAT);
             if (value != null) return value;
         }
 
@@ -174,7 +174,7 @@ public class YAPIONValue<T> extends YAPIONAny {
     public static boolean tryAssemble(String s, String regex, ParseType... possibleTypes) {
         for (int i = 0; i < possibleTypes.length; i++) {
             if (!s.endsWith(possibleTypes[i].getSuffix())) continue;
-            String t = s.substring(0, possibleTypes[i].getSuffix().length());
+            String t = s.substring(0, s.length() - possibleTypes[i].getSuffix().length());
             if (!t.matches(regex)) continue;
             return true;
         }
@@ -184,7 +184,7 @@ public class YAPIONValue<T> extends YAPIONAny {
     private static YAPIONValue<?> tryParse(String s, int radix, String regex, ParseType... possibleTypes) {
         for (int i = 0; i < possibleTypes.length; i++) {
             if (!s.endsWith(possibleTypes[i].getSuffix())) continue;
-            String t = s.substring(0, possibleTypes[i].getSuffix().length());
+            String t = s.substring(0, s.length() - possibleTypes[i].getSuffix().length());
             if (!t.matches(regex)) continue;
             YAPIONValue<?> value = tryParse(t, radix, possibleTypes[i]);
             if (value != null) return value;

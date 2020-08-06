@@ -57,14 +57,16 @@ public class YAPIONMain {
         yapionArray.add(new YAPIONValue<>(true));
         System.out.println(yapionObject);
 
-        for (int i = 0; i < 100; i++) {
+        /*for (int i = 0; i < 100; i++) {
             String s = yapionObject.toString();
             long time = System.currentTimeMillis();
             YAPIONParser.parse(s);
             time = System.currentTimeMillis() - time;
             System.out.println(YAPIONParser.parse(s));
             System.out.println(time);
-        }
+        }*/
+
+        System.out.println(YAPIONParser.parse(yapionObject.toString()));
 
         /*
         String s = yapionObject.toString();
