@@ -13,8 +13,23 @@
 
 package system;
 
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import net.sf.cglib.core.ClassGenerator;
+import net.sf.cglib.core.DefaultGeneratorStrategy;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.transform.TransformingClassGenerator;
+import net.sf.cglib.transform.impl.AddPropertyTransformer;
+import org.objectweb.asm.Type;
+import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisBase;
+import org.objenesis.ObjenesisStd;
+import org.objenesis.strategy.SerializingInstantiatorStrategy;
+import org.objenesis.strategy.SingleInstantiatorStrategy;
 import org.objenesis.strategy.StdInstantiatorStrategy;
+
+import java.lang.invoke.MethodHandles;
 
 public class ObjenesisTest {
 
@@ -25,16 +40,28 @@ public class ObjenesisTest {
 
     }
 
-    private class Test {
+    private final class Tets {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        /*Objenesis objenesis = new ObjenesisStd(false);
         ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
         ObjenesisTest objenesisTest = objenesisBase.newInstance(ObjenesisTest.class);
-        ObjenesisTest.Test instance = objenesisBase.newInstance(ObjenesisTest.Test.class);
-        System.out.println(objenesisTest);
-        System.out.println(instance);
+        System.out.println(objenesisTest);*/
+
+        ClassPool defaultClassPool = ClassPool.getDefault();
+        CtClass superClass = defaultClassPool.get(ObjenesisTest.class.getTypeName());
+        CtClass cc = defaultClassPool.makeClass(ObjenesisTest.class.getTypeName() + "Extended", superClass);
+        cc.addConstructor(new CtConstructor(new CtClass[0], cc));
+        System.out.println(cc);
+        System.out.println(cc.toClass(ObjenesisTest.class));
+        System.out.println((ObjenesisTest)cc.toClass(ObjenesisTest.class).getDeclaredConstructor().newInstance());
+        //System.out.println((ObjenesisTest)cc.toClass().getDeclaredConstructor().newInstance());
+
+        /*ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
+        Tets objenesisTest = objenesisBase.newInstance(Tets.class);
+        System.out.println(objenesisTest);*/
     }
 
     @Override
