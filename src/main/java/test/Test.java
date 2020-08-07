@@ -7,16 +7,24 @@ package test;
 import yapion.annotations.YAPIONSave;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @YAPIONSave
 public class Test {
 
-    public static transient volatile double i = 10.0;
+    public transient volatile double i = 10.0;
 
-    private static List<String> strings = new ArrayList<>();
+    private List<String> strings = new ArrayList<>();
+    private String[] strings2 = new String[4];
 
-    static {
+    private static int d = 0;
+
+    private Map<String, String> stringStringMap = new HashMap<>();
+    private Map<Hugo, String> hugoStringMap = new HashMap<>();
+
+    {
         strings.add("Hello WOrld");
         strings.add("Hello WOrld!");
         strings.add("Hello WOrld!!");
