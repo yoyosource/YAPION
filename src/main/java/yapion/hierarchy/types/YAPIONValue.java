@@ -36,6 +36,9 @@ public class YAPIONValue<T> extends YAPIONAny {
 
     @Override
     public long referenceValue() {
+        if (value == null) {
+            return getType().getReferenceValue() ^ calc(type);
+        }
         return getType().getReferenceValue() ^ calc(value.getClass().getTypeName());
     }
 
@@ -44,7 +47,11 @@ public class YAPIONValue<T> extends YAPIONAny {
             throw new YAPIONException("Invalid YAPIONValue type " + value.getClass().getTypeName() + " only " + String.join(", ", allowedTypes) + " allowed");
         }
         this.value = value;
-        this.type = value.getClass().getTypeName();
+        if (value == null) {
+            this.type = "null";
+        } else {
+            this.type = value.getClass().getTypeName();
+        }
     }
 
     @Override
@@ -99,6 +106,7 @@ public class YAPIONValue<T> extends YAPIONAny {
     }
 
     static <T> boolean validType(T t) {
+        if (t == null) return true;
         String typeName = t.getClass().getTypeName();
         for (int i = 0; i < allowedTypes.length; i++) {
             if (allowedTypes[i].endsWith(typeName)) {
@@ -114,6 +122,7 @@ public class YAPIONValue<T> extends YAPIONAny {
 
     @Override
     public String toString() {
+        if (value == null) return assembleOutput(type);
         String string = value.toString().replaceAll("[()]", "\\\\$0");
         if (value instanceof String) {
             return assembleString(string);

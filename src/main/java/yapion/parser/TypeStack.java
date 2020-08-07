@@ -11,17 +11,21 @@ import yapion.hierarchy.Type;
 public class TypeStack {
 
     private int pointer = -1;
-    private Type[] stack = new Type[65536];
+    private static final int depth = 65536;
+    private Type[] stack = new Type[depth];
+    private long[] timeStack = new long[depth];
 
     public void push(Type type) {
         pointer++;
         stack[pointer] = type;
+        timeStack[pointer] = System.nanoTime();
     }
 
     public Type pop(Type type) {
         if (empty()) {
             throw new YAPIONArrayIndexOutOfBoundsException();
         }
+        timeStack[pointer] = 0;
         Type current = stack[pointer];
         if (current != type) {
             throw new YAPIONParserException();
@@ -35,6 +39,13 @@ public class TypeStack {
             throw new YAPIONArrayIndexOutOfBoundsException();
         }
         return stack[pointer];
+    }
+
+    public long peekTime() {
+        if (empty()) {
+            throw new YAPIONArrayIndexOutOfBoundsException();
+        }
+        return System.nanoTime() - timeStack[pointer];
     }
 
     private boolean empty() {

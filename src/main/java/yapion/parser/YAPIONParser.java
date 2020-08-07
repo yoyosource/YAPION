@@ -226,7 +226,18 @@ public class YAPIONParser {
     }
 
     private void pop(Type type) {
+        setParseTime();
         typeStack.pop(type);
+    }
+
+    private final void setParseTime() {
+        try {
+            Method method = currentObject.getClass().getSuperclass().getDeclaredMethod("setParseTime", long.class);
+            method.setAccessible(true);
+            method.invoke(currentObject, typeStack.peekTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void reset() {
@@ -267,7 +278,7 @@ public class YAPIONParser {
 
     private void parseValue(char c) {
         if (!escaped && c == ')') {
-            typeStack.pop(Type.VALUE);
+            pop(Type.VALUE);
             add(new YAPIONVariable(key, YAPIONValue.parseValue(current.toString())));
             reset();
         } else {
@@ -356,6 +367,9 @@ public class YAPIONParser {
                 currentObject = yapionMap;
                 return;
             }
+        }
+        if (current.length() == 0 && (c == ' ' || c == '\n') && !escaped) {
+            return;
         }
         current.append(c);
     }

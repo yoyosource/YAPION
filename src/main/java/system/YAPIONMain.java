@@ -18,13 +18,16 @@ import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.*;
 import yapion.parser.YAPIONParser;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Optional;
 
 public class YAPIONMain {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable("test", new YAPIONValue<>("Hello World")));
         yapionObject.add(new YAPIONVariable("test2", new YAPIONValue<>("")));
@@ -59,16 +62,20 @@ public class YAPIONMain {
         yapionArray.add(new YAPIONValue<>(true));
         System.out.println(yapionObject);
 
-        /*for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             String s = yapionObject.toString();
-            long time = System.currentTimeMillis();
             YAPIONParser.parse(s);
-            time = System.currentTimeMillis() - time;
-            System.out.println(YAPIONParser.parse(s));
-            System.out.println(time);
-        }*/
+            YAPIONObject object = YAPIONParser.parse(s);
+            System.out.println(object);
+            System.out.println(object.getParseTimeMillis() + "ms");
+        }
 
         System.out.println(YAPIONParser.parse(yapionObject.toString()));
+
+        /*for (int i = 0; i < 100; i++) {
+            YAPIONObject object = YAPIONParser.parse(new FileInputStream(new File("/Users/jojo/IdeaProjects/YAPION/src/main/resources/test.yapion")));
+            System.out.println(object.getParseTime() + "ns");
+        }*/
 
         Optional<YAPIONAny.YAPIONSearch<? extends YAPIONAny>> value = yapionObject.get("test7", "test-MAP", "(hello)");
         if (value.isPresent()) {

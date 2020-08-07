@@ -44,6 +44,7 @@ public class YAPIONAny {
 
     private YAPIONAny parent = null;
     private boolean valuePresent = false;
+    private long parseTime = 0;
 
     public final void setParent(YAPIONAny yapionAny) {
         if (valuePresent) {
@@ -56,6 +57,24 @@ public class YAPIONAny {
     public final void removeParent() {
         parent = null;
         valuePresent = false;
+    }
+
+    private final void setParseTime(long time) {
+        this.parseTime = time;
+    }
+
+    /**
+     * @return parseTime in nanoseconds
+     */
+    public final long getParseTime() {
+        return parseTime;
+    }
+
+    /**
+     * @return parseTime in milliseconds as double
+     */
+    public final double getParseTimeMillis() {
+        return parseTime / 1000000.0;
     }
 
     protected final boolean isValuePresent() {

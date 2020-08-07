@@ -16,6 +16,10 @@ public class StateManager {
         this.emptyState = state.isEmpty();
     }
 
+    protected String get() {
+        return state;
+    }
+
     public boolean is(YAPIONLoad yapionLoad) {
         if (emptyState) return true;
         return yapionLoad.context().contains(state);

@@ -8,6 +8,9 @@ public interface Serializer<T> {
     default String primitiveType() {
         return "";
     }
-    YAPIONAny serialize(T object);
+    default String[] otherTypes() {
+        return new String[0];
+    }
+    YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer);
 
 }
