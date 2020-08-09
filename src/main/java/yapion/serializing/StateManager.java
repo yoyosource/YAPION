@@ -3,6 +3,10 @@ package yapion.serializing;
 import yapion.annotations.*;
 import yapion.exceptions.YAPIONException;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+
 public class StateManager {
 
     private String state;
@@ -20,29 +24,68 @@ public class StateManager {
         return state;
     }
 
-    public boolean is(YAPIONLoad yapionLoad) {
+    private boolean is(String s) {
+        if (!s.isEmpty() && emptyState) return false;
         if (emptyState) return true;
-        return yapionLoad.context().contains(state);
+        if (s.isEmpty()) return true;
+        return s.contains(state);
     }
 
-    public boolean is(YAPIONLoadExclude yapionLoadExclude) {
-        if (emptyState) return true;
-        return yapionLoadExclude.context().contains(state);
+    public boolean is(YAPIONLoad annotation) {
+        if (annotation == null) return false;
+        return is(annotation.context());
     }
 
-    public boolean is(YAPIONOptimize yapionOptimize) {
-        if (emptyState) return true;
-        return yapionOptimize.context().contains(state);
+    public boolean is(YAPIONLoadExclude annotation) {
+        if (annotation == null) return false;
+        return is(annotation.context());
     }
 
-    public boolean is(YAPIONSave yapionSave) {
-        if (emptyState) return true;
-        return yapionSave.context().contains(state);
+    public boolean is(YAPIONOptimize annotation) {
+        if (annotation == null) return false;
+        return is(annotation.context());
     }
 
-    public boolean is(YAPIONSaveExclude yapionSaveExclude) {
-        if (emptyState) return true;
-        return yapionSaveExclude.context().contains(state);
+    public boolean is(YAPIONSave annotation) {
+        if (annotation == null) return false;
+        return is(annotation.context());
+    }
+
+    public boolean is(YAPIONSaveExclude annotation) {
+        if (annotation == null) return false;
+        return is(annotation.context());
+    }
+
+    private Object object;
+    private boolean globalLoad = false;
+    private boolean globalOptimize = false;
+    private boolean globalSave = false;
+
+    public boolean is(Object object, Field field) {
+        if (this.object == null || this.object != object) {
+            this.object = object;
+            if (is(object.getClass().getDeclaredAnnotation(YAPIONLoadExclude.class))) globalLoad = false;
+            globalLoad = is(object.getClass().getDeclaredAnnotation(YAPIONLoad.class));
+            globalOptimize = is(object.getClass().getDeclaredAnnotation(YAPIONOptimize.class));
+            if (is(object.getClass().getDeclaredAnnotation(YAPIONSaveExclude.class))) globalSave = false;
+            globalSave = is(object.getClass().getDeclaredAnnotation(YAPIONSave.class));
+        }
+
+        return false;
+    }
+
+    public static class YAPIONInfo {
+
+        public final boolean load;
+        public final boolean save;
+        public final boolean optimize;
+
+        private YAPIONInfo(boolean load, boolean save, boolean optimize) {
+            this.load = load;
+            this.save = save;
+            this.optimize = optimize;
+        }
+
     }
 
 }

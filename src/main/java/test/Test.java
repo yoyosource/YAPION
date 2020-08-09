@@ -4,6 +4,7 @@
 
 package test;
 
+import yapion.annotations.YAPIONOptimize;
 import yapion.annotations.YAPIONSave;
 
 import java.util.*;
@@ -43,6 +44,7 @@ public class Test {
 
     {
         hugoStringHashMap.put(hugo, "");
+        hugoStringHashMap.put(new Hugo(), "EMPTY");
     }
 
     public String tru = "true";
@@ -56,6 +58,7 @@ public class Test {
 
         public int i = 0;
 
+        @YAPIONOptimize
         public Test t;
 
         public Hugo2 hugo2 = new Hugo2();

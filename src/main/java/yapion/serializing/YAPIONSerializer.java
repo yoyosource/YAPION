@@ -8,10 +8,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.serializer.object.SetSerializer;
-import yapion.serializing.serializer.other.CharacterSerializer;
-import yapion.serializing.serializer.other.StringBufferSerializer;
-import yapion.serializing.serializer.other.StringBuilderSerializer;
-import yapion.serializing.serializer.other.StringSerializer;
+import yapion.serializing.serializer.other.*;
 import yapion.serializing.serializer.object.ListSerializer;
 import yapion.serializing.serializer.object.MapSerializer;
 import yapion.serializing.serializer.number.*;
@@ -30,6 +27,7 @@ public class YAPIONSerializer {
         add(new StringBuilderSerializer());
         add(new StringBufferSerializer());
         add(new CharacterSerializer());
+        add(new FileSerializer());
 
         // Non Floating Point Numbers
         add(new ByteSerializer());
