@@ -28,6 +28,7 @@ public class StateManager {
         if (!s.isEmpty() && emptyState) return false;
         if (emptyState) return true;
         if (s.isEmpty()) return true;
+        if (s.equals("*")) return true;
         return s.contains(state);
     }
 
@@ -58,20 +59,60 @@ public class StateManager {
 
     private Object object;
     private boolean globalLoad = false;
-    private boolean globalOptimize = false;
     private boolean globalSave = false;
 
-    public boolean is(Object object, Field field) {
+    private Field field;
+    private boolean localLoad = false;
+    private boolean localOptimize = false;
+    private boolean localSave = false;
+
+    public YAPIONInfo is(Object object) {
         if (this.object == null || this.object != object) {
             this.object = object;
             if (is(object.getClass().getDeclaredAnnotation(YAPIONLoadExclude.class))) globalLoad = false;
             globalLoad = is(object.getClass().getDeclaredAnnotation(YAPIONLoad.class));
-            globalOptimize = is(object.getClass().getDeclaredAnnotation(YAPIONOptimize.class));
             if (is(object.getClass().getDeclaredAnnotation(YAPIONSaveExclude.class))) globalSave = false;
             globalSave = is(object.getClass().getDeclaredAnnotation(YAPIONSave.class));
         }
 
-        return false;
+        return new YAPIONInfo(globalLoad, globalSave, false);
+    }
+
+    public YAPIONInfo is(Object object, Field field) {
+        is(object);
+
+        if (this.field == null || this.field.equals(field)) {
+            YAPIONLoadExclude yapionLoadExclude = field.getDeclaredAnnotation(YAPIONLoadExclude.class);
+            YAPIONLoad yapionLoad = field.getDeclaredAnnotation(YAPIONLoad.class);
+            YAPIONOptimize yapionOptimize = field.getDeclaredAnnotation(YAPIONOptimize.class);
+            YAPIONSaveExclude yapionSaveExclude = field.getDeclaredAnnotation(YAPIONSaveExclude.class);
+            YAPIONSave yapionSave = field.getDeclaredAnnotation(YAPIONSave.class);
+
+            localLoad = true;
+            if (yapionLoadExclude != null && yapionLoad == null) {
+                localLoad = !is(yapionLoadExclude);
+            } else if (yapionLoadExclude == null && yapionLoad != null) {
+                localLoad = is(yapionLoad);
+            } else if (yapionLoadExclude != null && yapionLoad != null) {
+                if (is(yapionLoadExclude)) localLoad = false;
+                localLoad = is(yapionLoad);
+            }
+
+            localOptimize = is(yapionOptimize);
+
+            localSave = true;
+            if (yapionSaveExclude != null && yapionSave == null) {
+                localSave = !is(yapionSaveExclude);
+            } else if (yapionSaveExclude == null && yapionSave != null) {
+                localSave = is(yapionSave);
+            } else if (yapionSaveExclude != null && yapionSave != null) {
+                if (is(yapionSaveExclude)) localSave = false;
+                localSave = is(yapionSave);
+            }
+            // System.out.println(globalLoad + " " + localLoad + "   " + localOptimize + "   " + globalSave + " " + localSave);
+        }
+
+        return new YAPIONInfo(globalLoad && localLoad, globalSave && localSave, localOptimize);
     }
 
     public static class YAPIONInfo {

@@ -15,6 +15,7 @@ import yapion.serializing.serializer.number.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,6 +74,20 @@ public class YAPIONSerializer {
         System.out.println(yapionObject);
     }
 
+    private static void multiTest() {
+        Test test = new Test();
+        YAPIONObject yapionObject = null;
+        long globalTime = System.currentTimeMillis();
+        for (int i = 0; i < 100; i++) {
+            long time = System.currentTimeMillis();
+            yapionObject = serialize(test);
+            time = System.currentTimeMillis() - time;
+            System.out.println(time + "ms");
+        }
+        System.out.println(System.currentTimeMillis() - globalTime);
+        System.out.println(yapionObject);
+    }
+
     public static YAPIONObject serialize(Object object) {
         return serialize(object, "");
     }
@@ -104,7 +119,11 @@ public class YAPIONSerializer {
         }
     }
 
+    @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     public YAPIONSerializer parse(Object object) {
+        if (!stateManager.is(object).save) {
+            return this;
+        }
         YAPIONObject yapionObject = new YAPIONObject();
         if (!pointerMap.containsKey(object)) {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
@@ -119,6 +138,8 @@ public class YAPIONSerializer {
             if (Modifier.toString(field.getModifiers()).contains("static")) {
                 continue;
             }
+            StateManager.YAPIONInfo yapionInfo = stateManager.is(object, field);
+            if (!yapionInfo.save) continue;
 
             String name = field.getName();
             Object fieldObject = null;
@@ -128,7 +149,9 @@ public class YAPIONSerializer {
 
             }
             if (fieldObject == null) {
-                yapionObject.add(new YAPIONVariable(name, new YAPIONValue<>(null)));
+                if (!yapionInfo.optimize) {
+                    yapionObject.add(new YAPIONVariable(name, new YAPIONValue<>(null)));
+                }
                 continue;
             }
 
