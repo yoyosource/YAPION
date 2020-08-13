@@ -4,6 +4,7 @@ import test.Test;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
+import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
@@ -111,11 +112,23 @@ public class YAPIONSerializer {
         if (pointerMap.containsKey(object)) {
             return pointerMap.get(object);
         }
-        Serializer serializer = serializerMap.get(object.getClass().getTypeName());
-        if (serializer != null) {
-            return serializer.serialize(object, this);
+        if (object == null) {
+            return new YAPIONValue<>(null);
+        }
+        if (object.getClass().getTypeName().endsWith("[]")) {
+            YAPIONArray yapionArray = new YAPIONArray();
+            Object[] objects = (Object[])object;
+            for (Object o : objects) {
+                yapionArray.add(parse(o, this));
+            }
+            return yapionArray;
         } else {
-            return new YAPIONSerializer(object, yapionSerializer).parse().getYAPIONObject();
+            Serializer serializer = serializerMap.get(object.getClass().getTypeName());
+            if (serializer != null) {
+                return serializer.serialize(object, this);
+            } else {
+                return new YAPIONSerializer(object, yapionSerializer).parse().getYAPIONObject();
+            }
         }
     }
 
@@ -166,6 +179,9 @@ public class YAPIONSerializer {
                 continue;
             }
             YAPIONAny yapionAny = parse(fieldObject, this);
+            if (yapionAny == null) {
+                continue;
+            }
             if (yapionAny.getType() == Type.OBJECT) {
                 pointerMap.put(fieldObject, new YAPIONPointer((YAPIONObject) yapionAny));
             }

@@ -3,9 +3,7 @@ package yapion.serializing;
 import yapion.annotations.*;
 import yapion.exceptions.YAPIONException;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 public class StateManager {
 

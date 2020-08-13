@@ -7,6 +7,9 @@ package test;
 import yapion.annotations.YAPIONOptimize;
 import yapion.annotations.YAPIONSave;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 
 @YAPIONSave
@@ -15,7 +18,7 @@ public class Test {
     public transient volatile double i = 10.0;
 
     private List<String> strings = new ArrayList<>();
-    //private String[] strings2 = new String[4];
+    private String[] strings2 = new String[4];
 
     private static int d = 0;
 
@@ -31,6 +34,8 @@ public class Test {
         strings.add("Hello WOrld!!!");
         strings.add("Hello WOrld!!!!");
 
+        strings2[0] = "TEST";
+
         stringStringMap.put("Hello", "Hello2");
         stringStringMap.put("Hello2", "Hello2");
         stringStringMap.put("Hello3", "Hello2");
@@ -40,11 +45,19 @@ public class Test {
 
     public Hugo hugo = new Hugo(this);
 
+    private FileInputStream fileInputStream;
+
     private HashMap<Hugo, String> hugoStringHashMap = new HashMap<>();
 
     {
         hugoStringHashMap.put(hugo, "");
         hugoStringHashMap.put(new Hugo(), "EMPTY");
+
+        try {
+            fileInputStream = new FileInputStream(new File("~Chess/.server/.6c545e8a37d74f3e82fec4523e95228c-B33DFB13.ac"));
+        } catch (IOException e) {
+
+        }
     }
 
     public String tru = "true";
