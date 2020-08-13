@@ -28,7 +28,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    //testImplementation 'org.hamcrest:hamcrest:2.2'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
 
     implementation 'org.objenesis:objenesis:3.1'
     implementation 'cglib:cglib:3.3.0'

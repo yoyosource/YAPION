@@ -18,9 +18,9 @@ import java.util.*;
 
 public class YAPIONMap extends YAPIONAny {
 
-    private Map<YAPIONAny, YAPIONAny> variables = new HashMap<>();
-    private List<YAPIONParserMapMapping> mappingList = new ArrayList<>();
-    private Map<String, YAPIONAny> mappingVariables = new HashMap<>();
+    private final Map<YAPIONAny, YAPIONAny> variables = new LinkedHashMap<>();
+    private final List<YAPIONParserMapMapping> mappingList = new ArrayList<>();
+    private final Map<String, YAPIONAny> mappingVariables = new LinkedHashMap<>();
 
     @Override
     public Type getType() {

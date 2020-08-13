@@ -8,6 +8,7 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.parser.YAPIONParser;
 import yapion.serializing.serializer.object.SetSerializer;
 import yapion.serializing.serializer.other.*;
 import yapion.serializing.serializer.object.ListSerializer;
@@ -22,7 +23,7 @@ import java.util.Map;
 
 public class YAPIONSerializer {
 
-    private static Map<String, Serializer<?>> serializerMap = new HashMap<>();
+    private static final Map<String, Serializer<?>> serializerMap = new HashMap<>();
     static {
         // Other
         add(new StringSerializer());
@@ -64,9 +65,9 @@ public class YAPIONSerializer {
         }
     }
 
-    private Object object;
+    private final Object object;
     private YAPIONObject yapionObject;
-    private StateManager stateManager;
+    private final StateManager stateManager;
 
     private Map<Object, YAPIONPointer> pointerMap = new HashMap<>();
 
@@ -142,7 +143,6 @@ public class YAPIONSerializer {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
         }
         yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(object.getClass().getTypeName())));
-        yapionObject.add(new YAPIONVariable("@name", new YAPIONValue<>(object.getClass().getName())));
         this.yapionObject = yapionObject;
 
         Field[] fields = object.getClass().getDeclaredFields();

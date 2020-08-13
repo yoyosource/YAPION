@@ -17,15 +17,17 @@ public class Test {
 
     public transient volatile double i = 10.0;
 
-    private List<String> strings = new ArrayList<>();
-    private String[] strings2 = new String[4];
+    private final List<String> strings = new ArrayList<>();
+    private final String[] strings2 = new String[4];
+    //private String[][] strings3 = new String[3][3];
+    //private Hugo[][] hugos = new Hugo[4][4];
 
-    private static int d = 0;
+    private static final int d = 0;
 
-    private Map<String, String> stringStringMap = new HashMap<>();
-    private Map<Hugo, String> hugoStringMap = new HashMap<>();
-    private HashMap<String, String> hashMap = new HashMap<>();
-    private LinkedHashMap<Integer, String> linkedHashMap = new LinkedHashMap<>();
+    private final Map<String, String> stringStringMap = new HashMap<>();
+    private final Map<Hugo, String> hugoStringMap = new HashMap<>();
+    private final HashMap<String, String> hashMap = new HashMap<>();
+    private final LinkedHashMap<Integer, String> linkedHashMap = new LinkedHashMap<>();
 
     {
         strings.add("Hello WOrld");
@@ -35,6 +37,13 @@ public class Test {
         strings.add("Hello WOrld!!!!");
 
         strings2[0] = "TEST";
+        //strings3[0][0] = "TEST";
+
+        //hugos[0][0] = new Hugo();
+        //hugos[1][1] = new Hugo(this);
+        //hugos[2][2] = new Hugo();
+        //hugos[3][3] = new Hugo(this);
+
 
         stringStringMap.put("Hello", "Hello2");
         stringStringMap.put("Hello2", "Hello2");
@@ -47,7 +56,7 @@ public class Test {
 
     private FileInputStream fileInputStream;
 
-    private HashMap<Hugo, String> hugoStringHashMap = new HashMap<>();
+    private final HashMap<Hugo, String> hugoStringHashMap = new HashMap<>();
 
     {
         hugoStringHashMap.put(hugo, "");
@@ -64,7 +73,7 @@ public class Test {
 
     public Hugo hugo2 = hugo;
 
-    private Double test = 0.0;
+    private final Double test = 0.0;
 
     @YAPIONSave
     private class Hugo {
@@ -91,7 +100,7 @@ public class Test {
         @YAPIONSave
         private class Hugo2 {
 
-            private int i = 0;
+            private final int i = 0;
 
         }
 

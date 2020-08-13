@@ -37,7 +37,7 @@ public class YAPIONParser {
 
     private int index = 0;
 
-    private TypeStack typeStack = new TypeStack();
+    private final TypeStack typeStack = new TypeStack();
 
     public YAPIONObject result() {
         return result;
@@ -84,8 +84,8 @@ public class YAPIONParser {
     private StringBuilder current = new StringBuilder();
     private String key = "";
 
-    private List<YAPIONObject> yapionObjectList = new ArrayList<>();
-    private List<YAPIONPointer> yapionPointerList = new ArrayList<>();
+    private final List<YAPIONObject> yapionObjectList = new ArrayList<>();
+    private final List<YAPIONPointer> yapionPointerList = new ArrayList<>();
 
     private void parseInternal() throws IOException {
         char lastChar;
@@ -129,7 +129,7 @@ public class YAPIONParser {
         } else if (typeStack.peek() == Type.OBJECT) {
             // HANDLED elsewhere
         } else if (typeStack.peek() == Type.ARRAY) {
-            parseArray(c);
+            parseArray(c, lastChar);
             return;
         } else if (typeStack.peek() == Type.VALUE) {
             parseValue(c);
@@ -150,6 +150,7 @@ public class YAPIONParser {
                 return;
             } else if (c == '}') {
                 pop(Type.OBJECT);
+                reset();
                 currentObject = currentObject.getParent();
                 return;
             }
@@ -328,11 +329,13 @@ public class YAPIONParser {
         current.append(c);
     }
 
-    private void parseArray(char c) {
+    private void parseArray(char c, char lastChar) {
         key = "";
         if (!escaped) {
             if (c == ',') {
-                add(new YAPIONVariable("", YAPIONValue.parseValue(current.toString())));
+                if (current.length() != 0) {
+                    add(new YAPIONVariable("", YAPIONValue.parseValue(current.toString())));
+                }
                 current = new StringBuilder();
                 return;
             }
@@ -365,6 +368,10 @@ public class YAPIONParser {
                 YAPIONMap yapionMap = new YAPIONMap();
                 add(new YAPIONVariable("", yapionMap));
                 currentObject = yapionMap;
+                return;
+            }
+            if (lastChar == '-' && c == '>') {
+                push(Type.POINTER);
                 return;
             }
         }

@@ -19,8 +19,7 @@ public class FileSerializer implements Serializer<File> {
     @Override
     public YAPIONAny serialize(File object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>("@file")));
-        yapionObject.add(new YAPIONVariable("@name", new YAPIONValue<>("@file")));
+        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>("java.io.File")));
         yapionObject.add(new YAPIONVariable("absolutePath", new YAPIONValue<>(object.getAbsolutePath())));
         yapionObject.add(new YAPIONVariable("name", new YAPIONValue<>(object.getName())));
         yapionObject.add(new YAPIONVariable("parent", new YAPIONValue<>(object.getParent())));
