@@ -18,4 +18,9 @@ public class BigDecimalSerializer implements Serializer<BigDecimal> {
     public YAPIONAny serialize(BigDecimal object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(object);
     }
+
+    @Override
+    public BigDecimal deserialize(YAPIONAny yapionAny) {
+        return ((YAPIONValue<BigDecimal>) yapionAny).get();
+    }
 }

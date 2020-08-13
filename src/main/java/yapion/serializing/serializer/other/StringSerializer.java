@@ -17,4 +17,8 @@ public class StringSerializer implements Serializer<String> {
         return new YAPIONValue<>(object);
     }
 
+    @Override
+    public String deserialize(YAPIONAny yapionAny) {
+        return ((YAPIONValue<String>) yapionAny).get();
+    }
 }

@@ -21,4 +21,9 @@ public class LongSerializer implements Serializer<Long> {
     public YAPIONAny serialize(Long object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(object);
     }
+
+    @Override
+    public Long deserialize(YAPIONAny yapionAny) {
+        return ((YAPIONValue<Long>) yapionAny).get();
+    }
 }

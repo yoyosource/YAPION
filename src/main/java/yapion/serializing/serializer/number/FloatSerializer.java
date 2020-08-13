@@ -21,4 +21,9 @@ public class FloatSerializer implements Serializer<Float> {
     public YAPIONAny serialize(Float object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(object);
     }
+
+    @Override
+    public Float deserialize(YAPIONAny yapionAny) {
+        return ((YAPIONValue<Float>) yapionAny).get();
+    }
 }

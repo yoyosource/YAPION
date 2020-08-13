@@ -4,10 +4,13 @@
 
 package yapion.hierarchy;
 
+import yapion.annotations.YAPIONSave;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
+@YAPIONSave(context = "*")
 public class YAPIONAny {
 
     public Type getType() {

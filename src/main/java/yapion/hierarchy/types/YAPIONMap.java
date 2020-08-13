@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types;
 
+import yapion.annotations.YAPIONSave;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
@@ -16,6 +17,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@YAPIONSave(context = "*")
 public class YAPIONMap extends YAPIONAny {
 
     private final Map<YAPIONAny, YAPIONAny> variables = new LinkedHashMap<>();

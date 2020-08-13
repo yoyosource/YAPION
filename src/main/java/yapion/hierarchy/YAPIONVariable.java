@@ -4,6 +4,8 @@
 
 package yapion.hierarchy;
 
+import yapion.annotations.YAPIONSave;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -11,10 +13,11 @@ import java.util.Objects;
 
 import static yapion.utils.ReferenceIDUtils.calc;
 
+@YAPIONSave(context = "*")
 public class YAPIONVariable {
 
-    private String name;
-    private YAPIONAny value;
+    private final String name;
+    private final YAPIONAny value;
 
     private static final String PATTERN = "[({\\[<)}\\]>]";
     private static final String REPLACEMENT = "\\\\$0";

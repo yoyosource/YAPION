@@ -16,4 +16,9 @@ public class StringBufferSerializer implements Serializer<StringBuffer> {
     public YAPIONAny serialize(StringBuffer object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(object.toString());
     }
+
+    @Override
+    public StringBuffer deserialize(YAPIONAny yapionAny) {
+        return new StringBuffer().append(((YAPIONValue<String>) yapionAny).get());
+    }
 }

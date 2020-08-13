@@ -21,4 +21,9 @@ public class DoubleSerializer implements Serializer<Double> {
     public YAPIONAny serialize(Double object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(object);
     }
+
+    @Override
+    public Double deserialize(YAPIONAny yapionAny) {
+        return ((YAPIONValue<Double>) yapionAny).get();
+    }
 }

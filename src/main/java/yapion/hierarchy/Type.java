@@ -4,6 +4,9 @@
 
 package yapion.hierarchy;
 
+import yapion.annotations.YAPIONSave;
+
+@YAPIONSave(context = "*")
 public enum Type {
 
     ANY(0x21b7bcb508370b96L, "ANY"),
@@ -14,8 +17,8 @@ public enum Type {
     POINTER(0x4e958af3539fb57cL, "PNR"),
     VALUE(0xf86bfba6285c9be2L, "VAL");
 
-    private long referenceValue;
-    private String name;
+    private final long referenceValue;
+    private final String name;
 
     Type(long referenceValue, String name) {
         this.referenceValue = referenceValue;

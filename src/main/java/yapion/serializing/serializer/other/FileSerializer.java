@@ -26,4 +26,9 @@ public class FileSerializer implements Serializer<File> {
         yapionObject.add(new YAPIONVariable("path", new YAPIONValue<>(object.getPath())));
         return yapionObject;
     }
+
+    @Override
+    public File deserialize(YAPIONAny yapionAny) {
+        return null;
+    }
 }

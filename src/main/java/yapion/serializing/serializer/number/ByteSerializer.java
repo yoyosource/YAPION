@@ -5,6 +5,8 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONSerializer;
 
+import java.math.BigDecimal;
+
 public class ByteSerializer implements Serializer<Byte> {
 
     @Override
@@ -20,5 +22,10 @@ public class ByteSerializer implements Serializer<Byte> {
     @Override
     public YAPIONAny serialize(Byte object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(object);
+    }
+
+    @Override
+    public Byte deserialize(YAPIONAny yapionAny) {
+        return ((YAPIONValue<Byte>) yapionAny).get();
     }
 }

@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types;
 
+import yapion.annotations.YAPIONSave;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
@@ -16,9 +17,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@YAPIONSave(context = "*")
 public class YAPIONArray extends YAPIONAny {
 
-    private List<YAPIONAny> array = new ArrayList<>();
+    private final List<YAPIONAny> array = new ArrayList<>();
 
     @Override
     public Type getType() {
@@ -75,7 +77,9 @@ public class YAPIONArray extends YAPIONAny {
 
     public void add(YAPIONAny yapionAny) {
         array.add(yapionAny);
-        yapionAny.setParent(this);
+        if (yapionAny != null) {
+            yapionAny.setParent(this);
+        }
     }
 
     @Override
@@ -98,7 +102,9 @@ public class YAPIONArray extends YAPIONAny {
             if (b) {
                 st.append(",");
             }
-            if (yapionAny.getType() == Type.VALUE) {
+            if (yapionAny == null) {
+                st.append("null");
+            } else if (yapionAny.getType() == Type.VALUE) {
                 st.append(yapionAny.toString(), 1, yapionAny.toString().length() - 1);
             } else {
                 st.append(yapionAny.toString());

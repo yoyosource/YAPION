@@ -21,4 +21,9 @@ public class IntegerSerializer implements Serializer<Integer> {
     public YAPIONAny serialize(Integer object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(object);
     }
+
+    @Override
+    public Integer deserialize(YAPIONAny yapionAny) {
+        return ((YAPIONValue<Integer>) yapionAny).get();
+    }
 }

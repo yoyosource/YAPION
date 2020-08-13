@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types;
 
+import yapion.annotations.YAPIONSave;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
@@ -17,6 +18,7 @@ import java.util.Objects;
 
 import static yapion.utils.ReferenceIDUtils.calc;
 
+@YAPIONSave(context = "*")
 public class YAPIONValue<T> extends YAPIONAny {
 
     private static final String[] allowedTypes = new String[]{
@@ -26,7 +28,7 @@ public class YAPIONValue<T> extends YAPIONAny {
             "java.lang.String", "java.lang.Character"
     };
 
-    private T value;
+    private final T value;
     String type;
 
     @Override
@@ -251,7 +253,7 @@ public class YAPIONValue<T> extends YAPIONAny {
         DOUBLE("D"),
         BIGDECIMAL("BD");
 
-        private String suffix;
+        private final String suffix;
 
         ParseType(String suffix) {
             this.suffix = suffix;

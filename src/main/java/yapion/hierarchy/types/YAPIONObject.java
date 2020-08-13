@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types;
 
+import yapion.annotations.YAPIONSave;
 import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
@@ -18,9 +19,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@YAPIONSave(context = "*")
 public class YAPIONObject extends YAPIONAny {
 
-    private List<YAPIONVariable> variables = new ArrayList<>();
+    private final List<YAPIONVariable> variables = new ArrayList<>();
 
     @Override
     public Type getType() {

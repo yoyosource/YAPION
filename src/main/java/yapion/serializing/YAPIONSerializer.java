@@ -74,6 +74,8 @@ public class YAPIONSerializer {
     public static void main(String[] args) {
         YAPIONObject yapionObject = serialize(new Test());
         System.out.println(yapionObject);
+        YAPIONObject yapionObject1 = serialize(yapionObject);
+        System.out.println(yapionObject1);
     }
 
     private static void multiTest() {

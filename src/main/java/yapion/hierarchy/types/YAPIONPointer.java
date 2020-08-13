@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types;
 
+import yapion.annotations.YAPIONSave;
 import yapion.exceptions.value.YAPIONPointerException;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
@@ -13,6 +14,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+@YAPIONSave(context = "*")
 public class YAPIONPointer extends YAPIONAny {
 
     @Override

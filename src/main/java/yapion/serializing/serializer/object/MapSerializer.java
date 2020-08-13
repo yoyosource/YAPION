@@ -28,4 +28,9 @@ public class MapSerializer implements Serializer<Map> {
         }
         return yapionMap;
     }
+
+    @Override
+    public Map deserialize(YAPIONAny yapionAny) {
+        return null;
+    }
 }

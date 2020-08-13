@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 
 public class StateManager {
 
-    private String state;
+    private final String state;
     private boolean emptyState = false;
 
     public StateManager(String state) {
@@ -23,10 +23,10 @@ public class StateManager {
     }
 
     private boolean is(String s) {
+        if (s.equals("*")) return true;
         if (!s.isEmpty() && emptyState) return false;
         if (emptyState) return true;
         if (s.isEmpty()) return true;
-        if (s.equals("*")) return true;
         return s.contains(state);
     }
 
@@ -71,6 +71,8 @@ public class StateManager {
             globalLoad = is(object.getClass().getDeclaredAnnotation(YAPIONLoad.class));
             if (is(object.getClass().getDeclaredAnnotation(YAPIONSaveExclude.class))) globalSave = false;
             globalSave = is(object.getClass().getDeclaredAnnotation(YAPIONSave.class));
+
+            // System.out.println(globalLoad + "   " + globalSave + "   false");
         }
 
         return new YAPIONInfo(globalLoad, globalSave, false);
@@ -107,6 +109,7 @@ public class StateManager {
                 if (is(yapionSaveExclude)) localSave = false;
                 localSave = is(yapionSave);
             }
+
             // System.out.println(globalLoad + " " + localLoad + "   " + localOptimize + "   " + globalSave + " " + localSave);
         }
 

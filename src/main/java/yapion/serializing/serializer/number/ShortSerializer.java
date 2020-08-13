@@ -21,4 +21,9 @@ public class ShortSerializer implements Serializer<Short> {
     public YAPIONAny serialize(Short object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(object);
     }
+
+    @Override
+    public Short deserialize(YAPIONAny yapionAny) {
+        return ((YAPIONValue<Short>) yapionAny).get();
+    }
 }

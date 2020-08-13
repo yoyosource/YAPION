@@ -27,4 +27,9 @@ public class ListSerializer implements Serializer<List> {
         }
         return yapionArray;
     }
+
+    @Override
+    public List deserialize(YAPIONAny yapionAny) {
+        return null;
+    }
 }
