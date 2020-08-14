@@ -63,11 +63,11 @@ public class YAPIONMap extends YAPIONAny {
 
             outputStream.write((id1 + ":" + id2).getBytes(StandardCharsets.UTF_8));
             outputStream.write(",".getBytes(StandardCharsets.UTF_8));
-            outputStream.write(("#" + id1 + "{@").getBytes(StandardCharsets.UTF_8));
+            outputStream.write(("#" + id1 + "{").getBytes(StandardCharsets.UTF_8));
             entry.getKey().toOutputStream(outputStream);
             outputStream.write("}".getBytes(StandardCharsets.UTF_8));
             outputStream.write(",".getBytes(StandardCharsets.UTF_8));
-            outputStream.write(("#" + id2 + "{@").getBytes(StandardCharsets.UTF_8));
+            outputStream.write(("#" + id2 + "{").getBytes(StandardCharsets.UTF_8));
             entry.getValue().toOutputStream(outputStream);
             outputStream.write("}".getBytes(StandardCharsets.UTF_8));
         }

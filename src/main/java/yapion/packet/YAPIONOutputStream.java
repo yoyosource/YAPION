@@ -1,44 +1,26 @@
 package yapion.packet;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONSerializer;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class YAPIONOutputStream extends OutputStream {
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
+public class YAPIONOutputStream {
 
-    public YAPIONOutputStream() {
-        super();
-    }
+    private final OutputStream outputStream;
 
-    @Override
-    public void write(byte[] b) throws IOException {
-        throw new IOException();
-    }
-
-    @Override
-    public void write(byte[] b, int off, int len) throws IOException {
-        throw new IOException();
-    }
-
-    @Override
-    public void flush() throws IOException {
-        super.flush();
-    }
-
-    @Override
-    public void close() throws IOException {
-        super.close();
-    }
-
-    @Override
-    public void write(int b) throws IOException {
-        throw new IOException();
+    public YAPIONOutputStream(OutputStream outputStream) {
+        this.outputStream = outputStream;
     }
 
     public void write(YAPIONObject yapionObject) throws IOException {
-        super.write(yapionObject.toString().getBytes());
+        yapionObject.toOutputStream(outputStream);
+        outputStream.flush();
     }
 
     public void write(Object object) throws IOException {
@@ -47,6 +29,10 @@ public class YAPIONOutputStream extends OutputStream {
 
     public void write(Object object, String state) throws IOException {
         write(YAPIONSerializer.serialize(object, state));
+    }
+
+    public void close() throws IOException {
+        outputStream.close();
     }
 
 }

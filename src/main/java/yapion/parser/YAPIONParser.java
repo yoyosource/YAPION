@@ -39,6 +39,8 @@ public class YAPIONParser {
     private String s;
     private InputStream inputStream;
 
+    private boolean finished = false;
+
     private int index = 0;
 
     private final TypeStack typeStack = new TypeStack();
@@ -102,18 +104,26 @@ public class YAPIONParser {
                 index = i;
 
                 parseStep(lastChar, c);
+                if (finished) {
+                    break;
+                }
             }
         } else if (inputStream != null) {
-            int i = 0;
-            while (inputStream.available() > 0) {
+            while (!finished) {
+                index++;
                 lastChar = c;
-                c = (char)inputStream.read();
-                index = i++;
+                int i = inputStream.read();
+                if (i == -1) continue;
+                c = (char)i;
 
                 parseStep(lastChar, c);
             }
         } else {
             throw new YAPIONParserException("null input");
+        }
+
+        if (typeStack.isNotEmpty()) {
+            throw new YAPIONParserException("");
         }
 
         parseFinish();
@@ -156,6 +166,9 @@ public class YAPIONParser {
                 pop(Type.OBJECT);
                 reset();
                 currentObject = currentObject.getParent();
+                if (typeStack.isEmpty()) {
+                    finished = true;
+                }
                 return;
             }
             if (c == '[') {
