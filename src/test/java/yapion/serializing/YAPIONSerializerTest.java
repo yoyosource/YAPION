@@ -122,7 +122,7 @@ public class YAPIONSerializerTest {
     @Test
     public void testPrimitive() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestPrimitive());
-        assertThat(yapionObject.toString(), is("{@type(yapion.serializing.YAPIONSerializerTest$TestPrimitive)b(0)B(0)s(0)S(0)i(0)I(0)l(0L)L(0L)d(0.0)D(0.0)f(0.0F)F(0.0F)bi(0BI)bd(0BD)c(' ')C(' ')string()stringB()stringb()file{@type(java.io.File)absolutePath(/Users/jojo/IdeaProjects/YAPION/~)name(~)parent(null)path(~)}}"));
+        assertThat(yapionObject.toString(), is("{@type(yapion.serializing.YAPIONSerializerTest$TestPrimitive)b(0)B(0)s(0)S(0)i(0)I(0)l(0L)L(0L)d(0.0)D(0.0)f(0.0F)F(0.0F)bi(0BI)bd(0BD)c(' ')C(' ')string()stringB()stringb()file{@type(java.io.File)absolutePath(/Users/jojo/IdeaProjects/YAPION/~)}}"));
     }
 
     @Test
