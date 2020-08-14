@@ -14,6 +14,8 @@ ext {
     jarName = "${group}-${version}.jar"
     libs = "${buildDir}/libs"
 
+    groupName = "${group}"
+
     publication = mayor + "." + minor + "." + patch
 }
 
@@ -146,7 +148,7 @@ task licenseProject {
     mustRunAfter classes
 
     doLast {
-        def command = "java -classpath ${buildDir}/classes/java/main system.LicenseSystem" + group + " ${buildDir}"
+        def command = "java -classpath ${buildDir}/classes/java/main system.LicenseSystem${groupName} ${buildDir}"
         def retval = command.execute().text
         print(retval)
     }

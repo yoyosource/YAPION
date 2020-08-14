@@ -1,6 +1,9 @@
+// SPDX-License-Identifier: Apache-2.0
+// YAPION
+// Copyright (C) 2019,2020 yoyosource
+
 package yapion.utils;
 
-import sun.jvm.hotspot.tools.jcore.ClassWriter;
 import yapion.exceptions.utils.YAPIONConstructInstanceException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 
