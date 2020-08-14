@@ -12,6 +12,7 @@ import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.*;
+import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -221,19 +222,7 @@ public class YAPIONParser {
             long id = yapionPointer.getPointerID();
             YAPIONObject yapionObject = yapionObjectMap.get(id);
             if (yapionObject == null) continue;
-            try {
-                Method method = yapionPointer.getClass().getDeclaredMethod("setYAPIONObject", YAPIONObject.class);
-                method.setAccessible(true);
-                method.invoke(yapionPointer, yapionObject);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            ReflectionsUtils.invokeMethod("setYAPIONObject", yapionPointer, yapionObject);
         }
     }
 

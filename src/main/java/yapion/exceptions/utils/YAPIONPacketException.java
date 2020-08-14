@@ -1,4 +1,4 @@
-package yapion.exceptions.packet;
+package yapion.exceptions.utils;
 
 import yapion.exceptions.YAPIONException;
 

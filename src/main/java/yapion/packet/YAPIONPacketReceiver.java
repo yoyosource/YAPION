@@ -2,7 +2,7 @@ package yapion.packet;
 
 import yapion.annotations.YAPIONLoadExclude;
 import yapion.annotations.YAPIONSaveExclude;
-import yapion.exceptions.packet.YAPIONPacketException;
+import yapion.exceptions.utils.YAPIONPacketException;
 
 import java.util.HashMap;
 import java.util.Map;
