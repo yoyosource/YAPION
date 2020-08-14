@@ -5,6 +5,7 @@ import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.Serializer;
+import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 @YAPIONSaveExclude(context = "*")
@@ -27,7 +28,7 @@ public class IntegerSerializer implements Serializer<Integer> {
     }
 
     @Override
-    public Integer deserialize(YAPIONAny yapionAny) {
+    public Integer deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         return ((YAPIONValue<Integer>) yapionAny).get();
     }
 }

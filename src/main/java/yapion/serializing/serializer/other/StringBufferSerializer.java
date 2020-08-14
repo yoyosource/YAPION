@@ -5,6 +5,7 @@ import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.Serializer;
+import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 @YAPIONSaveExclude(context = "*")
@@ -22,7 +23,7 @@ public class StringBufferSerializer implements Serializer<StringBuffer> {
     }
 
     @Override
-    public StringBuffer deserialize(YAPIONAny yapionAny) {
+    public StringBuffer deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         return new StringBuffer().append(((YAPIONValue<String>) yapionAny).get());
     }
 }

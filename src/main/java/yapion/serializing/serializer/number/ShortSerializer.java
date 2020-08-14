@@ -5,6 +5,7 @@ import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.Serializer;
+import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 @YAPIONSaveExclude(context = "*")
@@ -27,7 +28,7 @@ public class ShortSerializer implements Serializer<Short> {
     }
 
     @Override
-    public Short deserialize(YAPIONAny yapionAny) {
+    public Short deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         return ((YAPIONValue<Short>) yapionAny).get();
     }
 }

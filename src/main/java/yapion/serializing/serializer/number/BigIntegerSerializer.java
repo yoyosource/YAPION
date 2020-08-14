@@ -5,6 +5,7 @@ import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.Serializer;
+import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 import java.math.BigInteger;
@@ -24,7 +25,7 @@ public class BigIntegerSerializer implements Serializer<BigInteger> {
     }
 
     @Override
-    public BigInteger deserialize(YAPIONAny yapionAny) {
+    public BigInteger deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         return ((YAPIONValue<BigInteger>) yapionAny).get();
     }
 }

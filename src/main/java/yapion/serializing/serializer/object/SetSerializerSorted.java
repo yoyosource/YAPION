@@ -8,28 +8,31 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.util.List;
+import java.util.Iterator;
+import java.util.SortedSet;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class ListSerializer implements Serializer<List> {
+public class SetSerializerSorted implements Serializer<SortedSet> {
 
     @Override
     public String type() {
-        return "java.util.List";
+        return "java.util.SortedSet";
     }
 
     @Override
-    public YAPIONAny serialize(List object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAny serialize(SortedSet object, YAPIONSerializer yapionSerializer) {
+        Iterator iterator = object.iterator();
         YAPIONArray yapionArray = new YAPIONArray();
-        for (int i = 0; i < object.size(); i++) {
-            yapionArray.add(yapionSerializer.parse(object.get(i), yapionSerializer));
+        while (iterator.hasNext()) {
+            yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
         }
         return yapionArray;
     }
 
     @Override
-    public List deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public SortedSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         return null;
     }
+
 }

@@ -16,6 +16,6 @@ public interface Serializer<T> {
         return new String[0];
     }
     YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer);
-    T deserialize(YAPIONAny yapionAny);
+    T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer);
 
 }

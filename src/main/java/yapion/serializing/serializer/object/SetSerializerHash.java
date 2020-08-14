@@ -8,28 +8,31 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Iterator;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class ListSerializer implements Serializer<List> {
+public class SetSerializerHash implements Serializer<HashSet> {
 
     @Override
     public String type() {
-        return "java.util.List";
+        return "java.util.HashSet";
     }
 
     @Override
-    public YAPIONAny serialize(List object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAny serialize(HashSet object, YAPIONSerializer yapionSerializer) {
+        Iterator iterator = object.iterator();
         YAPIONArray yapionArray = new YAPIONArray();
-        for (int i = 0; i < object.size(); i++) {
-            yapionArray.add(yapionSerializer.parse(object.get(i), yapionSerializer));
+        while (iterator.hasNext()) {
+            yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
         }
         return yapionArray;
     }
 
     @Override
-    public List deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public HashSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         return null;
     }
+
 }

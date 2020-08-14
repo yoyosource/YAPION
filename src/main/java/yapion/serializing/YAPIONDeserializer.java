@@ -6,9 +6,7 @@ import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.serializing.serializer.number.*;
-import yapion.serializing.serializer.object.ListSerializer;
-import yapion.serializing.serializer.object.MapSerializer;
-import yapion.serializing.serializer.object.SetSerializer;
+import yapion.serializing.serializer.object.*;
 import yapion.serializing.serializer.other.*;
 
 import java.util.HashMap;
@@ -41,8 +39,18 @@ public class YAPIONDeserializer {
 
         // Objects
         add(new ListSerializer());
+        add(new ListSerializerArray());
+        add(new ListSerializerLinked());
+
         add(new MapSerializer());
+        add(new MapSerializerHash());
+        add(new MapSerializerLinkedHash());
+        add(new MapSerializerTree());
+
         add(new SetSerializer());
+        add(new SetSerializerHash());
+        add(new SetSerializerLinkedHash());
+        add(new SetSerializerSorted());
     }
 
     private static void add(Serializer<?> serializer) {

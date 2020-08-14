@@ -11,9 +11,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.serializer.number.*;
-import yapion.serializing.serializer.object.ListSerializer;
-import yapion.serializing.serializer.object.MapSerializer;
-import yapion.serializing.serializer.object.SetSerializer;
+import yapion.serializing.serializer.object.*;
 import yapion.serializing.serializer.other.*;
 
 import java.lang.reflect.Field;
@@ -48,8 +46,18 @@ public class YAPIONSerializer {
 
         // Objects
         add(new ListSerializer());
+        add(new ListSerializerArray());
+        add(new ListSerializerLinked());
+
         add(new MapSerializer());
+        add(new MapSerializerHash());
+        add(new MapSerializerLinkedHash());
+        add(new MapSerializerTree());
+
         add(new SetSerializer());
+        add(new SetSerializerHash());
+        add(new SetSerializerLinkedHash());
+        add(new SetSerializerSorted());
     }
 
     private static void add(Serializer<?> serializer) {
@@ -144,6 +152,9 @@ public class YAPIONSerializer {
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     public YAPIONSerializer parse(Object object) {
         if (!stateManager.is(object).save) {
+            return this;
+        }
+        if (object.getClass().getSimpleName().contains("$")) {
             return this;
         }
         YAPIONObject yapionObject = new YAPIONObject();

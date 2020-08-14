@@ -5,6 +5,7 @@ import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.serializing.Serializer;
+import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 import java.util.Iterator;
@@ -20,12 +21,6 @@ public class SetSerializer implements Serializer<Set> {
     }
 
     @Override
-    public String[] otherTypes() {
-        //return new String[]{"java.util.SortedSet"};
-        return new String[]{"java.util.HashSet", "java.util.LinkedHashSet", "java.util.SortedSet"};
-    }
-
-    @Override
     public YAPIONAny serialize(Set object, YAPIONSerializer yapionSerializer) {
         Iterator iterator = object.iterator();
         YAPIONArray yapionArray = new YAPIONArray();
@@ -36,7 +31,7 @@ public class SetSerializer implements Serializer<Set> {
     }
 
     @Override
-    public Set deserialize(YAPIONAny yapionAny) {
+    public Set deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         return null;
     }
 }
