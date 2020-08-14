@@ -4,16 +4,20 @@
 
 package yapion.parser;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.Type;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class TypeStack {
 
     private int pointer = -1;
     private static final int depth = 65536;
-    private Type[] stack = new Type[depth];
-    private long[] timeStack = new long[depth];
+    private final Type[] stack = new Type[depth];
+    private final long[] timeStack = new long[depth];
 
     public void push(Type type) {
         pointer++;

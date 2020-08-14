@@ -4,8 +4,12 @@
 
 package yapion.parser;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONVariable;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class YAPIONParserMapObject {
 
     public final YAPIONVariable variable;

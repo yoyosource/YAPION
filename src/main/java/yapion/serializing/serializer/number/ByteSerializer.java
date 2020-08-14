@@ -1,12 +1,14 @@
 package yapion.serializing.serializer.number;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.math.BigDecimal;
-
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class ByteSerializer implements Serializer<Byte> {
 
     @Override

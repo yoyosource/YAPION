@@ -1,10 +1,14 @@
 package yapion.serializing.serializer.other;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONSerializer;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class CharacterSerializer implements Serializer<Character> {
 
     @Override

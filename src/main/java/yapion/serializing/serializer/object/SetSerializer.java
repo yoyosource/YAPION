@@ -1,5 +1,7 @@
 package yapion.serializing.serializer.object;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.serializing.Serializer;
@@ -7,8 +9,9 @@ import yapion.serializing.YAPIONSerializer;
 
 import java.util.Iterator;
 import java.util.Set;
-import java.util.SortedSet;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class SetSerializer implements Serializer<Set> {
 
     @Override

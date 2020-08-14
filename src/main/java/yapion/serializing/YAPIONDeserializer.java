@@ -1,7 +1,8 @@
 package yapion.serializing;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
-import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.serializing.serializer.number.*;
@@ -13,6 +14,8 @@ import yapion.serializing.serializer.other.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class YAPIONDeserializer {
 
     private static final Map<String, Serializer<?>> serializerMap = new HashMap<>();

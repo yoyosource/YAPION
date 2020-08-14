@@ -1,5 +1,7 @@
 package yapion.serializing.serializer.object;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.serializing.Serializer;
@@ -7,6 +9,8 @@ import yapion.serializing.YAPIONSerializer;
 
 import java.util.List;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class ListSerializer implements Serializer<List> {
 
     @Override

@@ -1,6 +1,8 @@
 package yapion.serializing;
 
 import test.Test;
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
@@ -8,19 +10,19 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.parser.YAPIONParser;
-import yapion.serializing.serializer.object.SetSerializer;
-import yapion.serializing.serializer.other.*;
+import yapion.serializing.serializer.number.*;
 import yapion.serializing.serializer.object.ListSerializer;
 import yapion.serializing.serializer.object.MapSerializer;
-import yapion.serializing.serializer.number.*;
+import yapion.serializing.serializer.object.SetSerializer;
+import yapion.serializing.serializer.other.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class YAPIONSerializer {
 
     private static final Map<String, Serializer<?>> serializerMap = new HashMap<>();
@@ -76,6 +78,10 @@ public class YAPIONSerializer {
         System.out.println(yapionObject);
         YAPIONObject yapionObject1 = serialize(yapionObject);
         System.out.println(yapionObject1);
+        YAPIONObject yapionObject2 = serialize(yapionObject1);
+        System.out.println(yapionObject2);
+        YAPIONObject yapionObject3 = serialize(yapionObject2);
+        System.out.println(yapionObject3);
     }
 
     private static void multiTest() {

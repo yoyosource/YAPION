@@ -5,6 +5,8 @@ import yapion.exceptions.YAPIONException;
 
 import java.lang.reflect.Field;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class StateManager {
 
     private final String state;

@@ -4,6 +4,8 @@
 
 package yapion.parser;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.exceptions.utils.YAPIONIOException;
 import yapion.hierarchy.Type;
@@ -20,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class YAPIONParser {
 
     public static YAPIONObject parse(String s) {

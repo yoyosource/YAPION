@@ -4,10 +4,18 @@
 
 package yapion.utils;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class RecursionUtils {
+
+    private RecursionUtils() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public enum RecursionType {
         DIRECT,
@@ -15,6 +23,8 @@ public class RecursionUtils {
         NONE
     }
 
+    @YAPIONSaveExclude(context = "*")
+    @YAPIONLoadExclude(context = "*")
     public static class RecursionResult {
         private final RecursionType recursionType;
         private final YAPIONAny yapionAny;

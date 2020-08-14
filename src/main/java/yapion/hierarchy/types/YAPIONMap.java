@@ -5,6 +5,7 @@
 package yapion.hierarchy.types;
 
 import yapion.annotations.YAPIONSave;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
@@ -21,7 +22,9 @@ import java.util.*;
 public class YAPIONMap extends YAPIONAny {
 
     private final Map<YAPIONAny, YAPIONAny> variables = new LinkedHashMap<>();
+    @YAPIONSaveExclude(context = "*")
     private final List<YAPIONParserMapMapping> mappingList = new ArrayList<>();
+    @YAPIONSaveExclude(context = "*")
     private final Map<String, YAPIONAny> mappingVariables = new LinkedHashMap<>();
 
     @Override

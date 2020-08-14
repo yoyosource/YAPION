@@ -1,5 +1,7 @@
 package yapion.serializing.serializer.other;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
@@ -9,6 +11,8 @@ import yapion.serializing.YAPIONSerializer;
 
 import java.io.File;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class FileSerializer implements Serializer<File> {
 
     @Override

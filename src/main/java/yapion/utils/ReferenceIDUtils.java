@@ -4,11 +4,20 @@
 
 package yapion.utils;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class ReferenceIDUtils {
+
+    private ReferenceIDUtils() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static long calc(String s) {
         try {
