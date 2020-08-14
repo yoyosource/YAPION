@@ -41,6 +41,10 @@ public class YAPIONPacket {
         return payload.get(key);
     }
 
+    public String getType() {
+        return type;
+    }
+
     public long length() {
         return getYAPION().toString().length();
     }

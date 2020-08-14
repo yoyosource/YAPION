@@ -1,13 +1,12 @@
 package yapion.packet;
 
-import test.Test;
 import yapion.annotations.YAPIONLoadExclude;
 import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
-import yapion.serializing.YAPIONSerializer;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
