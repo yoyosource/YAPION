@@ -1,10 +1,14 @@
 package yapion.packet;
 
+import yapion.annotations.YAPIONLoadExclude;
+import yapion.annotations.YAPIONSaveExclude;
 import yapion.exceptions.packet.YAPIONPacketException;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@YAPIONLoadExclude(context = "*")
+@YAPIONSaveExclude(context = "*")
 public class YAPIONPacketReceiver {
 
     private final Map<String, YAPIONPacketHandler> handlerMap = new HashMap<>();
