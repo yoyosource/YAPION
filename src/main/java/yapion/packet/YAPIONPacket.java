@@ -62,6 +62,10 @@ public class YAPIONPacket {
         return getYAPION();
     }
 
+    public String toSendString() {
+        return getYAPION().toString();
+    }
+
     @Override
     public String toString() {
         return "YAPIONPacket{" +
