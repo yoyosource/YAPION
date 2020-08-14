@@ -6,7 +6,6 @@ package yapion.serializing;
 
 import yapion.annotations.YAPIONLoadExclude;
 import yapion.annotations.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.serializing.serializer.number.*;
@@ -72,31 +71,31 @@ public class YAPIONDeserializer {
         }
     }
 
-    private final Object object;
-    private YAPIONObject yapionObject;
+    private Object object;
+    private final YAPIONObject yapionObject;
     private final StateManager stateManager;
 
-    private Map<Object, YAPIONPointer> pointerMap = new HashMap<>();
+    private Map<YAPIONPointer, Object> pointerMap = new HashMap<>();
 
     public static void main(String[] args) {
 
     }
 
-    public static Object deserialize(YAPIONAny yapionAny) {
-        return deserialize(yapionAny, "");
+    public static Object deserialize(YAPIONObject yapionObject) {
+        return deserialize(yapionObject, "");
     }
 
-    public static Object deserialize(YAPIONAny yapionAny, String state) {
-        return new YAPIONSerializer(yapionAny, state).parse().getYAPIONObject();
+    public static Object deserialize(YAPIONObject yapionObject, String state) {
+        return new YAPIONSerializer(yapionObject, state).parse().getYAPIONObject();
     }
 
-    public YAPIONDeserializer(YAPIONAny yapionAny, String state) {
+    public YAPIONDeserializer(YAPIONObject yapionObject, String state) {
         stateManager = new StateManager(state);
-        this.object = yapionAny;
+        this.yapionObject = yapionObject;
     }
 
-    private YAPIONDeserializer(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        this.object = yapionAny;
+    private YAPIONDeserializer(YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
+        this.yapionObject = yapionObject;
         this.stateManager = yapionDeserializer.stateManager;
         this.pointerMap = yapionDeserializer.pointerMap;
     }

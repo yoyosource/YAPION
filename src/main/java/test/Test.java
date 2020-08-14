@@ -4,6 +4,7 @@
 
 package test;
 
+import yapion.annotations.YAPIONDeserializeType;
 import yapion.annotations.YAPIONOptimize;
 import yapion.annotations.YAPIONSave;
 
@@ -17,6 +18,7 @@ public class Test {
 
     public transient volatile double i = 10.0;
 
+    @YAPIONDeserializeType(type = ArrayList.class)
     private final List<String> strings = new ArrayList<>();
     private final String[] strings2 = new String[4];
     //private String[][] strings3 = new String[3][3];
@@ -24,7 +26,9 @@ public class Test {
 
     private static final int d = 0;
 
+    @YAPIONDeserializeType(type = HashMap.class)
     private final Map<String, String> stringStringMap = new HashMap<>();
+    @YAPIONDeserializeType(type = HashMap.class)
     private final Map<Hugo, String> hugoStringMap = new HashMap<>();
     private final HashMap<String, String> hashMap = new HashMap<>();
     private final LinkedHashMap<Integer, String> linkedHashMap = new LinkedHashMap<>();
