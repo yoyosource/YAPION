@@ -51,6 +51,10 @@ public class YAPIONPointer extends YAPIONAny {
         this.yapionObject = yapionObject;
     }
 
+    private YAPIONObject getYAPIONObject() {
+        return yapionObject;
+    }
+
     public long getPointerID() {
         if (yapionObject != null) {
             pointerID = yapionObject.referenceValue();

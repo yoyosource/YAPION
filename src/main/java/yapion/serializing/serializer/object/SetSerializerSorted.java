@@ -12,6 +12,7 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
+import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.SortedSet;
 
@@ -35,7 +36,7 @@ public class SetSerializerSorted implements Serializer<SortedSet> {
     }
 
     @Override
-    public SortedSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public SortedSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
         return null;
     }
 

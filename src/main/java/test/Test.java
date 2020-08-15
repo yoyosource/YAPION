@@ -5,6 +5,7 @@
 package test;
 
 import yapion.annotations.YAPIONDeserializeType;
+import yapion.annotations.YAPIONLoad;
 import yapion.annotations.YAPIONOptimize;
 import yapion.annotations.YAPIONSave;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.*;
 
 @YAPIONSave
+@YAPIONLoad
 public class Test {
 
     public transient volatile double i = 10.0;
@@ -21,8 +23,8 @@ public class Test {
     @YAPIONDeserializeType(type = ArrayList.class)
     private final List<String> strings = new ArrayList<>();
     private final String[] strings2 = new String[4];
-    //private String[][] strings3 = new String[3][3];
-    //private Hugo[][] hugos = new Hugo[4][4];
+    private String[][] strings3 = new String[3][3];
+    private Hugo[][] hugos = new Hugo[4][4];
 
     private static final int d = 0;
 
@@ -41,12 +43,12 @@ public class Test {
         strings.add("Hello WOrld!!!!");
 
         strings2[0] = "TEST";
-        //strings3[0][0] = "TEST";
+        strings3[0][0] = "TEST";
 
-        //hugos[0][0] = new Hugo();
-        //hugos[1][1] = new Hugo(this);
-        //hugos[2][2] = new Hugo();
-        //hugos[3][3] = new Hugo(this);
+        hugos[0][0] = new Hugo();
+        hugos[1][1] = new Hugo(this);
+        hugos[2][2] = new Hugo();
+        hugos[3][3] = new Hugo(this);
 
 
         stringStringMap.put("Hello", "Hello2");
@@ -80,6 +82,7 @@ public class Test {
     private final Double test = 0.0;
 
     @YAPIONSave
+    @YAPIONLoad
     private class Hugo {
 
         public int i = 0;
@@ -102,6 +105,7 @@ public class Test {
         }
 
         @YAPIONSave
+        @YAPIONLoad
         private class Hugo2 {
 
             private final int i = 0;
@@ -109,5 +113,4 @@ public class Test {
         }
 
     }
-
 }

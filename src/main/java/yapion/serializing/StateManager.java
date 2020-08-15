@@ -70,6 +70,15 @@ public class StateManager {
     private boolean localOptimize = false;
     private boolean localSave = false;
 
+    public YAPIONInfo is(Class<?> clazz) {
+        if (is(clazz.getDeclaredAnnotation(YAPIONLoadExclude.class))) globalLoad = false;
+        globalLoad = is(clazz.getDeclaredAnnotation(YAPIONLoad.class));
+        if (is(clazz.getDeclaredAnnotation(YAPIONSaveExclude.class))) globalSave = false;
+        globalSave = is(clazz.getDeclaredAnnotation(YAPIONSave.class));
+
+        return new YAPIONInfo(globalLoad, globalSave);
+    }
+
     public YAPIONInfo is(Object object) {
         if (this.object == null || this.object != object) {
             this.object = object;
@@ -81,7 +90,7 @@ public class StateManager {
             // System.out.println(globalLoad + "   " + globalSave + "   false");
         }
 
-        return new YAPIONInfo(globalLoad, globalSave, false);
+        return new YAPIONInfo(globalLoad, globalSave);
     }
 
     public YAPIONInfo is(Object object, Field field) {
@@ -127,6 +136,12 @@ public class StateManager {
         public final boolean load;
         public final boolean save;
         public final boolean optimize;
+
+        private YAPIONInfo(boolean load, boolean save) {
+            this.load = load;
+            this.save = save;
+            this.optimize = false;
+        }
 
         private YAPIONInfo(boolean load, boolean save, boolean optimize) {
             this.load = load;

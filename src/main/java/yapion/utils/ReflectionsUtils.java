@@ -43,9 +43,6 @@ public class ReflectionsUtils {
     }
 
     public static Object constructInstance(String className, Object o) {
-        if (className.contains("$")) {
-            throw new YAPIONConstructInstanceException();
-        }
         try {
             Class<?> clazz = Class.forName(className);
             Constructor<?> constructor;
@@ -55,7 +52,11 @@ public class ReflectionsUtils {
                 constructor = clazz.getDeclaredConstructor(o.getClass());
             }
             constructor.setAccessible(true);
-            return constructor.newInstance();
+            if (o == null) {
+                return constructor.newInstance();
+            } else {
+                return constructor.newInstance(o);
+            }
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             throw new YAPIONReflectionException(e.getMessage(), e.getCause());
         }

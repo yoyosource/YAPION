@@ -12,6 +12,8 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
+import java.lang.reflect.Field;
+
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 public class IntegerSerializer implements Serializer<Integer> {
@@ -32,7 +34,7 @@ public class IntegerSerializer implements Serializer<Integer> {
     }
 
     @Override
-    public Integer deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public Integer deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
         return ((YAPIONValue<Integer>) yapionAny).get();
     }
 }

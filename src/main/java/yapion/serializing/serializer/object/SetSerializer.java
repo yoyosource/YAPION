@@ -12,6 +12,7 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
+import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -35,7 +36,7 @@ public class SetSerializer implements Serializer<Set> {
     }
 
     @Override
-    public Set deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public Set deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
         return null;
     }
 }

@@ -12,7 +12,10 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -33,8 +36,13 @@ public class ListSerializerLinked implements Serializer<LinkedList> {
     }
 
     @Override
-    public LinkedList deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        return null;
+    public LinkedList deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+        YAPIONArray yapionArray = (YAPIONArray)yapionAny;
+        LinkedList<Object> list = new LinkedList<>();
+        for (int i = 0; i < yapionArray.length(); i++) {
+            list.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer, field));
+        }
+        return list;
     }
 
 }

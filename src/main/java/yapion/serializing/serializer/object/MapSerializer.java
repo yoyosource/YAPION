@@ -7,11 +7,15 @@ package yapion.serializing.serializer.object;
 import yapion.annotations.YAPIONLoadExclude;
 import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 @YAPIONSaveExclude(context = "*")
@@ -34,7 +38,12 @@ public class MapSerializer implements Serializer<Map> {
     }
 
     @Override
-    public Map deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        return null;
+    public Map deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+        YAPIONMap yapionMap = (YAPIONMap)yapionAny;
+        HashMap<Object, Object> map = new HashMap();
+        for (YAPIONAny key : yapionMap.getKeys()) {
+            map.put(yapionDeserializer.parse(key, yapionDeserializer, field), yapionDeserializer.parse(yapionMap.get(key), yapionDeserializer, field));
+        }
+        return map;
     }
 }

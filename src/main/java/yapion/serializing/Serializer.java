@@ -8,6 +8,8 @@ import yapion.annotations.YAPIONLoadExclude;
 import yapion.annotations.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 
+import java.lang.reflect.Field;
+
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 public interface Serializer<T> {
@@ -16,10 +18,7 @@ public interface Serializer<T> {
     default String primitiveType() {
         return "";
     }
-    default String[] otherTypes() {
-        return new String[0];
-    }
     YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer);
-    T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer);
+    T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field);
 
 }

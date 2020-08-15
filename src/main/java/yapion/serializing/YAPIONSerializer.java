@@ -69,14 +69,6 @@ public class YAPIONSerializer {
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
             serializerMap.put(serializer.primitiveType(), serializer);
         }
-        if (serializer.otherTypes() != null && serializer.otherTypes().length != 0) {
-            for (String s : serializer.otherTypes()) {
-                if (s == null) continue;
-                if (s.isEmpty()) continue;
-                if (s.trim().isEmpty()) continue;
-                serializerMap.put(s, serializer);
-            }
-        }
     }
 
     private final Object object;

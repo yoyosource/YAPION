@@ -12,6 +12,7 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
+import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
@@ -35,7 +36,7 @@ public class SetSerializerLinkedHash implements Serializer<LinkedHashSet> {
     }
 
     @Override
-    public LinkedHashSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public LinkedHashSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
         return null;
     }
 

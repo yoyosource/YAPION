@@ -12,6 +12,8 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 @YAPIONSaveExclude(context = "*")
@@ -33,7 +35,12 @@ public class ListSerializer implements Serializer<List> {
     }
 
     @Override
-    public List deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        return null;
+    public List<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+        YAPIONArray yapionArray = (YAPIONArray)yapionAny;
+        List<Object> list = new ArrayList<>(yapionArray.length());
+        for (int i = 0; i < yapionArray.length(); i++) {
+            list.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer, field));
+        }
+        return list;
     }
 }

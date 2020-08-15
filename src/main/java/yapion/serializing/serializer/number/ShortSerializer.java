@@ -12,6 +12,8 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
+import java.lang.reflect.Field;
+
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 public class ShortSerializer implements Serializer<Short> {
@@ -32,7 +34,7 @@ public class ShortSerializer implements Serializer<Short> {
     }
 
     @Override
-    public Short deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public Short deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
         return ((YAPIONValue<Short>) yapionAny).get();
     }
 }
