@@ -82,7 +82,7 @@ public class StateManager {
         if (is(clazz.getDeclaredAnnotation(YAPIONSaveExclude.class))) globalSave = false;
         globalSave = is(clazz.getDeclaredAnnotation(YAPIONSave.class));
 
-        yapionData = object.getClass().getDeclaredAnnotation(YAPIONData.class);
+        yapionData = clazz.getDeclaredAnnotation(YAPIONData.class);
         if (yapionData != null) {
             globalLoad = is(yapionData);
             globalSave = is(yapionData);

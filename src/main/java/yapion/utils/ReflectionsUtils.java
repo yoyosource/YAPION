@@ -35,14 +35,26 @@ public class ReflectionsUtils {
         }
     }
 
-    public static Object constructObject(String className) {
+    public static Object constructObjectObjenesis(String className) {
         try {
-            if (Class.forName(className).getDeclaredAnnotation(YAPIONData.class) != null) {
-                ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
-                return objenesisBase.newInstance(Class.forName(className));
-            }
+            ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
+            return objenesisBase.newInstance(Class.forName(className));
         } catch (ClassNotFoundException e) {
+            return null;
+        }
+    }
 
+    public static boolean constructObjenesis(String className) {
+        try {
+            return Class.forName(className).getDeclaredAnnotation(YAPIONData.class) != null;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    public static Object constructObject(String className) {
+        if (constructObjenesis(className)) {
+            return constructObjectObjenesis(className);
         }
         Object o = null;
         if (className.contains("$")) {
