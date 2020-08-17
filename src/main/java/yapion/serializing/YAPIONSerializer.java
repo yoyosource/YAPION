@@ -17,6 +17,7 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.serializer.number.*;
 import yapion.serializing.serializer.object.*;
 import yapion.serializing.serializer.other.*;
+import yapion.utils.ModifierUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -61,7 +62,6 @@ public class YAPIONSerializer {
         add(new SetSerializer());
         add(new SetSerializerHash());
         add(new SetSerializerLinkedHash());
-        add(new SetSerializerSorted());
     }
 
     private static void add(Serializer<?> serializer) {
@@ -163,7 +163,7 @@ public class YAPIONSerializer {
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
-            if (Modifier.toString(field.getModifiers()).contains("static")) {
+            if (ModifierUtils.removed(field)) {
                 continue;
             }
             StateManager.YAPIONInfo yapionInfo = stateManager.is(object, field);

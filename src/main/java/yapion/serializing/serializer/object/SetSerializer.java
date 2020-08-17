@@ -13,8 +13,7 @@ import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 import java.lang.reflect.Field;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -37,6 +36,11 @@ public class SetSerializer implements Serializer<Set> {
 
     @Override
     public Set deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
-        return null;
+        YAPIONArray yapionArray = (YAPIONArray)yapionAny;
+        Set<Object> set = new HashSet<>(yapionArray.length());
+        for (int i = 0; i < yapionArray.length(); i++) {
+            set.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer, field));
+        }
+        return set;
     }
 }

@@ -15,6 +15,7 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.serializer.number.*;
 import yapion.serializing.serializer.object.*;
 import yapion.serializing.serializer.other.*;
+import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
@@ -63,7 +64,6 @@ public class YAPIONDeserializer {
         add(new SetSerializer());
         add(new SetSerializerHash());
         add(new SetSerializerLinkedHash());
-        add(new SetSerializerSorted());
     }
 
     private static void add(Serializer<?> serializer) {
@@ -108,7 +108,7 @@ public class YAPIONDeserializer {
 
     public Object parse(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
         if (yapionAny instanceof YAPIONPointer) {
-            Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", (YAPIONPointer)yapionAny);
+            Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", yapionAny);
             if (!objectOptional.isPresent()) {
                 return null;
             }
@@ -152,7 +152,7 @@ public class YAPIONDeserializer {
             Field[] fields = object.getClass().getDeclaredFields();
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (Modifier.toString(field.getModifiers()).contains("static")) {
+                if (ModifierUtils.removed(field)) {
                     continue;
                 }
                 StateManager.YAPIONInfo yapionInfo = stateManager.is(object, field);

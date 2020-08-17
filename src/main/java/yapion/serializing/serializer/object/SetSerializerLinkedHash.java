@@ -13,8 +13,10 @@ import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -37,7 +39,12 @@ public class SetSerializerLinkedHash implements Serializer<LinkedHashSet> {
 
     @Override
     public LinkedHashSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
-        return null;
+        YAPIONArray yapionArray = (YAPIONArray)yapionAny;
+        LinkedHashSet<Object> set = new LinkedHashSet<>(yapionArray.length());
+        for (int i = 0; i < yapionArray.length(); i++) {
+            set.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer, field));
+        }
+        return set;
     }
 
 }
