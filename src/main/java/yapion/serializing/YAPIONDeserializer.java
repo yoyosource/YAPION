@@ -155,9 +155,7 @@ public class YAPIONDeserializer {
                 if (ModifierUtils.removed(field)) {
                     continue;
                 }
-                StateManager.YAPIONInfo yapionInfo = stateManager.is(object, field);
-                if (!yapionInfo.load) continue;
-
+                if (!stateManager.is(object, field).load) continue;
                 if (yapionObject.getVariable(field.getName()) == null) continue;
 
                 YAPIONAny yapionAny = yapionObject.getVariable(field.getName()).getValue();
