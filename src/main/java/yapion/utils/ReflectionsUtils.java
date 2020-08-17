@@ -4,7 +4,12 @@
 
 package yapion.utils;
 
-import yapion.exceptions.utils.YAPIONConstructInstanceException;
+import org.objenesis.Objenesis;
+import org.objenesis.ObjenesisBase;
+import org.objenesis.ObjenesisStd;
+import org.objenesis.strategy.StdInstantiatorStrategy;
+import system.ObjenesisTest;
+import yapion.annotations.YAPIONData;
 import yapion.exceptions.utils.YAPIONReflectionException;
 
 import java.lang.reflect.Constructor;
@@ -34,6 +39,14 @@ public class ReflectionsUtils {
     }
 
     public static Object constructObject(String className) {
+        try {
+            if (Class.forName(className).getDeclaredAnnotation(YAPIONData.class) != null) {
+                ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
+                return objenesisBase.newInstance(Class.forName(className));
+            }
+        } catch (ClassNotFoundException e) {
+
+        }
         Object o = null;
         if (className.contains("$")) {
             String cName = className.substring(0, className.lastIndexOf('$'));

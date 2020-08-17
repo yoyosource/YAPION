@@ -61,9 +61,15 @@ public class StateManager {
         return is(annotation.context());
     }
 
+    public boolean is(YAPIONData annotation) {
+        if (annotation == null) return false;
+        return is(annotation.context());
+    }
+
     private Object object;
     private boolean globalLoad = false;
     private boolean globalSave = false;
+    private YAPIONData yapionData = null;
 
     private Field field;
     private boolean localLoad = false;
@@ -76,6 +82,12 @@ public class StateManager {
         if (is(clazz.getDeclaredAnnotation(YAPIONSaveExclude.class))) globalSave = false;
         globalSave = is(clazz.getDeclaredAnnotation(YAPIONSave.class));
 
+        yapionData = object.getClass().getDeclaredAnnotation(YAPIONData.class);
+        if (yapionData != null) {
+            globalLoad = is(yapionData);
+            globalSave = is(yapionData);
+        }
+
         return new YAPIONInfo(globalLoad, globalSave);
     }
 
@@ -87,6 +99,12 @@ public class StateManager {
             if (is(object.getClass().getDeclaredAnnotation(YAPIONSaveExclude.class))) globalSave = false;
             globalSave = is(object.getClass().getDeclaredAnnotation(YAPIONSave.class));
 
+            yapionData = object.getClass().getDeclaredAnnotation(YAPIONData.class);
+            if (yapionData != null) {
+                globalLoad = is(yapionData);
+                globalSave = is(yapionData);
+            }
+
             // System.out.println(globalLoad + "   " + globalSave + "   false");
         }
 
@@ -97,6 +115,7 @@ public class StateManager {
         is(object);
 
         if (this.field == null || this.field.equals(field)) {
+            this.field = field;
             YAPIONLoadExclude yapionLoadExclude = field.getDeclaredAnnotation(YAPIONLoadExclude.class);
             YAPIONLoad yapionLoad = field.getDeclaredAnnotation(YAPIONLoad.class);
             YAPIONOptimize yapionOptimize = field.getDeclaredAnnotation(YAPIONOptimize.class);
@@ -123,6 +142,11 @@ public class StateManager {
             } else if (yapionSaveExclude != null && yapionSave != null) {
                 if (is(yapionSaveExclude)) localSave = false;
                 localSave = is(yapionSave);
+            }
+
+            if (yapionData != null) {
+                localLoad = is(yapionData);
+                localSave = is(yapionData);
             }
 
             // System.out.println(globalLoad + " " + localLoad + "   " + localOptimize + "   " + globalSave + " " + localSave);
