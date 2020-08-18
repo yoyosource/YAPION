@@ -5,8 +5,8 @@
 package yapion.serializing;
 
 import test.Test;
-import yapion.annotations.YAPIONLoadExclude;
-import yapion.annotations.YAPIONSaveExclude;
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
@@ -20,7 +20,6 @@ import yapion.serializing.serializer.other.*;
 import yapion.utils.ModifierUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 

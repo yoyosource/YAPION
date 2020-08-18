@@ -4,7 +4,7 @@
 
 package yapion.hierarchy;
 
-import yapion.annotations.YAPIONSave;
+import yapion.annotations.serialize.YAPIONSave;
 
 @YAPIONSave(context = "*")
 public enum Type {

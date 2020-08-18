@@ -4,8 +4,8 @@
 
 package yapion.packet;
 
-import yapion.annotations.YAPIONLoadExclude;
-import yapion.annotations.YAPIONSaveExclude;
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 

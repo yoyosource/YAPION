@@ -5,9 +5,9 @@
 package yapion.serializing;
 
 import test.Test;
-import yapion.annotations.YAPIONDeserializeType;
-import yapion.annotations.YAPIONLoadExclude;
-import yapion.annotations.YAPIONSaveExclude;
+import yapion.annotations.deserialize.YAPIONDeserializeType;
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
@@ -19,7 +19,6 @@ import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -116,7 +115,7 @@ public class YAPIONDeserializer {
             return pointerMap.get(objectOptional.get());
         }
         if (yapionAny instanceof YAPIONValue) {
-            System.out.println(": " + yapionAny + " " + ((YAPIONValue) yapionAny).get());
+            System.out.println(": " + yapionAny + " " + ((YAPIONValue) yapionAny).get() + " " + ((YAPIONValue)yapionAny).get().getClass().getTypeName());
             return ((YAPIONValue) yapionAny).get();
         }
         if (yapionAny instanceof YAPIONObject) {
@@ -162,9 +161,9 @@ public class YAPIONDeserializer {
                 field.set(object, parse(yapionAny, this, field));
             }
         } catch (ClassNotFoundException e) {
-
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
-
+            e.printStackTrace();
         }
         return this;
     }

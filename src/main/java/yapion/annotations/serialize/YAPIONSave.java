@@ -2,7 +2,7 @@
 // YAPION
 // Copyright (C) 2019,2020 yoyosource
 
-package yapion.annotations;
+package yapion.annotations.serialize;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
-public @interface YAPIONLoad {
+public @interface YAPIONSave {
     String context() default "";
 }

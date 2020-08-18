@@ -4,10 +4,10 @@
 
 package test;
 
-import yapion.annotations.YAPIONDeserializeType;
-import yapion.annotations.YAPIONLoad;
-import yapion.annotations.YAPIONOptimize;
-import yapion.annotations.YAPIONSave;
+import yapion.annotations.deserialize.YAPIONDeserializeType;
+import yapion.annotations.deserialize.YAPIONLoad;
+import yapion.annotations.serialize.YAPIONOptimize;
+import yapion.annotations.serialize.YAPIONSave;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,8 +23,8 @@ public class Test {
     @YAPIONDeserializeType(type = ArrayList.class)
     private final List<String> strings = new ArrayList<>();
     private final String[] strings2 = new String[4];
-    private String[][] strings3 = new String[3][3];
-    private Hugo[][] hugos = new Hugo[4][4];
+    private final String[][] strings3 = new String[3][3];
+    private final Hugo[][] hugos = new Hugo[4][4];
 
     private static final int d = 0;
 

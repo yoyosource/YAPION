@@ -1,7 +1,7 @@
 package yapion.serializing;
 
 import org.junit.Test;
-import yapion.annotations.YAPIONSave;
+import yapion.annotations.serialize.YAPIONSave;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 

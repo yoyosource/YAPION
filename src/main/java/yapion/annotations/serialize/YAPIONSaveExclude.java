@@ -2,7 +2,7 @@
 // YAPION
 // Copyright (C) 2019,2020 yoyosource
 
-package yapion.annotations;
+package yapion.annotations.serialize;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

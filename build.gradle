@@ -33,8 +33,7 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest:2.2'
 
     implementation 'org.objenesis:objenesis:3.1'
-    implementation 'cglib:cglib:3.3.0'
-    implementation 'de.scrum-master.org.javassist:javassist:3.27.0-GA-bugfix-328'
+    implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
 }
 
 shadowJar {

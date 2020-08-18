@@ -4,7 +4,7 @@
 
 package yapion.hierarchy;
 
-import yapion.annotations.YAPIONSave;
+import yapion.annotations.serialize.YAPIONSave;
 
 import java.io.IOException;
 import java.io.OutputStream;

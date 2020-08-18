@@ -4,8 +4,8 @@
 
 package yapion.hierarchy.types;
 
-import yapion.annotations.YAPIONSave;
-import yapion.annotations.YAPIONSaveExclude;
+import yapion.annotations.serialize.YAPIONSave;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;

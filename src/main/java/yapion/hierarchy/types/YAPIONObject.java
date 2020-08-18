@@ -4,7 +4,7 @@
 
 package yapion.hierarchy.types;
 
-import yapion.annotations.YAPIONSave;
+import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;

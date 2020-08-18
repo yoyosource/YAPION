@@ -37,6 +37,9 @@ dependencies {
 - easymock/objenesis (https://github.com/easymock/objenesis)
   - [V] 3.1
   - [L] Apache-2.0
+- qos-ch/slf4j (https://github.com/qos-ch/slf4j)
+  - [V] 2.0.0-alpha1
+  - [L] MIT
 
 * [V] Version
 * [L] License

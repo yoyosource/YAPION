@@ -4,8 +4,8 @@
 
 package yapion.utils;
 
-import yapion.annotations.YAPIONLoadExclude;
-import yapion.annotations.YAPIONSaveExclude;
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
