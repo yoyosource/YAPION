@@ -26,10 +26,26 @@ import java.util.Map;
 @YAPIONLoadExclude(context = "*")
 public class YAPIONParser {
 
+    /**
+     * Parses the String to an YAPIONObject.
+     *
+     * @param s the string to parse
+     * @return YAPIONObject parsed out of the string
+     */
     public static YAPIONObject parse(String s) {
         return new YAPIONParser(s).parse().result();
     }
 
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will not cancel even when
+     * the end of Steam is reached. It will only cancel after it has a
+     * complete and valid YAPIONObject.
+     *
+     * @param inputStream the inputStream to parse
+     * @return YAPIONObject parsed out of the string
+     */
     public static YAPIONObject parse(InputStream inputStream) {
         return new YAPIONParser(inputStream).parse().result();
     }
@@ -45,18 +61,32 @@ public class YAPIONParser {
 
     private final TypeStack typeStack = new TypeStack();
 
-    public YAPIONObject result() {
-        return result;
-    }
-
+    /**
+     * Creates a YAPIONParser for parsing an string to an YAPIONObject.
+     *
+     * @param s to parse from
+     */
     public YAPIONParser(String s) {
         this.s = s;
     }
 
+    /**
+     * Creates a YAPIONParser for parsing an InputStream to an YAPIONObject.
+     *
+     * @param inputStream to parse from
+     */
     public YAPIONParser(InputStream inputStream) {
         this.inputStream = inputStream;
     }
 
+    /**
+     * Parses the InputStream or String to an YAPIONObject.
+     * If an InputStream is present this method only parses
+     * the next YAPIONObject and tries to read until the YAPIONObject
+     * is finished. It will not cancel even when the end of Steam
+     * is reached. It will only cancel after it has a complete and
+     * valid YAPIONObject.
+     */
     public YAPIONParser parse() {
         try {
             parseInternal();
@@ -70,6 +100,15 @@ public class YAPIONParser {
             throw yapionioException;
         }
         return this;
+    }
+
+    /**
+     * Returns the YAPIONObject parsed by {@code parse()}
+     *
+     * @return the YAPIONObject
+     */
+    public YAPIONObject result() {
+        return result;
     }
 
     private String generateErrorMessage() {

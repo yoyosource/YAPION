@@ -18,23 +18,52 @@ public class YAPIONOutputStream {
 
     private final OutputStream outputStream;
 
+    /**
+     * Creates a YAPIONOutputStream from an OutputStream.
+     *
+     * @param outputStream the OutputStream
+     */
     public YAPIONOutputStream(OutputStream outputStream) {
         this.outputStream = outputStream;
     }
 
+    /**
+     * Writing the YAPIONObject to the OutputStream.
+     *
+     * @param yapionObject the YAPIONObject
+     * @throws IOException
+     */
     public void write(YAPIONObject yapionObject) throws IOException {
         yapionObject.toOutputStream(outputStream);
         outputStream.flush();
     }
 
+    /**
+     * Writing the Object to the OutputStream.
+     *
+     * @param object the Object
+     * @throws IOException
+     */
     public void write(Object object) throws IOException {
         write(YAPIONSerializer.serialize(object));
     }
 
+    /**
+     * Writing the Object to the OutputStream with a specific state.
+     *
+     * @param object the Object
+     * @param state the specified state
+     * @throws IOException
+     */
     public void write(Object object, String state) throws IOException {
         write(YAPIONSerializer.serialize(object, state));
     }
 
+    /**
+     * Closes the OutputStream.
+     *
+     * @throws IOException
+     */
     public void close() throws IOException {
         outputStream.close();
     }

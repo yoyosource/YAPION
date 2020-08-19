@@ -26,6 +26,11 @@ public class YAPIONInputStream {
     private Thread yapionInputStreamHandler = null;
     private boolean running = true;
 
+    /**
+     * Creates a YAPIONInputStream from an InputStream.
+     *
+     * @param inputStream the InputStream
+     */
     public YAPIONInputStream(InputStream inputStream) {
         yapionInputStreamHandler = new Thread(() -> {
            while (running) {
@@ -43,25 +48,53 @@ public class YAPIONInputStream {
         this.inputStream = inputStream;
     }
 
+    /**
+     * Set a direct receiver to the data from the InputStream.
+     *
+     * @param yapionPacketReceiver the receiver
+     */
     public void setYAPIONPacketReceiver(YAPIONPacketReceiver yapionPacketReceiver) {
         this.yapionPacketReceiver = yapionPacketReceiver;
     }
 
+    /**
+     * Returns an estimate of bytes to be able to read.
+     *
+     * @return the estimated byte count
+     * @throws IOException
+     */
     public synchronized int available() throws IOException {
         if (yapionPacketReceiver != null) throw new IOException();
         return inputStream.available();
     }
 
+    /**
+     * Read and parses the next YAPIONObject.
+     *
+     * @return the next YAPIONObject
+     * @throws IOException
+     */
     public synchronized YAPIONObject read() throws IOException {
         if (yapionPacketReceiver != null) throw new IOException();
         return YAPIONParser.parse(inputStream);
     }
 
+    /**
+     * Read, parses and deserialized the next YAPIONObject.
+     *
+     * @return the next Object
+     * @throws IOException
+     */
     public synchronized Object readObject() throws IOException {
         if (yapionPacketReceiver != null) throw new IOException();
         return YAPIONDeserializer.deserialize(read());
     }
 
+    /**
+     * Closes this InputStream and tries to close the hanlder Thread
+     *
+     * @throws IOException
+     */
     public synchronized void close() throws IOException {
         running = false;
         inputStream.close();
