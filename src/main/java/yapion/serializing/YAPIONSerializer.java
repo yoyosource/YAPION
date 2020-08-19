@@ -101,14 +101,33 @@ public class YAPIONSerializer {
         System.out.println(yapionObject);
     }
 
+    /**
+     * Serialize an Object to an YAPION Object.
+     *
+     * @param object to serialize
+     * @return YAPIONObject from the object to serialize
+     */
     public static YAPIONObject serialize(Object object) {
         return serialize(object, "");
     }
 
+    /**
+     * Serialize an Object to an YAPION Object.
+     *
+     * @param object to serialize
+     * @param state the state for serialization
+     * @return YAPIONObject from the object to serialize
+     */
     public static YAPIONObject serialize(Object object, String state) {
         return new YAPIONSerializer(object, state).parse().getYAPIONObject();
     }
 
+    /**
+     * Creates a YAPIONSerializer for serializing an Object with a specified state.
+     *
+     * @param object to serialize
+     * @param state the state for serialization
+     */
     public YAPIONSerializer(Object object, String state) {
         stateManager = new StateManager(state);
         this.object = object;
@@ -146,7 +165,7 @@ public class YAPIONSerializer {
     }
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
-    public YAPIONSerializer parse(Object object) {
+    private YAPIONSerializer parse(Object object) {
         if (!stateManager.is(object).save) {
             return this;
         }
@@ -205,10 +224,18 @@ public class YAPIONSerializer {
         return this;
     }
 
+    /**
+     * Parses the Object to the YAPIONObject.
+     */
     public YAPIONSerializer parse() {
         return parse(object);
     }
 
+    /**
+     * Get the internal parsed YAPIONObject.
+     *
+     * @return YAPIONObject from the object to serialize
+     */
     public YAPIONObject getYAPIONObject() {
         return yapionObject;
     }
