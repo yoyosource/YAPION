@@ -7,6 +7,7 @@ package yapion.packet;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
@@ -78,8 +79,9 @@ public class YAPIONInputStream {
     private synchronized void handle() {
         if (yapionPacketReceiver == null) return;
         YAPIONObject yapionObject = YAPIONParser.parse(inputStream);
-        if (yapionObject.getVariable("@type") == null) return;
-        YAPIONAny yapionAny = yapionObject.getVariable("@type").getValue();
+        YAPIONVariable variable = yapionObject.getVariable("@type");
+        if (variable == null) return;
+        YAPIONAny yapionAny = variable.getValue();
         if (!(yapionAny instanceof YAPIONValue)) return;
         Object object = ((YAPIONValue)yapionAny).get();
         if (!(object instanceof String)) return;
