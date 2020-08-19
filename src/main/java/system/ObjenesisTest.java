@@ -16,6 +16,9 @@ package system;
 import org.objenesis.ObjenesisBase;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 public class ObjenesisTest {
 
     private int i;
@@ -34,6 +37,15 @@ public class ObjenesisTest {
         ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
         ObjenesisTest objenesisTest = objenesisBase.newInstance(ObjenesisTest.class);
         System.out.println(objenesisTest);
+        System.out.println(encodeBase64("{\"hugo\":\"Hello World\"}"));
+    }
+
+    public static String encodeBase64(String s) {
+        return new String(Base64.getEncoder().encode(s.getBytes()), StandardCharsets.UTF_8);
+    }
+
+    public static String decodeBase64(String base64) {
+        return new String(Base64.getDecoder().decode(base64.getBytes()), StandardCharsets.UTF_8);
     }
 
     @Override

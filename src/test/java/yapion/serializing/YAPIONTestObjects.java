@@ -1,5 +1,6 @@
 package yapion.serializing;
 
+import system.ObjenesisTest;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 
@@ -159,6 +160,21 @@ public class YAPIONTestObjects {
         public int hashCode() {
             return Objects.hash(b, B, s, S, i, I, l, L, d, D, f, F, bi, bd, c, C, string, stringB, stringb, file);
         }
+    }
+
+    public static void main(String[] args) {
+        String s1 = YAPIONSerializer.serialize(new TestObject()).toString();
+        String s2 = YAPIONSerializer.serialize(new TestMap()).toString();
+        String s3 = YAPIONSerializer.serialize(new TestArray()).toString();
+        String s4 = YAPIONSerializer.serialize(new TestPrimitive()).toString();
+
+        System.out.println(ObjenesisTest.encodeBase64(s1));
+        System.out.println(ObjenesisTest.encodeBase64(s2));
+        System.out.println(ObjenesisTest.encodeBase64(s3));
+        System.out.println(ObjenesisTest.encodeBase64(s4));
+
+        System.out.println(ObjenesisTest.decodeBase64("e0B0eXBlKH"));
+        System.out.println(ObjenesisTest.encodeBase64("{@type("));
     }
 
 }

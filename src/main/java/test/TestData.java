@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
+// YAPION
+// Copyright (C) 2019,2020 yoyosource
+
 package test;
 
 import yapion.annotations.YAPIONData;
@@ -38,7 +42,7 @@ public class TestData {
         System.out.println(object);
     }
 
-    private TestData(String s) {
+    public TestData(String s) {
 
     }
 
