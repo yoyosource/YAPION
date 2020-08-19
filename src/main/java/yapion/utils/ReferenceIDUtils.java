@@ -10,6 +10,8 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -19,32 +21,51 @@ public class ReferenceIDUtils {
         throw new IllegalStateException("Utility class");
     }
 
+    private static final Map<String, Long> referenceIDMap = new LinkedHashMap<String, Long>() {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, Long> eldest) {
+            return size() > 100;
+        }
+    };
+
+    /**
+     * Calculates the reference ID of a given String, primarily used for variable names.
+     * This method caches the last 100 inputs for faster reference ID calculation.
+     * Use {@link discardCache} to discard this Cache.
+     *
+     * @param s the input string to calculate a reference ID from
+     * @return the reference ID of the given String
+     */
     public static long calc(String s) {
+        if (referenceIDMap.containsKey(s)) {
+            return referenceIDMap.get(s);
+        }
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] bytes = digest.digest(s.getBytes(StandardCharsets.UTF_8));
-            // System.out.println("MD5: " + s);
-            // System.out.println((long)bytes[0] << 56);
-            // System.out.println((long)bytes[1] << 48);
-            // System.out.println((long)bytes[2] << 40);
-            // System.out.println((long)bytes[3] << 32);
-            // System.out.println((long)bytes[4] << 24);
-            // System.out.println((long)bytes[5] << 16);
-            // System.out.println((long)bytes[6] << 8);
-            // System.out.println((long)bytes[7] << 0);
-            // System.out.println((long)bytes[0] << 56 | (long)bytes[1] << 48 | (long)bytes[2] << 40 | (long)bytes[3] << 32 | (long)bytes[4] << 24 | (long)bytes[5] << 16 | (long)bytes[6] << 8 | (long)bytes[7]);
-            return (long)bytes[0] << 56 | (long)bytes[1] << 48 | (long)bytes[2] << 40 | (long)bytes[3] << 32 | (long)bytes[4] << 24 | (long)bytes[5] << 16 | (long)bytes[6] << 8 | (long)bytes[7];
+            long l = (long)bytes[0] << 56 | (long)bytes[1] << 48 | (long)bytes[2] << 40 | (long)bytes[3] << 32 | (long)bytes[4] << 24 | (long)bytes[5] << 16 | (long)bytes[6] << 8 | (long)bytes[7];
+            referenceIDMap.put(s, l);
+            return l;
         } catch (NoSuchAlgorithmException e) {
             return 0x0000000000000000L;
         }
     }
 
-    public static String format(long l) {
-        return String.format("%016X", l);
+    /**
+     * Discard the cache used by {@link calc}
+     */
+    public static void discardCache() {
+        referenceIDMap.clear();
     }
 
-    public static String formatLazy(long l) {
-        return String.format("%01X", l);
+    /**
+     * Formats the input to the standard reference ID structure.
+     *
+     * @param l the input to format
+     * @return the formated input
+     */
+    public static String format(long l) {
+        return String.format("%016X", l);
     }
 
 }

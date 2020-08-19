@@ -18,6 +18,13 @@ public class ModifierUtils {
         throw new IllegalStateException("Utility class");
     }
 
+    /**
+     * Checks if a given field should be serialized or not.
+     * Returns {@code true} if it should not be serialized.
+     *
+     * @param field Field to check
+     * @return {@code true} if field should not be serialized; {@code false} otherwise.
+     */
     public static boolean removed(Field field) {
         return Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers());
     }

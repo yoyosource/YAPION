@@ -21,6 +21,14 @@ public class ReflectionsUtils {
         throw new IllegalStateException("Utility class");
     }
 
+    /**
+     * Invokes a method with the given arguments on a given object and return the possible return value.
+     *
+     * @param name the name of the method to be called
+     * @param object the object on which the method should be called
+     * @param parameters the parameters that should be used
+     * @return the possible return value
+     */
     public static Optional<Object> invokeMethod(String name, Object object, Object... parameters) {
         Class<?>[] classes = new Class[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
@@ -36,6 +44,12 @@ public class ReflectionsUtils {
         }
     }
 
+    /**
+     * Construct an Object instance from a given className. By using the {@see ObjenesisBase}.
+     *
+     * @param className the class to create an instance from
+     * @return an instance of the specified class
+     */
     public static Object constructObjectObjenesis(String className) {
         try {
             ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
@@ -45,7 +59,7 @@ public class ReflectionsUtils {
         }
     }
 
-    public static boolean constructObjenesis(String className) {
+    private static boolean constructObjenesis(String className) {
         try {
             return Class.forName(className).getDeclaredAnnotation(YAPIONData.class) != null;
         } catch (ClassNotFoundException e) {
@@ -53,6 +67,12 @@ public class ReflectionsUtils {
         }
     }
 
+    /**
+     * Construct an Object instance from a given className. By using the {@see ObjenesisBase, only used for YAPIONData types} or a NoArgument constructor.
+     *
+     * @param className the class to create an instance from
+     * @return an instance of the specified class
+     */
     public static Object constructObject(String className) {
         if (constructObjenesis(className)) {
             return constructObjectObjenesis(className);
@@ -65,7 +85,7 @@ public class ReflectionsUtils {
         return constructInstance(className, o);
     }
 
-    public static Object constructInstance(String className, Object o) {
+    private static Object constructInstance(String className, Object o) {
         try {
             Class<?> clazz = Class.forName(className);
             Constructor<?> constructor;

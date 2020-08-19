@@ -8,6 +8,7 @@ import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONPointerException;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
+import yapion.utils.ReferenceIDUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -63,7 +64,7 @@ public class YAPIONPointer extends YAPIONAny {
     }
 
     public String getPointerIDString() {
-        return String.format("%016X", getPointerID());
+        return ReferenceIDUtils.format(getPointerID());
     }
 
     @Override

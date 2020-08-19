@@ -43,10 +43,24 @@ public class RecursionUtils {
         }
     }
 
+    /**
+     * Checks if a variable is already given in the hierarchy.
+     *
+     * @param toCheck is the variable to test for
+     * @param instance is the instance of a hierarchy to check against
+     * @return {@code RecursionResult} with the {@code RecursionType} and the {@code instance} against which was checked.
+     */
     public static RecursionResult checkRecursion(YAPIONVariable toCheck, YAPIONAny instance) {
         return checkRecursion(toCheck.getValue(), instance);
     }
 
+    /**
+     * Checks if a instance is already given in the hierarchy.
+     *
+     * @param toCheck is the instance to test for
+     * @param instance is the instance of a hierarchy to check against
+     * @return {@code RecursionResult} with the {@code RecursionType} and the {@code instance} against which was checked.
+     */
     public static RecursionResult checkRecursion(YAPIONAny toCheck, YAPIONAny instance) {
         if (toCheck == instance) {
             return new RecursionResult(RecursionType.DIRECT, instance);
