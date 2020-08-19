@@ -86,14 +86,33 @@ public class YAPIONDeserializer {
         System.out.println(serialize(o));
     }
 
+    /**
+     * Serialize an YAPION Object to an Object.
+     *
+     * @param yapionObject to deserialize
+     * @return Object from the YAPIONObject to deserialize
+     */
     public static Object deserialize(YAPIONObject yapionObject) {
         return deserialize(yapionObject, "");
     }
 
+    /**
+     * Serialize an YAPION Object to an Object.
+     *
+     * @param yapionObject to deserialize
+     * @param state the state for deserialization
+     * @return Object from the YAPIONObject to deserialize
+     */
     public static Object deserialize(YAPIONObject yapionObject, String state) {
         return new YAPIONDeserializer(yapionObject, state).parse().getObject();
     }
 
+    /**
+     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified state.
+     *
+     * @param yapionObject to deserialize
+     * @param state the state for deserialization
+     */
     public YAPIONDeserializer(YAPIONObject yapionObject, String state) {
         stateManager = new StateManager(state);
         this.yapionObject = yapionObject;
@@ -156,7 +175,7 @@ public class YAPIONDeserializer {
     }
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
-    public YAPIONDeserializer parse(YAPIONObject yapionObject) {
+    private YAPIONDeserializer parse(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>)yapionObject.getVariable("@type").getValue()).get();
         try {
             if (!stateManager.is(Class.forName(type)).load) {
@@ -186,10 +205,18 @@ public class YAPIONDeserializer {
         return this;
     }
 
+    /**
+     * Parses the YAPIONObject to the Object.
+     */
     public YAPIONDeserializer parse() {
         return parse(yapionObject);
     }
 
+    /**
+     * Get the internal parsed Object.
+     *
+     * @return Object from the YAPIONObject to deserialize
+     */
     public Object getObject() {
         return object;
     }
