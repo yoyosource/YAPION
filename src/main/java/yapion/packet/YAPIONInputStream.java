@@ -43,7 +43,7 @@ public class YAPIONInputStream {
         this.inputStream = inputStream;
     }
 
-    private void setYAPIONPacketReceiver(YAPIONPacketReceiver yapionPacketReceiver) {
+    public void setYAPIONPacketReceiver(YAPIONPacketReceiver yapionPacketReceiver) {
         this.yapionPacketReceiver = yapionPacketReceiver;
     }
 
