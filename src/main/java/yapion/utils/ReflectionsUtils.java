@@ -12,6 +12,7 @@ import yapion.exceptions.utils.YAPIONReflectionException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Optional;
 
 public class ReflectionsUtils {
@@ -68,13 +69,13 @@ public class ReflectionsUtils {
         try {
             Class<?> clazz = Class.forName(className);
             Constructor<?> constructor;
-            if (o == null) {
+            if (o == null || Modifier.isStatic(clazz.getModifiers())) {
                 constructor = clazz.getDeclaredConstructor();
             } else {
                 constructor = clazz.getDeclaredConstructor(o.getClass());
             }
             constructor.setAccessible(true);
-            if (o == null) {
+            if (o == null || Modifier.isStatic(clazz.getModifiers())) {
                 return constructor.newInstance();
             } else {
                 return constructor.newInstance(o);

@@ -115,25 +115,41 @@ public class YAPIONDeserializer {
             return pointerMap.get(objectOptional.get());
         }
         if (yapionAny instanceof YAPIONValue) {
-            System.out.println(": " + yapionAny + " " + ((YAPIONValue) yapionAny).get() + " " + ((YAPIONValue)yapionAny).get().getClass().getTypeName());
-            return ((YAPIONValue) yapionAny).get();
+            Object o = ((YAPIONValue) yapionAny).get();
+            switch (field.getType().getTypeName()) {
+                case "java.lang.StringBuilder":
+                    return new StringBuilder().append(o);
+                case "java.lang.StringBuffer":
+                    return new StringBuffer().append(o);
+                default:
+                    return o;
+            }
         }
         if (yapionAny instanceof YAPIONObject) {
             return new YAPIONDeserializer((YAPIONObject) yapionAny, yapionDeserializer).parse().getObject();
         } else {
-            YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
-            String type = field.getType().getTypeName();
-            if (yapionDeserializeType != null) {
-                type = yapionDeserializeType.type().getTypeName();
-            }
-
+            String type = getSerializerType(field);
             Serializer serializer = serializerMap.get(type);
             System.out.println(type + " " + serializer + " " + yapionAny);
-            if (serializer != null && yapionAny != null) {
-                return serializer.deserialize(yapionAny, this, field);
-            } else {
-                return null;
-            }
+            return getSerializer(type, yapionAny, field);
+        }
+    }
+
+    private String getSerializerType(Field field) {
+        YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
+        String type = field.getType().getTypeName();
+        if (yapionDeserializeType != null) {
+            type = yapionDeserializeType.type().getTypeName();
+        }
+        return type;
+    }
+
+    private Object getSerializer(String type, YAPIONAny yapionAny, Field field) {
+        Serializer serializer = serializerMap.get(type);
+        if (serializer != null && yapionAny != null) {
+            return serializer.deserialize(yapionAny, this, field);
+        } else {
+            return null;
         }
     }
 

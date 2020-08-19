@@ -133,6 +133,12 @@ public class YAPIONValue<T> extends YAPIONAny {
             return assembleOutput("'" + string + "'");
         }
 
+        if (value instanceof Byte) {
+            return assembleOutput(string + "B");
+        }
+        if (value instanceof Short) {
+            return assembleOutput(string + "S");
+        }
         if (value instanceof Integer) {
             return assembleOutput(string);
         }
