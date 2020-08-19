@@ -18,6 +18,7 @@ import java.util.Map;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SuppressWarnings({"java:S3740"})
 public class MapSerializerLinkedHash implements Serializer<LinkedHashMap> {
 
     @Override

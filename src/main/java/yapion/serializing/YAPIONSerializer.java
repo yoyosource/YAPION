@@ -120,6 +120,7 @@ public class YAPIONSerializer {
         this.pointerMap = yapionSerializer.pointerMap;
     }
 
+    @SuppressWarnings({"java:S3740"})
     public YAPIONAny parse(Object object, YAPIONSerializer yapionSerializer) {
         if (pointerMap.containsKey(object)) {
             return pointerMap.get(object);

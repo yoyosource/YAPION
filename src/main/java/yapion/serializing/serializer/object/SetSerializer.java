@@ -17,6 +17,7 @@ import java.util.*;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SuppressWarnings({"java:S3740"})
 public class SetSerializer implements Serializer<Set> {
 
     @Override

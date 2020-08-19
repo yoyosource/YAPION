@@ -15,9 +15,9 @@ import yapion.hierarchy.Type;
 public class TypeStack {
 
     private int pointer = -1;
-    private static final int depth = 65536;
-    private final Type[] stack = new Type[depth];
-    private final long[] timeStack = new long[depth];
+    private static final int DEPTH = 65536;
+    private final Type[] stack = new Type[DEPTH];
+    private final long[] timeStack = new long[DEPTH];
 
     public void push(Type type) {
         pointer++;

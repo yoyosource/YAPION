@@ -100,6 +100,14 @@ public class YAPIONObject extends YAPIONAny {
     }
 
     public YAPIONMap getMap(String key) {
+        YAPIONVariable yapionVariable = getVariable(key);
+        if (yapionVariable == null) {
+            return null;
+        }
+        YAPIONAny yapionAny = yapionVariable.getValue();
+        if (yapionAny instanceof YAPIONMap) {
+            return (YAPIONMap) yapionAny;
+        }
         return null;
     }
 
@@ -115,6 +123,7 @@ public class YAPIONObject extends YAPIONAny {
         return null;
     }
 
+    @SuppressWarnings({"java:S3740"})
     public YAPIONValue getValue(String key) {
         YAPIONVariable yapionVariable = getVariable(key);
         if (yapionVariable == null) {

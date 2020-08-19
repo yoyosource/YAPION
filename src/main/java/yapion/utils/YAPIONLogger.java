@@ -20,8 +20,6 @@ public class YAPIONLogger {
         throw new IllegalStateException("Utility class");
     }
 
-    private static final Logger logger = LoggerFactory.getLogger("YAPION");
-
     private static final Logger parsingLogger       = LoggerFactory.getLogger("YAPION [parser      ]");
     private static final Logger serializingLogger   = LoggerFactory.getLogger("YAPION [serializer  ]");
     private static final Logger deserializingLogger = LoggerFactory.getLogger("YAPION [deserializer]");
@@ -65,6 +63,7 @@ public class YAPIONLogger {
     }
 
     private static final class ClassContextSecurityManager extends SecurityManager {
+        @Override
         protected Class<?>[] getClassContext() {
             return super.getClassContext();
         }

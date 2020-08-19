@@ -18,6 +18,7 @@ import java.util.TreeMap;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SuppressWarnings({"java:S3740"})
 public class MapSerializerTree implements Serializer<TreeMap> {
 
     @Override

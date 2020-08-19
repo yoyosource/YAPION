@@ -17,6 +17,7 @@ import java.util.LinkedList;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SuppressWarnings({"java:S3740"})
 public class ListSerializerLinked implements Serializer<LinkedList> {
 
     @Override

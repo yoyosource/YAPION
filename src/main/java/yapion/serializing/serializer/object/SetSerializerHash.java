@@ -18,6 +18,7 @@ import java.util.Iterator;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SuppressWarnings({"java:S3740"})
 public class SetSerializerHash implements Serializer<HashSet> {
 
     @Override

@@ -105,6 +105,7 @@ public class YAPIONDeserializer {
         this.pointerMap = yapionDeserializer.pointerMap;
     }
 
+    @SuppressWarnings({"java:S3740"})
     public Object parse(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
         if (yapionAny instanceof YAPIONPointer) {
             Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", yapionAny);
@@ -144,6 +145,7 @@ public class YAPIONDeserializer {
         return type;
     }
 
+    @SuppressWarnings({"java:S3740"})
     private Object getSerializer(String type, YAPIONAny yapionAny, Field field) {
         Serializer serializer = serializerMap.get(type);
         if (serializer != null && yapionAny != null) {

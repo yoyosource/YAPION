@@ -18,6 +18,7 @@ import java.util.List;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SuppressWarnings({"java:S3740"})
 public class ListSerializer implements Serializer<List> {
 
     @Override

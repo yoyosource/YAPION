@@ -18,6 +18,7 @@ import java.util.LinkedHashSet;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SuppressWarnings({"java:S3740"})
 public class SetSerializerLinkedHash implements Serializer<LinkedHashSet> {
 
     @Override
