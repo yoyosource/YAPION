@@ -18,7 +18,7 @@ public class YAPIONDeserializerTest {
 
     @Test
     public void testMap() {
-        Object object = YAPIONDeserializer.deserialize(YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestMap)stringStringMap<0:1,#0{(Hello1)},#1{(Hello1)},2:3,#2{(Hello)},#3{(Hello)},4:5,#4{(Hello2)},#5{(Hello2)}>hugoStringMap<>hashMap<>linkedHashMap<>}"));
+        Object object = YAPIONDeserializer.deserialize(YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestMap)stringStringMap<0:1#0(Hello1)#1(Hello1)2:3#2(Hello)#3(Hello)4:5#4(Hello2)#5(Hello2)>hugoStringMap<>hashMap<>linkedHashMap<>}"));
         assertThat(object, is(new TestMap()));
     }
 

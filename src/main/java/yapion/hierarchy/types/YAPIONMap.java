@@ -137,20 +137,12 @@ public class YAPIONMap extends YAPIONAny {
 
         StringBuilder st = new StringBuilder();
         st.append("<");
-        boolean b = false;
         for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
             String id1 = String.format("%01X", id++);
             String id2 = String.format("%01X", id++);
 
-            if (b) {
-                st.append(",");
-            }
-            b = true;
-
             st.append(id1).append(":").append(id2);
-            st.append(",");
             st.append("#").append(id1).append(entry.getKey().toString());
-            st.append(",");
             st.append("#").append(id2).append(entry.getValue().toString());
         }
         st.append(">");
