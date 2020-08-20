@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import yapion.hierarchy.types.*;
 import yapion.packet.YAPIONInputStream;
 import yapion.packet.YAPIONOutputStream;
+import yapion.packet.YAPIONPacket;
+import yapion.packet.YAPIONPacketReceiver;
 import yapion.parser.TypeStack;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
@@ -23,6 +25,7 @@ public class YAPIONLogger {
     private static final Logger parsingLogger       = LoggerFactory.getLogger("YAPION [parser      ]");
     private static final Logger serializingLogger   = LoggerFactory.getLogger("YAPION [serializer  ]");
     private static final Logger deserializingLogger = LoggerFactory.getLogger("YAPION [deserializer]");
+    private static final Logger packetLogger        = LoggerFactory.getLogger("YAPION [packets     ]");
     private static final Logger utilsLogger         = LoggerFactory.getLogger("YAPION [utils       ]");
 
     private static final Logger outsideLogger       = LoggerFactory.getLogger("YAPION [wrong class ]");
@@ -31,6 +34,7 @@ public class YAPIONLogger {
         PARSER(parsingLogger, YAPIONParser.class, TypeStack.class, YAPIONArray.class, YAPIONMap.class, YAPIONObject.class, YAPIONPointer.class, YAPIONValue.class),
         SERIALIZER(serializingLogger, YAPIONSerializer.class, YAPIONOutputStream.class, ModifierUtils.class, ReflectionsUtils.class),
         DESERIALIZER(deserializingLogger, YAPIONDeserializer.class, YAPIONInputStream.class, ModifierUtils.class, ReflectionsUtils.class),
+        PACKET(packetLogger, YAPIONPacket.class, YAPIONPacketReceiver.class, YAPIONInputStream.class, YAPIONOutputStream.class),
         UTILS(utilsLogger, ModifierUtils.class, RecursionUtils.class, ReferenceIDUtils.class, ReflectionsUtils.class, YAPIONLogger.class);
 
         private final Logger logger;

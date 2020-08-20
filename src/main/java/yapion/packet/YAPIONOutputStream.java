@@ -39,6 +39,16 @@ public class YAPIONOutputStream {
     }
 
     /**
+     * Writing the YAPIONPacket to the OutputStream.
+     *
+     * @param yapionPacket the YAPIONPacket
+     * @throws IOException
+     */
+    public void write(YAPIONPacket yapionPacket) throws IOException {
+        write(yapionPacket.getYAPION());
+    }
+
+    /**
      * Writing the Object to the OutputStream.
      *
      * @param object the Object

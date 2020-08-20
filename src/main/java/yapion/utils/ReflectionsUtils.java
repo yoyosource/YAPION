@@ -13,6 +13,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class ReflectionsUtils {
@@ -40,6 +41,7 @@ public class ReflectionsUtils {
             method.setAccessible(true);
             return Optional.ofNullable(method.invoke(object, parameters));
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
+            YAPIONLogger.info(YAPIONLogger.LoggingType.UTILS, "Exception while invoking a method '" + name + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
             return Optional.empty();
         }
     }
@@ -55,6 +57,7 @@ public class ReflectionsUtils {
             ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
             return objenesisBase.newInstance(Class.forName(className));
         } catch (ClassNotFoundException e) {
+            YAPIONLogger.info(YAPIONLogger.LoggingType.UTILS, "Exception while creating an Object with Objenesis because the specified class '" + className + "' was not found", e.getCause());
             return null;
         }
     }
@@ -100,7 +103,11 @@ public class ReflectionsUtils {
             } else {
                 return constructor.newInstance(o);
             }
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            YAPIONLogger.info(YAPIONLogger.LoggingType.UTILS, "Exception while creating an Object with normal Constructor", e.getCause());
+            throw new YAPIONReflectionException(e.getMessage(), e.getCause());
+        } catch (ClassNotFoundException e) {
+            YAPIONLogger.info(YAPIONLogger.LoggingType.UTILS, "Exception while creating an Object with normal Constructor because the specified class '" + className + "' was not found", e.getCause());
             throw new YAPIONReflectionException(e.getMessage(), e.getCause());
         }
     }

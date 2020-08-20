@@ -8,6 +8,7 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.utils.YAPIONPacketException;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONSerializer;
 
@@ -31,28 +32,72 @@ public class YAPIONPacket {
     private final String type;
     private final Map<String, Object> payload = new HashMap<>();
 
+    /**
+     * Creates an YAPIONPacket with an specific type. If the type
+     * is {@code null} this constructor will throw an
+     * YAPIONPacketException. The type name "@error" and "@exception"
+     * are not allowed and will throws an YAPIONPacketException.
+     *
+     * @param type the specified type of packet
+     */
     public YAPIONPacket(String type) {
+        if (type == null) {
+            throw new YAPIONPacketException();
+        }
+        if (type.equals("@error") || type.equals("@exception")) {
+            throw new YAPIONPacketException();
+        }
         this.type = type;
     }
 
+    /**
+     * Adds another key value pair to this YAPIONPacket.
+     *
+     * @param key the key
+     * @param value the value
+     */
     public YAPIONPacket add(String key, Object value) {
         lastModified = System.currentTimeMillis();
         payload.put(key, value);
         return this;
     }
 
+    /**
+     * Gets a value of a specified key from this YAPIONPacket.
+     *
+     * @param key the key to retrieve
+     * @return the Object associated by the key
+     */
     public Object get(String key) {
         return payload.get(key);
     }
 
+    /**
+     * Gets the type of this YAPIONPacket.
+     *
+     * @return the type
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Returns the YAPION packet length that will be send.
+     *
+     * @return the length.
+     */
     public long length() {
         return getYAPION().toString().length();
     }
 
+    /**
+     * Creates the YAPIONObject from this YAPIONPacket and caches it
+     * for further use. Using {@code add} discards this cache. This
+     * method uses the {@code YAPIONSerializer} to serialize itself
+     * to the used YAPIONObject.
+     *
+     * @return the YAPIONObject
+     */
     public YAPIONObject getYAPION() {
         if (cache != null && lastModified == lastCreated) {
             return cache;
@@ -62,14 +107,12 @@ public class YAPIONPacket {
         return cache;
     }
 
-    public YAPIONObject toObject() {
-        return getYAPION();
-    }
-
-    public YAPIONObject getObject() {
-        return getYAPION();
-    }
-
+    /**
+     * Creates a String from the YAPIONObject created by {@code getYAPION}.
+     * Creates the YAPIONObject along side creating the string.
+     *
+     * @return the String from the YAPIONObject
+     */
     public String toSendString() {
         return getYAPION().toString();
     }
@@ -77,10 +120,7 @@ public class YAPIONPacket {
     @Override
     public String toString() {
         return "YAPIONPacket{" +
-                "lastModified=" + lastModified +
-                ", lastCreated=" + lastCreated +
-                ", cache=" + cache +
-                ", type='" + type + '\'' +
+                "type='" + type + '\'' +
                 ", payload=" + payload +
                 '}';
     }

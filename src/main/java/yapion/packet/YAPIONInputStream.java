@@ -12,6 +12,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
+import yapion.utils.YAPIONLogger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,12 +36,16 @@ public class YAPIONInputStream {
         yapionInputStreamHandler = new Thread(() -> {
            while (running) {
                try {
-                   Thread.sleep(100);
+                   Thread.sleep(10);
                } catch (InterruptedException e) {
                    Thread.currentThread().interrupt();
                }
                if (handleAvailable() == 0) continue;
-               handle();
+               try {
+                   handle();
+               } catch (Exception e) {
+                   YAPIONLogger.warn(YAPIONLogger.LoggingType.PACKET, "Something went wrong while handling the read object.", e.getCause());
+               }
            }
         });
         yapionInputStreamHandler.setDaemon(true);
@@ -91,7 +96,7 @@ public class YAPIONInputStream {
     }
 
     /**
-     * Closes this InputStream and tries to close the hanlder Thread
+     * Closes this InputStream and tries to close the handler Thread
      *
      * @throws IOException
      */

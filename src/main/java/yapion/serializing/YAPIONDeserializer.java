@@ -8,6 +8,7 @@ import test.Test;
 import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
@@ -17,6 +18,7 @@ import yapion.serializing.serializer.object.*;
 import yapion.serializing.serializer.other.*;
 import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
+import yapion.utils.YAPIONLogger;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -198,9 +200,11 @@ public class YAPIONDeserializer {
                 field.set(object, parse(yapionAny, this, field));
             }
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            YAPIONLogger.trace(YAPIONLogger.LoggingType.DESERIALIZER, "The class '" + type + "' was not found.", e.getCause());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            YAPIONLogger.trace(YAPIONLogger.LoggingType.DESERIALIZER, "", e.getCause());
+        } catch (YAPIONReflectionException e) {
+            YAPIONLogger.trace(YAPIONLogger.LoggingType.DESERIALIZER, "Exception while creating an Instance of the object '" + type + "'", e.getCause());
         }
         return this;
     }
