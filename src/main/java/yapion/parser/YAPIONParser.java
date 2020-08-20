@@ -16,7 +16,6 @@ import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -281,7 +280,7 @@ public class YAPIONParser {
     }
 
     private void initialObject(char c) {
-        if (c == '{') {
+        if (c == '{' && typeStack.isEmpty() && result == null) {
             typeStack.push(Type.OBJECT);
             result = new YAPIONObject();
             yapionObjectList.add(result);
