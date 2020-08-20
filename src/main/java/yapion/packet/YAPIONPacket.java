@@ -36,7 +36,7 @@ public class YAPIONPacket {
      * Creates an YAPIONPacket with an specific type. If the type
      * is {@code null} this constructor will throw an
      * YAPIONPacketException. The type name "@error" and "@exception"
-     * are not allowed and will throws an YAPIONPacketException.
+     * are not allowed and will throw an YAPIONPacketException.
      *
      * @param type the specified type of packet
      */
