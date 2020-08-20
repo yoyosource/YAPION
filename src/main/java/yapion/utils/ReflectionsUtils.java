@@ -7,6 +7,8 @@ package yapion.utils;
 import org.objenesis.ObjenesisBase;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 import yapion.annotations.YAPIONData;
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONReflectionException;
 
 import java.lang.reflect.Constructor;
@@ -23,7 +25,50 @@ public class ReflectionsUtils {
     }
 
     /**
-     * Invokes a method with the given arguments on a given object and return the possible return value.
+     * Invokes a method with the given arguments on a given object
+     * and return the possible return value.
+     *
+     * @param name the name of the method to be called
+     * @param object the object on which the method should be called
+     * @param parameters the parameters that should be used
+     * @return the possible return value
+     */
+    public static Optional<Object> invokeMethod(String name, Object object, Parameter... parameters) {
+        Class<?>[] classes = new Class[parameters.length];
+        Object[] objects = new Object[parameters.length];
+        for (int i = 0; i < parameters.length; i++) {
+            classes[i] = parameters[i].clazz;
+            objects[i] = parameters[i].object;
+        }
+
+        Class clazz = object.getClass();
+        boolean search = true;
+        while (search) {
+            if (clazz.getTypeName().equals("java.lang.Object")) {
+                return Optional.empty();
+            }
+            try {
+                clazz.getDeclaredMethod(name, classes);
+                search = false;
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+
+        try {
+            Method method = clazz.getDeclaredMethod(name, classes);
+            method.setAccessible(true);
+            return Optional.ofNullable(method.invoke(object, objects));
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            YAPIONLogger.info(YAPIONLogger.LoggingType.UTILS, "Exception while invoking a method '" + name + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Invokes a method with the given arguments on a given object
+     * and return the possible return value.
      *
      * @param name the name of the method to be called
      * @param object the object on which the method should be called
@@ -36,8 +81,22 @@ public class ReflectionsUtils {
             classes[i] = parameters[i].getClass();
         }
 
+        Class clazz = object.getClass();
+        boolean search = true;
+        while (search) {
+            if (clazz.getTypeName().equals("java.lang.Object")) {
+                return Optional.empty();
+            }
+            try {
+                clazz.getDeclaredMethod(name, classes);
+                search = false;
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+
         try {
-            Method method = object.getClass().getDeclaredMethod(name, classes);
+            Method method = clazz.getDeclaredMethod(name, classes);
             method.setAccessible(true);
             return Optional.ofNullable(method.invoke(object, parameters));
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
@@ -46,8 +105,23 @@ public class ReflectionsUtils {
         }
     }
 
+    @YAPIONSaveExclude(context = "*")
+    @YAPIONLoadExclude(context = "*")
+    public static class Parameter {
+
+        private final Class<?> clazz;
+        private final Object object;
+
+        public Parameter(Class<?> clazz, Object object) {
+            this.clazz = clazz;
+            this.object = object;
+        }
+
+    }
+
     /**
-     * Construct an Object instance from a given className. By using the {@see ObjenesisBase}.
+     * Construct an Object instance from a given className.
+     * By using the {@see ObjenesisBase}.
      *
      * @param className the class to create an instance from
      * @return an instance of the specified class
@@ -71,7 +145,9 @@ public class ReflectionsUtils {
     }
 
     /**
-     * Construct an Object instance from a given className. By using the {@see ObjenesisBase, only used for YAPIONData types} or a NoArgument constructor.
+     * Construct an Object instance from a given className.
+     * By using the {@see ObjenesisBase, only used for YAPIONData types}
+     * or a NoArgument constructor.
      *
      * @param className the class to create an instance from
      * @return an instance of the specified class

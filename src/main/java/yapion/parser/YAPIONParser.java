@@ -4,7 +4,6 @@
 
 package yapion.parser;
 
-import sun.reflect.misc.MethodUtil;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
@@ -272,7 +271,7 @@ public class YAPIONParser {
     }
 
     private void pop(Type type) {
-        ReflectionsUtils.invokeMethod("setParseTime", currentObject, typeStack.peekTime());
+        ReflectionsUtils.invokeMethod("setParseTime", currentObject, new ReflectionsUtils.Parameter(long.class, typeStack.peekTime()));
         typeStack.pop(type);
     }
 
