@@ -205,6 +205,10 @@ public class YAPIONDeserializer {
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parse(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>)yapionObject.getVariable("@type").getValue()).get();
+        if (serializerMap.containsKey(type)) {
+            object = serializerMap.get(type).deserialize(yapionObject, this, null);
+            return this;
+        }
         try {
             if (!stateManager.is(Class.forName(type)).load) {
                 return this;

@@ -36,6 +36,7 @@ public class FileSerializer implements Serializer<File> {
 
     @Override
     public File deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+        System.out.println("FILE deserialize " + yapionAny);
         YAPIONObject yapionObject = (YAPIONObject)yapionAny;
         return new File(yapionObject.getValue("absolutePath", "").get());
     }

@@ -363,7 +363,6 @@ public class YAPIONParser {
 
         if (c == '#') {
             if (current.length() != 0) {
-                // System.out.println(current);
                 add(new YAPIONValue<>(current.toString()));
             }
             current = new StringBuilder();

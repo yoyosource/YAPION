@@ -1,6 +1,7 @@
 package yapion.serializing;
 
 import system.ObjenesisTest;
+import yapion.annotations.YAPIONData;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 
@@ -11,8 +12,7 @@ import java.util.*;
 
 public class YAPIONTestObjects {
 
-    @YAPIONSave
-    @YAPIONLoad
+    @YAPIONData
     public static class TestObject {
         @Override
         public int hashCode() {
@@ -25,8 +25,7 @@ public class YAPIONTestObjects {
         }
     }
 
-    @YAPIONSave
-    @YAPIONLoad
+    @YAPIONData
     public static class TestMap {
 
         private final Map<String, String> stringStringMap = new HashMap<>();
@@ -56,8 +55,7 @@ public class YAPIONTestObjects {
         }
     }
 
-    @YAPIONSave
-    @YAPIONLoad
+    @YAPIONData
     public static class TestArray {
 
         private final String[] strings = new String[2];
@@ -101,8 +99,7 @@ public class YAPIONTestObjects {
         }
     }
 
-    @YAPIONSave
-    @YAPIONLoad
+    @YAPIONData
     public static class TestPrimitive {
 
         private final byte b = 0;
@@ -141,24 +138,24 @@ public class YAPIONTestObjects {
                     Double.compare(that.d, d) == 0 &&
                     Float.compare(that.f, f) == 0 &&
                     c == that.c &&
-                    Objects.equals(B, that.B) &&
-                    Objects.equals(S, that.S) &&
-                    Objects.equals(I, that.I) &&
-                    Objects.equals(L, that.L) &&
-                    Objects.equals(D, that.D) &&
-                    Objects.equals(F, that.F) &&
-                    Objects.equals(bi, that.bi) &&
-                    Objects.equals(bd, that.bd) &&
-                    Objects.equals(C, that.C) &&
-                    Objects.equals(string, that.string) &&
-                    Objects.equals(stringB, that.stringB) &&
-                    Objects.equals(stringb, that.stringb) &&
-                    Objects.equals(file, that.file);
+                    B.compareTo(that.B) == 0 &&
+                    S.compareTo(that.S) == 0 &&
+                    I.compareTo(that.I) == 0 &&
+                    L.compareTo(that.L) == 0 &&
+                    D.compareTo(that.D) == 0&&
+                    F.compareTo(that.F) == 0 &&
+                    bi.compareTo(that.bi) == 0 &&
+                    bd.compareTo(that.bd) == 0 &&
+                    C.compareTo(that.C) == 0 &&
+                    string.equals(that.string) &&
+                    stringB.toString().equals(that.stringB.toString()) &&
+                    stringb.toString().equals(that.stringb.toString()) &&
+                    file.equals(that.file);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(b, B, s, S, i, I, l, L, d, D, f, F, bi, bd, c, C, string, stringB, stringb, file);
+            return Objects.hash(b, B, s, S, i, I, l, L, d, D, f, F, bi, bd, c, C, string, stringB.toString(), stringb.toString(), file);
         }
     }
 
