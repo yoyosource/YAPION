@@ -28,6 +28,9 @@ public class YAPIONPacket {
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
     private YAPIONObject cache = null;
+    @YAPIONSaveExclude(context = "*")
+    @YAPIONLoadExclude(context = "*")
+    private String cacheString = null;
 
     private final String type;
     private final Map<String, Object> payload = new HashMap<>();
@@ -63,6 +66,17 @@ public class YAPIONPacket {
     }
 
     /**
+     * Removes a key value pair from this YAPIONPacket
+     *
+     * @param key the key
+     */
+    public YAPIONPacket remove(String key) {
+        lastModified = System.currentTimeMillis();
+        payload.remove(key);
+        return this;
+    }
+
+    /**
      * Gets a value of a specified key from this YAPIONPacket.
      *
      * @param key the key to retrieve
@@ -87,7 +101,7 @@ public class YAPIONPacket {
      * @return the length.
      */
     public long length() {
-        return getYAPION().toString().length();
+        return toSendString().length();
     }
 
     /**
@@ -109,12 +123,17 @@ public class YAPIONPacket {
 
     /**
      * Creates a String from the YAPIONObject created by {@code getYAPION}.
-     * Creates the YAPIONObject along side creating the string.
+     * Creates the YAPIONObject along side creating the string. The string
+     * gets cached for further use. Using {@code add} discards this cache.
      *
      * @return the String from the YAPIONObject
      */
     public String toSendString() {
-        return getYAPION().toString();
+        if (cacheString != null && lastModified == lastCreated) {
+            return cacheString;
+        }
+        cacheString = getYAPION().toString();
+        return cacheString;
     }
 
     @Override
