@@ -127,7 +127,7 @@ public class YAPIONTestObjects {
         private final StringBuilder stringB = new StringBuilder();
         private final StringBuffer stringb = new StringBuffer();
 
-        private final File file = new File("~");
+        private final File file = new File(getUserHome() + "/YAPI");
 
         @Override
         public boolean equals(Object o) {
@@ -160,6 +160,10 @@ public class YAPIONTestObjects {
         public int hashCode() {
             return Objects.hash(b, B, s, S, i, I, l, L, d, D, f, F, bi, bd, c, C, string, stringB, stringb, file);
         }
+    }
+
+    static String getUserHome() {
+        return System.getProperty("user.home");
     }
 
     public static void main(String[] args) {
