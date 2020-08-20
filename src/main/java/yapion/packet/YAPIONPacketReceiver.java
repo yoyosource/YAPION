@@ -18,9 +18,12 @@ public class YAPIONPacketReceiver {
 
     private final Map<String, YAPIONPacketHandler> handlerMap = new HashMap<>();
 
-    {
-        handlerMap.put("@error", (yapionPacket) -> {});
-        handlerMap.put("@exception", (yapionPacket) -> {});
+    /**
+     * Creates an YAPIONPacketReceiver
+     */
+    public YAPIONPacketReceiver() {
+        handlerMap.put("@error", yapionPacket -> {});
+        handlerMap.put("@exception", yapionPacket -> {});
     }
 
     /**

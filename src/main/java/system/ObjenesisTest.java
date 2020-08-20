@@ -28,10 +28,6 @@ public class ObjenesisTest {
 
     }
 
-    private final class Tets {
-
-    }
-
     public static void main(String[] args) throws Exception {
         // Objenesis objenesis = new ObjenesisStd(false);
         ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);

@@ -73,18 +73,18 @@ public class YAPIONLogger {
         }
     }
 
-    private static ClassContextSecurityManager SECURITY_MANAGER;
-    private static boolean SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED = false;
+    private static ClassContextSecurityManager securityManager;
+    private static boolean securityManagerCreationAlreadyAttempted = false;
 
     private static ClassContextSecurityManager getSecurityManager() {
-        if (SECURITY_MANAGER != null)
-            return SECURITY_MANAGER;
-        else if (SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED)
+        if (securityManager != null)
+            return securityManager;
+        else if (securityManagerCreationAlreadyAttempted)
             return null;
         else {
-            SECURITY_MANAGER = safeCreateSecurityManager();
-            SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED = true;
-            return SECURITY_MANAGER;
+            securityManager = safeCreateSecurityManager();
+            securityManagerCreationAlreadyAttempted = true;
+            return securityManager;
         }
     }
 

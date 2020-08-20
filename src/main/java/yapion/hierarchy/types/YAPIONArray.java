@@ -86,9 +86,7 @@ public class YAPIONArray extends YAPIONAny {
     protected Optional<YAPIONSearch<? extends YAPIONAny>> get(String key) {
         try {
             return Optional.of(new YAPIONSearch<>(get(Integer.parseInt(key))));
-        } catch (NumberFormatException e) {
-            return Optional.empty();
-        } catch (YAPIONArrayIndexOutOfBoundsException e) {
+        } catch (NumberFormatException | YAPIONArrayIndexOutOfBoundsException e) {
             return Optional.empty();
         }
     }

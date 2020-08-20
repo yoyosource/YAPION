@@ -175,65 +175,34 @@ public class YAPIONParser {
             return;
         }
 
-        if (typeStack.peek() == Type.POINTER) {
-            parsePointer(c);
-            return;
-        } else if (typeStack.peek() == Type.OBJECT) {
-            // HANDLED elsewhere
-        } else if (typeStack.peek() == Type.ARRAY) {
-            parseArray(c, lastChar);
-            return;
-        } else if (typeStack.peek() == Type.VALUE) {
-            parseValue(c);
-            return;
-        } else if (typeStack.peek() == Type.MAP) {
-            parseMap(c);
-            return;
+        switch (typeStack.peek()) {
+            case POINTER:
+                parsePointer(c);
+                return;
+            case ARRAY:
+                parseArray(c, lastChar);
+                return;
+            case VALUE:
+                parseValue(c);
+                return;
+            case MAP:
+                parseMap(c, lastChar);
+                return;
+            default:
+                break;
         }
 
-        if (!escaped) {
-            if (c == '{') {
-                push(Type.OBJECT);
-                YAPIONObject yapionObject = new YAPIONObject();
-                yapionObjectList.add(yapionObject);
-                add(new YAPIONVariable(key, yapionObject));
-                currentObject = yapionObject;
-                key = "";
-                return;
-            } else if (c == '}') {
-                pop(Type.OBJECT);
-                reset();
-                currentObject = currentObject.getParent();
-                if (typeStack.isEmpty()) {
-                    finished = true;
-                }
-                return;
+        if (parseObject(c, lastChar)) {
+            return;
+        }
+        if (!escaped && c == '}') {
+            pop(Type.OBJECT);
+            reset();
+            currentObject = currentObject.getParent();
+            if (typeStack.isEmpty()) {
+                finished = true;
             }
-            if (c == '[') {
-                push(Type.ARRAY);
-                YAPIONArray yapionArray = new YAPIONArray();
-                add(new YAPIONVariable(key, yapionArray));
-                currentObject = yapionArray;
-                key = "";
-                return;
-            }
-            if (c == '(') {
-                push(Type.VALUE);
-                return;
-            }
-            if (lastChar == '-' && c == '>') {
-                current.deleteCharAt(current.length() - 1);
-                push(Type.POINTER);
-                return;
-            }
-            if (c == '<') {
-                push(Type.MAP);
-                YAPIONMap yapionMap = new YAPIONMap();
-                add(new YAPIONVariable(key, yapionMap));
-                currentObject = yapionMap;
-                key = "";
-                return;
-            }
+            return;
         }
         if (current.length() == 0 && c == ' ' && escaped) {
             current.append(c);
@@ -310,6 +279,47 @@ public class YAPIONParser {
         }
     }
 
+    private boolean parseObject(char c, char lastChar) {
+        if (escaped) {
+            return false;
+        }
+        if (c == '{') {
+            push(Type.OBJECT);
+            YAPIONObject yapionObject = new YAPIONObject();
+            yapionObjectList.add(yapionObject);
+            add(new YAPIONVariable(key, yapionObject));
+            currentObject = yapionObject;
+            key = "";
+            return true;
+        }
+        if (c == '[') {
+            push(Type.ARRAY);
+            YAPIONArray yapionArray = new YAPIONArray();
+            add(new YAPIONVariable(key, yapionArray));
+            currentObject = yapionArray;
+            key = "";
+            return true;
+        }
+        if (c == '(') {
+            push(Type.VALUE);
+            return true;
+        }
+        if (lastChar == '-' && c == '>') {
+            current.deleteCharAt(current.length() - 1);
+            push(Type.POINTER);
+            return true;
+        }
+        if (c == '<') {
+            push(Type.MAP);
+            YAPIONMap yapionMap = new YAPIONMap();
+            add(new YAPIONVariable(key, yapionMap));
+            currentObject = yapionMap;
+            key = "";
+            return true;
+        }
+        return false;
+    }
+
     private void parseValue(char c) {
         if (!escaped && c == ')') {
             pop(Type.VALUE);
@@ -331,7 +341,7 @@ public class YAPIONParser {
         }
     }
 
-    private void parseMap(char c) {
+    private void parseMap(char c, char lastChar) {
         if (c == '>') {
             pop(Type.MAP);
             if (current.length() != 0) {
@@ -342,13 +352,7 @@ public class YAPIONParser {
             reset();
             return;
         }
-        if (!escaped && c == '{') {
-            push(Type.OBJECT);
-            YAPIONObject yapionObject = new YAPIONObject();
-            yapionObjectList.add(yapionObject);
-            add(new YAPIONVariable(key, yapionObject));
-            currentObject = yapionObject;
-            key = "";
+        if (parseObject(c, lastChar)) {
             return;
         }
 
@@ -381,32 +385,9 @@ public class YAPIONParser {
                 reset();
                 return;
             }
-            if (c == '{') {
-                push(Type.OBJECT);
-                YAPIONObject yapionObject = new YAPIONObject();
-                yapionObjectList.add(yapionObject);
-                add(new YAPIONVariable("", yapionObject));
-                currentObject = yapionObject;
-                return;
-            }
-            if (c == '[') {
-                push(Type.ARRAY);
-                YAPIONArray yapionArray = new YAPIONArray();
-                add(new YAPIONVariable("", yapionArray));
-                currentObject = yapionArray;
-                return;
-            }
-            if (c == '<') {
-                push(Type.MAP);
-                YAPIONMap yapionMap = new YAPIONMap();
-                add(new YAPIONVariable("", yapionMap));
-                currentObject = yapionMap;
-                return;
-            }
-            if (lastChar == '-' && c == '>') {
-                push(Type.POINTER);
-                return;
-            }
+        }
+        if (parseObject(c, lastChar)) {
+            return;
         }
         if (current.length() == 0 && (c == ' ' || c == '\n') && !escaped) {
             return;

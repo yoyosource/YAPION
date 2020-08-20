@@ -132,7 +132,7 @@ public class StateManager {
                 localLoad = !is(yapionLoadExclude);
             } else if (yapionLoadExclude == null && yapionLoad != null) {
                 localLoad = is(yapionLoad);
-            } else if (yapionLoadExclude != null && yapionLoad != null) {
+            } else if (yapionLoadExclude != null) {
                 if (is(yapionLoadExclude)) localLoad = false;
                 localLoad = is(yapionLoad);
             }
@@ -144,7 +144,7 @@ public class StateManager {
                 localSave = !is(yapionSaveExclude);
             } else if (yapionSaveExclude == null && yapionSave != null) {
                 localSave = is(yapionSave);
-            } else if (yapionSaveExclude != null && yapionSave != null) {
+            } else if (yapionSaveExclude != null) {
                 if (is(yapionSaveExclude)) localSave = false;
                 localSave = is(yapionSave);
             }

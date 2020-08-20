@@ -88,7 +88,9 @@ public class YAPIONAny {
         return parent;
     }
 
-    public void toOutputStream(OutputStream outputStream) throws IOException {}
+    public void toOutputStream(OutputStream outputStream) throws IOException {
+        // This method should be overwritten by YAPIONArray, YAPIONMap, YAPIONObject, YAPIONPointer and YAPIONValue
+    }
 
     public final Optional<YAPIONSearch<? extends YAPIONAny>> get(String... s) {
         Optional<YAPIONSearch<? extends YAPIONAny>> optional = Optional.of(new YAPIONSearch<>(this));

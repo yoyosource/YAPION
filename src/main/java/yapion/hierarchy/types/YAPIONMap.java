@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types;
 
+import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.Type;
@@ -23,8 +24,10 @@ public class YAPIONMap extends YAPIONAny {
 
     private final Map<YAPIONAny, YAPIONAny> variables = new LinkedHashMap<>();
     @YAPIONSaveExclude(context = "*")
+    @YAPIONLoadExclude(context = "*")
     private final List<YAPIONParserMapMapping> mappingList = new ArrayList<>();
     @YAPIONSaveExclude(context = "*")
+    @YAPIONLoadExclude(context = "*")
     private final Map<String, YAPIONAny> mappingVariables = new LinkedHashMap<>();
 
     @Override
@@ -102,9 +105,7 @@ public class YAPIONMap extends YAPIONAny {
                 continue;
             }
 
-            YAPIONAny key = ((YAPIONObject)mappingVariables.get(strings[0])).getVariable("").getValue();
-            YAPIONAny value = ((YAPIONObject)mappingVariables.get(strings[1])).getVariable("").getValue();
-            variables.put(key, value);
+            variables.put(mappingVariables.get(strings[0]), mappingVariables.get(strings[1]));
         }
 
         mappingVariables.clear();
@@ -148,9 +149,9 @@ public class YAPIONMap extends YAPIONAny {
 
             st.append(id1).append(":").append(id2);
             st.append(",");
-            st.append("#").append(id1).append("{").append(entry.getKey().toString()).append("}");
+            st.append("#").append(id1).append(entry.getKey().toString());
             st.append(",");
-            st.append("#").append(id2).append("{").append(entry.getValue().toString()).append("}");
+            st.append("#").append(id2).append(entry.getValue().toString());
         }
         st.append(">");
         return st.toString();

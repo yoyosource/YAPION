@@ -41,7 +41,7 @@ public class ReflectionsUtils {
             objects[i] = parameters[i].object;
         }
 
-        Class clazz = object.getClass();
+        Class<?> clazz = object.getClass();
         boolean search = true;
         while (search) {
             if (clazz.getTypeName().equals("java.lang.Object")) {
@@ -81,7 +81,7 @@ public class ReflectionsUtils {
             classes[i] = parameters[i].getClass();
         }
 
-        Class clazz = object.getClass();
+        Class<?> clazz = object.getClass();
         boolean search = true;
         while (search) {
             if (clazz.getTypeName().equals("java.lang.Object")) {
