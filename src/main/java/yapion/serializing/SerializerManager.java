@@ -66,14 +66,50 @@ public class SerializerManager {
 
     private static final Map<String, Serializer<?>> ownSerializerMap;
 
+    /**
+     * Adds a special Serializer for a specific Object.
+     *
+     * @param serializer the special Serializer to add
+     */
     public static void add(Serializer<?> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
         ownSerializerMap.put(serializer.type(), serializer);
     }
 
+    /**
+     * Remove a special Serializer with the type name.
+     *
+     * @param type the typeName to remove
+     */
+    public static void remove(String type) {
+        if (type == null) return;
+        ownSerializerMap.remove(type);
+    }
+
+    /**
+     * Remove a special Serializer with the Serializer.
+     *
+     * @param serializer the serializer to remove
+     */
+    public static void remove(Serializer<?> serializer) {
+        if (serializer == null) return;
+        if (serializer.type() == null) return;
+        remove(serializer.type());
+    }
+
+    /**
+     * Remove a special Serializer with the Class type name.
+     *
+     * @param clazz the Class type name
+     */
+    public static void remove(Class<?> clazz) {
+        if (clazz == null) return;
+        remove(clazz.getTypeName());
+    }
+
     @SuppressWarnings({"java:S1452"})
-    public static Serializer<?> get(String type) {
+    static Serializer<?> get(String type) {
         return serializerMap.getOrDefault(type, ownSerializerMap.getOrDefault(type, null));
     }
 
