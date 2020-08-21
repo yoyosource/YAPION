@@ -11,7 +11,7 @@ import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.Serializer;
+import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
@@ -21,7 +21,7 @@ import java.util.LinkedList;
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S3740"})
-public class ListSerializerLinked implements Serializer<LinkedList> {
+public class ListSerializerLinked implements InternalSerializer<LinkedList> {
 
     @Override
     public String type() {

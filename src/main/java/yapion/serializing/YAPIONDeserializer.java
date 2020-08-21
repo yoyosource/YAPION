@@ -5,15 +5,11 @@
 package yapion.serializing;
 
 import test.Test;
-import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.*;
-import yapion.serializing.serializer.number.*;
-import yapion.serializing.serializer.object.*;
-import yapion.serializing.serializer.other.*;
 import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
 import yapion.utils.YAPIONLogger;
@@ -128,7 +124,7 @@ public class YAPIONDeserializer {
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parse(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>)yapionObject.getVariable("@type").getValue()).get();
-        Serializer<?> serializer = SerializerManager.get(type);
+        InternalSerializer<?> serializer = SerializerManager.get(type);
         if (serializer != null) {
             object = serializer.deserialize(yapionObject, this);
             return this;

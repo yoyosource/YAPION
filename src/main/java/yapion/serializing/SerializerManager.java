@@ -2,6 +2,10 @@ package yapion.serializing;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.YAPIONVariable;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.serializer.number.*;
 import yapion.serializing.serializer.object.*;
 import yapion.serializing.serializer.other.*;
@@ -17,7 +21,7 @@ public class SerializerManager {
         throw new IllegalStateException("Utility class");
     }
 
-    private static final Map<String, Serializer<?>> serializerMap = new HashMap<>();
+    private static final Map<String, InternalSerializer<?>> serializerMap = new HashMap<>();
     static {
         // Other
         addPrivate(new StringSerializer());
@@ -56,7 +60,7 @@ public class SerializerManager {
         ownSerializerMap = new HashMap<>();
     }
 
-    private static void addPrivate(Serializer<?> serializer) {
+    private static void addPrivate(InternalSerializer<?> serializer) {
         if (ownSerializerMap != null) return;
         serializerMap.put(serializer.type(), serializer);
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
@@ -64,17 +68,35 @@ public class SerializerManager {
         }
     }
 
-    private static final Map<String, Serializer<?>> ownSerializerMap;
+    private static final Map<String, InternalSerializer<?>> ownSerializerMap;
 
     /**
      * Adds a special Serializer for a specific Object.
      *
      * @param serializer the special Serializer to add
      */
-    public static void add(Serializer<?> serializer) {
+    public static <T> void add(Serializer<T> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
-        ownSerializerMap.put(serializer.type(), serializer);
+        InternalSerializer<T> internalSerializer = new InternalSerializer<T>() {
+            @Override
+            public String type() {
+                return serializer.type().getTypeName();
+            }
+
+            @Override
+            public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
+                YAPIONObject yapionObject = serializer.serialize(object, yapionSerializer);
+                yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
+                return yapionObject;
+            }
+
+            @Override
+            public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+                return serializer.deserialize((YAPIONObject) yapionAny, yapionDeserializer);
+            }
+        };
+        ownSerializerMap.put(internalSerializer.type(), internalSerializer);
     }
 
     /**
@@ -95,7 +117,7 @@ public class SerializerManager {
     public static void remove(Serializer<?> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
-        remove(serializer.type());
+        remove(serializer.type().getTypeName());
     }
 
     /**
@@ -109,7 +131,7 @@ public class SerializerManager {
     }
 
     @SuppressWarnings({"java:S1452"})
-    static Serializer<?> get(String type) {
+    static InternalSerializer<?> get(String type) {
         return serializerMap.getOrDefault(type, ownSerializerMap.getOrDefault(type, null));
     }
 

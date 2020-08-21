@@ -10,7 +10,7 @@ import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.Serializer;
+import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
@@ -18,7 +18,7 @@ import java.io.File;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class FileSerializer implements Serializer<File> {
+public class FileSerializer implements InternalSerializer<File> {
 
     @Override
     public String type() {

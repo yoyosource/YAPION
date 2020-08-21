@@ -14,9 +14,6 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.serializer.number.*;
-import yapion.serializing.serializer.object.*;
-import yapion.serializing.serializer.other.*;
 import yapion.utils.ModifierUtils;
 
 import java.lang.reflect.Field;
@@ -112,7 +109,7 @@ public class YAPIONSerializer {
             }
             return yapionArray;
         } else {
-            Serializer serializer = SerializerManager.get(object.getClass().getTypeName());
+            InternalSerializer serializer = SerializerManager.get(object.getClass().getTypeName());
             if (serializer != null) {
                 return serializer.serialize(object, this);
             } else {
@@ -164,7 +161,7 @@ public class YAPIONSerializer {
                 continue;
             }
 
-            Serializer serializer = SerializerManager.get(fieldObject.getClass().getTypeName());
+            InternalSerializer serializer = SerializerManager.get(fieldObject.getClass().getTypeName());
             if (serializer != null) {
                 yapionObject.add(new YAPIONVariable(name, serializer.serialize(fieldObject, this)));
                 continue;

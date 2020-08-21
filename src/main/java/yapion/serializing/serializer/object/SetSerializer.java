@@ -11,7 +11,7 @@ import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.Serializer;
+import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
@@ -20,7 +20,7 @@ import java.util.*;
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S3740"})
-public class SetSerializer implements Serializer<Set> {
+public class SetSerializer implements InternalSerializer<Set> {
 
     @Override
     public String type() {

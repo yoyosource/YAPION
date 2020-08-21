@@ -10,13 +10,13 @@ import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.Serializer;
+import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class StringBuilderSerializer implements Serializer<StringBuilder> {
+public class StringBuilderSerializer implements InternalSerializer<StringBuilder> {
 
     @Override
     public String type() {

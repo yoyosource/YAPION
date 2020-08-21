@@ -8,7 +8,7 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.Serializer;
+import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
@@ -16,7 +16,7 @@ import java.math.BigInteger;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class BigIntegerSerializer implements Serializer<BigInteger> {
+public class BigIntegerSerializer implements InternalSerializer<BigInteger> {
 
     @Override
     public String type() {

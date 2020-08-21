@@ -11,7 +11,7 @@ import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.Serializer;
+import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
@@ -21,7 +21,7 @@ import java.util.Map;
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S3740"})
-public class MapSerializerHash implements Serializer<HashMap> {
+public class MapSerializerHash implements InternalSerializer<HashMap> {
 
     @Override
     public String type() {
