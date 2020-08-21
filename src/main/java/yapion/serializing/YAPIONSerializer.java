@@ -4,7 +4,6 @@
 
 package yapion.serializing;
 
-import test.Test;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.Type;
@@ -29,31 +28,6 @@ public class YAPIONSerializer {
     private final StateManager stateManager;
 
     private Map<Object, YAPIONPointer> pointerMap = new HashMap<>();
-
-    public static void main(String[] args) {
-        YAPIONObject yapionObject = serialize(new Test());
-        System.out.println(yapionObject);
-        YAPIONObject yapionObject1 = serialize(yapionObject);
-        System.out.println(yapionObject1);
-        YAPIONObject yapionObject2 = serialize(yapionObject1);
-        System.out.println(yapionObject2);
-        YAPIONObject yapionObject3 = serialize(yapionObject2);
-        System.out.println(yapionObject3);
-    }
-
-    private static void multiTest() {
-        Test test = new Test();
-        YAPIONObject yapionObject = null;
-        long globalTime = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
-            long time = System.currentTimeMillis();
-            yapionObject = serialize(test);
-            time = System.currentTimeMillis() - time;
-            System.out.println(time + "ms");
-        }
-        System.out.println(System.currentTimeMillis() - globalTime);
-        System.out.println(yapionObject);
-    }
 
     /**
      * Serialize an Object to an YAPION Object.

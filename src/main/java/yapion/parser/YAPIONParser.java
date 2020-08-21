@@ -341,11 +341,6 @@ public class YAPIONParser {
         }
     }
 
-    public static void main(String[] args) {
-        YAPIONObject yapionObject = parse("{test<0:1#0(Hello World)#1(Hello World)2:3#2(Test)#3(Test3)>}");
-        System.out.println(yapionObject);
-    }
-
     private void parseMap(char c, char lastChar) {
         if (c == '>') {
             pop(Type.MAP);

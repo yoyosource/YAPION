@@ -1,13 +1,11 @@
 package yapion.serializing;
 
-import system.ObjenesisTest;
 import yapion.annotations.YAPIONData;
-import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.serialize.YAPIONSave;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class YAPIONTestObjects {
@@ -224,13 +222,21 @@ public class YAPIONTestObjects {
         String s3 = YAPIONSerializer.serialize(new TestArray()).toString();
         String s4 = YAPIONSerializer.serialize(new TestPrimitive()).toString();
 
-        System.out.println(ObjenesisTest.encodeBase64(s1));
-        System.out.println(ObjenesisTest.encodeBase64(s2));
-        System.out.println(ObjenesisTest.encodeBase64(s3));
-        System.out.println(ObjenesisTest.encodeBase64(s4));
+        System.out.println(encodeBase64(s1));
+        System.out.println(encodeBase64(s2));
+        System.out.println(encodeBase64(s3));
+        System.out.println(encodeBase64(s4));
 
-        System.out.println(ObjenesisTest.decodeBase64("e0B0eXBlKH"));
-        System.out.println(ObjenesisTest.encodeBase64("{@type("));
+        System.out.println(decodeBase64("e0B0eXBlKH"));
+        System.out.println(encodeBase64("{@type("));
+    }
+
+    public static String encodeBase64(String s) {
+        return new String(Base64.getEncoder().encode(s.getBytes()), StandardCharsets.UTF_8);
+    }
+
+    public static String decodeBase64(String base64) {
+        return new String(Base64.getDecoder().decode(base64.getBytes()), StandardCharsets.UTF_8);
     }
 
 }

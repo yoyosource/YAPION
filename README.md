@@ -55,8 +55,8 @@ Both have objects as a key, value map and arrays. An YAPION structure can only b
 The String representation of an YAPION Object or Array is mostly shorter than the JSON equivalent. This is achieved by eliminating most quotation marks and building the key value pairs in a enum like fashion.
 YAPION as a object notation has 5 types. Those are value, array, object, map (see: Map) and pointer (see: Pointer).
 Values are indicated by '(...)', arrays by '\[...]', objects by '{...}', map by '<...> and pointers by '->...', the 3 dots are representing the value, or the key value pairs.
-## JSON Equivalent
-### Objects, Key-Value pairs
+### JSON Equivalent
+#### Objects, Key-Value pairs
 ```
 Example for an empty YAPION object
 JSON:   {}
@@ -86,7 +86,7 @@ Example for an YAPION object with "name":"yoyosource" and "owner":true as value 
 JSON:   {"name":"yoyosource","owner":true}
 YAPION: {name(yoyosource)owner(true)}
 ```
-### Arrays
+#### Arrays
 ```
 Example for an empty YAPION array
 JSON:   []
@@ -108,8 +108,8 @@ Example for embedding an YAPION array in another object.
 JSON:   {"contributor":[{"name":"yoyosource","owner":true},{"name":"chaoscaot444","owner":"false"}]}
 YAPION: {contributor[{name(yoyosource)owner(true)},{name(chaoscaot444)owner("false")}]}
 ```
-## YAPION Specific
-### Maps
+### YAPION Specific
+#### Maps
 ```
 Example for an empty YAPION map
 <>
@@ -131,4 +131,23 @@ The list of prefixes for pointers is as follows: '0123456789ABCDEF'
 ```
 Example for an YAPION pointer
 {hello->7FFFFFE53E6CBDFE}
+```
+
+## Code examples
+### Parsing
+```java
+YAPIONObject yapionObject = YAPIONParser.parse("[...]");
+YAPIONObject yapionObject1 = YAPIONParser.parse(new FileInputStream(new File([...])));
+```
+
+### Serializing
+```java
+YAPIONObject yapionObject = YAPIONSerializer.serialize([...]);
+YAPIONObject yapionObject1 = YAPIONSerializer.serialize([...], "[...]");
+```
+
+### Deserializing
+```java
+Object object = YAPIONDeserializer.deserialize([...]);
+Object object = YAPIONDeserializer.deserialize([...], "[...]");
 ```
