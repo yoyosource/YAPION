@@ -99,8 +99,8 @@ public class YAPIONTestObjects {
             if (this == o) return true;
             if (!(o instanceof TestArray)) return false;
             TestArray testArray = (TestArray) o;
-            return Arrays.equals(strings, testArray.strings) &&
-                    Arrays.equals(strings1, testArray.strings1) &&
+            return Arrays.deepEquals(strings, testArray.strings) &&
+                    Arrays.deepEquals(strings1, testArray.strings1) &&
                     Objects.equals(strings2, testArray.strings2) &&
                     Objects.equals(strings3, testArray.strings3);
         }

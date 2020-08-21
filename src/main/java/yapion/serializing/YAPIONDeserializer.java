@@ -17,12 +17,10 @@ import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
 import yapion.utils.YAPIONLogger;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static yapion.serializing.YAPIONSerializer.serialize;
 
@@ -35,6 +33,8 @@ public class YAPIONDeserializer {
     private final StateManager stateManager;
 
     private Map<YAPIONObject, Object> pointerMap = new HashMap<>();
+
+    private String arrayType = "";
 
     public static void main(String[] args) {
         YAPIONObject yapionObject = serialize(new Test());
@@ -110,19 +110,45 @@ public class YAPIONDeserializer {
         return null;
     }
 
-    private Object[] parseArray(YAPIONArray yapionArray) {
-        int length = yapionArray.length();
-        Object[] objects = new Object[length];
-        for (int i = 0; i < length; i++) {
-            YAPIONAny yapionAny = yapionArray.get(i);
-            if (yapionAny instanceof YAPIONArray) {
-                objects[i] = parseArray((YAPIONArray) yapionAny);
-            } else {
-                objects[i] = null;
+    private Object parseArray(YAPIONArray yapionArray) {
+        LinkedList<Integer> dimensions = new LinkedList<>();
+        YAPIONArray current = yapionArray;
+        while (current != null) {
+            dimensions.add(current.length());
+            if (dimensions.size() > 0) {
+                YAPIONAny yapionAny = current.get(0);
+                if (yapionAny instanceof YAPIONArray) {
+                    current = (YAPIONArray) yapionAny;
+                } else {
+                    current = null;
+                }
             }
         }
-        System.out.println(Arrays.toString(objects));
-        return objects;
+
+        int[] ints = new int[dimensions.size()];
+        for (int i = 0; i < dimensions.size(); i++) {
+            ints[i] = dimensions.removeLast();
+        }
+
+        while (arrayType.endsWith("[]")) {
+            arrayType = arrayType.substring(0, arrayType.length() - 2);
+        }
+        Object array = null;
+        try {
+            array = Array.newInstance(Class.forName(arrayType), ints);
+        } catch (ClassNotFoundException e) {
+
+        } catch (IllegalArgumentException e) {
+
+        } catch (NegativeArraySizeException e) {
+
+        }
+        if (array == null) return array;
+
+        for (int i = 0; i < yapionArray.length(); i++) {
+            Array.set(array, i, parse(yapionArray.get(i), this));
+        }
+        return array;
     }
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
@@ -158,6 +184,7 @@ public class YAPIONDeserializer {
 
                 YAPIONAny yapionAny = yapionObject.getVariable(field.getName()).getValue();
                 // getSerializerType(field)
+                arrayType = field.getType().getTypeName();
                 field.set(object, parse(yapionAny, this));
             }
             postDeserializationStep(object);
