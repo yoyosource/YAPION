@@ -48,8 +48,6 @@ dependencies {
 - Deserialize Java Object
 - Array Deserialization
 - More internal Java Types supported?
-- annotation for Objenesis Object creation
-- annotation for Object Creation without having an NoArgs Constructor?
 
 ## Structure
 YAPION is heavily inspired by JSON and you can see some similarities between those object notations.

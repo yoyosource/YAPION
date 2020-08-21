@@ -7,6 +7,8 @@ package yapion.serializing;
 import test.Test;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONObjenesis;
+import yapion.annotations.object.YAPIONPostDeserialization;
+import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.YAPIONAny;
@@ -16,6 +18,7 @@ import yapion.utils.ReflectionsUtils;
 import yapion.utils.YAPIONLogger;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -171,11 +174,23 @@ public class YAPIONDeserializer {
     }
 
     private void preDeserializationStep(Object object) {
-        
+        Method[] methods = object.getClass().getDeclaredMethods();
+        for (Method method : methods) {
+            if (stateManager.is(method.getAnnotation(YAPIONPreDeserialization.class))) {
+                ReflectionsUtils.invokeMethod(method.getName(), object);
+                break;
+            }
+        }
     }
 
     private void postDeserializationStep(Object object) {
-
+        Method[] methods = object.getClass().getDeclaredMethods();
+        for (Method method : methods) {
+            if (stateManager.is(method.getAnnotation(YAPIONPostDeserialization.class))) {
+                ReflectionsUtils.invokeMethod(method.getName(), object);
+                break;
+            }
+        }
     }
 
     /**
