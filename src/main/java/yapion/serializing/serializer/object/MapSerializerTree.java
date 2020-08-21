@@ -15,7 +15,6 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -43,7 +42,7 @@ public class MapSerializerTree implements Serializer<TreeMap> {
     }
 
     @Override
-    public TreeMap deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+    public TreeMap deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
         TreeMap<Object, Object> map = new TreeMap<>();
         for (YAPIONAny key : yapionMap.getKeys()) {

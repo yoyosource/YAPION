@@ -15,7 +15,6 @@ import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 import java.io.File;
-import java.lang.reflect.Field;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -35,7 +34,7 @@ public class FileSerializer implements Serializer<File> {
     }
 
     @Override
-    public File deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+    public File deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONObject yapionObject = (YAPIONObject)yapionAny;
         return new File(yapionObject.getValue("absolutePath", "").get());
     }

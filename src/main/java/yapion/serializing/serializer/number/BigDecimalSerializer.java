@@ -12,7 +12,6 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
 @YAPIONSaveExclude(context = "*")
@@ -30,7 +29,7 @@ public class BigDecimalSerializer implements Serializer<BigDecimal> {
     }
 
     @Override
-    public BigDecimal deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+    public BigDecimal deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         return ((YAPIONValue<BigDecimal>) yapionAny).get();
     }
 }

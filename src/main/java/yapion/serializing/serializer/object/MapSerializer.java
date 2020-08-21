@@ -15,7 +15,6 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +42,7 @@ public class MapSerializer implements Serializer<Map> {
     }
 
     @Override
-    public Map deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+    public Map deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
         HashMap<Object, Object> map = new HashMap();
         for (YAPIONAny key : yapionMap.getKeys()) {

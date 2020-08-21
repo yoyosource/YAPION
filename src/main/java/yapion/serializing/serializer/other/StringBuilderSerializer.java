@@ -14,8 +14,6 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.lang.reflect.Field;
-
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 public class StringBuilderSerializer implements Serializer<StringBuilder> {
@@ -34,7 +32,7 @@ public class StringBuilderSerializer implements Serializer<StringBuilder> {
     }
 
     @Override
-    public StringBuilder deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+    public StringBuilder deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONObject yapionObject = (YAPIONObject)yapionAny;
         return new StringBuilder().append(yapionObject.getValue("string", "").get());
     }

@@ -27,49 +27,6 @@ import java.util.Map;
 @YAPIONLoadExclude(context = "*")
 public class YAPIONSerializer {
 
-    private static final Map<String, Serializer<?>> serializerMap = new HashMap<>();
-    static {
-        // Other
-        add(new StringSerializer());
-        add(new StringBuilderSerializer());
-        add(new StringBufferSerializer());
-        add(new CharacterSerializer());
-        add(new FileSerializer());
-
-        // Non Floating Point Numbers
-        add(new ByteSerializer());
-        add(new ShortSerializer());
-        add(new IntegerSerializer());
-        add(new LongSerializer());
-        add(new BigIntegerSerializer());
-
-        // Floating Point Numbers
-        add(new FloatSerializer());
-        add(new DoubleSerializer());
-        add(new BigDecimalSerializer());
-
-        // Objects
-        add(new ListSerializer());
-        add(new ListSerializerArray());
-        add(new ListSerializerLinked());
-
-        add(new MapSerializer());
-        add(new MapSerializerHash());
-        add(new MapSerializerLinkedHash());
-        add(new MapSerializerTree());
-
-        add(new SetSerializer());
-        add(new SetSerializerHash());
-        add(new SetSerializerLinkedHash());
-    }
-
-    private static void add(Serializer<?> serializer) {
-        serializerMap.put(serializer.type(), serializer);
-        if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
-            serializerMap.put(serializer.primitiveType(), serializer);
-        }
-    }
-
     private final Object object;
     private YAPIONObject yapionObject;
     private final StateManager stateManager;
@@ -155,7 +112,7 @@ public class YAPIONSerializer {
             }
             return yapionArray;
         } else {
-            Serializer serializer = serializerMap.get(object.getClass().getTypeName());
+            Serializer serializer = SerializerManager.get(object.getClass().getTypeName());
             if (serializer != null) {
                 return serializer.serialize(object, this);
             } else {
@@ -207,7 +164,7 @@ public class YAPIONSerializer {
                 continue;
             }
 
-            Serializer serializer = serializerMap.get(fieldObject.getClass().getTypeName());
+            Serializer serializer = SerializerManager.get(fieldObject.getClass().getTypeName());
             if (serializer != null) {
                 yapionObject.add(new YAPIONVariable(name, serializer.serialize(fieldObject, this)));
                 continue;

@@ -15,7 +15,6 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -43,7 +42,7 @@ public class MapSerializerLinkedHash implements Serializer<LinkedHashMap> {
     }
 
     @Override
-    public LinkedHashMap deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+    public LinkedHashMap deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
         LinkedHashMap<Object, Object> map = new LinkedHashMap<>();
         for (YAPIONAny key : yapionMap.getKeys()) {

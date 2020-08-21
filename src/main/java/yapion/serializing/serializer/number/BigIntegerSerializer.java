@@ -12,7 +12,6 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.lang.reflect.Field;
 import java.math.BigInteger;
 
 @YAPIONSaveExclude(context = "*")
@@ -30,7 +29,7 @@ public class BigIntegerSerializer implements Serializer<BigInteger> {
     }
 
     @Override
-    public BigInteger deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+    public BigInteger deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         return ((YAPIONValue<BigInteger>) yapionAny).get();
     }
 }

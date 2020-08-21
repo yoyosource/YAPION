@@ -14,9 +14,6 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.io.File;
-import java.lang.reflect.Field;
-
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 public class StringBufferSerializer implements Serializer<StringBuffer> {
@@ -35,7 +32,7 @@ public class StringBufferSerializer implements Serializer<StringBuffer> {
     }
 
     @Override
-    public StringBuffer deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+    public StringBuffer deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONObject yapionObject = (YAPIONObject)yapionAny;
         return new StringBuffer().append(yapionObject.getValue("string", "").get());
     }

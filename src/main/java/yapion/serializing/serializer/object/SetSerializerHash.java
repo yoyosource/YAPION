@@ -15,7 +15,6 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -43,7 +42,7 @@ public class SetSerializerHash implements Serializer<HashSet> {
     }
 
     @Override
-    public HashSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+    public HashSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONArray yapionArray = ((YAPIONObject) yapionAny).getArray("values");
         HashSet<Object> set = new HashSet<>(yapionArray.length());
         for (int i = 0; i < yapionArray.length(); i++) {

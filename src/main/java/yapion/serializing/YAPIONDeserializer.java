@@ -30,49 +30,6 @@ import static yapion.serializing.YAPIONSerializer.serialize;
 @YAPIONLoadExclude(context = "*")
 public class YAPIONDeserializer {
 
-    private static final Map<String, Serializer<?>> serializerMap = new HashMap<>();
-    static {
-        // Other
-        add(new StringSerializer());
-        add(new StringBuilderSerializer());
-        add(new StringBufferSerializer());
-        add(new CharacterSerializer());
-        add(new FileSerializer());
-
-        // Non Floating Point Numbers
-        add(new ByteSerializer());
-        add(new ShortSerializer());
-        add(new IntegerSerializer());
-        add(new LongSerializer());
-        add(new BigIntegerSerializer());
-
-        // Floating Point Numbers
-        add(new FloatSerializer());
-        add(new DoubleSerializer());
-        add(new BigDecimalSerializer());
-
-        // Objects
-        add(new ListSerializer());
-        add(new ListSerializerArray());
-        add(new ListSerializerLinked());
-
-        add(new MapSerializer());
-        add(new MapSerializerHash());
-        add(new MapSerializerLinkedHash());
-        add(new MapSerializerTree());
-
-        add(new SetSerializer());
-        add(new SetSerializerHash());
-        add(new SetSerializerLinkedHash());
-    }
-
-    private static void add(Serializer<?> serializer) {
-        serializerMap.put(serializer.type(), serializer);
-        if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
-            serializerMap.put(serializer.primitiveType(), serializer);
-        }
-    }
-
     private Object object;
     private final YAPIONObject yapionObject;
     private final StateManager stateManager;
@@ -171,8 +128,9 @@ public class YAPIONDeserializer {
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parse(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>)yapionObject.getVariable("@type").getValue()).get();
-        if (serializerMap.containsKey(type)) {
-            object = serializerMap.get(type).deserialize(yapionObject, this, null);
+        Serializer<?> serializer = SerializerManager.get(type);
+        if (serializer != null) {
+            object = serializer.deserialize(yapionObject, this);
             return this;
         }
         try {

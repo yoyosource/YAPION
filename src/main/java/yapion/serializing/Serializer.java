@@ -8,8 +8,6 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 
-import java.lang.reflect.Field;
-
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 public interface Serializer<T> {
@@ -19,6 +17,6 @@ public interface Serializer<T> {
         return "";
     }
     YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer);
-    T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field);
+    T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer);
 
 }

@@ -12,8 +12,6 @@ import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.lang.reflect.Field;
-
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 public class ByteSerializer implements Serializer<Byte> {
@@ -34,7 +32,7 @@ public class ByteSerializer implements Serializer<Byte> {
     }
 
     @Override
-    public Byte deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+    public Byte deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         return ((YAPIONValue<Byte>) yapionAny).get();
     }
 }
