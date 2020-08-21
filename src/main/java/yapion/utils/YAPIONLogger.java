@@ -13,6 +13,7 @@ import yapion.packet.YAPIONPacket;
 import yapion.packet.YAPIONPacketReceiver;
 import yapion.parser.TypeStack;
 import yapion.parser.YAPIONParser;
+import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
@@ -32,8 +33,8 @@ public class YAPIONLogger {
 
     public enum LoggingType {
         PARSER(parsingLogger, YAPIONParser.class, TypeStack.class, YAPIONArray.class, YAPIONMap.class, YAPIONObject.class, YAPIONPointer.class, YAPIONValue.class),
-        SERIALIZER(serializingLogger, YAPIONSerializer.class, YAPIONOutputStream.class, ModifierUtils.class, ReflectionsUtils.class),
-        DESERIALIZER(deserializingLogger, YAPIONDeserializer.class, YAPIONInputStream.class, ModifierUtils.class, ReflectionsUtils.class),
+        SERIALIZER(serializingLogger, YAPIONSerializer.class, YAPIONOutputStream.class, ModifierUtils.class, ReflectionsUtils.class, InternalSerializer.class),
+        DESERIALIZER(deserializingLogger, YAPIONDeserializer.class, YAPIONInputStream.class, ModifierUtils.class, ReflectionsUtils.class, InternalSerializer.class),
         PACKET(packetLogger, YAPIONPacket.class, YAPIONPacketReceiver.class, YAPIONInputStream.class, YAPIONOutputStream.class),
         UTILS(utilsLogger, ModifierUtils.class, RecursionUtils.class, ReferenceIDUtils.class, ReflectionsUtils.class, YAPIONLogger.class);
 

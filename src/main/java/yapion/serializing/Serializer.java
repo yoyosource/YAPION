@@ -2,7 +2,6 @@ package yapion.serializing;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONObject;
 
 @YAPIONSaveExclude(context = "*")

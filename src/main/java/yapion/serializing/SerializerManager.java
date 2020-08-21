@@ -9,6 +9,7 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.serializer.number.*;
 import yapion.serializing.serializer.object.*;
 import yapion.serializing.serializer.other.*;
+import yapion.utils.YAPIONLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,14 +87,27 @@ public class SerializerManager {
 
             @Override
             public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
-                YAPIONObject yapionObject = serializer.serialize(object, yapionSerializer);
-                yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
-                return yapionObject;
+                try {
+                    YAPIONObject yapionObject = serializer.serialize(object, yapionSerializer);
+                    yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
+                    return yapionObject;
+                } catch (Exception e) {
+                    YAPIONLogger.error(YAPIONLogger.LoggingType.SERIALIZER, "An unexpected error occurred", e.getCause());
+                }
+                return null;
             }
 
             @Override
+            @SuppressWarnings({"java:S1905"})
             public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-                return serializer.deserialize((YAPIONObject) yapionAny, yapionDeserializer);
+                if (yapionAny instanceof YAPIONObject) {
+                    try {
+                        return serializer.deserialize((YAPIONObject) yapionAny, yapionDeserializer);
+                    } catch (Exception e) {
+                        YAPIONLogger.error(YAPIONLogger.LoggingType.DESERIALIZER, "An unexpected error occurred", e.getCause());
+                    }
+                }
+                return null;
             }
         };
         ownSerializerMap.put(internalSerializer.type(), internalSerializer);
