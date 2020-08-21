@@ -31,7 +31,7 @@ public class ListSerializerLinked implements InternalSerializer<LinkedList> {
     @Override
     public YAPIONAny serialize(LinkedList object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>("java.util.LinkedList")));
+        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator iterator = object.iterator();

@@ -31,7 +31,7 @@ public class SetSerializerLinkedHash implements InternalSerializer<LinkedHashSet
     @Override
     public YAPIONAny serialize(LinkedHashSet object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>("java.util.LinkedHashSet")));
+        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator iterator = object.iterator();

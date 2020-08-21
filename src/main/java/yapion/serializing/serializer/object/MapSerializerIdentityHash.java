@@ -23,7 +23,7 @@ public class MapSerializerIdentityHash implements InternalSerializer<IdentityHas
     @Override
     public YAPIONAny serialize(IdentityHashMap object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>("java.util.IdentityHashMap")));
+        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
         for (Object obj : object.entrySet()) {
@@ -42,4 +42,5 @@ public class MapSerializerIdentityHash implements InternalSerializer<IdentityHas
         }
         return map;
     }
+
 }

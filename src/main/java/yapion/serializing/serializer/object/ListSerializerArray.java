@@ -31,7 +31,7 @@ public class ListSerializerArray implements InternalSerializer<ArrayList> {
     @Override
     public YAPIONAny serialize(ArrayList object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>("java.util.ArrayList")));
+        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator iterator = object.iterator();

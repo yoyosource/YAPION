@@ -49,13 +49,21 @@ public class SerializerManager {
         addPrivate(new ListSerializerLinked());
 
         addPrivate(new MapSerializer());
+        addPrivate(new MapSerializerIdentityHash());
         addPrivate(new MapSerializerHash());
         addPrivate(new MapSerializerLinkedHash());
         addPrivate(new MapSerializerTree());
+        addPrivate(new MapSerializerWeakHash());
 
         addPrivate(new SetSerializer());
         addPrivate(new SetSerializerHash());
         addPrivate(new SetSerializerLinkedHash());
+        addPrivate(new SetSerializerTree());
+
+        // Other Objects
+        addPrivate(new StackSerializer());
+        addPrivate(new TableSerializerHash());
+        addPrivate(new VectorSerializer());
 
         // Own Serializers Init
         ownSerializerMap = new HashMap<>();
