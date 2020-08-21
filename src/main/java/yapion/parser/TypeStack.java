@@ -6,35 +6,34 @@ package yapion.parser;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.exceptions.parser.YAPIONParserException;
+import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.hierarchy.Type;
+
+import java.util.Iterator;
+import java.util.LinkedList;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 public class TypeStack {
 
-    private int pointer = -1;
-    private static final int DEPTH = 65536;
-    private final Type[] stack = new Type[DEPTH];
-    private final long[] timeStack = new long[DEPTH];
+    private final LinkedList<Type> stack = new LinkedList<>();
+    private final LinkedList<Long> timeStack = new LinkedList<>();
 
     public void push(Type type) {
-        pointer++;
-        stack[pointer] = type;
-        timeStack[pointer] = System.nanoTime();
+        stack.push(type);
+        timeStack.push(System.nanoTime());
     }
 
     public Type pop(Type type) {
         if (empty()) {
             throw new YAPIONArrayIndexOutOfBoundsException();
         }
-        timeStack[pointer] = 0;
-        Type current = stack[pointer];
+        timeStack.pop();
+        Type current = stack.pop();
         if (current != type) {
             throw new YAPIONParserException();
         }
-        pointer--;
         return current;
     }
 
@@ -42,36 +41,39 @@ public class TypeStack {
         if (empty()) {
             throw new YAPIONArrayIndexOutOfBoundsException();
         }
-        return stack[pointer];
+        return stack.getFirst();
     }
 
     public long peekTime() {
         if (empty()) {
             throw new YAPIONArrayIndexOutOfBoundsException();
         }
-        return System.nanoTime() - timeStack[pointer];
+        return System.nanoTime() - timeStack.getFirst();
     }
 
     private boolean empty() {
-        return pointer == -1;
+        return (stack.isEmpty());
     }
 
     public boolean isEmpty() {
-        return pointer == -1;
+        return (stack.isEmpty());
     }
 
     public boolean isNotEmpty() {
-        return pointer != -1;
+        return !(stack.isEmpty());
     }
 
     @Override
     public String toString() {
         StringBuilder st = new StringBuilder();
-        for (int i = 0; i <= pointer; i++) {
-            if (i != 0) {
+        Iterator<Type> iterator = stack.descendingIterator();
+        boolean b = false;
+        while (iterator.hasNext()) {
+            if (b) {
                 st.append(", ");
             }
-            st.append(stack[i].getName());
+            b = true;
+            st.append(iterator.next().getName());
         }
         return "TypeStack[" + st.toString() + "]";
     }

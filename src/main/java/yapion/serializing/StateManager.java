@@ -7,6 +7,8 @@ package yapion.serializing;
 import yapion.annotations.*;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.object.YAPIONPostDeserialization;
+import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
@@ -67,6 +69,16 @@ public class StateManager {
     }
 
     public boolean is(YAPIONData annotation) {
+        if (annotation == null) return false;
+        return is(annotation.context());
+    }
+
+    public boolean is(YAPIONPreDeserialization annotation) {
+        if (annotation == null) return false;
+        return is(annotation.context());
+    }
+
+    public boolean is(YAPIONPostDeserialization annotation) {
         if (annotation == null) return false;
         return is(annotation.context());
     }

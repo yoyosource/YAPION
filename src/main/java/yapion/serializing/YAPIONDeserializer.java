@@ -141,6 +141,7 @@ public class YAPIONDeserializer {
             } else {
                 object = ReflectionsUtils.constructObject(type);
             }
+            preDeserializationStep(object);
             pointerMap.put(yapionObject, object);
 
             Field[] fields = object.getClass().getDeclaredFields();
@@ -156,6 +157,7 @@ public class YAPIONDeserializer {
                 // getSerializerType(field)
                 field.set(object, parse(yapionAny, this));
             }
+            postDeserializationStep(object);
         } catch (ClassNotFoundException e) {
             YAPIONLogger.trace(YAPIONLogger.LoggingType.DESERIALIZER, "The class '" + type + "' was not found.", e.getCause());
         } catch (IllegalAccessException e) {
@@ -166,6 +168,14 @@ public class YAPIONDeserializer {
             e.printStackTrace();
         }
         return this;
+    }
+
+    private void preDeserializationStep(Object object) {
+        
+    }
+
+    private void postDeserializationStep(Object object) {
+
     }
 
     /**
