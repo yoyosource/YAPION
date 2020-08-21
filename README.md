@@ -45,8 +45,7 @@ dependencies {
 * [L] License
 
 ## Tasks
-- Deserialize Java Object
-- Array Deserialization
+- JSON to YAPION Parser
 - More internal Java Types supported?
 
 ## Structure
