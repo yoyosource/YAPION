@@ -44,6 +44,9 @@ public class SerializerManager {
         addPrivate(new BigDecimalSerializer());
 
         // Objects
+        addPrivate(new DequeSerializer());
+        addPrivate(new DequeSerializerArray());
+
         addPrivate(new ListSerializer());
         addPrivate(new ListSerializerArray());
         addPrivate(new ListSerializerLinked());
@@ -54,6 +57,9 @@ public class SerializerManager {
         addPrivate(new MapSerializerLinkedHash());
         addPrivate(new MapSerializerTree());
         addPrivate(new MapSerializerWeakHash());
+
+        addPrivate(new QueueSerializer());
+        addPrivate(new QueueSerializerPriority());
 
         addPrivate(new SetSerializer());
         addPrivate(new SetSerializerHash());
