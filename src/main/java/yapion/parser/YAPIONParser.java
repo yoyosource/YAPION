@@ -40,7 +40,8 @@ public class YAPIONParser {
      * This method only parses the next YAPIONObject and tries to read
      * until the YAPIONObject is finished. It will not cancel even when
      * the end of Steam is reached. It will only cancel after it has a
-     * complete and valid YAPIONObject.
+     * complete and valid YAPIONObject or 1 second without any new
+     * Input passed.
      *
      * @param inputStream the inputStream to parse
      * @return YAPIONObject parsed out of the string
@@ -147,11 +148,16 @@ public class YAPIONParser {
                 }
             }
         } else if (inputStream != null) {
+            long time = System.currentTimeMillis();
             while (!finished) {
                 index++;
                 lastChar = c;
+                if (System.currentTimeMillis() - time > 1000) {
+                    break;
+                }
                 int i = inputStream.read();
                 if (i == -1) continue;
+                time = System.currentTimeMillis();
                 c = (char)i;
 
                 parseStep(lastChar, c);
