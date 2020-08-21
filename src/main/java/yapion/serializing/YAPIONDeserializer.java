@@ -6,6 +6,7 @@ package yapion.serializing;
 
 import test.Test;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.YAPIONAny;
@@ -130,11 +131,16 @@ public class YAPIONDeserializer {
             return this;
         }
         try {
-            if (!stateManager.is(Class.forName(type)).load) {
+            Class<?> clazz = Class.forName(type);
+            if (!stateManager.is(clazz).load) {
                 return this;
             }
 
-            object = ReflectionsUtils.constructObject(type);
+            if (clazz.getDeclaredAnnotation(YAPIONObjenesis.class) != null) {
+                object = ReflectionsUtils.constructObjectObjenesis(type);
+            } else {
+                object = ReflectionsUtils.constructObject(type);
+            }
             pointerMap.put(yapionObject, object);
 
             Field[] fields = object.getClass().getDeclaredFields();

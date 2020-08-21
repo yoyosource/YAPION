@@ -45,7 +45,6 @@ dependencies {
 * [L] License
 
 ## Tasks
-### Serialization/Deserialization
 - Deserialize Java Object
 - Array Deserialization
 - More internal Java Types supported?
