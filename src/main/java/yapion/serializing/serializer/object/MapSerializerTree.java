@@ -7,7 +7,10 @@ package yapion.serializing.serializer.object;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONMap;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
@@ -28,20 +31,23 @@ public class MapSerializerTree implements Serializer<TreeMap> {
 
     @Override
     public YAPIONAny serialize(TreeMap object, YAPIONSerializer yapionSerializer) {
+        YAPIONObject yapionObject = new YAPIONObject();
+        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>("java.util.TreeMap")));
         YAPIONMap yapionMap = new YAPIONMap();
+        yapionObject.add(new YAPIONVariable("values", yapionMap));
         for (Object obj : object.entrySet()) {
             Map.Entry entry = (Map.Entry)obj;
             yapionMap.add(yapionSerializer.parse(entry.getKey(), yapionSerializer), yapionSerializer.parse(entry.getValue(), yapionSerializer));
         }
-        return yapionMap;
+        return yapionObject;
     }
 
     @Override
     public TreeMap deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
-        YAPIONMap yapionMap = (YAPIONMap)yapionAny;
+        YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
         TreeMap<Object, Object> map = new TreeMap<>();
         for (YAPIONAny key : yapionMap.getKeys()) {
-            map.put(yapionDeserializer.parse(key, yapionDeserializer, field), yapionDeserializer.parse(yapionMap.get(key), yapionDeserializer, field));
+            map.put(yapionDeserializer.parse(key, yapionDeserializer), yapionDeserializer.parse(yapionMap.get(key), yapionDeserializer));
         }
         return map;
     }

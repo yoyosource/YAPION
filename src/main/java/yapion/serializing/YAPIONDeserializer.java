@@ -10,10 +10,7 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.YAPIONAny;
-import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONPointer;
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.types.*;
 import yapion.serializing.serializer.number.*;
 import yapion.serializing.serializer.object.*;
 import yapion.serializing.serializer.other.*;
@@ -130,70 +127,39 @@ public class YAPIONDeserializer {
     }
 
     @SuppressWarnings({"java:S3740"})
-    public Object parse(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
+    public Object parse(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         if (yapionAny instanceof YAPIONPointer) {
             Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", yapionAny);
             if (!objectOptional.isPresent()) {
                 return null;
             }
-            System.out.println("-> " + objectOptional.get() + "   " + pointerMap.get(objectOptional.get()));
             Object object = objectOptional.get();
             for (Map.Entry<YAPIONObject, Object> entry : pointerMap.entrySet()) {
                 if (entry.getKey() == object) {
-                    System.out.println(object + "   " + entry.getKey() + "   " + entry.getValue());
                     return entry.getValue();
                 }
             }
             return null;
         }
         if (yapionAny instanceof YAPIONValue) {
-            Object o = ((YAPIONValue) yapionAny).get();
-            switch (field.getType().getTypeName()) {
-                case "java.lang.StringBuilder":
-                    return new StringBuilder().append(o);
-                case "java.lang.StringBuffer":
-                    return new StringBuffer().append(o);
-                default:
-                    return o;
-            }
+            return ((YAPIONValue) yapionAny).get();
         }
         if (yapionAny instanceof YAPIONObject) {
             return new YAPIONDeserializer((YAPIONObject) yapionAny, yapionDeserializer).parse().getObject();
-        } else {
-            String type = getSerializerType(field);
-            Serializer serializer = serializerMap.get(type);
-            System.out.println(type + " " + serializer + " " + yapionAny);
-            return getSerializer(type, yapionAny, field);
         }
-    }
-
-    private String getSerializerType(Field field) {
-        YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
-        String type = field.getType().getTypeName();
-        if (yapionDeserializeType != null) {
-            type = yapionDeserializeType.type().getTypeName();
-        }
-        return type;
-    }
-
-    @SuppressWarnings({"java:S3740"})
-    private Object getSerializer(String type, YAPIONAny yapionAny, Field field) {
-        Serializer serializer = serializerMap.get(type);
-        if (serializer != null && yapionAny != null) {
-            return serializer.deserialize(yapionAny, this, field);
-        } else if (yapionAny instanceof YAPIONArray) {
-            return parseArray((YAPIONArray) yapionAny, field);
+        if (yapionAny instanceof YAPIONArray) {
+            return parseArray((YAPIONArray) yapionAny);
         }
         return null;
     }
 
-    private Object[] parseArray(YAPIONArray yapionArray, Field field) {
+    private Object[] parseArray(YAPIONArray yapionArray) {
         int length = yapionArray.length();
         Object[] objects = new Object[length];
         for (int i = 0; i < length; i++) {
             YAPIONAny yapionAny = yapionArray.get(i);
             if (yapionAny instanceof YAPIONArray) {
-                objects[i] = parseArray((YAPIONArray) yapionAny, field);
+                objects[i] = parseArray((YAPIONArray) yapionAny);
             } else {
                 objects[i] = null;
             }
@@ -227,7 +193,8 @@ public class YAPIONDeserializer {
                 if (yapionObject.getVariable(field.getName()) == null) continue;
 
                 YAPIONAny yapionAny = yapionObject.getVariable(field.getName()).getValue();
-                field.set(object, parse(yapionAny, this, field));
+                // getSerializerType(field)
+                field.set(object, parse(yapionAny, this));
             }
         } catch (ClassNotFoundException e) {
             YAPIONLogger.trace(YAPIONLogger.LoggingType.DESERIALIZER, "The class '" + type + "' was not found.", e.getCause());

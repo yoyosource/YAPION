@@ -23,6 +23,12 @@ public class YAPIONTestObjects {
         public boolean equals(Object obj) {
             return obj instanceof TestObject;
         }
+
+        @Override
+        public String toString() {
+            return "TestObject{}";
+        }
+
     }
 
     @YAPIONData
@@ -53,6 +59,17 @@ public class YAPIONTestObjects {
         public int hashCode() {
             return Objects.hash(stringStringMap, hugoStringMap, hashMap, linkedHashMap);
         }
+
+        @Override
+        public String toString() {
+            return "TestMap{" +
+                    "stringStringMap=" + stringStringMap +
+                    ", hugoStringMap=" + hugoStringMap +
+                    ", hashMap=" + hashMap +
+                    ", linkedHashMap=" + linkedHashMap +
+                    '}';
+        }
+
     }
 
     @YAPIONData
@@ -97,6 +114,17 @@ public class YAPIONTestObjects {
             result = 31 * result + Arrays.hashCode(strings1);
             return result;
         }
+
+        @Override
+        public String toString() {
+            return "TestArray{" +
+                    "strings=" + Arrays.toString(strings) +
+                    ", strings1=" + Arrays.toString(strings1) +
+                    ", strings2=" + strings2 +
+                    ", strings3=" + strings3 +
+                    '}';
+        }
+
     }
 
     @YAPIONData
@@ -157,6 +185,33 @@ public class YAPIONTestObjects {
         public int hashCode() {
             return Objects.hash(b, B, s, S, i, I, l, L, d, D, f, F, bi, bd, c, C, string, stringB.toString(), stringb.toString(), file);
         }
+
+        @Override
+        public String toString() {
+            return "TestPrimitive{" +
+                    "b=" + b +
+                    ", B=" + B +
+                    ", s=" + s +
+                    ", S=" + S +
+                    ", i=" + i +
+                    ", I=" + I +
+                    ", l=" + l +
+                    ", L=" + L +
+                    ", d=" + d +
+                    ", D=" + D +
+                    ", f=" + f +
+                    ", F=" + F +
+                    ", bi=" + bi +
+                    ", bd=" + bd +
+                    ", c=" + c +
+                    ", C=" + C +
+                    ", string='" + string + '\'' +
+                    ", stringB=" + stringB +
+                    ", stringb=" + stringb +
+                    ", file=" + file +
+                    '}';
+        }
+
     }
 
     static String getUserHome() {

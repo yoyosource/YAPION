@@ -7,7 +7,10 @@ package yapion.serializing.serializer.object;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.Serializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
@@ -28,20 +31,23 @@ public class SetSerializerLinkedHash implements Serializer<LinkedHashSet> {
 
     @Override
     public YAPIONAny serialize(LinkedHashSet object, YAPIONSerializer yapionSerializer) {
-        Iterator iterator = object.iterator();
+        YAPIONObject yapionObject = new YAPIONObject();
+        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>("java.util.LinkedHashSet")));
         YAPIONArray yapionArray = new YAPIONArray();
+        yapionObject.add(new YAPIONVariable("values", yapionArray));
+        Iterator iterator = object.iterator();
         while (iterator.hasNext()) {
             yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
         }
-        return yapionArray;
+        return yapionObject;
     }
 
     @Override
     public LinkedHashSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer, Field field) {
-        YAPIONArray yapionArray = (YAPIONArray)yapionAny;
+        YAPIONArray yapionArray = ((YAPIONObject) yapionAny).getArray("values");
         LinkedHashSet<Object> set = new LinkedHashSet<>(yapionArray.length());
         for (int i = 0; i < yapionArray.length(); i++) {
-            set.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer, field));
+            set.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
         }
         return set;
     }
