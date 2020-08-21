@@ -114,13 +114,13 @@ Example for an empty YAPION map
 <>
 
 Example for an YAPION map with String to String mapping
-<0:1,#0(hello),#1("1")>
+<0:1#0(hello)#1("1")>
 
 Example for an YAPION map with Integer to String mapping
-<0:1,#0(1),#1("1")>
+<0:1#0(1)#1("1")>
 
 Example for an YAPION map with Object to Object mapping
-<0:1,#0{},#1{}>
+<0:1#0{}#1{}>
 ```
 ### Pointer
 These pointers point to another YAPION Object in the same serialization. For reconstructing the recursion this pointer points to the object it is referring to.

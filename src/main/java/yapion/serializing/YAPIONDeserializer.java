@@ -12,7 +12,10 @@ import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.YAPIONAny;
-import yapion.hierarchy.types.*;
+import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONPointer;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
 import yapion.utils.YAPIONLogger;
@@ -20,7 +23,10 @@ import yapion.utils.YAPIONLogger;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.IdentityHashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
 
 import static yapion.serializing.YAPIONSerializer.serialize;
 
@@ -32,7 +38,7 @@ public class YAPIONDeserializer {
     private final YAPIONObject yapionObject;
     private final StateManager stateManager;
 
-    private Map<YAPIONObject, Object> pointerMap = new HashMap<>();
+    private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
 
     private String arrayType = "";
 

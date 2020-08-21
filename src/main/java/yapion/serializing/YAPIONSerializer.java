@@ -16,7 +16,7 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.utils.ModifierUtils;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
 @YAPIONSaveExclude(context = "*")
@@ -27,7 +27,7 @@ public class YAPIONSerializer {
     private YAPIONObject yapionObject;
     private final StateManager stateManager;
 
-    private Map<Object, YAPIONPointer> pointerMap = new HashMap<>();
+    private Map<Object, YAPIONPointer> pointerMap = new IdentityHashMap<>();
 
     /**
      * Serialize an Object to an YAPION Object.
