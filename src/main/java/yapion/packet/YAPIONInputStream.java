@@ -108,12 +108,12 @@ public class YAPIONInputStream {
         inputStream.close();
     }
 
-    public synchronized void identifier(YAPIONPacketIdentifier yapionPacketIdentifier) {
+    public synchronized void identifier(YAPIONPacketIdentifier<?> yapionPacketIdentifier) {
         this.dynamicIdentifier = null;
         this.staticIdentifier = yapionPacketIdentifier;
     }
 
-    public synchronized void identifier(YAPIONPacketIdentifierCreator yapionPacketIdentifierCreator) {
+    public synchronized void identifier(YAPIONPacketIdentifierCreator<?> yapionPacketIdentifierCreator) {
         this.staticIdentifier = null;
         this.dynamicIdentifier = yapionPacketIdentifierCreator;
     }

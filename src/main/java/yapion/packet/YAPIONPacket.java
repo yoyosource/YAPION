@@ -37,7 +37,7 @@ public class YAPIONPacket {
 
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
-    private YAPIONPacketIdentifier yapionPacketIdentifier = null;
+    private YAPIONPacketIdentifier<?> yapionPacketIdentifier = null;
 
     /**
      * Creates an YAPIONPacket with an specific type. If the type
@@ -97,11 +97,11 @@ public class YAPIONPacket {
      *
      * @return the specified YAPIONPacketIdentifier
      */
-    public YAPIONPacketIdentifier getYapionPacketIdentifier() {
+    public YAPIONPacketIdentifier<?> getIdentifier() {
         return yapionPacketIdentifier;
     }
 
-    YAPIONPacket setYapionPacketIdentifier(YAPIONPacketIdentifier yapionPacketIdentifier) {
+    YAPIONPacket setYapionPacketIdentifier(YAPIONPacketIdentifier<?> yapionPacketIdentifier) {
         this.yapionPacketIdentifier = yapionPacketIdentifier;
         return this;
     }

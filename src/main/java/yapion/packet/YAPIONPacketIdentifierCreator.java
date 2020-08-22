@@ -1,8 +1,8 @@
 package yapion.packet;
 
 @FunctionalInterface
-public interface YAPIONPacketIdentifierCreator {
+public interface YAPIONPacketIdentifierCreator<T> {
 
-    YAPIONPacketIdentifier identifier();
+    YAPIONPacketIdentifier<T> identifier();
 
 }
