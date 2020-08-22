@@ -177,7 +177,7 @@ public class YAPIONParser {
         //System.out.println(typeStack + " " + c);
 
         if (typeStack.isEmpty()) {
-            initialObject(c);
+            initialType(c);
             return;
         }
 
@@ -198,7 +198,7 @@ public class YAPIONParser {
                 break;
         }
 
-        if (parseObject(c, lastChar)) {
+        if (everyType(c, lastChar)) {
             return;
         }
         if (!escaped && c == '}') {
@@ -254,15 +254,15 @@ public class YAPIONParser {
         key = "";
     }
 
-    private void initialObject(char c) {
+    private void initialType(char c) {
         if (c == '{' && typeStack.isEmpty() && result == null) {
             typeStack.push(Type.OBJECT);
             result = new YAPIONObject();
             yapionObjectList.add(result);
             currentObject = result;
-        } else {
-            throw new YAPIONParserException();
+            return;
         }
+        throw new YAPIONParserException();
     }
 
     private void add(YAPIONVariable yapionVariable) {
@@ -285,7 +285,7 @@ public class YAPIONParser {
         }
     }
 
-    private boolean parseObject(char c, char lastChar) {
+    private boolean everyType(char c, char lastChar) {
         if (escaped) {
             return false;
         }
@@ -358,7 +358,7 @@ public class YAPIONParser {
             reset();
             return;
         }
-        if (parseObject(c, lastChar)) {
+        if (everyType(c, lastChar)) {
             return;
         }
 
@@ -397,7 +397,7 @@ public class YAPIONParser {
                 return;
             }
         }
-        if (parseObject(c, lastChar)) {
+        if (everyType(c, lastChar)) {
             return;
         }
         if (current.length() == 0 && (c == ' ' || c == '\n') && !escaped) {

@@ -24,6 +24,9 @@ public class YAPIONInputStream {
     private final InputStream inputStream;
     private YAPIONPacketReceiver yapionPacketReceiver = null;
 
+    private YAPIONPacketIdentifier staticIdentifier = null;
+    private YAPIONPacketIdentifierCreator dynamicIdentifier = null;
+
     private Thread yapionInputStreamHandler = null;
     private boolean running = true;
 
@@ -105,6 +108,16 @@ public class YAPIONInputStream {
         inputStream.close();
     }
 
+    public synchronized void identifier(YAPIONPacketIdentifier yapionPacketIdentifier) {
+        this.dynamicIdentifier = null;
+        this.staticIdentifier = yapionPacketIdentifier;
+    }
+
+    public synchronized void identifier(YAPIONPacketIdentifierCreator yapionPacketIdentifierCreator) {
+        this.staticIdentifier = null;
+        this.dynamicIdentifier = yapionPacketIdentifierCreator;
+    }
+
     private synchronized int handleAvailable() {
         if (yapionPacketReceiver == null) return 0;
         try {
@@ -124,7 +137,10 @@ public class YAPIONInputStream {
         Object object = ((YAPIONValue)yapionAny).get();
         if (!(object instanceof String)) return;
         if (!object.equals(YAPIONPacket.class.getTypeName())) return;
-        yapionPacketReceiver.handle((YAPIONPacket) YAPIONDeserializer.deserialize(yapionObject));
+        YAPIONPacket yapionPacket = (YAPIONPacket) YAPIONDeserializer.deserialize(yapionObject);
+        if (staticIdentifier != null) yapionPacket.setYapionPacketIdentifier(staticIdentifier);
+        if (dynamicIdentifier != null) yapionPacket.setYapionPacketIdentifier(dynamicIdentifier.identifier());
+        yapionPacketReceiver.handle(yapionPacket);
     }
 
 }

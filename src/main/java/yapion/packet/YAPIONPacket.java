@@ -35,6 +35,10 @@ public class YAPIONPacket {
     private final String type;
     private final Map<String, Object> payload = new HashMap<>();
 
+    @YAPIONSaveExclude(context = "*")
+    @YAPIONLoadExclude(context = "*")
+    private YAPIONPacketIdentifier yapionPacketIdentifier = null;
+
     /**
      * Creates an YAPIONPacket with an specific type. If the type
      * is {@code null} this constructor will throw an
@@ -66,7 +70,7 @@ public class YAPIONPacket {
     }
 
     /**
-     * Removes a key value pair from this YAPIONPacket
+     * Removes a key value pair from this YAPIONPacket.
      *
      * @param key the key
      */
@@ -84,6 +88,22 @@ public class YAPIONPacket {
      */
     public Object get(String key) {
         return payload.get(key);
+    }
+
+    /**
+     * Gets the YAPIONPacketIdentifier from this YAPIONPacket.
+     * This value can return null when the value is not
+     * specified.
+     *
+     * @return the specified YAPIONPacketIdentifier
+     */
+    public YAPIONPacketIdentifier getYapionPacketIdentifier() {
+        return yapionPacketIdentifier;
+    }
+
+    YAPIONPacket setYapionPacketIdentifier(YAPIONPacketIdentifier yapionPacketIdentifier) {
+        this.yapionPacketIdentifier = yapionPacketIdentifier;
+        return this;
     }
 
     /**
