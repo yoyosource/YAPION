@@ -43,42 +43,42 @@ public class StateManager {
         return s.contains(state);
     }
 
-    public boolean is(YAPIONLoad annotation) {
+    boolean is(YAPIONLoad annotation) {
         if (annotation == null) return false;
         return is(annotation.context());
     }
 
-    public boolean is(YAPIONLoadExclude annotation) {
+    boolean is(YAPIONLoadExclude annotation) {
         if (annotation == null) return false;
         return is(annotation.context());
     }
 
-    public boolean is(YAPIONOptimize annotation) {
+    boolean is(YAPIONOptimize annotation) {
         if (annotation == null) return false;
         return is(annotation.context());
     }
 
-    public boolean is(YAPIONSave annotation) {
+    boolean is(YAPIONSave annotation) {
         if (annotation == null) return false;
         return is(annotation.context());
     }
 
-    public boolean is(YAPIONSaveExclude annotation) {
+    boolean is(YAPIONSaveExclude annotation) {
         if (annotation == null) return false;
         return is(annotation.context());
     }
 
-    public boolean is(YAPIONData annotation) {
+    boolean is(YAPIONData annotation) {
         if (annotation == null) return false;
         return is(annotation.context());
     }
 
-    public boolean is(YAPIONPreDeserialization annotation) {
+    boolean is(YAPIONPreDeserialization annotation) {
         if (annotation == null) return false;
         return is(annotation.context());
     }
 
-    public boolean is(YAPIONPostDeserialization annotation) {
+    boolean is(YAPIONPostDeserialization annotation) {
         if (annotation == null) return false;
         return is(annotation.context());
     }
@@ -93,7 +93,7 @@ public class StateManager {
     private boolean localOptimize = false;
     private boolean localSave = false;
 
-    public YAPIONInfo is(Class<?> clazz) {
+    YAPIONInfo is(Class<?> clazz) {
         if (is(clazz.getDeclaredAnnotation(YAPIONLoadExclude.class))) globalLoad = false;
         globalLoad = is(clazz.getDeclaredAnnotation(YAPIONLoad.class));
         if (is(clazz.getDeclaredAnnotation(YAPIONSaveExclude.class))) globalSave = false;
@@ -108,7 +108,7 @@ public class StateManager {
         return new YAPIONInfo(globalLoad, globalSave);
     }
 
-    public YAPIONInfo is(Object object) {
+    YAPIONInfo is(Object object) {
         if (this.object == null || this.object != object) {
             this.object = object;
             if (is(object.getClass().getDeclaredAnnotation(YAPIONLoadExclude.class))) globalLoad = false;
@@ -128,7 +128,7 @@ public class StateManager {
         return new YAPIONInfo(globalLoad, globalSave);
     }
 
-    public YAPIONInfo is(Object object, Field field) {
+    YAPIONInfo is(Object object, Field field) {
         is(object);
 
         if (this.field == null || this.field.equals(field)) {

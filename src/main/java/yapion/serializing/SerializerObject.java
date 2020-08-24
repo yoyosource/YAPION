@@ -27,7 +27,7 @@ public interface SerializerObject<T> {
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
-    static <T> SerializerObject<T> Serializer(TypeGetter<T> typeGetter, SerializationGetter<T> serializationGetter, DeserializationGetter<T> deserializationGetter) {
+    static <T> SerializerObject<T> SerializerObject(TypeGetter<T> typeGetter, SerializationGetter<T> serializationGetter, DeserializationGetter<T> deserializationGetter) {
         if (typeGetter == null || serializationGetter == null || deserializationGetter == null) {
             throw new YAPIONException();
         }

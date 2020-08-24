@@ -24,7 +24,22 @@ public class SerializeManager {
         throw new IllegalStateException("Utility class");
     }
 
-    private static final Map<String, InternalSerializer<?>> serializerMap = new HashMap<>();
+    @YAPIONSaveExclude(context = "*")
+    @YAPIONLoadExclude(context = "*")
+    private static class Serializer {
+        private final InternalSerializer<?> internalSerializer;
+        private final boolean overrideable;
+
+        public Serializer(InternalSerializer<?> internalSerializer, boolean overrideable) {
+            this.internalSerializer = internalSerializer;
+            this.overrideable = overrideable;
+        }
+    }
+
+    private static boolean overrideable = false;
+    private static final Serializer defaultSerializer = new Serializer(null, false);
+
+    private static final Map<String, Serializer> serializerMap = new HashMap<>();
     static {
         // Other
         addPrivate(new StringSerializer());
@@ -74,18 +89,16 @@ public class SerializeManager {
         addPrivate(new VectorSerializer());
 
         // Own Serializers Init
-        ownSerializerMap = new HashMap<>();
+        overrideable = true;
     }
 
     private static void addPrivate(InternalSerializer<?> serializer) {
-        if (ownSerializerMap != null) return;
-        serializerMap.put(serializer.type(), serializer);
+        if (serializerMap.containsKey(serializer.type()) && !serializerMap.get(serializer.type()).overrideable) return;
+        serializerMap.put(serializer.type(), new Serializer(serializer, overrideable));
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
-            serializerMap.put(serializer.primitiveType(), serializer);
+            serializerMap.put(serializer.primitiveType(), new Serializer(serializer, overrideable));
         }
     }
-
-    private static final Map<String, InternalSerializer<?>> ownSerializerMap;
 
     /**
      * Adds a special Serializer for a specific Object.
@@ -126,7 +139,7 @@ public class SerializeManager {
                 return null;
             }
         };
-        ownSerializerMap.put(internalSerializer.type(), internalSerializer);
+        addPrivate(internalSerializer);
     }
 
     /**
@@ -167,9 +180,14 @@ public class SerializeManager {
                 return null;
             }
         };
-        ownSerializerMap.put(internalSerializer.type(), internalSerializer);
+        addPrivate(internalSerializer);
     }
 
+    /**
+     * Adds a special Serializer for a specific Array.
+     *
+     * @param serializer the special Serializer to add
+     */
     public static <T> void add(SerializerArray<T> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
@@ -203,7 +221,7 @@ public class SerializeManager {
                 return null;
             }
         };
-        ownSerializerMap.put(internalSerializer.type(), internalSerializer);
+        addPrivate(internalSerializer);
     }
 
     /**
@@ -213,18 +231,8 @@ public class SerializeManager {
      */
     public static void remove(String type) {
         if (type == null) return;
-        ownSerializerMap.remove(type);
-    }
-
-    /**
-     * Remove a special Serializer with the Serializer.
-     *
-     * @param serializer the serializer to remove
-     */
-    public static void remove(SerializerObject<?> serializer) {
-        if (serializer == null) return;
-        if (serializer.type() == null) return;
-        remove(serializer.type().getTypeName());
+        if (serializerMap.containsKey(type) && !serializerMap.get(type).overrideable) return;
+        serializerMap.remove(type);
     }
 
     /**
@@ -239,7 +247,51 @@ public class SerializeManager {
 
     @SuppressWarnings({"java:S1452"})
     static InternalSerializer<?> get(String type) {
-        return serializerMap.getOrDefault(type, ownSerializerMap.getOrDefault(type, null));
+        return serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
+    }
+
+    public static <T> SerializerObject<T> SerializerObject(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONObject> serializationGetter, DeserializationGetter<T, YAPIONObject> deserializationGetter) {
+        return new SerializerObject<T>() {
+            @Override
+            public Class<T> type() {
+                return typeGetter.type();
+            }
+
+            @Override
+            public YAPIONObject serialize(T object, YAPIONSerializer yapionSerializer) {
+                try {
+                    YAPIONObject yapionObject = serializationGetter.serialize(object, yapionSerializer);
+                    yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type().getTypeName())));
+                    return yapionObject;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+
+            @Override
+            public T deserialize(YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
+                try {
+                    return deserializationGetter.deserialize(yapionObject, yapionDeserializer);
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        };
+    }
+
+    @FunctionalInterface
+    public interface TypeGetter<T> {
+        Class<T> type();
+    }
+
+    @FunctionalInterface
+    public interface SerializationGetter<T, R> {
+        R serialize(T object, YAPIONSerializer yapionSerializer);
+    }
+
+    @FunctionalInterface
+    public interface DeserializationGetter<T, R> {
+        T deserialize(R object, YAPIONDeserializer yapionDeserializer);
     }
 
 }
