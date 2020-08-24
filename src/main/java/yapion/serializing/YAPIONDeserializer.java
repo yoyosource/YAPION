@@ -160,7 +160,7 @@ public class YAPIONDeserializer {
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parse(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>)yapionObject.getVariable("@type").getValue()).get();
-        InternalSerializer<?> serializer = SerializerManager.get(type);
+        InternalSerializer<?> serializer = SerializeManager.get(type);
         if (serializer != null) {
             object = serializer.deserialize(yapionObject, this);
             return this;

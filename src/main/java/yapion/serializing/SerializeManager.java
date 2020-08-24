@@ -18,9 +18,9 @@ import java.util.Map;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class SerializerManager {
+public class SerializeManager {
 
-    private SerializerManager() {
+    private SerializeManager() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -92,7 +92,7 @@ public class SerializerManager {
      *
      * @param serializer the special Serializer to add
      */
-    public static <T> void add(Serializer<T> serializer) {
+    public static <T> void add(SerializerObject<T> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
         InternalSerializer<T> internalSerializer = new InternalSerializer<T>() {
@@ -221,7 +221,7 @@ public class SerializerManager {
      *
      * @param serializer the serializer to remove
      */
-    public static void remove(Serializer<?> serializer) {
+    public static void remove(SerializerObject<?> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
         remove(serializer.type().getTypeName());

@@ -83,7 +83,7 @@ public class YAPIONSerializer {
             }
             return yapionArray;
         } else {
-            InternalSerializer serializer = SerializerManager.get(object.getClass().getTypeName());
+            InternalSerializer serializer = SerializeManager.get(object.getClass().getTypeName());
             if (serializer != null) {
                 return serializer.serialize(object, this);
             } else {
@@ -135,7 +135,7 @@ public class YAPIONSerializer {
                 continue;
             }
 
-            InternalSerializer serializer = SerializerManager.get(fieldObject.getClass().getTypeName());
+            InternalSerializer serializer = SerializeManager.get(fieldObject.getClass().getTypeName());
             if (serializer != null) {
                 yapionObject.add(new YAPIONVariable(name, serializer.serialize(fieldObject, this)));
                 continue;

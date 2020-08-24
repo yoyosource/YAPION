@@ -7,7 +7,7 @@ import yapion.hierarchy.types.YAPIONObject;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public interface Serializer<T> {
+public interface SerializerObject<T> {
 
     Class<T> type();
     YAPIONObject serialize(T object, YAPIONSerializer yapionSerializer);
@@ -27,11 +27,11 @@ public interface Serializer<T> {
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
-    static <T> Serializer<T> Serializer(TypeGetter<T> typeGetter, SerializationGetter<T> serializationGetter, DeserializationGetter<T> deserializationGetter) {
+    static <T> SerializerObject<T> Serializer(TypeGetter<T> typeGetter, SerializationGetter<T> serializationGetter, DeserializationGetter<T> deserializationGetter) {
         if (typeGetter == null || serializationGetter == null || deserializationGetter == null) {
             throw new YAPIONException();
         }
-        return new Serializer<T>() {
+        return new SerializerObject<T>() {
             @Override
             public Class<T> type() {
                 return typeGetter.type();
