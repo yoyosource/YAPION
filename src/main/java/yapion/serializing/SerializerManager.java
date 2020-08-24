@@ -4,6 +4,8 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
+import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.serializer.number.*;
@@ -120,6 +122,83 @@ public class SerializerManager {
                     } catch (Exception e) {
                         YAPIONLogger.error(YAPIONLogger.LoggingType.DESERIALIZER, "An unexpected error occurred", e.getCause());
                     }
+                }
+                return null;
+            }
+        };
+        ownSerializerMap.put(internalSerializer.type(), internalSerializer);
+    }
+
+    /**
+     * Adds a special Serializer for a specific Map.
+     *
+     * @param serializer the special Serializer to add
+     */
+    public static <T> void add(SerializerMap<T> serializer) {
+        if (serializer == null) return;
+        if (serializer.type() == null) return;
+        InternalSerializer<T> internalSerializer = new InternalSerializer<T>() {
+            @Override
+            public String type() {
+                return serializer.type().getTypeName();
+            }
+
+            @Override
+            public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
+                try {
+                    YAPIONObject yapionObject = new YAPIONObject();
+                    YAPIONMap yapionMap = serializer.serialize(object, yapionSerializer);
+                    yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
+                    yapionObject.add(new YAPIONVariable("map", yapionMap));
+                    return yapionObject;
+                } catch (Exception e) {
+                    YAPIONLogger.error(YAPIONLogger.LoggingType.SERIALIZER, "An unexpected error occurred", e.getCause());
+                }
+                return null;
+            }
+
+            @Override
+            public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+                try {
+                    return serializer.deserialize(((YAPIONObject) yapionAny).getMap("map"), yapionDeserializer);
+                } catch (Exception e) {
+                    YAPIONLogger.error(YAPIONLogger.LoggingType.DESERIALIZER, "An unexpected error occurred", e.getCause());
+                }
+                return null;
+            }
+        };
+        ownSerializerMap.put(internalSerializer.type(), internalSerializer);
+    }
+
+    public static <T> void add(SerializerArray<T> serializer) {
+        if (serializer == null) return;
+        if (serializer.type() == null) return;
+        InternalSerializer<T> internalSerializer = new InternalSerializer<T>() {
+            @Override
+            public String type() {
+                return serializer.type().getTypeName();
+            }
+
+            @Override
+            public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
+                try {
+                    YAPIONObject yapionObject = new YAPIONObject();
+                    YAPIONArray yapionArray = serializer.serialize(object, yapionSerializer);
+                    yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
+                    yapionObject.add(new YAPIONVariable("array", yapionArray));
+                    return yapionObject;
+                } catch (Exception e) {
+                    YAPIONLogger.error(YAPIONLogger.LoggingType.SERIALIZER, "An unexpected error occurred", e.getCause());
+                }
+                return null;
+            }
+
+            @Override
+            public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+                try {
+                    return serializer.deserialize(((YAPIONObject) yapionAny).getArray("array"), yapionDeserializer);
+                } catch (Exception e) {
+                    YAPIONLogger.error(YAPIONLogger.LoggingType.DESERIALIZER, "An unexpected error occurred", e.getCause());
                 }
                 return null;
             }
