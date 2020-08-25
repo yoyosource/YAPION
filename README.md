@@ -41,6 +41,10 @@ dependencies {
   - [V] 2.0.0-alpha1
   - [L] MIT
 
+- rzwitserloot/lombok (https://github.com/rzwitserloot/lombok)
+  - [V] 1.18.6
+  - [L] MIT
+
 * [V] Version
 * [L] License
 
