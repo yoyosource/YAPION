@@ -36,6 +36,16 @@ public class YAPIONParser {
     }
 
     /**
+     * Parses the JSON String to an YAPIONObject.
+     *
+     * @param s the string to parse
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parseJSON(String s) {
+        return JSONParser.parse(s);
+    }
+
+    /**
      * Parses the InputStream to an YAPIONObject.
      * This method only parses the next YAPIONObject and tries to read
      * until the YAPIONObject is finished. It will not cancel even when

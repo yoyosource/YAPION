@@ -8,7 +8,7 @@ import org.objenesis.ObjenesisBase;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import yapion.annotations.YAPIONData;
+import yapion.annotations.object.YAPIONData;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONReflectionException;

@@ -2,7 +2,7 @@ package yapion.serializing;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import yapion.annotations.YAPIONData;
+import yapion.annotations.object.YAPIONData;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -90,6 +90,8 @@ public class YAPIONTestObjects {
         private final StringBuffer stringb = new StringBuffer();
 
         private final File file = new File(getUserHome() + "/YAPI");
+
+        // file.getPath()
     }
 
     static String getUserHome() {

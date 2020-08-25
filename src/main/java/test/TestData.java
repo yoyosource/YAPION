@@ -4,7 +4,7 @@
 
 package test;
 
-import yapion.annotations.YAPIONData;
+import yapion.annotations.object.YAPIONData;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;

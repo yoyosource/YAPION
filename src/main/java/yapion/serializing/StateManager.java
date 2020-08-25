@@ -4,9 +4,9 @@
 
 package yapion.serializing;
 
-import yapion.annotations.*;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONPostDeserialization;
 import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONOptimize;

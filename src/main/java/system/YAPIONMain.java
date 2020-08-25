@@ -13,82 +13,12 @@
 
 package system;
 
-import yapion.hierarchy.YAPIONAny;
-import yapion.hierarchy.YAPIONVariable;
-import yapion.hierarchy.types.*;
 import yapion.parser.YAPIONParser;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Optional;
 
 public class YAPIONMain {
 
-    public static void main(String[] args) throws IOException {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable("test", new YAPIONValue<>("Hello World")));
-        yapionObject.add(new YAPIONVariable("test2", new YAPIONValue<>("")));
-        yapionObject.add(new YAPIONVariable("test3", new YAPIONValue<>("true")));
-        yapionObject.add(new YAPIONVariable("test4", new YAPIONValue<>("0")));
-        yapionObject.add(new YAPIONVariable("test5", new YAPIONValue<>(true)));
-        yapionObject.add(new YAPIONVariable("test6", new YAPIONValue<>('A')));
-        yapionObject.add(new YAPIONVariable("pointer", new YAPIONPointer(yapionObject)));
-        yapionObject.add(new YAPIONVariable("test8", new YAPIONValue<>(0)));
-        yapionObject.add(new YAPIONVariable("test9", new YAPIONValue<>(0L)));
-        yapionObject.add(new YAPIONVariable("test10", new YAPIONValue<>(0F)));
-        yapionObject.add(new YAPIONVariable("test11", new YAPIONValue<>(0D)));
-        yapionObject.add(new YAPIONVariable("test12", new YAPIONValue<>(BigInteger.valueOf(0))));
-        yapionObject.add(new YAPIONVariable("test13", new YAPIONValue<>(BigDecimal.valueOf(0))));
-
-        YAPIONObject yapionObject1 = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable("test7", yapionObject1));
-        yapionObject1.addOrPointer(new YAPIONVariable("pointer", yapionObject));
-
-        YAPIONMap yapionMap = new YAPIONMap();
-        yapionObject1.add(new YAPIONVariable("test-MAP", yapionMap));
-        yapionMap.add(new YAPIONValue<>("hello"), new YAPIONValue<>("1"));
-
-        YAPIONMap yapionMap1 = new YAPIONMap();
-        yapionObject1.add(new YAPIONVariable("test-MAP1", yapionMap1));
-        yapionMap1.add(new YAPIONObject(), new YAPIONObject());
-
-        YAPIONArray yapionArray = new YAPIONArray();
-        yapionObject.add(new YAPIONVariable("test-ARRAY", yapionArray));
-        yapionArray.add(new YAPIONValue<>("17853"));
-        yapionArray.add(new YAPIONValue<>(3784));
-        yapionArray.add(new YAPIONValue<>(true));
-        System.out.println(yapionObject);
-
-        for (int i = 0; i < 100; i++) {
-            String s = yapionObject.toString();
-            YAPIONParser.parse(s);
-            YAPIONObject object = YAPIONParser.parse(s);
-            System.out.println(object);
-            System.out.println(object.getParseTimeMillis() + "ms");
-        }
-
-        System.out.println(YAPIONParser.parse(yapionObject.toString()));
-
-        /*for (int i = 0; i < 100; i++) {
-            YAPIONObject object = YAPIONParser.parse(new FileInputStream(new File("/Users/jojo/IdeaProjects/YAPION/src/main/resources/test.yapion")));
-            System.out.println(object.getParseTime() + "ns");
-        }*/
-
-        Optional<YAPIONAny.YAPIONSearch<? extends YAPIONAny>> value = yapionObject.get("test7", "test-MAP", "(hello)");
-        if (value.isPresent()) {
-            System.out.println(value.get());
-        } else {
-            System.out.println("Value Is Empty");
-        }
-        /*
-        String s = yapionObject.toString();
-        long time = System.currentTimeMillis();
-        YAPIONParser.parse(s);
-        System.out.println(System.currentTimeMillis() - time);
-        */
+    public static void main(String[] args) {
+        System.out.println(YAPIONParser.parseJSON("{\"contributor\":[{\"name\":\"yoyosource\",\"owner\":true},{\"name\":\"chaoscaot444\",\"owner\":\"false\"}]}"));
     }
 
 }
