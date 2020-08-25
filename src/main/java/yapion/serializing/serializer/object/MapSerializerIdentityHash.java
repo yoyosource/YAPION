@@ -10,11 +10,10 @@ import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-public class MapSerializerIdentityHash implements InternalSerializer<IdentityHashMap> {
+public class MapSerializerIdentityHash implements InternalSerializer<IdentityHashMap<?, ?>> {
 
     @Override
     public String type() {
@@ -22,20 +21,19 @@ public class MapSerializerIdentityHash implements InternalSerializer<IdentityHas
     }
 
     @Override
-    public YAPIONAny serialize(IdentityHashMap object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAny serialize(IdentityHashMap<?, ?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
-        for (Object obj : object.entrySet()) {
-            Map.Entry entry = (Map.Entry)obj;
+        for (Map.Entry<?, ?> entry : object.entrySet()) {
             yapionMap.add(yapionSerializer.parse(entry.getKey(), yapionSerializer), yapionSerializer.parse(entry.getValue(), yapionSerializer));
         }
         return yapionObject;
     }
 
     @Override
-    public IdentityHashMap deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public IdentityHashMap<?, ?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
         IdentityHashMap<Object, Object> map = new IdentityHashMap<>();
         for (YAPIONAny key : yapionMap.getKeys()) {

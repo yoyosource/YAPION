@@ -104,7 +104,7 @@ public class YAPIONSerializer {
         if (!pointerMap.containsKey(object)) {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
         }
-        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>(object.getClass().getTypeName())));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>(object.getClass().getTypeName())));
         this.yapionObject = yapionObject;
 
         Field[] fields = object.getClass().getDeclaredFields();

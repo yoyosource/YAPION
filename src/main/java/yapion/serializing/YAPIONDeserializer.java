@@ -42,15 +42,6 @@ public class YAPIONDeserializer {
 
     private String arrayType = "";
 
-    public static void main(String[] args) {
-        YAPIONObject yapionObject = serialize(new Test());
-        Object o = deserialize(yapionObject);
-        System.out.println(o);
-        System.out.println(yapionObject);
-        System.out.println(serialize(o));
-        System.out.println(yapionObject.toString().equals(serialize(o).toString()));
-    }
-
     /**
      * Serialize an YAPION Object to an Object.
      *
@@ -143,13 +134,14 @@ public class YAPIONDeserializer {
         try {
             array = Array.newInstance(Class.forName(arrayType), ints);
         } catch (ClassNotFoundException e) {
-
+            // Ignored
         } catch (IllegalArgumentException e) {
-
+            // Ignored
         } catch (NegativeArraySizeException e) {
-
+            // Ignored
         }
         if (array == null) return array;
+        // if (yapionArray == null) return array;
 
         for (int i = 0; i < yapionArray.length(); i++) {
             Array.set(array, i, parse(yapionArray.get(i), this));
@@ -159,7 +151,7 @@ public class YAPIONDeserializer {
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parse(YAPIONObject yapionObject) {
-        String type = ((YAPIONValue<String>)yapionObject.getVariable(SerializeManager.typeName).getValue()).get();
+        String type = ((YAPIONValue<String>)yapionObject.getVariable(SerializeManager.TYPE_NAME).getValue()).get();
         InternalSerializer<?> serializer = SerializeManager.get(type);
         if (serializer != null) {
             object = serializer.deserialize(yapionObject, this);
@@ -189,8 +181,7 @@ public class YAPIONDeserializer {
                 if (yapionObject.getVariable(field.getName()) == null) continue;
 
                 YAPIONAny yapionAny = yapionObject.getVariable(field.getName()).getValue();
-                // getSerializerType(field)
-                arrayType = field.getType().getTypeName();
+                arrayType = remove(field.getType().getTypeName(), '[', ']');
                 field.set(object, parse(yapionAny, this));
             }
             postDeserializationStep(object);
@@ -204,6 +195,18 @@ public class YAPIONDeserializer {
             e.printStackTrace();
         }
         return this;
+    }
+
+    private String remove(String s, char... chars) {
+        StringBuilder st = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            for (char d : chars) {
+                if (d == c) c = '\u0000';
+            }
+            if (c != '\u0000') st.append(c);
+        }
+        return st.toString();
     }
 
     private void preDeserializationStep(Object object) {

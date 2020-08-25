@@ -11,7 +11,6 @@ import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.utils.RecursionUtils;
 
-import javax.print.DocFlavor;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;

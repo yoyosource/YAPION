@@ -133,35 +133,11 @@ public class YAPIONParser {
     private final List<YAPIONPointer> yapionPointerList = new ArrayList<>();
 
     private void parseInternal() throws IOException {
-        char lastChar;
-        char c = '\u0000';
 
         if (s != null) {
-            for (int i = 0; i < s.length(); i++) {
-                lastChar = c;
-                c = s.charAt(i);
-                index = i;
-
-                parseStep(lastChar, c);
-                if (finished) {
-                    break;
-                }
-            }
+            parseString();
         } else if (inputStream != null) {
-            long time = System.currentTimeMillis();
-            while (!finished) {
-                index++;
-                lastChar = c;
-                if (System.currentTimeMillis() - time > 1000) {
-                    break;
-                }
-                int i = inputStream.read();
-                if (i == -1) continue;
-                time = System.currentTimeMillis();
-                c = (char)i;
-
-                parseStep(lastChar, c);
-            }
+            parseInputStream();
         } else {
             throw new YAPIONParserException("null input");
         }
@@ -173,9 +149,43 @@ public class YAPIONParser {
         parseFinish();
     }
 
-    private void parseStep(char lastChar, char c) {
-        //System.out.println(typeStack + " " + c);
+    private void parseString() {
+        char lastChar;
+        char c = '\u0000';
 
+        for (int i = 0; i < s.length(); i++) {
+            lastChar = c;
+            c = s.charAt(i);
+            index = i;
+
+            parseStep(lastChar, c);
+            if (finished) {
+                break;
+            }
+        }
+    }
+
+    private void parseInputStream() throws IOException {
+        char lastChar;
+        char c = '\u0000';
+
+        long time = System.currentTimeMillis();
+        while (!finished) {
+            index++;
+            lastChar = c;
+            if (System.currentTimeMillis() - time > 1000) {
+                break;
+            }
+            int i = inputStream.read();
+            if (i == -1) continue;
+            time = System.currentTimeMillis();
+            c = (char)i;
+
+            parseStep(lastChar, c);
+        }
+    }
+
+    private void parseStep(char lastChar, char c) {
         if (typeStack.isEmpty()) {
             initialType(c);
             return;

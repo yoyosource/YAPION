@@ -32,7 +32,7 @@ public class MapSerializerHash implements InternalSerializer<HashMap> {
     @Override
     public YAPIONAny serialize(HashMap object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
         for (Object obj : object.entrySet()) {

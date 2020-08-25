@@ -12,7 +12,7 @@ import yapion.serializing.YAPIONSerializer;
 
 import java.util.Stack;
 
-public class StackSerializer implements InternalSerializer<Stack> {
+public class StackSerializer implements InternalSerializer<Stack<?>> {
 
     @Override
     public String type() {
@@ -20,9 +20,9 @@ public class StackSerializer implements InternalSerializer<Stack> {
     }
 
     @Override
-    public YAPIONAny serialize(Stack object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAny serialize(Stack<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         for (int i = 0; i < object.size(); i++) {
@@ -32,10 +32,10 @@ public class StackSerializer implements InternalSerializer<Stack> {
     }
 
     @Override
-    public Stack deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public Stack<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONObject yapionObject = (YAPIONObject) yapionAny;
         YAPIONArray yapionArray = yapionObject.getArray("values");
-        Stack<Object> stack = new Stack<>();
+        Stack<?> stack = new Stack<>();
         for (int i = 0; i < yapionArray.length(); i++) {
             stack.push(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
         }

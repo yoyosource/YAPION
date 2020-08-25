@@ -29,7 +29,7 @@ public class FileSerializer implements InternalSerializer<File> {
     @Override
     public YAPIONAny serialize(File object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>("java.io.File")));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>("java.io.File")));
         yapionObject.add(new YAPIONVariable("absolutePath", new YAPIONValue<>(object.getAbsolutePath())));
         return yapionObject;
     }

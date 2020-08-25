@@ -13,7 +13,7 @@ import yapion.serializing.YAPIONSerializer;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-public class SetSerializerTree implements InternalSerializer<TreeSet> {
+public class SetSerializerTree implements InternalSerializer<TreeSet<?>> {
 
     @Override
     public String type() {
@@ -21,12 +21,12 @@ public class SetSerializerTree implements InternalSerializer<TreeSet> {
     }
 
     @Override
-    public YAPIONAny serialize(TreeSet object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAny serialize(TreeSet<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
-        Iterator iterator = object.iterator();
+        Iterator<?> iterator = object.iterator();
         while (iterator.hasNext()) {
             yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
         }
@@ -34,7 +34,7 @@ public class SetSerializerTree implements InternalSerializer<TreeSet> {
     }
 
     @Override
-    public TreeSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public TreeSet<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONArray yapionArray = ((YAPIONObject) yapionAny).getArray("values");
         TreeSet<Object> set = new TreeSet<>();
         for (int i = 0; i < yapionArray.length(); i++) {

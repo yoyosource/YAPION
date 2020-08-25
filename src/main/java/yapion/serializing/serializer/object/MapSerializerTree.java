@@ -32,7 +32,7 @@ public class MapSerializerTree implements InternalSerializer<TreeMap> {
     @Override
     public YAPIONAny serialize(TreeMap object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
         for (Object obj : object.entrySet()) {

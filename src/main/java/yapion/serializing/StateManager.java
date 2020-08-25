@@ -121,8 +121,6 @@ public class StateManager {
                 globalLoad = is(yapionData);
                 globalSave = is(yapionData);
             }
-
-            // System.out.println(globalLoad + "   " + globalSave + "   false");
         }
 
         return new YAPIONInfo(globalLoad, globalSave);
@@ -165,8 +163,6 @@ public class StateManager {
                 localLoad = is(yapionData);
                 localSave = is(yapionData);
             }
-
-            // System.out.println(globalLoad + " " + localLoad + "   " + localOptimize + "   " + globalSave + " " + localSave);
         }
 
         return new YAPIONInfo(globalLoad && localLoad, globalSave && localSave, localOptimize);

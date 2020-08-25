@@ -27,7 +27,7 @@ public class StringBuilderSerializer implements InternalSerializer<StringBuilder
     @Override
     public YAPIONAny serialize(StringBuilder object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>("java.lang.StringBuilder")));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>("java.lang.StringBuilder")));
         yapionObject.add(new YAPIONVariable("string", new YAPIONValue<>(object.toString())));
         return yapionObject;
     }

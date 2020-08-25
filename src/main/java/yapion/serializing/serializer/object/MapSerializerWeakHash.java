@@ -13,7 +13,7 @@ import yapion.serializing.YAPIONSerializer;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class MapSerializerWeakHash implements InternalSerializer<WeakHashMap> {
+public class MapSerializerWeakHash implements InternalSerializer<WeakHashMap<?, ?>> {
 
     @Override
     public String type() {
@@ -21,20 +21,19 @@ public class MapSerializerWeakHash implements InternalSerializer<WeakHashMap> {
     }
 
     @Override
-    public YAPIONAny serialize(WeakHashMap object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAny serialize(WeakHashMap<?, ?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
-        for (Object obj : object.entrySet()) {
-            Map.Entry entry = (Map.Entry)obj;
+        for (Map.Entry<?, ?> entry : object.entrySet()) {
             yapionMap.add(yapionSerializer.parse(entry.getKey(), yapionSerializer), yapionSerializer.parse(entry.getValue(), yapionSerializer));
         }
         return yapionObject;
     }
 
     @Override
-    public WeakHashMap deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public WeakHashMap<?, ?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
         WeakHashMap<Object, Object> map = new WeakHashMap<>();
         for (YAPIONAny key : yapionMap.getKeys()) {

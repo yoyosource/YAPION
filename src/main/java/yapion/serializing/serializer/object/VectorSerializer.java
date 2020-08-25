@@ -12,7 +12,7 @@ import yapion.serializing.YAPIONSerializer;
 
 import java.util.Vector;
 
-public class VectorSerializer implements InternalSerializer<Vector> {
+public class VectorSerializer implements InternalSerializer<Vector<?>> {
 
     @Override
     public String type() {
@@ -20,9 +20,9 @@ public class VectorSerializer implements InternalSerializer<Vector> {
     }
 
     @Override
-    public YAPIONAny serialize(Vector object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAny serialize(Vector<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         for (int i = 0; i < object.size(); i++) {
@@ -32,10 +32,10 @@ public class VectorSerializer implements InternalSerializer<Vector> {
     }
 
     @Override
-    public Vector deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public Vector<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONObject yapionObject = (YAPIONObject) yapionAny;
         YAPIONArray yapionArray = yapionObject.getArray("values");
-        Vector<Object> vector = new Vector<>();
+        Vector<?> vector = new Vector<>();
         for (int i = 0; i < yapionArray.length(); i++) {
             vector.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
         }

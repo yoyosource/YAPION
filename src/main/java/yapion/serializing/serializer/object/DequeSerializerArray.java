@@ -13,7 +13,7 @@ import yapion.serializing.YAPIONSerializer;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
-public class DequeSerializerArray implements InternalSerializer<ArrayDeque> {
+public class DequeSerializerArray implements InternalSerializer<ArrayDeque<?>> {
 
     @Override
     public String type() {
@@ -21,12 +21,12 @@ public class DequeSerializerArray implements InternalSerializer<ArrayDeque> {
     }
 
     @Override
-    public YAPIONAny serialize(ArrayDeque object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAny serialize(ArrayDeque<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
-        Iterator<Object> iterator = object.iterator();
+        Iterator<?> iterator = object.iterator();
         while (iterator.hasNext()) {
             yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
         }
@@ -34,7 +34,7 @@ public class DequeSerializerArray implements InternalSerializer<ArrayDeque> {
     }
 
     @Override
-    public ArrayDeque deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public ArrayDeque<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONObject yapionObject = (YAPIONObject) yapionAny;
         YAPIONArray yapionArray = yapionObject.getArray("values");
         ArrayDeque<Object> deque = new ArrayDeque<>();
