@@ -159,11 +159,7 @@ public class SerializeManager {
             @Override
             public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
-                    YAPIONObject yapionObject = new YAPIONObject();
-                    YAPIONMap yapionMap = serializer.serialize(object, yapionSerializer);
-                    yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
-                    yapionObject.add(new YAPIONVariable("map", yapionMap));
-                    return yapionObject;
+                    return new YAPIONObject().add("@type", new YAPIONValue<>(type())).add("map", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
                     YAPIONLogger.error(YAPIONLogger.LoggingType.SERIALIZER, "An unexpected error occurred", e.getCause());
                 }
@@ -185,7 +181,7 @@ public class SerializeManager {
     }
 
     /**
-     * Adds a special Serializer for a specific Array.
+     * Adds a special Serializer for a specific List.
      *
      * @param serializer the special Serializer to add
      */
@@ -201,11 +197,7 @@ public class SerializeManager {
             @Override
             public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
-                    YAPIONObject yapionObject = new YAPIONObject();
-                    YAPIONArray yapionArray = serializer.serialize(object, yapionSerializer);
-                    yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
-                    yapionObject.add(new YAPIONVariable("array", yapionArray));
-                    return yapionObject;
+                    return new YAPIONObject().add("@type", new YAPIONValue<>(type())).add("list", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
                     YAPIONLogger.error(YAPIONLogger.LoggingType.SERIALIZER, "An unexpected error occurred", e.getCause());
                 }
@@ -216,7 +208,7 @@ public class SerializeManager {
             @SuppressWarnings({"java:S1905"})
             public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
                 try {
-                    return serializer.deserialize(((YAPIONObject) yapionAny).getArray("array"), yapionDeserializer);
+                    return serializer.deserialize(((YAPIONObject) yapionAny).getArray("list"), yapionDeserializer);
                 } catch (Exception e) {
                     YAPIONLogger.error(YAPIONLogger.LoggingType.DESERIALIZER, "An unexpected error occurred", e.getCause());
                 }
@@ -227,7 +219,7 @@ public class SerializeManager {
     }
 
     /**
-     * Adds a special Serializer for a specific Array.
+     * Adds a special Serializer for a specific Queue.
      *
      * @param serializer the special Serializer to add
      */
@@ -243,11 +235,7 @@ public class SerializeManager {
             @Override
             public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
-                    YAPIONObject yapionObject = new YAPIONObject();
-                    YAPIONArray yapionArray = serializer.serialize(object, yapionSerializer);
-                    yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
-                    yapionObject.add(new YAPIONVariable("array", yapionArray));
-                    return yapionObject;
+                    return new YAPIONObject().add("@type", new YAPIONValue<>(type())).add("queue", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
                     YAPIONLogger.error(YAPIONLogger.LoggingType.SERIALIZER, "An unexpected error occurred", e.getCause());
                 }
@@ -258,7 +246,7 @@ public class SerializeManager {
             @SuppressWarnings({"java:S1905"})
             public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
                 try {
-                    return serializer.deserialize(((YAPIONObject) yapionAny).getArray("array"), yapionDeserializer);
+                    return serializer.deserialize(((YAPIONObject) yapionAny).getArray("queue"), yapionDeserializer);
                 } catch (Exception e) {
                     YAPIONLogger.error(YAPIONLogger.LoggingType.DESERIALIZER, "An unexpected error occurred", e.getCause());
                 }
@@ -269,7 +257,7 @@ public class SerializeManager {
     }
 
     /**
-     * Adds a special Serializer for a specific Array.
+     * Adds a special Serializer for a specific Set.
      *
      * @param serializer the special Serializer to add
      */
@@ -285,11 +273,7 @@ public class SerializeManager {
             @Override
             public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
-                    YAPIONObject yapionObject = new YAPIONObject();
-                    YAPIONArray yapionArray = serializer.serialize(object, yapionSerializer);
-                    yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type())));
-                    yapionObject.add(new YAPIONVariable("array", yapionArray));
-                    return yapionObject;
+                    return new YAPIONObject().add("@type", new YAPIONValue<>(type())).add("set", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
                     YAPIONLogger.error(YAPIONLogger.LoggingType.SERIALIZER, "An unexpected error occurred", e.getCause());
                 }
@@ -300,7 +284,7 @@ public class SerializeManager {
             @SuppressWarnings({"java:S1905"})
             public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
                 try {
-                    return serializer.deserialize(((YAPIONObject) yapionAny).getArray("array"), yapionDeserializer);
+                    return serializer.deserialize(((YAPIONObject) yapionAny).getArray("set"), yapionDeserializer);
                 } catch (Exception e) {
                     YAPIONLogger.error(YAPIONLogger.LoggingType.DESERIALIZER, "An unexpected error occurred", e.getCause());
                 }

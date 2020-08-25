@@ -75,11 +75,12 @@ public class YAPIONArray extends YAPIONAny {
         return array.get(index);
     }
 
-    public void add(YAPIONAny yapionAny) {
+    public YAPIONArray add(YAPIONAny yapionAny) {
         array.add(yapionAny);
         if (yapionAny != null) {
             yapionAny.setParent(this);
         }
+        return this;
     }
 
     @Override

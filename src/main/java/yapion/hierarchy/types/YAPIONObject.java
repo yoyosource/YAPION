@@ -11,6 +11,7 @@ import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.utils.RecursionUtils;
 
+import javax.print.DocFlavor;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -165,7 +166,7 @@ public class YAPIONObject extends YAPIONAny {
         }
     }
 
-    public void add(YAPIONVariable variable) {
+    public YAPIONObject add(YAPIONVariable variable) {
         check(variable);
         for (int i = variables.size() - 1; i >= 0; i--) {
             if (variables.get(i).getName().equals(variable.getName())) {
@@ -174,9 +175,14 @@ public class YAPIONObject extends YAPIONAny {
         }
         variables.add(variable);
         variable.getValue().setParent(this);
+        return this;
     }
 
-    public void addOrPointer(YAPIONVariable variable) {
+    public YAPIONObject add(String name, YAPIONAny value) {
+        return add(new YAPIONVariable(name, value));
+    }
+
+    public YAPIONObject addOrPointer(YAPIONVariable variable) {
         RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(variable.getValue(), this);
         if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
             if (result.getYAPIONAny() == null) {
@@ -187,7 +193,7 @@ public class YAPIONObject extends YAPIONAny {
             }
             variable = new YAPIONVariable(variable.getName(), new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
         }
-        add(variable);
+        return add(variable);
     }
 
     @Override

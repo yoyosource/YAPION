@@ -77,26 +77,29 @@ public class YAPIONMap extends YAPIONAny {
         outputStream.write(">".getBytes(StandardCharsets.UTF_8));
     }
 
-    public void add(YAPIONAny key, YAPIONAny value) {
+    public YAPIONMap add(YAPIONAny key, YAPIONAny value) {
         variables.put(key, value);
+        return this;
     }
 
-    public void add(YAPIONVariable variable) {
-        add(new YAPIONValue<>(variable.getName()), variable.getValue());
+    public YAPIONMap add(YAPIONVariable variable) {
+        return add(new YAPIONValue<>(variable.getName()), variable.getValue());
     }
 
-    public void add(YAPIONParserMapObject variable) {
+    public YAPIONMap add(YAPIONParserMapObject variable) {
         mappingVariables.put(variable.variable.getName().substring(1), variable.variable.getValue());
         variable.variable.getValue().setParent(this);
+        return this;
     }
 
-    public void add(YAPIONParserMapMapping mapping) {
+    public YAPIONMap add(YAPIONParserMapMapping mapping) {
         mappingList.add(mapping);
+        return this;
     }
 
-    public synchronized void finishMapping() {
+    public synchronized YAPIONMap finishMapping() {
         if (mappingVariables.isEmpty()) {
-            return;
+            return this;
         }
 
         for (YAPIONParserMapMapping mapping : mappingList) {
@@ -110,6 +113,7 @@ public class YAPIONMap extends YAPIONAny {
 
         mappingVariables.clear();
         mappingList.clear();
+        return this;
     }
 
     public YAPIONAny get(YAPIONAny key) {
