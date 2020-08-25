@@ -171,6 +171,7 @@ public class SerializeManager {
             }
 
             @Override
+            @SuppressWarnings({"java:S1905"})
             public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
                 try {
                     return serializer.deserialize(((YAPIONObject) yapionAny).getMap("map"), yapionDeserializer);
@@ -212,6 +213,7 @@ public class SerializeManager {
             }
 
             @Override
+            @SuppressWarnings({"java:S1905"})
             public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
                 try {
                     return serializer.deserialize(((YAPIONObject) yapionAny).getArray("array"), yapionDeserializer);
@@ -259,22 +261,52 @@ public class SerializeManager {
 
             @Override
             public YAPIONObject serialize(T object, YAPIONSerializer yapionSerializer) {
-                try {
-                    YAPIONObject yapionObject = serializationGetter.serialize(object, yapionSerializer);
-                    yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type().getTypeName())));
-                    return yapionObject;
-                } catch (Exception e) {
-                    return null;
-                }
+                YAPIONObject yapionObject = serializationGetter.serialize(object, yapionSerializer);
+                yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>(type().getTypeName())));
+                return yapionObject;
             }
 
             @Override
             public T deserialize(YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
-                try {
-                    return deserializationGetter.deserialize(yapionObject, yapionDeserializer);
-                } catch (Exception e) {
-                    return null;
-                }
+                return deserializationGetter.deserialize(yapionObject, yapionDeserializer);
+            }
+        };
+    }
+
+    public static <T> SerializerMap<T> SerializerMap(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONMap> serializationGetter, DeserializationGetter<T, YAPIONMap> deserializationGetter) {
+        return new SerializerMap<T>() {
+            @Override
+            public Class<T> type() {
+                return typeGetter.type();
+            }
+
+            @Override
+            public YAPIONMap serialize(T object, YAPIONSerializer yapionSerializer) {
+                return serializationGetter.serialize(object, yapionSerializer);
+            }
+
+            @Override
+            public T deserialize(YAPIONMap yapionMap, YAPIONDeserializer yapionDeserializer) {
+                return deserializationGetter.deserialize(yapionMap, yapionDeserializer);
+            }
+        };
+    }
+
+    public static <T> SerializerArray<T> SerializerArray(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
+        return new SerializerArray<T>() {
+            @Override
+            public Class<T> type() {
+                return typeGetter.type();
+            }
+
+            @Override
+            public YAPIONArray serialize(T object, YAPIONSerializer yapionSerializer) {
+                return serializationGetter.serialize(object, yapionSerializer);
+            }
+
+            @Override
+            public T deserialize(YAPIONArray yapionArray, YAPIONDeserializer yapionDeserializer) {
+                return deserializationGetter.deserialize(yapionArray, yapionDeserializer);
             }
         };
     }
