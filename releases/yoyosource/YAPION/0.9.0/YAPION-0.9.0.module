@@ -1,0 +1,77 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "yoyosource",
+    "module": "YAPION",
+    "version": "0.9.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.1.1",
+      "buildId": "zztzkmqxt5g2jhxo42fywl5l3m"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "YAPION-0.9.0.jar",
+          "url": "YAPION-0.9.0.jar",
+          "size": 150974,
+          "sha512": "564045f8428eb8a1d0035069011bd4eefdb76befd8b99e3d41675d7e526abfa86744e1b53c86f4bb6619b7a7ae3400cd659f90957102fed037aec276c23f217c",
+          "sha256": "0725c70c59f5440e5d59949eeb7e0c85081d6a998f65ab35c0c238cc035339fe",
+          "sha1": "df639956ae5590ceeb197883146c0372c939c088",
+          "md5": "ff950b0241e62e6f5cb0d3ddb80076bb"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.objenesis",
+          "module": "objenesis",
+          "version": {
+            "requires": "3.1"
+          }
+        },
+        {
+          "group": "org.slf4j",
+          "module": "slf4j-api",
+          "version": {
+            "requires": "2.0.0-alpha1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "YAPION-0.9.0.jar",
+          "url": "YAPION-0.9.0.jar",
+          "size": 150974,
+          "sha512": "564045f8428eb8a1d0035069011bd4eefdb76befd8b99e3d41675d7e526abfa86744e1b53c86f4bb6619b7a7ae3400cd659f90957102fed037aec276c23f217c",
+          "sha256": "0725c70c59f5440e5d59949eeb7e0c85081d6a998f65ab35c0c238cc035339fe",
+          "sha1": "df639956ae5590ceeb197883146c0372c939c088",
+          "md5": "ff950b0241e62e6f5cb0d3ddb80076bb"
+        }
+      ]
+    }
+  ]
+}
