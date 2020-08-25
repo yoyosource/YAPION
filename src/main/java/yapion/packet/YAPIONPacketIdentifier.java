@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
+// YAPION
+// Copyright (C) 2019,2020 yoyosource
+
 package yapion.packet;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
@@ -7,7 +11,7 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 @YAPIONLoadExclude(context = "*")
 public class YAPIONPacketIdentifier<T> {
 
-    private T identifier;
+    private final T identifier;
 
     /**
      * Creates an YAPIONPacketIdentifier with the specified

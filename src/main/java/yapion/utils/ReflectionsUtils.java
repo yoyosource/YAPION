@@ -6,6 +6,8 @@ package yapion.utils;
 
 import org.objenesis.ObjenesisBase;
 import org.objenesis.strategy.StdInstantiatorStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import yapion.annotations.YAPIONData;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
@@ -23,6 +25,8 @@ public class ReflectionsUtils {
     private ReflectionsUtils() {
         throw new IllegalStateException("Utility class");
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(ReflectionsUtils.class);
 
     /**
      * Invokes a method with the given arguments on a given object
@@ -62,7 +66,7 @@ public class ReflectionsUtils {
             return Optional.ofNullable(method.invoke(object, objects));
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
-            YAPIONLogger.info(YAPIONLogger.LoggingType.UTILS, "Exception while invoking a method '" + name + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
+            logger.info("Exception while invoking a method '" + name + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
             return Optional.empty();
         }
     }
@@ -102,7 +106,7 @@ public class ReflectionsUtils {
             method.setAccessible(true);
             return Optional.ofNullable(method.invoke(object, parameters));
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
-            YAPIONLogger.info(YAPIONLogger.LoggingType.UTILS, "Exception while invoking a method '" + name + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
+            logger.info("Exception while invoking a method '" + name + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
             return Optional.empty();
         }
     }
@@ -133,7 +137,7 @@ public class ReflectionsUtils {
             ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
             return objenesisBase.newInstance(Class.forName(className));
         } catch (ClassNotFoundException e) {
-            YAPIONLogger.info(YAPIONLogger.LoggingType.UTILS, "Exception while creating an Object with Objenesis because the specified class '" + className + "' was not found", e.getCause());
+            logger.info("Exception while creating an Object with Objenesis because the specified class '" + className + "' was not found", e.getCause());
             return null;
         }
     }
@@ -183,10 +187,10 @@ public class ReflectionsUtils {
                 return constructor.newInstance(o);
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            YAPIONLogger.info(YAPIONLogger.LoggingType.UTILS, "Exception while creating an Object with normal Constructor", e.getCause());
+            logger.info("Exception while creating an Object with normal Constructor", e.getCause());
             throw new YAPIONReflectionException(e.getMessage(), e.getCause());
         } catch (ClassNotFoundException e) {
-            YAPIONLogger.info(YAPIONLogger.LoggingType.UTILS, "Exception while creating an Object with normal Constructor because the specified class '" + className + "' was not found", e.getCause());
+            logger.info("Exception while creating an Object with normal Constructor because the specified class '" + className + "' was not found", e.getCause());
             throw new YAPIONReflectionException(e.getMessage(), e.getCause());
         }
     }

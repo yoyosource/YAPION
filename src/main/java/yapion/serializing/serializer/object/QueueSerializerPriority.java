@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
+// YAPION
+// Copyright (C) 2019,2020 yoyosource
+
 package yapion.serializing.serializer.object;
 
 import yapion.hierarchy.YAPIONAny;
@@ -37,7 +41,7 @@ public class QueueSerializerPriority implements InternalSerializer<PriorityQueue
     public PriorityQueue<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONObject yapionObject = (YAPIONObject) yapionAny;
         YAPIONArray yapionArray = yapionObject.getArray("values");
-        PriorityQueue<?> queue = new PriorityQueue<>();
+        PriorityQueue<Object> queue = new PriorityQueue<>();
         for (int i = 0; i < yapionArray.length(); i++) {
             queue.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
         }

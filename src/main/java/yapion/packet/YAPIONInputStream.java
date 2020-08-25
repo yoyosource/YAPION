@@ -4,6 +4,8 @@
 
 package yapion.packet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
@@ -12,7 +14,6 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
-import yapion.utils.YAPIONLogger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,8 @@ public class YAPIONInputStream {
 
     private Thread yapionInputStreamHandler = null;
     private boolean running = true;
+
+    private static final Logger logger = LoggerFactory.getLogger(YAPIONInputStream.class);
 
     /**
      * Creates a YAPIONInputStream from an InputStream.
@@ -47,7 +50,7 @@ public class YAPIONInputStream {
                try {
                    handle();
                } catch (Exception e) {
-                   YAPIONLogger.warn(YAPIONLogger.LoggingType.PACKET, "Something went wrong while handling the read object.", e.getCause());
+                   logger.warn("Something went wrong while handling the read object.", e.getCause());
                }
            }
         });

@@ -4,10 +4,11 @@
 
 package yapion.packet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONPacketException;
-import yapion.utils.YAPIONLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class YAPIONPacketReceiver {
 
     private final Map<String, YAPIONPacketHandler> handlerMap = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(YAPIONPacketReceiver.class);
 
     /**
      * Creates an YAPIONPacketReceiver
@@ -95,12 +97,12 @@ public class YAPIONPacketReceiver {
             handlerMap.get(type).handlePacket(yapionPacket);
             return;
         } catch (Exception e) {
-            YAPIONLogger.warn(YAPIONLogger.LoggingType.PACKET, "The packet handler with type '" + type + "' threw an exception.", e.getCause());
+            logger.warn("The packet handler with type '" + type + "' threw an exception.", e.getCause());
         }
         try {
             handlerMap.get("@exception").handlePacket(yapionPacket);
         } catch (Exception e) {
-            YAPIONLogger.warn(YAPIONLogger.LoggingType.PACKET, "The packet handler with type '@exception' threw an exception.", e.getCause());
+            logger.warn("The packet handler with type '@exception' threw an exception.", e.getCause());
         }
     }
 

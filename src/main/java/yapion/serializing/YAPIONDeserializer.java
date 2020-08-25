@@ -4,7 +4,8 @@
 
 package yapion.serializing;
 
-import test.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.object.YAPIONPostDeserialization;
@@ -18,7 +19,6 @@ import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
-import yapion.utils.YAPIONLogger;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -41,6 +41,8 @@ public class YAPIONDeserializer {
     private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
 
     private String arrayType = "";
+
+    private static final Logger logger = LoggerFactory.getLogger(YAPIONDeserializer.class);
 
     /**
      * Serialize an YAPION Object to an Object.
@@ -186,11 +188,11 @@ public class YAPIONDeserializer {
             }
             postDeserializationStep(object);
         } catch (ClassNotFoundException e) {
-            YAPIONLogger.trace(YAPIONLogger.LoggingType.DESERIALIZER, "The class '" + type + "' was not found.", e.getCause());
+            logger.trace("The class '" + type + "' was not found.", e.getCause());
         } catch (IllegalAccessException e) {
-            YAPIONLogger.trace(YAPIONLogger.LoggingType.DESERIALIZER, "", e.getCause());
+            logger.trace("", e.getCause());
         } catch (YAPIONReflectionException e) {
-            YAPIONLogger.trace(YAPIONLogger.LoggingType.DESERIALIZER, "Exception while creating an Instance of the object '" + type + "'", e.getCause());
+            logger.trace("Exception while creating an Instance of the object '" + type + "'", e.getCause());
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
