@@ -507,16 +507,22 @@ public class SerializeManager {
     }
 
     @FunctionalInterface
+    @YAPIONSaveExclude(context = "*")
+    @YAPIONLoadExclude(context = "*")
     public interface TypeGetter<T> {
         Class<T> type();
     }
 
     @FunctionalInterface
+    @YAPIONSaveExclude(context = "*")
+    @YAPIONLoadExclude(context = "*")
     public interface SerializationGetter<T, R> {
         R serialize(T object, YAPIONSerializer yapionSerializer);
     }
 
     @FunctionalInterface
+    @YAPIONSaveExclude(context = "*")
+    @YAPIONLoadExclude(context = "*")
     public interface DeserializationGetter<T, R> {
         T deserialize(R object, YAPIONDeserializer yapionDeserializer);
     }
