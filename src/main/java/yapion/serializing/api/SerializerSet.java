@@ -11,6 +11,7 @@ import java.util.Set;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SuppressWarnings({"java:S1610"})
 public abstract class SerializerSet<T extends Set<?>> {
 
     public abstract Class<T> type();

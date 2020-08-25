@@ -32,10 +32,11 @@ public class StackSerializer implements InternalSerializer<Stack<?>> {
     }
 
     @Override
+    @SuppressWarnings({"java:S1149"})
     public Stack<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONObject yapionObject = (YAPIONObject) yapionAny;
         YAPIONArray yapionArray = yapionObject.getArray("values");
-        Stack<?> stack = new Stack<>();
+        Stack<Object> stack = new Stack<>();
         for (int i = 0; i < yapionArray.length(); i++) {
             stack.push(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
         }

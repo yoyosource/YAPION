@@ -33,9 +33,10 @@ public class TableSerializerHash implements InternalSerializer<Hashtable<?, ?>> 
     }
 
     @Override
+    @SuppressWarnings({"java:S1149"})
     public Hashtable<?, ?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
-        Hashtable<?, ?> table = new Hashtable<>();
+        Hashtable<Object, Object> table = new Hashtable<>();
         for (YAPIONAny key : yapionMap.getKeys()) {
             table.put(yapionDeserializer.parse(key, yapionDeserializer), yapionDeserializer.parse(yapionMap.get(key), yapionDeserializer));
         }

@@ -11,6 +11,7 @@ import java.util.Map;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SuppressWarnings({"java:S1610"})
 public abstract class SerializerMap<T extends Map<?, ?>> {
 
     public abstract Class<T> type();

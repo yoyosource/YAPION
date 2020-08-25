@@ -32,10 +32,11 @@ public class VectorSerializer implements InternalSerializer<Vector<?>> {
     }
 
     @Override
+    @SuppressWarnings({"java:S1149"})
     public Vector<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONObject yapionObject = (YAPIONObject) yapionAny;
         YAPIONArray yapionArray = yapionObject.getArray("values");
-        Vector<?> vector = new Vector<>();
+        Vector<Object> vector = new Vector<>();
         for (int i = 0; i < yapionArray.length(); i++) {
             vector.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
         }

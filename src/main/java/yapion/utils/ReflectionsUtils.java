@@ -33,6 +33,7 @@ public class ReflectionsUtils {
      * @param parameters the parameters that should be used
      * @return the possible return value
      */
+    @SuppressWarnings({"java:S3011"})
     public static Optional<Object> invokeMethod(String name, Object object, Parameter... parameters) {
         Class<?>[] classes = new Class[parameters.length];
         Object[] objects = new Object[parameters.length];
@@ -75,6 +76,7 @@ public class ReflectionsUtils {
      * @param parameters the parameters that should be used
      * @return the possible return value
      */
+    @SuppressWarnings({"java:S3011"})
     public static Optional<Object> invokeMethod(String name, Object object, Object... parameters) {
         Class<?>[] classes = new Class[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
@@ -164,6 +166,7 @@ public class ReflectionsUtils {
         return constructInstance(className, o);
     }
 
+    @SuppressWarnings({"java:S3011"})
     private static Object constructInstance(String className, Object o) {
         try {
             Class<?> clazz = Class.forName(className);

@@ -338,6 +338,7 @@ public class SerializeManager {
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
+    @SuppressWarnings({"java:S100"})
     public static <T> SerializerObject<T> SerializerObject(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONObject> serializationGetter, DeserializationGetter<T, YAPIONObject> deserializationGetter) {
         return new SerializerObject<T>() {
             @Override
@@ -357,6 +358,7 @@ public class SerializeManager {
         };
     }
 
+    @SuppressWarnings({"java:S100"})
     public static <T> SerializerObject<T> SerializerObject(Class<T> clazz, SerializationGetter<T, YAPIONObject> serializationGetter, DeserializationGetter<T, YAPIONObject> deserializationGetter) {
         return SerializerObject(() -> clazz, serializationGetter, deserializationGetter);
     }
@@ -376,6 +378,7 @@ public class SerializeManager {
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
+    @SuppressWarnings({"java:S100"})
     public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONMap> serializationGetter, DeserializationGetter<T, YAPIONMap> deserializationGetter) {
         return new SerializerMap<T>() {
             @Override
@@ -395,6 +398,7 @@ public class SerializeManager {
         };
     }
 
+    @SuppressWarnings({"java:S100"})
     public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(Class<T> clazz, SerializationGetter<T, YAPIONMap> serializationGetter, DeserializationGetter<T, YAPIONMap> deserializationGetter) {
         return SerializerMap(() -> clazz, serializationGetter, deserializationGetter);
     }
@@ -414,6 +418,7 @@ public class SerializeManager {
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
+    @SuppressWarnings({"java:S100"})
     public static <T extends List<?>> SerializerList<T> SerializerList(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return new SerializerList<T>() {
             @Override
@@ -433,6 +438,7 @@ public class SerializeManager {
         };
     }
 
+    @SuppressWarnings({"java:S100"})
     public static <T extends List<?>> SerializerList<T> SerializerList(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return SerializerList(() -> clazz, serializationGetter, deserializationGetter);
     }
@@ -452,6 +458,7 @@ public class SerializeManager {
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
+    @SuppressWarnings({"java:S100"})
     public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return new SerializerQueue<T>() {
             @Override
@@ -471,6 +478,7 @@ public class SerializeManager {
         };
     }
 
+    @SuppressWarnings({"java:S100"})
     public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return SerializerQueue(() -> clazz, serializationGetter, deserializationGetter);
     }
@@ -490,6 +498,7 @@ public class SerializeManager {
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
+    @SuppressWarnings({"java:S100"})
     public static <T extends Set<?>> SerializerSet<T> SerializerSet(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return new SerializerSet<T>() {
             @Override
@@ -509,6 +518,7 @@ public class SerializeManager {
         };
     }
 
+    @SuppressWarnings({"java:S100"})
     public static <T extends Set<?>> SerializerSet<T> SerializerSet(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return SerializerSet(() -> clazz, serializationGetter, deserializationGetter);
     }

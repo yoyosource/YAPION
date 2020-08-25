@@ -9,6 +9,7 @@ import yapion.serializing.YAPIONSerializer;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SuppressWarnings({"java:S1610"})
 public abstract class SerializerObject<T> {
 
     public abstract Class<T> type();
