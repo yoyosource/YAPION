@@ -11,6 +11,7 @@ import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
+import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
@@ -26,7 +27,7 @@ public class StringBufferSerializer implements InternalSerializer<StringBuffer> 
     @Override
     public YAPIONAny serialize(StringBuffer object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>("java.lang.StringBuffer")));
+        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>("java.lang.StringBuffer")));
         yapionObject.add(new YAPIONVariable("string", new YAPIONValue<>(object.toString())));
         return yapionObject;
     }

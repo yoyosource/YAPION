@@ -1,11 +1,11 @@
 package yapion.serializing.serializer.other;
 
-import sun.jvm.hotspot.opto.CompilerPhaseType;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
+import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
@@ -21,7 +21,7 @@ public class OptionalSerializer implements InternalSerializer<Optional> {
     @Override
     public YAPIONAny serialize(Optional object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable("@type", new YAPIONValue<>("java.util.Optional")));
+        yapionObject.add(new YAPIONVariable(SerializeManager.typeName, new YAPIONValue<>("java.util.Optional")));
         yapionObject.add(new YAPIONVariable("present", new YAPIONValue<>(object.isPresent())));
         if (object.isPresent()) {
             yapionObject.add(new YAPIONVariable("value", yapionSerializer.parse(object.get(), yapionSerializer)));
