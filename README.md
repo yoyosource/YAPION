@@ -49,7 +49,6 @@ dependencies {
 * [L] License
 
 ## Tasks
-- JSON to YAPION Parser
 - More internal Java Types supported?
 
 ## Structure

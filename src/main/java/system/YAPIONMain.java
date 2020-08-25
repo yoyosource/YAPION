@@ -13,12 +13,10 @@
 
 package system;
 
-import yapion.parser.YAPIONParser;
-
 public class YAPIONMain {
 
     public static void main(String[] args) {
-        System.out.println(YAPIONParser.parseJSON("{\"contributor\":[{\"name\":\"yoyosource\",\"owner\":true},{\"name\":\"chaoscaot444\",\"owner\":\"false\"}]}"));
+
     }
 
 }
