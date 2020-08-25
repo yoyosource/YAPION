@@ -336,6 +336,21 @@ public class SerializeManager {
         return serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
     }
 
+    /**
+     * Create a Object Serializer from three interfaces:
+     * TypeGetter, SerializationGetter and
+     * DeserializationGetter. Those are all
+     * FunctionalInterfaces with just one method to override.
+     * This makes the use off those interfaces really easy.
+     * If any of the three arguments is {@code null} an
+     * YAPIONException is thrown.
+     *
+     * @param typeGetter the TypeGetter
+     * @param serializationGetter the SerializationGetter
+     * @param deserializationGetter the DeserializationGetter
+     * @param <T> the Type of this Serializer
+     * @return the Serializer that wraps the Interfaces
+     */
     public static <T> SerializerObject<T> SerializerObject(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONObject> serializationGetter, DeserializationGetter<T, YAPIONObject> deserializationGetter) {
         return new SerializerObject<T>() {
             @Override
@@ -355,6 +370,21 @@ public class SerializeManager {
         };
     }
 
+    /**
+     * Create a Map Serializer from three interfaces:
+     * TypeGetter, SerializationGetter and
+     * DeserializationGetter. Those are all
+     * FunctionalInterfaces with just one method to override.
+     * This makes the use off those interfaces really easy.
+     * If any of the three arguments is {@code null} an
+     * YAPIONException is thrown.
+     *
+     * @param typeGetter the TypeGetter
+     * @param serializationGetter the SerializationGetter
+     * @param deserializationGetter the DeserializationGetter
+     * @param <T> the Type of this Serializer
+     * @return the Serializer that wraps the Interfaces
+     */
     public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONMap> serializationGetter, DeserializationGetter<T, YAPIONMap> deserializationGetter) {
         return new SerializerMap<T>() {
             @Override
@@ -374,6 +404,21 @@ public class SerializeManager {
         };
     }
 
+    /**
+     * Create a List Serializer from three interfaces:
+     * TypeGetter, SerializationGetter and
+     * DeserializationGetter. Those are all
+     * FunctionalInterfaces with just one method to override.
+     * This makes the use off those interfaces really easy.
+     * If any of the three arguments is {@code null} an
+     * YAPIONException is thrown.
+     *
+     * @param typeGetter the TypeGetter
+     * @param serializationGetter the SerializationGetter
+     * @param deserializationGetter the DeserializationGetter
+     * @param <T> the Type of this Serializer
+     * @return the Serializer that wraps the Interfaces
+     */
     public static <T extends List<?>> SerializerList<T> SerializerList(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return new SerializerList<T>() {
             @Override
@@ -393,6 +438,21 @@ public class SerializeManager {
         };
     }
 
+    /**
+     * Create a Queue Serializer from three interfaces:
+     * TypeGetter, SerializationGetter and
+     * DeserializationGetter. Those are all
+     * FunctionalInterfaces with just one method to override.
+     * This makes the use off those interfaces really easy.
+     * If any of the three arguments is {@code null} an
+     * YAPIONException is thrown.
+     *
+     * @param typeGetter the TypeGetter
+     * @param serializationGetter the SerializationGetter
+     * @param deserializationGetter the DeserializationGetter
+     * @param <T> the Type of this Serializer
+     * @return the Serializer that wraps the Interfaces
+     */
     public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return new SerializerQueue<T>() {
             @Override
@@ -412,6 +472,21 @@ public class SerializeManager {
         };
     }
 
+    /**
+     * Create a Set Serializer from three interfaces:
+     * TypeGetter, SerializationGetter and
+     * DeserializationGetter. Those are all
+     * FunctionalInterfaces with just one method to override.
+     * This makes the use off those interfaces really easy.
+     * If any of the three arguments is {@code null} an
+     * YAPIONException is thrown.
+     *
+     * @param typeGetter the TypeGetter
+     * @param serializationGetter the SerializationGetter
+     * @param deserializationGetter the DeserializationGetter
+     * @param <T> the Type of this Serializer
+     * @return the Serializer that wraps the Interfaces
+     */
     public static <T extends Set<?>> SerializerSet<T> SerializerSet(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return new SerializerSet<T>() {
             @Override
