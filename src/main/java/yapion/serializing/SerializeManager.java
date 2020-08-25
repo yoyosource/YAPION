@@ -370,6 +370,10 @@ public class SerializeManager {
         };
     }
 
+    public static <T> SerializerObject<T> SerializerObject(Class<T> clazz, SerializationGetter<T, YAPIONObject> serializationGetter, DeserializationGetter<T, YAPIONObject> deserializationGetter) {
+        return SerializerObject(() -> clazz, serializationGetter, deserializationGetter);
+    }
+
     /**
      * Create a Map Serializer from three interfaces:
      * TypeGetter, SerializationGetter and
@@ -402,6 +406,10 @@ public class SerializeManager {
                 return deserializationGetter.deserialize(yapionMap, yapionDeserializer);
             }
         };
+    }
+
+    public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(Class<T> clazz, SerializationGetter<T, YAPIONMap> serializationGetter, DeserializationGetter<T, YAPIONMap> deserializationGetter) {
+        return SerializerMap(() -> clazz, serializationGetter, deserializationGetter);
     }
 
     /**
@@ -438,6 +446,10 @@ public class SerializeManager {
         };
     }
 
+    public static <T extends List<?>> SerializerList<T> SerializerList(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
+        return SerializerList(() -> clazz, serializationGetter, deserializationGetter);
+    }
+
     /**
      * Create a Queue Serializer from three interfaces:
      * TypeGetter, SerializationGetter and
@@ -472,6 +484,10 @@ public class SerializeManager {
         };
     }
 
+    public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
+        return SerializerQueue(() -> clazz, serializationGetter, deserializationGetter);
+    }
+
     /**
      * Create a Set Serializer from three interfaces:
      * TypeGetter, SerializationGetter and
@@ -504,6 +520,10 @@ public class SerializeManager {
                 return deserializationGetter.deserialize(yapionArray, yapionDeserializer);
             }
         };
+    }
+
+    public static <T extends Set<?>> SerializerSet<T> SerializerSet(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
+        return SerializerSet(() -> clazz, serializationGetter, deserializationGetter);
     }
 
     @FunctionalInterface
