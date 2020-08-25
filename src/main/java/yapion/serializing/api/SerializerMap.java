@@ -1,8 +1,12 @@
-package yapion.serializing;
+package yapion.serializing.api;
 
 import yapion.hierarchy.types.YAPIONMap;
+import yapion.serializing.YAPIONDeserializer;
+import yapion.serializing.YAPIONSerializer;
 
-public interface SerializerMap<T> {
+import java.util.Map;
+
+public interface SerializerMap<T extends Map<?, ?>> {
 
     Class<T> type();
     YAPIONMap serialize(T object, YAPIONSerializer yapionSerializer);
