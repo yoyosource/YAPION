@@ -50,6 +50,7 @@ dependencies {
 
 ## Tasks
 - More internal Java Types supported?
+- More efficient JSON Parser (eliminate the Recursion)
 
 ## Structure
 YAPION is heavily inspired by JSON and you can see some similarities between those object notations.
@@ -57,6 +58,13 @@ Both have objects as a key, value map and arrays. An YAPION structure can only b
 The String representation of an YAPION Object or Array is mostly shorter than the JSON equivalent. This is achieved by eliminating most quotation marks and building the key value pairs in a enum like fashion.
 YAPION as a object notation has 5 types. Those are value, array, object, map (see: Map) and pointer (see: Pointer).
 Values are indicated by '(...)', arrays by '\[...]', objects by '{...}', map by '<...> and pointers by '->...', the 3 dots are representing the value, or the key value pairs.
+
+### Benefits of YAPION
+- Most of the time JSON is nearly **1.15** to **1.4** time as long as the YAPION equivalent.
+- YAPION has native map support to easier serialize the Java counter part.
+- YAPION has native pointer support to easier serialize Java references to other Objects in multiple places.
+- YAPION's primitive types know what type they should be.
+
 ### JSON Equivalent
 #### Objects, Key-Value pairs
 ```

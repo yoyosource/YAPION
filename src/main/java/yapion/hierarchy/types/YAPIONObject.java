@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @YAPIONSave(context = "*")
 public class YAPIONObject extends YAPIONAny {
@@ -46,6 +47,11 @@ public class YAPIONObject extends YAPIONAny {
             variable.toOutputStream(outputStream);
         }
         outputStream.write("}".getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Override
+    public String toJSONString() {
+        return "{" + variables.stream().map(YAPIONVariable::toJSONString).collect(Collectors.joining(",")) + "}";
     }
 
     @Override

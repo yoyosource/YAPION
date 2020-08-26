@@ -52,6 +52,10 @@ public class YAPIONVariable {
         value.toOutputStream(outputStream);
     }
 
+    public String toJSONString() {
+        return "\"" + name + "\":" + value.toJSONString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -57,6 +57,9 @@ public class SerializeManager {
         add(new FileSerializer());
         add(new OptionalSerializer());
 
+        add(new RunnableSerializer());
+        add(new ThreadSerializer());
+
         // Non Floating Point Numbers
         add(new ByteSerializer());
         add(new ShortSerializer());

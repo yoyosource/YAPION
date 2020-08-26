@@ -92,6 +92,11 @@ public class YAPIONAny {
         // This method should be overwritten by YAPIONArray, YAPIONMap, YAPIONObject, YAPIONPointer and YAPIONValue
     }
 
+    public String toJSONString() {
+        // This method should be overwritten by YAPIONArray, YAPIONMap, YAPIONObject, YAPIONPointer and YAPIONValue
+        return "";
+    }
+
     public final Optional<YAPIONSearch<? extends YAPIONAny>> get(String... s) {
         Optional<YAPIONSearch<? extends YAPIONAny>> optional = Optional.of(new YAPIONSearch<>(this));
         for (int i = 0; i < s.length; i++) {

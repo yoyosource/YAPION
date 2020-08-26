@@ -33,6 +33,11 @@ public class YAPIONPointer extends YAPIONAny {
         outputStream.write(toString().getBytes(StandardCharsets.UTF_8));
     }
 
+    @Override
+    public String toJSONString() {
+        return "{\"@pointer\":\"" + getPointerIDString() + "\"}";
+    }
+
     private long pointerID;
     private YAPIONObject yapionObject;
 

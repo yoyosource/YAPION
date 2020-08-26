@@ -61,6 +61,20 @@ public class YAPIONValue<T> extends YAPIONAny {
         outputStream.write(toString().getBytes(StandardCharsets.UTF_8));
     }
 
+    @Override
+    public String toJSONString() {
+        if (value instanceof String) {
+            return "\"" + ((String) value).replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
+        }
+        if (value instanceof Character) {
+            return "\"" + value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
+        }
+        if (value == null) {
+            return "null";
+        }
+        return value.toString();
+    }
+
     public static YAPIONValue<?> parseValue(String s) {
         if (s.equals("true") || s.equals("false")) {
             return new YAPIONValue<>(s.equals("true"));
