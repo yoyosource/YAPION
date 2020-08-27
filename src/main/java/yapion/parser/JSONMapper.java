@@ -12,8 +12,8 @@ import java.util.Map;
 
 public class JSONMapper {
 
-    public static final String POINTER = "@pointer";
-    public static final String MAP = "@mapping";
+    public static final String POINTER_IDENTIFIER = "@pointer";
+    public static final String MAP_IDENTIFIER = "@mapping";
 
     private YAPIONObject json;
     private YAPIONObject result;
@@ -76,12 +76,12 @@ public class JSONMapper {
         }
 
         YAPIONObject yapionObject = (YAPIONObject) yapionAny;
-        if (yapionObject.getValue(POINTER, "") != null) {
+        if (yapionObject.getValue(POINTER_IDENTIFIER, "") != null) {
             YAPIONPointer yapionPointer = mapPointer(yapionObject);
             yapionPointerList.add(yapionPointer);
             return yapionPointer;
         }
-        if (yapionObject.getArray(MAP) != null) {
+        if (yapionObject.getArray(MAP_IDENTIFIER) != null) {
             return mapMap(yapionObject);
         }
         return mapObject(yapionObject);
@@ -95,11 +95,11 @@ public class JSONMapper {
     }
 
     private YAPIONPointer mapPointer(YAPIONObject yapionObject) {
-        return new YAPIONPointer(yapionObject.getValue(POINTER, "").get());
+        return new YAPIONPointer(yapionObject.getValue(POINTER_IDENTIFIER, "").get());
     }
 
     private YAPIONMap mapMap(YAPIONObject yapionObject) {
-        YAPIONArray mapping = yapionObject.getArray(MAP);
+        YAPIONArray mapping = yapionObject.getArray(MAP_IDENTIFIER);
         YAPIONMap yapionMap = new YAPIONMap();
         for (int i = 0; i < mapping.length(); i++) {
             String[] mapped = ((YAPIONValue<String>) mapping.get(i)).get().split(":");

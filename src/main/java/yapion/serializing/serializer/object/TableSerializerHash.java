@@ -31,7 +31,7 @@ public class TableSerializerHash implements InternalSerializer<Hashtable<?, ?>> 
     @Override
     public YAPIONAny serialize(Hashtable<?, ?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_NAME, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
         for (Map.Entry<?, ?> entry : object.entrySet()) {

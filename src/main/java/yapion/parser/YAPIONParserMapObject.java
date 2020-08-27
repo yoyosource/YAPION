@@ -18,11 +18,4 @@ public class YAPIONParserMapObject {
         this.variable = variable;
     }
 
-    @Override
-    public String toString() {
-        return "YAPIONParserMapObject{" +
-                "variable=" + variable +
-                '}';
-    }
-
 }

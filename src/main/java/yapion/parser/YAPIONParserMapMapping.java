@@ -18,11 +18,4 @@ public class YAPIONParserMapMapping {
         this.mapping = mapping;
     }
 
-    @Override
-    public String toString() {
-        return "YAPIONParserMapMapping{" +
-                "mapping=" + mapping +
-                '}';
-    }
-
 }

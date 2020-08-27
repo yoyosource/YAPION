@@ -15,7 +15,6 @@ package system;
 
 import test.Test;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONPointer;
 import yapion.parser.YAPIONParser;
 
 import java.io.IOException;

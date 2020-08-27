@@ -78,7 +78,7 @@ public class YAPIONMap extends YAPIONAny {
     public String toJSONString() {
         YAPIONObject yapionObject = new YAPIONObject();
         YAPIONArray mapping = new YAPIONArray();
-        yapionObject.add(JSONMapper.MAP, mapping);
+        yapionObject.add(JSONMapper.MAP_IDENTIFIER, mapping);
 
         long id = 0;
         for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {

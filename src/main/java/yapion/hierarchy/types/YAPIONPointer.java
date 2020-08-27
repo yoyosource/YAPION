@@ -36,7 +36,7 @@ public class YAPIONPointer extends YAPIONAny {
 
     @Override
     public String toJSONString() {
-        return "{\"" + JSONMapper.POINTER + "\":\"" + getPointerIDString() + "\"}";
+        return "{\"" + JSONMapper.POINTER_IDENTIFIER + "\":\"" + getPointerIDString() + "\"}";
     }
 
     private long pointerID;

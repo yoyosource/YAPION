@@ -30,7 +30,7 @@ public class SerializeManager {
         throw new IllegalStateException("Utility class");
     }
 
-    public static final String TYPE_NAME = "@type";
+    public static final String TYPE_IDENTIFIER = "@type";
     private static final Logger logger = LoggerFactory.getLogger(SerializeManager.class);
 
     @YAPIONSaveExclude(context = "*")
@@ -146,7 +146,7 @@ public class SerializeManager {
             public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
                     YAPIONObject yapionObject = serializer.serialize(object, yapionSerializer);
-                    yapionObject.add(new YAPIONVariable(TYPE_NAME, new YAPIONValue<>(type())));
+                    yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
                     return yapionObject;
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
@@ -187,7 +187,7 @@ public class SerializeManager {
             @Override
             public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
-                    return new YAPIONObject().add(TYPE_NAME, new YAPIONValue<>(type())).add("map", serializer.serialize(object, yapionSerializer));
+                    return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("map", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
@@ -225,7 +225,7 @@ public class SerializeManager {
             @Override
             public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
-                    return new YAPIONObject().add(TYPE_NAME, new YAPIONValue<>(type())).add("list", serializer.serialize(object, yapionSerializer));
+                    return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("list", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
@@ -263,7 +263,7 @@ public class SerializeManager {
             @Override
             public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
-                    return new YAPIONObject().add(TYPE_NAME, new YAPIONValue<>(type())).add("queue", serializer.serialize(object, yapionSerializer));
+                    return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("queue", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
@@ -301,7 +301,7 @@ public class SerializeManager {
             @Override
             public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
-                    return new YAPIONObject().add(TYPE_NAME, new YAPIONValue<>(type())).add("set", serializer.serialize(object, yapionSerializer));
+                    return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("set", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
