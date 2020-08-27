@@ -18,6 +18,7 @@ import yapion.serializing.api.*;
 import yapion.serializing.serializer.number.*;
 import yapion.serializing.serializer.object.*;
 import yapion.serializing.serializer.other.*;
+import yapion.serializing.serializer.overrideable.*;
 
 import java.util.*;
 
@@ -102,6 +103,12 @@ public class SerializeManager {
 
         // Own Serializers Init
         overrideable = true;
+
+        add(new YAPIONSerializerArray());
+        add(new YAPIONSerializerMap());
+        add(new YAPIONSerializerObject());
+        add(new YAPIONSerializerPointer());
+        add(new YAPIONSerializerValue());
     }
 
     private static void add(InternalSerializer<?> serializer) {
@@ -117,7 +124,7 @@ public class SerializeManager {
      *
      * @param serializer the special Serializer to add
      */
-    public static <T> void add(SerializerObject<T> serializer) {
+    public static <T> void add(SerializerObjectInterface<T> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
         InternalSerializer<T> internalSerializer = new InternalSerializer<T>() {
@@ -159,7 +166,7 @@ public class SerializeManager {
      *
      * @param serializer the special Serializer to add
      */
-    public static <T extends Map<?, ?>> void add(SerializerMap<T> serializer) {
+    public static <T extends Map<?, ?>> void add(SerializerMapInterface<T> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
         InternalSerializer<T> internalSerializer = new InternalSerializer<T>() {
@@ -197,7 +204,7 @@ public class SerializeManager {
      *
      * @param serializer the special Serializer to add
      */
-    public static <T extends List<?>> void add(SerializerList<T> serializer) {
+    public static <T extends List<?>> void add(SerializerListInterface<T> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
         InternalSerializer<T> internalSerializer = new InternalSerializer<T>() {
@@ -235,7 +242,7 @@ public class SerializeManager {
      *
      * @param serializer the special Serializer to add
      */
-    public static <T extends Queue<?>> void add(SerializerQueue<T> serializer) {
+    public static <T extends Queue<?>> void add(SerializerQueueInterface<T> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
         InternalSerializer<T> internalSerializer = new InternalSerializer<T>() {
@@ -273,7 +280,7 @@ public class SerializeManager {
      *
      * @param serializer the special Serializer to add
      */
-    public static <T extends Set<?>> void add(SerializerSet<T> serializer) {
+    public static <T extends Set<?>> void add(SerializerSetInterface<T> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
         InternalSerializer<T> internalSerializer = new InternalSerializer<T>() {

@@ -14,7 +14,7 @@ import yapion.serializing.YAPIONSerializer;
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S1610"})
-public abstract class SerializerObject<T> {
+public abstract class SerializerObject<T> implements SerializerObjectInterface<T> {
 
     public abstract Class<T> type();
     public abstract YAPIONObject serialize(T object, YAPIONSerializer yapionSerializer);

@@ -16,7 +16,7 @@ import java.util.List;
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S1610"})
-public abstract class SerializerList<T extends List<?>> {
+public abstract class SerializerList<T extends List<?>> implements SerializerListInterface<T> {
 
     public abstract Class<T> type();
     public abstract YAPIONArray serialize(T object, YAPIONSerializer yapionSerializer);

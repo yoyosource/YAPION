@@ -16,7 +16,7 @@ import java.util.Queue;
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S1610"})
-public abstract class SerializerQueue<T extends Queue<?>> {
+public abstract class SerializerQueue<T extends Queue<?>> implements SerializerQueueInterface<T> {
 
     public abstract Class<T> type();
     public abstract YAPIONArray serialize(T object, YAPIONSerializer yapionSerializer);

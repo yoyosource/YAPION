@@ -100,6 +100,14 @@ public class YAPIONSerializer {
         if (object.getClass().getSimpleName().contains("$")) {
             return this;
         }
+
+        String type = object.getClass().getTypeName();
+        InternalSerializer serializer = SerializeManager.get(type);
+        if (serializer != null) {
+            this.yapionObject = (YAPIONObject) serializer.serialize(object, this);
+            return this;
+        }
+
         YAPIONObject yapionObject = new YAPIONObject();
         if (!pointerMap.containsKey(object)) {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
@@ -135,11 +143,6 @@ public class YAPIONSerializer {
                 continue;
             }
 
-            InternalSerializer serializer = SerializeManager.get(fieldObject.getClass().getTypeName());
-            if (serializer != null) {
-                yapionObject.add(new YAPIONVariable(name, serializer.serialize(fieldObject, this)));
-                continue;
-            }
             YAPIONAny yapionAny = parse(fieldObject, this);
             if (yapionAny == null) {
                 continue;

@@ -14,15 +14,16 @@
 package system;
 
 import test.Test;
-import test.TestData;
 import yapion.hierarchy.types.YAPIONObject;
+
+import java.io.IOException;
 
 import static yapion.parser.YAPIONParser.parseJSON;
 import static yapion.serializing.YAPIONSerializer.serialize;
 
 public class YAPIONMain {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         YAPIONObject yapionObject = parseJSON("{\"contributor\":[{\"name\":\"yoyosource\",\"owner\":true},{\"name\":\"chaoscaot444\",\"owner\":\"false\"}]}");
         System.out.println(yapionObject);
         System.out.println(yapionObject.toJSONString());
@@ -30,18 +31,25 @@ public class YAPIONMain {
 
         YAPIONObject object = serialize(new Test());
         System.out.println(object);
+        object = serialize(object);
+        System.out.println(object);
         System.out.println(object.toJSONString());
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             test(object);
-            object = serialize(object);
+            if (false) {
+                object = parseJSON(object.toJSONString());
+            } else {
+                object = serialize(object);
+            }
         }
+        // object.toOutputStream(new FileOutputStream(new File("test.yapion")));
     }
 
     public static void test(YAPIONObject yapionObject) {
         int lengthJSON = yapionObject.toJSONString().length();
         int lengthYAPION = yapionObject.toString().length();
         double factor = (double)lengthJSON / lengthYAPION;
-        System.out.println("FACTOR: " + factor + "   JSON: " + lengthJSON + "   YAPION: " + lengthYAPION);
+        System.out.println("FACTOR: " + factor + "   JSON: " + lengthJSON + "   YAPION: " + lengthYAPION + "   DIV: " + (lengthJSON - lengthYAPION));
     }
 
 }
