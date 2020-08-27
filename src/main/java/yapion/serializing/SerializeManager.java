@@ -35,9 +35,9 @@ public class SerializeManager {
 
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
-    private static class Serializer {
-        private final InternalSerializer<?> internalSerializer;
-        private final boolean overrideable;
+    private static final class Serializer {
+        private InternalSerializer<?> internalSerializer;
+        private boolean overrideable;
 
         public Serializer(InternalSerializer<?> internalSerializer, boolean overrideable) {
             this.internalSerializer = internalSerializer;

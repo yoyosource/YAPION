@@ -51,6 +51,7 @@ dependencies {
 ## Tasks
 - More internal Java Types supported?
 - More efficient JSON Parser (eliminate the Recursion)
+- More efficient JSON Mapper (eliminate the Recursion?)
 
 ## Structure
 YAPION is heavily inspired by JSON and you can see some similarities between those object notations.
