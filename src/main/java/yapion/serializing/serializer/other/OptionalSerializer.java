@@ -4,6 +4,8 @@
 
 package yapion.serializing.serializer.other;
 
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
@@ -15,6 +17,8 @@ import yapion.serializing.YAPIONSerializer;
 
 import java.util.Optional;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class OptionalSerializer implements InternalSerializer<Optional<?>> {
 
     @Override

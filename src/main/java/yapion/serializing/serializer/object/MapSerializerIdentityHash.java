@@ -4,6 +4,8 @@
 
 package yapion.serializing.serializer.object;
 
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONMap;
@@ -17,6 +19,8 @@ import yapion.serializing.YAPIONSerializer;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class MapSerializerIdentityHash implements InternalSerializer<IdentityHashMap<?, ?>> {
 
     @Override

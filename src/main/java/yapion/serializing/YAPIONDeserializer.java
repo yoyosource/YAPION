@@ -159,6 +159,7 @@ public class YAPIONDeserializer {
             object = serializer.deserialize(yapionObject, this);
             return this;
         }
+
         try {
             Class<?> clazz = Class.forName(type);
             if (!stateManager.is(clazz).load) {

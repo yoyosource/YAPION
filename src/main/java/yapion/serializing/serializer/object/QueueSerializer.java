@@ -4,6 +4,8 @@
 
 package yapion.serializing.serializer.object;
 
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
@@ -16,6 +18,8 @@ import yapion.serializing.YAPIONSerializer;
 
 import java.util.*;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class QueueSerializer implements InternalSerializer<Queue<?>> {
 
     @Override

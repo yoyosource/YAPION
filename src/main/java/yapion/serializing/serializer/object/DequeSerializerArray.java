@@ -4,6 +4,8 @@
 
 package yapion.serializing.serializer.object;
 
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
@@ -17,6 +19,8 @@ import yapion.serializing.YAPIONSerializer;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 public class DequeSerializerArray implements InternalSerializer<ArrayDeque<?>> {
 
     @Override

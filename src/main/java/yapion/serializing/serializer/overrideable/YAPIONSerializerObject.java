@@ -1,12 +1,16 @@
 package yapion.serializing.serializer.overrideable;
 
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
+import yapion.serializing.InternalOverrideableSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-public class YAPIONSerializerObject implements InternalSerializer<YAPIONObject> {
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
+public class YAPIONSerializerObject implements InternalOverrideableSerializer<YAPIONObject> {
 
     @Override
     public String type() {
@@ -15,7 +19,6 @@ public class YAPIONSerializerObject implements InternalSerializer<YAPIONObject> 
 
     @Override
     public YAPIONAny serialize(YAPIONObject object, YAPIONSerializer yapionSerializer) {
-        System.out.println(object);
         return object;
     }
 

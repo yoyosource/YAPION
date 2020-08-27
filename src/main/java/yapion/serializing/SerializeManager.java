@@ -101,14 +101,23 @@ public class SerializeManager {
         add(new TableSerializerHash());
         add(new VectorSerializer());
 
-        // Own Serializers Init
-        overrideable = true;
-
+        // Overrideable
         add(new YAPIONSerializerArray());
         add(new YAPIONSerializerMap());
         add(new YAPIONSerializerObject());
         add(new YAPIONSerializerPointer());
         add(new YAPIONSerializerValue());
+
+        // Own Serializers Init
+        overrideable = true;
+    }
+
+    private static void add(InternalOverrideableSerializer<?> serializer) {
+        if (serializerMap.containsKey(serializer.type()) && !serializerMap.get(serializer.type()).overrideable) return;
+        serializerMap.put(serializer.type(), new Serializer(serializer, true));
+        if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
+            serializerMap.put(serializer.primitiveType(), new Serializer(serializer, true));
+        }
     }
 
     private static void add(InternalSerializer<?> serializer) {
