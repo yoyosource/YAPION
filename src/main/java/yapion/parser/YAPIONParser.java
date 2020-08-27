@@ -53,7 +53,7 @@ public class YAPIONParser {
      * @return YAPIONObject with mapped YAPIONPointer and YAPIONMap
      */
     public static YAPIONObject mapJSON(YAPIONObject yapionObject) {
-        return JSONMapper.mapObject(yapionObject);
+        return JSONMapper.map(yapionObject);
     }
 
     /**
