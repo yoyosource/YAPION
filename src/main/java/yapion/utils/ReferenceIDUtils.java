@@ -33,7 +33,7 @@ public class ReferenceIDUtils {
     /**
      * Calculates the reference ID of a given String, primarily used for variable names.
      * This method caches the last 100 inputs for faster reference ID calculation.
-     * Use {@see discardCache} to discard this Cache.
+     * Use {@code discardCache()} to discard this Cache.
      *
      * @param s the input string to calculate a reference ID from
      * @return the reference ID of the given String

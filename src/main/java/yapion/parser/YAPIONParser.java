@@ -46,16 +46,18 @@ public class YAPIONParser {
     }
 
     /**
-     * Maps every corrupted YAPIONPointer and YAPIONMap back to their
-     * corresponding YAPION representations. Useful to fix a serialized
-     * java object from JSON representation back to the java object.
+     * This method maps every corrupted YAPIONPointer and YAPIONMap
+     * back to their corresponding YAPION representations. Useful
+     * to fix a serialized java object from JSON representation
+     * back to the java object.
      *
      * {"@pointer":"0000000000000000"} will be interpreted as a pointer.
      * {"@mapping":[]} will be interpreted as a map.
      *
-     * For further information {@see YAPIONMap.toJSONString} and
-     * {@see YAPIONPointer.toJSONString}. Those methods describe how
-     * a YAPIONPointer and YAPIONMap is represented in JSON format.
+     * For further information in the classes {@link YAPIONMap} and
+     * {@link YAPIONPointer} are a method to represent these types
+     * as JSON. Those methods describe how a YAPIONPointer and
+     * YAPIONMap are represented in JSON format.
      *
      * @param yapionObject the YAPIONObject to map
      * @return YAPIONObject with mapped YAPIONPointer and YAPIONMap

@@ -9,6 +9,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This annotation is for optimizing the YAPIONObject to remove Objects
+ * that are {@code null}. This is for preventing clutter in the
+ * serialization. Only use this if you can handle the edge case that, in
+ * the deserialization, the field can be after deserialization {@code null}.
+ *
+ * The context describes the state in which the
+ * {@link yapion.serializing.YAPIONSerializer} should be in for this
+ * annotation to take effect.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface YAPIONOptimize {

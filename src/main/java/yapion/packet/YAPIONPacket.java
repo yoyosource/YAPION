@@ -127,7 +127,7 @@ public class YAPIONPacket {
     /**
      * Creates the YAPIONObject from this YAPIONPacket and caches it
      * for further use. Using {@code add} discards this cache. This
-     * method uses the {@code YAPIONSerializer} to serialize itself
+     * method uses the {@link YAPIONSerializer} to serialize itself
      * to the used YAPIONObject.
      *
      * @return the YAPIONObject

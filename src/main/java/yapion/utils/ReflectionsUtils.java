@@ -127,7 +127,7 @@ public class ReflectionsUtils {
 
     /**
      * Construct an Object instance from a given className.
-     * By using the {@see ObjenesisBase}.
+     * By using the {@link ObjenesisBase}.
      *
      * @param className the class to create an instance from
      * @return an instance of the specified class
@@ -152,7 +152,7 @@ public class ReflectionsUtils {
 
     /**
      * Construct an Object instance from a given className.
-     * By using the {@see ObjenesisBase, only used for YAPIONData types}
+     * By using the {@link ObjenesisBase, only used for YAPIONData types}
      * or a NoArgument constructor.
      *
      * @param className the class to create an instance from
