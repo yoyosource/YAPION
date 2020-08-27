@@ -181,7 +181,6 @@ public class JSONParser {
 
         if (chars[index] == '\"') {
             boolean escaped = false;
-            boolean start = true;
 
             for (int i = index + 1; i < chars.length; i++) {
                 if (chars[i] == '\\') {
@@ -190,11 +189,10 @@ public class JSONParser {
                     continue;
                 }
 
-                if (!escaped && !start && chars[i] == '\"') {
+                if (!escaped && chars[i] == '\"') {
                     break;
                 }
                 st.append(chars[i]);
-                start = false;
                 escaped = false;
             }
 

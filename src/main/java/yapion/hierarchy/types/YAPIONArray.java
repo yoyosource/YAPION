@@ -89,6 +89,14 @@ public class YAPIONArray extends YAPIONAny {
         return this;
     }
 
+    public YAPIONArray set(int index, YAPIONAny yapionAny) {
+        if (index < 0 || index >= length()) {
+            return this;
+        }
+        array.set(index, yapionAny);
+        return this;
+    }
+
     @Override
     protected Optional<YAPIONSearch<? extends YAPIONAny>> get(String key) {
         try {

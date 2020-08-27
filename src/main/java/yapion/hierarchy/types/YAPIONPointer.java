@@ -8,6 +8,7 @@ import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONPointerException;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
+import yapion.parser.JSONMapper;
 import yapion.utils.ReferenceIDUtils;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class YAPIONPointer extends YAPIONAny {
 
     @Override
     public String toJSONString() {
-        return "{\"@pointer\":\"" + getPointerIDString() + "\"}";
+        return "{\"" + JSONMapper.POINTER + "\":\"" + getPointerIDString() + "\"}";
     }
 
     private long pointerID;

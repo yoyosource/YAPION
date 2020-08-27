@@ -72,6 +72,10 @@ public class YAPIONObject extends YAPIONAny {
         return keys;
     }
 
+    public int variables() {
+        return variables.size();
+    }
+
     public YAPIONVariable getVariable(String key) {
         for (YAPIONVariable yapionVariable : variables) {
             if (yapionVariable.getName().equals(key)) {
@@ -176,6 +180,10 @@ public class YAPIONObject extends YAPIONAny {
         for (int i = variables.size() - 1; i >= 0; i--) {
             if (variables.get(i).getName().equals(variable.getName())) {
                 variables.remove(i).getValue().removeParent();
+
+                variables.add(i, variable);
+                variable.getValue().setParent(this);
+                return this;
             }
         }
         variables.add(variable);

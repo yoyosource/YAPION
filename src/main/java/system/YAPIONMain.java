@@ -15,6 +15,8 @@ package system;
 
 import test.Test;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONPointer;
+import yapion.parser.YAPIONParser;
 
 import java.io.IOException;
 
@@ -31,8 +33,7 @@ public class YAPIONMain {
 
         YAPIONObject object = serialize(new Test());
         System.out.println(object);
-        object = serialize(object);
-        System.out.println(object);
+        System.out.println(YAPIONParser.mapJSON(YAPIONParser.parseJSON(object.toJSONString())));
         System.out.println(object.toJSONString());
         for (int i = 0; i < 5; i++) {
             test(object);

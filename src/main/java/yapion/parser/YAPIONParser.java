@@ -46,6 +46,17 @@ public class YAPIONParser {
     }
 
     /**
+     * Maps every corrupted YAPIONPointer and YAPIONMap back to their
+     * corresponding YAPION representations.
+     *
+     * @param yapionObject the YAPIONObject to map
+     * @return YAPIONObject with mapped YAPIONPointer and YAPIONMap
+     */
+    public static YAPIONObject mapJSON(YAPIONObject yapionObject) {
+        return JSONMapper.mapObject(yapionObject);
+    }
+
+    /**
      * Parses the InputStream to an YAPIONObject.
      * This method only parses the next YAPIONObject and tries to read
      * until the YAPIONObject is finished. It will not cancel even when

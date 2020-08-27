@@ -10,6 +10,7 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.YAPIONVariable;
+import yapion.parser.JSONMapper;
 import yapion.parser.YAPIONParser;
 import yapion.parser.YAPIONParserMapMapping;
 import yapion.parser.YAPIONParserMapObject;
@@ -77,7 +78,7 @@ public class YAPIONMap extends YAPIONAny {
     public String toJSONString() {
         YAPIONObject yapionObject = new YAPIONObject();
         YAPIONArray mapping = new YAPIONArray();
-        yapionObject.add("@mapping", mapping);
+        yapionObject.add(JSONMapper.MAP, mapping);
 
         long id = 0;
         for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
