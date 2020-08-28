@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * serialization. Only use this if you can handle the edge case that, in
  * the deserialization, the field can be after deserialization {@code null}.
  *
- * The context describes the state in which the
+ * <br><br>The context describes the state in which the
  * {@link yapion.serializing.YAPIONSerializer} should be in for this
  * annotation to take effect.
  */

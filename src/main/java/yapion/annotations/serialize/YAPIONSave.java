@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * this annotation will be written into the YAPION object. If this
  * annotation annotates a Type it is considered as a class description.
  *
- * The context describes the state in which the
+ * <br><br>The context describes the state in which the
  * {@link yapion.serializing.YAPIONSerializer} should be in for this
  * annotation to take effect.
  */
