@@ -9,6 +9,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This annotation describes one of the four steps in the process
+ * of deserialization. You can use this annotation for a method
+ * that corrects the data or object deserialized by YAPION. This
+ * can be useful to evaluate {@see null} pointer to their default
+ * value or to set values that depends on other fields. This
+ * annotation is useful if you use {@link YAPIONData} or
+ * {@link YAPIONObjenesis} as annotations.
+ *
+ * <br><br>The four Steps are:
+ * <br>- Constructing the object (either by using the Constructor or {@link org.objenesis.ObjenesisBase})
+ * <br>- PreDeserialization method call
+ * <br>- Deserializing all fields ({@link yapion.serializing.YAPIONDeserializer})
+ * <br>- PostDeserialization method call
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface YAPIONPostDeserialization {
