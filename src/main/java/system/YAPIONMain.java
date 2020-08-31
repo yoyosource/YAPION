@@ -14,8 +14,12 @@
 package system;
 
 import test.Test;
+import test.TestEnum;
+import yapion.annotations.object.YAPIONObjenesis;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
+import yapion.serializing.YAPIONDeserializer;
+import yapion.serializing.YAPIONSerializer;
 
 import java.io.IOException;
 
@@ -25,7 +29,7 @@ import static yapion.serializing.YAPIONSerializer.serialize;
 public class YAPIONMain {
 
     public static void main(String[] args) throws IOException {
-        YAPIONObject yapionObject = parseJSON("{\"contributor\":[{\"name\":\"yoyosource\",\"owner\":true},{\"name\":\"chaoscaot444\",\"owner\":\"false\"}]}");
+        /*YAPIONObject yapionObject = parseJSON("{\"contributor\":[{\"name\":\"yoyosource\",\"owner\":true},{\"name\":\"chaoscaot444\",\"owner\":\"false\"}]}");
         System.out.println(yapionObject);
         System.out.println(yapionObject.toJSONString());
         System.out.println(yapionObject.toJSONString().equals("{\"contributor\":[{\"name\":\"yoyosource\",\"owner\":true},{\"name\":\"chaoscaot444\",\"owner\":\"false\"}]}"));
@@ -42,7 +46,19 @@ public class YAPIONMain {
                 object = serialize(object);
             }
         }
-        // object.toOutputStream(new FileOutputStream(new File("test.yapion")));
+        // object.toOutputStream(new FileOutputStream(new File("test.yapion")));*/
+
+        YAPIONObject enum1 = YAPIONSerializer.serialize(new TestEnum.TestEnumNormal());
+        YAPIONObject enum2 = YAPIONSerializer.serialize(new TestEnum.TestEnumObjenesis());
+        YAPIONObject enum3 = YAPIONSerializer.serialize(new TestEnum.TestEnumObjenesis2());
+
+        System.out.println(enum1);
+        System.out.println(enum2);
+        System.out.println(enum3);
+
+        System.out.println(YAPIONDeserializer.deserialize(enum1));
+        System.out.println(YAPIONDeserializer.deserialize(enum2));
+        System.out.println(YAPIONDeserializer.deserialize(enum3));
     }
 
     public static void test(YAPIONObject yapionObject) {

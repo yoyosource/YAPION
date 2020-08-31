@@ -83,7 +83,11 @@ public class YAPIONSerializer {
             }
             return yapionArray;
         } else {
-            InternalSerializer serializer = SerializeManager.get(object.getClass().getTypeName());
+            String type = object.getClass().getTypeName();
+            if (object.getClass().isEnum()) {
+                type = "java.lang.Enum";
+            }
+            InternalSerializer serializer = SerializeManager.get(type);
             if (serializer != null) {
                 return serializer.serialize(object, this);
             } else {

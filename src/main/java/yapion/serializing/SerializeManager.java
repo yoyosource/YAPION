@@ -61,6 +61,8 @@ public class SerializeManager {
         add(new RunnableSerializer());
         add(new ThreadSerializer());
 
+        add(new EnumSerializer());
+
         // Non Floating Point Numbers
         add(new ByteSerializer());
         add(new ShortSerializer());
