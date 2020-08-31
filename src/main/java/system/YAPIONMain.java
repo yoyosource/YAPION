@@ -17,6 +17,7 @@ import test.Test;
 import test.TestEnum;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.packet.YAPIONPacket;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
@@ -59,6 +60,10 @@ public class YAPIONMain {
         System.out.println(YAPIONDeserializer.deserialize(enum1));
         System.out.println(YAPIONDeserializer.deserialize(enum2));
         System.out.println(YAPIONDeserializer.deserialize(enum3));
+
+        YAPIONPacket yapionPacket = new YAPIONPacket("type");
+        yapionPacket.add("type", "type");
+        System.out.println(yapionPacket.getYAPION());
     }
 
     public static void test(YAPIONObject yapionObject) {

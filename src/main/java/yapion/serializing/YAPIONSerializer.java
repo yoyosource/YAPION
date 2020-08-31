@@ -88,7 +88,7 @@ public class YAPIONSerializer {
                 type = "java.lang.Enum";
             }
             InternalSerializer serializer = SerializeManager.get(type);
-            if (serializer != null) {
+            if (serializer != null && !serializer.empty()) {
                 return serializer.serialize(object, this);
             } else {
                 return new YAPIONSerializer(object, yapionSerializer).parse().getYAPIONObject();
@@ -106,8 +106,11 @@ public class YAPIONSerializer {
         }
 
         String type = object.getClass().getTypeName();
+        if (object.getClass().isEnum()) {
+            type = "java.lang.Enum";
+        }
         InternalSerializer serializer = SerializeManager.get(type);
-        if (serializer != null) {
+        if (serializer != null && !serializer.empty()) {
             this.yapionObject = (YAPIONObject) serializer.serialize(object, this);
             return this;
         }
@@ -127,6 +130,7 @@ public class YAPIONSerializer {
             }
             StateManager.YAPIONInfo yapionInfo = stateManager.is(object, field);
             if (!yapionInfo.save) continue;
+            System.out.println("TEST " + object + " " + field);
 
             String name = field.getName();
             Object fieldObject = null;

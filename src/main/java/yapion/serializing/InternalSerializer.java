@@ -16,6 +16,9 @@ public interface InternalSerializer<T> {
     default String primitiveType() {
         return "";
     }
+    default boolean empty() {
+        return false;
+    }
     YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer);
     T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer);
 

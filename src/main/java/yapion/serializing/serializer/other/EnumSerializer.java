@@ -1,15 +1,14 @@
 package yapion.serializing.serializer.other;
 
-import test.TestEnum;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
+import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.util.Arrays;
-
+@SuppressWarnings({"java:S1192"})
 public class EnumSerializer implements InternalSerializer<Enum<?>> {
 
     @Override
@@ -20,7 +19,7 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
     @Override
     public YAPIONAny serialize(Enum<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add("@type", new YAPIONValue<>(type()));
+        yapionObject.add(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type()));
         yapionObject.add("@enum", new YAPIONValue<>(object.getClass().getTypeName()));
         yapionObject.add("value", new YAPIONValue<>(object.name()));
         yapionObject.add("ordinal", new YAPIONValue<>(object.ordinal()));
@@ -46,7 +45,7 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
                 }
             }
         } catch (ClassNotFoundException e) {
-
+            // Ignored
         }
         return null;
     }

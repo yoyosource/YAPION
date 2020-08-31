@@ -153,7 +153,7 @@ public class YAPIONDeserializer {
     private YAPIONDeserializer parse(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>)yapionObject.getVariable(SerializeManager.TYPE_IDENTIFIER).getValue()).get();
         InternalSerializer<?> serializer = SerializeManager.get(type);
-        if (serializer != null) {
+        if (serializer != null && !serializer.empty()) {
             object = serializer.deserialize(yapionObject, this);
             return this;
         }

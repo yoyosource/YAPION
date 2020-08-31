@@ -4,6 +4,7 @@
 
 package yapion.packet;
 
+import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSave;
@@ -33,6 +34,7 @@ public class YAPIONPacket {
     private String cacheString = null;
 
     private final String type;
+    @YAPIONDeserializeType(type = HashMap.class)
     private final Map<String, Object> payload = new HashMap<>();
 
     @YAPIONSaveExclude(context = "*")
