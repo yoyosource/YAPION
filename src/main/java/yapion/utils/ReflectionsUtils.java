@@ -152,8 +152,9 @@ public class ReflectionsUtils {
 
     /**
      * Construct an Object instance from a given className.
-     * By using the {@link ObjenesisBase, only used for YAPIONData types}
-     * or a NoArgument constructor.
+     * By using the {@link ObjenesisBase, only with {@link YAPIONData}
+     * or {@link yapion.annotations.object.YAPIONObjenesis}} or
+     * a NoArgument constructor.
      *
      * @param className the class to create an instance from
      * @return an instance of the specified class

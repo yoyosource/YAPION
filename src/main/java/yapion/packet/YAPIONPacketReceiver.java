@@ -66,14 +66,14 @@ public class YAPIONPacketReceiver {
     }
 
     /**
-     * A wrapper function to {@see add}
+     * A wrapper function to {@link #add(String, YAPIONPacketHandler)}
      */
     public YAPIONPacketReceiver add(YAPIONPacketHandler yapionPacketHandler, String packetType) {
         return add(packetType, yapionPacketHandler);
     }
 
     /**
-     * A wrapper function to {@see add}
+     * A wrapper function to {@link #add(String[], YAPIONPacketHandler)}
      */
     public YAPIONPacketReceiver add(YAPIONPacketHandler yapionPacketHandler, String... packetTypes) {
         return add(packetTypes, yapionPacketHandler);

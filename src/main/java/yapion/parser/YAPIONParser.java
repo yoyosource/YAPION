@@ -51,13 +51,13 @@ public class YAPIONParser {
      * to fix a serialized java object from JSON representation
      * back to the java object.
      *
-     * {"@pointer":"0000000000000000"} will be interpreted as a pointer.
-     * {"@mapping":[]} will be interpreted as a map.
+     * <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
+     * <br>{"@mapping":[]} will be interpreted as a map.
      *
-     * For further information in the classes {@link YAPIONMap} and
-     * {@link YAPIONPointer} are a method to represent these types
-     * as JSON. Those methods describe how a YAPIONPointer and
-     * YAPIONMap are represented in JSON format.
+     * <br><br>For further information in the classes {@link YAPIONMap#toJSONString()}
+     * and {@link YAPIONPointer#toJSONString()} are a method to
+     * represent these types as JSON. Those methods describe how
+     * a YAPIONPointer and YAPIONMap are represented in JSON format.
      *
      * @param yapionObject the YAPIONObject to map
      * @return YAPIONObject with mapped YAPIONPointer and YAPIONMap

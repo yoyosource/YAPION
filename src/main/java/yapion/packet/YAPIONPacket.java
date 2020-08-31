@@ -125,10 +125,10 @@ public class YAPIONPacket {
     }
 
     /**
-     * Creates the YAPIONObject from this YAPIONPacket and caches it
-     * for further use. Using {@code add} discards this cache. This
-     * method uses the {@link YAPIONSerializer} to serialize itself
-     * to the used YAPIONObject.
+     * Creates the YAPIONObject from this YAPIONPacket and caches it for further
+     * use. Using {@link #add(String, Object)} discards this cache. This method
+     * uses the {@link YAPIONSerializer} to serialize itself to the used
+     * YAPIONObject.
      *
      * @return the YAPIONObject
      */
@@ -144,7 +144,8 @@ public class YAPIONPacket {
     /**
      * Creates a String from the YAPIONObject created by {@code getYAPION}.
      * Creates the YAPIONObject along side creating the string. The string
-     * gets cached for further use. Using {@code add} discards this cache.
+     * gets cached for further use. Using {@link #add(String, Object)}
+     * discards this cache.
      *
      * @return the String from the YAPIONObject
      */

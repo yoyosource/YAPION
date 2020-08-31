@@ -33,7 +33,7 @@ public class ReferenceIDUtils {
     /**
      * Calculates the reference ID of a given String, primarily used for variable names.
      * This method caches the last 100 inputs for faster reference ID calculation.
-     * Use {@code discardCache()} to discard this Cache.
+     * Use {@link #discardCache()} to discard this Cache.
      *
      * @param s the input string to calculate a reference ID from
      * @return the reference ID of the given String
@@ -68,7 +68,7 @@ public class ReferenceIDUtils {
     }
 
     /**
-     * Discard the cache used by {@see calc}
+     * Discard the cache used by {@link #calc(String)}
      */
     public static void discardCache() {
         referenceIDMap.clear();
