@@ -81,6 +81,7 @@ task incrementMayor {
         mayor = Integer.parseInt(mayor) + 1
         minor = 0
         patch = 0
+        println("Version: " + mayor + "." + minor + "." + patch)
         save()
     }
 }
@@ -92,6 +93,7 @@ task incrementMinor {
     doLast {
         minor = Integer.parseInt(minor) + 1
         patch = 0
+        println("Version: " + mayor + "." + minor + "." + patch)
         save()
     }
 }
@@ -102,6 +104,7 @@ task incrementPatch {
 
     doLast {
         patch = Integer.parseInt(patch) + 1
+        println("Version: " + mayor + "." + minor + "." + patch)
         save()
     }
 }
