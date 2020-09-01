@@ -64,6 +64,7 @@ public class YAPIONMain {
         YAPIONPacket yapionPacket = new YAPIONPacket("type");
         yapionPacket.add("type", "type");
         System.out.println(yapionPacket.getYAPION());
+        System.out.println(YAPIONDeserializer.deserialize(yapionPacket.getYAPION()));
     }
 
     public static void test(YAPIONObject yapionObject) {

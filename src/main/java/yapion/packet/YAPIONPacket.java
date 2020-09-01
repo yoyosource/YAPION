@@ -7,6 +7,7 @@ package yapion.packet;
 import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONPacketException;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
+@YAPIONObjenesis
 public class YAPIONPacket {
 
     @YAPIONSaveExclude(context = "*")

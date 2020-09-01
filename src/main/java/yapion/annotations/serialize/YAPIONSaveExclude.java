@@ -4,6 +4,8 @@
 
 package yapion.annotations.serialize;
 
+import yapion.serializing.YAPIONSerializer;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,9 +17,8 @@ import java.lang.annotation.Target;
  * this annotation will not be written into the YAPION object. If this
  * annotation annotates a Type it is considered as a class description.
  *
- * <br><br>The context describes the state in which the
- * {@link yapion.serializing.YAPIONSerializer} should be in for this
- * annotation to take effect.
+ * <br><br>The context describes the state in which the {@link YAPIONSerializer}
+ * should be in for this annotation to take effect.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})

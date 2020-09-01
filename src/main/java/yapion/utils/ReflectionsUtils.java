@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONReflectionException;
 
@@ -27,6 +28,7 @@ public class ReflectionsUtils {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(ReflectionsUtils.class);
+    private static final ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
 
     /**
      * Invokes a method with the given arguments on a given object
@@ -134,7 +136,6 @@ public class ReflectionsUtils {
      */
     public static Object constructObjectObjenesis(String className) {
         try {
-            ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
             return objenesisBase.newInstance(Class.forName(className));
         } catch (ClassNotFoundException e) {
             logger.info("Exception while creating an Object with Objenesis because the specified class '" + className + "' was not found", e.getCause());
@@ -142,31 +143,22 @@ public class ReflectionsUtils {
         }
     }
 
-    private static boolean constructObjenesis(String className) {
-        try {
-            return Class.forName(className).getDeclaredAnnotation(YAPIONData.class) != null;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
     /**
      * Construct an Object instance from a given className.
      * By using the {@link ObjenesisBase, only with {@link YAPIONData}
-     * or {@link yapion.annotations.object.YAPIONObjenesis}} or
-     * a NoArgument constructor.
+     * or {@link YAPIONObjenesis}} or a NoArgument constructor.
      *
      * @param className the class to create an instance from
      * @return an instance of the specified class
      */
-    public static Object constructObject(String className) {
-        if (constructObjenesis(className)) {
+    public static Object constructObject(String className, boolean data) {
+        if (data) {
             return constructObjectObjenesis(className);
         }
         Object o = null;
         if (className.contains("$")) {
             String cName = className.substring(0, className.lastIndexOf('$'));
-            o = constructObject(cName);
+            o = constructObject(cName, false);
         }
         return constructInstance(className, o);
     }

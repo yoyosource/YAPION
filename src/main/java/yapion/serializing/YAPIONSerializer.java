@@ -130,7 +130,6 @@ public class YAPIONSerializer {
             }
             StateManager.YAPIONInfo yapionInfo = stateManager.is(object, field);
             if (!yapionInfo.save) continue;
-            System.out.println("TEST " + object + " " + field);
 
             String name = field.getName();
             Object fieldObject = null;

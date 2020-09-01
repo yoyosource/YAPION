@@ -4,6 +4,9 @@
 
 package yapion.annotations.object;
 
+import org.objenesis.ObjenesisBase;
+import yapion.serializing.YAPIONDeserializer;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -18,9 +21,9 @@ import java.lang.annotation.Target;
  * if you use {@link YAPIONData} or {@link YAPIONObjenesis} as annotations.
  *
  * <br><br>The four Steps are:
- * <br>- Constructing the object (either by using the Constructor or {@link org.objenesis.ObjenesisBase})
+ * <br>- Constructing the object (either by using the Constructor or {@link ObjenesisBase})
  * <br>- PreDeserialization method call
- * <br>- Deserializing all fields ({@link yapion.serializing.YAPIONDeserializer})
+ * <br>- Deserializing all fields ({@link YAPIONDeserializer})
  * <br>- PostDeserialization method call
  */
 @Retention(RetentionPolicy.RUNTIME)

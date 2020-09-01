@@ -103,7 +103,7 @@ public class StateManager {
             globalSave = is(yapionData);
         }
 
-        return new YAPIONInfo(globalLoad, globalSave);
+        return new YAPIONInfo(globalLoad, globalSave, yapionData != null && globalLoad);
     }
 
     YAPIONInfo is(Object object) {
@@ -118,7 +118,7 @@ public class StateManager {
             globalSave = is(yapionData);
         }
 
-        return new YAPIONInfo(globalLoad, globalSave);
+        return new YAPIONInfo(globalLoad, globalSave, yapionData != null && globalLoad);
     }
 
     YAPIONInfo is(Object object, Field field) {
@@ -157,7 +157,7 @@ public class StateManager {
             localSave = is(yapionData);
         }
 
-        return new YAPIONInfo(globalLoad && localLoad, globalSave && localSave, localOptimize);
+        return new YAPIONInfo(globalLoad && localLoad, globalSave && localSave, yapionData != null && localLoad, localOptimize);
     }
 
     public static class YAPIONInfo {
@@ -165,17 +165,27 @@ public class StateManager {
         public final boolean load;
         public final boolean save;
         public final boolean optimize;
+        public final boolean data;
 
         private YAPIONInfo(boolean load, boolean save) {
             this.load = load;
             this.save = save;
             this.optimize = false;
+            this.data = false;
         }
 
-        private YAPIONInfo(boolean load, boolean save, boolean optimize) {
+        private YAPIONInfo(boolean load, boolean save, boolean data) {
+            this.load = load;
+            this.save = save;
+            this.optimize = false;
+            this.data = data;
+        }
+
+        public YAPIONInfo(boolean load, boolean save, boolean data, boolean optimize) {
             this.load = load;
             this.save = save;
             this.optimize = optimize;
+            this.data = data;
         }
 
     }

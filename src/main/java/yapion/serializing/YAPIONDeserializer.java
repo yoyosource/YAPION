@@ -6,6 +6,7 @@ package yapion.serializing;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.object.YAPIONPostDeserialization;
@@ -23,10 +24,7 @@ import yapion.utils.ReflectionsUtils;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.IdentityHashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -149,12 +147,20 @@ public class YAPIONDeserializer {
         return array;
     }
 
+    private Object serialize(YAPIONAny yapionAny, String type) {
+        InternalSerializer<?> serializer = SerializeManager.get(type);
+        if (serializer != null && !serializer.empty()) {
+            return serializer.deserialize(yapionAny, this);
+        }
+        return null;
+    }
+
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parse(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>)yapionObject.getVariable(SerializeManager.TYPE_IDENTIFIER).getValue()).get();
-        InternalSerializer<?> serializer = SerializeManager.get(type);
-        if (serializer != null && !serializer.empty()) {
-            object = serializer.deserialize(yapionObject, this);
+        Object o = serialize(yapionObject, type);
+        if (o != null) {
+            object = o;
             return this;
         }
 
@@ -167,7 +173,7 @@ public class YAPIONDeserializer {
             if (clazz.getDeclaredAnnotation(YAPIONObjenesis.class) != null) {
                 object = ReflectionsUtils.constructObjectObjenesis(type);
             } else {
-                object = ReflectionsUtils.constructObject(type);
+                object = ReflectionsUtils.constructObject(type, stateManager.is(clazz).data);
             }
             preDeserializationStep(object);
             pointerMap.put(yapionObject, object);
@@ -181,9 +187,15 @@ public class YAPIONDeserializer {
                 if (!stateManager.is(object, field).load) continue;
                 if (yapionObject.getVariable(field.getName()) == null) continue;
 
-                YAPIONAny yapionAny = yapionObject.getVariable(field.getName()).getValue();
                 arrayType = remove(field.getType().getTypeName(), '[', ']');
-                field.set(object, parse(yapionAny, this));
+
+                YAPIONAny yapionAny = yapionObject.getVariable(field.getName()).getValue();
+                YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
+                if (isValid(field, yapionDeserializeType)) {
+                    field.set(object, serialize(yapionAny, yapionDeserializeType.type().getTypeName()));
+                } else {
+                    field.set(object, parse(yapionAny, this));
+                }
             }
             postDeserializationStep(object);
         } catch (ClassNotFoundException e) {
@@ -196,6 +208,22 @@ public class YAPIONDeserializer {
             e.printStackTrace();
         }
         return this;
+    }
+
+    private boolean isValid(Field field, YAPIONDeserializeType yapionDeserializeType) {
+        if (!field.getType().isInterface()) return false;
+        if (yapionDeserializeType == null) return false;
+        String type = field.getType().getTypeName();
+        Class<?> clazz = yapionDeserializeType.type();
+        while (!clazz.getTypeName().equals("java.lang.Object")) {
+            for (Class<?> ifc : clazz.getInterfaces()) {
+                if (ifc.getTypeName().equals(type) && SerializeManager.get(yapionDeserializeType.type().getTypeName()) != null) {
+                    return true;
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return false;
     }
 
     private String remove(String s, char... chars) {
