@@ -4,22 +4,17 @@
 
 package yapion.hierarchy;
 
+import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
+import yapion.hierarchy.interfaces.*;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @YAPIONSave(context = "*")
-public class YAPIONAny {
-
-    public Type getType() {
-        return Type.ANY;
-    }
-
-    public long referenceValue() {
-        return getType().getReferenceValue() & 0x7FFFFFFFFFFFFFFFL;
-    }
+@YAPIONLoad(context = "*")
+public abstract class YAPIONAny implements Output, ObjectSearch, ObjectPath, YAPIONType {
 
     public final int getDepth() {
         int depth = 0;
@@ -41,7 +36,8 @@ public class YAPIONAny {
         return path.toArray(new String[0]);
     }
 
-    protected String getPath(YAPIONAny yapionAny) {
+    @Override
+    public String getPath(YAPIONAny yapionAny) {
         return "";
     }
 
@@ -88,17 +84,8 @@ public class YAPIONAny {
         return parent;
     }
 
-    public void toOutputStream(OutputStream outputStream) throws IOException {
-        // This method should be overwritten by YAPIONArray, YAPIONMap, YAPIONObject, YAPIONPointer and YAPIONValue
-    }
-
-    public String toJSONString() {
-        // This method should be overwritten by YAPIONArray, YAPIONMap, YAPIONObject, YAPIONPointer and YAPIONValue
-        return "";
-    }
-
-    public final Optional<YAPIONSearch<? extends YAPIONAny>> get(String... s) {
-        Optional<YAPIONSearch<? extends YAPIONAny>> optional = Optional.of(new YAPIONSearch<>(this));
+    public final Optional<ObjectSearch.YAPIONSearchResult<? extends YAPIONAny>> get(String... s) {
+        Optional<ObjectSearch.YAPIONSearchResult<? extends YAPIONAny>> optional = Optional.of(new ObjectSearch.YAPIONSearchResult<>(this));
         for (int i = 0; i < s.length; i++) {
             if (!optional.isPresent()) return Optional.empty();
             optional = optional.get().value.get(s[i]);
@@ -106,25 +93,9 @@ public class YAPIONAny {
         return optional;
     }
 
-    protected Optional<YAPIONSearch<? extends YAPIONAny>> get(String key) {
-        return Optional.ofNullable(null);
-    }
-
-    public class YAPIONSearch<T> {
-
-        public final T value;
-
-        public YAPIONSearch(T value) {
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return "YAPIONSearch{" +
-                    "value=" + value +
-                    '}';
-        }
-
+    @Override
+    public Optional<YAPIONSearchResult<? extends YAPIONAny>> get(String key) {
+        return Optional.empty();
     }
 
 }

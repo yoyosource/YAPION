@@ -5,6 +5,7 @@
 package yapion.hierarchy;
 
 import yapion.annotations.serialize.YAPIONSave;
+import yapion.hierarchy.interfaces.Output;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,7 +15,7 @@ import java.util.Objects;
 import static yapion.utils.ReferenceIDUtils.calc;
 
 @YAPIONSave(context = "*")
-public class YAPIONVariable {
+public class YAPIONVariable implements Output {
 
     private final String name;
     private final YAPIONAny value;
@@ -41,19 +42,25 @@ public class YAPIONVariable {
 
     @Override
     public String toString() {
-        if (name.startsWith(" ")) {
-            return "\\" + name.replaceAll(PATTERN, REPLACEMENT) + value.toString();
-        }
-        return name.replaceAll(PATTERN, REPLACEMENT) + value.toString();
+        return toYAPIONString();
     }
 
-    public void toOutputStream(OutputStream outputStream) throws IOException {
-        outputStream.write(name.getBytes(StandardCharsets.UTF_8));
-        value.toOutputStream(outputStream);
+    @Override
+    public String toYAPIONString() {
+        if (name.startsWith(" ")) {
+            return "\\" + name.replaceAll(PATTERN, REPLACEMENT) + value.toYAPIONString();
+        }
+        return name.replaceAll(PATTERN, REPLACEMENT) + value.toYAPIONString();
     }
 
     public String toJSONString() {
         return "\"" + name + "\":" + value.toJSONString();
+    }
+
+    public void toOutputStream(OutputStream outputStream) throws IOException {
+        if (name.startsWith(" ")) outputStream.write("\\".getBytes(StandardCharsets.UTF_8));
+        outputStream.write(name.replaceAll(PATTERN, REPLACEMENT).getBytes(StandardCharsets.UTF_8));
+        value.toOutputStream(outputStream);
     }
 
     @Override

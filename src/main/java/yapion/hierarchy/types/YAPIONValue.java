@@ -31,19 +31,6 @@ public class YAPIONValue<T> extends YAPIONAny {
     private final T value;
     String type;
 
-    @Override
-    public Type getType() {
-        return Type.VALUE;
-    }
-
-    @Override
-    public long referenceValue() {
-        if (value == null) {
-            return getType().getReferenceValue() ^ calc(type);
-        }
-        return getType().getReferenceValue() ^ calc(value.getClass().getTypeName());
-    }
-
     public YAPIONValue(T value) {
         if (!validType(value)) {
             throw new YAPIONException("Invalid YAPIONValue type " + value.getClass().getTypeName() + " only " + String.join(", ", allowedTypes) + " allowed");
@@ -57,8 +44,52 @@ public class YAPIONValue<T> extends YAPIONAny {
     }
 
     @Override
-    public void toOutputStream(OutputStream outputStream) throws IOException {
-        outputStream.write(toString().getBytes(StandardCharsets.UTF_8));
+    public Type getType() {
+        return Type.VALUE;
+    }
+
+    @Override
+    public long referenceValue() {
+        return getType().getReferenceValue() ^ calc(type);
+    }
+
+    @Override
+    public String toYAPIONString() {
+        if (value == null) return assembleOutput(type);
+        String string = value.toString().replaceAll("[()]", "\\\\$0");
+        if (value instanceof String) {
+            return assembleString(string);
+        }
+        if (value instanceof Character) {
+            return assembleOutput("'" + string + "'");
+        }
+
+        if (value instanceof Byte) {
+            return assembleOutput(string + "B");
+        }
+        if (value instanceof Short) {
+            return assembleOutput(string + "S");
+        }
+        if (value instanceof Integer) {
+            return assembleOutput(string);
+        }
+        if (value instanceof Long) {
+            return assembleOutput(string + "L");
+        }
+        if (value instanceof BigInteger) {
+            return assembleOutput(string + "BI");
+        }
+
+        if (value instanceof Float) {
+            return assembleOutput(string + "F");
+        }
+        if (value instanceof Double) {
+            return assembleOutput(string);
+        }
+        if (value instanceof BigDecimal) {
+            return assembleOutput(string + "BD");
+        }
+        return assembleOutput(value.toString());
     }
 
     @Override
@@ -73,6 +104,11 @@ public class YAPIONValue<T> extends YAPIONAny {
             return "null";
         }
         return value.toString();
+    }
+
+    @Override
+    public void toOutputStream(OutputStream outputStream) throws IOException {
+        outputStream.write(toString().getBytes(StandardCharsets.UTF_8));
     }
 
     public static YAPIONValue<?> parseValue(String s) {
@@ -138,41 +174,7 @@ public class YAPIONValue<T> extends YAPIONAny {
 
     @Override
     public String toString() {
-        if (value == null) return assembleOutput(type);
-        String string = value.toString().replaceAll("[()]", "\\\\$0");
-        if (value instanceof String) {
-            return assembleString(string);
-        }
-        if (value instanceof Character) {
-            return assembleOutput("'" + string + "'");
-        }
-
-        if (value instanceof Byte) {
-            return assembleOutput(string + "B");
-        }
-        if (value instanceof Short) {
-            return assembleOutput(string + "S");
-        }
-        if (value instanceof Integer) {
-            return assembleOutput(string);
-        }
-        if (value instanceof Long) {
-            return assembleOutput(string + "L");
-        }
-        if (value instanceof BigInteger) {
-            return assembleOutput(string + "BI");
-        }
-
-        if (value instanceof Float) {
-            return assembleOutput(string + "F");
-        }
-        if (value instanceof Double) {
-            return assembleOutput(string);
-        }
-        if (value instanceof BigDecimal) {
-            return assembleOutput(string + "BD");
-        }
-        return assembleOutput(value.toString());
+        return toYAPIONString();
     }
 
     private String assembleOutput(String s) {

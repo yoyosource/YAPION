@@ -30,13 +30,18 @@ public class YAPIONPointer extends YAPIONAny {
     }
 
     @Override
-    public void toOutputStream(OutputStream outputStream) throws IOException {
-        outputStream.write(toString().getBytes(StandardCharsets.UTF_8));
+    public String toYAPIONString() {
+        return "->" + getPointerIDString();
     }
 
     @Override
     public String toJSONString() {
         return "{\"" + JSONMapper.POINTER_IDENTIFIER + "\":\"" + getPointerIDString() + "\"}";
+    }
+
+    @Override
+    public void toOutputStream(OutputStream outputStream) throws IOException {
+        outputStream.write(toYAPIONString().getBytes(StandardCharsets.UTF_8));
     }
 
     private long pointerID;

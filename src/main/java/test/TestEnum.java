@@ -8,8 +8,6 @@ import yapion.annotations.serialize.YAPIONSave;
 
 public class TestEnum {
 
-    @YAPIONSave
-    @YAPIONLoad
     public enum Value {
         Type,
         Value,

@@ -45,10 +45,46 @@ public class YAPIONMap extends YAPIONAny {
     public String getPath(YAPIONAny yapionAny) {
         for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
             if (entry.getValue() == yapionAny) {
-                return entry.getKey().toString();
+                return entry.getKey().toYAPIONString();
             }
         }
         return "";
+    }
+
+    @Override
+    public String toYAPIONString() {
+        long id = 0;
+
+        StringBuilder st = new StringBuilder();
+        st.append("<");
+        for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
+            String id1 = String.format("%01X", id++);
+            String id2 = String.format("%01X", id++);
+
+            st.append(id1).append(":").append(id2);
+            st.append("#").append(id1).append(entry.getKey().toYAPIONString());
+            st.append("#").append(id2).append(entry.getValue().toYAPIONString());
+        }
+        st.append(">");
+        return st.toString();
+    }
+
+    @Override
+    public String toJSONString() {
+        YAPIONObject yapionObject = new YAPIONObject();
+        YAPIONArray mapping = new YAPIONArray();
+        yapionObject.add(JSONMapper.MAP_IDENTIFIER, mapping);
+
+        long id = 0;
+        for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
+            String id1 = String.format("%01X", id++);
+            String id2 = String.format("%01X", id++);
+
+            mapping.add(new YAPIONValue<>(id1 + ":" + id2));
+            yapionObject.add("#" + id1, entry.getKey());
+            yapionObject.add("#" + id2, entry.getValue());
+        }
+        return yapionObject.toJSONString();
     }
 
     @Override
@@ -72,24 +108,6 @@ public class YAPIONMap extends YAPIONAny {
             entry.getValue().toOutputStream(outputStream);
         }
         outputStream.write(">".getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Override
-    public String toJSONString() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        YAPIONArray mapping = new YAPIONArray();
-        yapionObject.add(JSONMapper.MAP_IDENTIFIER, mapping);
-
-        long id = 0;
-        for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
-            String id1 = String.format("%01X", id++);
-            String id2 = String.format("%01X", id++);
-
-            mapping.add(new YAPIONValue<>(id1 + ":" + id2));
-            yapionObject.add("#" + id1, entry.getKey());
-            yapionObject.add("#" + id2, entry.getValue());
-        }
-        return yapionObject.toJSONString();
     }
 
     public YAPIONMap add(YAPIONAny key, YAPIONAny value) {
@@ -140,32 +158,19 @@ public class YAPIONMap extends YAPIONAny {
     }
 
     @Override
-    protected Optional<YAPIONSearch<? extends YAPIONAny>> get(String key) {
+    public Optional<YAPIONSearchResult<? extends YAPIONAny>> get(String key) {
         YAPIONVariable variable = YAPIONParser.parse("{" + key + "}").getVariable("");
         if (variable == null) return Optional.empty();
         YAPIONAny anyKey = variable.getValue();
         if (anyKey == null) return Optional.empty();
         YAPIONAny anyValue = get(anyKey);
         if (anyValue == null) return Optional.empty();
-        return Optional.of(new YAPIONSearch<>(anyValue));
+        return Optional.of(new YAPIONSearchResult<>(anyValue));
     }
 
     @Override
     public String toString() {
-        long id = 0;
-
-        StringBuilder st = new StringBuilder();
-        st.append("<");
-        for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
-            String id1 = String.format("%01X", id++);
-            String id2 = String.format("%01X", id++);
-
-            st.append(id1).append(":").append(id2);
-            st.append("#").append(id1).append(entry.getKey().toString());
-            st.append("#").append(id2).append(entry.getValue().toString());
-        }
-        st.append(">");
-        return st.toString();
+        return toYAPIONString();
     }
 
     @Override

@@ -15,6 +15,7 @@ public enum Type {
     ARRAY(0xf4f767c97724e81eL, "ARR"),
     MAP(0x29548df23a131510L, "MAP"),
     POINTER(0x4e958af3539fb57cL, "PNR"),
+    // BINARY_POINTER(0x4e958af3539fb57cL, "PNR"),
     VALUE(0xf86bfba6285c9be2L, "VAL");
 
     private final long referenceValue;

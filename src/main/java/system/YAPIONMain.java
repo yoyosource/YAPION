@@ -15,17 +15,14 @@ package system;
 
 import test.Test;
 import test.TestEnum;
-import yapion.annotations.object.YAPIONObjenesis;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.packet.YAPIONPacket;
+import yapion.parser.YAPIONBinary;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 import java.io.IOException;
-
-import static yapion.parser.YAPIONParser.parseJSON;
-import static yapion.serializing.YAPIONSerializer.serialize;
 
 public class YAPIONMain {
 
@@ -49,7 +46,7 @@ public class YAPIONMain {
         }
         // object.toOutputStream(new FileOutputStream(new File("test.yapion")));*/
 
-        YAPIONObject enum1 = YAPIONSerializer.serialize(new TestEnum.TestEnumNormal());
+        /*YAPIONObject enum1 = YAPIONSerializer.serialize(new TestEnum.TestEnumNormal());
         YAPIONObject enum2 = YAPIONSerializer.serialize(new TestEnum.TestEnumObjenesis());
         YAPIONObject enum3 = YAPIONSerializer.serialize(new TestEnum.TestEnumObjenesis2());
 
@@ -65,7 +62,74 @@ public class YAPIONMain {
         yapionPacket.add("type", "type");
         System.out.println(yapionPacket.getYAPION());
         System.out.println(YAPIONDeserializer.deserialize(yapionPacket.getYAPION()));
+
+        System.out.println(yapionPacket.getYAPION().toBinaryYAPIONString());*/
+
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
+        System.out.println(yapionObject.toYAPIONString());
+        System.out.println(YAPIONParser.toBinary(yapionObject));
+        // System.out.println(yapionObject.toBinaryYAPIONString());
+        // System.out.println(YAPIONParser.parse(yapionObject.toBinaryYAPIONString()));
+
+        /*YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
+        yapionObject = YAPIONParser.parse(yapionObject.toString());
+        System.out.println(yapionObject.getParseTime());
+        System.out.println(yapionObject.getParseTimeMillis());
+        long time = System.currentTimeMillis();
+        int times = 80000;
+        for (int i = 0; i <= times; i++) {
+            YAPIONDeserializer.deserialize(yapionObject);
+        }
+        time = System.currentTimeMillis() - time;
+        System.out.println(time * 1.0 / times + " s/deserialization");
+        System.out.println(1.0 / (time * 1.0 / times) + " deserialization/s");
+        System.out.println(time + " ms");*/
     }
+
+    // 10000
+    // 0.5993 s/deserialization
+    // 1.6686133822793257 deserialization/s
+    // 5993 ms
+
+    // 20000
+    // 0.45095 s/deserialization
+    // 2.2175407473112316 deserialization/s
+    // 9019 ms
+
+    // 30000
+    // 0.422 s/deserialization
+    // 2.3696682464454977 deserialization/s
+    // 12660 ms
+
+    // 40000
+    // 0.407825 s/deserialization
+    // 2.4520321216207934 deserialization/s
+    // 16313 ms
+
+    // 50000
+    // 0.4091 s/deserialization
+    // 2.4443901246638964 deserialization/s
+    // 20455 ms
+
+    // 60000
+    // 0.3728 s/deserialization
+    // 2.6824034334763946 deserialization/s
+    // 22368 ms
+
+    // 70000
+    // 0.3871 s/deserialization
+    // 2.5833118057349522 deserialization/s
+    // 27097 ms
+
+    // 80000
+    // 0.491175 s/deserialization
+    // 2.03593423932407 deserialization/s
+    // 39294 ms
+
+    // 80000
+    // 0.52795 s/deserialization
+    // 1.89411876124633 deserialization/s
+    // 42236 ms
 
     public static void test(YAPIONObject yapionObject) {
         int lengthJSON = yapionObject.toJSONString().length();

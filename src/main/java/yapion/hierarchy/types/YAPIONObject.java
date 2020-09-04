@@ -41,17 +41,27 @@ public class YAPIONObject extends YAPIONAny {
     }
 
     @Override
+    public String toYAPIONString() {
+        StringBuilder st = new StringBuilder();
+        st.append("{");
+        for (YAPIONVariable yapionVariable : variables) {
+            st.append(yapionVariable.toYAPIONString());
+        }
+        return st.append("}").toString();
+    }
+
+    @Override
+    public String toJSONString() {
+        return "{" + variables.stream().map(YAPIONVariable::toJSONString).collect(Collectors.joining(",")) + "}";
+    }
+
+    @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
         outputStream.write("{".getBytes(StandardCharsets.UTF_8));
         for (YAPIONVariable variable : variables) {
             variable.toOutputStream(outputStream);
         }
         outputStream.write("}".getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Override
-    public String toJSONString() {
-        return "{" + variables.stream().map(YAPIONVariable::toJSONString).collect(Collectors.joining(",")) + "}";
     }
 
     @Override
@@ -210,19 +220,14 @@ public class YAPIONObject extends YAPIONAny {
     }
 
     @Override
-    protected Optional<YAPIONSearch<? extends YAPIONAny>> get(String key) {
+    public Optional<YAPIONSearchResult<? extends YAPIONAny>> get(String key) {
         if (getVariable(key) == null) return Optional.empty();
-        return Optional.of(new YAPIONSearch<>(getVariable(key).getValue()));
+        return Optional.of(new YAPIONSearchResult<>(getVariable(key).getValue()));
     }
 
     @Override
     public String toString() {
-        StringBuilder st = new StringBuilder();
-        st.append("{");
-        for (YAPIONVariable yapionVariable : variables) {
-            st.append(yapionVariable.toString());
-        }
-        return st.append("}").toString();
+        return toYAPIONString();
     }
 
     @Override

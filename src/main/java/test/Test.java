@@ -6,6 +6,8 @@ package test;
 
 import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.annotations.deserialize.YAPIONLoad;
+import yapion.annotations.object.YAPIONPostDeserialization;
+import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.annotations.serialize.YAPIONSave;
 
@@ -34,6 +36,12 @@ public class Test {
     private final Map<Hugo, String> hugoStringMap = new HashMap<>();
     private final HashMap<String, String> hashMap = new HashMap<>();
     private final LinkedHashMap<Integer, String> linkedHashMap = new LinkedHashMap<>();
+
+    @YAPIONPreDeserialization(context = "*")
+    @YAPIONPostDeserialization(context = "*")
+    private void test() {
+
+    }
 
     {
         strings.add("Hello WOrld");

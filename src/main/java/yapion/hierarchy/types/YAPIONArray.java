@@ -44,6 +44,33 @@ public class YAPIONArray extends YAPIONAny {
     }
 
     @Override
+    public String toYAPIONString() {
+        StringBuilder st = new StringBuilder();
+        st.append("[");
+        boolean b = false;
+        for (YAPIONAny yapionAny : array) {
+            if (b) {
+                st.append(",");
+            }
+            if (yapionAny == null) {
+                st.append("null");
+            } else if (yapionAny.getType() == Type.VALUE) {
+                st.append(yapionAny.toYAPIONString(), 1, yapionAny.toYAPIONString().length() - 1);
+            } else {
+                st.append(yapionAny.toYAPIONString());
+            }
+            b = true;
+        }
+        st.append("]");
+        return st.toString();
+    }
+
+    @Override
+    public String toJSONString() {
+        return "[" + array.stream().map(YAPIONAny::toJSONString).collect(Collectors.joining(",")) + "]";
+    }
+
+    @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
         outputStream.write("[".getBytes(StandardCharsets.UTF_8));
         for (int i = 0; i < array.size(); i++) {
@@ -52,18 +79,13 @@ public class YAPIONArray extends YAPIONAny {
             }
             YAPIONAny yapionAny = array.get(i);
             if (yapionAny instanceof YAPIONValue) {
-                String s = yapionAny.toString();
+                String s = yapionAny.toYAPIONString();
                 outputStream.write(s.substring(1, s.length() - 1).getBytes(StandardCharsets.UTF_8));
             } else {
                 array.get(i).toOutputStream(outputStream);
             }
         }
         outputStream.write("]".getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Override
-    public String toJSONString() {
-        return "[" + array.stream().map(YAPIONAny::toJSONString).collect(Collectors.joining(",")) + "]";
     }
 
     public int size() {
@@ -97,10 +119,12 @@ public class YAPIONArray extends YAPIONAny {
         return this;
     }
 
+
+
     @Override
-    protected Optional<YAPIONSearch<? extends YAPIONAny>> get(String key) {
+    public Optional<YAPIONSearchResult<? extends YAPIONAny>> get(String key) {
         try {
-            return Optional.of(new YAPIONSearch<>(get(Integer.parseInt(key))));
+            return Optional.of(new YAPIONSearchResult<>(get(Integer.parseInt(key))));
         } catch (NumberFormatException | YAPIONArrayIndexOutOfBoundsException e) {
             return Optional.empty();
         }
@@ -108,24 +132,7 @@ public class YAPIONArray extends YAPIONAny {
 
     @Override
     public String toString() {
-        StringBuilder st = new StringBuilder();
-        st.append("[");
-        boolean b = false;
-        for (YAPIONAny yapionAny : array) {
-            if (b) {
-                st.append(",");
-            }
-            if (yapionAny == null) {
-                st.append("null");
-            } else if (yapionAny.getType() == Type.VALUE) {
-                st.append(yapionAny.toString(), 1, yapionAny.toString().length() - 1);
-            } else {
-                st.append(yapionAny.toString());
-            }
-            b = true;
-        }
-        st.append("]");
-        return st.toString();
+        return toYAPIONString();
     }
 
     @Override
