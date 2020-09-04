@@ -31,6 +31,7 @@ public class SerializeManager {
     }
 
     public static final String TYPE_IDENTIFIER = "@type";
+    public static final String ENUM_IDENTIFIER = "@enum";
     private static final Logger logger = LoggerFactory.getLogger(SerializeManager.class);
 
     @YAPIONSaveExclude(context = "*")

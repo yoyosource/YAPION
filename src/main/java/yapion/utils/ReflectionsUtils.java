@@ -113,6 +113,58 @@ public class ReflectionsUtils {
         }
     }
 
+    /**
+     * Invokes a method with the given arguments on a given object
+     * and return the possible return value.
+     *
+     * @param method the method to be called
+     * @param object the object on which the method should be called
+     * @param parameters the parameters that should be used
+     * @return the possible return value
+     */
+    public static Optional<Object> invokeMethod(Method method, Object object, Parameter... parameters) {
+        Class<?>[] classes = new Class[parameters.length];
+        Object[] objects = new Object[parameters.length];
+        for (int i = 0; i < parameters.length; i++) {
+            classes[i] = parameters[i].clazz;
+            objects[i] = parameters[i].object;
+        }
+
+        try {
+            method.setAccessible(true);
+            return Optional.ofNullable(method.invoke(object, objects));
+        } catch (SecurityException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            logger.info("Exception while invoking a method '" + method.getName() + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Invokes a method with the given arguments on a given object
+     * and return the possible return value.
+     *
+     * @param method the method to be called
+     * @param object the object on which the method should be called
+     * @param parameters the parameters that should be used
+     * @return the possible return value
+     */
+    public static Optional<Object> invokeMethod(Method method, Object object, Object... parameters) {
+        try {
+            method.setAccessible(true);
+            return Optional.ofNullable(method.invoke(object, parameters));
+        } catch (SecurityException | IllegalAccessException | InvocationTargetException e) {
+            Class<?>[] classes = new Class[parameters.length];
+            for (int i = 0; i < parameters.length; i++) {
+                classes[i] = parameters[i].getClass();
+            }
+
+            e.printStackTrace();
+            logger.info("Exception while invoking a method '" + method.getName() + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
+            return Optional.empty();
+        }
+    }
+
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
     public static class Parameter {

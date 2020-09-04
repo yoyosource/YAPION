@@ -59,4 +59,16 @@ public class YAPIONSerializerTest {
         assertThat(YAPIONParser.parse(yapionObject.toString()).toString(), is(yapionObject.toString()));
     }
 
+    @Test
+    public void testEnum() {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestEnum());
+        assertThat(yapionObject.toString(), is("{@type(yapion.serializing.YAPIONTestObjects$TestEnum)test1{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(Hello)ordinal(0)}test2{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(World)ordinal(1)}test3{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(Hugo)ordinal(2)}test4{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(My)ordinal(3)}test5{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(Name)ordinal(4)}}"));
+    }
+
+    @Test
+    public void testEnumReparse() {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestEnum());
+        assertThat(YAPIONParser.parse(yapionObject.toString()).toString(), is(yapionObject.toString()));
+    }
+
 }

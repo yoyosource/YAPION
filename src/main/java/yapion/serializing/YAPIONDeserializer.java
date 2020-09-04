@@ -30,6 +30,37 @@ import java.util.*;
 @YAPIONLoadExclude(context = "*")
 public class YAPIONDeserializer {
 
+    private static int cacheSize = 100;
+
+    private static final Map<String, ObjectCache> methodMap = new LinkedHashMap<String, ObjectCache>() {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, ObjectCache> eldest) {
+            return size() > cacheSize;
+        }
+    };
+
+    /**
+     * Set the cache size of the internal cache to a specific
+     * number above 100. If you set a number below 100 it will
+     * default to 100.
+     *
+     * @param cacheSize the cache Size
+     */
+    public static void setCacheSize(int cacheSize) {
+        if (cacheSize < 100) {
+            cacheSize = 100;
+        }
+        YAPIONDeserializer.cacheSize = cacheSize;
+    }
+
+    /**
+     * Discard the cache used by {@link #preDeserializationStep(Object)}
+     * and {@link #postDeserializationStep(Object)}.
+     */
+    public static void discardCache() {
+        methodMap.clear();
+    }
+
     private Object object;
     private final YAPIONObject yapionObject;
     private final StateManager stateManager;
@@ -238,24 +269,59 @@ public class YAPIONDeserializer {
         return st.toString();
     }
 
-    private void preDeserializationStep(Object object) {
-        Method[] methods = object.getClass().getDeclaredMethods();
-        for (Method method : methods) {
-            if (stateManager.is(method.getAnnotation(YAPIONPreDeserialization.class))) {
-                ReflectionsUtils.invokeMethod(method.getName(), object);
-                break;
+    private class ObjectCache {
+
+        private Map<String, Method> preCache = new HashMap<>();
+        private Map<String, Method> postCache = new HashMap<>();
+
+        public ObjectCache(Object object) {
+            Method[] methods = object.getClass().getDeclaredMethods();
+            for (Method method : methods) {
+                YAPIONPreDeserialization yapionPreDeserialization = method.getAnnotation(YAPIONPreDeserialization.class);
+                YAPIONPostDeserialization yapionPostDeserialization = method.getAnnotation(YAPIONPostDeserialization.class);
+
+                if (yapionPreDeserialization != null) cachePre(yapionPreDeserialization.context(), method);
+                if (yapionPostDeserialization != null) cachePost(yapionPostDeserialization.context(), method);
             }
+        }
+
+        private void cachePre(String context, Method method) {
+            for (String s : context.split(" ")) {
+                preCache.put(s, method);
+            }
+        }
+
+        private void cachePost(String context, Method method) {
+            for (String s : context.split(" ")) {
+                postCache.put(s, method);
+            }
+        }
+
+        private void pre(Object object) {
+            if (!preCache.containsKey(stateManager.get())) return;
+            ReflectionsUtils.invokeMethod(preCache.get(stateManager.get()), object);
+        }
+
+        private void post(Object object) {
+            if (!postCache.containsKey(stateManager.get())) return;
+            ReflectionsUtils.invokeMethod(postCache.get(stateManager.get()), object);
         }
     }
 
-    private void postDeserializationStep(Object object) {
-        Method[] methods = object.getClass().getDeclaredMethods();
-        for (Method method : methods) {
-            if (stateManager.is(method.getAnnotation(YAPIONPostDeserialization.class))) {
-                ReflectionsUtils.invokeMethod(method.getName(), object);
-                break;
-            }
+    private void preDeserializationStep(Object object) {
+        String key = object.getClass().getTypeName();
+        if (!methodMap.containsKey(key)) {
+            methodMap.put(key, new ObjectCache(object));
         }
+        methodMap.get(key).pre(object);
+    }
+
+    private void postDeserializationStep(Object object) {
+        String key = object.getClass().getTypeName();
+        if (!methodMap.containsKey(key)) {
+            methodMap.put(key, new ObjectCache(object));
+        }
+        methodMap.get(key).post(object);
     }
 
     /**

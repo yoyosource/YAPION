@@ -2,7 +2,9 @@ package yapion.serializing;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.object.YAPIONData;
+import yapion.annotations.serialize.YAPIONSave;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -92,6 +94,28 @@ public class YAPIONTestObjects {
         private final File file = new File(getUserHome() + "/YAPI");
 
         // file.getPath()
+    }
+
+    private enum EnumerationTest {
+        Hello,
+        World,
+        Hugo,
+        My,
+        Name,
+    }
+
+    @YAPIONSave
+    @YAPIONLoad
+    @ToString
+    @EqualsAndHashCode
+    public static class TestEnum {
+
+        private final EnumerationTest test1 = EnumerationTest.Hello;
+        private final EnumerationTest test2 = EnumerationTest.World;
+        private final EnumerationTest test3 = EnumerationTest.Hugo;
+        private final EnumerationTest test4 = EnumerationTest.My;
+        private final EnumerationTest test5 = EnumerationTest.Name;
+
     }
 
     static String getUserHome() {
