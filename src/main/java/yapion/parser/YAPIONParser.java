@@ -66,6 +66,14 @@ public class YAPIONParser {
         return JSONMapper.map(yapionObject);
     }
 
+    public static String toBinary(YAPIONObject yapionObject) {
+        return YAPIONBinary.toBinary(yapionObject);
+    }
+
+    public static YAPIONObject fromBinary(String binary) {
+        return YAPIONBinary.toYAPION(binary);
+    }
+
     /**
      * Parses the InputStream to an YAPIONObject.
      * This method only parses the next YAPIONObject and tries to read
@@ -84,11 +92,10 @@ public class YAPIONParser {
     private YAPIONObject result = null;
     private YAPIONAny currentObject = null;
     private String s;
-    private InputStream inputStream;
-
-    private boolean finished = false;
-
     private int index = 0;
+
+    private InputStream inputStream;
+    private boolean finished = false;
 
     private final TypeStack typeStack = new TypeStack();
 
@@ -164,7 +171,6 @@ public class YAPIONParser {
     private final List<YAPIONPointer> yapionPointerList = new ArrayList<>();
 
     private void parseInternal() throws IOException {
-
         if (s != null) {
             parseString();
         } else if (inputStream != null) {
@@ -176,7 +182,6 @@ public class YAPIONParser {
         if (typeStack.isNotEmpty()) {
             throw new YAPIONParserException("");
         }
-
         parseFinish();
     }
 
@@ -223,6 +228,10 @@ public class YAPIONParser {
         }
 
         switch (typeStack.peek()) {
+            // Todo: BINARY POINTER?
+            /*case BINARY_POINTER:
+                parseBinaryPointer(c);
+                return;*/
             case POINTER:
                 parsePointer(c);
                 return;
@@ -351,6 +360,11 @@ public class YAPIONParser {
             push(Type.VALUE);
             return true;
         }
+        // Todo: BINARY POINTER?
+        /*if (c == 0x06) {
+            push(Type.BINARY_POINTER);
+            return true;
+        }*/
         if (lastChar == '-' && c == '>') {
             current.deleteCharAt(current.length() - 1);
             push(Type.POINTER);
@@ -387,6 +401,18 @@ public class YAPIONParser {
             reset();
         }
     }
+
+    // Todo: BINARY POINTER?
+    /*private void parseBinaryPointer(char c) {
+        current.append(String.format("%02X", (int)c));
+        if (current.length() == 16) {
+            pop(Type.BINARY_POINTER);
+            YAPIONPointer yapionPointer = new YAPIONPointer(current.toString());
+            yapionPointerList.add(yapionPointer);
+            add(new YAPIONVariable(key, yapionPointer));
+            reset();
+        }
+    }*/
 
     private void parseMap(char c, char lastChar) {
         if (c == '>') {

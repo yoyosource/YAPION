@@ -5,10 +5,7 @@ import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.*;
 import yapion.utils.ReflectionsUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JSONMapper {
 
@@ -16,7 +13,7 @@ public class JSONMapper {
     public static final String MAP_IDENTIFIER = "@mapping";
 
     private YAPIONObject json;
-    private YAPIONObject result;
+    private YAPIONObject result = null;
 
     private List<YAPIONObject> yapionObjectList = new ArrayList<>();
     private List<YAPIONPointer> yapionPointerList = new ArrayList<>();
@@ -30,6 +27,7 @@ public class JSONMapper {
     }
 
     public JSONMapper parse() {
+        if (json == null) return this;
         result = mapObject(json);
         parseFinish();
         return this;
