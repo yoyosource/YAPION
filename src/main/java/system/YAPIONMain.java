@@ -15,8 +15,11 @@ package system;
 
 import test.Test;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.packet.*;
 import yapion.serializing.YAPIONSerializer;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class YAPIONMain {
@@ -60,8 +63,8 @@ public class YAPIONMain {
 
         System.out.println(yapionPacket.getYAPION().toBinaryYAPIONString());*/
 
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
-        System.out.println(yapionObject.toYAPIONString());
+        //YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
+        //System.out.println(yapionObject.toYAPIONString());
 
         // System.out.println(yapionObject.toBinaryYAPIONString());
         // System.out.println(YAPIONParser.parse(yapionObject.toBinaryYAPIONString()));

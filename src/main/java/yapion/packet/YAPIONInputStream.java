@@ -68,6 +68,7 @@ public class YAPIONInputStream {
             }
         });
         yapionInputStreamHandler.setDaemon(true);
+        yapionInputStreamHandler.start();
     }
 
     /**
