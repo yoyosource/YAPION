@@ -69,6 +69,8 @@ public class YAPIONTestObjects {
     @EqualsAndHashCode
     public static class TestPrimitive {
 
+        private final boolean t = false;
+        private final Boolean T = true;
         private final byte b = 0;
         private final Byte B = 0;
         private final short s = 0;

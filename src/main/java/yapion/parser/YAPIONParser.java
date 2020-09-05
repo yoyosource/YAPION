@@ -70,7 +70,7 @@ public class YAPIONParser {
      * Parses the InputStream to an YAPIONObject.
      * This method only parses the next YAPIONObject and tries to read
      * until the YAPIONObject is finished. It will not cancel even when
-     * the end of Steam is reached. It will only cancel after it has a
+     * the end of Stream is reached. It will only cancel after it has a
      * complete and valid YAPIONObject or 1 second without any new
      * Input passed.
      *

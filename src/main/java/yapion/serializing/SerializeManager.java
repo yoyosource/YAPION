@@ -56,6 +56,7 @@ public class SerializeManager {
         add(new StringBuilderSerializer());
         add(new StringBufferSerializer());
         add(new CharacterSerializer());
+        add(new BooleanSerializer());
         add(new FileSerializer());
         add(new OptionalSerializer());
 
