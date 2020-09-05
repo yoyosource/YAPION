@@ -14,12 +14,7 @@
 package system;
 
 import test.Test;
-import test.TestEnum;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.packet.YAPIONPacket;
-import yapion.parser.YAPIONBinary;
-import yapion.parser.YAPIONParser;
-import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 import java.io.IOException;
@@ -67,7 +62,7 @@ public class YAPIONMain {
 
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
         System.out.println(yapionObject.toYAPIONString());
-        System.out.println(YAPIONParser.toBinary(yapionObject));
+
         // System.out.println(yapionObject.toBinaryYAPIONString());
         // System.out.println(YAPIONParser.parse(yapionObject.toBinaryYAPIONString()));
 

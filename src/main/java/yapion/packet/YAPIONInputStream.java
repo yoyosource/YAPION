@@ -17,6 +17,8 @@ import yapion.serializing.YAPIONDeserializer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -39,23 +41,6 @@ public class YAPIONInputStream {
      * @param inputStream the InputStream
      */
     public YAPIONInputStream(InputStream inputStream) {
-        yapionInputStreamHandler = new Thread(() -> {
-           while (running) {
-               try {
-                   Thread.sleep(10);
-               } catch (InterruptedException e) {
-                   Thread.currentThread().interrupt();
-               }
-               if (handleAvailable() == 0) continue;
-               try {
-                   handle();
-               } catch (Exception e) {
-                   logger.warn("Something went wrong while handling the read object.", e.getCause());
-               }
-           }
-        });
-        yapionInputStreamHandler.setDaemon(true);
-        yapionInputStreamHandler.start();
         this.inputStream = inputStream;
     }
 
@@ -66,6 +51,23 @@ public class YAPIONInputStream {
      */
     public void setYAPIONPacketReceiver(YAPIONPacketReceiver yapionPacketReceiver) {
         this.yapionPacketReceiver = yapionPacketReceiver;
+        if (yapionInputStreamHandler != null) return;
+        yapionInputStreamHandler = new Thread(() -> {
+            while (running) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                if (handleAvailable() == 0) continue;
+                try {
+                    handle();
+                } catch (Exception e) {
+                    logger.warn("Something went wrong while handling the read object.", e.getCause());
+                }
+            }
+        });
+        yapionInputStreamHandler.setDaemon(true);
     }
 
     /**

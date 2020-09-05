@@ -66,14 +66,6 @@ public class YAPIONParser {
         return JSONMapper.map(yapionObject);
     }
 
-    public static String toBinary(YAPIONObject yapionObject) {
-        return YAPIONBinary.toBinary(yapionObject);
-    }
-
-    public static YAPIONObject fromBinary(String binary) {
-        return YAPIONBinary.toYAPION(binary);
-    }
-
     /**
      * Parses the InputStream to an YAPIONObject.
      * This method only parses the next YAPIONObject and tries to read
