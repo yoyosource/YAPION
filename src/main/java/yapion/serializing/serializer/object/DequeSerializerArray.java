@@ -15,14 +15,14 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
-import yapion.serializing.serializer.SerializeLoader;
+import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializeLoader
+@SerializerImplementation
 public class DequeSerializerArray implements InternalSerializer<ArrayDeque<?>> {
 
     @Override

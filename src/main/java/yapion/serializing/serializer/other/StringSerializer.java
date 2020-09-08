@@ -11,11 +11,11 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
-import yapion.serializing.serializer.SerializeLoader;
+import yapion.serializing.serializer.SerializerImplementation;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializeLoader
+@SerializerImplementation
 public class StringSerializer implements InternalSerializer<String> {
 
     @Override

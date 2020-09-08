@@ -6,11 +6,11 @@ import yapion.hierarchy.YAPIONAny;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
-import yapion.serializing.serializer.SerializeLoader;
+import yapion.serializing.serializer.SerializerImplementation;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializeLoader
+@SerializerImplementation
 public class ThreadSerializer implements InternalSerializer<Thread> {
 
     @Override

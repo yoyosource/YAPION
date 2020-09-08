@@ -15,7 +15,7 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
-import yapion.serializing.serializer.SerializeLoader;
+import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -23,7 +23,7 @@ import java.util.LinkedHashSet;
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S3740"})
-@SerializeLoader
+@SerializerImplementation
 public class SetSerializerLinkedHash implements InternalSerializer<LinkedHashSet> {
 
     @Override

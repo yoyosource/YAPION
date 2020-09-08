@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 @IndexAnnotated
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.TYPE})
-public @interface SerializeLoader {
+public @interface SerializerImplementation {
 
 }

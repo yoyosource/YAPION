@@ -16,15 +16,10 @@ import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.api.*;
-import yapion.serializing.serializer.SerializeLoader;
-import yapion.serializing.serializer.number.*;
-import yapion.serializing.serializer.object.*;
-import yapion.serializing.serializer.other.*;
-import yapion.serializing.serializer.overrideable.*;
+import yapion.serializing.serializer.SerializerImplementation;
 import yapion.utils.ReflectionsUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -55,7 +50,7 @@ public class SerializeManager {
 
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
     static {
-        Iterable<Class<?>> clazzes = ClassIndex.getAnnotated(SerializeLoader.class);
+        Iterable<Class<?>> clazzes = ClassIndex.getAnnotated(SerializerImplementation.class);
         clazzes.forEach(clazz -> {
             try {
                 Object o = ReflectionsUtils.constructObjectObjenesis(clazz.getTypeName());
