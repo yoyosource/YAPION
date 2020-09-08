@@ -15,12 +15,14 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.serializer.SerializeLoader;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SerializeLoader
 public class MapSerializerIdentityHash implements InternalSerializer<IdentityHashMap<?, ?>> {
 
     @Override

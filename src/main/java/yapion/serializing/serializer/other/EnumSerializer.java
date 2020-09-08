@@ -1,5 +1,7 @@
 package yapion.serializing.serializer.other;
 
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
@@ -7,8 +9,12 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.serializer.SerializeLoader;
 
+@YAPIONSaveExclude(context = "*")
+@YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S1192"})
+@SerializeLoader
 public class EnumSerializer implements InternalSerializer<Enum<?>> {
 
     @Override

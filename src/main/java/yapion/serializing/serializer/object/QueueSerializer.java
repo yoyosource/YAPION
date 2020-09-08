@@ -15,11 +15,13 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.serializer.SerializeLoader;
 
 import java.util.*;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SerializeLoader
 public class QueueSerializer implements InternalSerializer<Queue<?>> {
 
     @Override

@@ -63,8 +63,8 @@ public class YAPIONMain {
 
         System.out.println(yapionPacket.getYAPION().toBinaryYAPIONString());*/
 
-        //YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
-        //System.out.println(yapionObject.toYAPIONString());
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
+        System.out.println(yapionObject.toYAPIONString());
 
         // System.out.println(yapionObject.toBinaryYAPIONString());
         // System.out.println(YAPIONParser.parse(yapionObject.toBinaryYAPIONString()));

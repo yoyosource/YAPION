@@ -4,6 +4,7 @@
 
 package yapion.serializing;
 
+import org.atteo.classindex.ClassIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
@@ -15,12 +16,15 @@ import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.api.*;
+import yapion.serializing.serializer.SerializeLoader;
 import yapion.serializing.serializer.number.*;
 import yapion.serializing.serializer.object.*;
 import yapion.serializing.serializer.other.*;
 import yapion.serializing.serializer.overrideable.*;
+import yapion.utils.ReflectionsUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -51,70 +55,27 @@ public class SerializeManager {
 
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
     static {
-        // Other
-        add(new StringSerializer());
-        add(new StringBuilderSerializer());
-        add(new StringBufferSerializer());
-        add(new CharacterSerializer());
-        add(new BooleanSerializer());
-        add(new FileSerializer());
-        add(new OptionalSerializer());
+        Iterable<Class<?>> clazzes = ClassIndex.getAnnotated(SerializeLoader.class);
+        clazzes.forEach(clazz -> {
+            try {
+                Object o = ReflectionsUtils.constructObjectObjenesis(clazz.getTypeName());
+                if (o == null) return;
+                if (!o.getClass().getTypeName().startsWith("yapion.serializing.serializer")) return;
+                if (o.getClass().getInterfaces().length != 1) return;
+                switch (o.getClass().getInterfaces()[0].getTypeName()) {
+                    case "yapion.serializing.InternalOverrideableSerializer":
+                        add((InternalOverrideableSerializer<?>)o);
+                        break;
+                    case "yapion.serializing.InternalSerializer":
+                        add((InternalSerializer<?>)o);
+                        break;
+                    default:
+                        break;
+                }
+            } catch (Exception e) {
 
-        add(new RunnableSerializer());
-        add(new ThreadSerializer());
-
-        add(new EnumSerializer());
-
-        // add(new YAPIONSerializerPacket());
-
-        // Non Floating Point Numbers
-        add(new ByteSerializer());
-        add(new ShortSerializer());
-        add(new IntegerSerializer());
-        add(new LongSerializer());
-        add(new BigIntegerSerializer());
-
-        // Floating Point Numbers
-        add(new FloatSerializer());
-        add(new DoubleSerializer());
-        add(new BigDecimalSerializer());
-
-        // Objects
-        add(new DequeSerializer());
-        add(new DequeSerializerArray());
-
-        add(new ListSerializer());
-        add(new ListSerializerArray());
-        add(new ListSerializerLinked());
-
-        add(new MapSerializer());
-        add(new MapSerializerIdentityHash());
-        add(new MapSerializerHash());
-        add(new MapSerializerLinkedHash());
-        add(new MapSerializerTree());
-        add(new MapSerializerWeakHash());
-
-        add(new QueueSerializer());
-        add(new QueueSerializerPriority());
-
-        add(new SetSerializer());
-        add(new SetSerializerHash());
-        add(new SetSerializerLinkedHash());
-        add(new SetSerializerTree());
-
-        // Other Objects
-        add(new StackSerializer());
-        add(new TableSerializerHash());
-        add(new VectorSerializer());
-
-        // Overrideable
-        add(new YAPIONSerializerArray());
-        add(new YAPIONSerializerMap());
-        add(new YAPIONSerializerObject());
-        add(new YAPIONSerializerPointer());
-        add(new YAPIONSerializerValue());
-
-        // Own Serializers Init
+            }
+        });
         overrideable = true;
     }
 

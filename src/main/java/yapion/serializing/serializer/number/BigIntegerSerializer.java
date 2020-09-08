@@ -11,11 +11,13 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.serializer.SerializeLoader;
 
 import java.math.BigInteger;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SerializeLoader
 public class BigIntegerSerializer implements InternalSerializer<BigInteger> {
 
     @Override

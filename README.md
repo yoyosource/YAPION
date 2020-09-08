@@ -40,6 +40,9 @@ dependencies {
 - qos-ch/slf4j (https://github.com/qos-ch/slf4j)
   - [V] 2.0.0-alpha1
   - [L] MIT
+- classindex:classindex (https://github.com/atteo/classindex)
+  - [V] 3.4
+  - [L] Apache-2.0
 
 - rzwitserloot/lombok (https://github.com/rzwitserloot/lombok)
   - [V] 1.18.6

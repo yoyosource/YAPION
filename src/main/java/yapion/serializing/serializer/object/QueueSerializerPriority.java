@@ -15,12 +15,14 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.serializer.SerializeLoader;
 
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SerializeLoader
 public class QueueSerializerPriority implements InternalSerializer<PriorityQueue<?>> {
 
     @Override

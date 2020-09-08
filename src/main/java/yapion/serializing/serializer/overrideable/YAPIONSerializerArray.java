@@ -7,9 +7,11 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.serializing.InternalOverrideableSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.serializer.SerializeLoader;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@SerializeLoader
 public class YAPIONSerializerArray implements InternalOverrideableSerializer<YAPIONArray> {
 
     @Override

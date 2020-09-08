@@ -14,9 +14,11 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
+import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -63,12 +65,38 @@ public class YAPIONInputStream {
                 try {
                     handle();
                 } catch (Exception e) {
+                    drop();
+                    if (yapionPacketReceiver != null) {
+                        yapionPacketReceiver.handle(constructExceptionPacket());
+                    }
                     logger.warn("Something went wrong while handling the read object.", e.getCause());
                 }
             }
         });
         yapionInputStreamHandler.setDaemon(true);
         yapionInputStreamHandler.start();
+    }
+
+    private YAPIONPacket constructExceptionPacket() {
+        YAPIONPacket yapionPacket = new YAPIONPacket("");
+        try {
+            Field field = yapionPacket.getClass().getField("type");
+            field.setAccessible(true);
+            field.set(yapionPacket, "@exception");
+        } catch (Exception e) {
+
+        }
+        if (staticIdentifier != null) yapionPacket.setYapionPacketIdentifier(staticIdentifier);
+        if (dynamicIdentifier != null) yapionPacket.setYapionPacketIdentifier(dynamicIdentifier.identifier());
+        return yapionPacket;
+    }
+
+    private void drop() {
+        try {
+            while (inputStream.available() > 0) inputStream.read();
+        } catch (IOException e) {
+
+        }
     }
 
     /**
