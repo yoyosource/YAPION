@@ -45,30 +45,26 @@ public class SerializeManager {
         }
     }
 
-    private static boolean overrideable = false;
+    private static final boolean overrideable;
     private static final Serializer defaultSerializer = new Serializer(null, false);
 
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
     static {
         Iterable<Class<?>> clazzes = ClassIndex.getAnnotated(SerializerImplementation.class);
         clazzes.forEach(clazz -> {
-            try {
-                Object o = ReflectionsUtils.constructObjectObjenesis(clazz.getTypeName());
-                if (o == null) return;
-                if (!o.getClass().getTypeName().startsWith("yapion.serializing.serializer")) return;
-                if (o.getClass().getInterfaces().length != 1) return;
-                switch (o.getClass().getInterfaces()[0].getTypeName()) {
-                    case "yapion.serializing.InternalOverrideableSerializer":
-                        add((InternalOverrideableSerializer<?>)o);
-                        break;
-                    case "yapion.serializing.InternalSerializer":
-                        add((InternalSerializer<?>)o);
-                        break;
-                    default:
-                        break;
-                }
-            } catch (Exception e) {
-
+            Object o = ReflectionsUtils.constructObjectObjenesis(clazz.getTypeName());
+            if (o == null) return;
+            if (!o.getClass().getTypeName().startsWith("yapion.serializing.serializer")) return;
+            if (o.getClass().getInterfaces().length != 1) return;
+            switch (o.getClass().getInterfaces()[0].getTypeName()) {
+                case "yapion.serializing.InternalOverrideableSerializer":
+                    add((InternalOverrideableSerializer<?>)o);
+                    break;
+                case "yapion.serializing.InternalSerializer":
+                    add((InternalSerializer<?>)o);
+                    break;
+                default:
+                    break;
             }
         });
         overrideable = true;
