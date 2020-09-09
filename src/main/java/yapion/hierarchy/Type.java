@@ -4,9 +4,6 @@
 
 package yapion.hierarchy;
 
-import yapion.annotations.serialize.YAPIONSave;
-
-@YAPIONSave(context = "*")
 public enum Type {
 
     ANY(0x21b7bcb508370b96L, "ANY"),

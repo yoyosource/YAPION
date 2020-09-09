@@ -28,7 +28,7 @@ import java.util.*;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class YAPIONDeserializer {
+public final class YAPIONDeserializer {
 
     private static int cacheSize = 100;
 

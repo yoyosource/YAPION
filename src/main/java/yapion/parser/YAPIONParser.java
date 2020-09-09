@@ -23,7 +23,7 @@ import java.util.Map;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class YAPIONParser {
+public final class YAPIONParser {
 
     /**
      * Parses the String to an YAPIONObject.

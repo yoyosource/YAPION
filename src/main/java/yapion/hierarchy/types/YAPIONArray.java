@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types;
 
+import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.hierarchy.Type;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @YAPIONSave(context = "*")
+@YAPIONLoad(context = "*")
 public class YAPIONArray extends YAPIONAny {
 
     private final List<YAPIONAny> array = new ArrayList<>();

@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types;
 
+import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.Type;
@@ -19,6 +20,7 @@ import java.util.Objects;
 import static yapion.utils.ReferenceIDUtils.calc;
 
 @YAPIONSave(context = "*")
+@YAPIONLoad(context = "*")
 public class YAPIONValue<T> extends YAPIONAny {
 
     private static final String[] allowedTypes = new String[]{

@@ -4,6 +4,7 @@
 
 package yapion.hierarchy;
 
+import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.hierarchy.interfaces.Output;
 
@@ -15,7 +16,8 @@ import java.util.Objects;
 import static yapion.utils.ReferenceIDUtils.calc;
 
 @YAPIONSave(context = "*")
-public class YAPIONVariable implements Output {
+@YAPIONLoad(context = "*")
+public final class YAPIONVariable implements Output {
 
     private final String name;
     private final YAPIONAny value;

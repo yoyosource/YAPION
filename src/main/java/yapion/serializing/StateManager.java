@@ -18,7 +18,7 @@ import java.lang.reflect.Field;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class StateManager {
+public final class StateManager {
 
     private final String state;
     private boolean emptyState = false;

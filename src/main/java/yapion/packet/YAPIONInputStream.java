@@ -14,17 +14,14 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
-import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class YAPIONInputStream {
+public final class YAPIONInputStream {
 
     public static final int DEFAULT_WAIT = 10;
     public static final int LOW_WAIT = 1;

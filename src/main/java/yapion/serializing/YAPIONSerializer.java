@@ -21,7 +21,7 @@ import java.util.Map;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class YAPIONSerializer {
+public final class YAPIONSerializer {
 
     private final Object object;
     private YAPIONObject yapionObject;

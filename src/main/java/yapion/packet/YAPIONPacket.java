@@ -20,7 +20,7 @@ import java.util.Map;
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
 @YAPIONObjenesis
-public class YAPIONPacket {
+public final class YAPIONPacket {
 
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")

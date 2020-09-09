@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types;
 
+import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.Type;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @YAPIONSave(context = "*")
+@YAPIONLoad(context = "*")
 public class YAPIONObject extends YAPIONAny {
 
     private final List<YAPIONVariable> variables = new ArrayList<>();

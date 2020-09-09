@@ -14,7 +14,7 @@ import java.io.OutputStream;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public class YAPIONOutputStream {
+public final class YAPIONOutputStream {
 
     private final OutputStream outputStream;
 
