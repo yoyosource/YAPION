@@ -47,7 +47,10 @@ public class YAPIONInputStream {
     }
 
     /**
-     * Set a direct receiver to the data from the InputStream.
+     * Set a direct receiver for data from this InputStream.
+     * If an exception was thrown while reading, parsing, or
+     * handling the received Packet an Exception packet will
+     * be raised and handled by the same YAPIONPacketReceiver.
      *
      * @param yapionPacketReceiver the receiver
      */
