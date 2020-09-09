@@ -3,6 +3,7 @@ package yapion.serializing.serializer.objectNet;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
@@ -22,7 +23,7 @@ public class SocketSerializerServer implements InternalSerializer<ServerSocket> 
 
     @Override
     public YAPIONAny serialize(ServerSocket object, YAPIONSerializer yapionSerializer) {
-        return null;
+        return new YAPIONValue<>(null);
     }
 
     @Override
