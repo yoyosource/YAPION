@@ -136,6 +136,38 @@ task publishProject {
     dependsOn publishMavenPublicationToMavenRepository
 }
 
+task commitProject {
+    description 'Commit this repo to GitHub/origin'
+    group "Release"
+
+    doLast {
+        shell("git add releases/yoyosource/YAPION/${mayor}.${minor}.${patch}/")
+        shell("git add gradle.properties")
+        shell("git add releases/yoyosource/YAPION/maven-metadata.xml")
+        shell("git add releases/yoyosource/YAPION/maven-metadata.xml.md5")
+        shell("git add releases/yoyosource/YAPION/maven-metadata.xml.sha1")
+        shell("git add releases/yoyosource/YAPION/maven-metadata.xml.sha256")
+        shell("git add releases/yoyosource/YAPION/maven-metadata.xml.sha512")
+        shell("git commit -m \"Maven Release ${mayor}.${minor}.${patch}\"")
+        shell("git tag \"V${mayor}.${minor}.${patch}\"")
+    }
+}
+
+/**
+ * Executes a shell command and returns the stdout result.
+ *
+ * @param command the command to execute (cannot contain pipes)
+ * @return the trimmed result from stdout, stderr and the exit value
+ */
+def shell(String command) {
+    def proc = ['bash', '-c', command].execute()
+    def out = new StringBuilder()
+    def err = new StringBuilder()
+    proc.waitForProcessOutput(out, err)
+
+    return [out.toString().trim(), err.toString().trim(), proc.exitValue()]
+}
+
 task buildProject {
     description 'Build this repo'
     group "Build"
