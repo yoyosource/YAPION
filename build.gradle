@@ -7,6 +7,7 @@ plugins {
 }
 
 group 'YAPION'
+def groupID = 'yoyosource'
 version 'SNAPSHOT'
 
 ext {
@@ -17,6 +18,8 @@ ext {
     groupName = "${group}"
 
     publication = mayor + "." + minor + "." + patch
+
+    releasePath = "releases/${groupID}/${group}"
 }
 
 sourceCompatibility = 1.8
@@ -69,7 +72,7 @@ publishing {
     }
     publications {
         maven(MavenPublication) {
-            groupId = 'yoyosource'
+            groupId = groupID
             artifactId = group
             version = publication
 
@@ -141,15 +144,32 @@ task commitProject {
     group "Release"
 
     doLast {
-        shell("git add releases/yoyosource/YAPION/${mayor}.${minor}.${patch}/")
+        def status = shell("git status")
+        if (!status.contains("${releasePath}/${mayor}.${minor}.${patch}")) {
+            println("No new Version detected")
+            return
+        }
+        println("Adding new files to git")
+        shell("git add ${releasePath}/${mayor}.${minor}.${patch}/")
         shell("git add gradle.properties")
-        shell("git add releases/yoyosource/YAPION/maven-metadata.xml")
-        shell("git add releases/yoyosource/YAPION/maven-metadata.xml.md5")
-        shell("git add releases/yoyosource/YAPION/maven-metadata.xml.sha1")
-        shell("git add releases/yoyosource/YAPION/maven-metadata.xml.sha256")
-        shell("git add releases/yoyosource/YAPION/maven-metadata.xml.sha512")
+        shell("git add ${releasePath}/maven-metadata.xml")
+        shell("git add ${releasePath}/maven-metadata.xml.md5")
+        shell("git add ${releasePath}/maven-metadata.xml.sha1")
+        shell("git add ${releasePath}/maven-metadata.xml.sha256")
+        shell("git add ${releasePath}/maven-metadata.xml.sha512")
+        println("Creating new commit with name 'Maven Release ${mayor}.${minor}.${patch}'")
         shell("git commit -m \"Maven Release ${mayor}.${minor}.${patch}\"")
+        println("Creating new tag with name 'V${mayor}.${minor}.${patch}'")
         shell("git tag \"V${mayor}.${minor}.${patch}\"")
+
+        println("Should this commit be pushed? [Y/n]")
+        if (System.in.read() == 'Y'.charAt(0)) {
+            shell("git push")
+            shell("git push --tags")
+        } else {
+            println("Use 'git push' and 'git push --tags' to manually")
+            println("push this to origin.")
+        }
     }
 }
 
