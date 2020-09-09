@@ -65,8 +65,8 @@ public class SerializeManager {
     }, false);
 
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
-    private static final List<InternalSerializerGroup> nSerializerGroups = new ArrayList<>();
-    private static final List<InternalSerializerGroup> oSerializerGroups = new ArrayList<>();
+    private static final GroupList nSerializerGroups = new GroupList();
+    private static final GroupList oSerializerGroups = new GroupList();
     static {
         Iterable<Class<?>> clazzes = ClassIndex.getAnnotated(SerializerImplementation.class);
         clazzes.forEach(clazz -> {
@@ -90,6 +90,7 @@ public class SerializeManager {
         oSerializerGroups.add(() -> "yapion.parser.");
         oSerializerGroups.add(() -> "yapion.serializing.");
         oSerializerGroups.add(() -> "yapion.utils.");
+        oSerializerGroups.build();
 
         nSerializerGroups.add(() -> "java.io.");
         nSerializerGroups.add(() -> "java.net.");
@@ -98,6 +99,7 @@ public class SerializeManager {
         nSerializerGroups.add(() -> "java.text.");
         nSerializerGroups.add(() -> "java.time.");
         nSerializerGroups.add(() -> "java.util.");
+        nSerializerGroups.build();
         overrideable = true;
     }
 
@@ -334,23 +336,11 @@ public class SerializeManager {
 
     @SuppressWarnings({"java:S1452"})
     static InternalSerializer<?> get(String type) {
+        if (oSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
         InternalSerializer<?> serializer = serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
-        if (serializer != null) {
-            if (contains(oSerializerGroups, type)) {
-                return defaultNullSerializer.internalSerializer;
-            }
-            return serializer;
-        }
-        if (contains(nSerializerGroups, type)) {
-            return defaultNullSerializer.internalSerializer;
-        }
+        if (serializer != null) return serializer;
+        if (nSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
         return null;
-    }
-
-    private static boolean contains(List<InternalSerializerGroup> groups, String type) {
-        return groups.stream()
-                .map(InternalSerializerGroup::group)
-                .anyMatch(type::startsWith);
     }
 
     /**
