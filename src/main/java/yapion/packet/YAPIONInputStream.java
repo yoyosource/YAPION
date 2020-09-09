@@ -26,6 +26,10 @@ import java.util.zip.GZIPOutputStream;
 @YAPIONLoadExclude(context = "*")
 public class YAPIONInputStream {
 
+    public static final int DEFAULT_WAIT = 10;
+    public static final int LOW_WAIT = 1;
+    public static final int HIGH_WAIT = 1000;
+
     private final InputStream inputStream;
     private YAPIONPacketReceiver yapionPacketReceiver = null;
 
@@ -56,11 +60,36 @@ public class YAPIONInputStream {
      */
     public void setYAPIONPacketReceiver(YAPIONPacketReceiver yapionPacketReceiver) {
         this.yapionPacketReceiver = yapionPacketReceiver;
+        thread(DEFAULT_WAIT);
+    }
+
+    /**
+     * Set a direct receiver for data from this InputStream.
+     * If an exception was thrown while reading, parsing, or
+     * handling the received Packet an Exception packet will
+     * be raised and handled by the same YAPIONPacketReceiver.
+     *
+     * @param yapionPacketReceiver the receiver
+     * @param time the wait time of the internal receiver loop
+     *             this time should be between 1 and 1000 ms
+     *             and will be bounded to a value between it
+     *             when outside values are given if -1 is
+     *             given the default will be selected
+     */
+    public void setYAPIONPacketReceiver(YAPIONPacketReceiver yapionPacketReceiver, int time) {
+        if (time == -1) time = DEFAULT_WAIT;
+        if (time < LOW_WAIT) time = LOW_WAIT;
+        if (time > HIGH_WAIT) time = HIGH_WAIT;
+        this.yapionPacketReceiver = yapionPacketReceiver;
+        thread(time);
+    }
+
+    private void thread(int time) {
         if (yapionInputStreamHandler != null) return;
         yapionInputStreamHandler = new Thread(() -> {
             while (running) {
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(time);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
