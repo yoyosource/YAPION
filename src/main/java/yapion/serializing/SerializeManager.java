@@ -47,8 +47,26 @@ public class SerializeManager {
 
     private static final boolean overrideable;
     private static final Serializer defaultSerializer = new Serializer(null, false);
+    private static final Serializer defaultNullSerializer = new Serializer(new InternalSerializer<Object>() {
+        @Override
+        public String type() {
+            return "";
+        }
+
+        @Override
+        public YAPIONAny serialize(Object object, YAPIONSerializer yapionSerializer) {
+            return new YAPIONValue<>(null);
+        }
+
+        @Override
+        public Object deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+            return null;
+        }
+    }, false);
 
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
+    private static final List<InternalSerializerGroup> nSerializerGroups = new ArrayList<>();
+    private static final List<InternalSerializerGroup> oSerializerGroups = new ArrayList<>();
     static {
         Iterable<Class<?>> clazzes = ClassIndex.getAnnotated(SerializerImplementation.class);
         clazzes.forEach(clazz -> {
@@ -67,6 +85,19 @@ public class SerializeManager {
                     break;
             }
         });
+        oSerializerGroups.add(() -> "yapion.annotations.");
+        oSerializerGroups.add(() -> "yapion.exceptions.");
+        oSerializerGroups.add(() -> "yapion.parser.");
+        oSerializerGroups.add(() -> "yapion.serializing.");
+        oSerializerGroups.add(() -> "yapion.utils.");
+
+        nSerializerGroups.add(() -> "java.io.");
+        nSerializerGroups.add(() -> "java.net.");
+        nSerializerGroups.add(() -> "java.nio.");
+        nSerializerGroups.add(() -> "java.security.");
+        nSerializerGroups.add(() -> "java.text.");
+        nSerializerGroups.add(() -> "java.time.");
+        nSerializerGroups.add(() -> "java.util.");
         overrideable = true;
     }
 
@@ -303,7 +334,23 @@ public class SerializeManager {
 
     @SuppressWarnings({"java:S1452"})
     static InternalSerializer<?> get(String type) {
-        return serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
+        InternalSerializer<?> serializer = serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
+        if (serializer != null) {
+            if (contains(oSerializerGroups, type)) {
+                return defaultNullSerializer.internalSerializer;
+            }
+            return serializer;
+        }
+        if (contains(nSerializerGroups, type)) {
+            return defaultNullSerializer.internalSerializer;
+        }
+        return null;
+    }
+
+    private static boolean contains(List<InternalSerializerGroup> groups, String type) {
+        return groups.stream()
+                .map(InternalSerializerGroup::group)
+                .anyMatch(type::startsWith);
     }
 
     /**
