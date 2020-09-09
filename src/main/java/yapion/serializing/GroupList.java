@@ -6,25 +6,29 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-class GroupList extends ArrayList<InternalSerializerGroup> {
+final class GroupList extends ArrayList<InternalSerializerGroup> {
 
-    private List<String> stringStream;
-    private boolean builded = false;
+    private boolean done = false;
 
     public void build() {
-        if (builded) return;
-        stringStream = stream().map(InternalSerializerGroup::group).collect(Collectors.toList());
-        builded = true;
+        done = true;
     }
 
     public boolean contains(String s) {
-        if (!builded) return false;
+        if (!done) return false;
         if (s == null) return false;
-        return stringStream.stream().anyMatch(s::startsWith);
+        Iterator<InternalSerializerGroup> groupIterator = groupIterator();
+        while (groupIterator.hasNext()) {
+            if (s.startsWith(groupIterator.next().group())) return true;
+        }
+        return false;
+    }
+
+    private Iterator<InternalSerializerGroup> groupIterator() {
+        return super.iterator();
     }
 
 
@@ -40,7 +44,7 @@ class GroupList extends ArrayList<InternalSerializerGroup> {
 
     @Override
     public boolean add(InternalSerializerGroup internalSerializerGroup) {
-        if (builded) {
+        if (done) {
             throw new UnsupportedOperationException();
         }
         return super.add(internalSerializerGroup);
