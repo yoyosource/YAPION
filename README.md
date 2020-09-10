@@ -44,6 +44,7 @@ dependencies {
   - [V] 3.4
   - [L] Apache-2.0
 
+
 - rzwitserloot/lombok (https://github.com/rzwitserloot/lombok)
   - [V] 1.18.6
   - [L] MIT
