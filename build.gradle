@@ -64,6 +64,25 @@ shadowJar {
     }
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java/']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java/']
+        }
+    }
+}
+
+javadoc {
+    source = sourceSets.main.allJava
+    // classpath = configurations.compile
+    exclude("${rootDir}/src/main/java/system", "${rootDir}/src/main/java/test")
+}
+
 publishing {
     repositories {
         maven {

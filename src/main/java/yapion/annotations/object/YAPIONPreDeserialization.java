@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  * This annotation describes one of the four steps in the process
  * of deserialization. You can use this annotation for a method
  * that defaults the data or object before deserialized by YAPION.
- * This can be useful to evaluate {@see null} pointer to their
+ * This can be useful to evaluate {@code null} pointer to their
  * default value or to set default values. This annotation is useful
  * if you use {@link YAPIONData} or {@link YAPIONObjenesis} as annotations.
  *

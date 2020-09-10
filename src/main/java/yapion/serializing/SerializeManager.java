@@ -88,7 +88,7 @@ public class SerializeManager {
         oSerializerGroups.add(() -> "yapion.annotations.");
         oSerializerGroups.add(() -> "yapion.exceptions.");
         oSerializerGroups.add(() -> "yapion.parser.");
-        oSerializerGroups.add(() -> "yapion.serializing.");
+        oSerializerGroups.add(() -> "yapion.serializing.serializer");
         oSerializerGroups.add(() -> "yapion.utils.");
         oSerializerGroups.build();
 

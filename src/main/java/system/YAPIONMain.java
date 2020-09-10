@@ -16,11 +16,10 @@ package system;
 import test.Test;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.packet.*;
+import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONSerializer;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class YAPIONMain {
 
@@ -63,8 +62,16 @@ public class YAPIONMain {
 
         System.out.println(yapionPacket.getYAPION().toBinaryYAPIONString());*/
 
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
-        System.out.println(yapionObject.toYAPIONString());
+        //YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
+        //System.out.println(yapionObject.toYAPIONString());
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("test.json"))));
+        String line = bufferedReader.readLine();
+        System.out.println(line);
+        System.out.println(line.length());
+        System.out.println(YAPIONParser.parseJSON(line).toYAPIONString());
+        System.out.println(YAPIONParser.parseJSON(line).toYAPIONString().length());
+
 
         // System.out.println(yapionObject.toBinaryYAPIONString());
         // System.out.println(YAPIONParser.parse(yapionObject.toBinaryYAPIONString()));
