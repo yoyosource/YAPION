@@ -110,6 +110,7 @@ task incrementMayor {
         patch = 0
         println("Version: " + mayor + "." + minor + "." + patch)
         save()
+        println("NEXT STEP: projectPublish")
     }
 }
 
@@ -122,6 +123,7 @@ task incrementMinor {
         patch = 0
         println("Version: " + mayor + "." + minor + "." + patch)
         save()
+        println("NEXT STEP: projectPublish")
     }
 }
 
@@ -133,6 +135,7 @@ task incrementPatch {
         patch = Integer.parseInt(patch) + 1
         println("Version: " + mayor + "." + minor + "." + patch)
         save()
+        println("NEXT STEP: projectPublish")
     }
 }
 
@@ -156,6 +159,10 @@ task projectPublish {
     group "Release"
 
     dependsOn publishMavenPublicationToMavenRepository
+
+    doLast {
+        println("NEXT STEP: projectCommit")
+    }
 }
 
 task projectCommit {
@@ -190,6 +197,8 @@ task projectCommit {
         } else {
             println("Use 'git push' and 'git push --tags' to manually push this to origin.")
         }
+
+        println("NEXT STEP: projectJavaDoc")
     }
 }
 
@@ -203,6 +212,23 @@ task projectJavaDoc {
         shell("rm -r docs")
         shell("mkdir docs")
         shell("cp -R build/docs/javadoc/* docs")
+
+        println("Should this change be comitted? [Y/n]")
+        if (!"Yy".contains(System.in.read() + "")) {
+            println("Use 'git commit -m \"Documentation update\"' to manually commit this change.'")
+            return
+        }
+        println("Creating new commit with name 'Documentation update'")
+        shell("git commit -m \"Documentation update\"")
+
+        println("Should this commit be pushed? [Y/n]")
+        if (!"Yy".contains(System.in.read() + "")) {
+            println("Use 'git push' to manually push this to origin.")
+            return
+        }
+        shell("git push")
+
+        println("NEXT STEP: ----")
     }
 }
 
