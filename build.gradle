@@ -78,7 +78,7 @@ sourceSets {
 }
 
 javadoc {
-    source = sourceSets.main.allJava
+    source = 'src/main/java/yapion'
     // classpath = configurations.compile
     exclude("${rootDir}/src/main/java/system", "${rootDir}/src/main/java/test")
 }
@@ -151,14 +151,14 @@ private void save() {
     f.text = String.join("\n", strings)
 }
 
-task publishProject {
+task projectPublish {
     description 'Publish this repo to GitHub Maven'
     group "Release"
 
     dependsOn publishMavenPublicationToMavenRepository
 }
 
-task commitProject {
+task projectCommit {
     description 'Commit this repo to GitHub/origin'
     group "Release"
 
@@ -190,6 +190,19 @@ task commitProject {
         } else {
             println("Use 'git push' and 'git push --tags' to manually push this to origin.")
         }
+    }
+}
+
+task projectJavaDoc {
+    description 'Create new JavaDoc for the existing sources'
+    group "Release"
+
+    dependsOn javadoc
+
+    doLast {
+        shell("rm -r docs")
+        shell("mkdir docs")
+        shell("cp -R build/docs/javadoc/* docs")
     }
 }
 
