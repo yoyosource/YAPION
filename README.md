@@ -151,13 +151,13 @@ Example for an YAPION pointer
 ### Parsing
 ```java
 YAPIONObject yapionObject = YAPIONParser.parse("[...]");
-YAPIONObject yapionObject1 = YAPIONParser.parse(new FileInputStream(new File([...])));
+YAPIONObject yapionObject = YAPIONParser.parse(new FileInputStream(new File([...])));
 ```
 
 ### Serializing
 ```java
 YAPIONObject yapionObject = YAPIONSerializer.serialize([...]);
-YAPIONObject yapionObject1 = YAPIONSerializer.serialize([...], "[...]");
+YAPIONObject yapionObject = YAPIONSerializer.serialize([...], "[...]");
 ```
 
 ### Deserializing
