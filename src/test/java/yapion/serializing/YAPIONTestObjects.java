@@ -5,6 +5,8 @@ import lombok.ToString;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.serialize.YAPIONSave;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.parser.YAPIONParser;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -125,15 +127,41 @@ public class YAPIONTestObjects {
     }
 
     public static void main(String[] args) {
-        String s1 = YAPIONSerializer.serialize(new TestObject()).toString();
-        String s2 = YAPIONSerializer.serialize(new TestMap()).toString();
-        String s3 = YAPIONSerializer.serialize(new TestArray()).toString();
-        String s4 = YAPIONSerializer.serialize(new TestPrimitive()).toString();
+        YAPIONObject yapionObject1 = YAPIONSerializer.serialize(new TestObject());
+        YAPIONObject yapionObject2 = YAPIONSerializer.serialize(new TestMap());
+        YAPIONObject yapionObject3 = YAPIONSerializer.serialize(new TestArray());
+        YAPIONObject yapionObject4 = YAPIONSerializer.serialize(new TestPrimitive());
+        YAPIONObject yapionObject5 = YAPIONSerializer.serialize(new TestEnum());
 
-        System.out.println(encodeBase64(s1));
-        System.out.println(encodeBase64(s2));
-        System.out.println(encodeBase64(s3));
-        System.out.println(encodeBase64(s4));
+        System.out.println(yapionObject1);
+        System.out.println(yapionObject1.toJSONString());
+        System.out.println(YAPIONParser.parseJSON(yapionObject1.toJSONString()));
+        System.out.println(encodeBase64(yapionObject1.toString()));
+        System.out.println(encodeBase64(yapionObject1.toJSONString()));
+        System.out.println();
+        System.out.println(yapionObject2);
+        System.out.println(yapionObject2.toJSONString());
+        System.out.println(YAPIONParser.parseJSON(yapionObject2.toJSONString()));
+        System.out.println(encodeBase64(yapionObject2.toString()));
+        System.out.println(encodeBase64(yapionObject2.toJSONString()));
+        System.out.println();
+        System.out.println(yapionObject3);
+        System.out.println(yapionObject3.toJSONString());
+        System.out.println(YAPIONParser.parseJSON(yapionObject3.toJSONString()));
+        System.out.println(encodeBase64(yapionObject3.toString()));
+        System.out.println(encodeBase64(yapionObject3.toJSONString()));
+        System.out.println();
+        System.out.println(yapionObject4);
+        System.out.println(yapionObject4.toJSONString());
+        System.out.println(YAPIONParser.parseJSON(yapionObject4.toJSONString()));
+        System.out.println(encodeBase64(yapionObject4.toString()));
+        System.out.println(encodeBase64(yapionObject4.toJSONString()));
+        System.out.println();
+        System.out.println(yapionObject5);
+        System.out.println(yapionObject5.toJSONString());
+        System.out.println(YAPIONParser.parseJSON(yapionObject5.toJSONString()));
+        System.out.println(encodeBase64(yapionObject5.toString()));
+        System.out.println(encodeBase64(yapionObject5.toJSONString()));
 
         System.out.println(decodeBase64("e0B0eXBlKH"));
         System.out.println(encodeBase64("{@type("));
