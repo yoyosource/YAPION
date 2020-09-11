@@ -215,11 +215,11 @@ task projectJavaDoc {
 
         println("Should this change be comitted? [Y/n]")
         if (!"Yy".contains(((char)System.in.read()).toString())) {
-            println("Use 'git commit -m \"Documentation update\"' to manually commit this change.'")
+            println("Use 'git commit -am \"Documentation update\"' to manually commit this change.'")
             return
         }
         println("Creating new commit with name 'Documentation update'")
-        shell("git commit -m \"Documentation update\"")
+        shell("git commit -am \"Documentation update\"")
 
         while (System.in.available() > 0) System.in.read()
 
