@@ -27,8 +27,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":42,"i7":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -158,7 +158,7 @@ extends java.lang.Object</pre>
 </a>
 <h3>Method Summary</h3>
 <div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="tableTab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
+<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="tableTab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t6" class="tableTab" onclick="show(32);">Deprecated Methods</button></div>
 <div id="memberSummary_tabpanel" role="tabpanel">
 <table aria-labelledby="t0">
 <tr>
@@ -206,11 +206,20 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor" id="i5">
 <td class="colFirst"><code>java.lang.Object</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(yapion.hierarchy.YAPIONAny,yapion.serializing.YAPIONDeserializer)">parse</a></span>&#8203;(<a href="../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny,
-     <a href="YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(yapion.hierarchy.YAPIONAny)">parse</a></span>&#8203;(<a href="../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i6">
+<td class="colFirst"><code>java.lang.Object</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(yapion.hierarchy.YAPIONAny,yapion.serializing.YAPIONDeserializer)">parse</a></span>&#8203;(<a href="../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny,
+     <a href="YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">since 0.12.0</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setCacheSize(int)">setCacheSize</a></span>&#8203;(int&nbsp;cacheSize)</code></th>
 <td class="colLast">
@@ -338,8 +347,21 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>parse</h4>
-<pre class="methodSignature">public&nbsp;java.lang.Object&nbsp;parse&#8203;(<a href="../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny,
+<pre class="methodSignature">@Deprecated
+public&nbsp;java.lang.Object&nbsp;parse&#8203;(<a href="../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny,
                               <a href="YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">since 0.12.0</div>
+</div>
+</li>
+</ul>
+<a id="parse(yapion.hierarchy.YAPIONAny)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>parse</h4>
+<pre class="methodSignature">public&nbsp;java.lang.Object&nbsp;parse&#8203;(<a href="../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny)</pre>
 </li>
 </ul>
 <a id="parse()">
