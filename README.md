@@ -51,7 +51,6 @@ dependencies {
 * [L] License
 
 ## Tasks
-- More internal Java Types supported?
 - More efficient JSON Parser (eliminate the Recursion)
 - More efficient JSON Mapper (eliminate the Recursion?)
 
