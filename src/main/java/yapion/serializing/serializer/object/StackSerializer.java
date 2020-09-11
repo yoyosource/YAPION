@@ -36,7 +36,7 @@ public class StackSerializer implements InternalSerializer<Stack<?>> {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         for (int i = 0; i < object.size(); i++) {
-            yapionArray.add(yapionSerializer.parse(object.get(i), yapionSerializer));
+            yapionArray.add(yapionSerializer.parse(object.get(i)));
         }
         return yapionObject;
     }
@@ -48,7 +48,7 @@ public class StackSerializer implements InternalSerializer<Stack<?>> {
         YAPIONArray yapionArray = yapionObject.getArray("values");
         Stack<Object> stack = new Stack<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            stack.push(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
+            stack.push(yapionDeserializer.parse(yapionArray.get(i)));
         }
         return stack;
     }

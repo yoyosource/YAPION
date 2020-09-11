@@ -67,8 +67,16 @@ public final class YAPIONSerializer {
         this.pointerMap = yapionSerializer.pointerMap;
     }
 
-    @SuppressWarnings({"java:S3740"})
+    /**
+     * @deprecated since 0.12.0
+     */
+    @Deprecated
     public YAPIONAny parse(Object object, YAPIONSerializer yapionSerializer) {
+        return parse(object);
+    }
+
+    @SuppressWarnings({"java:S3740"})
+    public YAPIONAny parse(Object object) {
         if (pointerMap.containsKey(object)) {
             return pointerMap.get(object);
         }
@@ -79,7 +87,7 @@ public final class YAPIONSerializer {
             YAPIONArray yapionArray = new YAPIONArray();
             Object[] objects = (Object[])object;
             for (Object o : objects) {
-                yapionArray.add(parse(o, this));
+                yapionArray.add(parse(o));
             }
             return yapionArray;
         } else {
@@ -91,13 +99,13 @@ public final class YAPIONSerializer {
             if (serializer != null && !serializer.empty()) {
                 return serializer.serialize(object, this);
             } else {
-                return new YAPIONSerializer(object, yapionSerializer).parse().getYAPIONObject();
+                return new YAPIONSerializer(object, this).parse().getYAPIONObject();
             }
         }
     }
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
-    private YAPIONSerializer parse(Object object) {
+    private YAPIONSerializer parseObject(Object object) {
         if (!stateManager.is(object).save) {
             return this;
         }
@@ -150,7 +158,7 @@ public final class YAPIONSerializer {
                 continue;
             }
 
-            YAPIONAny yapionAny = parse(fieldObject, this);
+            YAPIONAny yapionAny = parse(fieldObject);
             if (yapionAny == null) {
                 continue;
             }
@@ -166,7 +174,7 @@ public final class YAPIONSerializer {
      * Parses the Object to the YAPIONObject.
      */
     public YAPIONSerializer parse() {
-        return parse(object);
+        return parseObject(object);
     }
 
     /**

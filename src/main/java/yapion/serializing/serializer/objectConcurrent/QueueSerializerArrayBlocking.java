@@ -36,7 +36,7 @@ public class QueueSerializerArrayBlocking implements InternalSerializer<ArrayBlo
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator<?> iterator = object.iterator();
         while (iterator.hasNext()) {
-            yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
+            yapionArray.add(yapionSerializer.parse(iterator.next()));
         }
         return yapionObject;
     }
@@ -47,7 +47,7 @@ public class QueueSerializerArrayBlocking implements InternalSerializer<ArrayBlo
         YAPIONArray yapionArray = yapionObject.getArray("values");
         ArrayBlockingQueue<Object> queue = new ArrayBlockingQueue<>(yapionArray.length());
         for (int i = 0; i < yapionArray.length(); i++) {
-            queue.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
+            queue.add(yapionDeserializer.parse(yapionArray.get(i)));
         }
         return queue;
     }

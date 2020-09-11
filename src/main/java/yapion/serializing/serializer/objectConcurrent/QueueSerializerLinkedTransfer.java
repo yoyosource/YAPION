@@ -36,7 +36,7 @@ public class QueueSerializerLinkedTransfer implements InternalSerializer<LinkedT
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator<?> iterator = object.iterator();
         while (iterator.hasNext()) {
-            yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
+            yapionArray.add(yapionSerializer.parse(iterator.next()));
         }
         return yapionObject;
     }
@@ -47,7 +47,7 @@ public class QueueSerializerLinkedTransfer implements InternalSerializer<LinkedT
         YAPIONArray yapionArray = yapionObject.getArray("values");
         LinkedTransferQueue<Object> queue = new LinkedTransferQueue<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            queue.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
+            queue.add(yapionDeserializer.parse(yapionArray.get(i)));
         }
         return queue;
     }

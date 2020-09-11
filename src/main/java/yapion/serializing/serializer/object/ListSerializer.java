@@ -40,7 +40,7 @@ public class ListSerializer implements InternalSerializer<List> {
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator iterator = object.iterator();
         while (iterator.hasNext()) {
-            yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
+            yapionArray.add(yapionSerializer.parse(iterator.next()));
         }
         return yapionObject;
     }
@@ -50,7 +50,7 @@ public class ListSerializer implements InternalSerializer<List> {
         YAPIONArray yapionArray = ((YAPIONObject) yapionAny).getArray("values");
         List<Object> list = new ArrayList<>(yapionArray.length());
         for (int i = 0; i < yapionArray.length(); i++) {
-            list.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
+            list.add(yapionDeserializer.parse(yapionArray.get(i)));
         }
         return list;
     }

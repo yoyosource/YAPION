@@ -37,7 +37,7 @@ public class QueueSerializerLinkedBlocking implements InternalSerializer<LinkedB
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator<?> iterator = object.iterator();
         while (iterator.hasNext()) {
-            yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
+            yapionArray.add(yapionSerializer.parse(iterator.next()));
         }
         return yapionObject;
     }
@@ -48,7 +48,7 @@ public class QueueSerializerLinkedBlocking implements InternalSerializer<LinkedB
         YAPIONArray yapionArray = yapionObject.getArray("values");
         LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            queue.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
+            queue.add(yapionDeserializer.parse(yapionArray.get(i)));
         }
         return queue;
     }

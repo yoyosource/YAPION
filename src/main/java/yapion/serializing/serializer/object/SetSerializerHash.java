@@ -39,7 +39,7 @@ public class SetSerializerHash implements InternalSerializer<HashSet> {
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator iterator = object.iterator();
         while (iterator.hasNext()) {
-            yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
+            yapionArray.add(yapionSerializer.parse(iterator.next()));
         }
         return yapionObject;
     }
@@ -49,7 +49,7 @@ public class SetSerializerHash implements InternalSerializer<HashSet> {
         YAPIONArray yapionArray = ((YAPIONObject) yapionAny).getArray("values");
         HashSet<Object> set = new HashSet<>(yapionArray.length());
         for (int i = 0; i < yapionArray.length(); i++) {
-            set.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
+            set.add(yapionDeserializer.parse(yapionArray.get(i)));
         }
         return set;
     }

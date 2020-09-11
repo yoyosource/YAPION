@@ -33,7 +33,7 @@ public class OptionalSerializer implements InternalSerializer<Optional<?>> {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>("java.util.Optional")));
         yapionObject.add(new YAPIONVariable("present", new YAPIONValue<>(object.isPresent())));
-        object.ifPresent(o -> yapionObject.add(new YAPIONVariable("value", yapionSerializer.parse(o, yapionSerializer))));
+        object.ifPresent(o -> yapionObject.add(new YAPIONVariable("value", yapionSerializer.parse(o))));
         return yapionObject;
     }
 
@@ -42,7 +42,7 @@ public class OptionalSerializer implements InternalSerializer<Optional<?>> {
     public Optional<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONObject yapionObject = (YAPIONObject) yapionAny;
         if (yapionObject.getValue("present", true).get()) {
-            return Optional.ofNullable(yapionDeserializer.parse(yapionObject.getVariable("value").getValue(), yapionDeserializer));
+            return Optional.ofNullable(yapionDeserializer.parse(yapionObject.getVariable("value").getValue()));
         }
         return Optional.empty();
     }

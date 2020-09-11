@@ -37,7 +37,7 @@ public class TableSerializerHash implements InternalSerializer<Hashtable<?, ?>> 
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
         for (Map.Entry<?, ?> entry : object.entrySet()) {
-            yapionMap.add(yapionSerializer.parse(entry.getKey(), yapionSerializer), yapionSerializer.parse(entry.getValue(), yapionSerializer));
+            yapionMap.add(yapionSerializer.parse(entry.getKey()), yapionSerializer.parse(entry.getValue()));
         }
         return yapionObject;
     }
@@ -48,7 +48,7 @@ public class TableSerializerHash implements InternalSerializer<Hashtable<?, ?>> 
         YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
         Hashtable<Object, Object> table = new Hashtable<>();
         for (YAPIONAny key : yapionMap.getKeys()) {
-            table.put(yapionDeserializer.parse(key, yapionDeserializer), yapionDeserializer.parse(yapionMap.get(key), yapionDeserializer));
+            table.put(yapionDeserializer.parse(key), yapionDeserializer.parse(yapionMap.get(key)));
         }
         return table;
     }

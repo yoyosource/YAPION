@@ -1,6 +1,7 @@
 package yapion.serializing.api;
 
-import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.types.*;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
@@ -8,8 +9,57 @@ import java.util.Set;
 
 public interface SerializerSetInterface<T extends Set<?>> {
 
+    /**
+     * Describes the Class type this Serializer should be used for
+     * by the {@link YAPIONSerializer} and {@link YAPIONDeserializer}
+     * this Serializer will be used preferably as it should suite
+     * the Class better than the internal fallback.
+     *
+     * @return the Class Type this Serializer is for
+     */
     Class<T> type();
+
+    /**
+     * This method is used to serialize the type defined by
+     * {@link #type()}. You will get the object to serialize
+     * as well as the current {@link YAPIONSerializer} designated to
+     * this serialization. This serializer should be used to
+     * serialize any parts of the {@link Object} that are not
+     * primitive types. So anything that cannot be represented
+     * by {@link YAPIONValue}. To use the serializer call
+     * {@link YAPIONSerializer#parse(Object)}. You will need
+     * to provide the Object and the YAPIONSerializer will
+     * provide you with an {@link YAPIONAny}. This is generic
+     * and can be an {@link YAPIONObject}, {@link YAPIONMap},
+     * {@link YAPIONArray}, {@link YAPIONPointer} or
+     * {@link YAPIONValue}. So you should be able to handle any
+     * thing you can get or just handle it generically with
+     * {@link YAPIONAny} to be safe.
+     *
+     * @param object the {@link Object} to serialize
+     * @param yapionSerializer the current YAPIONSerializer
+     * @return the serialized version of the inputted Object
+     */
     YAPIONArray serialize(T object, YAPIONSerializer yapionSerializer);
+
+    /**
+     * This method is used to deserialize the type defined
+     * by {@link #type()}. You will get the specified
+     * {@link YAPIONArray} as well as the current {@link YAPIONDeserializer} designed to
+     * this deserialization. This deserializer should be used to
+     * deserialize any parts of the {@link YAPIONArray} that are not
+     * {@link YAPIONValue} types. So anything that cannot be
+     * represented by {@link YAPIONValue}. To use the serializer
+     * call {@link YAPIONDeserializer#parse(YAPIONAny)}. You will
+     * need to provide the {@link YAPIONAny} and the YAPIONDeserializer
+     * will provide you with an {@link Object}. This is generic
+     * and can be any Object. So you should be able to handle
+     * any thing generically.
+     *
+     * @param yapionArray The {@link YAPIONArray} to deserialize
+     * @param yapionDeserializer the current YAPIONDeserializer
+     * @return the deserialized version of the inputted {@link YAPIONArray}
+     */
     T deserialize(YAPIONArray yapionArray, YAPIONDeserializer yapionDeserializer);
 
 }

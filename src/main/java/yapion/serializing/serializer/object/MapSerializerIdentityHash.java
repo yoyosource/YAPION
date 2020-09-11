@@ -37,7 +37,7 @@ public class MapSerializerIdentityHash implements InternalSerializer<IdentityHas
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
         for (Map.Entry<?, ?> entry : object.entrySet()) {
-            yapionMap.add(yapionSerializer.parse(entry.getKey(), yapionSerializer), yapionSerializer.parse(entry.getValue(), yapionSerializer));
+            yapionMap.add(yapionSerializer.parse(entry.getKey()), yapionSerializer.parse(entry.getValue()));
         }
         return yapionObject;
     }
@@ -47,7 +47,7 @@ public class MapSerializerIdentityHash implements InternalSerializer<IdentityHas
         YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
         IdentityHashMap<Object, Object> map = new IdentityHashMap<>();
         for (YAPIONAny key : yapionMap.getKeys()) {
-            map.put(yapionDeserializer.parse(key, yapionDeserializer), yapionDeserializer.parse(yapionMap.get(key), yapionDeserializer));
+            map.put(yapionDeserializer.parse(key), yapionDeserializer.parse(yapionMap.get(key)));
         }
         return map;
     }

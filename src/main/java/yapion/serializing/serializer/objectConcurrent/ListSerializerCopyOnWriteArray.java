@@ -34,7 +34,7 @@ public class ListSerializerCopyOnWriteArray implements InternalSerializer<CopyOn
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator iterator = object.iterator();
         while (iterator.hasNext()) {
-            yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
+            yapionArray.add(yapionSerializer.parse(iterator.next()));
         }
         return yapionObject;
     }
@@ -44,7 +44,7 @@ public class ListSerializerCopyOnWriteArray implements InternalSerializer<CopyOn
         YAPIONArray yapionArray = ((YAPIONObject) yapionAny).getArray("values");
         CopyOnWriteArrayList<Object> list = new CopyOnWriteArrayList<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            list.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
+            list.add(yapionDeserializer.parse(yapionArray.get(i)));
         }
         return list;
     }

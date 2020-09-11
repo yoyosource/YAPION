@@ -34,7 +34,7 @@ public class DequeSerializerConcurrentLinked implements InternalSerializer<Concu
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator<?> iterator = object.iterator();
         while (iterator.hasNext()) {
-            yapionArray.add(yapionSerializer.parse(iterator.next(), yapionSerializer));
+            yapionArray.add(yapionSerializer.parse(iterator.next()));
         }
         return yapionObject;
     }
@@ -45,7 +45,7 @@ public class DequeSerializerConcurrentLinked implements InternalSerializer<Concu
         YAPIONArray yapionArray = yapionObject.getArray("values");
         ConcurrentLinkedDeque<Object> deque = new ConcurrentLinkedDeque<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            deque.add(yapionDeserializer.parse(yapionArray.get(i), yapionDeserializer));
+            deque.add(yapionDeserializer.parse(yapionArray.get(i)));
         }
         return deque;
     }

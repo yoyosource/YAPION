@@ -109,8 +109,16 @@ public final class YAPIONDeserializer {
         this.pointerMap = yapionDeserializer.pointerMap;
     }
 
-    @SuppressWarnings({"java:S3740"})
+    /**
+     * @deprecated since 0.12.0
+     */
+    @Deprecated
     public Object parse(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+        return parse(yapionAny);
+    }
+
+    @SuppressWarnings({"java:S3740"})
+    public Object parse(YAPIONAny yapionAny) {
         if (yapionAny instanceof YAPIONPointer) {
             Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", yapionAny);
             if (!objectOptional.isPresent()) {
@@ -128,7 +136,7 @@ public final class YAPIONDeserializer {
             return ((YAPIONValue) yapionAny).get();
         }
         if (yapionAny instanceof YAPIONObject) {
-            return new YAPIONDeserializer((YAPIONObject) yapionAny, yapionDeserializer).parse().getObject();
+            return new YAPIONDeserializer((YAPIONObject) yapionAny, this).parse().getObject();
         }
         if (yapionAny instanceof YAPIONArray) {
             return parseArray((YAPIONArray) yapionAny);
@@ -187,7 +195,7 @@ public final class YAPIONDeserializer {
     }
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
-    private YAPIONDeserializer parse(YAPIONObject yapionObject) {
+    private YAPIONDeserializer parseObject(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>)yapionObject.getVariable(SerializeManager.TYPE_IDENTIFIER).getValue()).get();
         Object o = serialize(yapionObject, type);
         if (o != null) {
@@ -328,7 +336,7 @@ public final class YAPIONDeserializer {
      * Parses the YAPIONObject to the Object.
      */
     public YAPIONDeserializer parse() {
-        return parse(yapionObject);
+        return parseObject(yapionObject);
     }
 
     /**
