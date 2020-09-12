@@ -115,12 +115,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../../InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;java.util.HashSet&gt;</code></dd>
+<dd><code><a href="../../InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;java.util.HashSet&lt;?&gt;&gt;</code></dd>
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">SetSerializerHash</span>
 extends java.lang.Object
-implements <a href="../../InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;java.util.HashSet&gt;</pre>
+implements <a href="../../InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;java.util.HashSet&lt;?&gt;&gt;</pre>
 </li>
 </ul>
 </div>
@@ -170,14 +170,14 @@ implements <a href="../../InternalSerializer.html" title="interface in yapion.se
 </tr>
 <tbody>
 <tr class="altColor" id="i0">
-<td class="colFirst"><code>java.util.HashSet</code></td>
+<td class="colFirst"><code>java.util.HashSet&lt;?&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deserialize(yapion.hierarchy.YAPIONAny,yapion.serializing.YAPIONDeserializer)">deserialize</a></span>&#8203;(<a href="../../../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny,
            <a href="../../YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code><a href="../../../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serialize(java.util.HashSet,yapion.serializing.YAPIONSerializer)">serialize</a></span>&#8203;(java.util.HashSet&nbsp;object,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serialize(java.util.HashSet,yapion.serializing.YAPIONSerializer)">serialize</a></span>&#8203;(java.util.HashSet&lt;?&gt;&nbsp;object,
          <a href="../../YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a>&nbsp;yapionSerializer)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -248,7 +248,7 @@ implements <a href="../../InternalSerializer.html" title="interface in yapion.se
 <pre class="methodSignature">public&nbsp;java.lang.String&nbsp;type()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../InternalSerializer.html#type()">type</a></code>&nbsp;in interface&nbsp;<code><a href="../../InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;java.util.HashSet&gt;</code></dd>
+<dd><code><a href="../../InternalSerializer.html#type()">type</a></code>&nbsp;in interface&nbsp;<code><a href="../../InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;java.util.HashSet&lt;?&gt;&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -258,11 +258,11 @@ implements <a href="../../InternalSerializer.html" title="interface in yapion.se
 <ul class="blockList">
 <li class="blockList">
 <h4>serialize</h4>
-<pre class="methodSignature">public&nbsp;<a href="../../../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;serialize&#8203;(java.util.HashSet&nbsp;object,
+<pre class="methodSignature">public&nbsp;<a href="../../../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;serialize&#8203;(java.util.HashSet&lt;?&gt;&nbsp;object,
                            <a href="../../YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a>&nbsp;yapionSerializer)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../InternalSerializer.html#serialize(T,yapion.serializing.YAPIONSerializer)">serialize</a></code>&nbsp;in interface&nbsp;<code><a href="../../InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;java.util.HashSet&gt;</code></dd>
+<dd><code><a href="../../InternalSerializer.html#serialize(T,yapion.serializing.YAPIONSerializer)">serialize</a></code>&nbsp;in interface&nbsp;<code><a href="../../InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;java.util.HashSet&lt;?&gt;&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -272,11 +272,11 @@ implements <a href="../../InternalSerializer.html" title="interface in yapion.se
 <ul class="blockListLast">
 <li class="blockList">
 <h4>deserialize</h4>
-<pre class="methodSignature">public&nbsp;java.util.HashSet&nbsp;deserialize&#8203;(<a href="../../../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny,
-                                     <a href="../../YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</pre>
+<pre class="methodSignature">public&nbsp;java.util.HashSet&lt;?&gt;&nbsp;deserialize&#8203;(<a href="../../../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny,
+                                        <a href="../../YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../InternalSerializer.html#deserialize(yapion.hierarchy.YAPIONAny,yapion.serializing.YAPIONDeserializer)">deserialize</a></code>&nbsp;in interface&nbsp;<code><a href="../../InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;java.util.HashSet&gt;</code></dd>
+<dd><code><a href="../../InternalSerializer.html#deserialize(yapion.hierarchy.YAPIONAny,yapion.serializing.YAPIONDeserializer)">deserialize</a></code>&nbsp;in interface&nbsp;<code><a href="../../InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;java.util.HashSet&lt;?&gt;&gt;</code></dd>
 </dl>
 </li>
 </ul>
