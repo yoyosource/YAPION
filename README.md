@@ -51,6 +51,7 @@ dependencies {
 * [L] License
 
 ## Tasks
+- Fix primitive Array serialization.
 - More efficient JSON Parser (eliminate the Recursion)
 - More efficient JSON Mapper (eliminate the Recursion?)
 
