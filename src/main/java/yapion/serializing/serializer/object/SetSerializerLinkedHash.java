@@ -22,9 +22,8 @@ import java.util.LinkedHashSet;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SuppressWarnings({"java:S3740"})
 @SerializerImplementation
-public class SetSerializerLinkedHash implements InternalSerializer<LinkedHashSet> {
+public class SetSerializerLinkedHash implements InternalSerializer<LinkedHashSet<?>> {
 
     @Override
     public String type() {
@@ -32,12 +31,12 @@ public class SetSerializerLinkedHash implements InternalSerializer<LinkedHashSet
     }
 
     @Override
-    public YAPIONAny serialize(LinkedHashSet object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAny serialize(LinkedHashSet<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
-        Iterator iterator = object.iterator();
+        Iterator<?> iterator = object.iterator();
         while (iterator.hasNext()) {
             yapionArray.add(yapionSerializer.parse(iterator.next()));
         }
@@ -45,7 +44,7 @@ public class SetSerializerLinkedHash implements InternalSerializer<LinkedHashSet
     }
 
     @Override
-    public LinkedHashSet deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public LinkedHashSet<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONArray yapionArray = ((YAPIONObject) yapionAny).getArray("values");
         LinkedHashSet<Object> set = new LinkedHashSet<>(yapionArray.length());
         for (int i = 0; i < yapionArray.length(); i++) {

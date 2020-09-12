@@ -14,8 +14,6 @@ import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.Iterator;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 @YAPIONSaveExclude(context = "*")

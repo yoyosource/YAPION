@@ -22,9 +22,8 @@ import java.util.TreeMap;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SuppressWarnings({"java:S3740"})
 @SerializerImplementation
-public class MapSerializerTree implements InternalSerializer<TreeMap> {
+public class MapSerializerTree implements InternalSerializer<TreeMap<?, ?>> {
 
     @Override
     public String type() {
@@ -32,20 +31,19 @@ public class MapSerializerTree implements InternalSerializer<TreeMap> {
     }
 
     @Override
-    public YAPIONAny serialize(TreeMap object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAny serialize(TreeMap<?, ?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
-        for (Object obj : object.entrySet()) {
-            Map.Entry entry = (Map.Entry)obj;
+        for (Map.Entry<?, ?> entry : object.entrySet()) {
             yapionMap.add(yapionSerializer.parse(entry.getKey()), yapionSerializer.parse(entry.getValue()));
         }
         return yapionObject;
     }
 
     @Override
-    public TreeMap deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public TreeMap<?, ?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
         YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
         TreeMap<Object, Object> map = new TreeMap<>();
         for (YAPIONAny key : yapionMap.getKeys()) {

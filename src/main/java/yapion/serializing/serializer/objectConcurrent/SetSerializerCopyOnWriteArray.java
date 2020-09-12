@@ -13,9 +13,7 @@ import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.serializer.SerializerImplementation;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @YAPIONSaveExclude(context = "*")
@@ -34,7 +32,7 @@ public class SetSerializerCopyOnWriteArray implements InternalSerializer<CopyOnW
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
-        Iterator iterator = object.iterator();
+        Iterator<?> iterator = object.iterator();
         while (iterator.hasNext()) {
             yapionArray.add(yapionSerializer.parse(iterator.next()));
         }

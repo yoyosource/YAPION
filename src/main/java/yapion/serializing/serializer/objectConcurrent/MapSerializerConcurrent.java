@@ -13,7 +13,6 @@ import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.serializer.SerializerImplementation;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -34,8 +33,7 @@ public class MapSerializerConcurrent implements InternalSerializer<ConcurrentMap
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
-        for (Object obj : object.entrySet()) {
-            Map.Entry entry = (Map.Entry)obj;
+        for (Map.Entry<?, ?> entry : object.entrySet()) {
             yapionMap.add(yapionSerializer.parse(entry.getKey()), yapionSerializer.parse(entry.getValue()));
         }
         return yapionObject;
