@@ -59,6 +59,11 @@ public final class YAPIONVariable implements Output {
         return "\"" + name + "\":" + value.toJSONString();
     }
 
+    @Override
+    public String toLossyJSONString() {
+        return "\"" + name + "\":" + value.toLossyJSONString();
+    }
+
     public void toOutputStream(OutputStream outputStream) throws IOException {
         if (name.startsWith(" ")) outputStream.write("\\".getBytes(StandardCharsets.UTF_8));
         outputStream.write(name.replaceAll(PATTERN, REPLACEMENT).getBytes(StandardCharsets.UTF_8));

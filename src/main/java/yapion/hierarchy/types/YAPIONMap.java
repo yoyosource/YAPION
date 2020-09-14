@@ -90,6 +90,24 @@ public class YAPIONMap extends YAPIONAny {
     }
 
     @Override
+    public String toLossyJSONString() {
+        YAPIONObject yapionObject = new YAPIONObject();
+        YAPIONArray mapping = new YAPIONArray();
+        yapionObject.add(JSONMapper.MAP_IDENTIFIER, mapping);
+
+        long id = 0;
+        for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
+            String id1 = String.format("%01X", id++);
+            String id2 = String.format("%01X", id++);
+
+            mapping.add(new YAPIONValue<>(id1 + ":" + id2));
+            yapionObject.add("#" + id1, entry.getKey());
+            yapionObject.add("#" + id2, entry.getValue());
+        }
+        return yapionObject.toLossyJSONString();
+    }
+
+    @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
         long id = 0;
         outputStream.write("<".getBytes(StandardCharsets.UTF_8));

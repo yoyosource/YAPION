@@ -73,6 +73,11 @@ public class YAPIONArray extends YAPIONAny {
     }
 
     @Override
+    public String toLossyJSONString() {
+        return "[" + array.stream().map(YAPIONAny::toLossyJSONString).collect(Collectors.joining(",")) + "]";
+    }
+
+    @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
         outputStream.write("[".getBytes(StandardCharsets.UTF_8));
         for (int i = 0; i < array.size(); i++) {

@@ -58,6 +58,11 @@ public class YAPIONObject extends YAPIONAny {
     }
 
     @Override
+    public String toLossyJSONString() {
+        return "{" + variables.stream().map(YAPIONVariable::toLossyJSONString).collect(Collectors.joining(",")) + "}";
+    }
+
+    @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
         outputStream.write("{".getBytes(StandardCharsets.UTF_8));
         for (YAPIONVariable variable : variables) {

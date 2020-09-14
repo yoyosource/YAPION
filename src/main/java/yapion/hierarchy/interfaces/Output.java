@@ -9,6 +9,8 @@ public interface Output {
 
     String toJSONString();
 
+    String toLossyJSONString();
+
     void toOutputStream(OutputStream outputStream) throws IOException;
 
 }

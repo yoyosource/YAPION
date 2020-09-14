@@ -15,6 +15,7 @@ import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.utils.ModifierUtils;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -83,11 +84,10 @@ public final class YAPIONSerializer {
         if (object == null) {
             return new YAPIONValue<>(null);
         }
-        if (object.getClass().getTypeName().endsWith("[]")) {
+        if (object.getClass().isArray()) {
             YAPIONArray yapionArray = new YAPIONArray();
-            Object[] objects = (Object[])object;
-            for (Object o : objects) {
-                yapionArray.add(parse(o));
+            for (int i = 0; i < Array.getLength(object); i++) {
+                yapionArray.add(parse(Array.get(object, i)));
             }
             return yapionArray;
         } else {

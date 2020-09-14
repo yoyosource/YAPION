@@ -5,12 +5,24 @@ import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.*;
 import yapion.utils.ReflectionsUtils;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 public class JSONMapper {
 
     public static final String POINTER_IDENTIFIER = "@pointer";
     public static final String MAP_IDENTIFIER = "@mapping";
+
+    public static final String BYTE_IDENTIFIER = "@byte";
+    public static final String SHORT_IDENTIFIER = "@short";
+    public static final String CHAR_IDENTIFIER = "@char";
+    public static final String INT_IDENTIFIER = "@int";
+    public static final String FLOAT_IDENTIFIER = "@float";
+    public static final String LONG_IDENTIFIER = "@long";
+    public static final String DOUBLE_IDENTIFIER = "@double";
+    public static final String BIG_INTEGER_IDENTIFIER = "@bint";
+    public static final String BIG_DECIMAL_IDENTIFIER = "@bdecimal";
 
     private YAPIONObject json;
     private YAPIONObject result = null;
@@ -82,6 +94,35 @@ public class JSONMapper {
         if (yapionObject.getArray(MAP_IDENTIFIER) != null) {
             return mapMap(yapionObject);
         }
+
+        if (yapionObject.getValue(BYTE_IDENTIFIER) != null) {
+            return mapByteValue(yapionObject);
+        }
+        if (yapionObject.getValue(SHORT_IDENTIFIER) != null) {
+            return mapShortValue(yapionObject);
+        }
+        if (yapionObject.getValue(CHAR_IDENTIFIER) != null) {
+            return mapCharValue(yapionObject);
+        }
+        if (yapionObject.getValue(INT_IDENTIFIER) != null) {
+            return mapIntValue(yapionObject);
+        }
+        if (yapionObject.getValue(FLOAT_IDENTIFIER) != null) {
+            return mapFloatValue(yapionObject);
+        }
+        if (yapionObject.getValue(LONG_IDENTIFIER) != null) {
+            return mapLongValue(yapionObject);
+        }
+        if (yapionObject.getValue(DOUBLE_IDENTIFIER) != null) {
+            return mapDoubleValue(yapionObject);
+        }
+        if (yapionObject.getValue(BIG_INTEGER_IDENTIFIER) != null) {
+            return mapBigIntegerValue(yapionObject);
+        }
+        if (yapionObject.getValue(BIG_DECIMAL_IDENTIFIER) != null) {
+            return mapBigDecimalValue(yapionObject);
+        }
+
         return mapObject(yapionObject);
     }
 
@@ -107,6 +148,42 @@ public class JSONMapper {
             yapionMap.add(key, value);
         }
         return yapionMap;
+    }
+
+    private YAPIONValue<Byte> mapByteValue(YAPIONObject yapionObject) {
+        return new YAPIONValue<>(((byte)(int)yapionObject.getValue(BYTE_IDENTIFIER).get()));
+    }
+
+    private YAPIONValue<Short> mapShortValue(YAPIONObject yapionObject) {
+        return new YAPIONValue<>(((short)(int)yapionObject.getValue(SHORT_IDENTIFIER).get()));
+    }
+
+    private YAPIONValue<Character> mapCharValue(YAPIONObject yapionObject) {
+        return new YAPIONValue<>(yapionObject.getValue(CHAR_IDENTIFIER, "").get().charAt(0));
+    }
+
+    private YAPIONValue<Integer> mapIntValue(YAPIONObject yapionObject) {
+        return new YAPIONValue<>(((int)yapionObject.getValue(INT_IDENTIFIER).get()));
+    }
+
+    private YAPIONValue<Float> mapFloatValue(YAPIONObject yapionObject) {
+        return new YAPIONValue<>(((float)(double)yapionObject.getValue(FLOAT_IDENTIFIER).get()));
+    }
+
+    private YAPIONValue<Long> mapLongValue(YAPIONObject yapionObject) {
+        return new YAPIONValue<>(((long)(int)yapionObject.getValue(LONG_IDENTIFIER).get()));
+    }
+
+    private YAPIONValue<Double> mapDoubleValue(YAPIONObject yapionObject) {
+        return new YAPIONValue<>(((double)yapionObject.getValue(DOUBLE_IDENTIFIER).get()));
+    }
+
+    private YAPIONValue<BigInteger> mapBigIntegerValue(YAPIONObject yapionObject) {
+        return new YAPIONValue<>(((BigInteger)yapionObject.getValue(BIG_INTEGER_IDENTIFIER).get()));
+    }
+
+    private YAPIONValue<BigDecimal> mapBigDecimalValue(YAPIONObject yapionObject) {
+        return new YAPIONValue<>(((BigDecimal)yapionObject.getValue(BIG_DECIMAL_IDENTIFIER).get()));
     }
 
 }

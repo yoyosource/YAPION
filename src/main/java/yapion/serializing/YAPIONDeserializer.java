@@ -145,45 +145,61 @@ public final class YAPIONDeserializer {
     }
 
     private Object parseArray(YAPIONArray yapionArray) {
+        if (yapionArray == null) return null;
         LinkedList<Integer> dimensions = new LinkedList<>();
         YAPIONArray current = yapionArray;
         while (current != null) {
             dimensions.add(current.length());
-            if (dimensions.size() > 0) {
-                YAPIONAny yapionAny = current.get(0);
-                if (yapionAny instanceof YAPIONArray) {
-                    current = (YAPIONArray) yapionAny;
-                } else {
-                    current = null;
-                }
+            if (current.length() <= 0) {
+                break;
+            }
+            YAPIONAny yapionAny = current.get(0);
+            current = null;
+            if (yapionAny instanceof YAPIONArray) {
+                current = (YAPIONArray) yapionAny;
             }
         }
 
         int[] ints = new int[dimensions.size()];
         for (int i = 0; i < dimensions.size(); i++) {
-            ints[i] = dimensions.removeLast();
+            ints[i] = dimensions.removeFirst();
         }
 
-        while (arrayType.endsWith("[]")) {
+        while (arrayType.charAt(arrayType.length() - 1) == ']') {
             arrayType = arrayType.substring(0, arrayType.length() - 2);
         }
         Object array = null;
         try {
-            array = Array.newInstance(Class.forName(arrayType), ints);
-        } catch (ClassNotFoundException e) {
-            // Ignored
+            array = Array.newInstance(getClass(arrayType), ints);
         } catch (IllegalArgumentException e) {
             // Ignored
         } catch (NegativeArraySizeException e) {
             // Ignored
         }
-        if (array == null) return array;
-        // if (yapionArray == null) return array;
+        if (array == null) return null;
 
         for (int i = 0; i < yapionArray.length(); i++) {
             Array.set(array, i, parse(yapionArray.get(i), this));
         }
         return array;
+    }
+
+    public Class<?> getClass(String className) {
+        switch (className) {
+            case "boolean": return boolean.class;
+            case "byte":    return byte.class;
+            case "short":   return short.class;
+            case "int":     return int.class;
+            case "long":    return long.class;
+            case "char":    return char.class;
+            case "float":   return float.class;
+            case "double":  return double.class;
+        }
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            return Object.class;
+        }
     }
 
     private Object serialize(YAPIONAny yapionAny, String type) {

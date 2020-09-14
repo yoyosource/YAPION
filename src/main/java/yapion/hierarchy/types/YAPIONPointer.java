@@ -42,6 +42,11 @@ public class YAPIONPointer extends YAPIONAny {
     }
 
     @Override
+    public String toLossyJSONString() {
+        return "{\"" + JSONMapper.POINTER_IDENTIFIER + "\":\"" + getPointerIDString() + "\"}";
+    }
+
+    @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
         outputStream.write(toYAPIONString().getBytes(StandardCharsets.UTF_8));
     }

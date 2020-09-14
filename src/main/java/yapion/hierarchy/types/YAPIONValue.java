@@ -9,12 +9,15 @@ import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.Type;
 import yapion.hierarchy.YAPIONAny;
+import yapion.parser.JSONMapper;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static yapion.utils.ReferenceIDUtils.calc;
@@ -29,6 +32,19 @@ public class YAPIONValue<T> extends YAPIONAny {
             "java.lang.Float", "java.lang.Double", "java.math.BigDecimal",
             "java.lang.String", "java.lang.Character"
     };
+    private static final Map<String, String> typeIdentifier = new HashMap<>();
+
+    static {
+        typeIdentifier.put(allowedTypes[1], JSONMapper.BYTE_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[2], JSONMapper.SHORT_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[3], JSONMapper.INT_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[4], JSONMapper.LONG_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[5], JSONMapper.BIG_INTEGER_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[6], JSONMapper.FLOAT_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[7], JSONMapper.DOUBLE_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[8], JSONMapper.BIG_DECIMAL_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[10], JSONMapper.CHAR_IDENTIFIER);
+    }
 
     private final T value;
     String type;
@@ -96,6 +112,27 @@ public class YAPIONValue<T> extends YAPIONAny {
 
     @Override
     public String toJSONString() {
+        if (value instanceof String) {
+            return "\"" + ((String) value).replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
+        }
+        if (value instanceof Character) {
+            YAPIONObject yapionObject = new YAPIONObject();
+            yapionObject.add(typeIdentifier.get(type), new YAPIONValue<>(value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")));
+            return yapionObject.toLossyJSONString();
+        }
+        if (value == null) {
+            return "null";
+        }
+        if (typeIdentifier.containsKey(type)) {
+            YAPIONObject yapionObject = new YAPIONObject();
+            yapionObject.add(typeIdentifier.get(type), this);
+            return yapionObject.toLossyJSONString();
+        }
+        return value.toString();
+    }
+
+    @Override
+    public String toLossyJSONString() {
         if (value instanceof String) {
             return "\"" + ((String) value).replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
         }
