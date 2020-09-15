@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -106,7 +106,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
+<li><a href="typegroups/YAPIONAnyClosure.html" title="class in yapion.hierarchy.typegroups">yapion.hierarchy.typegroups.YAPIONAnyClosure</a></li>
+<li>
+<ul class="inheritance">
 <li>yapion.hierarchy.YAPIONVariable</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -115,12 +120,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a></code></dd>
+<dd><code><a href="interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a></code>, <code><a href="interfaces/YAPIONReference.html" title="interface in yapion.hierarchy.interfaces">YAPIONReference</a></code></dd>
 </dl>
 <hr>
 <pre>public final class <span class="typeNameLabel">YAPIONVariable</span>
-extends java.lang.Object
-implements <a href="interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a></pre>
+extends <a href="typegroups/YAPIONAnyClosure.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyClosure</a></pre>
 </li>
 </ul>
 </div>
@@ -143,8 +147,8 @@ implements <a href="interfaces/Output.html" title="interface in yapion.hierarchy
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,yapion.hierarchy.YAPIONAny)">YAPIONVariable</a></span>&#8203;(java.lang.String&nbsp;name,
-              <a href="YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;value)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,yapion.hierarchy.typegroups.YAPIONAnyType)">YAPIONVariable</a></span>&#8203;(java.lang.String&nbsp;name,
+              <a href="typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -181,7 +185,7 @@ implements <a href="interfaces/Output.html" title="interface in yapion.hierarchy
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i2">
-<td class="colFirst"><code><a href="YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a></code></td>
+<td class="colFirst"><code><a href="typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getValue()">getValue</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -201,16 +205,21 @@ implements <a href="interfaces/Output.html" title="interface in yapion.hierarchy
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i6">
+<td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toLossyJSONString()">toLossyJSONString</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toOutputStream(java.io.OutputStream)">toOutputStream</a></span>&#8203;(java.io.OutputStream&nbsp;outputStream)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr class="altColor" id="i8">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i8">
+<tr class="rowColor" id="i9">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toYAPIONString()">toYAPIONString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -242,14 +251,14 @@ implements <a href="interfaces/Output.html" title="interface in yapion.hierarchy
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(java.lang.String,yapion.hierarchy.YAPIONAny)">
+<a id="&lt;init&gt;(java.lang.String,yapion.hierarchy.typegroups.YAPIONAnyType)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>YAPIONVariable</h4>
 <pre>public&nbsp;YAPIONVariable&#8203;(java.lang.String&nbsp;name,
-                      <a href="YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;value)</pre>
+                      <a href="typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;value)</pre>
 </li>
 </ul>
 </li>
@@ -277,7 +286,7 @@ implements <a href="interfaces/Output.html" title="interface in yapion.hierarchy
 <ul class="blockList">
 <li class="blockList">
 <h4>getValue</h4>
-<pre class="methodSignature">public&nbsp;<a href="YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;getValue()</pre>
+<pre class="methodSignature">public&nbsp;<a href="typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;getValue()</pre>
 </li>
 </ul>
 <a id="referenceValue()">
@@ -309,10 +318,6 @@ implements <a href="interfaces/Output.html" title="interface in yapion.hierarchy
 <li class="blockList">
 <h4>toYAPIONString</h4>
 <pre class="methodSignature">public&nbsp;java.lang.String&nbsp;toYAPIONString()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="interfaces/Output.html#toYAPIONString()">toYAPIONString</a></code>&nbsp;in interface&nbsp;<code><a href="interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a></code></dd>
-</dl>
 </li>
 </ul>
 <a id="toJSONString()">
@@ -322,10 +327,15 @@ implements <a href="interfaces/Output.html" title="interface in yapion.hierarchy
 <li class="blockList">
 <h4>toJSONString</h4>
 <pre class="methodSignature">public&nbsp;java.lang.String&nbsp;toJSONString()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="interfaces/Output.html#toJSONString()">toJSONString</a></code>&nbsp;in interface&nbsp;<code><a href="interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a></code></dd>
-</dl>
+</li>
+</ul>
+<a id="toLossyJSONString()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>toLossyJSONString</h4>
+<pre class="methodSignature">public&nbsp;java.lang.String&nbsp;toLossyJSONString()</pre>
 </li>
 </ul>
 <a id="toOutputStream(java.io.OutputStream)">
@@ -337,8 +347,6 @@ implements <a href="interfaces/Output.html" title="interface in yapion.hierarchy
 <pre class="methodSignature">public&nbsp;void&nbsp;toOutputStream&#8203;(java.io.OutputStream&nbsp;outputStream)
                     throws java.io.IOException</pre>
 <dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="interfaces/Output.html#toOutputStream(java.io.OutputStream)">toOutputStream</a></code>&nbsp;in interface&nbsp;<code><a href="interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a></code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>
 </dl>

@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6};
+var data = {"i0":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -106,11 +106,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <dl>
+<dt>All Superinterfaces:</dt>
+<dd><code><a href="YAPIONReference.html" title="interface in yapion.hierarchy.interfaces">YAPIONReference</a></code></dd>
+</dl>
+<dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a></code>, <code><a href="../types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a></code>, <code><a href="../types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a></code>, <code><a href="../types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code>, <code><a href="../types/YAPIONPointer.html" title="class in yapion.hierarchy.types">YAPIONPointer</a></code>, <code><a href="../types/YAPIONValue.html" title="class in yapion.hierarchy.types">YAPIONValue</a></code></dd>
+<dd><code><a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a></code>, <code><a href="../types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a></code>, <code><a href="../typegroups/YAPIONDataType.html" title="class in yapion.hierarchy.typegroups">YAPIONDataType</a></code>, <code><a href="../types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a></code>, <code><a href="../typegroups/YAPIONMappingType.html" title="class in yapion.hierarchy.typegroups">YAPIONMappingType</a></code>, <code><a href="../types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code>, <code><a href="../types/YAPIONPointer.html" title="class in yapion.hierarchy.types">YAPIONPointer</a></code>, <code><a href="../types/YAPIONValue.html" title="class in yapion.hierarchy.types">YAPIONValue</a></code>, <code><a href="../typegroups/YAPIONValueType.html" title="class in yapion.hierarchy.typegroups">YAPIONValueType</a></code></dd>
 </dl>
 <hr>
-<pre>public interface <span class="typeNameLabel">YAPIONType</span></pre>
+<pre>public interface <span class="typeNameLabel">YAPIONType</span>
+extends <a href="YAPIONReference.html" title="interface in yapion.hierarchy.interfaces">YAPIONReference</a></pre>
 </li>
 </ul>
 </div>
@@ -135,19 +140,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor" id="i0">
-<td class="colFirst"><code><a href="../Type.html" title="enum in yapion.hierarchy">Type</a></code></td>
+<td class="colFirst"><code><a href="../YAPIONType.html" title="enum in yapion.hierarchy">YAPIONType</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getType()">getType</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i1">
-<td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#referenceValue()">referenceValue</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.yapion.hierarchy.interfaces.YAPIONReference">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;yapion.hierarchy.interfaces.<a href="YAPIONReference.html" title="interface in yapion.hierarchy.interfaces">YAPIONReference</a></h3>
+<code><a href="YAPIONReference.html#referenceValue()">referenceValue</a></code></li>
+</ul>
 </li>
 </ul>
 </section>
@@ -167,19 +174,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <a id="getType()">
 <!--   -->
 </a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getType</h4>
-<pre class="methodSignature"><a href="../Type.html" title="enum in yapion.hierarchy">Type</a>&nbsp;getType()</pre>
-</li>
-</ul>
-<a id="referenceValue()">
-<!--   -->
-</a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>referenceValue</h4>
-<pre class="methodSignature">long&nbsp;referenceValue()</pre>
+<h4>getType</h4>
+<pre class="methodSignature"><a href="../YAPIONType.html" title="enum in yapion.hierarchy">YAPIONType</a>&nbsp;getType()</pre>
 </li>
 </ul>
 </li>

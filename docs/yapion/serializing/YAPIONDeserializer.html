@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":42,"i7":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10,"i7":42,"i8":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -191,27 +191,32 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr class="rowColor" id="i3">
+<td class="colFirst"><code>java.lang.Class&lt;?&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClass(java.lang.String)">getClass</a></span>&#8203;(java.lang.String&nbsp;className)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i4">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getObject()">getObject</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the internal parsed Object.</div>
 </td>
 </tr>
-<tr class="altColor" id="i4">
+<tr class="rowColor" id="i5">
 <td class="colFirst"><code><a href="YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse()">parse</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Parses the YAPIONObject to the Object.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
-<td class="colFirst"><code>java.lang.Object</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(yapion.hierarchy.YAPIONAny)">parse</a></span>&#8203;(<a href="../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 <tr class="altColor" id="i6">
 <td class="colFirst"><code>java.lang.Object</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(yapion.hierarchy.YAPIONAny,yapion.serializing.YAPIONDeserializer)">parse</a></span>&#8203;(<a href="../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(yapion.hierarchy.typegroups.YAPIONAnyType)">parse</a></span>&#8203;(<a href="../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i7">
+<td class="colFirst"><code>java.lang.Object</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(yapion.hierarchy.typegroups.YAPIONAnyType,yapion.serializing.YAPIONDeserializer)">parse</a></span>&#8203;(<a href="../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType,
      <a href="YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -219,7 +224,7 @@ extends java.lang.Object</pre>
 </div>
 </td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr class="altColor" id="i8">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setCacheSize(int)">setCacheSize</a></span>&#8203;(int&nbsp;cacheSize)</code></th>
 <td class="colLast">
@@ -341,27 +346,36 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="parse(yapion.hierarchy.YAPIONAny,yapion.serializing.YAPIONDeserializer)">
+<a id="parse(yapion.hierarchy.typegroups.YAPIONAnyType,yapion.serializing.YAPIONDeserializer)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>parse</h4>
 <pre class="methodSignature">@Deprecated
-public&nbsp;java.lang.Object&nbsp;parse&#8203;(<a href="../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny,
+public&nbsp;java.lang.Object&nbsp;parse&#8203;(<a href="../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType,
                               <a href="YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">since 0.12.0</div>
 </div>
 </li>
 </ul>
-<a id="parse(yapion.hierarchy.YAPIONAny)">
+<a id="parse(yapion.hierarchy.typegroups.YAPIONAnyType)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>parse</h4>
-<pre class="methodSignature">public&nbsp;java.lang.Object&nbsp;parse&#8203;(<a href="../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny)</pre>
+<pre class="methodSignature">public&nbsp;java.lang.Object&nbsp;parse&#8203;(<a href="../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType)</pre>
+</li>
+</ul>
+<a id="getClass(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getClass</h4>
+<pre class="methodSignature">public&nbsp;java.lang.Class&lt;?&gt;&nbsp;getClass&#8203;(java.lang.String&nbsp;className)</pre>
 </li>
 </ul>
 <a id="parse()">

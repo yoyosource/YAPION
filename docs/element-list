@@ -8,6 +8,7 @@ yapion.exceptions.utils
 yapion.exceptions.value
 yapion.hierarchy
 yapion.hierarchy.interfaces
+yapion.hierarchy.typegroups
 yapion.hierarchy.types
 yapion.packet
 yapion.parser

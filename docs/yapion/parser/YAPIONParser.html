@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":10,"i2":9,"i3":9,"i4":9,"i5":10};
+var data = {"i0":9,"i1":9,"i2":10,"i3":9,"i4":9,"i5":9,"i6":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -174,41 +174,49 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>static <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapJSON(java.lang.String)">mapJSON</a></span>&#8203;(java.lang.String&nbsp;s)</code></th>
+<td class="colLast">
+<div class="block">This method first parses the String to a YAPIONObject with
+ <a href="#parseJSON(java.lang.String)"><code>parseJSON(String)</code></a> and maps the YAPIONObject back.</div>
+</td>
+</tr>
+<tr class="rowColor" id="i1">
+<td class="colFirst"><code>static <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapJSON(yapion.hierarchy.types.YAPIONObject)">mapJSON</a></span>&#8203;(<a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject)</code></th>
 <td class="colLast">
 <div class="block">This method maps every corrupted YAPIONPointer and YAPIONMap
  back to their corresponding YAPION representations.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr class="altColor" id="i2">
 <td class="colFirst"><code><a href="YAPIONParser.html" title="class in yapion.parser">YAPIONParser</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse()">parse</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Parses the InputStream or String to an YAPIONObject.</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
+<tr class="rowColor" id="i3">
 <td class="colFirst"><code>static <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(java.io.InputStream)">parse</a></span>&#8203;(java.io.InputStream&nbsp;inputStream)</code></th>
 <td class="colLast">
 <div class="block">Parses the InputStream to an YAPIONObject.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr class="altColor" id="i4">
 <td class="colFirst"><code>static <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(java.lang.String)">parse</a></span>&#8203;(java.lang.String&nbsp;s)</code></th>
 <td class="colLast">
 <div class="block">Parses the String to an YAPIONObject.</div>
 </td>
 </tr>
-<tr class="altColor" id="i4">
+<tr class="rowColor" id="i5">
 <td class="colFirst"><code>static <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseJSON(java.lang.String)">parseJSON</a></span>&#8203;(java.lang.String&nbsp;s)</code></th>
 <td class="colLast">
 <div class="block">Parses the JSON String to an YAPIONObject.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr class="altColor" id="i6">
 <td class="colFirst"><code><a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#result()">result</a></span>()</code></th>
 <td class="colLast">
@@ -327,6 +335,20 @@ extends java.lang.Object</pre>
  <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
  <br>{"@mapping":[]} will be interpreted as a map.
 
+ <br><br>Some specialties for non Lossy JSON <a href="../hierarchy/interfaces/Output.html#toJSONString()"><code>Output.toJSONString()</code></a>
+ instead of <a href="../hierarchy/interfaces/Output.html#toLossyJSONString()"><code>Output.toLossyJSONString()</code></a> will be the primitive
+ types that are represented by an YAPIONObject instead.
+ This is to ensure that Data loss will not happen.
+ <br>{"@byte":0} will be interpreted as a <code>Byte</code>
+ <br>{"@short":0} will be interpreted as a <code>Short</code>
+ <br>{"@int":0} will be interpreted as an <code>Integer</code>
+ <br>{"@long":0} will be interpreted as a <code>Long</code>
+ <br>{"@bint":0} will be interpreted as a <code>BigInteger</code>
+ <br>{"@char":""} will be interpreted as a <code>Character</code>
+ <br>{"@float":0.0} will be interpreted as a <code>Float</code>
+ <br>{"@double":0.0} will be interpreted as a <code>Double</code>
+ <br>{"@bdecimal":0.0} will be interpreted as a <code>BigDecimal</code>
+
  <br><br>For further information in the classes <a href="../hierarchy/types/YAPIONMap.html#toJSONString()"><code>YAPIONMap.toJSONString()</code></a>
  and <a href="../hierarchy/types/YAPIONPointer.html#toJSONString()"><code>YAPIONPointer.toJSONString()</code></a> are a method to
  represent these types as JSON. Those methods describe how
@@ -334,6 +356,50 @@ extends java.lang.Object</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>yapionObject</code> - the YAPIONObject to map</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>YAPIONObject with mapped YAPIONPointer and YAPIONMap</dd>
+</dl>
+</li>
+</ul>
+<a id="mapJSON(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>mapJSON</h4>
+<pre class="methodSignature">public static&nbsp;<a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;mapJSON&#8203;(java.lang.String&nbsp;s)</pre>
+<div class="block">This method first parses the String to a YAPIONObject with
+ <a href="#parseJSON(java.lang.String)"><code>parseJSON(String)</code></a> and maps the YAPIONObject back.
+ After parsing this method maps every corrupted YAPIONPointer
+ and YAPIONMap back to their corresponding YAPION
+ representations. Useful to serialize a java object with JSON
+ and create the underlying Java object back out of this JSON
+ representation.
+
+ <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
+ <br>{"@mapping":[]} will be interpreted as a map.
+
+ <br><br>Some specialties for non Lossy JSON <a href="../hierarchy/interfaces/Output.html#toJSONString()"><code>Output.toJSONString()</code></a>
+ instead of <a href="../hierarchy/interfaces/Output.html#toLossyJSONString()"><code>Output.toLossyJSONString()</code></a> will be the primitive
+ types that are represented by an YAPIONObject instead.
+ This is to ensure that Data loss will not happen.
+ <br>{"@byte":0} will be interpreted as a <code>Byte</code>
+ <br>{"@short":0} will be interpreted as a <code>Short</code>
+ <br>{"@int":0} will be interpreted as an <code>Integer</code>
+ <br>{"@long":0} will be interpreted as a <code>Long</code>
+ <br>{"@bint":0} will be interpreted as a <code>BigInteger</code>
+ <br>{"@char":""} will be interpreted as a <code>Character</code>
+ <br>{"@float":0.0} will be interpreted as a <code>Float</code>
+ <br>{"@double":0.0} will be interpreted as a <code>Double</code>
+ <br>{"@bdecimal":0.0} will be interpreted as a <code>BigDecimal</code>
+
+ <br><br>For further information in the classes <a href="../hierarchy/types/YAPIONMap.html#toJSONString()"><code>YAPIONMap.toJSONString()</code></a>
+ and <a href="../hierarchy/types/YAPIONPointer.html#toJSONString()"><code>YAPIONPointer.toJSONString()</code></a> are a method to
+ represent these types as JSON. Those methods describe how
+ a YAPIONPointer and YAPIONMap are represented in JSON format.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>s</code> - the String to map</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>YAPIONObject with mapped YAPIONPointer and YAPIONMap</dd>
 </dl>

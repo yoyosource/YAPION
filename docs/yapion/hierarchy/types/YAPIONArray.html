@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -106,10 +106,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li><a href="../YAPIONAny.html" title="class in yapion.hierarchy">yapion.hierarchy.YAPIONAny</a></li>
+<li><a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">yapion.hierarchy.typegroups.YAPIONAnyType</a></li>
+<li>
+<ul class="inheritance">
+<li><a href="../typegroups/YAPIONDataType.html" title="class in yapion.hierarchy.typegroups">yapion.hierarchy.typegroups.YAPIONDataType</a></li>
 <li>
 <ul class="inheritance">
 <li>yapion.hierarchy.types.YAPIONArray</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -120,11 +125,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../interfaces/ObjectPath.html" title="interface in yapion.hierarchy.interfaces">ObjectPath</a></code>, <code><a href="../interfaces/ObjectSearch.html" title="interface in yapion.hierarchy.interfaces">ObjectSearch</a></code>, <code><a href="../interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a></code>, <code><a href="../interfaces/YAPIONType.html" title="interface in yapion.hierarchy.interfaces">YAPIONType</a></code></dd>
+<dd><code><a href="../interfaces/ObjectPath.html" title="interface in yapion.hierarchy.interfaces">ObjectPath</a></code>, <code><a href="../interfaces/ObjectSearch.html" title="interface in yapion.hierarchy.interfaces">ObjectSearch</a></code>, <code><a href="../interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a></code>, <code><a href="../interfaces/YAPIONReference.html" title="interface in yapion.hierarchy.interfaces">YAPIONReference</a></code>, <code><a href="../interfaces/YAPIONType.html" title="interface in yapion.hierarchy.interfaces">YAPIONType</a></code></dd>
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">YAPIONArray</span>
-extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a></pre>
+extends <a href="../typegroups/YAPIONDataType.html" title="class in yapion.hierarchy.typegroups">YAPIONDataType</a></pre>
 </li>
 </ul>
 </div>
@@ -192,7 +197,7 @@ extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny<
 <tbody>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code><a href="YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#add(yapion.hierarchy.YAPIONAny)">add</a></span>&#8203;(<a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#add(yapion.hierarchy.typegroups.YAPIONAnyType)">add</a></span>&#8203;(<a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i1">
@@ -201,22 +206,22 @@ extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny<
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i2">
-<td class="colFirst"><code><a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a></code></td>
+<td class="colFirst"><code><a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(int)">get</a></span>&#8203;(int&nbsp;index)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i3">
-<td class="colFirst"><code>java.util.Optional&lt;<a href="../interfaces/ObjectSearch.YAPIONSearchResult.html" title="class in yapion.hierarchy.interfaces">ObjectSearch.YAPIONSearchResult</a>&lt;? extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&gt;&gt;</code></td>
+<td class="colFirst"><code>java.util.Optional&lt;<a href="../interfaces/ObjectSearch.YAPIONSearchResult.html" title="class in yapion.hierarchy.interfaces">ObjectSearch.YAPIONSearchResult</a>&lt;? extends <a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.String)">get</a></span>&#8203;(java.lang.String&nbsp;key)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPath(yapion.hierarchy.YAPIONAny)">getPath</a></span>&#8203;(<a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPath(yapion.hierarchy.typegroups.YAPIONAnyType)">getPath</a></span>&#8203;(<a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i5">
-<td class="colFirst"><code><a href="../Type.html" title="enum in yapion.hierarchy">Type</a></code></td>
+<td class="colFirst"><code><a href="../YAPIONType.html" title="enum in yapion.hierarchy">YAPIONType</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getType()">getType</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -226,42 +231,52 @@ extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny<
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i7">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isEmpty()">isEmpty</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i8">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#length()">length</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i8">
+<tr class="rowColor" id="i9">
 <td class="colFirst"><code>long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#referenceValue()">referenceValue</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr class="altColor" id="i10">
 <td class="colFirst"><code><a href="YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#set(int,yapion.hierarchy.YAPIONAny)">set</a></span>&#8203;(int&nbsp;index,
-   <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#set(int,yapion.hierarchy.typegroups.YAPIONAnyType)">set</a></span>&#8203;(int&nbsp;index,
+   <a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i10">
+<tr class="rowColor" id="i11">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size()">size</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i11">
+<tr class="altColor" id="i12">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toJSONString()">toJSONString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i12">
+<tr class="rowColor" id="i13">
+<td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toLossyJSONString()">toLossyJSONString</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i14">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toOutputStream(java.io.OutputStream)">toOutputStream</a></span>&#8203;(java.io.OutputStream&nbsp;outputStream)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i13">
+<tr class="rowColor" id="i15">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i14">
+<tr class="altColor" id="i16">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toYAPIONString()">toYAPIONString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -271,11 +286,11 @@ extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny<
 </div>
 </div>
 <ul class="blockList">
-<li class="blockList"><a id="methods.inherited.from.class.yapion.hierarchy.YAPIONAny">
+<li class="blockList"><a id="methods.inherited.from.class.yapion.hierarchy.typegroups.YAPIONAnyType">
 <!--   -->
 </a>
-<h3>Methods inherited from class&nbsp;yapion.hierarchy.<a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a></h3>
-<code><a href="../YAPIONAny.html#get(java.lang.String...)">get</a>, <a href="../YAPIONAny.html#getDepth()">getDepth</a>, <a href="../YAPIONAny.html#getParent()">getParent</a>, <a href="../YAPIONAny.html#getParseTime()">getParseTime</a>, <a href="../YAPIONAny.html#getParseTimeMillis()">getParseTimeMillis</a>, <a href="../YAPIONAny.html#getPath()">getPath</a>, <a href="../YAPIONAny.html#isValuePresent()">isValuePresent</a>, <a href="../YAPIONAny.html#removeParent()">removeParent</a>, <a href="../YAPIONAny.html#setParent(yapion.hierarchy.YAPIONAny)">setParent</a></code></li>
+<h3>Methods inherited from class&nbsp;yapion.hierarchy.typegroups.<a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a></h3>
+<code><a href="../typegroups/YAPIONAnyType.html#get(java.lang.String...)">get</a>, <a href="../typegroups/YAPIONAnyType.html#getDepth()">getDepth</a>, <a href="../typegroups/YAPIONAnyType.html#getParent()">getParent</a>, <a href="../typegroups/YAPIONAnyType.html#getParseTime()">getParseTime</a>, <a href="../typegroups/YAPIONAnyType.html#getParseTimeMillis()">getParseTimeMillis</a>, <a href="../typegroups/YAPIONAnyType.html#getPath()">getPath</a>, <a href="../typegroups/YAPIONAnyType.html#isValuePresent()">isValuePresent</a>, <a href="../typegroups/YAPIONAnyType.html#removeParent()">removeParent</a>, <a href="../typegroups/YAPIONAnyType.html#setParent(yapion.hierarchy.typegroups.YAPIONAnyType)">setParent</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -325,7 +340,7 @@ extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny<
 <ul class="blockList">
 <li class="blockList">
 <h4>getType</h4>
-<pre class="methodSignature">public&nbsp;<a href="../Type.html" title="enum in yapion.hierarchy">Type</a>&nbsp;getType()</pre>
+<pre class="methodSignature">public&nbsp;<a href="../YAPIONType.html" title="enum in yapion.hierarchy">YAPIONType</a>&nbsp;getType()</pre>
 </li>
 </ul>
 <a id="referenceValue()">
@@ -337,18 +352,18 @@ extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny<
 <pre class="methodSignature">public&nbsp;long&nbsp;referenceValue()</pre>
 </li>
 </ul>
-<a id="getPath(yapion.hierarchy.YAPIONAny)">
+<a id="getPath(yapion.hierarchy.typegroups.YAPIONAnyType)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getPath</h4>
-<pre class="methodSignature">public&nbsp;java.lang.String&nbsp;getPath&#8203;(<a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny)</pre>
+<pre class="methodSignature">public&nbsp;java.lang.String&nbsp;getPath&#8203;(<a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../interfaces/ObjectPath.html#getPath(yapion.hierarchy.YAPIONAny)">getPath</a></code>&nbsp;in interface&nbsp;<code><a href="../interfaces/ObjectPath.html" title="interface in yapion.hierarchy.interfaces">ObjectPath</a></code></dd>
+<dd><code><a href="../interfaces/ObjectPath.html#getPath(yapion.hierarchy.typegroups.YAPIONAnyType)">getPath</a></code>&nbsp;in interface&nbsp;<code><a href="../interfaces/ObjectPath.html" title="interface in yapion.hierarchy.interfaces">ObjectPath</a></code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="../YAPIONAny.html#getPath(yapion.hierarchy.YAPIONAny)">getPath</a></code>&nbsp;in class&nbsp;<code><a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a></code></dd>
+<dd><code><a href="../typegroups/YAPIONAnyType.html#getPath(yapion.hierarchy.typegroups.YAPIONAnyType)">getPath</a></code>&nbsp;in class&nbsp;<code><a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -368,6 +383,15 @@ extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny<
 <li class="blockList">
 <h4>toJSONString</h4>
 <pre class="methodSignature">public&nbsp;java.lang.String&nbsp;toJSONString()</pre>
+</li>
+</ul>
+<a id="toLossyJSONString()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>toLossyJSONString</h4>
+<pre class="methodSignature">public&nbsp;java.lang.String&nbsp;toLossyJSONString()</pre>
 </li>
 </ul>
 <a id="toOutputStream(java.io.OutputStream)">
@@ -391,6 +415,10 @@ extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny<
 <li class="blockList">
 <h4>size</h4>
 <pre class="methodSignature">public&nbsp;int&nbsp;size()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../typegroups/YAPIONDataType.html#size()">size</a></code>&nbsp;in class&nbsp;<code><a href="../typegroups/YAPIONDataType.html" title="class in yapion.hierarchy.typegroups">YAPIONDataType</a></code></dd>
+</dl>
 </li>
 </ul>
 <a id="length()">
@@ -400,6 +428,23 @@ extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny<
 <li class="blockList">
 <h4>length</h4>
 <pre class="methodSignature">public&nbsp;int&nbsp;length()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../typegroups/YAPIONDataType.html#length()">length</a></code>&nbsp;in class&nbsp;<code><a href="../typegroups/YAPIONDataType.html" title="class in yapion.hierarchy.typegroups">YAPIONDataType</a></code></dd>
+</dl>
+</li>
+</ul>
+<a id="isEmpty()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isEmpty</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;isEmpty()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../typegroups/YAPIONDataType.html#isEmpty()">isEmpty</a></code>&nbsp;in class&nbsp;<code><a href="../typegroups/YAPIONDataType.html" title="class in yapion.hierarchy.typegroups">YAPIONDataType</a></code></dd>
+</dl>
 </li>
 </ul>
 <a id="get(int)">
@@ -408,26 +453,26 @@ extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny<
 <ul class="blockList">
 <li class="blockList">
 <h4>get</h4>
-<pre class="methodSignature">public&nbsp;<a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;get&#8203;(int&nbsp;index)</pre>
+<pre class="methodSignature">public&nbsp;<a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;get&#8203;(int&nbsp;index)</pre>
 </li>
 </ul>
-<a id="add(yapion.hierarchy.YAPIONAny)">
+<a id="add(yapion.hierarchy.typegroups.YAPIONAnyType)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>add</h4>
-<pre class="methodSignature">public&nbsp;<a href="YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a>&nbsp;add&#8203;(<a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny)</pre>
+<pre class="methodSignature">public&nbsp;<a href="YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a>&nbsp;add&#8203;(<a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType)</pre>
 </li>
 </ul>
-<a id="set(int,yapion.hierarchy.YAPIONAny)">
+<a id="set(int,yapion.hierarchy.typegroups.YAPIONAnyType)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>set</h4>
 <pre class="methodSignature">public&nbsp;<a href="YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a>&nbsp;set&#8203;(int&nbsp;index,
-                       <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&nbsp;yapionAny)</pre>
+                       <a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType)</pre>
 </li>
 </ul>
 <a id="get(java.lang.String)">
@@ -436,12 +481,12 @@ extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny<
 <ul class="blockList">
 <li class="blockList">
 <h4>get</h4>
-<pre class="methodSignature">public&nbsp;java.util.Optional&lt;<a href="../interfaces/ObjectSearch.YAPIONSearchResult.html" title="class in yapion.hierarchy.interfaces">ObjectSearch.YAPIONSearchResult</a>&lt;? extends <a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a>&gt;&gt;&nbsp;get&#8203;(java.lang.String&nbsp;key)</pre>
+<pre class="methodSignature">public&nbsp;java.util.Optional&lt;<a href="../interfaces/ObjectSearch.YAPIONSearchResult.html" title="class in yapion.hierarchy.interfaces">ObjectSearch.YAPIONSearchResult</a>&lt;? extends <a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&gt;&gt;&nbsp;get&#8203;(java.lang.String&nbsp;key)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../interfaces/ObjectSearch.html#get(java.lang.String)">get</a></code>&nbsp;in interface&nbsp;<code><a href="../interfaces/ObjectSearch.html" title="interface in yapion.hierarchy.interfaces">ObjectSearch</a></code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="../YAPIONAny.html#get(java.lang.String)">get</a></code>&nbsp;in class&nbsp;<code><a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a></code></dd>
+<dd><code><a href="../typegroups/YAPIONAnyType.html#get(java.lang.String)">get</a></code>&nbsp;in class&nbsp;<code><a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a></code></dd>
 </dl>
 </li>
 </ul>

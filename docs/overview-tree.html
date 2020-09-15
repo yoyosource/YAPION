@@ -89,6 +89,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="yapion/exceptions/value/package-tree.html">yapion.exceptions.value</a>, </li>
 <li><a href="yapion/hierarchy/package-tree.html">yapion.hierarchy</a>, </li>
 <li><a href="yapion/hierarchy/interfaces/package-tree.html">yapion.hierarchy.interfaces</a>, </li>
+<li><a href="yapion/hierarchy/typegroups/package-tree.html">yapion.hierarchy.typegroups</a>, </li>
 <li><a href="yapion/hierarchy/types/package-tree.html">yapion.hierarchy.types</a>, </li>
 <li><a href="yapion/packet/package-tree.html">yapion.packet</a>, </li>
 <li><a href="yapion/parser/package-tree.html">yapion.parser</a>, </li>
@@ -127,6 +128,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">yapion.serializing.serializer.number.<a href="yapion/serializing/serializer/number/IntegerSerializer.html" title="class in yapion.serializing.serializer.number"><span class="typeNameLink">IntegerSerializer</span></a> (implements yapion.serializing.<a href="yapion/serializing/InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;T&gt;)</li>
 <li class="circle">yapion.parser.<a href="yapion/parser/JSONMapper.html" title="class in yapion.parser"><span class="typeNameLink">JSONMapper</span></a></li>
 <li class="circle">yapion.parser.<a href="yapion/parser/JSONParser.html" title="class in yapion.parser"><span class="typeNameLink">JSONParser</span></a></li>
+<li class="circle">yapion.parser.<a href="yapion/parser/JSONParserN.html" title="class in yapion.parser"><span class="typeNameLink">JSONParserN</span></a></li>
 <li class="circle">yapion.serializing.serializer.object.<a href="yapion/serializing/serializer/object/ListSerializer.html" title="class in yapion.serializing.serializer.object"><span class="typeNameLink">ListSerializer</span></a> (implements yapion.serializing.<a href="yapion/serializing/InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;T&gt;)</li>
 <li class="circle">yapion.serializing.serializer.object.<a href="yapion/serializing/serializer/object/ListSerializerArray.html" title="class in yapion.serializing.serializer.object"><span class="typeNameLink">ListSerializerArray</span></a> (implements yapion.serializing.<a href="yapion/serializing/InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;T&gt;)</li>
 <li class="circle">yapion.serializing.serializer.objectConcurrent.<a href="yapion/serializing/serializer/objectConcurrent/ListSerializerCopyOnWriteArray.html" title="class in yapion.serializing.serializer.objectConcurrent"><span class="typeNameLink">ListSerializerCopyOnWriteArray</span></a> (implements yapion.serializing.<a href="yapion/serializing/InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;T&gt;)</li>
@@ -217,13 +219,30 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">yapion.serializing.serializer.objectNet.<a href="yapion/serializing/serializer/objectNet/URISerializer.html" title="class in yapion.serializing.serializer.objectNet"><span class="typeNameLink">URISerializer</span></a> (implements yapion.serializing.<a href="yapion/serializing/InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;T&gt;)</li>
 <li class="circle">yapion.serializing.serializer.objectNet.<a href="yapion/serializing/serializer/objectNet/URLSerializer.html" title="class in yapion.serializing.serializer.objectNet"><span class="typeNameLink">URLSerializer</span></a> (implements yapion.serializing.<a href="yapion/serializing/InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;T&gt;)</li>
 <li class="circle">yapion.serializing.serializer.object.<a href="yapion/serializing/serializer/object/VectorSerializer.html" title="class in yapion.serializing.serializer.object"><span class="typeNameLink">VectorSerializer</span></a> (implements yapion.serializing.<a href="yapion/serializing/InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a>&lt;T&gt;)</li>
-<li class="circle">yapion.hierarchy.<a href="yapion/hierarchy/YAPIONAny.html" title="class in yapion.hierarchy"><span class="typeNameLink">YAPIONAny</span></a> (implements yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/ObjectPath.html" title="interface in yapion.hierarchy.interfaces">ObjectPath</a>, yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/ObjectSearch.html" title="interface in yapion.hierarchy.interfaces">ObjectSearch</a>, yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a>, yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/YAPIONType.html" title="interface in yapion.hierarchy.interfaces">YAPIONType</a>)
+<li class="circle">yapion.hierarchy.typegroups.<a href="yapion/hierarchy/typegroups/YAPIONAnyClosure.html" title="class in yapion.hierarchy.typegroups"><span class="typeNameLink">YAPIONAnyClosure</span></a> (implements yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a>, yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/YAPIONReference.html" title="interface in yapion.hierarchy.interfaces">YAPIONReference</a>)
+<ul>
+<li class="circle">yapion.hierarchy.<a href="yapion/hierarchy/YAPIONVariable.html" title="class in yapion.hierarchy"><span class="typeNameLink">YAPIONVariable</span></a></li>
+</ul>
+</li>
+<li class="circle">yapion.hierarchy.typegroups.<a href="yapion/hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups"><span class="typeNameLink">YAPIONAnyType</span></a> (implements yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/ObjectPath.html" title="interface in yapion.hierarchy.interfaces">ObjectPath</a>, yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/ObjectSearch.html" title="interface in yapion.hierarchy.interfaces">ObjectSearch</a>, yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a>, yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/YAPIONType.html" title="interface in yapion.hierarchy.interfaces">YAPIONType</a>)
+<ul>
+<li class="circle">yapion.hierarchy.typegroups.<a href="yapion/hierarchy/typegroups/YAPIONDataType.html" title="class in yapion.hierarchy.typegroups"><span class="typeNameLink">YAPIONDataType</span></a>
 <ul>
 <li class="circle">yapion.hierarchy.types.<a href="yapion/hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types"><span class="typeNameLink">YAPIONArray</span></a></li>
+<li class="circle">yapion.hierarchy.typegroups.<a href="yapion/hierarchy/typegroups/YAPIONMappingType.html" title="class in yapion.hierarchy.typegroups"><span class="typeNameLink">YAPIONMappingType</span></a>
+<ul>
 <li class="circle">yapion.hierarchy.types.<a href="yapion/hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types"><span class="typeNameLink">YAPIONMap</span></a></li>
 <li class="circle">yapion.hierarchy.types.<a href="yapion/hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types"><span class="typeNameLink">YAPIONObject</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="circle">yapion.hierarchy.typegroups.<a href="yapion/hierarchy/typegroups/YAPIONValueType.html" title="class in yapion.hierarchy.typegroups"><span class="typeNameLink">YAPIONValueType</span></a>
+<ul>
 <li class="circle">yapion.hierarchy.types.<a href="yapion/hierarchy/types/YAPIONPointer.html" title="class in yapion.hierarchy.types"><span class="typeNameLink">YAPIONPointer</span></a></li>
 <li class="circle">yapion.hierarchy.types.<a href="yapion/hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><span class="typeNameLink">YAPIONValue</span></a>&lt;T&gt;</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="circle">yapion.serializing.<a href="yapion/serializing/YAPIONDeserializer.html" title="class in yapion.serializing"><span class="typeNameLink">YAPIONDeserializer</span></a></li>
@@ -243,7 +262,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">yapion.serializing.serializer.overrideable.<a href="yapion/serializing/serializer/overrideable/YAPIONSerializerPointer.html" title="class in yapion.serializing.serializer.overrideable"><span class="typeNameLink">YAPIONSerializerPointer</span></a> (implements yapion.serializing.<a href="yapion/serializing/InternalOverrideableSerializer.html" title="interface in yapion.serializing">InternalOverrideableSerializer</a>&lt;T&gt;)</li>
 <li class="circle">yapion.serializing.serializer.overrideable.<a href="yapion/serializing/serializer/overrideable/YAPIONSerializerValue.html" title="class in yapion.serializing.serializer.overrideable"><span class="typeNameLink">YAPIONSerializerValue</span></a> (implements yapion.serializing.<a href="yapion/serializing/InternalOverrideableSerializer.html" title="interface in yapion.serializing">InternalOverrideableSerializer</a>&lt;T&gt;)</li>
 <li class="circle">yapion.<a href="yapion/YAPIONUtils.html" title="class in yapion"><span class="typeNameLink">YAPIONUtils</span></a></li>
-<li class="circle">yapion.hierarchy.<a href="yapion/hierarchy/YAPIONVariable.html" title="class in yapion.hierarchy"><span class="typeNameLink">YAPIONVariable</span></a> (implements yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/Output.html" title="interface in yapion.hierarchy.interfaces">Output</a>)</li>
 </ul>
 </li>
 </ul>
@@ -269,7 +287,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">yapion.serializing.api.<a href="yapion/serializing/api/SerializerSetInterface.html" title="interface in yapion.serializing.api"><span class="typeNameLink">SerializerSetInterface</span></a>&lt;T&gt;</li>
 <li class="circle">yapion.packet.<a href="yapion/packet/YAPIONPacketHandler.html" title="interface in yapion.packet"><span class="typeNameLink">YAPIONPacketHandler</span></a></li>
 <li class="circle">yapion.packet.<a href="yapion/packet/YAPIONPacketIdentifierCreator.html" title="interface in yapion.packet"><span class="typeNameLink">YAPIONPacketIdentifierCreator</span></a>&lt;T&gt;</li>
+<li class="circle">yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/YAPIONReference.html" title="interface in yapion.hierarchy.interfaces"><span class="typeNameLink">YAPIONReference</span></a>
+<ul>
 <li class="circle">yapion.hierarchy.interfaces.<a href="yapion/hierarchy/interfaces/YAPIONType.html" title="interface in yapion.hierarchy.interfaces"><span class="typeNameLink">YAPIONType</span></a></li>
+</ul>
+</li>
 </ul>
 </section>
 <section role="region">
@@ -296,7 +318,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">java.lang.Enum&lt;E&gt; (implements java.lang.Comparable&lt;T&gt;, java.lang.constant.Constable, java.io.Serializable)
 <ul>
 <li class="circle">yapion.utils.<a href="yapion/utils/RecursionUtils.RecursionType.html" title="enum in yapion.utils"><span class="typeNameLink">RecursionUtils.RecursionType</span></a></li>
-<li class="circle">yapion.hierarchy.<a href="yapion/hierarchy/Type.html" title="enum in yapion.hierarchy"><span class="typeNameLink">Type</span></a></li>
+<li class="circle">yapion.hierarchy.<a href="yapion/hierarchy/YAPIONType.html" title="enum in yapion.hierarchy"><span class="typeNameLink">YAPIONType</span></a></li>
 <li class="circle">yapion.<a href="yapion/YAPIONUtils.CheckResult.html" title="enum in yapion"><span class="typeNameLink">YAPIONUtils.CheckResult</span></a></li>
 </ul>
 </li>

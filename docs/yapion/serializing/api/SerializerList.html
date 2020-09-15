@@ -289,12 +289,12 @@ implements <a href="SerializerListInterface.html" title="interface in yapion.ser
  by <a href="../../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>. To use the serializer call
  <a href="../YAPIONSerializer.html#parse(java.lang.Object)"><code>YAPIONSerializer.parse(Object)</code></a>. You will need
  to provide the Object and the YAPIONSerializer will
- provide you with an <a href="../../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy"><code>YAPIONAny</code></a>. This is generic
+ provide you with an <a href="../../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups"><code>YAPIONAnyType</code></a>. This is generic
  and can be an <a href="../../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types"><code>YAPIONObject</code></a>, <a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types"><code>YAPIONMap</code></a>,
  <a href="../../hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types"><code>YAPIONArray</code></a>, <a href="../../hierarchy/types/YAPIONPointer.html" title="class in yapion.hierarchy.types"><code>YAPIONPointer</code></a> or
  <a href="../../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>. So you should be able to handle any
  thing you can get or just handle it generically with
- <a href="../../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy"><code>YAPIONAny</code></a> to be safe.</div>
+ <a href="../../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups"><code>YAPIONAnyType</code></a> to be safe.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="SerializerListInterface.html#serialize(T,yapion.serializing.YAPIONSerializer)">serialize</a></code>&nbsp;in interface&nbsp;<code><a href="SerializerListInterface.html" title="interface in yapion.serializing.api">SerializerListInterface</a>&lt;<a href="SerializerList.html" title="type parameter in SerializerList">T</a> extends java.util.List&lt;?&gt;&gt;</code></dd>
@@ -321,8 +321,8 @@ implements <a href="SerializerListInterface.html" title="interface in yapion.ser
  deserialize any parts of the <a href="../../hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types"><code>YAPIONArray</code></a> that are not
  <a href="../../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a> types. So anything that cannot be
  represented by <a href="../../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>. To use the serializer
- call <a href="../YAPIONDeserializer.html#parse(yapion.hierarchy.YAPIONAny)"><code>YAPIONDeserializer.parse(YAPIONAny)</code></a>. You will
- need to provide the <a href="../../hierarchy/YAPIONAny.html" title="class in yapion.hierarchy"><code>YAPIONAny</code></a> and the YAPIONDeserializer
+ call <a href="../YAPIONDeserializer.html#parse(yapion.hierarchy.typegroups.YAPIONAnyType)"><code>YAPIONDeserializer.parse(YAPIONAnyType)</code></a>. You will
+ need to provide the <a href="../../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups"><code>YAPIONAnyType</code></a> and the YAPIONDeserializer
  will provide you with an <code>Object</code>. This is generic
  and can be any Object. So you should be able to handle
  any thing generically.</div>

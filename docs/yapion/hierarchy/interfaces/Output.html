@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -107,7 +107,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../YAPIONAny.html" title="class in yapion.hierarchy">YAPIONAny</a></code>, <code><a href="../types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a></code>, <code><a href="../types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a></code>, <code><a href="../types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code>, <code><a href="../types/YAPIONPointer.html" title="class in yapion.hierarchy.types">YAPIONPointer</a></code>, <code><a href="../types/YAPIONValue.html" title="class in yapion.hierarchy.types">YAPIONValue</a></code>, <code><a href="../YAPIONVariable.html" title="class in yapion.hierarchy">YAPIONVariable</a></code></dd>
+<dd><code><a href="../typegroups/YAPIONAnyClosure.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyClosure</a></code>, <code><a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a></code>, <code><a href="../types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a></code>, <code><a href="../typegroups/YAPIONDataType.html" title="class in yapion.hierarchy.typegroups">YAPIONDataType</a></code>, <code><a href="../types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a></code>, <code><a href="../typegroups/YAPIONMappingType.html" title="class in yapion.hierarchy.typegroups">YAPIONMappingType</a></code>, <code><a href="../types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code>, <code><a href="../types/YAPIONPointer.html" title="class in yapion.hierarchy.types">YAPIONPointer</a></code>, <code><a href="../types/YAPIONValue.html" title="class in yapion.hierarchy.types">YAPIONValue</a></code>, <code><a href="../typegroups/YAPIONValueType.html" title="class in yapion.hierarchy.typegroups">YAPIONValueType</a></code>, <code><a href="../YAPIONVariable.html" title="class in yapion.hierarchy">YAPIONVariable</a></code></dd>
 </dl>
 <hr>
 <pre>public interface <span class="typeNameLabel">Output</span></pre>
@@ -140,11 +140,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i1">
+<td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toLossyJSONString()">toLossyJSONString</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i2">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toOutputStream(java.io.OutputStream)">toOutputStream</a></span>&#8203;(java.io.OutputStream&nbsp;outputStream)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i2">
+<tr class="rowColor" id="i3">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toYAPIONString()">toYAPIONString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -185,6 +190,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>toJSONString</h4>
 <pre class="methodSignature">java.lang.String&nbsp;toJSONString()</pre>
+</li>
+</ul>
+<a id="toLossyJSONString()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>toLossyJSONString</h4>
+<pre class="methodSignature">java.lang.String&nbsp;toLossyJSONString()</pre>
 </li>
 </ul>
 <a id="toOutputStream(java.io.OutputStream)">
