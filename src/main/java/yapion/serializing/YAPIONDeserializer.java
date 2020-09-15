@@ -110,7 +110,7 @@ public final class YAPIONDeserializer {
     }
 
     /**
-     * @deprecated since 0.12.0
+     * @deprecated since 0.12.0 use {@link #parse(YAPIONAnyType)} instead
      */
     @Deprecated
     public Object parse(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {

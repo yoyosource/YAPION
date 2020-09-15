@@ -69,7 +69,7 @@ public final class YAPIONSerializer {
     }
 
     /**
-     * @deprecated since 0.12.0
+     * @deprecated since 0.12.0 use {@link #parse(Object)} instead
      */
     @Deprecated
     public YAPIONAnyType parse(Object object, YAPIONSerializer yapionSerializer) {
