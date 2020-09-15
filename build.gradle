@@ -190,8 +190,7 @@ task projectCommit {
         println("Creating new tag with name 'V${mayor}.${minor}.${patch}'")
         shell("git tag \"V${mayor}.${minor}.${patch}\"")
 
-        println("Should this commit be pushed? [Y/n]")
-        if (!"Yy".contains(((char)System.in.read()).toString())) {
+        if (!answer("Should this commit be pushed? [Y/n]")) {
             println("Use 'git push' and 'git push --tags' to manually push this to origin.")
         } else {
             shell("git push")
@@ -213,8 +212,7 @@ task projectJavaDoc {
         shell("mkdir docs")
         shell("cp -R build/docs/javadoc/* docs")
 
-        println("Should this change be comitted? [Y/n]")
-        if (!"Yy".contains(((char)System.in.read()).toString())) {
+        if (!answer("Should this change be comitted? [Y/n]")) {
             println("Use 'git commit -m \"Documentation update\"' to manually commit this change.'")
             return
         }
@@ -222,14 +220,11 @@ task projectJavaDoc {
         shell("git add docs")
         shell("git commit -m \"Documentation update\"")
 
-        while (System.in.available() > 0) System.in.read()
-
-        println("Should this commit be pushed? [Y/n]")
-        if (!"Yy".contains(((char)System.in.read()).toString())) {
+        if (answer("Should this commit be pushed? [Y/n]")) {
+            shell("git push")
+        } else {
             println("Use 'git push' to manually push this to origin.")
-            return
         }
-        shell("git push")
 
         println("NEXT STEP: ----")
     }
@@ -248,6 +243,12 @@ def shell(String command) {
     proc.waitForProcessOutput(out, err)
 
     return [out.toString().trim(), err.toString().trim(), proc.exitValue()]
+}
+
+def answer(String question) {
+    while (System.in.available() > 0) System.in.read()
+    println(question)
+    return "Yy".contains(((char)System.in.read()).toString())
 }
 
 task buildProject {
