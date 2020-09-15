@@ -2,6 +2,7 @@ package yapion.parser;
 
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
+import yapion.hierarchy.typegroups.YAPIONMappingType;
 import yapion.hierarchy.types.*;
 import yapion.utils.ReflectionsUtils;
 
@@ -140,7 +141,7 @@ public class JSONMapper {
         return new YAPIONPointer(yapionObject.getValue(POINTER_IDENTIFIER, "").get());
     }
 
-    private YAPIONAnyType mapMap(YAPIONObject yapionObject) {
+    private YAPIONMappingType mapMap(YAPIONObject yapionObject) {
         YAPIONArray mapping = yapionObject.getArray(MAP_IDENTIFIER);
         if (yapionObject.size() != mapping.length() * 2 + 1) {
             return mapObject(yapionObject);
