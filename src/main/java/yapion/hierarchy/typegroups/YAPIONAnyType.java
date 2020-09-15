@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public abstract class YAPIONAnyType implements Output, ObjectSearch, ObjectPath, YAPIONType {
+public abstract class YAPIONAnyType extends YAPIONAnyClosure implements Output, ObjectSearch, ObjectPath, YAPIONType {
 
     public final int getDepth() {
         int depth = 0;
