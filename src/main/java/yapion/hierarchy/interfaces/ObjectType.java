@@ -1,7 +1,9 @@
 package yapion.hierarchy.interfaces;
 
-public interface YAPIONType {
-    
-    yapion.hierarchy.YAPIONType getType();
+import yapion.hierarchy.YAPIONType;
+
+public interface ObjectType {
+
+    YAPIONType getType();
 
 }
