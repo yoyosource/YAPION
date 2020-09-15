@@ -6,7 +6,7 @@ package yapion.utils;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 
 @YAPIONSaveExclude(context = "*")
@@ -27,19 +27,19 @@ public class RecursionUtils {
     @YAPIONLoadExclude(context = "*")
     public static class RecursionResult {
         private final RecursionType recursionType;
-        private final YAPIONAny yapionAny;
+        private final YAPIONAnyType yapionAnyType;
 
-        private RecursionResult(RecursionType recursionType, YAPIONAny yapionAny) {
+        private RecursionResult(RecursionType recursionType, YAPIONAnyType yapionAnyType) {
             this.recursionType = recursionType;
-            this.yapionAny = yapionAny;
+            this.yapionAnyType = yapionAnyType;
         }
 
         public RecursionType getRecursionType() {
             return recursionType;
         }
 
-        public YAPIONAny getYAPIONAny() {
-            return yapionAny;
+        public YAPIONAnyType getYAPIONAny() {
+            return yapionAnyType;
         }
     }
 
@@ -50,7 +50,7 @@ public class RecursionUtils {
      * @param instance is the instance of a hierarchy to check against
      * @return {@link RecursionResult} with the {@link RecursionType} and the {@code instance} against which was checked.
      */
-    public static RecursionResult checkRecursion(YAPIONVariable toCheck, YAPIONAny instance) {
+    public static RecursionResult checkRecursion(YAPIONVariable toCheck, YAPIONAnyType instance) {
         return checkRecursion(toCheck.getValue(), instance);
     }
 
@@ -61,7 +61,7 @@ public class RecursionUtils {
      * @param instance is the instance of a hierarchy to check against
      * @return {@link RecursionResult} with the {@link RecursionType} and the {@code instance} against which was checked.
      */
-    public static RecursionResult checkRecursion(YAPIONAny toCheck, YAPIONAny instance) {
+    public static RecursionResult checkRecursion(YAPIONAnyType toCheck, YAPIONAnyType instance) {
         if (toCheck == instance) {
             return new RecursionResult(RecursionType.DIRECT, instance);
         }

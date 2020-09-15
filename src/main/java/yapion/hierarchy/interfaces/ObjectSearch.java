@@ -1,14 +1,14 @@
 package yapion.hierarchy.interfaces;
 
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 
 import java.util.Optional;
 
 public interface ObjectSearch {
 
-    Optional<YAPIONSearchResult<? extends YAPIONAny>> get(String... s);
+    Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String... s);
 
-    Optional<ObjectSearch.YAPIONSearchResult<? extends YAPIONAny>> get(String key);
+    Optional<ObjectSearch.YAPIONSearchResult<? extends YAPIONAnyType>> get(String key);
 
     class YAPIONSearchResult<T> {
 

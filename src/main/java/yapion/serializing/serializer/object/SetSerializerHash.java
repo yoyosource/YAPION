@@ -6,7 +6,7 @@ package yapion.serializing.serializer.object;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -31,7 +31,7 @@ public class SetSerializerHash implements InternalSerializer<HashSet<?>> {
     }
 
     @Override
-    public YAPIONAny serialize(HashSet<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(HashSet<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
@@ -44,8 +44,8 @@ public class SetSerializerHash implements InternalSerializer<HashSet<?>> {
     }
 
     @Override
-    public HashSet<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONArray yapionArray = ((YAPIONObject) yapionAny).getArray("values");
+    public HashSet<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONArray yapionArray = ((YAPIONObject) yapionAnyType).getArray("values");
         HashSet<Object> set = new HashSet<>(yapionArray.length());
         for (int i = 0; i < yapionArray.length(); i++) {
             set.add(yapionDeserializer.parse(yapionArray.get(i)));

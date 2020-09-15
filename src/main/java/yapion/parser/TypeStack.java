@@ -8,7 +8,7 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
-import yapion.hierarchy.Type;
+import yapion.hierarchy.YAPIONType;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,27 +17,27 @@ import java.util.LinkedList;
 @YAPIONLoadExclude(context = "*")
 public class TypeStack {
 
-    private final LinkedList<Type> stack = new LinkedList<>();
+    private final LinkedList<YAPIONType> stack = new LinkedList<>();
     private final LinkedList<Long> timeStack = new LinkedList<>();
 
-    public void push(Type type) {
-        stack.push(type);
+    public void push(YAPIONType YAPIONType) {
+        stack.push(YAPIONType);
         timeStack.push(System.nanoTime());
     }
 
-    public Type pop(Type type) {
+    public YAPIONType pop(YAPIONType YAPIONType) {
         if (empty()) {
             throw new YAPIONArrayIndexOutOfBoundsException();
         }
         timeStack.pop();
-        Type current = stack.pop();
-        if (current != type) {
+        YAPIONType current = stack.pop();
+        if (current != YAPIONType) {
             throw new YAPIONParserException();
         }
         return current;
     }
 
-    public Type peek() {
+    public YAPIONType peek() {
         if (empty()) {
             throw new YAPIONArrayIndexOutOfBoundsException();
         }
@@ -66,7 +66,7 @@ public class TypeStack {
     @Override
     public String toString() {
         StringBuilder st = new StringBuilder();
-        Iterator<Type> iterator = stack.descendingIterator();
+        Iterator<YAPIONType> iterator = stack.descendingIterator();
         boolean b = false;
         while (iterator.hasNext()) {
             if (b) {

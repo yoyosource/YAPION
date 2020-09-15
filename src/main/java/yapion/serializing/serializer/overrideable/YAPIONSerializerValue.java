@@ -2,7 +2,7 @@ package yapion.serializing.serializer.overrideable;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalOverrideableSerializer;
 import yapion.serializing.YAPIONDeserializer;
@@ -20,13 +20,13 @@ public class YAPIONSerializerValue implements InternalOverrideableSerializer<YAP
     }
 
     @Override
-    public YAPIONAny serialize(YAPIONValue<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(YAPIONValue<?> object, YAPIONSerializer yapionSerializer) {
         return object;
     }
 
     @Override
-    public YAPIONValue<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        return (YAPIONValue<?>) yapionAny;
+    public YAPIONValue<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        return (YAPIONValue<?>) yapionAnyType;
     }
 
 }

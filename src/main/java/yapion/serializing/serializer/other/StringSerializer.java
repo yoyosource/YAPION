@@ -6,7 +6,7 @@ package yapion.serializing.serializer.other;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
@@ -24,12 +24,12 @@ public class StringSerializer implements InternalSerializer<String> {
     }
 
     @Override
-    public YAPIONAny serialize(String object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(String object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(object);
     }
 
     @Override
-    public String deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        return ((YAPIONValue<String>) yapionAny).get();
+    public String deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        return ((YAPIONValue<String>) yapionAnyType).get();
     }
 }

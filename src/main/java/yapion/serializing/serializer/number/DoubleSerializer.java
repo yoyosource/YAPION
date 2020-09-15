@@ -6,7 +6,7 @@ package yapion.serializing.serializer.number;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
@@ -29,12 +29,12 @@ public class DoubleSerializer implements InternalSerializer<Double> {
     }
 
     @Override
-    public YAPIONAny serialize(Double object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(Double object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(object);
     }
 
     @Override
-    public Double deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        return ((YAPIONValue<Double>) yapionAny).get();
+    public Double deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        return ((YAPIONValue<Double>) yapionAnyType).get();
     }
 }

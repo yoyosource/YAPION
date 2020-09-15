@@ -6,7 +6,7 @@ package yapion.serializing.serializer.other;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
@@ -29,7 +29,7 @@ public class OptionalSerializer implements InternalSerializer<Optional<?>> {
     }
 
     @Override
-    public YAPIONAny serialize(Optional<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(Optional<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>("java.util.Optional")));
         yapionObject.add(new YAPIONVariable("present", new YAPIONValue<>(object.isPresent())));
@@ -39,8 +39,8 @@ public class OptionalSerializer implements InternalSerializer<Optional<?>> {
 
     @Override
     @SuppressWarnings({"java:S5411"})
-    public Optional<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAny;
+    public Optional<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
         if (yapionObject.getValue("present", true).get()) {
             return Optional.ofNullable(yapionDeserializer.parse(yapionObject.getVariable("value").getValue()));
         }

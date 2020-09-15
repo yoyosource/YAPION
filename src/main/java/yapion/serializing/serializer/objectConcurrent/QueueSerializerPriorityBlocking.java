@@ -2,7 +2,7 @@ package yapion.serializing.serializer.objectConcurrent;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -27,7 +27,7 @@ public class QueueSerializerPriorityBlocking implements InternalSerializer<Prior
     }
 
     @Override
-    public YAPIONAny serialize(PriorityBlockingQueue<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(PriorityBlockingQueue<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
@@ -40,8 +40,8 @@ public class QueueSerializerPriorityBlocking implements InternalSerializer<Prior
     }
 
     @Override
-    public PriorityBlockingQueue<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAny;
+    public PriorityBlockingQueue<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
         YAPIONArray yapionArray = yapionObject.getArray("values");
         PriorityBlockingQueue<Object> queue = new PriorityBlockingQueue<>();
         for (int i = 0; i < yapionArray.length(); i++) {

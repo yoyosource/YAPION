@@ -7,8 +7,9 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
-import yapion.hierarchy.Type;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.YAPIONType;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.typegroups.YAPIONDataType;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -21,13 +22,13 @@ import java.util.stream.Collectors;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONArray extends YAPIONAny {
+public class YAPIONArray extends YAPIONDataType {
 
-    private final List<YAPIONAny> array = new ArrayList<>();
+    private final List<YAPIONAnyType> array = new ArrayList<>();
 
     @Override
-    public Type getType() {
-        return Type.ARRAY;
+    public YAPIONType getType() {
+        return YAPIONType.ARRAY;
     }
 
     @Override
@@ -36,9 +37,9 @@ public class YAPIONArray extends YAPIONAny {
     }
 
     @Override
-    public String getPath(YAPIONAny yapionAny) {
+    public String getPath(YAPIONAnyType yapionAnyType) {
         for (int i = 0; i < array.size(); i++) {
-            if (array.get(i) == yapionAny) {
+            if (array.get(i) == yapionAnyType) {
                 return i + "";
             }
         }
@@ -50,16 +51,16 @@ public class YAPIONArray extends YAPIONAny {
         StringBuilder st = new StringBuilder();
         st.append("[");
         boolean b = false;
-        for (YAPIONAny yapionAny : array) {
+        for (YAPIONAnyType yapionAnyType : array) {
             if (b) {
                 st.append(",");
             }
-            if (yapionAny == null) {
+            if (yapionAnyType == null) {
                 st.append("null");
-            } else if (yapionAny.getType() == Type.VALUE) {
-                st.append(yapionAny.toYAPIONString(), 1, yapionAny.toYAPIONString().length() - 1);
+            } else if (yapionAnyType.getType() == YAPIONType.VALUE) {
+                st.append(yapionAnyType.toYAPIONString(), 1, yapionAnyType.toYAPIONString().length() - 1);
             } else {
-                st.append(yapionAny.toYAPIONString());
+                st.append(yapionAnyType.toYAPIONString());
             }
             b = true;
         }
@@ -69,12 +70,12 @@ public class YAPIONArray extends YAPIONAny {
 
     @Override
     public String toJSONString() {
-        return "[" + array.stream().map(YAPIONAny::toJSONString).collect(Collectors.joining(",")) + "]";
+        return "[" + array.stream().map(YAPIONAnyType::toJSONString).collect(Collectors.joining(",")) + "]";
     }
 
     @Override
     public String toLossyJSONString() {
-        return "[" + array.stream().map(YAPIONAny::toLossyJSONString).collect(Collectors.joining(",")) + "]";
+        return "[" + array.stream().map(YAPIONAnyType::toLossyJSONString).collect(Collectors.joining(",")) + "]";
     }
 
     @Override
@@ -84,9 +85,9 @@ public class YAPIONArray extends YAPIONAny {
             if (i != 0) {
                 outputStream.write(",".getBytes(StandardCharsets.UTF_8));
             }
-            YAPIONAny yapionAny = array.get(i);
-            if (yapionAny instanceof YAPIONValue) {
-                String s = yapionAny.toYAPIONString();
+            YAPIONAnyType yapionAnyType = array.get(i);
+            if (yapionAnyType instanceof YAPIONValue) {
+                String s = yapionAnyType.toYAPIONString();
                 outputStream.write(s.substring(1, s.length() - 1).getBytes(StandardCharsets.UTF_8));
             } else {
                 array.get(i).toOutputStream(outputStream);
@@ -103,33 +104,37 @@ public class YAPIONArray extends YAPIONAny {
         return array.size();
     }
 
-    public YAPIONAny get(int index) {
+    public boolean isEmpty() {
+        return array.isEmpty();
+    }
+
+    public YAPIONAnyType get(int index) {
         if (index < 0 || index >= length()) {
             throw new YAPIONArrayIndexOutOfBoundsException("Index " + index + " out of bounds for length " + length());
         }
         return array.get(index);
     }
 
-    public YAPIONArray add(YAPIONAny yapionAny) {
-        array.add(yapionAny);
-        if (yapionAny != null) {
-            yapionAny.setParent(this);
+    public YAPIONArray add(YAPIONAnyType yapionAnyType) {
+        array.add(yapionAnyType);
+        if (yapionAnyType != null) {
+            yapionAnyType.setParent(this);
         }
         return this;
     }
 
-    public YAPIONArray set(int index, YAPIONAny yapionAny) {
+    public YAPIONArray set(int index, YAPIONAnyType yapionAnyType) {
         if (index < 0 || index >= length()) {
             return this;
         }
-        array.set(index, yapionAny);
+        array.set(index, yapionAnyType);
         return this;
     }
 
 
 
     @Override
-    public Optional<YAPIONSearchResult<? extends YAPIONAny>> get(String key) {
+    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String key) {
         try {
             return Optional.of(new YAPIONSearchResult<>(get(Integer.parseInt(key))));
         } catch (NumberFormatException | YAPIONArrayIndexOutOfBoundsException e) {

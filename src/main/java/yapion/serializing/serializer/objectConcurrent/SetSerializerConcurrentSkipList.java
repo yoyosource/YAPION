@@ -2,7 +2,7 @@ package yapion.serializing.serializer.objectConcurrent;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -27,7 +27,7 @@ public class SetSerializerConcurrentSkipList implements InternalSerializer<Concu
     }
 
     @Override
-    public YAPIONAny serialize(ConcurrentSkipListSet<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(ConcurrentSkipListSet<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
@@ -40,8 +40,8 @@ public class SetSerializerConcurrentSkipList implements InternalSerializer<Concu
     }
 
     @Override
-    public ConcurrentSkipListSet<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONArray yapionArray = ((YAPIONObject) yapionAny).getArray("values");
+    public ConcurrentSkipListSet<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONArray yapionArray = ((YAPIONObject) yapionAnyType).getArray("values");
         ConcurrentSkipListSet<Object> set = new ConcurrentSkipListSet<>();
         for (int i = 0; i < yapionArray.length(); i++) {
             set.add(yapionDeserializer.parse(yapionArray.get(i)));

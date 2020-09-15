@@ -7,8 +7,8 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.YAPIONException;
-import yapion.hierarchy.Type;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.YAPIONType;
+import yapion.hierarchy.typegroups.YAPIONValueType;
 import yapion.parser.JSONMapper;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ import static yapion.utils.ReferenceIDUtils.calc;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONValue<T> extends YAPIONAny {
+public class YAPIONValue<T> extends YAPIONValueType {
 
     private static final String[] allowedTypes = new String[]{
             "java.lang.Boolean",
@@ -62,8 +62,8 @@ public class YAPIONValue<T> extends YAPIONAny {
     }
 
     @Override
-    public Type getType() {
-        return Type.VALUE;
+    public YAPIONType getType() {
+        return YAPIONType.VALUE;
     }
 
     @Override

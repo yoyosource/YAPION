@@ -4,7 +4,7 @@
 
 package yapion.hierarchy;
 
-public enum Type {
+public enum YAPIONType {
 
     ANY(0x21b7bcb508370b96L, "ANY"),
 
@@ -18,7 +18,7 @@ public enum Type {
     private final long referenceValue;
     private final String name;
 
-    Type(long referenceValue, String name) {
+    YAPIONType(long referenceValue, String name) {
         this.referenceValue = referenceValue;
         this.name = name;
     }

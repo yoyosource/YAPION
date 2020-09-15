@@ -1,10 +1,10 @@
 package yapion.hierarchy.interfaces;
 
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 
 public interface ObjectPath {
 
-    String getPath(YAPIONAny yapionAny);
+    String getPath(YAPIONAnyType yapionAnyType);
 
     String[] getPath();
 

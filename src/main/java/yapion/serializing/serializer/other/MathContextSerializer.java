@@ -2,7 +2,7 @@ package yapion.serializing.serializer.other;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
@@ -26,7 +26,7 @@ public class MathContextSerializer implements InternalSerializer<MathContext> {
     }
 
     @Override
-    public YAPIONAny serialize(MathContext object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(MathContext object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         yapionObject.add(new YAPIONVariable("precision", new YAPIONValue<>(object.getPrecision())));
@@ -35,8 +35,8 @@ public class MathContextSerializer implements InternalSerializer<MathContext> {
     }
 
     @Override
-    public MathContext deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAny;
+    public MathContext deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
         int precision = yapionObject.getValue("precision", 0).get();
         RoundingMode roundingMode = (RoundingMode) yapionDeserializer.parse(yapionObject.getObject("roundMode"));
         return new MathContext(precision, roundingMode);

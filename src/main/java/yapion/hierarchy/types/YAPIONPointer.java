@@ -7,8 +7,8 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONPointerException;
-import yapion.hierarchy.Type;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.YAPIONType;
+import yapion.hierarchy.typegroups.YAPIONValueType;
 import yapion.parser.JSONMapper;
 import yapion.utils.ReferenceIDUtils;
 
@@ -19,11 +19,11 @@ import java.util.Objects;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONPointer extends YAPIONAny {
+public class YAPIONPointer extends YAPIONValueType {
 
     @Override
-    public Type getType() {
-        return Type.POINTER;
+    public YAPIONType getType() {
+        return YAPIONType.POINTER;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class YAPIONPointer extends YAPIONAny {
 
     @Override
     public String toString() {
-        return "->" + getPointerIDString();
+        return toYAPIONString();
     }
 
     @Override

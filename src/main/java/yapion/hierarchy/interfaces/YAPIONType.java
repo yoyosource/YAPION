@@ -1,11 +1,7 @@
 package yapion.hierarchy.interfaces;
 
-import yapion.hierarchy.Type;
+public interface YAPIONType extends YAPIONReference {
 
-public interface YAPIONType {
-
-    Type getType();
-
-    long referenceValue();
+    yapion.hierarchy.YAPIONType getType();
 
 }

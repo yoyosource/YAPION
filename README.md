@@ -65,7 +65,7 @@ Values are indicated by '(...)', arrays by '\[...]', objects by '{...}', map by 
 - Most of the time JSON is nearly **1.15** to **1.4** time as long as the YAPION equivalent.
 - YAPION has native map support to easier serialize the Java counter part.
 - YAPION has native pointer support to easier serialize Java references to other Objects in multiple places.
-- YAPION's primitive types know what type they should be.
+- YAPION's primitive types know what Java Type they should be.
 
 ### JSON Equivalent
 #### Objects, Key-Value pairs

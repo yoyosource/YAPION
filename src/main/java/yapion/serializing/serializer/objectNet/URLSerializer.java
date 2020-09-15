@@ -2,7 +2,7 @@ package yapion.serializing.serializer.objectNet;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
@@ -25,7 +25,7 @@ public class URLSerializer implements InternalSerializer<URL> {
     }
 
     @Override
-    public YAPIONAny serialize(URL object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(URL object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type()));
         try {
@@ -40,8 +40,8 @@ public class URLSerializer implements InternalSerializer<URL> {
     }
 
     @Override
-    public URL deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAny;
+    public URL deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
         String protocol = yapionObject.getValue("protocol", "").get();
         String host = yapionObject.getValue("host", "").get();
         int port = yapionObject.getValue("port", 0).get();

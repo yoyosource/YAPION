@@ -2,7 +2,7 @@ package yapion.serializing.serializer.other;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
@@ -20,12 +20,12 @@ public class ThreadSerializer implements InternalSerializer<Thread> {
     }
 
     @Override
-    public YAPIONAny serialize(Thread object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(Thread object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(null);
     }
 
     @Override
-    public Thread deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public Thread deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
         return null;
     }
 

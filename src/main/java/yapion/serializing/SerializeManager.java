@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
@@ -54,12 +54,12 @@ public class SerializeManager {
         }
 
         @Override
-        public YAPIONAny serialize(Object object, YAPIONSerializer yapionSerializer) {
+        public YAPIONAnyType serialize(Object object, YAPIONSerializer yapionSerializer) {
             return new YAPIONValue<>(null);
         }
 
         @Override
-        public Object deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+        public Object deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
             return null;
         }
     }, false);
@@ -134,7 +134,7 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
+            public YAPIONAnyType serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
                     YAPIONObject yapionObject = serializer.serialize(object, yapionSerializer);
                     yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
@@ -147,7 +147,7 @@ public class SerializeManager {
 
             @Override
             @SuppressWarnings({"java:S1905"})
-            public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+            public T deserialize(YAPIONAnyType yapionAny, YAPIONDeserializer yapionDeserializer) {
                 if (yapionAny instanceof YAPIONObject) {
                     try {
                         return serializer.deserialize((YAPIONObject) yapionAny, yapionDeserializer);
@@ -176,7 +176,7 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
+            public YAPIONAnyType serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
                     return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("map", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
@@ -187,7 +187,7 @@ public class SerializeManager {
 
             @Override
             @SuppressWarnings({"java:S1905"})
-            public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+            public T deserialize(YAPIONAnyType yapionAny, YAPIONDeserializer yapionDeserializer) {
                 try {
                     return serializer.deserialize(((YAPIONObject) yapionAny).getMap("map"), yapionDeserializer);
                 } catch (Exception e) {
@@ -214,7 +214,7 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
+            public YAPIONAnyType serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
                     return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("list", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
@@ -225,7 +225,7 @@ public class SerializeManager {
 
             @Override
             @SuppressWarnings({"java:S1905"})
-            public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+            public T deserialize(YAPIONAnyType yapionAny, YAPIONDeserializer yapionDeserializer) {
                 try {
                     return serializer.deserialize(((YAPIONObject) yapionAny).getArray("list"), yapionDeserializer);
                 } catch (Exception e) {
@@ -252,7 +252,7 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
+            public YAPIONAnyType serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
                     return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("queue", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
@@ -263,7 +263,7 @@ public class SerializeManager {
 
             @Override
             @SuppressWarnings({"java:S1905"})
-            public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+            public T deserialize(YAPIONAnyType yapionAny, YAPIONDeserializer yapionDeserializer) {
                 try {
                     return serializer.deserialize(((YAPIONObject) yapionAny).getArray("queue"), yapionDeserializer);
                 } catch (Exception e) {
@@ -290,7 +290,7 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer) {
+            public YAPIONAnyType serialize(T object, YAPIONSerializer yapionSerializer) {
                 try {
                     return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("set", serializer.serialize(object, yapionSerializer));
                 } catch (Exception e) {
@@ -301,7 +301,7 @@ public class SerializeManager {
 
             @Override
             @SuppressWarnings({"java:S1905"})
-            public T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+            public T deserialize(YAPIONAnyType yapionAny, YAPIONDeserializer yapionDeserializer) {
                 try {
                     return serializer.deserialize(((YAPIONObject) yapionAny).getArray("set"), yapionDeserializer);
                 } catch (Exception e) {

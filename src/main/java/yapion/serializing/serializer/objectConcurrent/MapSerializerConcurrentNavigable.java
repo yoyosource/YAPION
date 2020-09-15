@@ -2,7 +2,7 @@ package yapion.serializing.serializer.objectConcurrent;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
@@ -28,7 +28,7 @@ public class MapSerializerConcurrentNavigable implements InternalSerializer<Conc
     }
 
     @Override
-    public YAPIONAny serialize(ConcurrentNavigableMap<?, ?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(ConcurrentNavigableMap<?, ?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
@@ -40,10 +40,10 @@ public class MapSerializerConcurrentNavigable implements InternalSerializer<Conc
     }
 
     @Override
-    public ConcurrentNavigableMap<?, ?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
+    public ConcurrentNavigableMap<?, ?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONMap yapionMap = ((YAPIONObject) yapionAnyType).getMap("values");
         ConcurrentNavigableMap<Object, Object> map = new ConcurrentSkipListMap<>();
-        for (YAPIONAny key : yapionMap.getKeys()) {
+        for (YAPIONAnyType key : yapionMap.getKeys()) {
             map.put(yapionDeserializer.parse(key), yapionDeserializer.parse(yapionMap.get(key)));
         }
         return map;

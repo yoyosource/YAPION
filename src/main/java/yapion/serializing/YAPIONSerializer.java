@@ -6,8 +6,8 @@ package yapion.serializing;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.Type;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.YAPIONType;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -72,12 +72,12 @@ public final class YAPIONSerializer {
      * @deprecated since 0.12.0
      */
     @Deprecated
-    public YAPIONAny parse(Object object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType parse(Object object, YAPIONSerializer yapionSerializer) {
         return parse(object);
     }
 
     @SuppressWarnings({"java:S3740"})
-    public YAPIONAny parse(Object object) {
+    public YAPIONAnyType parse(Object object) {
         if (pointerMap.containsKey(object)) {
             return pointerMap.get(object);
         }
@@ -158,14 +158,14 @@ public final class YAPIONSerializer {
                 continue;
             }
 
-            YAPIONAny yapionAny = parse(fieldObject);
-            if (yapionAny == null) {
+            YAPIONAnyType yapionAnyType = parse(fieldObject);
+            if (yapionAnyType == null) {
                 continue;
             }
-            if (yapionAny.getType() == Type.OBJECT) {
-                pointerMap.put(fieldObject, new YAPIONPointer((YAPIONObject) yapionAny));
+            if (yapionAnyType.getType() == YAPIONType.OBJECT) {
+                pointerMap.put(fieldObject, new YAPIONPointer((YAPIONObject) yapionAnyType));
             }
-            yapionObject.add(new YAPIONVariable(name, yapionAny));
+            yapionObject.add(new YAPIONVariable(name, yapionAnyType));
         }
         return this;
     }

@@ -2,7 +2,7 @@ package yapion.serializing.serializer.objectConcurrent;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -28,7 +28,7 @@ public class DequeSerializerBlocking implements InternalSerializer<BlockingDeque
     }
 
     @Override
-    public YAPIONAny serialize(BlockingDeque<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(BlockingDeque<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
@@ -41,8 +41,8 @@ public class DequeSerializerBlocking implements InternalSerializer<BlockingDeque
     }
 
     @Override
-    public BlockingDeque<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAny;
+    public BlockingDeque<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
         YAPIONArray yapionArray = yapionObject.getArray("values");
         BlockingDeque<Object> deque = new LinkedBlockingDeque<>();
         for (int i = 0; i < yapionArray.length(); i++) {

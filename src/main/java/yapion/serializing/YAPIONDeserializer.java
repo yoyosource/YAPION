@@ -13,7 +13,7 @@ import yapion.annotations.object.YAPIONPostDeserialization;
 import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONReflectionException;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
@@ -113,14 +113,14 @@ public final class YAPIONDeserializer {
      * @deprecated since 0.12.0
      */
     @Deprecated
-    public Object parse(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        return parse(yapionAny);
+    public Object parse(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        return parse(yapionAnyType);
     }
 
     @SuppressWarnings({"java:S3740"})
-    public Object parse(YAPIONAny yapionAny) {
-        if (yapionAny instanceof YAPIONPointer) {
-            Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", yapionAny);
+    public Object parse(YAPIONAnyType yapionAnyType) {
+        if (yapionAnyType instanceof YAPIONPointer) {
+            Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", yapionAnyType);
             if (!objectOptional.isPresent()) {
                 return null;
             }
@@ -132,14 +132,14 @@ public final class YAPIONDeserializer {
             }
             return null;
         }
-        if (yapionAny instanceof YAPIONValue) {
-            return ((YAPIONValue) yapionAny).get();
+        if (yapionAnyType instanceof YAPIONValue) {
+            return ((YAPIONValue) yapionAnyType).get();
         }
-        if (yapionAny instanceof YAPIONObject) {
-            return new YAPIONDeserializer((YAPIONObject) yapionAny, this).parse().getObject();
+        if (yapionAnyType instanceof YAPIONObject) {
+            return new YAPIONDeserializer((YAPIONObject) yapionAnyType, this).parse().getObject();
         }
-        if (yapionAny instanceof YAPIONArray) {
-            return parseArray((YAPIONArray) yapionAny);
+        if (yapionAnyType instanceof YAPIONArray) {
+            return parseArray((YAPIONArray) yapionAnyType);
         }
         return null;
     }
@@ -153,10 +153,10 @@ public final class YAPIONDeserializer {
             if (current.length() <= 0) {
                 break;
             }
-            YAPIONAny yapionAny = current.get(0);
+            YAPIONAnyType yapionAnyType = current.get(0);
             current = null;
-            if (yapionAny instanceof YAPIONArray) {
-                current = (YAPIONArray) yapionAny;
+            if (yapionAnyType instanceof YAPIONArray) {
+                current = (YAPIONArray) yapionAnyType;
             }
         }
 
@@ -202,10 +202,10 @@ public final class YAPIONDeserializer {
         }
     }
 
-    private Object serialize(YAPIONAny yapionAny, String type) {
+    private Object serialize(YAPIONAnyType yapionAnyType, String type) {
         InternalSerializer<?> serializer = SerializeManager.get(type);
         if (serializer != null && !serializer.empty()) {
-            return serializer.deserialize(yapionAny, this);
+            return serializer.deserialize(yapionAnyType, this);
         }
         return null;
     }
@@ -244,12 +244,12 @@ public final class YAPIONDeserializer {
 
                 arrayType = remove(field.getType().getTypeName(), '[', ']');
 
-                YAPIONAny yapionAny = yapionObject.getVariable(field.getName()).getValue();
+                YAPIONAnyType yapionAnyType = yapionObject.getVariable(field.getName()).getValue();
                 YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
                 if (isValid(field, yapionDeserializeType)) {
-                    field.set(object, serialize(yapionAny, yapionDeserializeType.type().getTypeName()));
+                    field.set(object, serialize(yapionAnyType, yapionDeserializeType.type().getTypeName()));
                 } else {
-                    field.set(object, parse(yapionAny, this));
+                    field.set(object, parse(yapionAnyType, this));
                 }
             }
             postDeserializationStep(object);

@@ -6,7 +6,7 @@ package yapion.serializing.api;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
@@ -39,12 +39,12 @@ public abstract class SerializerList<T extends List<?>> implements SerializerLis
      * by {@link YAPIONValue}. To use the serializer call
      * {@link YAPIONSerializer#parse(Object)}. You will need
      * to provide the Object and the YAPIONSerializer will
-     * provide you with an {@link YAPIONAny}. This is generic
+     * provide you with an {@link YAPIONAnyType}. This is generic
      * and can be an {@link YAPIONObject}, {@link YAPIONMap},
      * {@link YAPIONArray}, {@link YAPIONPointer} or
      * {@link YAPIONValue}. So you should be able to handle any
      * thing you can get or just handle it generically with
-     * {@link YAPIONAny} to be safe.
+     * {@link YAPIONAnyType} to be safe.
      *
      * @param object the {@link Object} to serialize
      * @param yapionSerializer the current YAPIONSerializer
@@ -60,8 +60,8 @@ public abstract class SerializerList<T extends List<?>> implements SerializerLis
      * deserialize any parts of the {@link YAPIONArray} that are not
      * {@link YAPIONValue} types. So anything that cannot be
      * represented by {@link YAPIONValue}. To use the serializer
-     * call {@link YAPIONDeserializer#parse(YAPIONAny)}. You will
-     * need to provide the {@link YAPIONAny} and the YAPIONDeserializer
+     * call {@link YAPIONDeserializer#parse(YAPIONAnyType)}. You will
+     * need to provide the {@link YAPIONAnyType} and the YAPIONDeserializer
      * will provide you with an {@link Object}. This is generic
      * and can be any Object. So you should be able to handle
      * any thing generically.

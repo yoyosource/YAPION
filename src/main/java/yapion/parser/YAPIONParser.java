@@ -8,14 +8,17 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.exceptions.utils.YAPIONIOException;
-import yapion.hierarchy.Type;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.YAPIONType;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
+import yapion.hierarchy.interfaces.Output;
 import yapion.hierarchy.types.*;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +57,20 @@ public final class YAPIONParser {
      * <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
      * <br>{"@mapping":[]} will be interpreted as a map.
      *
+     * <br><br>Some specialties for non Lossy JSON {@link Output#toJSONString()}
+     * instead of {@link Output#toLossyJSONString()} will be the primitive
+     * types that are represented by an YAPIONObject instead.
+     * This is to ensure that Data loss will not happen.
+     * <br>{"@byte":0} will be interpreted as a {@link Byte}
+     * <br>{"@short":0} will be interpreted as a {@link Short}
+     * <br>{"@int":0} will be interpreted as an {@link Integer}
+     * <br>{"@long":0} will be interpreted as a {@link Long}
+     * <br>{"@bint":0} will be interpreted as a {@link BigInteger}
+     * <br>{"@char":""} will be interpreted as a {@link Character}
+     * <br>{"@float":0.0} will be interpreted as a {@link Float}
+     * <br>{"@double":0.0} will be interpreted as a {@link Double}
+     * <br>{"@bdecimal":0.0} will be interpreted as a {@link BigDecimal}
+     *
      * <br><br>For further information in the classes {@link YAPIONMap#toJSONString()}
      * and {@link YAPIONPointer#toJSONString()} are a method to
      * represent these types as JSON. Those methods describe how
@@ -64,6 +81,44 @@ public final class YAPIONParser {
      */
     public static YAPIONObject mapJSON(YAPIONObject yapionObject) {
         return JSONMapper.map(yapionObject);
+    }
+
+    /**
+     * This method first parses the String to a YAPIONObject with
+     * {@link #parseJSON(String)} and maps the YAPIONObject back.
+     * After parsing this method maps every corrupted YAPIONPointer
+     * and YAPIONMap back to their corresponding YAPION
+     * representations. Useful to serialize a java object with JSON
+     * and create the underlying Java object back out of this JSON
+     * representation.
+     *
+     * <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
+     * <br>{"@mapping":[]} will be interpreted as a map.
+     *
+     * <br><br>Some specialties for non Lossy JSON {@link Output#toJSONString()}
+     * instead of {@link Output#toLossyJSONString()} will be the primitive
+     * types that are represented by an YAPIONObject instead.
+     * This is to ensure that Data loss will not happen.
+     * <br>{"@byte":0} will be interpreted as a {@link Byte}
+     * <br>{"@short":0} will be interpreted as a {@link Short}
+     * <br>{"@int":0} will be interpreted as an {@link Integer}
+     * <br>{"@long":0} will be interpreted as a {@link Long}
+     * <br>{"@bint":0} will be interpreted as a {@link BigInteger}
+     * <br>{"@char":""} will be interpreted as a {@link Character}
+     * <br>{"@float":0.0} will be interpreted as a {@link Float}
+     * <br>{"@double":0.0} will be interpreted as a {@link Double}
+     * <br>{"@bdecimal":0.0} will be interpreted as a {@link BigDecimal}
+     *
+     * <br><br>For further information in the classes {@link YAPIONMap#toJSONString()}
+     * and {@link YAPIONPointer#toJSONString()} are a method to
+     * represent these types as JSON. Those methods describe how
+     * a YAPIONPointer and YAPIONMap are represented in JSON format.
+     *
+     * @param s the String to map
+     * @return YAPIONObject with mapped YAPIONPointer and YAPIONMap
+     */
+    public static YAPIONObject mapJSON(String s) {
+        return JSONMapper.map(parseJSON(s));
     }
 
     /**
@@ -82,7 +137,7 @@ public final class YAPIONParser {
     }
 
     private YAPIONObject result = null;
-    private YAPIONAny currentObject = null;
+    private YAPIONAnyType currentObject = null;
     private String s;
     private int index = 0;
 
@@ -244,7 +299,7 @@ public final class YAPIONParser {
             return;
         }
         if (!escaped && c == '}') {
-            pop(Type.OBJECT);
+            pop(YAPIONType.OBJECT);
             reset();
             currentObject = currentObject.getParent();
             if (typeStack.isEmpty()) {
@@ -280,15 +335,15 @@ public final class YAPIONParser {
         }
     }
 
-    private void push(Type type) {
-        typeStack.push(type);
+    private void push(YAPIONType YAPIONType) {
+        typeStack.push(YAPIONType);
         key = current.toString();
         current = new StringBuilder();
     }
 
-    private void pop(Type type) {
+    private void pop(YAPIONType YAPIONType) {
         ReflectionsUtils.invokeMethod("setParseTime", currentObject, new ReflectionsUtils.Parameter(long.class, typeStack.peekTime()));
-        typeStack.pop(type);
+        typeStack.pop(YAPIONType);
     }
 
     private void reset() {
@@ -298,7 +353,7 @@ public final class YAPIONParser {
 
     private void initialType(char c) {
         if (c == '{' && typeStack.isEmpty() && result == null) {
-            typeStack.push(Type.OBJECT);
+            typeStack.push(YAPIONType.OBJECT);
             result = new YAPIONObject();
             yapionObjectList.add(result);
             currentObject = result;
@@ -332,7 +387,7 @@ public final class YAPIONParser {
             return false;
         }
         if (c == '{') {
-            push(Type.OBJECT);
+            push(YAPIONType.OBJECT);
             YAPIONObject yapionObject = new YAPIONObject();
             yapionObjectList.add(yapionObject);
             add(new YAPIONVariable(key, yapionObject));
@@ -341,7 +396,7 @@ public final class YAPIONParser {
             return true;
         }
         if (c == '[') {
-            push(Type.ARRAY);
+            push(YAPIONType.ARRAY);
             YAPIONArray yapionArray = new YAPIONArray();
             add(new YAPIONVariable(key, yapionArray));
             currentObject = yapionArray;
@@ -349,7 +404,7 @@ public final class YAPIONParser {
             return true;
         }
         if (c == '(') {
-            push(Type.VALUE);
+            push(YAPIONType.VALUE);
             return true;
         }
         // Todo: BINARY POINTER?
@@ -359,11 +414,11 @@ public final class YAPIONParser {
         }*/
         if (lastChar == '-' && c == '>') {
             current.deleteCharAt(current.length() - 1);
-            push(Type.POINTER);
+            push(YAPIONType.POINTER);
             return true;
         }
         if (c == '<') {
-            push(Type.MAP);
+            push(YAPIONType.MAP);
             YAPIONMap yapionMap = new YAPIONMap();
             add(new YAPIONVariable(key, yapionMap));
             currentObject = yapionMap;
@@ -375,7 +430,7 @@ public final class YAPIONParser {
 
     private void parseValue(char c) {
         if (!escaped && c == ')') {
-            pop(Type.VALUE);
+            pop(YAPIONType.VALUE);
             add(new YAPIONVariable(key, YAPIONValue.parseValue(current.toString())));
             reset();
         } else {
@@ -386,7 +441,7 @@ public final class YAPIONParser {
     private void parsePointer(char c) {
         current.append(c);
         if (current.length() == 16) {
-            pop(Type.POINTER);
+            pop(YAPIONType.POINTER);
             YAPIONPointer yapionPointer = new YAPIONPointer(current.toString());
             yapionPointerList.add(yapionPointer);
             add(new YAPIONVariable(key, yapionPointer));
@@ -408,7 +463,7 @@ public final class YAPIONParser {
 
     private void parseMap(char c, char lastChar) {
         if (c == '>') {
-            pop(Type.MAP);
+            pop(YAPIONType.MAP);
             if (current.length() != 0) {
                 add(new YAPIONValue<>(current.toString()));
             }
@@ -450,7 +505,7 @@ public final class YAPIONParser {
                 if (current.length() != 0) {
                     add(new YAPIONVariable("", YAPIONValue.parseValue(current.toString())));
                 }
-                pop(Type.ARRAY);
+                pop(YAPIONType.ARRAY);
                 currentObject = currentObject.getParent();
                 reset();
                 return;

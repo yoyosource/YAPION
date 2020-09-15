@@ -6,7 +6,7 @@ package yapion.serializing.serializer.other;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
@@ -27,7 +27,7 @@ public class StringBuilderSerializer implements InternalSerializer<StringBuilder
     }
 
     @Override
-    public YAPIONAny serialize(StringBuilder object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(StringBuilder object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>("java.lang.StringBuilder")));
         yapionObject.add(new YAPIONVariable("string", new YAPIONValue<>(object.toString())));
@@ -35,8 +35,8 @@ public class StringBuilderSerializer implements InternalSerializer<StringBuilder
     }
 
     @Override
-    public StringBuilder deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject)yapionAny;
+    public StringBuilder deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
         return new StringBuilder().append(yapionObject.getValue("string", "").get());
     }
 }

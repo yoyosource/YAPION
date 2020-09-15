@@ -2,7 +2,7 @@ package yapion.serializing.serializer.other;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
@@ -20,12 +20,12 @@ public class RunnableSerializer implements InternalSerializer<Runnable> {
     }
 
     @Override
-    public YAPIONAny serialize(Runnable object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(Runnable object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(null);
     }
 
     @Override
-    public Runnable deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
+    public Runnable deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
         return null;
     }
 

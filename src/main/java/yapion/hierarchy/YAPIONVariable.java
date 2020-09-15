@@ -6,7 +6,8 @@ package yapion.hierarchy;
 
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
-import yapion.hierarchy.interfaces.Output;
+import yapion.hierarchy.typegroups.YAPIONAnyClosure;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,15 +18,15 @@ import static yapion.utils.ReferenceIDUtils.calc;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public final class YAPIONVariable implements Output {
+public final class YAPIONVariable extends YAPIONAnyClosure {
 
     private final String name;
-    private final YAPIONAny value;
+    private final YAPIONAnyType value;
 
     private static final String PATTERN = "[({\\[<)}\\]>]";
     private static final String REPLACEMENT = "\\\\$0";
 
-    public YAPIONVariable(String name, YAPIONAny value) {
+    public YAPIONVariable(String name, YAPIONAnyType value) {
         this.name = name;
         this.value = value;
     }
@@ -34,7 +35,7 @@ public final class YAPIONVariable implements Output {
         return name;
     }
 
-    public YAPIONAny getValue() {
+    public YAPIONAnyType getValue() {
         return value;
     }
 

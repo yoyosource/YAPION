@@ -6,7 +6,7 @@ package yapion.serializing.serializer.object;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -32,7 +32,7 @@ public class DequeSerializer implements InternalSerializer<Deque<?>> {
     }
 
     @Override
-    public YAPIONAny serialize(Deque<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(Deque<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
@@ -45,8 +45,8 @@ public class DequeSerializer implements InternalSerializer<Deque<?>> {
     }
 
     @Override
-    public Deque<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAny;
+    public Deque<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
         YAPIONArray yapionArray = yapionObject.getArray("values");
         Deque<Object> deque = new ArrayDeque<>();
         for (int i = 0; i < yapionArray.length(); i++) {

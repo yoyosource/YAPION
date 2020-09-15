@@ -6,7 +6,7 @@ package yapion.serializing.serializer.object;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -30,7 +30,7 @@ public class QueueSerializer implements InternalSerializer<Queue<?>> {
     }
 
     @Override
-    public YAPIONAny serialize(Queue<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(Queue<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
@@ -43,8 +43,8 @@ public class QueueSerializer implements InternalSerializer<Queue<?>> {
     }
 
     @Override
-    public Queue<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAny;
+    public Queue<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
         YAPIONArray yapionArray = yapionObject.getArray("values");
         Queue<Object> queue = new PriorityQueue<>();
         for (int i = 0; i < yapionArray.length(); i++) {

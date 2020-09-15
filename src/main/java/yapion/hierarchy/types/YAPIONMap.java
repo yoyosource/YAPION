@@ -8,9 +8,10 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.Type;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.YAPIONType;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
+import yapion.hierarchy.typegroups.YAPIONMappingType;
 import yapion.parser.JSONMapper;
 import yapion.parser.YAPIONParser;
 import yapion.parser.YAPIONParserMapMapping;
@@ -23,19 +24,19 @@ import java.util.*;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONMap extends YAPIONAny {
+public class YAPIONMap extends YAPIONMappingType {
 
-    private final Map<YAPIONAny, YAPIONAny> variables = new LinkedHashMap<>();
+    private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
     private final List<YAPIONParserMapMapping> mappingList = new ArrayList<>();
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
-    private final Map<String, YAPIONAny> mappingVariables = new LinkedHashMap<>();
+    private final Map<String, YAPIONAnyType> mappingVariables = new LinkedHashMap<>();
 
     @Override
-    public Type getType() {
-        return Type.MAP;
+    public YAPIONType getType() {
+        return YAPIONType.MAP;
     }
 
     @Override
@@ -44,9 +45,9 @@ public class YAPIONMap extends YAPIONAny {
     }
 
     @Override
-    public String getPath(YAPIONAny yapionAny) {
-        for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
-            if (entry.getValue() == yapionAny) {
+    public String getPath(YAPIONAnyType yapionAnyType) {
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
+            if (entry.getValue() == yapionAnyType) {
                 return entry.getKey().toYAPIONString();
             }
         }
@@ -59,7 +60,7 @@ public class YAPIONMap extends YAPIONAny {
 
         StringBuilder st = new StringBuilder();
         st.append("<");
-        for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             String id1 = String.format("%01X", id++);
             String id2 = String.format("%01X", id++);
 
@@ -78,7 +79,7 @@ public class YAPIONMap extends YAPIONAny {
         yapionObject.add(JSONMapper.MAP_IDENTIFIER, mapping);
 
         long id = 0;
-        for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             String id1 = String.format("%01X", id++);
             String id2 = String.format("%01X", id++);
 
@@ -96,7 +97,7 @@ public class YAPIONMap extends YAPIONAny {
         yapionObject.add(JSONMapper.MAP_IDENTIFIER, mapping);
 
         long id = 0;
-        for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             String id1 = String.format("%01X", id++);
             String id2 = String.format("%01X", id++);
 
@@ -112,7 +113,7 @@ public class YAPIONMap extends YAPIONAny {
         long id = 0;
         outputStream.write("<".getBytes(StandardCharsets.UTF_8));
         boolean b = false;
-        for (Map.Entry<YAPIONAny, YAPIONAny> entry : variables.entrySet()) {
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             String id1 = String.format("%01X", id++);
             String id2 = String.format("%01X", id++);
 
@@ -130,7 +131,7 @@ public class YAPIONMap extends YAPIONAny {
         outputStream.write(">".getBytes(StandardCharsets.UTF_8));
     }
 
-    public YAPIONMap add(YAPIONAny key, YAPIONAny value) {
+    public YAPIONMap add(YAPIONAnyType key, YAPIONAnyType value) {
         variables.put(key, value);
         return this;
     }
@@ -148,6 +149,18 @@ public class YAPIONMap extends YAPIONAny {
     public YAPIONMap add(YAPIONParserMapMapping mapping) {
         mappingList.add(mapping);
         return this;
+    }
+
+    public int size() {
+        return variables.size();
+    }
+
+    public int length() {
+        return variables.size();
+    }
+
+    public boolean isEmpty() {
+        return variables.isEmpty();
     }
 
     public synchronized YAPIONMap finishMapping() {
@@ -169,21 +182,21 @@ public class YAPIONMap extends YAPIONAny {
         return this;
     }
 
-    public YAPIONAny get(YAPIONAny key) {
+    public YAPIONAnyType get(YAPIONAnyType key) {
         return variables.get(key);
     }
 
-    public List<YAPIONAny> getKeys() {
+    public List<YAPIONAnyType> getKeys() {
         return new ArrayList<>(variables.keySet());
     }
 
     @Override
-    public Optional<YAPIONSearchResult<? extends YAPIONAny>> get(String key) {
+    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String key) {
         YAPIONVariable variable = YAPIONParser.parse("{" + key + "}").getVariable("");
         if (variable == null) return Optional.empty();
-        YAPIONAny anyKey = variable.getValue();
+        YAPIONAnyType anyKey = variable.getValue();
         if (anyKey == null) return Optional.empty();
-        YAPIONAny anyValue = get(anyKey);
+        YAPIONAnyType anyValue = get(anyKey);
         if (anyValue == null) return Optional.empty();
         return Optional.of(new YAPIONSearchResult<>(anyValue));
     }

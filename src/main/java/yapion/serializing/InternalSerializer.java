@@ -6,7 +6,7 @@ package yapion.serializing;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -19,7 +19,7 @@ public interface InternalSerializer<T> {
     default boolean empty() {
         return false;
     }
-    YAPIONAny serialize(T object, YAPIONSerializer yapionSerializer);
-    T deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer);
+    YAPIONAnyType serialize(T object, YAPIONSerializer yapionSerializer);
+    T deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer);
 
 }

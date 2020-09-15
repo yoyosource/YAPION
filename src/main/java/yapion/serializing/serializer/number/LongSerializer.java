@@ -6,7 +6,7 @@ package yapion.serializing.serializer.number;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
@@ -29,12 +29,12 @@ public class LongSerializer implements InternalSerializer<Long> {
     }
 
     @Override
-    public YAPIONAny serialize(Long object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(Long object, YAPIONSerializer yapionSerializer) {
         return new YAPIONValue<>(object);
     }
 
     @Override
-    public Long deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        return ((YAPIONValue<Long>) yapionAny).get();
+    public Long deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        return ((YAPIONValue<Long>) yapionAnyType).get();
     }
 }

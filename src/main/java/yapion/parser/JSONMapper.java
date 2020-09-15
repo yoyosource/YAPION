@@ -1,6 +1,6 @@
 package yapion.parser;
 
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.*;
 import yapion.utils.ReflectionsUtils;
@@ -64,7 +64,7 @@ public class JSONMapper {
 
     private YAPIONObject mapObject(YAPIONObject json) {
         yapionObjectList.add(json);
-        List<YAPIONVariable> toChange = new ArrayList<>(json.variables());
+        List<YAPIONVariable> toChange = new ArrayList<>(json.size());
         for (String s : json.getKeys()) {
             YAPIONVariable variable = json.getVariable(s);
             toChange.add(new YAPIONVariable(variable.getName(), map(variable.getValue())));
@@ -77,22 +77,25 @@ public class JSONMapper {
         return json;
     }
 
-    private YAPIONAny map(YAPIONAny yapionAny) {
-        if (yapionAny instanceof YAPIONArray) {
-            return mapArray((YAPIONArray) yapionAny);
+    private YAPIONAnyType map(YAPIONAnyType yapionAnyType) {
+        if (yapionAnyType instanceof YAPIONArray) {
+            return mapArray((YAPIONArray) yapionAnyType);
         }
-        if (!(yapionAny instanceof YAPIONObject)) {
-            return yapionAny;
+        if (!(yapionAnyType instanceof YAPIONObject)) {
+            return yapionAnyType;
         }
 
-        YAPIONObject yapionObject = (YAPIONObject) yapionAny;
+        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
+        if (yapionObject.getArray(MAP_IDENTIFIER) != null) {
+            return mapMap(yapionObject);
+        }
+        if (yapionObject.size() != 1) {
+            return mapObject(yapionObject);
+        }
         if (yapionObject.getValue(POINTER_IDENTIFIER, "") != null) {
             YAPIONPointer yapionPointer = mapPointer(yapionObject);
             yapionPointerList.add(yapionPointer);
             return yapionPointer;
-        }
-        if (yapionObject.getArray(MAP_IDENTIFIER) != null) {
-            return mapMap(yapionObject);
         }
 
         if (yapionObject.getValue(BYTE_IDENTIFIER) != null) {
@@ -137,13 +140,16 @@ public class JSONMapper {
         return new YAPIONPointer(yapionObject.getValue(POINTER_IDENTIFIER, "").get());
     }
 
-    private YAPIONMap mapMap(YAPIONObject yapionObject) {
+    private YAPIONAnyType mapMap(YAPIONObject yapionObject) {
         YAPIONArray mapping = yapionObject.getArray(MAP_IDENTIFIER);
+        if (yapionObject.size() != mapping.length() * 2 + 1) {
+            return mapObject(yapionObject);
+        }
         YAPIONMap yapionMap = new YAPIONMap();
         for (int i = 0; i < mapping.length(); i++) {
             String[] mapped = ((YAPIONValue<String>) mapping.get(i)).get().split(":");
-            YAPIONAny key = map(yapionObject.getVariable("#" + mapped[0]).getValue());
-            YAPIONAny value = map(yapionObject.getVariable("#" + mapped[1]).getValue());
+            YAPIONAnyType key = map(yapionObject.getVariable("#" + mapped[0]).getValue());
+            YAPIONAnyType value = map(yapionObject.getVariable("#" + mapped[1]).getValue());
 
             yapionMap.add(key, value);
         }

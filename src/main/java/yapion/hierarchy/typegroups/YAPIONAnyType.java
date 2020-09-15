@@ -2,7 +2,7 @@
 // YAPION
 // Copyright (C) 2019,2020 yoyosource
 
-package yapion.hierarchy;
+package yapion.hierarchy.typegroups;
 
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
@@ -14,12 +14,12 @@ import java.util.Optional;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public abstract class YAPIONAny implements Output, ObjectSearch, ObjectPath, YAPIONType {
+public abstract class YAPIONAnyType implements Output, ObjectSearch, ObjectPath, YAPIONType {
 
     public final int getDepth() {
         int depth = 0;
-        YAPIONAny yapionAny = this;
-        while ((yapionAny = yapionAny.getParent()) != null){
+        YAPIONAnyType yapionAnyType = this;
+        while ((yapionAnyType = yapionAnyType.getParent()) != null){
             depth++;
         }
         return depth;
@@ -27,29 +27,29 @@ public abstract class YAPIONAny implements Output, ObjectSearch, ObjectPath, YAP
 
     public final String[] getPath() {
         List<String> path = new ArrayList<>();
-        YAPIONAny last = this;
-        YAPIONAny yapionAny = this;
-        while ((yapionAny = yapionAny.getParent()) != null) {
-            path.add(yapionAny.getPath(last));
-            last = yapionAny;
+        YAPIONAnyType last = this;
+        YAPIONAnyType yapionAnyType = this;
+        while ((yapionAnyType = yapionAnyType.getParent()) != null) {
+            path.add(yapionAnyType.getPath(last));
+            last = yapionAnyType;
         }
         return path.toArray(new String[0]);
     }
 
     @Override
-    public String getPath(YAPIONAny yapionAny) {
+    public String getPath(YAPIONAnyType yapionAnyType) {
         return "";
     }
 
-    private YAPIONAny parent = null;
+    private YAPIONAnyType parent = null;
     private boolean valuePresent = false;
     private long parseTime = 0;
 
-    public final void setParent(YAPIONAny yapionAny) {
+    public final void setParent(YAPIONAnyType yapionAnyType) {
         if (valuePresent) {
             return;
         }
-        this.parent = yapionAny;
+        this.parent = yapionAnyType;
         valuePresent = true;
     }
 
@@ -80,12 +80,12 @@ public abstract class YAPIONAny implements Output, ObjectSearch, ObjectPath, YAP
         return valuePresent;
     }
 
-    public final YAPIONAny getParent() {
+    public final YAPIONAnyType getParent() {
         return parent;
     }
 
-    public final Optional<ObjectSearch.YAPIONSearchResult<? extends YAPIONAny>> get(String... s) {
-        Optional<ObjectSearch.YAPIONSearchResult<? extends YAPIONAny>> optional = Optional.of(new ObjectSearch.YAPIONSearchResult<>(this));
+    public final Optional<ObjectSearch.YAPIONSearchResult<? extends YAPIONAnyType>> get(String... s) {
+        Optional<ObjectSearch.YAPIONSearchResult<? extends YAPIONAnyType>> optional = Optional.of(new ObjectSearch.YAPIONSearchResult<>(this));
         for (int i = 0; i < s.length; i++) {
             if (!optional.isPresent()) return Optional.empty();
             optional = optional.get().value.get(s[i]);
@@ -94,7 +94,7 @@ public abstract class YAPIONAny implements Output, ObjectSearch, ObjectPath, YAP
     }
 
     @Override
-    public Optional<YAPIONSearchResult<? extends YAPIONAny>> get(String key) {
+    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String key) {
         return Optional.empty();
     }
 

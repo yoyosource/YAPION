@@ -6,7 +6,7 @@ package yapion.serializing.serializer.object;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
@@ -31,7 +31,7 @@ public class MapSerializerWeakHash implements InternalSerializer<WeakHashMap<?, 
     }
 
     @Override
-    public YAPIONAny serialize(WeakHashMap<?, ?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(WeakHashMap<?, ?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
@@ -43,10 +43,10 @@ public class MapSerializerWeakHash implements InternalSerializer<WeakHashMap<?, 
     }
 
     @Override
-    public WeakHashMap<?, ?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONMap yapionMap = ((YAPIONObject) yapionAny).getMap("values");
+    public WeakHashMap<?, ?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONMap yapionMap = ((YAPIONObject) yapionAnyType).getMap("values");
         WeakHashMap<Object, Object> map = new WeakHashMap<>();
-        for (YAPIONAny key : yapionMap.getKeys()) {
+        for (YAPIONAnyType key : yapionMap.getKeys()) {
             map.put(yapionDeserializer.parse(key), yapionDeserializer.parse(yapionMap.get(key)));
         }
         return map;

@@ -2,7 +2,7 @@ package yapion.serializing.serializer.objectConcurrent;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONAny;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -27,7 +27,7 @@ public class ListSerializerCopyOnWriteArray implements InternalSerializer<CopyOn
     }
 
     @Override
-    public YAPIONAny serialize(CopyOnWriteArrayList<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(CopyOnWriteArrayList<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
@@ -40,8 +40,8 @@ public class ListSerializerCopyOnWriteArray implements InternalSerializer<CopyOn
     }
 
     @Override
-    public CopyOnWriteArrayList<?> deserialize(YAPIONAny yapionAny, YAPIONDeserializer yapionDeserializer) {
-        YAPIONArray yapionArray = ((YAPIONObject) yapionAny).getArray("values");
+    public CopyOnWriteArrayList<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        YAPIONArray yapionArray = ((YAPIONObject) yapionAnyType).getArray("values");
         CopyOnWriteArrayList<Object> list = new CopyOnWriteArrayList<>();
         for (int i = 0; i < yapionArray.length(); i++) {
             list.add(yapionDeserializer.parse(yapionArray.get(i)));
