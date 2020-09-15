@@ -144,7 +144,7 @@ public final class YAPIONSerializer {
             try {
                 fieldObject = field.get(object);
             } catch (Exception e) {
-
+                // Ignored
             }
             if (fieldObject == null) {
                 if (!yapionInfo.optimize) {

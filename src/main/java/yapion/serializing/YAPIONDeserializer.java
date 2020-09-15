@@ -171,15 +171,13 @@ public final class YAPIONDeserializer {
         Object array = null;
         try {
             array = Array.newInstance(getClass(arrayType), ints);
-        } catch (IllegalArgumentException e) {
-            // Ignored
-        } catch (NegativeArraySizeException e) {
+        } catch (IllegalArgumentException | NegativeArraySizeException e) {
             // Ignored
         }
         if (array == null) return null;
 
         for (int i = 0; i < yapionArray.length(); i++) {
-            Array.set(array, i, parse(yapionArray.get(i), this));
+            Array.set(array, i, parse(yapionArray.get(i)));
         }
         return array;
     }
@@ -194,6 +192,7 @@ public final class YAPIONDeserializer {
             case "char":    return char.class;
             case "float":   return float.class;
             case "double":  return double.class;
+            default: break;
         }
         try {
             return Class.forName(className);
@@ -249,7 +248,7 @@ public final class YAPIONDeserializer {
                 if (isValid(field, yapionDeserializeType)) {
                     field.set(object, serialize(yapionAnyType, yapionDeserializeType.type().getTypeName()));
                 } else {
-                    field.set(object, parse(yapionAnyType, this));
+                    field.set(object, parse(yapionAnyType));
                 }
             }
             postDeserializationStep(object);
