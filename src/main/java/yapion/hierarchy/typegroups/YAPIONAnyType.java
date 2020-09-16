@@ -84,8 +84,8 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
         return parent;
     }
 
-    public final Optional<ObjectSearch.YAPIONSearchResult<? extends YAPIONAnyType>> get(String... s) {
-        Optional<ObjectSearch.YAPIONSearchResult<? extends YAPIONAnyType>> optional = Optional.of(new ObjectSearch.YAPIONSearchResult<>(this));
+    public final Optional<ObjectSearch.YAPIONSearchResult<?>> get(String... s) {
+        Optional<ObjectSearch.YAPIONSearchResult<?>> optional = Optional.of(new ObjectSearch.YAPIONSearchResult<>(this));
         for (int i = 0; i < s.length; i++) {
             if (!optional.isPresent()) return Optional.empty();
             optional = optional.get().value.get(s[i]);
@@ -94,7 +94,7 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
     }
 
     @Override
-    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String key) {
+    public Optional<YAPIONSearchResult<?>> get(String key) {
         return Optional.empty();
     }
 

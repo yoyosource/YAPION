@@ -6,11 +6,11 @@ import java.util.Optional;
 
 public interface ObjectSearch {
 
-    Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String... s);
+    Optional<YAPIONSearchResult<?>> get(String... s);
 
-    Optional<ObjectSearch.YAPIONSearchResult<? extends YAPIONAnyType>> get(String key);
+    Optional<YAPIONSearchResult<?>> get(String key);
 
-    class YAPIONSearchResult<T> {
+    class YAPIONSearchResult<T extends YAPIONAnyType> {
 
         public final T value;
 
@@ -20,12 +20,9 @@ public interface ObjectSearch {
 
         @Override
         public String toString() {
-            return "YAPIONSearch{" +
-                    "value=" + value +
-                    '}';
+            return "SearchResult{" + value + '}';
         }
 
     }
-
 
 }
