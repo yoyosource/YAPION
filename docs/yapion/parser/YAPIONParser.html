@@ -335,9 +335,10 @@ extends java.lang.Object</pre>
  <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
  <br>{"@mapping":[]} will be interpreted as a map.
 
- <br><br>Some specialties for non Lossy JSON <a href="../hierarchy/typegroups/YAPIONAnyClosure.html#toJSONString()"><code>YAPIONAnyClosure.toJSONString()</code></a>
- instead of <a href="../hierarchy/typegroups/YAPIONAnyClosure.html#toLossyJSONString()"><code>YAPIONAnyClosure.toLossyJSONString()</code></a> will be the primitive
- types that are represented by an YAPIONObject instead.
+ <br><br>Some specialties for non Lossy JSON <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONString()"><code>ObjectOutput.toJSONString()</code></a>
+ instead of <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toLossyJSONString()"><code>ObjectOutput.toLossyJSONString()</code></a> will be
+ the primitive types that are represented by an YAPIONObject
+ instead.
  This is to ensure that Data loss will not happen.
  <br>{"@byte":0} will be interpreted as a <code>Byte</code>
  <br>{"@short":0} will be interpreted as a <code>Short</code>
@@ -349,10 +350,18 @@ extends java.lang.Object</pre>
  <br>{"@double":0.0} will be interpreted as a <code>Double</code>
  <br>{"@bdecimal":0.0} will be interpreted as a <code>BigDecimal</code>
 
- <br><br>For further information in the classes <a href="../hierarchy/types/YAPIONMap.html#toJSONString()"><code>YAPIONMap.toJSONString()</code></a>
- and <a href="../hierarchy/types/YAPIONPointer.html#toJSONString()"><code>YAPIONPointer.toJSONString()</code></a> are a method to
- represent these types as JSON. Those methods describe how
- a YAPIONPointer and YAPIONMap are represented in JSON format.</div>
+ <br><br>You can find more information in the classes
+ <a href="../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types"><code>YAPIONMap</code></a>, <a href="../hierarchy/types/YAPIONPointer.html" title="class in yapion.hierarchy.types"><code>YAPIONPointer</code></a> and <a href="../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>.
+ These classes have the method <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONString()"><code>ObjectOutput.toJSONString()</code></a>
+ and <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toLossyJSONString()"><code>ObjectOutput.toLossyJSONString()</code></a> overridden with a
+ specific implementation for these types. The difference
+ between those methods should be the <a href="../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>
+ implementation as it tries to not lose any data with
+ <a href="../hierarchy/types/YAPIONValue.html#toJSONString()"><code>YAPIONValue.toJSONString()</code></a> and will discard some data
+ by using <a href="../hierarchy/types/YAPIONValue.html#toLossyJSONString()"><code>YAPIONValue.toLossyJSONString()</code></a>. The data
+ that gets lost are the type of numbers, floating point
+ numbers and the information whether or not the <code>String</code>
+ was previously a <code>Character</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>yapionObject</code> - the YAPIONObject to map</dd>
@@ -379,9 +388,10 @@ extends java.lang.Object</pre>
  <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
  <br>{"@mapping":[]} will be interpreted as a map.
 
- <br><br>Some specialties for non Lossy JSON <a href="../hierarchy/typegroups/YAPIONAnyClosure.html#toJSONString()"><code>YAPIONAnyClosure.toJSONString()</code></a>
- instead of <a href="../hierarchy/typegroups/YAPIONAnyClosure.html#toLossyJSONString()"><code>YAPIONAnyClosure.toLossyJSONString()</code></a> will be the primitive
- types that are represented by an YAPIONObject instead.
+ <br><br>Some specialties for non Lossy JSON <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONString()"><code>ObjectOutput.toJSONString()</code></a>
+ instead of <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toLossyJSONString()"><code>ObjectOutput.toLossyJSONString()</code></a> will be
+ the primitive types that are represented by an YAPIONObject
+ instead.
  This is to ensure that Data loss will not happen.
  <br>{"@byte":0} will be interpreted as a <code>Byte</code>
  <br>{"@short":0} will be interpreted as a <code>Short</code>
@@ -393,10 +403,18 @@ extends java.lang.Object</pre>
  <br>{"@double":0.0} will be interpreted as a <code>Double</code>
  <br>{"@bdecimal":0.0} will be interpreted as a <code>BigDecimal</code>
 
- <br><br>For further information in the classes <a href="../hierarchy/types/YAPIONMap.html#toJSONString()"><code>YAPIONMap.toJSONString()</code></a>
- and <a href="../hierarchy/types/YAPIONPointer.html#toJSONString()"><code>YAPIONPointer.toJSONString()</code></a> are a method to
- represent these types as JSON. Those methods describe how
- a YAPIONPointer and YAPIONMap are represented in JSON format.</div>
+ <br><br>You can find more information in the classes
+ <a href="../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types"><code>YAPIONMap</code></a>, <a href="../hierarchy/types/YAPIONPointer.html" title="class in yapion.hierarchy.types"><code>YAPIONPointer</code></a> and <a href="../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>.
+ These classes have the method <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONString()"><code>ObjectOutput.toJSONString()</code></a>
+ and <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toLossyJSONString()"><code>ObjectOutput.toLossyJSONString()</code></a> overridden with a
+ specific implementation for these types. The difference
+ between those methods should be the <a href="../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>
+ implementation as it tries to not lose any data with
+ <a href="../hierarchy/types/YAPIONValue.html#toJSONString()"><code>YAPIONValue.toJSONString()</code></a> and will discard some data
+ by using <a href="../hierarchy/types/YAPIONValue.html#toLossyJSONString()"><code>YAPIONValue.toLossyJSONString()</code></a>. The data
+ that gets lost are the type of numbers, floating point
+ numbers and the information whether or not the <code>String</code>
+ was previously a <code>Character</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>s</code> - the String to map</dd>
