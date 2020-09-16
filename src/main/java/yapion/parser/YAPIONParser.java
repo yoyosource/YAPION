@@ -9,6 +9,7 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.exceptions.utils.YAPIONIOException;
 import yapion.hierarchy.YAPIONType;
+import yapion.hierarchy.interfaces.ObjectOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.*;
@@ -56,8 +57,8 @@ public final class YAPIONParser {
      * <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
      * <br>{"@mapping":[]} will be interpreted as a map.
      *
-     * <br><br>Some specialties for non Lossy JSON {@link YAPIONAnyType#toJSONString()}
-     * instead of {@link YAPIONAnyType#toLossyJSONString()} will be the primitive
+     * <br><br>Some specialties for non Lossy JSON {@link ObjectOutput#toJSONString()}
+     * instead of {@link ObjectOutput#toLossyJSONString()} will be the primitive
      * types that are represented by an YAPIONObject instead.
      * This is to ensure that Data loss will not happen.
      * <br>{"@byte":0} will be interpreted as a {@link Byte}
@@ -94,8 +95,8 @@ public final class YAPIONParser {
      * <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
      * <br>{"@mapping":[]} will be interpreted as a map.
      *
-     * <br><br>Some specialties for non Lossy JSON {@link YAPIONAnyType#toJSONString()}
-     * instead of {@link YAPIONAnyType#toLossyJSONString()} will be the primitive
+     * <br><br>Some specialties for non Lossy JSON {@link ObjectOutput#toJSONString()}
+     * instead of {@link ObjectOutput#toLossyJSONString()} will be the primitive
      * types that are represented by an YAPIONObject instead.
      * This is to ensure that Data loss will not happen.
      * <br>{"@byte":0} will be interpreted as a {@link Byte}

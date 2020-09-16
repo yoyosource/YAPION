@@ -1,18 +1,8 @@
 package yapion.hierarchy.typegroups;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import yapion.hierarchy.interfaces.ObjectOutput;
 
-public abstract class YAPIONAnyClosure {
-
-    public abstract String toYAPIONString();
-
-    public abstract String toJSONString();
-
-    public abstract String toLossyJSONString();
-
-    public abstract void toOutputStream(OutputStream outputStream) throws IOException;
-
+public abstract class YAPIONAnyClosure implements ObjectOutput {
     
     public abstract long referenceValue();
 
