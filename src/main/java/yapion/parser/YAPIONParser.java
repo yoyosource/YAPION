@@ -78,12 +78,12 @@ public final class YAPIONParser {
      * and {@link ObjectOutput#toLossyJSONString()} overridden with a
      * specific implementation for these types. The difference
      * between those methods should be the {@link YAPIONValue}
-     * implementation as it tries not losing any data with
+     * implementation as it tries to not lose any data with
      * {@link YAPIONValue#toJSONString()} and will discard some data
      * by using {@link YAPIONValue#toLossyJSONString()}. The data
      * that gets lost are the type of numbers, floating point
-     * numbers and if this {@link String} was a {@link Character}
-     * previously.
+     * numbers and the information whether or not the {@link String}
+     * was previously a {@link Character}.
      *
      * @param yapionObject the YAPIONObject to map
      * @return YAPIONObject with mapped YAPIONPointer and YAPIONMap
@@ -125,12 +125,12 @@ public final class YAPIONParser {
      * and {@link ObjectOutput#toLossyJSONString()} overridden with a
      * specific implementation for these types. The difference
      * between those methods should be the {@link YAPIONValue}
-     * implementation as it tries not losing any data with
+     * implementation as it tries to not lose any data with
      * {@link YAPIONValue#toJSONString()} and will discard some data
      * by using {@link YAPIONValue#toLossyJSONString()}. The data
      * that gets lost are the type of numbers, floating point
-     * numbers and if this {@link String} was a {@link Character}
-     * previously.
+     * numbers and the information whether or not the {@link String}
+     * was previously a {@link Character}.
      *
      * @param s the String to map
      * @return YAPIONObject with mapped YAPIONPointer and YAPIONMap
