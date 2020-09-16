@@ -10,6 +10,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONSerializer;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 @YAPIONSaveExclude(context = "*")
@@ -31,7 +32,7 @@ public final class YAPIONOutputStream {
      * Writing the YAPIONObject to the OutputStream.
      *
      * @param yapionObject the YAPIONObject
-     * @throws IOException
+     * @throws IOException {@link OutputStream#flush()}
      */
     public void write(YAPIONObject yapionObject) throws IOException {
         yapionObject.toOutputStream(outputStream);
@@ -42,7 +43,7 @@ public final class YAPIONOutputStream {
      * Writing the YAPIONPacket to the OutputStream.
      *
      * @param yapionPacket the YAPIONPacket
-     * @throws IOException
+     * @throws IOException {@link #write(YAPIONObject)}
      */
     public void write(YAPIONPacket yapionPacket) throws IOException {
         write(yapionPacket.getYAPION());
@@ -52,7 +53,7 @@ public final class YAPIONOutputStream {
      * Writing the Object to the OutputStream.
      *
      * @param object the Object
-     * @throws IOException
+     * @throws IOException {@link #write(YAPIONPacket)}
      */
     public void write(Object object) throws IOException {
         write(YAPIONSerializer.serialize(object));
@@ -63,7 +64,7 @@ public final class YAPIONOutputStream {
      *
      * @param object the Object
      * @param state the specified state
-     * @throws IOException
+     * @throws IOException {@link #write(Object)}
      */
     public void write(Object object, String state) throws IOException {
         write(YAPIONSerializer.serialize(object, state));
@@ -72,7 +73,7 @@ public final class YAPIONOutputStream {
     /**
      * Closes the OutputStream.
      *
-     * @throws IOException
+     * @throws IOException {@link OutputStream#close()}
      */
     public void close() throws IOException {
         outputStream.close();

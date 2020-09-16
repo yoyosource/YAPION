@@ -70,12 +70,21 @@ public final class YAPIONSerializer {
 
     /**
      * @deprecated since 0.12.0 use {@link #parse(Object)} instead
+     *
+     * @param object to parse
+     * @param yapionSerializer to parse with
+     *
+     * @return the {@link YAPIONAnyType} of the Object inputted
      */
     @Deprecated
     public YAPIONAnyType parse(Object object, YAPIONSerializer yapionSerializer) {
         return parse(object);
     }
 
+    /**
+     * @param object to parse
+     * @return the {@link YAPIONAnyType} of the Object inputted
+     */
     @SuppressWarnings({"java:S3740"})
     public YAPIONAnyType parse(Object object) {
         if (pointerMap.containsKey(object)) {

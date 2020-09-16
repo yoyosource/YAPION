@@ -201,6 +201,7 @@ public class ReflectionsUtils {
      * or {@link YAPIONObjenesis} or a NoArgument constructor.
      *
      * @param className the class to create an instance from
+     * @param data branch to {@link #constructObjectObjenesis(String)}
      * @return an instance of the specified class
      */
     public static Object constructObject(String className, boolean data) {

@@ -86,7 +86,7 @@ public class YAPIONPacketReceiver {
      * special "@exception" handler is called. If this also throws an
      * exception this method will log the exception as a warning.
      *
-     * @param yapionPacket
+     * @param yapionPacket to handle
      */
     public void handle(YAPIONPacket yapionPacket) {
         String type = yapionPacket.getType();
