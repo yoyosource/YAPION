@@ -132,7 +132,7 @@ public final class YAPIONInputStream {
      * Returns an estimate of bytes to be able to read.
      *
      * @return the estimated byte count
-     * @throws IOException
+     * @throws IOException {@link YAPIONPacketReceiver} not null or {@link InputStream#available()}
      */
     public synchronized int available() throws IOException {
         if (yapionPacketReceiver != null) throw new IOException();
@@ -143,7 +143,7 @@ public final class YAPIONInputStream {
      * Read and parses the next YAPIONObject.
      *
      * @return the next YAPIONObject
-     * @throws IOException
+     * @throws IOException {@link YAPIONPacketReceiver} not null
      */
     public synchronized YAPIONObject read() throws IOException {
         if (yapionPacketReceiver != null) throw new IOException();
@@ -154,7 +154,7 @@ public final class YAPIONInputStream {
      * Read, parses and deserialized the next YAPIONObject.
      *
      * @return the next Object
-     * @throws IOException
+     * @throws IOException {@link YAPIONPacketReceiver} not null
      */
     public synchronized Object readObject() throws IOException {
         if (yapionPacketReceiver != null) throw new IOException();
@@ -164,7 +164,7 @@ public final class YAPIONInputStream {
     /**
      * Closes this InputStream and tries to close the handler Thread
      *
-     * @throws IOException
+     * @throws IOException {@link InputStream#close()}
      */
     public synchronized void close() throws IOException {
         running = false;
