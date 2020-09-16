@@ -1,0 +1,84 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "yoyosource",
+    "module": "YAPION",
+    "version": "0.15.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.1.1",
+      "buildId": "foug664xbzfvjnnmimorrypnbm"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "YAPION-0.15.0.jar",
+          "url": "YAPION-0.15.0.jar",
+          "size": 232252,
+          "sha512": "3b1c861b75b05c234cb2b7fa140028d356a0a0b8cf911c2263ffabe8609f2bffffb6d9f6433bbf772fc3c918b46942e715b521222a06aec766a2de1059a4b877",
+          "sha256": "a48bdf65afdd2cb3430aab84a03bc03634adaa15a0bfe98232d8bd2edaa71128",
+          "sha1": "db4174256bf5e04df0367ce677a9bfba934bd7b5",
+          "md5": "1a4b5c7ca653035041057a53db78242c"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.atteo.classindex",
+          "module": "classindex",
+          "version": {
+            "requires": "3.4"
+          }
+        },
+        {
+          "group": "org.objenesis",
+          "module": "objenesis",
+          "version": {
+            "requires": "3.1"
+          }
+        },
+        {
+          "group": "org.slf4j",
+          "module": "slf4j-api",
+          "version": {
+            "requires": "2.0.0-alpha1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "YAPION-0.15.0.jar",
+          "url": "YAPION-0.15.0.jar",
+          "size": 232252,
+          "sha512": "3b1c861b75b05c234cb2b7fa140028d356a0a0b8cf911c2263ffabe8609f2bffffb6d9f6433bbf772fc3c918b46942e715b521222a06aec766a2de1059a4b877",
+          "sha256": "a48bdf65afdd2cb3430aab84a03bc03634adaa15a0bfe98232d8bd2edaa71128",
+          "sha1": "db4174256bf5e04df0367ce677a9bfba934bd7b5",
+          "md5": "1a4b5c7ca653035041057a53db78242c"
+        }
+      ]
+    }
+  ]
+}
