@@ -6,7 +6,7 @@ package yapion.hierarchy.typegroups;
 
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
-import yapion.hierarchy.interfaces.*;
+import yapion.hierarchy.typeinterfaces.*;
 
 import java.util.ArrayList;
 import java.util.List;

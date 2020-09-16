@@ -1,9 +1,8 @@
 package yapion.parser;
 
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.YAPIONVariable;
-import yapion.hierarchy.typegroups.YAPIONMappingType;
 import yapion.hierarchy.types.*;
+import yapion.hierarchy.typegroups.YAPIONMappingType;
 import yapion.utils.ReflectionsUtils;
 
 import java.math.BigDecimal;

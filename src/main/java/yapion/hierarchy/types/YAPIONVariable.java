@@ -2,7 +2,7 @@
 // YAPION
 // Copyright (C) 2019,2020 yoyosource
 
-package yapion.hierarchy;
+package yapion.hierarchy.types;
 
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;

@@ -7,9 +7,7 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONRecursionException;
-import yapion.hierarchy.YAPIONType;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.typegroups.YAPIONMappingType;
 import yapion.utils.RecursionUtils;
 

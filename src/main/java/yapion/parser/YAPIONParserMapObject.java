@@ -6,7 +6,7 @@ package yapion.parser;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.YAPIONVariable;
+import yapion.hierarchy.types.YAPIONVariable;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")

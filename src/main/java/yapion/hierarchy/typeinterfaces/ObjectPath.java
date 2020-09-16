@@ -1,4 +1,4 @@
-package yapion.hierarchy.interfaces;
+package yapion.hierarchy.typeinterfaces;
 
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 

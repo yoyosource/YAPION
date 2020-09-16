@@ -1,7 +1,7 @@
 package yapion.parser;
 
 import yapion.exceptions.YAPIONException;
-import yapion.hierarchy.YAPIONVariable;
+import yapion.hierarchy.types.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;

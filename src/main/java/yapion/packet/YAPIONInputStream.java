@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.types.YAPIONVariable;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
 
@@ -30,8 +30,8 @@ public final class YAPIONInputStream {
     private final InputStream inputStream;
     private YAPIONPacketReceiver yapionPacketReceiver = null;
 
-    private YAPIONPacketIdentifier staticIdentifier = null;
-    private YAPIONPacketIdentifierCreator dynamicIdentifier = null;
+    private YAPIONPacketIdentifier<?> staticIdentifier = null;
+    private YAPIONPacketIdentifierCreator<?> dynamicIdentifier = null;
 
     private Thread yapionInputStreamHandler = null;
     private boolean running = true;

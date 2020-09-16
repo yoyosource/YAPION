@@ -7,7 +7,6 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONPointerException;
-import yapion.hierarchy.YAPIONType;
 import yapion.hierarchy.typegroups.YAPIONValueType;
 import yapion.parser.JSONMapper;
 import yapion.utils.ReferenceIDUtils;

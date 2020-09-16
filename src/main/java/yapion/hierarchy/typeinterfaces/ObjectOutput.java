@@ -1,4 +1,4 @@
-package yapion.hierarchy.interfaces;
+package yapion.hierarchy.typeinterfaces;
 
 import java.io.IOException;
 import java.io.OutputStream;

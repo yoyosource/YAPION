@@ -8,7 +8,7 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
-import yapion.hierarchy.YAPIONType;
+import yapion.hierarchy.types.YAPIONType;
 
 import java.util.Iterator;
 import java.util.LinkedList;
