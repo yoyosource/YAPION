@@ -58,8 +58,9 @@ public final class YAPIONParser {
      * <br>{"@mapping":[]} will be interpreted as a map.
      *
      * <br><br>Some specialties for non Lossy JSON {@link ObjectOutput#toJSONString()}
-     * instead of {@link ObjectOutput#toLossyJSONString()} will be the primitive
-     * types that are represented by an YAPIONObject instead.
+     * instead of {@link ObjectOutput#toLossyJSONString()} will be
+     * the primitive types that are represented by an YAPIONObject
+     * instead.
      * This is to ensure that Data loss will not happen.
      * <br>{"@byte":0} will be interpreted as a {@link Byte}
      * <br>{"@short":0} will be interpreted as a {@link Short}
@@ -71,10 +72,18 @@ public final class YAPIONParser {
      * <br>{"@double":0.0} will be interpreted as a {@link Double}
      * <br>{"@bdecimal":0.0} will be interpreted as a {@link BigDecimal}
      *
-     * <br><br>For further information in the classes {@link YAPIONMap#toJSONString()}
-     * and {@link YAPIONPointer#toJSONString()} are a method to
-     * represent these types as JSON. Those methods describe how
-     * a YAPIONPointer and YAPIONMap are represented in JSON format.
+     * <br><br>You can find more information in the classes
+     * {@link YAPIONMap}, {@link YAPIONPointer} and {@link YAPIONValue}.
+     * These classes have the method {@link ObjectOutput#toJSONString()}
+     * and {@link ObjectOutput#toLossyJSONString()} overridden with a
+     * specific implementation for these types. The difference
+     * between those methods should be the {@link YAPIONValue}
+     * implementation as it tries not losing any data with
+     * {@link YAPIONValue#toJSONString()} and will discard some data
+     * by using {@link YAPIONValue#toLossyJSONString()}. The data
+     * that gets lost are the type of numbers, floating point
+     * numbers and if this {@link String} was a {@link Character}
+     * previously.
      *
      * @param yapionObject the YAPIONObject to map
      * @return YAPIONObject with mapped YAPIONPointer and YAPIONMap
@@ -96,8 +105,9 @@ public final class YAPIONParser {
      * <br>{"@mapping":[]} will be interpreted as a map.
      *
      * <br><br>Some specialties for non Lossy JSON {@link ObjectOutput#toJSONString()}
-     * instead of {@link ObjectOutput#toLossyJSONString()} will be the primitive
-     * types that are represented by an YAPIONObject instead.
+     * instead of {@link ObjectOutput#toLossyJSONString()} will be
+     * the primitive types that are represented by an YAPIONObject
+     * instead.
      * This is to ensure that Data loss will not happen.
      * <br>{"@byte":0} will be interpreted as a {@link Byte}
      * <br>{"@short":0} will be interpreted as a {@link Short}
@@ -109,10 +119,18 @@ public final class YAPIONParser {
      * <br>{"@double":0.0} will be interpreted as a {@link Double}
      * <br>{"@bdecimal":0.0} will be interpreted as a {@link BigDecimal}
      *
-     * <br><br>For further information in the classes {@link YAPIONMap#toJSONString()}
-     * and {@link YAPIONPointer#toJSONString()} are a method to
-     * represent these types as JSON. Those methods describe how
-     * a YAPIONPointer and YAPIONMap are represented in JSON format.
+     * <br><br>You can find more information in the classes
+     * {@link YAPIONMap}, {@link YAPIONPointer} and {@link YAPIONValue}.
+     * These classes have the method {@link ObjectOutput#toJSONString()}
+     * and {@link ObjectOutput#toLossyJSONString()} overridden with a
+     * specific implementation for these types. The difference
+     * between those methods should be the {@link YAPIONValue}
+     * implementation as it tries not losing any data with
+     * {@link YAPIONValue#toJSONString()} and will discard some data
+     * by using {@link YAPIONValue#toLossyJSONString()}. The data
+     * that gets lost are the type of numbers, floating point
+     * numbers and if this {@link String} was a {@link Character}
+     * previously.
      *
      * @param s the String to map
      * @return YAPIONObject with mapped YAPIONPointer and YAPIONMap
