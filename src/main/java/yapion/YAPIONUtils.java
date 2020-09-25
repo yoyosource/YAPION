@@ -1,11 +1,23 @@
+// SPDX-License-Identifier: Apache-2.0
+// YAPION
+// Copyright (C) 2019,2020 yoyosource
+
 package yapion;
 
+import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONObject;
 import yapion.packet.YAPIONInputStream;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.utils.YAPIONObjectIterator;
 
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class YAPIONUtils {
 
@@ -88,6 +100,26 @@ public class YAPIONUtils {
             return CheckResult.PROBABLE;
         }
         return isBase64YAPIONObject(string);
+    }
+
+    /**
+     * The inputted {@link YAPIONObject} is traversed layer by layer.
+     * Outputs an {@link Stream} of {@link YAPIONAnyType} of all keys
+     * in the whole {@link YAPIONObject}.
+     *
+     * @param yapionObject the {@link YAPIONObject} to traverse
+     * @return the {@link Stream} which contains all {@link YAPIONAnyType} of the {@link YAPIONObject}
+     */
+    public static Stream<YAPIONAnyType> walk(YAPIONObject yapionObject) {
+        YAPIONObjectIterator iterator = new YAPIONObjectIterator(yapionObject);
+        try {
+            Spliterator<YAPIONAnyType> spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.DISTINCT);
+            return StreamSupport.stream(spliterator, false)
+                    .onClose(iterator::close);
+        } catch (Error | RuntimeException e) {
+            iterator.close();
+            throw e;
+        }
     }
 
 }
