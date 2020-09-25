@@ -12,6 +12,10 @@ import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONPacketException;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.validators.Validator;
+import yapion.hierarchy.validators.ValidatorType;
+import yapion.hierarchy.validators.ValidatorVariable;
+import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONSerializer;
 
 import java.util.HashMap;
@@ -21,6 +25,30 @@ import java.util.Map;
 @YAPIONLoad(context = "*")
 @YAPIONObjenesis
 public final class YAPIONPacket {
+
+    /**
+     * Create an {@link Validator} that validates {@link YAPIONPacket's}.
+     * This Validator is only for the meta-structure you
+     * should add you own checks for any value you can add
+     * to this packet.
+     *
+     * @return an {@link Validator} instance for an {@link YAPIONPacket}
+     */
+    public static Validator validator() {
+        Validator validator = new Validator();
+        validator.add(new ValidatorVariable(o -> o.toString().equals("yapion.packet.YAPIONPacket"), SerializeManager.TYPE_IDENTIFIER).setType(ValidatorType.VALUE));
+        validator.add(new ValidatorVariable(o -> !o.toString().equals(YAPIONPacketReceiver.ERROR_HANDLER) && !o.toString().equals(YAPIONPacketReceiver.EXCEPTION_HANDLER), "type").setType(ValidatorType.VALUE));
+        validator.add(new ValidatorVariable("payload").setType(ValidatorType.MAP));
+        validator.setValidationHook((strings) -> {
+            String s = strings.get(0);
+            if (!(s.startsWith("(") && s.endsWith(")"))) {
+                strings.set(0, "(" + s + ")");
+            }
+            strings.add(0, "payload");
+            return strings;
+        });
+        return validator;
+    }
 
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
@@ -55,7 +83,7 @@ public final class YAPIONPacket {
         if (type == null) {
             throw new YAPIONPacketException();
         }
-        if (type.equals("@error") || type.equals("@exception")) {
+        if (type.equals(YAPIONPacketReceiver.ERROR_HANDLER) || type.equals(YAPIONPacketReceiver.EXCEPTION_HANDLER)) {
             throw new YAPIONPacketException();
         }
         this.type = type;
