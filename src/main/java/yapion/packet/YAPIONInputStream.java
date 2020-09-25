@@ -17,7 +17,6 @@ import yapion.serializing.YAPIONDeserializer;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -96,7 +95,9 @@ public final class YAPIONInputStream {
                 } catch (Exception e) {
                     drop();
                     if (yapionPacketReceiver != null) {
-                        yapionPacketReceiver.handle(constructExceptionPacket());
+                        YAPIONPacket yapionPacket = new YAPIONPacket("");
+                        addIdentifier(yapionPacket);
+                        yapionPacketReceiver.handleException(yapionPacket, e);
                     }
                     logger.warn("Something went wrong while handling the read object.", e.getCause());
                 }
@@ -104,20 +105,6 @@ public final class YAPIONInputStream {
         });
         yapionInputStreamHandler.setDaemon(true);
         yapionInputStreamHandler.start();
-    }
-
-    private YAPIONPacket constructExceptionPacket() {
-        YAPIONPacket yapionPacket = new YAPIONPacket("");
-        try {
-            Field field = yapionPacket.getClass().getField("type");
-            field.setAccessible(true);
-            field.set(yapionPacket, "@exception");
-        } catch (Exception e) {
-
-        }
-        if (staticIdentifier != null) yapionPacket.setYapionPacketIdentifier(staticIdentifier);
-        if (dynamicIdentifier != null) yapionPacket.setYapionPacketIdentifier(dynamicIdentifier.identifier());
-        return yapionPacket;
     }
 
     private void drop() {
@@ -201,9 +188,13 @@ public final class YAPIONInputStream {
         if (!(object instanceof String)) return;
         if (!object.equals(YAPIONPacket.class.getTypeName())) return;
         YAPIONPacket yapionPacket = (YAPIONPacket) YAPIONDeserializer.deserialize(yapionObject);
+        addIdentifier(yapionPacket);
+        yapionPacketReceiver.handle(yapionPacket);
+    }
+
+    private void addIdentifier(YAPIONPacket yapionPacket) {
         if (staticIdentifier != null) yapionPacket.setYapionPacketIdentifier(staticIdentifier);
         if (dynamicIdentifier != null) yapionPacket.setYapionPacketIdentifier(dynamicIdentifier.identifier());
-        yapionPacketReceiver.handle(yapionPacket);
     }
 
 }

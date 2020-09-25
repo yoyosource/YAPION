@@ -97,19 +97,19 @@ public class YAPIONPacketReceiver {
             handleError(yapionPacket);
             return;
         }
-        handlePacket(yapionPacket, type, handlerMap.get(type).inThread());
+        handlePacket(yapionPacket, type, handlerMap.get(type));
     }
 
-    private void handlePacket(YAPIONPacket yapionPacket, String type, boolean inThread) {
+    private void handlePacket(YAPIONPacket yapionPacket, String type, YAPIONPacketHandler handler) {
         Runnable runnable = () -> {
             try {
-                handlerMap.get(type).handlePacket(yapionPacket);
+                handler.handlePacket(yapionPacket);
             } catch (Exception e) {
                 logger.warn("The packet handler with type '" + type + "' threw an exception.", e.getCause());
-                handleException(yapionPacket, e);
+                if (!handler.ignoreException()) handleException(yapionPacket, e);
             }
         };
-        if (inThread) {
+        if (handler.runThread()) {
             Thread thread = new Thread(runnable);
             thread.setName("handlePacket Thread");
             thread.setDaemon(true);
@@ -128,7 +128,7 @@ public class YAPIONPacketReceiver {
         }
     }
 
-    private void handleException(YAPIONPacket yapionPacket, Exception exception) {
+    void handleException(YAPIONPacket yapionPacket, Exception exception) {
         try {
             yapionPacket.add(EXCEPTION_HANDLER, exception);
             handlerMap.get(EXCEPTION_HANDLER).handlePacket(yapionPacket);

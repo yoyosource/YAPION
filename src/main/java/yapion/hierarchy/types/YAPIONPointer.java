@@ -87,7 +87,8 @@ public class YAPIONPointer extends YAPIONValueType {
 
     @Override
     public Optional<YAPIONSearchResult<?>> get(String key) {
-        if (key.equals("@followPointer")) return Optional.of(new YAPIONSearchResult<>(yapionObject));
+        if (yapionObject == null) return Optional.empty();
+        if (key.equals("@reference")) return Optional.of(new YAPIONSearchResult<>(yapionObject));
         return Optional.empty();
     }
 
