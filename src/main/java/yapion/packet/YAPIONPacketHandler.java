@@ -13,4 +13,8 @@ public interface YAPIONPacketHandler {
 
     void handlePacket(YAPIONPacket yapionPacket);
 
+    default boolean inThread() {
+        return false;
+    }
+
 }

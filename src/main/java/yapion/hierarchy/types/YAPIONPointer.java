@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.Optional;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
@@ -82,6 +83,12 @@ public class YAPIONPointer extends YAPIONValueType {
 
     public String getPointerIDString() {
         return ReferenceIDUtils.format(getPointerID());
+    }
+
+    @Override
+    public Optional<YAPIONSearchResult<?>> get(String key) {
+        if (key.equals("@followPointer")) return Optional.of(new YAPIONSearchResult<>(yapionObject));
+        return Optional.empty();
     }
 
     @Override

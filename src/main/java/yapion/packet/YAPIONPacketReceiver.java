@@ -20,12 +20,15 @@ public class YAPIONPacketReceiver {
     private final Map<String, YAPIONPacketHandler> handlerMap = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(YAPIONPacketReceiver.class);
 
+    public static final String ERROR_HANDLER = "@error";
+    public static final String EXCEPTION_HANDLER = "@exception";
+
     /**
      * Creates an YAPIONPacketReceiver
      */
     public YAPIONPacketReceiver() {
-        handlerMap.put("@error", yapionPacket -> {});
-        handlerMap.put("@exception", yapionPacket -> {});
+        handlerMap.put(ERROR_HANDLER, yapionPacket -> {});
+        handlerMap.put(EXCEPTION_HANDLER, yapionPacket -> {});
     }
 
     /**
@@ -91,18 +94,46 @@ public class YAPIONPacketReceiver {
     public void handle(YAPIONPacket yapionPacket) {
         String type = yapionPacket.getType();
         if (!handlerMap.containsKey(type)) {
-            type = "@error";
-        }
-        try {
-            handlerMap.get(type).handlePacket(yapionPacket);
+            handleError(yapionPacket);
             return;
-        } catch (Exception e) {
-            logger.warn("The packet handler with type '" + type + "' threw an exception.", e.getCause());
         }
+        handlePacket(yapionPacket, type, handlerMap.get(type).inThread());
+    }
+
+    private void handlePacket(YAPIONPacket yapionPacket, String type, boolean inThread) {
+        Runnable runnable = () -> {
+            try {
+                handlerMap.get(type).handlePacket(yapionPacket);
+            } catch (Exception e) {
+                logger.warn("The packet handler with type '" + type + "' threw an exception.", e.getCause());
+                handleException(yapionPacket, e);
+            }
+        };
+        if (inThread) {
+            Thread thread = new Thread(runnable);
+            thread.setName("handlePacket Thread");
+            thread.setDaemon(true);
+            thread.start();
+        } else {
+            runnable.run();
+        }
+    }
+
+    private void handleError(YAPIONPacket yapionPacket) {
         try {
-            handlerMap.get("@exception").handlePacket(yapionPacket);
+            handlerMap.get(ERROR_HANDLER).handlePacket(yapionPacket);
         } catch (Exception e) {
-            logger.warn("The packet handler with type '@exception' threw an exception.", e.getCause());
+            logger.warn("The packet handler with type '" + ERROR_HANDLER + "' threw an exception.", e.getCause());
+            handleException(yapionPacket, e);
+        }
+    }
+
+    private void handleException(YAPIONPacket yapionPacket, Exception exception) {
+        try {
+            yapionPacket.add(EXCEPTION_HANDLER, exception);
+            handlerMap.get(EXCEPTION_HANDLER).handlePacket(yapionPacket);
+        } catch (Exception e) {
+            logger.warn("The packet handler with type '" + EXCEPTION_HANDLER + "' threw an exception.", e.getCause());
         }
     }
 
