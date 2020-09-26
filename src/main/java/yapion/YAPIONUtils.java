@@ -94,7 +94,7 @@ public class YAPIONUtils {
     }
 
     /**
-     * Check ist a generic String can be a YAPION Object serialized by the
+     * Check if a generic String can be a YAPION Object serialized by the
      * {@link YAPIONSerializer} that can be deserialized by the {@link YAPIONDeserializer}.
      *
      * @param string the string to check
@@ -108,6 +108,13 @@ public class YAPIONUtils {
         return isBase64YAPIONObject(string);
     }
 
+    /**
+     * Check if a generic String has YAPIONObjects embedded which can be deserialized
+     * by the {@link YAPIONDeserializer}.
+     *
+     * @param string the string to check
+     * @return the result if the String contains an {@link YAPIONObject}
+     */
     public static CheckResult stringContainsYAPIONObject(String string) {
         for (int i = 0; i < string.length(); i++) {
             char c = string.charAt(i);
@@ -123,6 +130,12 @@ public class YAPIONUtils {
         return CheckResult.NOT;
     }
 
+    /**
+     * Retrieve any {@link YAPIONObject} embedded in an generic String.
+     *
+     * @param string the string to extract from
+     * @return all {@link YAPIONObject's} that got extracted
+     */
     public static List<YAPIONObject> stringGetAllYAPIONObjects(String string) {
         List<YAPIONObject> yapionObjects = new ArrayList<>();
         int i = 0;
