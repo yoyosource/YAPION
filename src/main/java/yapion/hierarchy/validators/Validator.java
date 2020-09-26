@@ -124,8 +124,11 @@ public final class Validator {
     }
 
     public static Validator validator(YAPIONObject yapionObject, ValidationOption... validationOptions) {
-        ValidationTypes types = new ValidationTypes(validationOptions);
         Validator validator = new Validator();
+        if (validationOptions == null) return validator;
+        if (validationOptions.length == 0) return validator;
+
+        ValidationTypes types = new ValidationTypes(validationOptions);
         YAPIONUtils.walk(yapionObject).forEach(s -> {
             ValidatorType validatorType = ValidatorType.getByYAPIONType(s.getType());
             String[] path = s.getPath();
