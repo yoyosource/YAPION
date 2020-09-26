@@ -22,7 +22,7 @@ public interface YAPIONPacketHandler {
     /**
      * Specifies if this handler should be run in an Thread.
      *
-     * @return {@see true} if it should run in a thread, {@see false} otherwise
+     * @return {@code true} if it should run in a thread, {@code false} otherwise
      */
     default boolean runThread() {
         return false;
@@ -32,7 +32,7 @@ public interface YAPIONPacketHandler {
      * Specifies if exceptions should be ignores and not processes by the
      * '@exception' handler.
      *
-     * @return {@see true} if exceptions should be ignored, {@see false} otherwise
+     * @return {@code true} if exceptions should be ignored, {@code false} otherwise
      */
     default boolean ignoreException() {
         return false;

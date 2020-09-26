@@ -56,7 +56,7 @@ public final class ValidatorCluster {
      * {@link Validator}. It uses the {@link ClusterMode#ANY_VALID}.
      *
      * @param yapionObject the {@link YAPIONObject} to validate
-     * @return {@see true} if any {@link Validator} returns {@see true}, {@see false} otherwise
+     * @return {@code true} if any {@link Validator} returns {@code true}, {@code false} otherwise
      */
     public boolean validate(YAPIONObject yapionObject) {
         return validate(ClusterMode.ANY_VALID, yapionObject);
@@ -68,7 +68,7 @@ public final class ValidatorCluster {
      *
      * @param yapionObject the {@link YAPIONObject} to validate
      * @param validNumber the {@link Validator} threshold
-     * @return {@see true} if at least n {@link Validator}'s returned {@see true}, {@see false} otherwise
+     * @return {@code true} if at least n {@link Validator}'s returned {@code true}, {@code false} otherwise
      */
     public boolean validate(YAPIONObject yapionObject, int validNumber) {
         return validate(ClusterMode.LEAST_VALID, yapionObject, validNumber);
@@ -79,7 +79,7 @@ public final class ValidatorCluster {
      *
      * @param clusterMode the {@link ClusterMode} to use
      * @param yapionObject the {@link YAPIONObject} to validate
-     * @return {@see true} if the specification of the {@link ClusterMode} are met
+     * @return {@code true} if the specification of the {@code ClusterMode} are met
      *         {@link ClusterMode#ANY_VALID} and {@link ClusterMode#LEAST_VALID} will behave the same
      *         {@link ClusterMode#SPECIFIC_VALID} will behase as one and only one is valid
      *         {@link ClusterMode#MOST_VALID} will behave as one valid or none valid
@@ -94,7 +94,7 @@ public final class ValidatorCluster {
      * @param clusterMode the {@link ClusterMode} to use
      * @param yapionObject the {@link YAPIONObject} to validate
      * @param validNumber the {@link Validator} threshold
-     * @return {@see true} if the specification of the {@link ClusterMode} are met, {@see false} otherwise
+     * @return {@code true} if the specification of the {@link ClusterMode} are met, {@code false} otherwise
      */
     public boolean validate(ClusterMode clusterMode, YAPIONObject yapionObject, int validNumber) {
         int valid = 0;

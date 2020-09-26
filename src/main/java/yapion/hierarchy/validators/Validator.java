@@ -37,8 +37,8 @@ public final class Validator {
      * Add a new {@link ValidatorVariable} which will validate a
      * small portion of any {@link YAPIONObject}.
      * This method throws an {@link YAPIONException} if the path
-     * in the {@link ValidatorVariable} is {@see null} or the
-     * type is {@see null}.
+     * in the {@link ValidatorVariable} is {@code null} or the
+     * type is {@code null}.
      *
      * @param variable the {@link ValidatorVariable} to add
      */
@@ -70,7 +70,7 @@ public final class Validator {
      * {@link ValidatorVariable}'s given by the user.
      *
      * @param yapionObject the {@link YAPIONObject} to validate
-     * @return {@see true} if the {@link YAPIONObject} was valid, {@see false} otherwise
+     * @return {@code true} if the {@link YAPIONObject} was valid, {@code false} otherwise
      */
     public boolean validate(YAPIONObject yapionObject) {
         for (ValidatorVariable validatorVariable : variables) {

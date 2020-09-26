@@ -14,7 +14,7 @@ public interface Validation {
      * {@link YAPIONValue} value is considered to be valid.
      *
      * @param o the value of the {@link YAPIONValue}
-     * @return {@see true} if valid, {@see false} otherwise
+     * @return {@code true} if valid, {@code false} otherwise
      */
     boolean validate(Object o);
 
