@@ -9,6 +9,7 @@ yapion.exceptions.value
 yapion.hierarchy.typegroups
 yapion.hierarchy.typeinterfaces
 yapion.hierarchy.types
+yapion.hierarchy.validators
 yapion.packet
 yapion.parser
 yapion.serializing
