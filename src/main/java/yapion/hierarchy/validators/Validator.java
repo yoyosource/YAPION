@@ -67,7 +67,7 @@ public final class Validator {
 
     /**
      * Validate a specified {@link YAPIONObject} with the specified
-     * {@link ValidatorVariable's} given by the user.
+     * {@link ValidatorVariable}'s given by the user.
      *
      * @param yapionObject the {@link YAPIONObject} to validate
      * @return {@see true} if the {@link YAPIONObject} was valid, {@see false} otherwise
@@ -90,8 +90,17 @@ public final class Validator {
     }
 
     public enum ValidationOption {
+        /**
+         * Only validate the structure.
+         */
         STRUCTURE,
+        /**
+         * Only validate the values.
+         */
         VALUE,
+        /**
+         * Only validate the type of values.
+         */
         TYPE
     }
 
@@ -119,10 +128,24 @@ public final class Validator {
 
     }
 
+    /**
+     * Creates an {@link Validator} for the given {@link YAPIONObject} with just the
+     * {@link ValidationOption#STRUCTURE}.
+     *
+     * @param yapionObject the example {@link YAPIONObject}
+     * @return the {@link Validator} for the given {@link YAPIONObject}
+     */
     public static Validator validator(YAPIONObject yapionObject) {
         return validator(yapionObject, ValidationOption.STRUCTURE);
     }
 
+    /**
+     * Creates an {@link Validator} for the given {@link YAPIONObject} with the {@link ValidationOption}'s.
+     *
+     * @param yapionObject the example {@link YAPIONObject}
+     * @param validationOptions what the validator should validate
+     * @return the {@link Validator} for the given {@link YAPIONObject}
+     */
     public static Validator validator(YAPIONObject yapionObject, ValidationOption... validationOptions) {
         Validator validator = new Validator();
         if (validationOptions == null) return validator;

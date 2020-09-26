@@ -27,7 +27,7 @@ import java.util.Map;
 public final class YAPIONPacket {
 
     /**
-     * Create an {@link Validator} that validates {@link YAPIONPacket's}.
+     * Create an {@link Validator} that validates {@link YAPIONPacket}'s.
      * This Validator is only for the meta-structure you
      * should add you own checks for any value you can add
      * to this packet.

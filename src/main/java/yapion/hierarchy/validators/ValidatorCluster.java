@@ -25,11 +25,29 @@ public final class ValidatorCluster {
     }
 
     public enum ClusterMode {
+        /**
+         * If one or more are valid.
+         */
         ANY_VALID,
+        /**
+         * If all are valid.
+         */
         ALL_VALID,
+        /**
+         * If at least the inputted number are valid.
+         */
         LEAST_VALID,
+        /**
+         * If at most the inputted number are valid.
+         */
         MOST_VALID,
+        /**
+         * If n are valid.
+         */
         SPECIFIC_VALID,
+        /**
+         * If none are valid.
+         */
         NONE_VALID,
     }
 
@@ -50,15 +68,14 @@ public final class ValidatorCluster {
      *
      * @param yapionObject the {@link YAPIONObject} to validate
      * @param validNumber the {@link Validator} threshold
-     * @return {@see true} if at least n {@link Validator's} returned {@see true}, {@see false} otherwise
+     * @return {@see true} if at least n {@link Validator}'s returned {@see true}, {@see false} otherwise
      */
     public boolean validate(YAPIONObject yapionObject, int validNumber) {
         return validate(ClusterMode.LEAST_VALID, yapionObject, validNumber);
     }
 
     /**
-     * Checks if the inputted {@link YAPIONObject} matches one
-     * {@link Validator}.
+     * Checks if the inputted {@link YAPIONObject} matches the {@link Validator} with the specified {@link ClusterMode}.
      *
      * @param clusterMode the {@link ClusterMode} to use
      * @param yapionObject the {@link YAPIONObject} to validate
@@ -72,6 +89,7 @@ public final class ValidatorCluster {
     }
 
     /**
+     * Checks if the inputted {@link YAPIONObject} matches the {@link Validator} with the specified {@link ClusterMode}.
      *
      * @param clusterMode the {@link ClusterMode} to use
      * @param yapionObject the {@link YAPIONObject} to validate

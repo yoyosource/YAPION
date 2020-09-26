@@ -134,7 +134,7 @@ public class YAPIONUtils {
      * Retrieve any {@link YAPIONObject} embedded in an generic String.
      *
      * @param string the string to extract from
-     * @return all {@link YAPIONObject's} that got extracted
+     * @return all {@link YAPIONObject}'s that got extracted
      */
     public static List<YAPIONObject> stringGetAllYAPIONObjects(String string) {
         List<YAPIONObject> yapionObjects = new ArrayList<>();
