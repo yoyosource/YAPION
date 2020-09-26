@@ -14,10 +14,7 @@ import yapion.utils.RecursionUtils;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @YAPIONSave(context = "*")
@@ -235,6 +232,15 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     @Override
+    public List<YAPIONAnyType> getAllValues() {
+        List<YAPIONAnyType> yapionAnyTypes = new ArrayList<>();
+        for (YAPIONVariable variable : variables) {
+            yapionAnyTypes.add(variable.getValue());
+        }
+        return yapionAnyTypes;
+    }
+
+    @Override
     public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String key) {
         if (getVariable(key) == null) return Optional.empty();
         return Optional.of(new YAPIONSearchResult<>(getVariable(key).getValue()));
@@ -250,7 +256,7 @@ public class YAPIONObject extends YAPIONMappingType {
         if (this == o) return true;
         if (!(o instanceof YAPIONObject)) return false;
         YAPIONObject that = (YAPIONObject) o;
-        return Objects.equals(variables, that.variables);
+        return variables.equals(that.variables);
     }
 
     @Override

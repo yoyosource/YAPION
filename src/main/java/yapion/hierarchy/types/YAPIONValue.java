@@ -329,8 +329,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
         if (this == o) return true;
         if (!(o instanceof YAPIONValue)) return false;
         YAPIONValue<?> that = (YAPIONValue<?>) o;
-        return Objects.equals(value, that.value) &&
-                Objects.equals(type, that.type);
+        return type.equals(that.type) && Objects.equals(value, that.value);
     }
 
     @Override

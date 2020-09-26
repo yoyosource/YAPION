@@ -76,8 +76,7 @@ public final class YAPIONVariable extends YAPIONAnyClosure {
         if (this == o) return true;
         if (!(o instanceof YAPIONVariable)) return false;
         YAPIONVariable variable = (YAPIONVariable) o;
-        return Objects.equals(name, variable.name) &&
-                Objects.equals(value, variable.value);
+        return name.equals(variable.name) && value.equals(variable.value);
     }
 
     @Override

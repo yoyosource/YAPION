@@ -4,16 +4,22 @@
 
 package yapion;
 
+import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.packet.YAPIONInputStream;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
-import yapion.utils.YAPIONObjectIterator;
+import yapion.utils.YAPIONTreeIterator;
+import yapion.utils.YAPIONTreeIterator.YAPIONTreeIteratorOption;
 
 import java.io.InputStream;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
@@ -88,7 +94,7 @@ public class YAPIONUtils {
     }
 
     /**
-     * Check ist a generic String can be a YAPION Object serialozed by the
+     * Check ist a generic String can be a YAPION Object serialized by the
      * {@link YAPIONSerializer} that can be deserialized by the {@link YAPIONDeserializer}.
      *
      * @param string the string to check
@@ -102,24 +108,71 @@ public class YAPIONUtils {
         return isBase64YAPIONObject(string);
     }
 
+    public static CheckResult stringContainsYAPIONObject(String string) {
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);
+            if (c == '{') {
+                try {
+                    YAPIONParser.parse(string.substring(i));
+                    return CheckResult.IS;
+                } catch (YAPIONException e) {
+
+                }
+            }
+        }
+        return CheckResult.NOT;
+    }
+
+    public static List<YAPIONObject> stringGetAllYAPIONObjects(String string) {
+        List<YAPIONObject> yapionObjects = new ArrayList<>();
+        int i = 0;
+        while (i < string.length()) {
+            char c = string.charAt(i);
+            if (c == '{') {
+                try {
+                    YAPIONObject yapionObject = YAPIONParser.parse(string.substring(i));
+                    i += yapionObject.toYAPIONString().length();
+                    yapionObjects.add(yapionObject);
+                } catch (YAPIONException e) {
+
+                }
+            }
+            i++;
+        }
+        return yapionObjects;
+    }
+
     /**
-     * The inputted {@link YAPIONObject} is traversed layer by layer.
+     * The inputted {@link YAPIONObject} is traversed depth first, values beforehand.
      * Outputs an {@link Stream} of {@link YAPIONAnyType} of all keys
-     * in the whole {@link YAPIONObject}.
+     * in the whole {@link YAPIONObject}. This method is inspired by {@link Files#walk(Path, FileVisitOption...)}
+     *
+     * @param yapionObject the {@link YAPIONObject} to traverse
+     * @param option the {@link YAPIONTreeIteratorOption} to use
+     * @return the {@link Stream} which contains all {@link YAPIONAnyType} of the {@link YAPIONObject}
+     */
+    @SuppressWarnings({"java:S1181"})
+    public static Stream<YAPIONAnyType> walk(YAPIONObject yapionObject, YAPIONTreeIteratorOption option) {
+        YAPIONTreeIterator iterator = new YAPIONTreeIterator(yapionObject, option);
+        try {
+            Spliterator<YAPIONAnyType> spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.DISTINCT);
+            return StreamSupport.stream(spliterator, false).onClose(iterator::close);
+        } catch (Error | RuntimeException e) {
+            iterator.close();
+            throw e;
+        }
+    }
+
+    /**
+     * The inputted {@link YAPIONObject} is traversed depth first, values beforehand.
+     * Outputs an {@link Stream} of {@link YAPIONAnyType} of all keys
+     * in the whole {@link YAPIONObject}. This method is inspired by {@link Files#walk(Path, FileVisitOption...)}
      *
      * @param yapionObject the {@link YAPIONObject} to traverse
      * @return the {@link Stream} which contains all {@link YAPIONAnyType} of the {@link YAPIONObject}
      */
     public static Stream<YAPIONAnyType> walk(YAPIONObject yapionObject) {
-        YAPIONObjectIterator iterator = new YAPIONObjectIterator(yapionObject);
-        try {
-            Spliterator<YAPIONAnyType> spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.DISTINCT);
-            return StreamSupport.stream(spliterator, false)
-                    .onClose(iterator::close);
-        } catch (Error | RuntimeException e) {
-            iterator.close();
-            throw e;
-        }
+        return walk(yapionObject, YAPIONTreeIteratorOption.TRAVERSE_ALL);
     }
 
 }

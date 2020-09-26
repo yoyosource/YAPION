@@ -48,6 +48,9 @@ public class YAPIONMap extends YAPIONMappingType {
             if (entry.getValue() == yapionAnyType) {
                 return entry.getKey().toYAPIONString();
             }
+            if (entry.getKey() == yapionAnyType) {
+                return entry.getKey().toYAPIONString();
+            }
         }
         return "";
     }
@@ -131,6 +134,8 @@ public class YAPIONMap extends YAPIONMappingType {
 
     public YAPIONMap add(YAPIONAnyType key, YAPIONAnyType value) {
         variables.put(key, value);
+        value.setParent(this);
+        key.setParent(this);
         return this;
     }
 
@@ -159,6 +164,11 @@ public class YAPIONMap extends YAPIONMappingType {
 
     public boolean isEmpty() {
         return variables.isEmpty();
+    }
+
+    @Override
+    public List<YAPIONAnyType> getAllValues() {
+        return getKeys();
     }
 
     public synchronized YAPIONMap finishMapping() {
@@ -190,13 +200,10 @@ public class YAPIONMap extends YAPIONMappingType {
 
     @Override
     public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String key) {
-        YAPIONVariable variable = YAPIONParser.parse("{" + key + "}").getVariable("");
-        if (variable == null) return Optional.empty();
-        YAPIONAnyType anyKey = variable.getValue();
-        if (anyKey == null) return Optional.empty();
-        YAPIONAnyType anyValue = get(anyKey);
-        if (anyValue == null) return Optional.empty();
-        return Optional.of(new YAPIONSearchResult<>(anyValue));
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
+            if (entry.getKey().toYAPIONString().equals(key)) return Optional.of(new YAPIONSearchResult<>(entry.getValue()));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -209,7 +216,7 @@ public class YAPIONMap extends YAPIONMappingType {
         if (this == o) return true;
         if (!(o instanceof YAPIONMap)) return false;
         YAPIONMap yapionMap = (YAPIONMap) o;
-        return Objects.equals(variables, yapionMap.variables);
+        return variables.equals(yapionMap.variables);
     }
 
     @Override

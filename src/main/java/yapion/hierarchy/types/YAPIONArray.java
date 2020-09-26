@@ -107,6 +107,11 @@ public class YAPIONArray extends YAPIONDataType {
         return array.isEmpty();
     }
 
+    @Override
+    public List<YAPIONAnyType> getAllValues() {
+        return array;
+    }
+
     public YAPIONAnyType get(int index) {
         if (index < 0 || index >= length()) {
             throw new YAPIONArrayIndexOutOfBoundsException("Index " + index + " out of bounds for length " + length());
@@ -151,7 +156,7 @@ public class YAPIONArray extends YAPIONDataType {
         if (this == o) return true;
         if (!(o instanceof YAPIONArray)) return false;
         YAPIONArray that = (YAPIONArray) o;
-        return Objects.equals(array, that.array);
+        return array.equals(that.array);
     }
 
     @Override

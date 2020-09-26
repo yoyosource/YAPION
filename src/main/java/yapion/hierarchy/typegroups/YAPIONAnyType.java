@@ -6,10 +6,11 @@ package yapion.hierarchy.typegroups;
 
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
-import yapion.hierarchy.typeinterfaces.*;
+import yapion.hierarchy.typeinterfaces.ObjectPath;
+import yapion.hierarchy.typeinterfaces.ObjectSearch;
+import yapion.hierarchy.typeinterfaces.ObjectType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Optional;
 
 @YAPIONSave(context = "*")
@@ -26,11 +27,11 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
     }
 
     public final String[] getPath() {
-        List<String> path = new ArrayList<>();
+        LinkedList<String> path = new LinkedList<>();
         YAPIONAnyType last = this;
         YAPIONAnyType yapionAnyType = this;
         while ((yapionAnyType = yapionAnyType.getParent()) != null) {
-            path.add(yapionAnyType.getPath(last));
+            path.addFirst(yapionAnyType.getPath(last));
             last = yapionAnyType;
         }
         return path.toArray(new String[0]);

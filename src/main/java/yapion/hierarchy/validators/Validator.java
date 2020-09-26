@@ -4,16 +4,21 @@
 
 package yapion.hierarchy.validators;
 
+import test.Test;
+import test.TestData;
+import test.TestEnum;
+import yapion.YAPIONUtils;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typeinterfaces.ObjectSearch;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.YAPIONSerializer;
+import yapion.utils.YAPIONTreeIterator;
 
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -80,7 +85,16 @@ public final class Validator {
         return true;
     }
 
+    public static void main(String[] args) {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
+        System.out.println(yapionObject);
+        validatorStructure(yapionObject);
+    }
+
     public static Validator validatorStructure(YAPIONObject yapionObject) {
+        YAPIONUtils.walk(yapionObject, YAPIONTreeIterator.YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES).forEach(s -> {
+            System.out.println(s + "   " + Arrays.toString(s.getPath()));
+        });
         return null;
     }
 
