@@ -46,7 +46,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     private final T value;
-    String type;
+    private String type;
 
     public YAPIONValue(T value) {
         if (!validType(value)) {
@@ -208,6 +208,10 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     public T get() {
         return value;
+    }
+
+    public String getValueType() {
+        return type;
     }
 
     @Override

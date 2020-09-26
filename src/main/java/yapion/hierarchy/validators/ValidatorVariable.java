@@ -63,10 +63,20 @@ public class ValidatorVariable {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "ValidatorVariable{" +
+                "path=" + path +
+                ", type=" + type +
+                ", hasValidation=" + (validation != null) +
+                '}';
+    }
+
     boolean validate(YAPIONAnyType yapionAnyType) {
         if (type == null) return false;
         if (yapionAnyType.getType() != type.getType()) return false;
         if (type != ValidatorType.VALUE) return true;
+        if (validation == null) return true;
         Object o = ((YAPIONValue<?>)yapionAnyType).get();
         return validation.validate(o);
     }

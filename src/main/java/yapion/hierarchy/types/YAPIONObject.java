@@ -167,7 +167,7 @@ public class YAPIONObject extends YAPIONMappingType {
         if (!(yapionAnyType instanceof YAPIONValue)) {
             return null;
         }
-        if (!((YAPIONValue) yapionAnyType).type.equalsIgnoreCase(type.getClass().getTypeName())) {
+        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getClass().getTypeName())) {
             return null;
         }
         return (YAPIONValue<T>) yapionAnyType;

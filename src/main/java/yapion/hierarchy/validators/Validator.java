@@ -5,19 +5,15 @@
 package yapion.hierarchy.validators;
 
 import test.Test;
-import test.TestData;
-import test.TestEnum;
 import yapion.YAPIONUtils;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typeinterfaces.ObjectSearch;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.YAPIONSerializer;
-import yapion.utils.YAPIONTreeIterator;
 
-import java.nio.file.Files;
 import java.util.*;
 
 @YAPIONSaveExclude(context = "*")
@@ -85,21 +81,78 @@ public final class Validator {
         return true;
     }
 
-    public static void main(String[] args) {
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
-        System.out.println(yapionObject);
-        validatorStructure(yapionObject);
+    @Override
+    public String toString() {
+        return "Validator{" +
+                "validationSteps=" + variables.size() +
+                ", variables=" + variables +
+                '}';
     }
 
-    public static Validator validatorStructure(YAPIONObject yapionObject) {
-        YAPIONUtils.walk(yapionObject, YAPIONTreeIterator.YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES).forEach(s -> {
-            System.out.println(s + "   " + Arrays.toString(s.getPath()));
+    public enum ValidationOption {
+        STRUCTURE,
+        VALUE,
+        TYPE
+    }
+
+    private static class ValidationTypes {
+
+        private boolean structure = false;
+        private boolean value = false;
+        private boolean type = false;
+
+        private ValidationTypes(ValidationOption... validationOptions) {
+            for (ValidationOption validationOption : validationOptions) {
+                switch (validationOption) {
+                    case STRUCTURE:
+                        structure = true;
+                        break;
+                    case VALUE:
+                        value = true;
+                        break;
+                    case TYPE:
+                        type = true;
+                        break;
+                }
+            }
+        }
+
+    }
+
+    public static Validator validator(YAPIONObject yapionObject) {
+        return validator(yapionObject, ValidationOption.STRUCTURE);
+    }
+
+    public static Validator validator(YAPIONObject yapionObject, ValidationOption... validationOptions) {
+        ValidationTypes types = new ValidationTypes(validationOptions);
+        Validator validator = new Validator();
+        YAPIONUtils.walk(yapionObject).forEach(s -> {
+            ValidatorType validatorType = ValidatorType.getByYAPIONType(s.getType());
+            String[] path = s.getPath();
+            ValidatorVariable validatorVariable = null;
+            if (s instanceof YAPIONValue) {
+                Validation validation = null;
+                if (types.value && !types.type) {
+                    validation = o -> o.toString().equals(((YAPIONValue<?>) s).get().toString());
+                }
+                if (types.value && types.type) {
+                    validation = o -> o.getClass().getTypeName().equals(((YAPIONValue<?>) s).getValueType()) && o.toString().equals(((YAPIONValue<?>) s).get().toString());
+                }
+                if (!types.value && types.type) {
+                    validation = o -> o.getClass().getTypeName().equals(((YAPIONValue<?>) s).getValueType());
+                }
+                if (validation == null && types.structure) {
+                    validatorVariable = new ValidatorVariable(path);
+                } else if (validation != null) {
+                    validatorVariable = new ValidatorVariable(validation, path);
+                }
+            } else if (types.structure) {
+                validatorVariable = new ValidatorVariable(path);
+            }
+            if (validatorVariable == null) return;
+            validator.add(validatorVariable.setType(validatorType));
         });
-        return null;
-    }
-
-    public static Validator validatorEquality(YAPIONObject yapionObject) {
-        return null;
+        return validator;
     }
 
 }
