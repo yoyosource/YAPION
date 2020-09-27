@@ -4,6 +4,7 @@
 
 package yapion.utils;
 
+import yapion.annotations.object.YAPIONData;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONDataType;
 import yapion.hierarchy.typegroups.YAPIONValueType;
@@ -58,19 +59,16 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
 
     @Override
     public YAPIONAnyType next() {
-        if (!hasNext()) return null;
-        YAPIONAnyType yapionAnyType = yapionAnyTypeList.removeFirst();
-        if (yapionAnyType instanceof YAPIONObject) {
-            add((YAPIONObject) yapionAnyType);
-            if (option == YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES) return next();
-        } else if (yapionAnyType instanceof YAPIONMap) {
-            add((YAPIONMap) yapionAnyType);
-            if (option == YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES) return next();
-        } else if (yapionAnyType instanceof YAPIONArray) {
-            add((YAPIONArray) yapionAnyType);
-            if (option == YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES) return next();
+        while (true) {
+            if (!hasNext()) return null;
+            YAPIONAnyType yapionAnyType = yapionAnyTypeList.removeFirst();
+            if (yapionAnyType instanceof YAPIONDataType) {
+                add((YAPIONDataType) yapionAnyType);
+                if (option != YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES) return yapionAnyType;
+            } else {
+                return yapionAnyType;
+            }
         }
-        return yapionAnyType;
     }
 
     @Override
