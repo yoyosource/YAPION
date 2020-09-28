@@ -5,12 +5,13 @@
 package yapion.hierarchy.typeinterfaces;
 
 import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONPath;
 
 public interface ObjectPath {
 
     String getPath(YAPIONAnyType yapionAnyType);
 
-    String[] getPath();
+    YAPIONPath getPath();
 
     int getDepth();
 

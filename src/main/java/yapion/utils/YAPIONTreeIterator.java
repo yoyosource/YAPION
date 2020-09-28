@@ -4,18 +4,18 @@
 
 package yapion.utils;
 
-import yapion.annotations.object.YAPIONData;
+import test.Test;
+import yapion.YAPIONUtils;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONDataType;
 import yapion.hierarchy.typegroups.YAPIONValueType;
-import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.validators.Validator;
+import yapion.serializing.YAPIONDeserializer;
+import yapion.serializing.YAPIONSerializer;
 
 import java.io.Closeable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
 
@@ -25,16 +25,16 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
         TRAVERSE_DATA_TYPES
     }
 
-    private LinkedList<YAPIONAnyType> yapionAnyTypeList = new LinkedList<>();
-    private YAPIONTreeIteratorOption option = YAPIONTreeIteratorOption.TRAVERSE_ALL;
+    private LinkedList<YAPIONAnyType> yapionAnyTypes = new LinkedList<>();
+    private YAPIONTreeIteratorOption option;
 
     public YAPIONTreeIterator(YAPIONObject yapionObject) {
-        add(yapionObject);
+        this(yapionObject, YAPIONTreeIteratorOption.TRAVERSE_ALL);
     }
 
     public YAPIONTreeIterator(YAPIONObject yapionObject, YAPIONTreeIteratorOption option) {
-        add(yapionObject);
         this.option = option;
+        add(yapionObject);
     }
 
     private void add(YAPIONDataType yapionDataType) {
@@ -44,24 +44,24 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
         for (YAPIONAnyType yapionAnyType : allValues) {
             if (yapionAnyType instanceof YAPIONValueType) {
                 if (option == YAPIONTreeIteratorOption.TRAVERSE_DATA_TYPES) continue;
-                yapionAnyTypeList.add(indexValue++, yapionAnyType);
-                indexOther++;
+                yapionAnyTypes.add(indexValue++, yapionAnyType);
             } else {
-                yapionAnyTypeList.add(indexOther++, yapionAnyType);
+                yapionAnyTypes.add(indexOther, yapionAnyType);
             }
+            indexOther++;
         }
     }
 
     @Override
     public boolean hasNext() {
-        return !yapionAnyTypeList.isEmpty();
+        return !yapionAnyTypes.isEmpty();
     }
 
     @Override
     public YAPIONAnyType next() {
         while (true) {
             if (!hasNext()) return null;
-            YAPIONAnyType yapionAnyType = yapionAnyTypeList.removeFirst();
+            YAPIONAnyType yapionAnyType = yapionAnyTypes.removeFirst();
             if (yapionAnyType instanceof YAPIONDataType) {
                 add((YAPIONDataType) yapionAnyType);
                 if (option != YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES) return yapionAnyType;
@@ -73,7 +73,7 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
 
     @Override
     public void close() {
-        yapionAnyTypeList.clear();
+        yapionAnyTypes.clear();
     }
 
 }

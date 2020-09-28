@@ -154,7 +154,7 @@ public final class Validator {
         ValidationTypes types = new ValidationTypes(validationOptions);
         YAPIONUtils.walk(yapionObject).forEach(s -> {
             ValidatorType validatorType = ValidatorType.getByYAPIONType(s.getType());
-            String[] path = s.getPath();
+            String[] path = s.getPath().getPath();
             ValidatorVariable validatorVariable = null;
             if (s instanceof YAPIONValue) {
                 Validation validation = null;

@@ -9,8 +9,8 @@ import yapion.annotations.serialize.YAPIONSave;
 import yapion.hierarchy.typeinterfaces.ObjectPath;
 import yapion.hierarchy.typeinterfaces.ObjectSearch;
 import yapion.hierarchy.typeinterfaces.ObjectType;
+import yapion.hierarchy.types.YAPIONPath;
 
-import java.util.LinkedList;
 import java.util.Optional;
 
 @YAPIONSave(context = "*")
@@ -26,15 +26,9 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
         return depth;
     }
 
-    public final String[] getPath() {
-        LinkedList<String> path = new LinkedList<>();
-        YAPIONAnyType last = this;
-        YAPIONAnyType yapionAnyType = this;
-        while ((yapionAnyType = yapionAnyType.getParent()) != null) {
-            path.addFirst(yapionAnyType.getPath(last));
-            last = yapionAnyType;
-        }
-        return path.toArray(new String[0]);
+    @Override
+    public final YAPIONPath getPath() {
+        return new YAPIONPath(this);
     }
 
     @Override
