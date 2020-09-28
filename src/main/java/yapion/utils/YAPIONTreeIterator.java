@@ -4,18 +4,15 @@
 
 package yapion.utils;
 
-import test.Test;
-import yapion.YAPIONUtils;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONDataType;
 import yapion.hierarchy.typegroups.YAPIONValueType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.validators.Validator;
-import yapion.serializing.YAPIONDeserializer;
-import yapion.serializing.YAPIONSerializer;
 
 import java.io.Closeable;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
 
