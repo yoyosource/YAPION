@@ -149,7 +149,8 @@ public class YAPIONValue<T> extends YAPIONValueType {
         outputStream.write(toString().getBytes(StandardCharsets.UTF_8));
     }
 
-    public static YAPIONValue<?> parseValue(String s) {
+    @SuppressWarnings({"java:S3740"})
+    public static YAPIONValue parseValue(String s) {
         if (s.equals("true") || s.equals("false")) {
             return new YAPIONValue<>(s.equals("true"));
         }
@@ -168,29 +169,25 @@ public class YAPIONValue<T> extends YAPIONValueType {
         }
 
         if (s.matches(NUMBER_HEX)) {
-            YAPIONValue<?> value = tryParse(s, 16, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER);
+            YAPIONValue value = tryParse(s, 16, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER);
             if (value != null) return value;
         }
-        {
-            YAPIONValue<?> value = tryParse(s, 16, NUMBER_HEX, ParseType.BIGINTEGER, ParseType.LONG, ParseType.INTEGER, ParseType.SHORT, ParseType.BYTE);
-            if (value != null) return value;
-        }
+        YAPIONValue value1 = tryParse(s, 16, NUMBER_HEX, ParseType.BIGINTEGER, ParseType.LONG, ParseType.INTEGER, ParseType.SHORT, ParseType.BYTE);
+        if (value1 != null) return value1;
+
         if (s.matches(NUMBER_NORMAL)) {
-            YAPIONValue<?> value = tryParse(s, 10, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER);
+            YAPIONValue value = tryParse(s, 10, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER);
             if (value != null) return value;
         }
-        {
-            YAPIONValue<?> value = tryParse(s, 10, NUMBER_NORMAL, ParseType.BIGINTEGER, ParseType.LONG, ParseType.INTEGER, ParseType.SHORT, ParseType.BYTE, ParseType.BIGDECIMAL, ParseType.DOUBLE, ParseType.FLOAT);
-            if (value != null) return value;
-        }
+        YAPIONValue value2 = tryParse(s, 10, NUMBER_NORMAL, ParseType.BIGINTEGER, ParseType.LONG, ParseType.INTEGER, ParseType.SHORT, ParseType.BYTE, ParseType.BIGDECIMAL, ParseType.DOUBLE, ParseType.FLOAT);
+        if (value2 != null) return value2;
+
         if (s.matches(NUMBER_FLOAT)) {
-            YAPIONValue<?> value = tryParse(s, 10, ParseType.DOUBLE, ParseType.BIGDECIMAL);
+            YAPIONValue value = tryParse(s, 10, ParseType.DOUBLE, ParseType.BIGDECIMAL);
             if (value != null) return value;
         }
-        {
-            YAPIONValue<?> value = tryParse(s, 10, NUMBER_FLOAT, ParseType.BIGDECIMAL, ParseType.DOUBLE, ParseType.FLOAT);
-            if (value != null) return value;
-        }
+        YAPIONValue value3 = tryParse(s, 10, NUMBER_FLOAT, ParseType.BIGDECIMAL, ParseType.DOUBLE, ParseType.FLOAT);
+        if (value3 != null) return value3;
 
         return new YAPIONValue<>(s);
     }
@@ -264,26 +261,29 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return false;
     }
 
-    private static YAPIONValue<?> tryParse(String s, int radix, String regex, ParseType... possibleTypes) {
+    @SuppressWarnings({"java:S3740"})
+    private static YAPIONValue tryParse(String s, int radix, String regex, ParseType... possibleTypes) {
         for (int i = 0; i < possibleTypes.length; i++) {
             if (!s.endsWith(possibleTypes[i].getSuffix())) continue;
             String t = s.substring(0, s.length() - possibleTypes[i].getSuffix().length());
             if (!t.matches(regex)) continue;
-            YAPIONValue<?> value = tryParse(t, radix, possibleTypes[i]);
+            YAPIONValue value = tryParse(t, radix, possibleTypes[i]);
             if (value != null) return value;
         }
         return null;
     }
 
-    private static YAPIONValue<?> tryParse(String s, int radix, ParseType... parseOrder) {
+    @SuppressWarnings({"java:S3740"})
+    private static YAPIONValue tryParse(String s, int radix, ParseType... parseOrder) {
         for (int i = 0; i < parseOrder.length; i++) {
-            YAPIONValue<?> value = tryParse(s, radix, parseOrder[i]);
+            YAPIONValue value = tryParse(s, radix, parseOrder[i]);
             if (value != null) return value;
         }
         return null;
     }
 
-    private static YAPIONValue<?> tryParse(String s, int radix, ParseType parseType) {
+    @SuppressWarnings({"java:S3740"})
+    private static YAPIONValue tryParse(String s, int radix, ParseType parseType) {
         try {
             switch (parseType) {
                 case BYTE: return new YAPIONValue<>(Byte.parseByte(s, radix));
@@ -298,7 +298,9 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
                 default: break;
             }
-        } catch (NumberFormatException e) {}
+        } catch (NumberFormatException e) {
+            // Ignored
+        }
         return null;
     }
 

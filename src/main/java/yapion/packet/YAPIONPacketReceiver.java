@@ -105,7 +105,7 @@ public class YAPIONPacketReceiver {
             try {
                 handler.handlePacket(yapionPacket);
             } catch (Exception e) {
-                logger.warn("The packet handler with type '" + type + "' threw an exception.", e.getCause());
+                logger.warn(String.format("The packet handler with type '%s' threw an exception.", type), e.getCause());
                 if (!handler.ignoreException()) handleException(yapionPacket, e);
             }
         };

@@ -92,8 +92,8 @@ public class YAPIONTestObjects {
         private final Character C = ' ';
 
         private final String string = "";
-        private final StringBuilder stringB = new StringBuilder();
-        private final StringBuffer stringb = new StringBuffer();
+        @EqualsAndHashCode.Exclude final StringBuilder stringB = new StringBuilder();
+        @EqualsAndHashCode.Exclude final StringBuffer stringb = new StringBuffer();
 
         private final File file = new File(getUserHome() + "/YAPI");
 
