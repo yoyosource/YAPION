@@ -1,0 +1,11 @@
+{
+  test(Test)
+  hello{
+    world(1)
+  }
+  is[this,
+    working?,
+    0]
+  I<0:1#0(Hope)#1(So)>
+  t->0000000000000000
+}

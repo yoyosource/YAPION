@@ -9,9 +9,9 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.typegroups.YAPIONDataType;
 import yapion.hierarchy.typegroups.YAPIONMappingType;
 import yapion.parser.JSONMapper;
-import yapion.parser.YAPIONParser;
 import yapion.parser.YAPIONParserMapMapping;
 import yapion.parser.YAPIONParserMapObject;
 
@@ -154,14 +154,27 @@ public class YAPIONMap extends YAPIONMappingType {
         return this;
     }
 
+    @Override
     public int size() {
         return variables.size();
     }
 
+    @Override
+    public long deepSize() {
+        long size = size();
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
+            if (entry.getKey() instanceof YAPIONDataType) size += ((YAPIONDataType) entry.getKey()).deepSize();
+            if (entry.getValue() instanceof YAPIONDataType) size += ((YAPIONDataType) entry.getValue()).deepSize();
+        }
+        return size;
+    }
+
+    @Override
     public int length() {
         return variables.size();
     }
 
+    @Override
     public boolean isEmpty() {
         return variables.isEmpty();
     }

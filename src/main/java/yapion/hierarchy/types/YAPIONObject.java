@@ -8,6 +8,7 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.typegroups.YAPIONDataType;
 import yapion.hierarchy.typegroups.YAPIONMappingType;
 import yapion.utils.RecursionUtils;
 
@@ -218,8 +219,19 @@ public class YAPIONObject extends YAPIONMappingType {
         return add(variable);
     }
 
+    @Override
     public int size() {
         return variables.size();
+    }
+
+    @Override
+    public long deepSize() {
+        long size = size();
+        for (YAPIONVariable yapionVariable : variables) {
+            YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+            if (yapionAnyType instanceof YAPIONDataType) size += ((YAPIONDataType) yapionAnyType).deepSize();
+        }
+        return size;
     }
 
     @Override
@@ -227,6 +239,7 @@ public class YAPIONObject extends YAPIONMappingType {
         return variables.size();
     }
 
+    @Override
     public boolean isEmpty() {
         return variables.isEmpty();
     }

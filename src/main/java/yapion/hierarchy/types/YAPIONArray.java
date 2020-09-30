@@ -95,14 +95,26 @@ public class YAPIONArray extends YAPIONDataType {
         outputStream.write("]".getBytes(StandardCharsets.UTF_8));
     }
 
+    @Override
     public int size() {
         return array.size();
     }
 
+    @Override
+    public long deepSize() {
+        long size = size();
+        for (YAPIONAnyType yapionAnyType : array) {
+            if (yapionAnyType instanceof YAPIONDataType) size += ((YAPIONDataType) yapionAnyType).deepSize();
+        }
+        return size;
+    }
+
+    @Override
     public int length() {
         return array.size();
     }
 
+    @Override
     public boolean isEmpty() {
         return array.isEmpty();
     }
