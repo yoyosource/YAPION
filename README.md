@@ -53,6 +53,7 @@ dependencies {
 ## Tasks
 - More efficient JSON Parser (eliminate the Recursion)
 - More efficient JSON Mapper (eliminate the Recursion?)
+- Make Serializer and Deserializer event based, to eliminate the Recursive part (Queue, Serialize Callback: with result function, Done Callback: with serializer callback for dependency handling)
 
 ## Structure
 YAPION is heavily inspired by JSON and you can see some similarities between those object notations.
