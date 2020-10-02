@@ -8,9 +8,9 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.exceptions.utils.YAPIONIOException;
-import yapion.hierarchy.types.*;
-import yapion.hierarchy.typeinterfaces.ObjectOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.typeinterfaces.ObjectOutput;
+import yapion.hierarchy.types.*;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;

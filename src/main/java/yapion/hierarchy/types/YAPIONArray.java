@@ -93,7 +93,9 @@ public class YAPIONArray extends YAPIONDataType {
             }
             b = true;
         }
-        st.append(",\n").append(reducedIndent());
+        if (!array.isEmpty()) {
+            st.append(",\n").append(reducedIndent());
+        }
         st.append("]");
         return st.toString();
     }
@@ -143,7 +145,9 @@ public class YAPIONArray extends YAPIONDataType {
                 array.get(i).toOutputStream(outputStream);
             }
         }
-        outputStream.write(bytes("\n" + reducedIndent()));
+        if (!array.isEmpty()) {
+            outputStream.write(bytes("\n" + reducedIndent()));
+        }
         outputStream.write("]".getBytes(StandardCharsets.UTF_8));
     }
 

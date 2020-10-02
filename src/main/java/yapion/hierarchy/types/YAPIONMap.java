@@ -90,7 +90,9 @@ public class YAPIONMap extends YAPIONMappingType {
             st.append(indent);
             st.append("#").append(id2).append(entry.getValue().toYAPIONStringPrettified());
         }
-        st.append("\n").append(reducedIndent());
+        if (!variables.isEmpty()) {
+            st.append("\n").append(reducedIndent());
+        }
         st.append(">");
         return st.toString();
     }
@@ -168,7 +170,9 @@ public class YAPIONMap extends YAPIONMappingType {
             outputStream.write(bytes("#" + id2));
             entry.getValue().toOutputStreamPrettified(outputStream);
         }
-        outputStream.write(bytes("\n" + reducedIndent()));
+        if (!variables.isEmpty()) {
+            outputStream.write(bytes("\n" + reducedIndent()));
+        }
         outputStream.write(bytes(">"));
     }
 
