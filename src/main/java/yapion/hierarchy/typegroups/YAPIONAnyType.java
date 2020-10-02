@@ -26,6 +26,14 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
         return depth;
     }
 
+    public final String indent() {
+        return indent((getDepth() + 1) * 2);
+    }
+
+    public final String reducedIndent() {
+        return indent(getDepth() * 2);
+    }
+
     @Override
     public final YAPIONPath getPath() {
         return new YAPIONPath(this);

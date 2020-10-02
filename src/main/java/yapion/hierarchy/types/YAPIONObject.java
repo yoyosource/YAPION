@@ -14,8 +14,10 @@ import yapion.utils.RecursionUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @YAPIONSave(context = "*")
@@ -50,6 +52,19 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     @Override
+    public String toYAPIONStringPrettified() {
+        final String indent = indent();
+        StringBuilder st = new StringBuilder();
+        st.append("{");
+        for (YAPIONVariable yapionVariable : variables) {
+            st.append("\n").append(indent);
+            st.append(yapionVariable.toYAPIONStringPrettified());
+        }
+        st.append("\n").append(reducedIndent());
+        return st.append("}").toString();
+    }
+
+    @Override
     public String toJSONString() {
         return "{" + variables.stream().map(YAPIONVariable::toJSONString).collect(Collectors.joining(",")) + "}";
     }
@@ -61,11 +76,23 @@ public class YAPIONObject extends YAPIONMappingType {
 
     @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
-        outputStream.write("{".getBytes(StandardCharsets.UTF_8));
+        outputStream.write(bytes("{"));
         for (YAPIONVariable variable : variables) {
             variable.toOutputStream(outputStream);
         }
-        outputStream.write("}".getBytes(StandardCharsets.UTF_8));
+        outputStream.write(bytes("}"));
+    }
+
+    @Override
+    public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
+        final byte[] indent = bytes(indent());
+        outputStream.write(bytes("{"));
+        for (YAPIONVariable variable : variables) {
+            outputStream.write(indent);
+            variable.toOutputStreamPrettified(outputStream);
+        }
+        outputStream.write(bytes("\n" + reducedIndent()));
+        outputStream.write(bytes("}"));
     }
 
     @Override

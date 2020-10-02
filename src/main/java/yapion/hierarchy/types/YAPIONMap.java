@@ -17,7 +17,6 @@ import yapion.parser.YAPIONParserMapObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @YAPIONSave(context = "*")
@@ -74,6 +73,29 @@ public class YAPIONMap extends YAPIONMappingType {
     }
 
     @Override
+    public String toYAPIONStringPrettified() {
+        final String indent = "\n" + indent();
+        long id = 0;
+
+        StringBuilder st = new StringBuilder();
+        st.append("<");
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
+            st.append(indent);
+            String id1 = String.format("%01X", id++);
+            String id2 = String.format("%01X", id++);
+
+            st.append(id1).append(":").append(id2);
+            st.append(indent);
+            st.append("#").append(id1).append(entry.getKey().toYAPIONStringPrettified());
+            st.append(indent);
+            st.append("#").append(id2).append(entry.getValue().toYAPIONStringPrettified());
+        }
+        st.append("\n").append(reducedIndent());
+        st.append(">");
+        return st.toString();
+    }
+
+    @Override
     public String toJSONString() {
         YAPIONObject yapionObject = new YAPIONObject();
         YAPIONArray mapping = new YAPIONArray();
@@ -112,24 +134,42 @@ public class YAPIONMap extends YAPIONMappingType {
     @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
         long id = 0;
-        outputStream.write("<".getBytes(StandardCharsets.UTF_8));
-        boolean b = false;
+
+        outputStream.write(bytes("<"));
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             String id1 = String.format("%01X", id++);
             String id2 = String.format("%01X", id++);
 
-            if (b) {
-                outputStream.write(",".getBytes(StandardCharsets.UTF_8));
-            }
-            b = true;
-
-            outputStream.write((id1 + ":" + id2).getBytes(StandardCharsets.UTF_8));
-            outputStream.write(("#" + id1).getBytes(StandardCharsets.UTF_8));
+            outputStream.write(bytes(id1 + ":" + id2));
+            outputStream.write(bytes("#" + id1));
             entry.getKey().toOutputStream(outputStream);
-            outputStream.write(("#" + id2).getBytes(StandardCharsets.UTF_8));
+            outputStream.write(bytes("#" + id2));
             entry.getValue().toOutputStream(outputStream);
         }
-        outputStream.write(">".getBytes(StandardCharsets.UTF_8));
+        outputStream.write(bytes(">"));
+    }
+
+    @Override
+    public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
+        final byte[] indent = bytes("," + indent());
+        long id = 0;
+
+        outputStream.write(bytes("<"));
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
+            outputStream.write(indent);
+            String id1 = String.format("%01X", id++);
+            String id2 = String.format("%01X", id++);
+
+            outputStream.write(bytes(id1 + ":" + id2));
+            outputStream.write(indent);
+            outputStream.write(bytes("#" + id1));
+            entry.getKey().toOutputStreamPrettified(outputStream);
+            outputStream.write(indent);
+            outputStream.write(bytes("#" + id2));
+            entry.getValue().toOutputStreamPrettified(outputStream);
+        }
+        outputStream.write(bytes("\n" + reducedIndent()));
+        outputStream.write(bytes(">"));
     }
 
     public YAPIONMap add(YAPIONAnyType key, YAPIONAnyType value) {

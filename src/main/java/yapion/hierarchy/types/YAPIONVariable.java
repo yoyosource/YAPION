@@ -56,6 +56,14 @@ public final class YAPIONVariable extends YAPIONAnyClosure {
         return name.replaceAll(PATTERN, REPLACEMENT) + value.toYAPIONString();
     }
 
+    @Override
+    public String toYAPIONStringPrettified() {
+        if (name.startsWith(" ")) {
+            return "\\" + name.replaceAll(PATTERN, REPLACEMENT) + value.toYAPIONStringPrettified();
+        }
+        return name.replaceAll(PATTERN, REPLACEMENT) + value.toYAPIONStringPrettified();
+    }
+
     public String toJSONString() {
         return "\"" + name + "\":" + value.toJSONString();
     }
@@ -65,10 +73,18 @@ public final class YAPIONVariable extends YAPIONAnyClosure {
         return "\"" + name + "\":" + value.toLossyJSONString();
     }
 
+    @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
         if (name.startsWith(" ")) outputStream.write("\\".getBytes(StandardCharsets.UTF_8));
         outputStream.write(name.replaceAll(PATTERN, REPLACEMENT).getBytes(StandardCharsets.UTF_8));
         value.toOutputStream(outputStream);
+    }
+
+    @Override
+    public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
+        if (name.startsWith(" ")) outputStream.write("\\".getBytes(StandardCharsets.UTF_8));
+        outputStream.write(name.replaceAll(PATTERN, REPLACEMENT).getBytes(StandardCharsets.UTF_8));
+        value.toOutputStreamPrettified(outputStream);
     }
 
     @Override

@@ -13,7 +13,6 @@ import yapion.utils.ReferenceIDUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -37,6 +36,11 @@ public class YAPIONPointer extends YAPIONValueType {
     }
 
     @Override
+    public String toYAPIONStringPrettified() {
+        return toYAPIONString();
+    }
+
+    @Override
     public String toJSONString() {
         return "{\"" + JSONMapper.POINTER_IDENTIFIER + "\":\"" + getPointerIDString() + "\"}";
     }
@@ -48,7 +52,12 @@ public class YAPIONPointer extends YAPIONValueType {
 
     @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
-        outputStream.write(toYAPIONString().getBytes(StandardCharsets.UTF_8));
+        outputStream.write(bytes(toYAPIONString()));
+    }
+
+    @Override
+    public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
+        toOutputStream(outputStream);
     }
 
     private long pointerID;

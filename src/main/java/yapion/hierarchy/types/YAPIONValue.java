@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -110,6 +109,11 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     @Override
+    public String toYAPIONStringPrettified() {
+        return toYAPIONString();
+    }
+
+    @Override
     public String toJSONString() {
         if (value instanceof String) {
             return "\"" + ((String) value).replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
@@ -146,7 +150,12 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
-        outputStream.write(toString().getBytes(StandardCharsets.UTF_8));
+        outputStream.write(bytes(toYAPIONString()));
+    }
+
+    @Override
+    public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
+        toOutputStream(outputStream);
     }
 
     @SuppressWarnings({"java:S3740"})

@@ -291,10 +291,6 @@ public final class YAPIONParser {
         }
 
         switch (typeStack.peek()) {
-            // Todo: BINARY POINTER?
-            /*case BINARY_POINTER:
-                parseBinaryPointer(c);
-                return;*/
             case POINTER:
                 parsePointer(c);
                 return;
@@ -423,11 +419,6 @@ public final class YAPIONParser {
             push(YAPIONType.VALUE);
             return true;
         }
-        // Todo: BINARY POINTER?
-        /*if (c == 0x06) {
-            push(Type.BINARY_POINTER);
-            return true;
-        }*/
         if (lastChar == '-' && c == '>') {
             current.deleteCharAt(current.length() - 1);
             push(YAPIONType.POINTER);
@@ -455,6 +446,7 @@ public final class YAPIONParser {
     }
 
     private void parsePointer(char c) {
+        if (c == ' ' || c == '\n') return;
         current.append(c);
         if (current.length() == 16) {
             pop(YAPIONType.POINTER);
@@ -465,19 +457,10 @@ public final class YAPIONParser {
         }
     }
 
-    // Todo: BINARY POINTER?
-    /*private void parseBinaryPointer(char c) {
-        current.append(String.format("%02X", (int)c));
-        if (current.length() == 16) {
-            pop(Type.BINARY_POINTER);
-            YAPIONPointer yapionPointer = new YAPIONPointer(current.toString());
-            yapionPointerList.add(yapionPointer);
-            add(new YAPIONVariable(key, yapionPointer));
-            reset();
-        }
-    }*/
-
     private void parseMap(char c, char lastChar) {
+        if (everyType(c, lastChar)) {
+            return;
+        }
         if (c == '>') {
             pop(YAPIONType.MAP);
             if (current.length() != 0) {
@@ -486,9 +469,6 @@ public final class YAPIONParser {
             ((YAPIONMap)currentObject).finishMapping();
             currentObject = currentObject.getParent();
             reset();
-            return;
-        }
-        if (everyType(c, lastChar)) {
             return;
         }
 
@@ -504,7 +484,9 @@ public final class YAPIONParser {
             current = new StringBuilder();
             return;
         }
-        current.append(c);
+        if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c == ':' || c == '#' || c == '-')) {
+            current.append(c);
+        }
     }
 
     private void parseArray(char c, char lastChar) {

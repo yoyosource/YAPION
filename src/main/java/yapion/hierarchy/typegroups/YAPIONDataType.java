@@ -10,9 +10,7 @@ public abstract class YAPIONDataType extends YAPIONAnyType {
 
     public abstract int size();
 
-    public long deepSize() {
-        return 0L;
-    }
+    public abstract long deepSize();
 
     public abstract int length();
 
