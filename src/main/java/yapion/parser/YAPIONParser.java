@@ -445,9 +445,14 @@ public final class YAPIONParser {
         }
     }
 
+    private boolean isHex(char c) {
+        return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
+    }
+
     private void parsePointer(char c) {
-        if (c == ' ' || c == '\n') return;
-        current.append(c);
+        if (isHex(c)) {
+            current.append(c);
+        }
         if (current.length() == 16) {
             pop(YAPIONType.POINTER);
             YAPIONPointer yapionPointer = new YAPIONPointer(current.toString());
@@ -484,7 +489,7 @@ public final class YAPIONParser {
             current = new StringBuilder();
             return;
         }
-        if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c == ':' || c == '#' || c == '-')) {
+        if (isHex(c) || (c == ':' || c == '#' || c == '-')) {
             current.append(c);
         }
     }
