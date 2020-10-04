@@ -17,7 +17,7 @@ ext {
 
     groupName = "${group}"
 
-    publication = mayor + "." + minor + "." + patch
+    publication = major + "." + minor + "." + patch
 
     releasePath = "releases/${groupID}/${group}"
 }
@@ -102,15 +102,15 @@ publishing {
     }
 }
 
-task incrementMayor {
-    description 'Increment Mayor'
+task incrementMajor {
+    description 'Increment Major'
     group "Release"
 
     doLast {
-        mayor = Integer.parseInt(mayor) + 1
+        major = Integer.parseInt(major) + 1
         minor = 0
         patch = 0
-        println("Version: " + mayor + "." + minor + "." + patch)
+        println("Version: " + major + "." + minor + "." + patch)
         save()
         println("NEXT STEP: projectPublish")
     }
@@ -123,7 +123,7 @@ task incrementMinor {
     doLast {
         minor = Integer.parseInt(minor) + 1
         patch = 0
-        println("Version: " + mayor + "." + minor + "." + patch)
+        println("Version: " + major + "." + minor + "." + patch)
         save()
         println("NEXT STEP: projectPublish")
     }
@@ -135,7 +135,7 @@ task incrementPatch {
 
     doLast {
         patch = Integer.parseInt(patch) + 1
-        println("Version: " + mayor + "." + minor + "." + patch)
+        println("Version: " + major + "." + minor + "." + patch)
         save()
         println("NEXT STEP: projectPublish")
     }
@@ -145,8 +145,8 @@ private void save() {
     File f = new File("${new File("${buildDir}").parentFile.toString()}/gradle.properties")
     String[] strings = f.getText().split("\n")
     for (int i = 0; i < strings.length; i++) {
-        if (strings[i].startsWith("mayor = ")) {
-            strings[i] = "mayor = " + mayor
+        if (strings[i].startsWith("major = ")) {
+            strings[i] = "major = " + major
         } else if (strings[i].startsWith("minor = ")) {
             strings[i] = "minor = " + minor
         } else if (strings[i].startsWith("patch = ")) {
@@ -173,13 +173,13 @@ task projectCommit {
 
     doLast {
         def status = shell("git status")
-        if (!status.toString().contains("${releasePath}/${mayor}.${minor}.${patch}/")) {
+        if (!status.toString().contains("${releasePath}/${major}.${minor}.${patch}/")) {
             println("No new Version detected")
             return
         }
 
         println("Adding new files to git")
-        shell("git add ${releasePath}/${mayor}.${minor}.${patch}/")
+        shell("git add ${releasePath}/${major}.${minor}.${patch}/")
         shell("git add gradle.properties")
         shell("git add ${releasePath}/maven-metadata.xml")
         shell("git add ${releasePath}/maven-metadata.xml.md5")
@@ -187,10 +187,10 @@ task projectCommit {
         shell("git add ${releasePath}/maven-metadata.xml.sha256")
         shell("git add ${releasePath}/maven-metadata.xml.sha512")
 
-        println("Creating new commit with name 'Maven Release ${mayor}.${minor}.${patch}'")
-        shell("git commit -m \"Maven Release ${mayor}.${minor}.${patch}\"")
-        println("Creating new tag with name 'V${mayor}.${minor}.${patch}'")
-        shell("git tag \"V${mayor}.${minor}.${patch}\"")
+        println("Creating new commit with name 'Maven Release ${major}.${minor}.${patch}'")
+        shell("git commit -m \"Maven Release ${major}.${minor}.${patch}\"")
+        println("Creating new tag with name 'V${major}.${minor}.${patch}'")
+        shell("git tag \"V${major}.${minor}.${patch}\"")
 
         if (!answer("Should this commit be pushed? [Y/n]")) {
             println("Use 'git push' and 'git push --tags' to manually push this to origin.")
