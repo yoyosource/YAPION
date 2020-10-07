@@ -24,7 +24,7 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
         TRAVERSE_DATA_TYPES
     }
 
-    private static final Comparator<YAPIONDataType> comparator = Comparator.comparingLong(YAPIONDataType::deepSize);
+    private static final Comparator<YAPIONDataType> comparator = Comparator.comparingLong(YAPIONDataType::size);
     private LinkedList<YAPIONAnyType> yapionAnyTypes = new LinkedList<>();
     private YAPIONTreeIteratorOption option;
 

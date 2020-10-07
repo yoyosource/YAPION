@@ -31,7 +31,7 @@ public class OptionalSerializer implements InternalSerializer<Optional<?>> {
     @Override
     public YAPIONAnyType serialize(Optional<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>("java.util.Optional")));
+        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         yapionObject.add(new YAPIONVariable("present", new YAPIONValue<>(object.isPresent())));
         object.ifPresent(o -> yapionObject.add(new YAPIONVariable("value", yapionSerializer.parse(o))));
         return yapionObject;
