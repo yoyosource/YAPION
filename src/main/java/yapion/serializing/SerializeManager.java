@@ -64,26 +64,15 @@ public class SerializeManager {
         }
     }, false);
 
+    private static final String internalOverrideableSerializer = InternalOverrideableSerializer.class.getTypeName();
+    private static final String internalSerializer = InternalSerializer.class.getTypeName();
+
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
     private static final GroupList nSerializerGroups = new GroupList();
     private static final GroupList oSerializerGroups = new GroupList();
     static {
-        Iterable<Class<?>> clazzes = ClassIndex.getAnnotated(SerializerImplementation.class);
-        clazzes.forEach(clazz -> {
-            Object o = ReflectionsUtils.constructObjectObjenesis(clazz.getTypeName());
-            if (o == null) return;
-            if (!o.getClass().getTypeName().startsWith("yapion.serializing.serializer")) return;
-            if (o.getClass().getInterfaces().length != 1) return;
-            switch (o.getClass().getInterfaces()[0].getTypeName()) {
-                case "yapion.serializing.InternalOverrideableSerializer":
-                    add((InternalOverrideableSerializer<?>)o);
-                    break;
-                case "yapion.serializing.InternalSerializer":
-                    add((InternalSerializer<?>)o);
-                    break;
-                default:
-                    break;
-            }
+        ClassIndex.getAnnotated(SerializerImplementation.class).forEach(clazz -> {
+            add(ReflectionsUtils.constructObjectObjenesis(clazz.getTypeName()));
         });
         oSerializerGroups.add(() -> "yapion.annotations.");
         oSerializerGroups.add(() -> "yapion.exceptions.");
@@ -101,6 +90,19 @@ public class SerializeManager {
         nSerializerGroups.add(() -> "java.util.");
         nSerializerGroups.build();
         overrideable = true;
+    }
+
+    private static void add(Object o) {
+        if (overrideable) return;
+        if (o == null) return;
+        if (!o.getClass().getTypeName().startsWith("yapion.serializing.serializer")) return;
+        if (o.getClass().getInterfaces().length != 1) return;
+        String typeName = o.getClass().getInterfaces()[0].getTypeName();
+        if (typeName.equals(internalOverrideableSerializer)) {
+            add((InternalOverrideableSerializer<?>)o);
+        } else if (typeName.equals(internalSerializer)) {
+            add((InternalSerializer<?>)o);
+        }
     }
 
     private static void add(InternalOverrideableSerializer<?> serializer) {
