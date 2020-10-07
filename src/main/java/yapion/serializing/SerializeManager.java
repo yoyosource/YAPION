@@ -71,9 +71,7 @@ public class SerializeManager {
     private static final GroupList nSerializerGroups = new GroupList();
     private static final GroupList oSerializerGroups = new GroupList();
     static {
-        ClassIndex.getAnnotated(SerializerImplementation.class).forEach(clazz -> {
-            add(ReflectionsUtils.constructObjectObjenesis(clazz.getTypeName()));
-        });
+        ClassIndex.getAnnotated(SerializerImplementation.class).forEach(SerializeManager::add);
         oSerializerGroups.add(() -> "yapion.annotations.");
         oSerializerGroups.add(() -> "yapion.exceptions.");
         oSerializerGroups.add(() -> "yapion.parser.");
@@ -92,21 +90,23 @@ public class SerializeManager {
         overrideable = true;
     }
 
-    private static void add(Object o) {
+    private static void add(Class<?> clazz) {
         if (overrideable) return;
+        String className = clazz.getTypeName();
+        if (!className.startsWith("yapion.serializing.serializer")) return;
+        if (clazz.getInterfaces().length != 1) return;
+        String typeName = clazz.getInterfaces()[0].getTypeName();
+        Object o = ReflectionsUtils.constructObjectObjenesis(className);
         if (o == null) return;
-        if (!o.getClass().getTypeName().startsWith("yapion.serializing.serializer")) return;
-        if (o.getClass().getInterfaces().length != 1) return;
-        String typeName = o.getClass().getInterfaces()[0].getTypeName();
         if (typeName.equals(internalOverrideableSerializer)) {
-            add((InternalOverrideableSerializer<?>)o);
+            add((InternalOverrideableSerializer<?>) o);
         } else if (typeName.equals(internalSerializer)) {
-            add((InternalSerializer<?>)o);
+            add((InternalSerializer<?>) o);
         }
     }
 
     private static void add(InternalOverrideableSerializer<?> serializer) {
-        if (serializerMap.containsKey(serializer.type()) && !serializerMap.get(serializer.type()).overrideable) return;
+        if (!checkOverrideable(serializer)) return;
         serializerMap.put(serializer.type(), new Serializer(serializer, true));
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
             serializerMap.put(serializer.primitiveType(), new Serializer(serializer, true));
@@ -114,11 +114,15 @@ public class SerializeManager {
     }
 
     private static void add(InternalSerializer<?> serializer) {
-        if (serializerMap.containsKey(serializer.type()) && !serializerMap.get(serializer.type()).overrideable) return;
+        if (!checkOverrideable(serializer)) return;
         serializerMap.put(serializer.type(), new Serializer(serializer, overrideable));
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
             serializerMap.put(serializer.primitiveType(), new Serializer(serializer, overrideable));
         }
+    }
+
+    private static boolean checkOverrideable(InternalSerializer<?> serializer) {
+        return !serializerMap.containsKey(serializer.type()) || serializerMap.get(serializer.type()).overrideable;
     }
 
     /**
