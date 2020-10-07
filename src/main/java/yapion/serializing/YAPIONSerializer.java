@@ -20,6 +20,8 @@ import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 public final class YAPIONSerializer {
@@ -136,7 +138,7 @@ public final class YAPIONSerializer {
         if (!pointerMap.containsKey(object)) {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
         }
-        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName())));
+        yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName())));
         this.yapionObject = yapionObject;
 
         Field[] fields = object.getClass().getDeclaredFields();

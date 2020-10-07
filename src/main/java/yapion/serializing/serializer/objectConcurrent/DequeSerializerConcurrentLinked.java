@@ -20,6 +20,8 @@ import yapion.serializing.serializer.SerializerImplementation;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SerializerImplementation
@@ -33,7 +35,7 @@ public class DequeSerializerConcurrentLinked implements InternalSerializer<Concu
     @Override
     public YAPIONAnyType serialize(ConcurrentLinkedDeque<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator<?> iterator = object.iterator();

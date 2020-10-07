@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static yapion.utils.IdentifierUtils.*;
 import static yapion.utils.ReferenceIDUtils.calc;
 
 @YAPIONSave(context = "*")
@@ -33,15 +34,15 @@ public class YAPIONValue<T> extends YAPIONValueType {
     private static final Map<String, String> typeIdentifier = new HashMap<>();
 
     static {
-        typeIdentifier.put(allowedTypes[1], JSONMapper.BYTE_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[2], JSONMapper.SHORT_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[3], JSONMapper.INT_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[4], JSONMapper.LONG_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[5], JSONMapper.BIG_INTEGER_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[6], JSONMapper.FLOAT_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[7], JSONMapper.DOUBLE_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[8], JSONMapper.BIG_DECIMAL_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[10], JSONMapper.CHAR_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[1], BYTE_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[2], SHORT_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[3], INT_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[4], LONG_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[5], BIG_INTEGER_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[6], FLOAT_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[7], DOUBLE_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[8], BIG_DECIMAL_IDENTIFIER);
+        typeIdentifier.put(allowedTypes[10], CHAR_IDENTIFIER);
     }
 
     private final T value;

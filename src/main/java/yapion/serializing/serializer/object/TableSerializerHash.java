@@ -20,6 +20,8 @@ import yapion.serializing.serializer.SerializerImplementation;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SerializerImplementation
@@ -33,7 +35,7 @@ public class TableSerializerHash implements InternalSerializer<Hashtable<?, ?>> 
     @Override
     public YAPIONAnyType serialize(Hashtable<?, ?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
         for (Map.Entry<?, ?> entry : object.entrySet()) {

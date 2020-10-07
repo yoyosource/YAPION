@@ -21,6 +21,8 @@ import yapion.serializing.YAPIONSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
 @YAPIONObjenesis
@@ -190,7 +192,7 @@ public final class YAPIONPacket {
      */
     public static Validator validator() {
         Validator validator = new Validator();
-        validator.add(new ValidatorVariable(o -> o.toString().equals("yapion.packet.YAPIONPacket"), SerializeManager.TYPE_IDENTIFIER).setType(ValidatorType.VALUE));
+        validator.add(new ValidatorVariable(o -> o.toString().equals("yapion.packet.YAPIONPacket"), TYPE_IDENTIFIER).setType(ValidatorType.VALUE));
         validator.add(new ValidatorVariable(o -> !o.toString().equals(YAPIONPacketReceiver.ERROR_HANDLER) && !o.toString().equals(YAPIONPacketReceiver.EXCEPTION_HANDLER), "type").setType(ValidatorType.VALUE));
         validator.add(new ValidatorVariable("payload").setType(ValidatorType.MAP));
         validator.setValidationHook((strings) -> {

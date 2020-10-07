@@ -10,13 +10,14 @@ import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -31,7 +32,7 @@ public class URLSerializer implements InternalSerializer<URL> {
     @Override
     public YAPIONAnyType serialize(URL object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+        yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
         try {
             yapionObject.add("protocol", new YAPIONValue<>(object.getProtocol()));
             yapionObject.add("host", new YAPIONValue<>(object.getHost()));

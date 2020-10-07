@@ -26,6 +26,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 public final class YAPIONDeserializer {
@@ -220,7 +222,7 @@ public final class YAPIONDeserializer {
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parseObject(YAPIONObject yapionObject) {
-        String type = ((YAPIONValue<String>)yapionObject.getVariable(SerializeManager.TYPE_IDENTIFIER).getValue()).get();
+        String type = ((YAPIONValue<String>)yapionObject.getVariable(TYPE_IDENTIFIER).getValue()).get();
         Object o = serialize(yapionObject, type);
         if (o != null) {
             object = o;

@@ -21,6 +21,8 @@ import yapion.utils.ReflectionsUtils;
 
 import java.util.*;
 
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 public class SerializeManager {
@@ -29,8 +31,6 @@ public class SerializeManager {
         throw new IllegalStateException("Utility class");
     }
 
-    public static final String TYPE_IDENTIFIER = "@type";
-    public static final String ENUM_IDENTIFIER = "@enum";
     private static final Logger logger = LoggerFactory.getLogger(SerializeManager.class);
 
     @YAPIONSaveExclude(context = "*")

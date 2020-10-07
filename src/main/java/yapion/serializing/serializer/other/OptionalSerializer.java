@@ -18,6 +18,8 @@ import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.Optional;
 
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SerializerImplementation
@@ -31,7 +33,7 @@ public class OptionalSerializer implements InternalSerializer<Optional<?>> {
     @Override
     public YAPIONAnyType serialize(Optional<?> object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         yapionObject.add(new YAPIONVariable("present", new YAPIONValue<>(object.isPresent())));
         object.ifPresent(o -> yapionObject.add(new YAPIONVariable("value", yapionSerializer.parse(o))));
         return yapionObject;

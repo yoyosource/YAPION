@@ -19,6 +19,8 @@ import yapion.serializing.serializer.SerializerImplementation;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SerializerImplementation
@@ -32,7 +34,7 @@ public class MathContextSerializer implements InternalSerializer<MathContext> {
     @Override
     public YAPIONAnyType serialize(MathContext object, YAPIONSerializer yapionSerializer) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(SerializeManager.TYPE_IDENTIFIER, new YAPIONValue<>(type())));
+        yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         yapionObject.add(new YAPIONVariable("precision", new YAPIONValue<>(object.getPrecision())));
         yapionObject.add(new YAPIONVariable("roundMode", yapionSerializer.parse(object.getRoundingMode())));
         return yapionObject;

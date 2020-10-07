@@ -16,6 +16,8 @@ import java.io.OutputStream;
 import java.util.Objects;
 import java.util.Optional;
 
+import static yapion.utils.IdentifierUtils.POINTER_IDENTIFIER;
+
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
 public class YAPIONPointer extends YAPIONValueType {
@@ -42,12 +44,12 @@ public class YAPIONPointer extends YAPIONValueType {
 
     @Override
     public String toJSONString() {
-        return "{\"" + JSONMapper.POINTER_IDENTIFIER + "\":\"" + getPointerIDString() + "\"}";
+        return "{\"" + POINTER_IDENTIFIER + "\":\"" + getPointerIDString() + "\"}";
     }
 
     @Override
     public String toLossyJSONString() {
-        return "{\"" + JSONMapper.POINTER_IDENTIFIER + "\":\"" + getPointerIDString() + "\"}";
+        return "{\"" + POINTER_IDENTIFIER + "\":\"" + getPointerIDString() + "\"}";
     }
 
     @Override

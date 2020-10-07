@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
+import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
+
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
 public class YAPIONMap extends YAPIONMappingType {
@@ -101,7 +103,7 @@ public class YAPIONMap extends YAPIONMappingType {
     public String toJSONString() {
         YAPIONObject yapionObject = new YAPIONObject();
         YAPIONArray mapping = new YAPIONArray();
-        yapionObject.add(JSONMapper.MAP_IDENTIFIER, mapping);
+        yapionObject.add(MAP_IDENTIFIER, mapping);
 
         long id = 0;
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
@@ -119,7 +121,7 @@ public class YAPIONMap extends YAPIONMappingType {
     public String toLossyJSONString() {
         YAPIONObject yapionObject = new YAPIONObject();
         YAPIONArray mapping = new YAPIONArray();
-        yapionObject.add(JSONMapper.MAP_IDENTIFIER, mapping);
+        yapionObject.add(MAP_IDENTIFIER, mapping);
 
         long id = 0;
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
