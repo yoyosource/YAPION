@@ -7,6 +7,7 @@ package yapion.serializing;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONData;
+import yapion.annotations.object.YAPIONField;
 import yapion.annotations.object.YAPIONPostDeserialization;
 import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONOptimize;
@@ -73,6 +74,11 @@ public final class StateManager {
         return is(annotation.context());
     }
 
+    boolean is(YAPIONField annotation) {
+        if (annotation == null) return false;
+        return is(annotation.context());
+    }
+
     private boolean globalLoad = false;
     private boolean globalSave = false;
     private YAPIONData yapionData = null;
@@ -97,28 +103,18 @@ public final class StateManager {
     }
 
     YAPIONInfo is(Object object) {
-        if (is(object.getClass().getDeclaredAnnotation(YAPIONLoadExclude.class))) globalLoad = false;
-        globalLoad = is(object.getClass().getDeclaredAnnotation(YAPIONLoad.class));
-        if (is(object.getClass().getDeclaredAnnotation(YAPIONSaveExclude.class))) globalSave = false;
-        globalSave = is(object.getClass().getDeclaredAnnotation(YAPIONSave.class));
-
-        yapionData = object.getClass().getDeclaredAnnotation(YAPIONData.class);
-        if (yapionData != null) {
-            globalLoad = is(yapionData);
-            globalSave = is(yapionData);
-        }
-
-        return new YAPIONInfo(globalLoad, globalSave, yapionData != null && globalLoad);
+        return is(object.getClass());
     }
 
     YAPIONInfo is(Object object, Field field) {
-        is(object);
+        is(object.getClass());
 
         YAPIONLoadExclude yapionLoadExclude = field.getDeclaredAnnotation(YAPIONLoadExclude.class);
         YAPIONLoad yapionLoad = field.getDeclaredAnnotation(YAPIONLoad.class);
         YAPIONOptimize yapionOptimize = field.getDeclaredAnnotation(YAPIONOptimize.class);
         YAPIONSaveExclude yapionSaveExclude = field.getDeclaredAnnotation(YAPIONSaveExclude.class);
         YAPIONSave yapionSave = field.getDeclaredAnnotation(YAPIONSave.class);
+        YAPIONField yapionField = field.getDeclaredAnnotation(YAPIONField.class);
 
         localLoad = true;
         if (yapionLoadExclude != null && yapionLoad == null) {
@@ -140,6 +136,11 @@ public final class StateManager {
         } else if (yapionSaveExclude != null) {
             if (is(yapionSaveExclude)) localSave = false;
             localSave = is(yapionSave);
+        }
+
+        if (yapionField != null) {
+            localLoad = is(yapionField);
+            localSave = is(yapionField);
         }
 
         if (yapionData != null) {
