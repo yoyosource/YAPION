@@ -95,8 +95,9 @@ public final class StateManager {
 
         yapionData = clazz.getDeclaredAnnotation(YAPIONData.class);
         if (yapionData != null) {
-            globalLoad = is(yapionData);
-            globalSave = is(yapionData);
+            boolean yapionDataBoolean = is(yapionData);
+            globalLoad = globalLoad || yapionDataBoolean;
+            globalSave = globalSave || yapionDataBoolean;
         }
 
         return new YAPIONInfo(globalLoad, globalSave, yapionData != null && globalLoad);
@@ -139,13 +140,15 @@ public final class StateManager {
         }
 
         if (yapionField != null) {
-            localLoad = is(yapionField);
-            localSave = is(yapionField);
+            boolean yapionFieldBoolean = is(yapionField);
+            localLoad = localLoad | yapionFieldBoolean;
+            localSave = localSave | yapionFieldBoolean;
         }
 
         if (yapionData != null) {
-            localLoad = is(yapionData);
-            localSave = is(yapionData);
+            boolean yapionDataBoolean = is(yapionData);
+            localLoad = localLoad || yapionDataBoolean;
+            localSave = localSave || yapionDataBoolean;
         }
 
         return new YAPIONInfo(globalLoad && localLoad, globalSave && localSave, yapionData != null && localLoad, localOptimize);

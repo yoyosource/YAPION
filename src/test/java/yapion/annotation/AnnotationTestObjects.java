@@ -1,10 +1,7 @@
 package yapion.annotation;
 
 import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.object.YAPIONData;
-import yapion.annotations.object.YAPIONObjenesis;
-import yapion.annotations.object.YAPIONPostDeserialization;
-import yapion.annotations.object.YAPIONPreDeserialization;
+import yapion.annotations.object.*;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.annotations.serialize.YAPIONSave;
 
@@ -60,6 +57,15 @@ public class AnnotationTestObjects {
         @YAPIONSave
         @YAPIONLoad(context = {"objenesis"})
         private String s = "objenesis";
+
+    }
+
+    @YAPIONData(context = "type")
+    @YAPIONSave(context = "fieldOther")
+    public static class FieldTypeTest {
+
+        @YAPIONField(context = {"field", "fieldOther"})
+        private String s = "FieldType";
 
     }
 
