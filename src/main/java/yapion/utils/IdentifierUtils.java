@@ -1,7 +1,11 @@
 package yapion.utils;
 
+import yapion.hierarchy.typeinterfaces.ObjectOutput;
+import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONVariable;
+import yapion.parser.JSONMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.serializer.other.EnumSerializer;
@@ -28,12 +32,20 @@ public class IdentifierUtils {
     public static final String ENUM_IDENTIFIER = "@enum";
 
     /**
-     *
+     * This variable is used in the {@link YAPIONPointer#toJSONString()}
+     * implementation and {@link YAPIONPointer#toLossyJSONString()} for
+     * representation of an {@link YAPIONPointer} as a JSON object.
+     * The {@link JSONMapper} uses this variable to identify a
+     * {@link YAPIONPointer} in the JSON representation.
      */
     public static final String POINTER_IDENTIFIER = "@pointer";
 
     /**
-     *
+     * This variable is used in the {@link YAPIONMap#toJSONString()}
+     * implementation and {@link YAPIONMap#toLossyJSONString()} for
+     * representation of an {@link YAPIONMap} as a JSON object.
+     * The {@link JSONMapper} uses this variable to identify a
+     * {@link YAPIONMap} in the JSON representation.
      */
     public static final String MAP_IDENTIFIER = "@mapping";
 
