@@ -8,6 +8,10 @@ import yapion.serializing.serializer.other.EnumSerializer;
 
 public class IdentifierUtils {
 
+    private IdentifierUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * This variable is used in the {@link YAPIONSerializer}
      * and {@link YAPIONDeserializer} for identifying an
