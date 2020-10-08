@@ -21,12 +21,9 @@ import java.lang.reflect.Field;
 public final class StateManager {
 
     private final String state;
-    private boolean emptyState = false;
+    private boolean emptyState;
 
     public StateManager(String state) {
-        if (state.contains(" ")) {
-            throw new YAPIONException("State cannot contain ' ': \"" + state + "\"");
-        }
         this.state = state;
         this.emptyState = state.isEmpty();
     }
@@ -35,12 +32,15 @@ public final class StateManager {
         return state;
     }
 
-    private boolean is(String s) {
-        if (s.equals("*")) return true;
-        if (!s.isEmpty() && emptyState) return false;
+    private boolean is(String[] strings) {
         if (emptyState) return true;
-        if (s.isEmpty()) return true;
-        return s.contains(state);
+        if (strings.length == 0) return true;
+        for (String s : strings) {
+            if (s.equals("*")) return true;
+            if (s.isEmpty()) return true;
+            if (s.equals(state)) return true;
+        }
+        return false;
     }
 
     boolean is(YAPIONLoad annotation) {
@@ -69,16 +69,6 @@ public final class StateManager {
     }
 
     boolean is(YAPIONData annotation) {
-        if (annotation == null) return false;
-        return is(annotation.context());
-    }
-
-    boolean is(YAPIONPreDeserialization annotation) {
-        if (annotation == null) return false;
-        return is(annotation.context());
-    }
-
-    boolean is(YAPIONPostDeserialization annotation) {
         if (annotation == null) return false;
         return is(annotation.context());
     }

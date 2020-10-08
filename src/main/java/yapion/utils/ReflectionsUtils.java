@@ -12,6 +12,7 @@ import yapion.annotations.object.YAPIONData;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 
 import java.lang.reflect.Constructor;
@@ -134,9 +135,8 @@ public class ReflectionsUtils {
             method.setAccessible(true);
             return Optional.ofNullable(method.invoke(object, objects));
         } catch (SecurityException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
             logger.info("Exception while invoking a method '" + method.getName() + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
-            return Optional.empty();
+            throw new YAPIONException(e.getMessage(), e.getCause());
         }
     }
 

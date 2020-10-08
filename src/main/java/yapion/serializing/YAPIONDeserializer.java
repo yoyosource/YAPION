@@ -319,26 +319,28 @@ public final class YAPIONDeserializer {
             }
         }
 
-        private void cachePre(String context, Method method) {
-            for (String s : context.split(" ")) {
+        private void cachePre(String[] context, Method method) {
+            for (String s : context) {
                 preCache.put(s, method);
             }
         }
 
-        private void cachePost(String context, Method method) {
-            for (String s : context.split(" ")) {
+        private void cachePost(String[] context, Method method) {
+            for (String s : context) {
                 postCache.put(s, method);
             }
         }
 
-        private void pre(Object object) {
-            if (!preCache.containsKey(stateManager.get())) return;
-            ReflectionsUtils.invokeMethod(preCache.get(stateManager.get()), object);
+        private void pre(Object object, StateManager stateManager) {
+            String state = stateManager.get();
+            if (!preCache.containsKey(state)) return;
+            ReflectionsUtils.invokeMethod(preCache.get(state), object);
         }
 
-        private void post(Object object) {
-            if (!postCache.containsKey(stateManager.get())) return;
-            ReflectionsUtils.invokeMethod(postCache.get(stateManager.get()), object);
+        private void post(Object object, StateManager stateManager) {
+            String state = stateManager.get();
+            if (!postCache.containsKey(state)) return;
+            ReflectionsUtils.invokeMethod(postCache.get(state), object);
         }
     }
 
@@ -347,7 +349,7 @@ public final class YAPIONDeserializer {
         if (!methodMap.containsKey(key)) {
             methodMap.put(key, new ObjectCache(object));
         }
-        methodMap.get(key).pre(object);
+        methodMap.get(key).pre(object, stateManager);
     }
 
     private void postDeserializationStep(Object object) {
@@ -355,7 +357,7 @@ public final class YAPIONDeserializer {
         if (!methodMap.containsKey(key)) {
             methodMap.put(key, new ObjectCache(object));
         }
-        methodMap.get(key).post(object);
+        methodMap.get(key).post(object, stateManager);
     }
 
     /**

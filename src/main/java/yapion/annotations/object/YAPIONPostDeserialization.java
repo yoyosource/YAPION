@@ -30,5 +30,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface YAPIONPostDeserialization {
-    String context() default "";
+    String[] context() default {};
 }
