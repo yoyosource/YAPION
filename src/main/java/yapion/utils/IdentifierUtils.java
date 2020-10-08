@@ -1,10 +1,6 @@
 package yapion.utils;
 
-import yapion.hierarchy.typeinterfaces.ObjectOutput;
-import yapion.hierarchy.types.YAPIONMap;
-import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONPointer;
-import yapion.hierarchy.types.YAPIONVariable;
+import yapion.hierarchy.types.*;
 import yapion.parser.JSONMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
@@ -50,47 +46,101 @@ public class IdentifierUtils {
     public static final String MAP_IDENTIFIER = "@mapping";
 
     /**
-     *
+     * This variable is used in the {@link YAPIONValue#toJSONString()}
+     * implementation for representation of the internal type
+     * notice into the JSON structure. The {@link YAPIONValue}
+     * is wrapped into an JSON object with one key value pair.
+     * The key to this value is this identifier and the {@link JSONMapper}
+     * will use this variable to identify a specific {@link YAPIONValue}
+     * type in the JSON representation.
      */
     public static final String BYTE_IDENTIFIER = "@byte";
 
     /**
-     *
+     * This variable is used in the {@link YAPIONValue#toJSONString()}
+     * implementation for representation of the internal type
+     * notice into the JSON structure. The {@link YAPIONValue}
+     * is wrapped into an JSON object with one key value pair.
+     * The key to this value is this identifier and the {@link JSONMapper}
+     * will use this variable to identify a specific {@link YAPIONValue}
+     * type in the JSON representation.
      */
     public static final String SHORT_IDENTIFIER = "@short";
 
     /**
-     *
+     * This variable is used in the {@link YAPIONValue#toJSONString()}
+     * implementation for representation of the internal type
+     * notice into the JSON structure. The {@link YAPIONValue}
+     * is wrapped into an JSON object with one key value pair.
+     * The key to this value is this identifier and the {@link JSONMapper}
+     * will use this variable to identify a specific {@link YAPIONValue}
+     * type in the JSON representation.
      */
     public static final String CHAR_IDENTIFIER = "@char";
 
     /**
-     *
+     * This variable is used in the {@link YAPIONValue#toJSONString()}
+     * implementation for representation of the internal type
+     * notice into the JSON structure. The {@link YAPIONValue}
+     * is wrapped into an JSON object with one key value pair.
+     * The key to this value is this identifier and the {@link JSONMapper}
+     * will use this variable to identify a specific {@link YAPIONValue}
+     * type in the JSON representation.
      */
     public static final String INT_IDENTIFIER = "@int";
 
     /**
-     *
+     * This variable is used in the {@link YAPIONValue#toJSONString()}
+     * implementation for representation of the internal type
+     * notice into the JSON structure. The {@link YAPIONValue}
+     * is wrapped into an JSON object with one key value pair.
+     * The key to this value is this identifier and the {@link JSONMapper}
+     * will use this variable to identify a specific {@link YAPIONValue}
+     * type in the JSON representation.
      */
     public static final String FLOAT_IDENTIFIER = "@float";
 
     /**
-     *
+     * This variable is used in the {@link YAPIONValue#toJSONString()}
+     * implementation for representation of the internal type
+     * notice into the JSON structure. The {@link YAPIONValue}
+     * is wrapped into an JSON object with one key value pair.
+     * The key to this value is this identifier and the {@link JSONMapper}
+     * will use this variable to identify a specific {@link YAPIONValue}
+     * type in the JSON representation.
      */
     public static final String LONG_IDENTIFIER = "@long";
 
     /**
-     *
+     * This variable is used in the {@link YAPIONValue#toJSONString()}
+     * implementation for representation of the internal type
+     * notice into the JSON structure. The {@link YAPIONValue}
+     * is wrapped into an JSON object with one key value pair.
+     * The key to this value is this identifier and the {@link JSONMapper}
+     * will use this variable to identify a specific {@link YAPIONValue}
+     * type in the JSON representation.
      */
     public static final String DOUBLE_IDENTIFIER = "@double";
 
     /**
-     *
+     * This variable is used in the {@link YAPIONValue#toJSONString()}
+     * implementation for representation of the internal type
+     * notice into the JSON structure. The {@link YAPIONValue}
+     * is wrapped into an JSON object with one key value pair.
+     * The key to this value is this identifier and the {@link JSONMapper}
+     * will use this variable to identify a specific {@link YAPIONValue}
+     * type in the JSON representation.
      */
     public static final String BIG_INTEGER_IDENTIFIER = "@bint";
 
     /**
-     *
+     * This variable is used in the {@link YAPIONValue#toJSONString()}
+     * implementation for representation of the internal type
+     * notice into the JSON structure. The {@link YAPIONValue}
+     * is wrapped into an JSON object with one key value pair.
+     * The key to this value is this identifier and the {@link JSONMapper}
+     * will use this variable to identify a specific {@link YAPIONValue}
+     * type in the JSON representation.
      */
     public static final String BIG_DECIMAL_IDENTIFIER = "@bdecimal";
 
