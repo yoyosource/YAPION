@@ -141,8 +141,8 @@ public final class StateManager {
 
         if (yapionField != null) {
             boolean yapionFieldBoolean = is(yapionField);
-            localLoad = localLoad | yapionFieldBoolean;
-            localSave = localSave | yapionFieldBoolean;
+            localLoad = localLoad || yapionFieldBoolean;
+            localSave = localSave || yapionFieldBoolean;
         }
 
         if (yapionData != null) {
