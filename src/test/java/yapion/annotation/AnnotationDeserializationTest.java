@@ -2,12 +2,9 @@ package yapion.annotation;
 
 import org.junit.Test;
 import yapion.exceptions.YAPIONException;
-import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static yapion.annotation.AnnotationTestObjects.*;
 
 public class AnnotationDeserializationTest {
@@ -30,18 +27,6 @@ public class AnnotationDeserializationTest {
     @Test
     public void testPost() {
         YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PostTest()), "noException");
-    }
-
-    @Test
-    public void testOptimizeNull() {
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new OptimizeTest(null));
-        assertThat(yapionObject.toYAPIONString(), is("{@type(yapion.annotation.AnnotationTestObjects$OptimizeTest)}"));
-    }
-
-    @Test
-    public void testOptimizeNonNull() {
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new OptimizeTest("yoyosource"));
-        assertThat(yapionObject.toYAPIONString(), is("{@type(yapion.annotation.AnnotationTestObjects$OptimizeTest)s(yoyosource)}"));
     }
 
 }

@@ -1,9 +1,12 @@
 package yapion.annotation;
 
+import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.object.YAPIONData;
+import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.object.YAPIONPostDeserialization;
 import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONOptimize;
+import yapion.annotations.serialize.YAPIONSave;
 
 public class AnnotationTestObjects {
 
@@ -46,6 +49,17 @@ public class AnnotationTestObjects {
         public OptimizeTest(String s) {
             this.s = s;
         }
+
+    }
+
+    @YAPIONObjenesis
+    @YAPIONSave
+    @YAPIONLoad
+    public static class ObjenesisTest {
+
+        @YAPIONSave
+        @YAPIONLoad(context = {"objenesis"})
+        private String s = "objenesis";
 
     }
 
