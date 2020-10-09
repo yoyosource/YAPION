@@ -4,13 +4,17 @@
 
 package yapion;
 
+import test.Test;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONPointer;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.packet.YAPIONInputStream;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.utils.ReflectionsUtils;
 import yapion.utils.YAPIONTreeIterator;
 import yapion.utils.YAPIONTreeIterator.YAPIONTreeIteratorOption;
 
@@ -18,10 +22,7 @@ import java.io.InputStream;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -186,6 +187,31 @@ public class YAPIONUtils {
      */
     public static Stream<YAPIONAnyType> walk(YAPIONObject yapionObject) {
         return walk(yapionObject, YAPIONTreeIteratorOption.TRAVERSE_ALL);
+    }
+
+    /**
+     * The inputted {@link YAPIONObject} is flattened to one {@link YAPIONObject} as the
+     * main layer. Every value will be put under this and every structure will be removes
+     * as. This will also remove any information about maps arrays and such.
+     *
+     * <br><br>(pointer@...) will represent a pointer
+     *
+     * @param yapionObject the {@link YAPIONObject} to flatten
+     * @return the flattened {@link YAPIONObject} this is a new instance
+     */
+    public static YAPIONObject flatten(YAPIONObject yapionObject) {
+        YAPIONObject output = new YAPIONObject();
+        walk(yapionObject, YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES).forEach(s -> {
+            String path = String.join(".", s.getPath().getPath());
+            if (s instanceof YAPIONPointer) {
+                Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", s);
+                if (!objectOptional.isPresent()) return;
+                output.add(path, new YAPIONValue<>("pointer@" + String.join(",", ((YAPIONObject)objectOptional.get()).getPath().getPath())));
+            } else {
+                output.add(path, s);
+            }
+        });
+        return output;
     }
 
 }
