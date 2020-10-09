@@ -25,6 +25,9 @@ import java.lang.annotation.Target;
  * <br>- PreDeserialization method call
  * <br>- Deserializing all fields ({@link YAPIONDeserializer})
  * <br>- PostDeserialization method call
+ *
+ * <br><br>The context describes the state in which the {@link YAPIONDeserializer}
+ * should be for this annotation to take effect.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})

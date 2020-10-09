@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  * annotation annotates a Type it is considered as a class description.
  *
  * <br><br>The context describes the state in which the {@link YAPIONSerializer}
- * should be in for this annotation to take effect.
+ * should be for this annotation to take effect.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})

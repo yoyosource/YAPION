@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  * overwrite any existing {@link YAPIONLoad} and {@link YAPIONSave}.
  *
  * <br><br>The context describes the state in which the {@link YAPIONSerializer}
- * or {@link YAPIONDeserializer} should be in for this annotation
+ * or {@link YAPIONDeserializer} should be for this annotation
  * to take effect.
  */
 @Retention(RetentionPolicy.RUNTIME)

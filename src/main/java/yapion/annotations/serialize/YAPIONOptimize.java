@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  * the deserialization, the field can be after deserialization {@code null}.
  *
  * <br><br>The context describes the state in which the {@link YAPIONSerializer}
- * should be in for this annotation to take effect.
+ * should be for this annotation to take effect.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
