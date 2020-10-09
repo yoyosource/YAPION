@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -65,7 +65,7 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
@@ -154,6 +154,23 @@ extends <a href="../typegroups/YAPIONValueType.html" title="class in yapion.hier
 </a>
 <h3>Nested classes/interfaces inherited from interface&nbsp;yapion.hierarchy.typeinterfaces.<a href="../typeinterfaces/ObjectSearch.html" title="interface in yapion.hierarchy.typeinterfaces">ObjectSearch</a></h3>
 <code><a href="../typeinterfaces/ObjectSearch.YAPIONSearchResult.html" title="class in yapion.hierarchy.typeinterfaces">ObjectSearch.YAPIONSearchResult</a>&lt;<a href="../typeinterfaces/ObjectSearch.YAPIONSearchResult.html" title="type parameter in ObjectSearch.YAPIONSearchResult">T</a> extends <a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&gt;</code></li>
+</ul>
+</li>
+</ul>
+</section>
+<!-- =========== FIELD SUMMARY =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<ul class="blockList">
+<li class="blockList"><a id="fields.inherited.from.class.yapion.hierarchy.typeinterfaces.ObjectOutput">
+<!--   -->
+</a>
+<h3>Fields inherited from interface&nbsp;yapion.hierarchy.typeinterfaces.<a href="../typeinterfaces/ObjectOutput.html" title="interface in yapion.hierarchy.typeinterfaces">ObjectOutput</a></h3>
+<code><a href="../typeinterfaces/ObjectOutput.html#indent">indent</a></code></li>
 </ul>
 </li>
 </ul>
@@ -255,13 +272,23 @@ extends <a href="../typegroups/YAPIONValueType.html" title="class in yapion.hier
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i10">
-<td class="colFirst"><code>java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toOutputStreamPrettified(java.io.OutputStream)">toOutputStreamPrettified</a></span>&#8203;(java.io.OutputStream&nbsp;outputStream)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i11">
 <td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i12">
+<td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toYAPIONString()">toYAPIONString</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i13">
+<td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toYAPIONStringPrettified()">toYAPIONStringPrettified</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -273,7 +300,7 @@ extends <a href="../typegroups/YAPIONValueType.html" title="class in yapion.hier
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;yapion.hierarchy.typegroups.<a href="../typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a></h3>
-<code><a href="../typegroups/YAPIONAnyType.html#get(java.lang.String...)">get</a>, <a href="../typegroups/YAPIONAnyType.html#getDepth()">getDepth</a>, <a href="../typegroups/YAPIONAnyType.html#getParent()">getParent</a>, <a href="../typegroups/YAPIONAnyType.html#getParseTime()">getParseTime</a>, <a href="../typegroups/YAPIONAnyType.html#getParseTimeMillis()">getParseTimeMillis</a>, <a href="../typegroups/YAPIONAnyType.html#getPath()">getPath</a>, <a href="../typegroups/YAPIONAnyType.html#getPath(yapion.hierarchy.typegroups.YAPIONAnyType)">getPath</a>, <a href="../typegroups/YAPIONAnyType.html#isValuePresent()">isValuePresent</a>, <a href="../typegroups/YAPIONAnyType.html#removeParent()">removeParent</a>, <a href="../typegroups/YAPIONAnyType.html#setParent(yapion.hierarchy.typegroups.YAPIONAnyType)">setParent</a></code></li>
+<code><a href="../typegroups/YAPIONAnyType.html#cacheReferenceValue(long)">cacheReferenceValue</a>, <a href="../typegroups/YAPIONAnyType.html#discardReferenceValue()">discardReferenceValue</a>, <a href="../typegroups/YAPIONAnyType.html#get(java.lang.String...)">get</a>, <a href="../typegroups/YAPIONAnyType.html#getDepth()">getDepth</a>, <a href="../typegroups/YAPIONAnyType.html#getParent()">getParent</a>, <a href="../typegroups/YAPIONAnyType.html#getParseTime()">getParseTime</a>, <a href="../typegroups/YAPIONAnyType.html#getParseTimeMillis()">getParseTimeMillis</a>, <a href="../typegroups/YAPIONAnyType.html#getPath()">getPath</a>, <a href="../typegroups/YAPIONAnyType.html#getPath(yapion.hierarchy.typegroups.YAPIONAnyType)">getPath</a>, <a href="../typegroups/YAPIONAnyType.html#getReferenceValue()">getReferenceValue</a>, <a href="../typegroups/YAPIONAnyType.html#hasReferenceValue()">hasReferenceValue</a>, <a href="../typegroups/YAPIONAnyType.html#indent()">indent</a>, <a href="../typegroups/YAPIONAnyType.html#isValuePresent()">isValuePresent</a>, <a href="../typegroups/YAPIONAnyType.html#reducedIndent()">reducedIndent</a>, <a href="../typegroups/YAPIONAnyType.html#removeParent()">removeParent</a>, <a href="../typegroups/YAPIONAnyType.html#setParent(yapion.hierarchy.typegroups.YAPIONAnyType)">setParent</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -281,6 +308,13 @@ extends <a href="../typegroups/YAPIONValueType.html" title="class in yapion.hier
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
 <code>clone, finalize, getClass, notify, notifyAll, wait, wait, wait</code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.yapion.hierarchy.typeinterfaces.ObjectOutput">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;yapion.hierarchy.typeinterfaces.<a href="../typeinterfaces/ObjectOutput.html" title="interface in yapion.hierarchy.typeinterfaces">ObjectOutput</a></h3>
+<code><a href="../typeinterfaces/ObjectOutput.html#bytes(java.lang.String)">bytes</a>, <a href="../typeinterfaces/ObjectOutput.html#indent(int)">indent</a></code></li>
 </ul>
 </li>
 </ul>
@@ -357,6 +391,15 @@ extends <a href="../typegroups/YAPIONValueType.html" title="class in yapion.hier
 <pre class="methodSignature">public&nbsp;java.lang.String&nbsp;toYAPIONString()</pre>
 </li>
 </ul>
+<a id="toYAPIONStringPrettified()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>toYAPIONStringPrettified</h4>
+<pre class="methodSignature">public&nbsp;java.lang.String&nbsp;toYAPIONStringPrettified()</pre>
+</li>
+</ul>
 <a id="toJSONString()">
 <!--   -->
 </a>
@@ -383,6 +426,20 @@ extends <a href="../typegroups/YAPIONValueType.html" title="class in yapion.hier
 <h4>toOutputStream</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;toOutputStream&#8203;(java.io.OutputStream&nbsp;outputStream)
                     throws java.io.IOException</pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.io.IOException</code></dd>
+</dl>
+</li>
+</ul>
+<a id="toOutputStreamPrettified(java.io.OutputStream)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>toOutputStreamPrettified</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;toOutputStreamPrettified&#8203;(java.io.OutputStream&nbsp;outputStream)
+                              throws java.io.IOException</pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>
@@ -495,7 +552,7 @@ extends <a href="../typegroups/YAPIONValueType.html" title="class in yapion.hier
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>

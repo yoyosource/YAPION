@@ -104,10 +104,10 @@ public @interface <span class="memberNameLabel">YAPIONData</span></pre>
 <div class="block">This annotation describes a combined <a href="../deserialize/YAPIONLoad.html" title="annotation in yapion.annotations.deserialize"><code>YAPIONLoad</code></a> and
  <a href="../serialize/YAPIONSave.html" title="annotation in yapion.annotations.serialize"><code>YAPIONSave</code></a> and stands for every Field specified in
  this Type. This annotation will overwrite any existing
- <a href="../deserialize/YAPIONLoad.html" title="annotation in yapion.annotations.deserialize"><code>YAPIONLoad</code></a> and <a href="../serialize/YAPIONSave.html" title="annotation in yapion.annotations.serialize"><code>YAPIONSave</code></a>.
+ <a href="../deserialize/YAPIONLoad.html" title="annotation in yapion.annotations.deserialize"><code>YAPIONLoad</code></a>, <a href="../serialize/YAPIONSave.html" title="annotation in yapion.annotations.serialize"><code>YAPIONSave</code></a> and <a href="YAPIONField.html" title="annotation in yapion.annotations.object"><code>YAPIONField</code></a>.
 
  <br><br>The context describes the state in which the <a href="../../serializing/YAPIONSerializer.html" title="class in yapion.serializing"><code>YAPIONSerializer</code></a>
- or <a href="../../serializing/YAPIONDeserializer.html" title="class in yapion.serializing"><code>YAPIONDeserializer</code></a> should be in for this annotation
+ or <a href="../../serializing/YAPIONDeserializer.html" title="class in yapion.serializing"><code>YAPIONDeserializer</code></a> should be for this annotation
  to take effect.</div>
 </li>
 </ul>
@@ -132,7 +132,7 @@ public @interface <span class="memberNameLabel">YAPIONData</span></pre>
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colFirst"><code>java.lang.String[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#context()">context</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -161,10 +161,10 @@ public @interface <span class="memberNameLabel">YAPIONData</span></pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>context</h4>
-<pre>java.lang.String&nbsp;context</pre>
+<pre>java.lang.String[]&nbsp;context</pre>
 <dl>
 <dt>Default:</dt>
-<dd>""</dd>
+<dd>{}</dd>
 </dl>
 </li>
 </ul>
