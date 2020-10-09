@@ -33,11 +33,16 @@ public class YAPIONObject extends YAPIONMappingType {
 
     @Override
     public long referenceValue() {
+        if (hasReferenceValue()) {
+            return getReferenceValue();
+        }
         long referenceValue = 0;
         referenceValue += getDepth();
+        referenceValue ^= getType().getReferenceValue();
         for (YAPIONVariable variable : variables) {
             referenceValue ^= variable.referenceValue() & 0x7FFFFFFFFFFFFFFFL;
         }
+        cacheReferenceValue(referenceValue);
         return referenceValue;
     }
 
@@ -218,6 +223,7 @@ public class YAPIONObject extends YAPIONMappingType {
 
     public YAPIONObject add(YAPIONVariable variable) {
         check(variable);
+        discardReferenceValue();
         for (int i = variables.size() - 1; i >= 0; i--) {
             if (variables.get(i).getName().equals(variable.getName())) {
                 variables.remove(i).getValue().removeParent();
@@ -237,6 +243,7 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     public YAPIONObject addOrPointer(YAPIONVariable variable) {
+        discardReferenceValue();
         RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(variable.getValue(), this);
         if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
             if (result.getYAPIONAny() == null) {

@@ -67,7 +67,10 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @Override
     public long referenceValue() {
-        return getType().getReferenceValue() ^ calc(type);
+        if (!hasReferenceValue()) {
+            cacheReferenceValue(getType().getReferenceValue() ^ calc(type));
+        }
+        return getReferenceValue();
     }
 
     @Override

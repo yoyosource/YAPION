@@ -40,7 +40,17 @@ public class YAPIONMap extends YAPIONMappingType {
 
     @Override
     public long referenceValue() {
-        return getType().getReferenceValue();
+        if (hasReferenceValue()) {
+            return getReferenceValue();
+        }
+        long referenceValue = 0;
+        referenceValue ^= getType().getReferenceValue();
+        referenceValue += getDepth();
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> e : variables.entrySet()) {
+            referenceValue ^= (e.getKey().referenceValue() * e.getValue().referenceValue()) & 0x7FFFFFFFFFFFFFFFL;
+        }
+        cacheReferenceValue(referenceValue);
+        return referenceValue;
     }
 
     @Override
@@ -179,6 +189,7 @@ public class YAPIONMap extends YAPIONMappingType {
     }
 
     public YAPIONMap add(YAPIONAnyType key, YAPIONAnyType value) {
+        discardReferenceValue();
         variables.put(key, value);
         value.setParent(this);
         key.setParent(this);
@@ -190,12 +201,14 @@ public class YAPIONMap extends YAPIONMappingType {
     }
 
     public YAPIONMap add(YAPIONParserMapObject variable) {
+        discardReferenceValue();
         mappingVariables.put(variable.variable.getName().substring(1), variable.variable.getValue());
         variable.variable.getValue().setParent(this);
         return this;
     }
 
     public YAPIONMap add(YAPIONParserMapMapping mapping) {
+        discardReferenceValue();
         mappingList.add(mapping);
         return this;
     }
@@ -231,6 +244,7 @@ public class YAPIONMap extends YAPIONMappingType {
     }
 
     public synchronized YAPIONMap finishMapping() {
+        discardReferenceValue();
         if (mappingVariables.isEmpty()) {
             return this;
         }

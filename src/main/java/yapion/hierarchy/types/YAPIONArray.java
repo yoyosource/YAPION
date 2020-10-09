@@ -32,7 +32,18 @@ public class YAPIONArray extends YAPIONDataType {
 
     @Override
     public long referenceValue() {
-        return getType().getReferenceValue();
+        if (hasReferenceValue()) {
+            return getReferenceValue();
+        }
+        long referenceValue = 0;
+        referenceValue += getDepth();
+        referenceValue ^= getType().getReferenceValue();
+        for (int i = 0; i < array.size(); i++) {
+            referenceValue += i;
+            referenceValue ^= (array.get(i).referenceValue()) & 0x7FFFFFFFFFFFFFFFL;
+        }
+        cacheReferenceValue(referenceValue);
+        return referenceValue;
     }
 
     @Override
@@ -188,6 +199,7 @@ public class YAPIONArray extends YAPIONDataType {
     }
 
     public YAPIONArray add(YAPIONAnyType yapionAnyType) {
+        discardReferenceValue();
         array.add(yapionAnyType);
         if (yapionAnyType != null) {
             yapionAnyType.setParent(this);
@@ -196,6 +208,7 @@ public class YAPIONArray extends YAPIONDataType {
     }
 
     public YAPIONArray set(int index, YAPIONAnyType yapionAnyType) {
+        discardReferenceValue();
         if (index < 0 || index >= length()) {
             return this;
         }

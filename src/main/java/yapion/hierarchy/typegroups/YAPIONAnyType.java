@@ -17,6 +17,32 @@ import java.util.Optional;
 @YAPIONLoad(context = "*")
 public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSearch, ObjectPath, ObjectType {
 
+    // Reference Value System
+    private long referenceValue = 0;
+    private boolean hasReferenceValue = false;
+
+    protected final void cacheReferenceValue(long referenceValue) {
+        this.referenceValue = referenceValue;
+        hasReferenceValue = true;
+    }
+
+    protected final long getReferenceValue() {
+        return referenceValue;
+    }
+
+    protected final void discardReferenceValue() {
+        hasReferenceValue = false;
+        YAPIONAnyType yapionAnyType = this;
+        while ((yapionAnyType = yapionAnyType.getParent()) != null) {
+            yapionAnyType.hasReferenceValue = false;
+        }
+    }
+
+    protected final boolean hasReferenceValue() {
+        return hasReferenceValue;
+    }
+
+    // Depth System / Pretty YAPION String
     public final int getDepth() {
         int depth = 0;
         YAPIONAnyType yapionAnyType = this;
@@ -34,6 +60,7 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
         return indent(getDepth() * 2);
     }
 
+    // Path System
     @Override
     public final YAPIONPath getPath() {
         return new YAPIONPath(this);
@@ -44,9 +71,9 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
         return "";
     }
 
+    // Parent System
     private YAPIONAnyType parent = null;
     private boolean valuePresent = false;
-    private long parseTime = 0;
 
     public final void setParent(YAPIONAnyType yapionAnyType) {
         if (valuePresent) {
@@ -60,6 +87,13 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
         parent = null;
         valuePresent = false;
     }
+
+    public final YAPIONAnyType getParent() {
+        return parent;
+    }
+
+    // Parse Time
+    private long parseTime = 0;
 
     private final void setParseTime(long time) {
         this.parseTime = time;
@@ -83,10 +117,7 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
         return valuePresent;
     }
 
-    public final YAPIONAnyType getParent() {
-        return parent;
-    }
-
+    // Traverse System
     public final Optional<YAPIONSearchResult<?>> get(String... s) {
         if (s == null || s.length == 0) {
             return Optional.of(new YAPIONSearchResult<>(this));
