@@ -127,6 +127,11 @@ public class YAPIONValue<T> extends YAPIONValueType {
             yapionObject.add(typeIdentifier.get(type), new YAPIONValue<>(value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")));
             return yapionObject.toLossyJSONString();
         }
+        if (value instanceof BigInteger || value instanceof BigDecimal) {
+            YAPIONObject yapionObject = new YAPIONObject();
+            yapionObject.add(typeIdentifier.get(type), new YAPIONValue<>(value.toString()));
+            return yapionObject.toLossyJSONString();
+        }
         if (value == null) {
             return "null";
         }

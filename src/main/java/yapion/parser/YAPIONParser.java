@@ -64,11 +64,11 @@ public final class YAPIONParser {
      * <br>{"@short":0} will be interpreted as a {@link Short}
      * <br>{"@int":0} will be interpreted as an {@link Integer}
      * <br>{"@long":0} will be interpreted as a {@link Long}
-     * <br>{"@bint":0} will be interpreted as a {@link BigInteger}
+     * <br>{"@bint":"0"} will be interpreted as a {@link BigInteger}
      * <br>{"@char":""} will be interpreted as a {@link Character}
      * <br>{"@float":0.0} will be interpreted as a {@link Float}
      * <br>{"@double":0.0} will be interpreted as a {@link Double}
-     * <br>{"@bdecimal":0.0} will be interpreted as a {@link BigDecimal}
+     * <br>{"@bdecimal":"0.0"} will be interpreted as a {@link BigDecimal}
      *
      * <br><br>You can find more information in the classes
      * {@link YAPIONMap}, {@link YAPIONPointer} and {@link YAPIONValue}.

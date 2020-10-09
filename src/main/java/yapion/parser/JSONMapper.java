@@ -178,11 +178,11 @@ public class JSONMapper {
     }
 
     private YAPIONValue<BigInteger> mapBigIntegerValue(YAPIONObject yapionObject) {
-        return new YAPIONValue<>(((BigInteger)yapionObject.getValue(BIG_INTEGER_IDENTIFIER).get()));
+        return new YAPIONValue<>(new BigInteger((String)yapionObject.getValue(BIG_INTEGER_IDENTIFIER).get()));
     }
 
     private YAPIONValue<BigDecimal> mapBigDecimalValue(YAPIONObject yapionObject) {
-        return new YAPIONValue<>(((BigDecimal)yapionObject.getValue(BIG_DECIMAL_IDENTIFIER).get()));
+        return new YAPIONValue<>(new BigDecimal((String)yapionObject.getValue(BIG_DECIMAL_IDENTIFIER).get()));
     }
 
 }
