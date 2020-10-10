@@ -4,6 +4,7 @@
 
 package yapion.serializing;
 
+import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.types.YAPIONType;
@@ -38,7 +39,7 @@ public final class YAPIONSerializer {
      * @param object to serialize
      * @return YAPIONObject from the object to serialize
      */
-    public static YAPIONObject serialize(Object object) {
+    public static YAPIONObject serialize(@NonNull() Object object) {
         return serialize(object, "");
     }
 
@@ -49,7 +50,7 @@ public final class YAPIONSerializer {
      * @param state the state for serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static YAPIONObject serialize(Object object, String state) {
+    public static YAPIONObject serialize(@NonNull Object object, String state) {
         return new YAPIONSerializer(object, state).parse().getYAPIONObject();
     }
 
@@ -59,12 +60,12 @@ public final class YAPIONSerializer {
      * @param object to serialize
      * @param state the state for serialization
      */
-    public YAPIONSerializer(Object object, String state) {
+    public YAPIONSerializer(@NonNull Object object, String state) {
         stateManager = new StateManager(state);
         this.object = object;
     }
 
-    private YAPIONSerializer(Object object, YAPIONSerializer yapionSerializer) {
+    private YAPIONSerializer(@NonNull Object object, YAPIONSerializer yapionSerializer) {
         this.object = object;
         this.stateManager = yapionSerializer.stateManager;
         this.pointerMap = yapionSerializer.pointerMap;

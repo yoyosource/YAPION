@@ -4,6 +4,7 @@
 
 package yapion.serializing;
 
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONDeserializeType;
@@ -79,7 +80,7 @@ public final class YAPIONDeserializer {
      * @param yapionObject to deserialize
      * @return Object from the YAPIONObject to deserialize
      */
-    public static Object deserialize(YAPIONObject yapionObject) {
+    public static Object deserialize(@NonNull YAPIONObject yapionObject) {
         return deserialize(yapionObject, "");
     }
 
@@ -90,7 +91,7 @@ public final class YAPIONDeserializer {
      * @param state the state for deserialization
      * @return Object from the YAPIONObject to deserialize
      */
-    public static Object deserialize(YAPIONObject yapionObject, String state) {
+    public static Object deserialize(@NonNull YAPIONObject yapionObject, String state) {
         return new YAPIONDeserializer(yapionObject, state).parse().getObject();
     }
 
@@ -100,12 +101,12 @@ public final class YAPIONDeserializer {
      * @param yapionObject to deserialize
      * @param state the state for deserialization
      */
-    public YAPIONDeserializer(YAPIONObject yapionObject, String state) {
+    public YAPIONDeserializer(@NonNull YAPIONObject yapionObject, String state) {
         stateManager = new StateManager(state);
         this.yapionObject = yapionObject;
     }
 
-    private YAPIONDeserializer(YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
+    private YAPIONDeserializer(@NonNull YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
         this.yapionObject = yapionObject;
         this.stateManager = yapionDeserializer.stateManager;
         this.pointerMap = yapionDeserializer.pointerMap;

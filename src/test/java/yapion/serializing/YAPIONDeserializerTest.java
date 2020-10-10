@@ -43,4 +43,14 @@ public class YAPIONDeserializerTest {
         assertThat(object, is(new TestEnum()));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void testNPECheck() {
+        YAPIONDeserializer.deserialize(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testNPECheckState() {
+        YAPIONDeserializer.deserialize(null, "some state");
+    }
+
 }
