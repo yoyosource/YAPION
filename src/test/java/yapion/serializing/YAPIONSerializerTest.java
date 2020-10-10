@@ -70,4 +70,14 @@ public class YAPIONSerializerTest {
         assertThat(YAPIONParser.parse(yapionObject.toString()).toString(), is(yapionObject.toString()));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void testNPECheck() {
+        YAPIONSerializer.serialize(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testNPECheckState() {
+        YAPIONSerializer.serialize(null, "some state");
+    }
+
 }
