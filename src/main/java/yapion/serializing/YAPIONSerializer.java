@@ -7,6 +7,7 @@ package yapion.serializing;
 import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.types.YAPIONType;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONVariable;
@@ -118,11 +119,8 @@ public final class YAPIONSerializer {
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONSerializer parseObject(Object object) {
-        if (!stateManager.is(object).save) {
-            return this;
-        }
         if (object.getClass().getSimpleName().contains("$")) {
-            return this;
+            throw new YAPIONSerializerException("Simple class name (" + object.getClass().getTypeName() + ") is not allowed to contain '$'");
         }
 
         String type = object.getClass().getTypeName();
@@ -133,6 +131,10 @@ public final class YAPIONSerializer {
         if (serializer != null && !serializer.empty()) {
             this.yapionObject = (YAPIONObject) serializer.serialize(object, this);
             return this;
+        }
+
+        if (!stateManager.is(object).save) {
+            throw new YAPIONSerializerException("No suitable serializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
         }
 
         YAPIONObject yapionObject = new YAPIONObject();

@@ -4,6 +4,8 @@ import org.junit.Test;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static yapion.serializing.YAPIONTestObjects.*;
@@ -78,6 +80,14 @@ public class YAPIONSerializerTest {
     @Test(expected = NullPointerException.class)
     public void testNPECheckState() {
         YAPIONSerializer.serialize(null, "some state");
+    }
+
+    @Test
+    public void testInternalSerializer() {
+        // It should be possible to use objects as root objects for which
+        // an internal serializer exists which returns a YAPIONObject.
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new ArrayList<String>());
+        assertThat(yapionObject.toString(), is("{@type(java.util.ArrayList)values[]}"));
     }
 
 }
