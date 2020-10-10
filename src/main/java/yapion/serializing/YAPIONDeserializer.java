@@ -13,6 +13,8 @@ import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.object.YAPIONPostDeserialization;
 import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.serializing.YAPIONDeserializerException;
+import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -233,7 +235,7 @@ public final class YAPIONDeserializer {
         try {
             Class<?> clazz = Class.forName(type);
             if (!stateManager.is(clazz).load) {
-                return this;
+                throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
             }
 
             if (clazz.getDeclaredAnnotation(YAPIONObjenesis.class) != null) {

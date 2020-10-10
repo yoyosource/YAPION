@@ -8,12 +8,9 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONField;
-import yapion.annotations.object.YAPIONPostDeserialization;
-import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.exceptions.YAPIONException;
 
 import java.lang.reflect.Field;
 
@@ -117,7 +114,18 @@ public final class StateManager {
         YAPIONSave yapionSave = field.getDeclaredAnnotation(YAPIONSave.class);
         YAPIONField yapionField = field.getDeclaredAnnotation(YAPIONField.class);
 
-        localLoad = true;
+        boolean localDefault = false;
+        try {
+            field.setAccessible(true);
+            Object fieldValue = field.get(object);
+            if (fieldValue != null) {
+                localDefault = fieldValue.getClass().isEnum();
+            }
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            // ignored
+        }
+
+        localLoad = localDefault; // no field ignore for enum values (if not explicitly defined)
         if (yapionLoadExclude != null && yapionLoad == null) {
             localLoad = !is(yapionLoadExclude);
         } else if (yapionLoadExclude == null && yapionLoad != null) {
@@ -129,7 +137,7 @@ public final class StateManager {
 
         localOptimize = is(yapionOptimize);
 
-        localSave = true;
+        localSave = localDefault; // no field ignore for enum values (if not explicitly defined)
         if (yapionSaveExclude != null && yapionSave == null) {
             localSave = !is(yapionSaveExclude);
         } else if (yapionSaveExclude == null && yapionSave != null) {

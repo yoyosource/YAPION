@@ -62,10 +62,18 @@ public class AnnotationTestObjects {
 
     @YAPIONData(context = "type")
     @YAPIONSave(context = "fieldOther")
-    public static class FieldTypeTest {
+    public static class FieldTypeTest1 {
 
-        @YAPIONField(context = {"field", "fieldOther"})
-        private String s = "FieldType";
+        @YAPIONField(context = {"fieldOther"})
+        private String s = "some-string";
+
+    }
+
+    @YAPIONSave(context = "other")
+    public static class FieldTypeTest2 {
+
+        @YAPIONField(context = {"fieldOther"})
+        private String s = "some-string";
 
     }
 
