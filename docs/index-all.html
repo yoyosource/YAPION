@@ -351,6 +351,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="yapion/serializing/serializer/objectConcurrent/DequeSerializerConcurrentLinked.html#%3Cinit%3E()">DequeSerializerConcurrentLinked()</a></span> - Constructor for class yapion.serializing.serializer.objectConcurrent.<a href="yapion/serializing/serializer/objectConcurrent/DequeSerializerConcurrentLinked.html" title="class in yapion.serializing.serializer.objectConcurrent">DequeSerializerConcurrentLinked</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/serializing/YAPIONDeserializer.html#deserialize(yapion.hierarchy.types.YAPIONObject)">deserialize(YAPIONObject)</a></span> - Static method in class yapion.serializing.<a href="yapion/serializing/YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a></dt>
+<dd>
+<div class="block">Serialize an YAPION Object to an Object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="yapion/serializing/YAPIONDeserializer.html#deserialize(yapion.hierarchy.types.YAPIONObject,java.lang.String)">deserialize(YAPIONObject, String)</a></span> - Static method in class yapion.serializing.<a href="yapion/serializing/YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a></dt>
+<dd>
+<div class="block">Serialize an YAPION Object to an Object.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="yapion/serializing/SerializeManager.DeserializationGetter.html#deserialize(R,yapion.serializing.YAPIONDeserializer)">deserialize(R, YAPIONDeserializer)</a></span> - Method in interface yapion.serializing.<a href="yapion/serializing/SerializeManager.DeserializationGetter.html" title="interface in yapion.serializing">SerializeManager.DeserializationGetter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="yapion/serializing/InternalSerializer.html#deserialize(yapion.hierarchy.typegroups.YAPIONAnyType,yapion.serializing.YAPIONDeserializer)">deserialize(YAPIONAnyType, YAPIONDeserializer)</a></span> - Method in interface yapion.serializing.<a href="yapion/serializing/InternalSerializer.html" title="interface in yapion.serializing">InternalSerializer</a></dt>
@@ -536,14 +544,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">This method is used to deserialize the type defined
  by <a href="yapion/serializing/api/SerializerMapInterface.html#type()"><code>SerializerMapInterface.type()</code></a>.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="yapion/serializing/YAPIONDeserializer.html#deserialize(yapion.hierarchy.types.YAPIONObject)">deserialize(YAPIONObject)</a></span> - Static method in class yapion.serializing.<a href="yapion/serializing/YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a></dt>
-<dd>
-<div class="block">Serialize an YAPION Object to an Object.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="yapion/serializing/YAPIONDeserializer.html#deserialize(yapion.hierarchy.types.YAPIONObject,java.lang.String)">deserialize(YAPIONObject, String)</a></span> - Static method in class yapion.serializing.<a href="yapion/serializing/YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a></dt>
-<dd>
-<div class="block">Serialize an YAPION Object to an Object.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="yapion/serializing/api/SerializerObject.html#deserialize(yapion.hierarchy.types.YAPIONObject,yapion.serializing.YAPIONDeserializer)">deserialize(YAPIONObject, YAPIONDeserializer)</a></span> - Method in class yapion.serializing.api.<a href="yapion/serializing/api/SerializerObject.html" title="class in yapion.serializing.api">SerializerObject</a></dt>
 <dd>
@@ -974,6 +974,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="yapion/serializing/StateManager.YAPIONInfo.html#load">load</a></span> - Variable in class yapion.serializing.<a href="yapion/serializing/StateManager.YAPIONInfo.html" title="class in yapion.serializing">StateManager.YAPIONInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/serializing/SerializeManager.html#loadClassFile(java.io.File)">loadClassFile(File)</a></span> - Static method in class yapion.serializing.<a href="yapion/serializing/SerializeManager.html" title="class in yapion.serializing">SerializeManager</a></dt>
+<dd>
+<div class="block">This method is to load serializer if the autoload does not work.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="yapion/utils/IdentifierUtils.html#LONG_IDENTIFIER">LONG_IDENTIFIER</a></span> - Static variable in class yapion.utils.<a href="yapion/utils/IdentifierUtils.html" title="class in yapion.utils">IdentifierUtils</a></dt>
 <dd>
 <div class="block">This variable is used in the <a href="yapion/hierarchy/types/YAPIONValue.html#toJSONString()"><code>YAPIONValue.toJSONString()</code></a>
@@ -1347,6 +1351,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><span class="memberNameLink"><a href="yapion/serializing/StateManager.YAPIONInfo.html#save">save</a></span> - Variable in class yapion.serializing.<a href="yapion/serializing/StateManager.YAPIONInfo.html" title="class in yapion.serializing">StateManager.YAPIONInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/serializing/YAPIONSerializer.html#serialize(java.lang.Object)">serialize(Object)</a></span> - Static method in class yapion.serializing.<a href="yapion/serializing/YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a></dt>
+<dd>
+<div class="block">Serialize an Object to an YAPION Object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="yapion/serializing/YAPIONSerializer.html#serialize(java.lang.Object,java.lang.String)">serialize(Object, String)</a></span> - Static method in class yapion.serializing.<a href="yapion/serializing/YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a></dt>
+<dd>
+<div class="block">Serialize an Object to an YAPION Object.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="yapion/serializing/serializer/other/FileSerializer.html#serialize(java.io.File,yapion.serializing.YAPIONSerializer)">serialize(File, YAPIONSerializer)</a></span> - Method in class yapion.serializing.serializer.other.<a href="yapion/serializing/serializer/other/FileSerializer.html" title="class in yapion.serializing.serializer.other">FileSerializer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="yapion/serializing/serializer/other/BooleanSerializer.html#serialize(java.lang.Boolean,yapion.serializing.YAPIONSerializer)">serialize(Boolean, YAPIONSerializer)</a></span> - Method in class yapion.serializing.serializer.other.<a href="yapion/serializing/serializer/other/BooleanSerializer.html" title="class in yapion.serializing.serializer.other">BooleanSerializer</a></dt>
@@ -1365,14 +1377,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="yapion/serializing/serializer/number/LongSerializer.html#serialize(java.lang.Long,yapion.serializing.YAPIONSerializer)">serialize(Long, YAPIONSerializer)</a></span> - Method in class yapion.serializing.serializer.number.<a href="yapion/serializing/serializer/number/LongSerializer.html" title="class in yapion.serializing.serializer.number">LongSerializer</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="yapion/serializing/YAPIONSerializer.html#serialize(java.lang.Object)">serialize(Object)</a></span> - Static method in class yapion.serializing.<a href="yapion/serializing/YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a></dt>
-<dd>
-<div class="block">Serialize an Object to an YAPION Object.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="yapion/serializing/YAPIONSerializer.html#serialize(java.lang.Object,java.lang.String)">serialize(Object, String)</a></span> - Static method in class yapion.serializing.<a href="yapion/serializing/YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a></dt>
-<dd>
-<div class="block">Serialize an Object to an YAPION Object.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="yapion/serializing/serializer/other/ProcessSerializerBuilder.html#serialize(java.lang.ProcessBuilder,yapion.serializing.YAPIONSerializer)">serialize(ProcessBuilder, YAPIONSerializer)</a></span> - Method in class yapion.serializing.serializer.other.<a href="yapion/serializing/serializer/other/ProcessSerializerBuilder.html" title="class in yapion.serializing.serializer.other">ProcessSerializerBuilder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="yapion/serializing/serializer/other/ProcessSerializer.html#serialize(java.lang.Process,yapion.serializing.YAPIONSerializer)">serialize(Process, YAPIONSerializer)</a></span> - Method in class yapion.serializing.serializer.other.<a href="yapion/serializing/serializer/other/ProcessSerializer.html" title="class in yapion.serializing.serializer.other">ProcessSerializer</a></dt>
@@ -2336,6 +2340,8 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="yapion/exceptions/parser/package-summary.html">yapion.exceptions.parser</a> - package yapion.exceptions.parser</dt>
 <dd>&nbsp;</dd>
+<dt><a href="yapion/exceptions/serializing/package-summary.html">yapion.exceptions.serializing</a> - package yapion.exceptions.serializing</dt>
+<dd>&nbsp;</dd>
 <dt><a href="yapion/exceptions/utils/package-summary.html">yapion.exceptions.utils</a> - package yapion.exceptions.utils</dt>
 <dd>&nbsp;</dd>
 <dt><a href="yapion/exceptions/value/package-summary.html">yapion.exceptions.value</a> - package yapion.exceptions.value</dt>
@@ -2424,6 +2430,18 @@ the order they are declared.</div>
 <dd>
 <div class="block">Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified state.</div>
 </dd>
+<dt><a href="yapion/exceptions/serializing/YAPIONDeserializerException.html" title="class in yapion.exceptions.serializing"><span class="typeNameLink">YAPIONDeserializerException</span></a> - Exception in <a href="yapion/exceptions/serializing/package-summary.html">yapion.exceptions.serializing</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/exceptions/serializing/YAPIONDeserializerException.html#%3Cinit%3E()">YAPIONDeserializerException()</a></span> - Constructor for exception yapion.exceptions.serializing.<a href="yapion/exceptions/serializing/YAPIONDeserializerException.html" title="class in yapion.exceptions.serializing">YAPIONDeserializerException</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/exceptions/serializing/YAPIONDeserializerException.html#%3Cinit%3E(java.lang.String)">YAPIONDeserializerException(String)</a></span> - Constructor for exception yapion.exceptions.serializing.<a href="yapion/exceptions/serializing/YAPIONDeserializerException.html" title="class in yapion.exceptions.serializing">YAPIONDeserializerException</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/exceptions/serializing/YAPIONDeserializerException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)">YAPIONDeserializerException(String, Throwable)</a></span> - Constructor for exception yapion.exceptions.serializing.<a href="yapion/exceptions/serializing/YAPIONDeserializerException.html" title="class in yapion.exceptions.serializing">YAPIONDeserializerException</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/exceptions/serializing/YAPIONDeserializerException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable,boolean,boolean)">YAPIONDeserializerException(String, Throwable, boolean, boolean)</a></span> - Constructor for exception yapion.exceptions.serializing.<a href="yapion/exceptions/serializing/YAPIONDeserializerException.html" title="class in yapion.exceptions.serializing">YAPIONDeserializerException</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/exceptions/serializing/YAPIONDeserializerException.html#%3Cinit%3E(java.lang.Throwable)">YAPIONDeserializerException(Throwable)</a></span> - Constructor for exception yapion.exceptions.serializing.<a href="yapion/exceptions/serializing/YAPIONDeserializerException.html" title="class in yapion.exceptions.serializing">YAPIONDeserializerException</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="yapion/annotations/deserialize/YAPIONDeserializeType.html" title="annotation in yapion.annotations.deserialize"><span class="typeNameLink">YAPIONDeserializeType</span></a> - Annotation Type in <a href="yapion/annotations/deserialize/package-summary.html">yapion.annotations.deserialize</a></dt>
 <dd>
 <div class="block">This annotation is useful for interface implementations like
@@ -2644,6 +2662,18 @@ the order they are declared.</div>
 <dt><a href="yapion/serializing/serializer/overrideable/YAPIONSerializerArray.html" title="class in yapion.serializing.serializer.overrideable"><span class="typeNameLink">YAPIONSerializerArray</span></a> - Class in <a href="yapion/serializing/serializer/overrideable/package-summary.html">yapion.serializing.serializer.overrideable</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="yapion/serializing/serializer/overrideable/YAPIONSerializerArray.html#%3Cinit%3E()">YAPIONSerializerArray()</a></span> - Constructor for class yapion.serializing.serializer.overrideable.<a href="yapion/serializing/serializer/overrideable/YAPIONSerializerArray.html" title="class in yapion.serializing.serializer.overrideable">YAPIONSerializerArray</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="yapion/exceptions/serializing/YAPIONSerializerException.html" title="class in yapion.exceptions.serializing"><span class="typeNameLink">YAPIONSerializerException</span></a> - Exception in <a href="yapion/exceptions/serializing/package-summary.html">yapion.exceptions.serializing</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/exceptions/serializing/YAPIONSerializerException.html#%3Cinit%3E()">YAPIONSerializerException()</a></span> - Constructor for exception yapion.exceptions.serializing.<a href="yapion/exceptions/serializing/YAPIONSerializerException.html" title="class in yapion.exceptions.serializing">YAPIONSerializerException</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/exceptions/serializing/YAPIONSerializerException.html#%3Cinit%3E(java.lang.String)">YAPIONSerializerException(String)</a></span> - Constructor for exception yapion.exceptions.serializing.<a href="yapion/exceptions/serializing/YAPIONSerializerException.html" title="class in yapion.exceptions.serializing">YAPIONSerializerException</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/exceptions/serializing/YAPIONSerializerException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)">YAPIONSerializerException(String, Throwable)</a></span> - Constructor for exception yapion.exceptions.serializing.<a href="yapion/exceptions/serializing/YAPIONSerializerException.html" title="class in yapion.exceptions.serializing">YAPIONSerializerException</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/exceptions/serializing/YAPIONSerializerException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable,boolean,boolean)">YAPIONSerializerException(String, Throwable, boolean, boolean)</a></span> - Constructor for exception yapion.exceptions.serializing.<a href="yapion/exceptions/serializing/YAPIONSerializerException.html" title="class in yapion.exceptions.serializing">YAPIONSerializerException</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="yapion/exceptions/serializing/YAPIONSerializerException.html#%3Cinit%3E(java.lang.Throwable)">YAPIONSerializerException(Throwable)</a></span> - Constructor for exception yapion.exceptions.serializing.<a href="yapion/exceptions/serializing/YAPIONSerializerException.html" title="class in yapion.exceptions.serializing">YAPIONSerializerException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="yapion/serializing/serializer/overrideable/YAPIONSerializerMap.html" title="class in yapion.serializing.serializer.overrideable"><span class="typeNameLink">YAPIONSerializerMap</span></a> - Class in <a href="yapion/serializing/serializer/overrideable/package-summary.html">yapion.serializing.serializer.overrideable</a></dt>
 <dd>&nbsp;</dd>

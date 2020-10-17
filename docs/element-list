@@ -4,6 +4,7 @@ yapion.annotations.object
 yapion.annotations.serialize
 yapion.exceptions
 yapion.exceptions.parser
+yapion.exceptions.serializing
 yapion.exceptions.utils
 yapion.exceptions.value
 yapion.hierarchy.typegroups
