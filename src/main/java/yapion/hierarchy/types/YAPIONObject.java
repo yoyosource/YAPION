@@ -93,7 +93,7 @@ public class YAPIONObject extends YAPIONMappingType {
     @Override
     public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
         final byte[] indent = bytes(indent());
-        outputStream.write(bytes("{"));
+        outputStream.write(bytes("{\n"));
         for (YAPIONVariable variable : variables) {
             outputStream.write(indent);
             variable.toOutputStreamPrettified(outputStream);

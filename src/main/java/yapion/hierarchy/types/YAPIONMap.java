@@ -168,7 +168,7 @@ public class YAPIONMap extends YAPIONMappingType {
         final byte[] indent = bytes("," + indent());
         long id = 0;
 
-        outputStream.write(bytes("<"));
+        outputStream.write(bytes("<\n"));
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             outputStream.write(indent);
             String id1 = String.format("%01X", id++);
