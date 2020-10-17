@@ -10,15 +10,12 @@ import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONVariable;
-import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONMap;
-import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.types.*;
 import yapion.serializing.api.*;
 import yapion.serializing.serializer.SerializerImplementation;
 import yapion.utils.ReflectionsUtils;
 
+import java.io.*;
 import java.util.*;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
@@ -90,6 +87,22 @@ public class SerializeManager {
         overrideable = true;
     }
 
+    /**
+     * This method is to load serializer if the autoload does not work.
+     * The file should have the same format as the {@link ClassIndex} file.
+     * And will be handled the same way.
+     */
+    public static void loadClassFile(File file) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        bufferedReader.lines().forEach(s -> {
+            try {
+                addLoad(Class.forName(s));
+            } catch (ClassNotFoundException e) {
+                // Ignored
+            }
+        });
+    }
+
     private static void add(Class<?> clazz) {
         if (overrideable) return;
         String className = clazz.getTypeName();
@@ -105,6 +118,33 @@ public class SerializeManager {
         }
     }
 
+    private static void addLoad(Class<?> clazz) {
+        String className = clazz.getTypeName();
+        if (clazz.getInterfaces().length != 1) return;
+        String typeName = clazz.getInterfaces()[0].getTypeName();
+        Object o = ReflectionsUtils.constructObjectObjenesis(className);
+        if (o == null) return;
+        if (className.startsWith("yapion.serializing.serializer")) {
+            if (typeName.equals(internalOverrideableSerializer)) {
+                addLoad((InternalOverrideableSerializer<?>) o);
+            } else if (typeName.equals(internalSerializer)) {
+                addLoad((InternalSerializer<?>) o, false);
+            }
+        } else {
+            if (o instanceof SerializerListInterface) {
+                add((SerializerListInterface<?>) o);
+            } else if (o instanceof SerializerMapInterface) {
+                add((SerializerMapInterface<?>) o);
+            } else if (o instanceof SerializerObjectInterface) {
+                add((SerializerObjectInterface<?>) o);
+            } else if (o instanceof SerializerQueueInterface) {
+                add((SerializerQueueInterface<?>) o);
+            } else if (o instanceof SerializerSetInterface) {
+                add((SerializerSetInterface<?>) o);
+            }
+        }
+    }
+
     private static void add(InternalOverrideableSerializer<?> serializer) {
         if (!checkOverrideable(serializer)) return;
         serializerMap.put(serializer.type(), new Serializer(serializer, true));
@@ -115,6 +155,20 @@ public class SerializeManager {
 
     private static void add(InternalSerializer<?> serializer) {
         if (!checkOverrideable(serializer)) return;
+        serializerMap.put(serializer.type(), new Serializer(serializer, overrideable));
+        if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
+            serializerMap.put(serializer.primitiveType(), new Serializer(serializer, overrideable));
+        }
+    }
+
+    private static void addLoad(InternalOverrideableSerializer<?> serializer) {
+        serializerMap.put(serializer.type(), new Serializer(serializer, true));
+        if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
+            serializerMap.put(serializer.primitiveType(), new Serializer(serializer, true));
+        }
+    }
+
+    private static void addLoad(InternalSerializer<?> serializer, boolean overrideable) {
         serializerMap.put(serializer.type(), new Serializer(serializer, overrideable));
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
             serializerMap.put(serializer.primitiveType(), new Serializer(serializer, overrideable));
