@@ -58,11 +58,11 @@ public class YAPIONObject extends YAPIONMappingType {
 
     @Override
     public String toYAPIONStringPrettified() {
-        final String indent = indent();
+        final String indent = "\n" + indent();
         StringBuilder st = new StringBuilder();
         st.append("{");
         for (YAPIONVariable yapionVariable : variables) {
-            st.append("\n").append(indent);
+            st.append(indent);
             st.append(yapionVariable.toYAPIONStringPrettified());
         }
         if (!variables.isEmpty()) {
@@ -92,8 +92,8 @@ public class YAPIONObject extends YAPIONMappingType {
 
     @Override
     public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
-        final byte[] indent = bytes(indent());
-        outputStream.write(bytes("{\n"));
+        final byte[] indent = bytes("\n" + indent());
+        outputStream.write(bytes("{"));
         for (YAPIONVariable variable : variables) {
             outputStream.write(indent);
             variable.toOutputStreamPrettified(outputStream);

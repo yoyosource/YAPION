@@ -165,10 +165,10 @@ public class YAPIONMap extends YAPIONMappingType {
 
     @Override
     public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
-        final byte[] indent = bytes("," + indent());
+        final byte[] indent = bytes(",\n" + indent());
         long id = 0;
 
-        outputStream.write(bytes("<\n"));
+        outputStream.write(bytes("<"));
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             outputStream.write(indent);
             String id1 = String.format("%01X", id++);

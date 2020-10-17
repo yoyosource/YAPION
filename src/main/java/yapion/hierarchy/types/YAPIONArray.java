@@ -83,7 +83,7 @@ public class YAPIONArray extends YAPIONDataType {
 
     @Override
     public String toYAPIONStringPrettified() {
-        final String indent = indent();
+        final String indent = "\n" + indent();
         StringBuilder st = new StringBuilder();
         st.append("[");
         boolean b = false;
@@ -91,7 +91,7 @@ public class YAPIONArray extends YAPIONDataType {
             if (b) {
                 st.append(",");
             }
-            st.append("\n").append(indent);
+            st.append(indent);
             if (yapionAnyType == null) {
                 st.append("null");
             } else {
@@ -141,8 +141,8 @@ public class YAPIONArray extends YAPIONDataType {
 
     @Override
     public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
-        final byte[] indent = bytes("," + indent());
-        outputStream.write(bytes("[\n"));
+        final byte[] indent = bytes("\n" + indent());
+        outputStream.write(bytes("["));
         for (int i = 0; i < array.size(); i++) {
             if (i != 0) {
                 outputStream.write(",".getBytes(StandardCharsets.UTF_8));
