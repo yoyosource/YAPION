@@ -3,8 +3,8 @@
   <groupId>yoyosource</groupId>
   <artifactId>YAPION</artifactId>
   <versioning>
-    <latest>0.17.0</latest>
-    <release>0.17.0</release>
+    <latest>0.17.1</latest>
+    <release>0.17.1</release>
     <versions>
       <version>0.1.0</version>
       <version>0.2.0</version>
@@ -27,7 +27,8 @@
       <version>0.15.0</version>
       <version>0.16.0</version>
       <version>0.17.0</version>
+      <version>0.17.1</version>
     </versions>
-    <lastUpdated>20201009161954</lastUpdated>
+    <lastUpdated>20201017095345</lastUpdated>
   </versioning>
 </metadata>
