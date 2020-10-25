@@ -11,7 +11,11 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
+
+import java.math.BigDecimal;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -29,12 +33,12 @@ public class CharacterSerializer implements InternalSerializer<Character> {
     }
 
     @Override
-    public YAPIONAnyType serialize(Character object, YAPIONSerializer yapionSerializer) {
-        return new YAPIONValue<>(object);
+    public YAPIONAnyType serialize(SerializeData<Character> serializeData) {
+        return new YAPIONValue<>(serializeData.object);
     }
 
     @Override
-    public Character deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        return ((YAPIONValue<Character>) yapionAnyType).get();
+    public Character deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        return ((YAPIONValue<Character>) deserializeData.object).get();
     }
 }

@@ -9,8 +9,8 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.YAPIONDeserializer;
-import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 @YAPIONSaveExclude(context = "*")
@@ -29,12 +29,12 @@ public class IntegerSerializer implements InternalSerializer<Integer> {
     }
 
     @Override
-    public YAPIONAnyType serialize(Integer object, YAPIONSerializer yapionSerializer) {
-        return new YAPIONValue<>(object);
+    public YAPIONAnyType serialize(SerializeData<Integer> serializeData) {
+        return new YAPIONValue<>(serializeData.object);
     }
 
     @Override
-    public Integer deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        return ((YAPIONValue<Integer>) yapionAnyType).get();
+    public Integer deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        return ((YAPIONValue<Integer>) deserializeData.object).get();
     }
 }

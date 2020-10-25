@@ -12,6 +12,8 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.net.MalformedURLException;
@@ -30,14 +32,14 @@ public class URLSerializer implements InternalSerializer<URL> {
     }
 
     @Override
-    public YAPIONAnyType serialize(URL object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<URL> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
         try {
-            yapionObject.add("protocol", new YAPIONValue<>(object.getProtocol()));
-            yapionObject.add("host", new YAPIONValue<>(object.getHost()));
-            yapionObject.add("port", new YAPIONValue<>(object.getPort()));
-            yapionObject.add("file", new YAPIONValue<>(object.getFile()));
+            yapionObject.add("protocol", new YAPIONValue<>(serializeData.object.getProtocol()));
+            yapionObject.add("host", new YAPIONValue<>(serializeData.object.getHost()));
+            yapionObject.add("port", new YAPIONValue<>(serializeData.object.getPort()));
+            yapionObject.add("file", new YAPIONValue<>(serializeData.object.getFile()));
         } catch (Exception e) {
 
         }
@@ -45,8 +47,8 @@ public class URLSerializer implements InternalSerializer<URL> {
     }
 
     @Override
-    public URL deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
+    public URL deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         String protocol = yapionObject.getValue("protocol", "").get();
         String host = yapionObject.getValue("host", "").get();
         int port = yapionObject.getValue("port", 0).get();

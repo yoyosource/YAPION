@@ -9,8 +9,8 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.YAPIONDeserializer;
-import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigDecimal;
@@ -26,12 +26,12 @@ public class BigDecimalSerializer implements InternalSerializer<BigDecimal> {
     }
 
     @Override
-    public YAPIONAnyType serialize(BigDecimal object, YAPIONSerializer yapionSerializer) {
-        return new YAPIONValue<>(object);
+    public YAPIONAnyType serialize(SerializeData<BigDecimal> serializeData) {
+        return new YAPIONValue<>(serializeData.object);
     }
 
     @Override
-    public BigDecimal deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        return ((YAPIONValue<BigDecimal>) yapionAnyType).get();
+    public BigDecimal deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        return ((YAPIONValue<BigDecimal>) deserializeData.object).get();
     }
 }

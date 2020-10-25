@@ -11,6 +11,8 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 @YAPIONSaveExclude(context = "*")
@@ -24,12 +26,12 @@ public class ProcessSerializerBuilder implements InternalSerializer<ProcessBuild
     }
 
     @Override
-    public YAPIONAnyType serialize(ProcessBuilder object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<ProcessBuilder> serializeData) {
         return new YAPIONValue<>(null);
     }
 
     @Override
-    public ProcessBuilder deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+    public ProcessBuilder deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         return null;
     }
 }

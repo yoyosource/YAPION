@@ -7,13 +7,12 @@ package yapion.serializing.serializer.other;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.types.YAPIONVariable;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.SerializeManager;
-import yapion.serializing.YAPIONDeserializer;
-import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.MathContext;
@@ -32,19 +31,20 @@ public class MathContextSerializer implements InternalSerializer<MathContext> {
     }
 
     @Override
-    public YAPIONAnyType serialize(MathContext object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<MathContext> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
-        yapionObject.add(new YAPIONVariable("precision", new YAPIONValue<>(object.getPrecision())));
-        yapionObject.add(new YAPIONVariable("roundMode", yapionSerializer.parse(object.getRoundingMode())));
+        yapionObject.add(new YAPIONVariable("precision", new YAPIONValue<>(serializeData.object.getPrecision())));
+        yapionObject.add(new YAPIONVariable("roundMode", serializeData.serialize(serializeData.object.getRoundingMode())));
         return yapionObject;
     }
 
     @Override
-    public MathContext deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
+    public MathContext deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         int precision = yapionObject.getValue("precision", 0).get();
-        RoundingMode roundingMode = (RoundingMode) yapionDeserializer.parse(yapionObject.getObject("roundMode"));
+        RoundingMode roundingMode = (RoundingMode) deserializeData.deserialize(yapionObject.getObject("roundMode"));
         return new MathContext(precision, roundingMode);
     }
+
 }

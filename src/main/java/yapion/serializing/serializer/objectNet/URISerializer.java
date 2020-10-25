@@ -10,9 +10,8 @@ import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.SerializeManager;
-import yapion.serializing.YAPIONDeserializer;
-import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.net.URI;
@@ -30,11 +29,11 @@ public class URISerializer implements InternalSerializer<URI> {
     }
 
     @Override
-    public YAPIONAnyType serialize(URI object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<URI> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
         try {
-            yapionObject.add("uri", new YAPIONValue<>((String) URI.class.getDeclaredField("string").get(object)));
+            yapionObject.add("uri", new YAPIONValue<>((String) URI.class.getDeclaredField("string").get(serializeData.object)));
         } catch (Exception e) {
             yapionObject.add("uri", new YAPIONValue<>(""));
         }
@@ -42,8 +41,8 @@ public class URISerializer implements InternalSerializer<URI> {
     }
 
     @Override
-    public URI deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
+    public URI deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         String s = yapionObject.getValue("uri", "").get();
         return URI.create(s);
     }

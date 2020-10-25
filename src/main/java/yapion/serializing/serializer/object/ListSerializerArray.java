@@ -15,6 +15,8 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.ArrayList;
@@ -34,24 +36,24 @@ public class ListSerializerArray implements InternalSerializer<ArrayList> {
     }
 
     @Override
-    public YAPIONAnyType serialize(ArrayList object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<ArrayList> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
-        Iterator iterator = object.iterator();
+        Iterator iterator = serializeData.object.iterator();
         while (iterator.hasNext()) {
-            yapionArray.add(yapionSerializer.parse(iterator.next()));
+            yapionArray.add(serializeData.serialize(iterator.next()));
         }
         return yapionObject;
     }
 
     @Override
-    public ArrayList deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        YAPIONArray yapionArray = ((YAPIONObject) yapionAnyType).getArray("values");
+    public ArrayList deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
         ArrayList<Object> list = new ArrayList<>(yapionArray.length());
         for (int i = 0; i < yapionArray.length(); i++) {
-            list.add(yapionDeserializer.parse(yapionArray.get(i)));
+            list.add(deserializeData.deserialize(yapionArray.get(i)));
         }
         return list;
     }

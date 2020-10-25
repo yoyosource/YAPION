@@ -11,6 +11,8 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.serializing.InternalOverrideableSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 @YAPIONSaveExclude(context = "*")
@@ -24,13 +26,13 @@ public class YAPIONSerializerArray implements InternalOverrideableSerializer<YAP
     }
 
     @Override
-    public YAPIONAnyType serialize(YAPIONArray object, YAPIONSerializer yapionSerializer) {
-        return object;
+    public YAPIONAnyType serialize(SerializeData<YAPIONArray> serializeData) {
+        return serializeData.object;
     }
 
     @Override
-    public YAPIONArray deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        return (YAPIONArray) yapionAnyType;
+    public YAPIONArray deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        return (YAPIONArray) deserializeData.object;
     }
 
 }

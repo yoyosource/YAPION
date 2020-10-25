@@ -11,7 +11,11 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
+
+import java.math.BigDecimal;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -24,12 +28,12 @@ public class StringSerializer implements InternalSerializer<String> {
     }
 
     @Override
-    public YAPIONAnyType serialize(String object, YAPIONSerializer yapionSerializer) {
-        return new YAPIONValue<>(object);
+    public YAPIONAnyType serialize(SerializeData<String> serializeData) {
+        return new YAPIONValue<>(serializeData.object);
     }
 
     @Override
-    public String deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        return ((YAPIONValue<String>) yapionAnyType).get();
+    public String deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        return ((YAPIONValue<String>) deserializeData.object).get();
     }
 }

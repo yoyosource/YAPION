@@ -12,6 +12,8 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 import yapion.serializing.api.*;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 import yapion.utils.ReflectionsUtils;
 
@@ -51,12 +53,12 @@ public class SerializeManager {
         }
 
         @Override
-        public YAPIONAnyType serialize(Object object, YAPIONSerializer yapionSerializer) {
+        public YAPIONAnyType serialize(SerializeData<Object> serializeData) {
             return new YAPIONValue<>(null);
         }
 
         @Override
-        public Object deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+        public Object deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
             return null;
         }
     }, false);
@@ -194,10 +196,10 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONAnyType serialize(T object, YAPIONSerializer yapionSerializer) {
+            public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
-                    YAPIONObject yapionObject = serializer.serialize(object, yapionSerializer);
-                    yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
+                    YAPIONObject yapionObject = serializer.serialize(serializeData);
+                    yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
                     return yapionObject;
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
@@ -207,10 +209,10 @@ public class SerializeManager {
 
             @Override
             @SuppressWarnings({"java:S1905"})
-            public T deserialize(YAPIONAnyType yapionAny, YAPIONDeserializer yapionDeserializer) {
-                if (yapionAny instanceof YAPIONObject) {
+            public T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+                if (deserializeData.object instanceof YAPIONObject) {
                     try {
-                        return serializer.deserialize((YAPIONObject) yapionAny, yapionDeserializer);
+                        return serializer.deserialize((DeserializeData<YAPIONObject>) deserializeData);
                     } catch (Exception e) {
                         logger.error("An unexpected error occurred", e.getCause());
                     }
@@ -236,9 +238,12 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONAnyType serialize(T object, YAPIONSerializer yapionSerializer) {
+            public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
-                    return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("map", serializer.serialize(object, yapionSerializer));
+                    YAPIONObject yapionObject = new YAPIONObject();
+                    yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+                    yapionObject.add("map", serializer.serialize(serializeData));
+                    return yapionObject;
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
@@ -247,9 +252,9 @@ public class SerializeManager {
 
             @Override
             @SuppressWarnings({"java:S1905"})
-            public T deserialize(YAPIONAnyType yapionAny, YAPIONDeserializer yapionDeserializer) {
+            public T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
                 try {
-                    return serializer.deserialize(((YAPIONObject) yapionAny).getMap("map"), yapionDeserializer);
+                    return serializer.deserialize(deserializeData.clone(((YAPIONObject) deserializeData.object).getMap("map")));
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
@@ -274,9 +279,12 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONAnyType serialize(T object, YAPIONSerializer yapionSerializer) {
+            public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
-                    return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("list", serializer.serialize(object, yapionSerializer));
+                    YAPIONObject yapionObject = new YAPIONObject();
+                    yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+                    yapionObject.add("list", serializer.serialize(serializeData));
+                    return yapionObject;
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
@@ -285,9 +293,9 @@ public class SerializeManager {
 
             @Override
             @SuppressWarnings({"java:S1905"})
-            public T deserialize(YAPIONAnyType yapionAny, YAPIONDeserializer yapionDeserializer) {
+            public T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
                 try {
-                    return serializer.deserialize(((YAPIONObject) yapionAny).getArray("list"), yapionDeserializer);
+                    return serializer.deserialize(deserializeData.clone(((YAPIONObject) deserializeData.object).getArray("list")));
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
@@ -312,9 +320,12 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONAnyType serialize(T object, YAPIONSerializer yapionSerializer) {
+            public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
-                    return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("queue", serializer.serialize(object, yapionSerializer));
+                    YAPIONObject yapionObject = new YAPIONObject();
+                    yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+                    yapionObject.add("queue", serializeData.serialize(serializeData));
+                    return yapionObject;
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
@@ -323,9 +334,9 @@ public class SerializeManager {
 
             @Override
             @SuppressWarnings({"java:S1905"})
-            public T deserialize(YAPIONAnyType yapionAny, YAPIONDeserializer yapionDeserializer) {
+            public T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
                 try {
-                    return serializer.deserialize(((YAPIONObject) yapionAny).getArray("queue"), yapionDeserializer);
+                    return serializer.deserialize(deserializeData.clone(((YAPIONObject) deserializeData.object).getArray("queue")));
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
@@ -350,9 +361,12 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONAnyType serialize(T object, YAPIONSerializer yapionSerializer) {
+            public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
-                    return new YAPIONObject().add(TYPE_IDENTIFIER, new YAPIONValue<>(type())).add("set", serializer.serialize(object, yapionSerializer));
+                    YAPIONObject yapionObject = new YAPIONObject();
+                    yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+                    yapionObject.add("set", serializer.serialize(serializeData));
+                    return yapionObject;
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
@@ -361,9 +375,9 @@ public class SerializeManager {
 
             @Override
             @SuppressWarnings({"java:S1905"})
-            public T deserialize(YAPIONAnyType yapionAny, YAPIONDeserializer yapionDeserializer) {
+            public T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
                 try {
-                    return serializer.deserialize(((YAPIONObject) yapionAny).getArray("set"), yapionDeserializer);
+                    return serializer.deserialize(deserializeData.clone(((YAPIONObject) deserializeData.object).getArray("set")));
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
                 }
@@ -427,13 +441,13 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONObject serialize(T object, YAPIONSerializer yapionSerializer) {
-                return serializationGetter.serialize(object, yapionSerializer);
+            public YAPIONObject serialize(SerializeData<T> serializeData) {
+                return serializationGetter.serialize(serializeData);
             }
 
             @Override
-            public T deserialize(YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
-                return deserializationGetter.deserialize(yapionObject, yapionDeserializer);
+            public T deserialize(DeserializeData<YAPIONObject> deserializeData) {
+                return deserializationGetter.deserialize(deserializeData);
             }
         };
     }
@@ -467,13 +481,13 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONMap serialize(T object, YAPIONSerializer yapionSerializer) {
-                return serializationGetter.serialize(object, yapionSerializer);
+            public YAPIONMap serialize(SerializeData<T> serializeData) {
+                return serializationGetter.serialize(serializeData);
             }
 
             @Override
-            public T deserialize(YAPIONMap yapionMap, YAPIONDeserializer yapionDeserializer) {
-                return deserializationGetter.deserialize(yapionMap, yapionDeserializer);
+            public T deserialize(DeserializeData<YAPIONMap> deserializeData) {
+                return deserializationGetter.deserialize(deserializeData);
             }
         };
     }
@@ -507,13 +521,13 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONArray serialize(T object, YAPIONSerializer yapionSerializer) {
-                return serializationGetter.serialize(object, yapionSerializer);
+            public YAPIONArray serialize(SerializeData<T> serializeData) {
+                return serializationGetter.serialize(serializeData);
             }
 
             @Override
-            public T deserialize(YAPIONArray yapionArray, YAPIONDeserializer yapionDeserializer) {
-                return deserializationGetter.deserialize(yapionArray, yapionDeserializer);
+            public T deserialize(DeserializeData<YAPIONArray> deserializeData) {
+                return deserializationGetter.deserialize(deserializeData);
             }
         };
     }
@@ -547,13 +561,13 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONArray serialize(T object, YAPIONSerializer yapionSerializer) {
-                return serializationGetter.serialize(object, yapionSerializer);
+            public YAPIONArray serialize(SerializeData<T> serializeData) {
+                return serializationGetter.serialize(serializeData);
             }
 
             @Override
-            public T deserialize(YAPIONArray yapionArray, YAPIONDeserializer yapionDeserializer) {
-                return deserializationGetter.deserialize(yapionArray, yapionDeserializer);
+            public T deserialize(DeserializeData<YAPIONArray> deserializeData) {
+                return deserializationGetter.deserialize(deserializeData);
             }
         };
     }
@@ -587,13 +601,13 @@ public class SerializeManager {
             }
 
             @Override
-            public YAPIONArray serialize(T object, YAPIONSerializer yapionSerializer) {
-                return serializationGetter.serialize(object, yapionSerializer);
+            public YAPIONArray serialize(SerializeData<T> serializeData) {
+                return serializationGetter.serialize(serializeData);
             }
 
             @Override
-            public T deserialize(YAPIONArray yapionArray, YAPIONDeserializer yapionDeserializer) {
-                return deserializationGetter.deserialize(yapionArray, yapionDeserializer);
+            public T deserialize(DeserializeData<YAPIONArray> deserializeData) {
+                return deserializationGetter.deserialize(deserializeData);
             }
         };
     }
@@ -613,15 +627,15 @@ public class SerializeManager {
     @FunctionalInterface
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
-    public interface SerializationGetter<T, R> {
-        R serialize(T object, YAPIONSerializer yapionSerializer);
+    public interface SerializationGetter<T, R extends YAPIONAnyType> {
+        R serialize(SerializeData<T> serializeData);
     }
 
     @FunctionalInterface
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
-    public interface DeserializationGetter<T, R> {
-        T deserialize(R object, YAPIONDeserializer yapionDeserializer);
+    public interface DeserializationGetter<T, R extends YAPIONAnyType> {
+        T deserialize(DeserializeData<R> deserializeData);
     }
 
 }

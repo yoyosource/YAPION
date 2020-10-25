@@ -9,8 +9,8 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.YAPIONDeserializer;
-import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 @YAPIONSaveExclude(context = "*")
@@ -24,12 +24,12 @@ public class ThreadSerializerLocal implements InternalSerializer<ThreadLocal<?>>
     }
 
     @Override
-    public YAPIONAnyType serialize(ThreadLocal<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<ThreadLocal<?>> serializeData) {
         return new YAPIONValue<>(null);
     }
 
     @Override
-    public ThreadLocal<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+    public ThreadLocal<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         return null;
     }
 }

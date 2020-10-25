@@ -15,6 +15,7 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.serializing.data.SerializeData;
 import yapion.utils.ModifierUtils;
 
 import java.lang.reflect.Array;
@@ -30,7 +31,7 @@ public final class YAPIONSerializer {
 
     private final Object object;
     private YAPIONObject yapionObject;
-    private final StateManager stateManager;
+    private final ContextManager contextManager;
 
     private Map<Object, YAPIONPointer> pointerMap = new IdentityHashMap<>();
 
@@ -48,27 +49,27 @@ public final class YAPIONSerializer {
      * Serialize an Object to an YAPION Object.
      *
      * @param object to serialize
-     * @param state the state for serialization
+     * @param context the context for serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static YAPIONObject serialize(@NonNull Object object, String state) {
-        return new YAPIONSerializer(object, state).parse().getYAPIONObject();
+    public static YAPIONObject serialize(@NonNull Object object, String context) {
+        return new YAPIONSerializer(object, context).parse().getYAPIONObject();
     }
 
     /**
-     * Creates a YAPIONSerializer for serializing an Object with a specified state.
+     * Creates a YAPIONSerializer for serializing an Object with a specified context.
      *
      * @param object to serialize
-     * @param state the state for serialization
+     * @param context the context for serialization
      */
-    public YAPIONSerializer(@NonNull Object object, String state) {
-        stateManager = new StateManager(state);
+    public YAPIONSerializer(@NonNull Object object, String context) {
+        contextManager = new ContextManager(context);
         this.object = object;
     }
 
     private YAPIONSerializer(@NonNull Object object, YAPIONSerializer yapionSerializer) {
         this.object = object;
-        this.stateManager = yapionSerializer.stateManager;
+        this.contextManager = yapionSerializer.contextManager;
         this.pointerMap = yapionSerializer.pointerMap;
     }
 
@@ -110,7 +111,7 @@ public final class YAPIONSerializer {
             }
             InternalSerializer serializer = SerializeManager.get(type);
             if (serializer != null && !serializer.empty()) {
-                return serializer.serialize(object, this);
+                return serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
             } else {
                 return new YAPIONSerializer(object, this).parse().getYAPIONObject();
             }
@@ -129,11 +130,11 @@ public final class YAPIONSerializer {
         }
         InternalSerializer serializer = SerializeManager.get(type);
         if (serializer != null && !serializer.empty()) {
-            this.yapionObject = (YAPIONObject) serializer.serialize(object, this);
+            this.yapionObject = (YAPIONObject) serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
             return this;
         }
 
-        if (!stateManager.is(object).save) {
+        if (!contextManager.is(object).save) {
             throw new YAPIONSerializerException("No suitable serializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
         }
 
@@ -150,7 +151,7 @@ public final class YAPIONSerializer {
             if (ModifierUtils.removed(field)) {
                 continue;
             }
-            StateManager.YAPIONInfo yapionInfo = stateManager.is(object, field);
+            ContextManager.YAPIONInfo yapionInfo = contextManager.is(object, field);
             if (!yapionInfo.save) continue;
 
             String name = field.getName();

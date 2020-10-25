@@ -7,13 +7,12 @@ package yapion.serializing.serializer.other;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.types.YAPIONVariable;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.SerializeManager;
-import yapion.serializing.YAPIONDeserializer;
-import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
@@ -29,16 +28,17 @@ public class StringBuilderSerializer implements InternalSerializer<StringBuilder
     }
 
     @Override
-    public YAPIONAnyType serialize(StringBuilder object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<StringBuilder> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
-        yapionObject.add(new YAPIONVariable("string", new YAPIONValue<>(object.toString())));
+        yapionObject.add(new YAPIONVariable("string", new YAPIONValue<>(serializeData.object.toString())));
         return yapionObject;
     }
 
     @Override
-    public StringBuilder deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
+    public StringBuilder deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         return new StringBuilder().append(yapionObject.getValue("string", "").get());
     }
+
 }

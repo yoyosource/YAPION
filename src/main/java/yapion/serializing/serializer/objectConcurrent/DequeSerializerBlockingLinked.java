@@ -15,6 +15,8 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.Iterator;
@@ -33,25 +35,25 @@ public class DequeSerializerBlockingLinked implements InternalSerializer<LinkedB
     }
 
     @Override
-    public YAPIONAnyType serialize(LinkedBlockingDeque<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<LinkedBlockingDeque<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
-        Iterator<?> iterator = object.iterator();
+        Iterator<?> iterator = serializeData.object.iterator();
         while (iterator.hasNext()) {
-            yapionArray.add(yapionSerializer.parse(iterator.next()));
+            yapionArray.add(serializeData.serialize(iterator.next()));
         }
         return yapionObject;
     }
 
     @Override
-    public LinkedBlockingDeque<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
+    public LinkedBlockingDeque<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         YAPIONArray yapionArray = yapionObject.getArray("values");
         LinkedBlockingDeque<Object> deque = new LinkedBlockingDeque<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            deque.add(yapionDeserializer.parse(yapionArray.get(i)));
+            deque.add(deserializeData.deserialize(yapionArray.get(i)));
         }
         return deque;
     }

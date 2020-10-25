@@ -8,6 +8,8 @@ import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 
 public interface SerializerObjectInterface<T> {
 
@@ -38,11 +40,10 @@ public interface SerializerObjectInterface<T> {
      * thing you can get or just handle it generically with
      * {@link YAPIONAnyType} to be safe.
      *
-     * @param object the {@link Object} to serialize
-     * @param yapionSerializer the current YAPIONSerializer
+     * @param serializeData all data for serialization
      * @return the serialized version of the inputted Object
      */
-    YAPIONObject serialize(T object, YAPIONSerializer yapionSerializer);
+    YAPIONObject serialize(SerializeData<T> serializeData);
 
     /**
      * This method is used to deserialize the type defined
@@ -58,10 +59,9 @@ public interface SerializerObjectInterface<T> {
      * and can be any Object. So you should be able to handle
      * any thing generically.
      *
-     * @param yapionObject The {@link YAPIONObject} to deserialize
-     * @param yapionDeserializer the current YAPIONDeserializer
+     * @param deserializeData all data for deserialization
      * @return the deserialized version of the inputted {@link YAPIONObject}
      */
-    T deserialize(YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer);
+    T deserialize(DeserializeData<YAPIONObject> deserializeData);
 
 }

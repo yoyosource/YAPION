@@ -15,6 +15,8 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.Map;
@@ -33,23 +35,23 @@ public class MapSerializerWeakHash implements InternalSerializer<WeakHashMap<?, 
     }
 
     @Override
-    public YAPIONAnyType serialize(WeakHashMap<?, ?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<WeakHashMap<?, ?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
-        for (Map.Entry<?, ?> entry : object.entrySet()) {
-            yapionMap.add(yapionSerializer.parse(entry.getKey()), yapionSerializer.parse(entry.getValue()));
+        for (Map.Entry<?, ?> entry : serializeData.object.entrySet()) {
+            yapionMap.add(serializeData.serialize(entry.getKey()), serializeData.serialize(entry.getValue()));
         }
         return yapionObject;
     }
 
     @Override
-    public WeakHashMap<?, ?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        YAPIONMap yapionMap = ((YAPIONObject) yapionAnyType).getMap("values");
+    public WeakHashMap<?, ?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONMap yapionMap = ((YAPIONObject) deserializeData.object).getMap("values");
         WeakHashMap<Object, Object> map = new WeakHashMap<>();
         for (YAPIONAnyType key : yapionMap.getKeys()) {
-            map.put(yapionDeserializer.parse(key), yapionDeserializer.parse(yapionMap.get(key)));
+            map.put(deserializeData.deserialize(key), deserializeData.deserialize(yapionMap.get(key)));
         }
         return map;
     }

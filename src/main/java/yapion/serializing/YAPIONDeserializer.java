@@ -14,13 +14,13 @@ import yapion.annotations.object.YAPIONPostDeserialization;
 import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
-import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.serializing.data.DeserializeData;
 import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
 
@@ -68,7 +68,7 @@ public final class YAPIONDeserializer {
 
     private Object object;
     private final YAPIONObject yapionObject;
-    private final StateManager stateManager;
+    private final ContextManager contextManager;
 
     private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
 
@@ -90,27 +90,27 @@ public final class YAPIONDeserializer {
      * Serialize an YAPION Object to an Object.
      *
      * @param yapionObject to deserialize
-     * @param state the state for deserialization
+     * @param context the context for deserialization
      * @return Object from the YAPIONObject to deserialize
      */
-    public static Object deserialize(@NonNull YAPIONObject yapionObject, String state) {
-        return new YAPIONDeserializer(yapionObject, state).parse().getObject();
+    public static Object deserialize(@NonNull YAPIONObject yapionObject, String context) {
+        return new YAPIONDeserializer(yapionObject, context).parse().getObject();
     }
 
     /**
-     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified state.
+     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.
      *
      * @param yapionObject to deserialize
-     * @param state the state for deserialization
+     * @param context the context for deserialization
      */
-    public YAPIONDeserializer(@NonNull YAPIONObject yapionObject, String state) {
-        stateManager = new StateManager(state);
+    public YAPIONDeserializer(@NonNull YAPIONObject yapionObject, String context) {
+        contextManager = new ContextManager(context);
         this.yapionObject = yapionObject;
     }
 
     private YAPIONDeserializer(@NonNull YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
         this.yapionObject = yapionObject;
-        this.stateManager = yapionDeserializer.stateManager;
+        this.contextManager = yapionDeserializer.contextManager;
         this.pointerMap = yapionDeserializer.pointerMap;
     }
 
@@ -218,7 +218,7 @@ public final class YAPIONDeserializer {
     private Object serialize(YAPIONAnyType yapionAnyType, String type) {
         InternalSerializer<?> serializer = SerializeManager.get(type);
         if (serializer != null && !serializer.empty()) {
-            return serializer.deserialize(yapionAnyType, this);
+            return serializer.deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this));
         }
         return null;
     }
@@ -234,14 +234,14 @@ public final class YAPIONDeserializer {
 
         try {
             Class<?> clazz = Class.forName(type);
-            if (!stateManager.is(clazz).load) {
+            if (!contextManager.is(clazz).load) {
                 throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
             }
 
             if (clazz.getDeclaredAnnotation(YAPIONObjenesis.class) != null) {
                 object = ReflectionsUtils.constructObjectObjenesis(type);
             } else {
-                object = ReflectionsUtils.constructObject(type, stateManager.is(clazz).data);
+                object = ReflectionsUtils.constructObject(type, contextManager.is(clazz).data);
             }
             preDeserializationStep(object);
             pointerMap.put(yapionObject, object);
@@ -252,7 +252,7 @@ public final class YAPIONDeserializer {
                 if (ModifierUtils.removed(field)) {
                     continue;
                 }
-                if (!stateManager.is(object, field).load) continue;
+                if (!contextManager.is(object, field).load) continue;
                 if (yapionObject.getVariable(field.getName()) == null) continue;
 
                 arrayType = remove(field.getType().getTypeName(), '[', ']');
@@ -334,14 +334,14 @@ public final class YAPIONDeserializer {
             }
         }
 
-        private void pre(Object object, StateManager stateManager) {
-            String state = stateManager.get();
+        private void pre(Object object, ContextManager contextManager) {
+            String state = contextManager.get();
             if (!preCache.containsKey(state)) return;
             ReflectionsUtils.invokeMethod(preCache.get(state), object);
         }
 
-        private void post(Object object, StateManager stateManager) {
-            String state = stateManager.get();
+        private void post(Object object, ContextManager contextManager) {
+            String state = contextManager.get();
             if (!postCache.containsKey(state)) return;
             ReflectionsUtils.invokeMethod(postCache.get(state), object);
         }
@@ -352,7 +352,7 @@ public final class YAPIONDeserializer {
         if (!methodMap.containsKey(key)) {
             methodMap.put(key, new ObjectCache(object));
         }
-        methodMap.get(key).pre(object, stateManager);
+        methodMap.get(key).pre(object, contextManager);
     }
 
     private void postDeserializationStep(Object object) {
@@ -360,7 +360,7 @@ public final class YAPIONDeserializer {
         if (!methodMap.containsKey(key)) {
             methodMap.put(key, new ObjectCache(object));
         }
-        methodMap.get(key).post(object, stateManager);
+        methodMap.get(key).post(object, contextManager);
     }
 
     /**

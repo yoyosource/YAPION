@@ -15,6 +15,8 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.HashMap;
@@ -34,24 +36,24 @@ public class MapSerializerHash implements InternalSerializer<HashMap> {
     }
 
     @Override
-    public YAPIONAnyType serialize(HashMap object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<HashMap> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
-        for (Object obj : object.entrySet()) {
+        for (Object obj : serializeData.object.entrySet()) {
             Map.Entry entry = (Map.Entry)obj;
-            yapionMap.add(yapionSerializer.parse(entry.getKey()), yapionSerializer.parse(entry.getValue()));
+            yapionMap.add(serializeData.serialize(entry.getKey()), serializeData.serialize(entry.getValue()));
         }
         return yapionObject;
     }
 
     @Override
-    public HashMap deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        YAPIONMap yapionMap = ((YAPIONObject) yapionAnyType).getMap("values");
+    public HashMap deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONMap yapionMap = ((YAPIONObject) deserializeData.object).getMap("values");
         HashMap<Object, Object> map = new HashMap();
         for (YAPIONAnyType key : yapionMap.getKeys()) {
-            map.put(yapionDeserializer.parse(key), yapionDeserializer.parse(yapionMap.get(key)));
+            map.put(deserializeData.deserialize(key), deserializeData.deserialize(yapionMap.get(key)));
         }
         return map;
     }

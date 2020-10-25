@@ -15,6 +15,8 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.Iterator;
@@ -33,24 +35,24 @@ public class SetSerializerCopyOnWriteArray implements InternalSerializer<CopyOnW
     }
 
     @Override
-    public YAPIONAnyType serialize(CopyOnWriteArraySet<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<CopyOnWriteArraySet<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
-        Iterator<?> iterator = object.iterator();
+        Iterator<?> iterator = serializeData.object.iterator();
         while (iterator.hasNext()) {
-            yapionArray.add(yapionSerializer.parse(iterator.next()));
+            yapionArray.add(serializeData.serialize(iterator.next()));
         }
         return yapionObject;
     }
 
     @Override
-    public CopyOnWriteArraySet<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        YAPIONArray yapionArray = ((YAPIONObject) yapionAnyType).getArray("values");
+    public CopyOnWriteArraySet<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
         CopyOnWriteArraySet<Object> set = new CopyOnWriteArraySet<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            set.add(yapionDeserializer.parse(yapionArray.get(i)));
+            set.add(deserializeData.deserialize(yapionArray.get(i)));
         }
         return set;
     }

@@ -14,6 +14,8 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.io.File;
@@ -31,16 +33,17 @@ public class FileSerializer implements InternalSerializer<File> {
     }
 
     @Override
-    public YAPIONAnyType serialize(File object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<File> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
-        yapionObject.add(new YAPIONVariable("absolutePath", new YAPIONValue<>(object.getAbsolutePath())));
+        yapionObject.add(new YAPIONVariable("absolutePath", new YAPIONValue<>(serializeData.object.getAbsolutePath())));
         return yapionObject;
     }
 
     @Override
-    public File deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
+    public File deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         return new File(yapionObject.getValue("absolutePath", "").get());
     }
+
 }

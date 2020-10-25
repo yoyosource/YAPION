@@ -11,6 +11,8 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.net.Socket;
@@ -26,12 +28,12 @@ public class SocketSerializer implements InternalSerializer<Socket> {
     }
 
     @Override
-    public YAPIONAnyType serialize(Socket object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<Socket> serializeData) {
         return new YAPIONValue<>(null);
     }
 
     @Override
-    public Socket deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
+    public Socket deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         return null;
     }
 }

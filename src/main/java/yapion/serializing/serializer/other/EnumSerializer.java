@@ -12,6 +12,8 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
@@ -29,18 +31,18 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
     }
 
     @Override
-    public YAPIONAnyType serialize(Enum<?> object, YAPIONSerializer yapionSerializer) {
+    public YAPIONAnyType serialize(SerializeData<Enum<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
-        yapionObject.add(ENUM_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName()));
-        yapionObject.add("value", new YAPIONValue<>(object.name()));
-        yapionObject.add("ordinal", new YAPIONValue<>(object.ordinal()));
+        yapionObject.add(ENUM_IDENTIFIER, new YAPIONValue<>(serializeData.object.getClass().getTypeName()));
+        yapionObject.add("value", new YAPIONValue<>(serializeData.object.name()));
+        yapionObject.add("ordinal", new YAPIONValue<>(serializeData.object.ordinal()));
         return yapionObject;
     }
 
     @Override
-    public Enum<?> deserialize(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
+    public Enum<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         String type = yapionObject.getValue(ENUM_IDENTIFIER, "").get();
         String enumType = yapionObject.getValue("value", "").get();
         int ordinal = -1;
@@ -64,4 +66,5 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
         }
         return null;
     }
+
 }

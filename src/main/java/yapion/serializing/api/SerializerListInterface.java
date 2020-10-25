@@ -8,6 +8,8 @@ import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 
 import java.util.List;
 
@@ -40,11 +42,10 @@ public interface SerializerListInterface<T extends List<?>> {
      * thing you can get or just handle it generically with
      * {@link YAPIONAnyType} to be safe.
      *
-     * @param object the {@link Object} to serialize
-     * @param yapionSerializer the current YAPIONSerializer
+     * @param serializeData all data for serialization
      * @return the serialized version of the inputted Object
      */
-    YAPIONArray serialize(T object, YAPIONSerializer yapionSerializer);
+    YAPIONArray serialize(SerializeData<T> serializeData);
 
     /**
      * This method is used to deserialize the type defined
@@ -60,10 +61,9 @@ public interface SerializerListInterface<T extends List<?>> {
      * and can be any Object. So you should be able to handle
      * any thing generically.
      *
-     * @param yapionArray The {@link YAPIONArray} to deserialize
-     * @param yapionDeserializer the current YAPIONDeserializer
+     * @param deserializeData all data for deserialization
      * @return the deserialized version of the inputted {@link YAPIONArray}
      */
-    T deserialize(YAPIONArray yapionArray, YAPIONDeserializer yapionDeserializer);
+    T deserialize(DeserializeData<YAPIONArray> deserializeData);
 
 }

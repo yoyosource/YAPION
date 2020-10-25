@@ -16,12 +16,12 @@ import java.lang.reflect.Field;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-public final class StateManager {
+public final class ContextManager {
 
     private final String state;
     private boolean emptyState;
 
-    public StateManager(String state) {
+    public ContextManager(String state) {
         this.state = state;
         this.emptyState = state.isEmpty();
     }
