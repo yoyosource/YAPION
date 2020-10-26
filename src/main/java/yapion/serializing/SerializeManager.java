@@ -4,13 +4,17 @@
 
 package yapion.serializing;
 
+import lombok.ToString;
 import org.atteo.classindex.ClassIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.types.*;
+import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONMap;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.api.*;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
@@ -35,6 +39,7 @@ public class SerializeManager {
 
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
+    @ToString
     private static final class Serializer {
         private InternalSerializer<?> internalSerializer;
         private boolean overrideable;
@@ -118,17 +123,19 @@ public class SerializeManager {
 
     private static void add(InternalOverrideableSerializer<?> serializer) {
         if (!checkOverrideable(serializer)) return;
-        serializerMap.put(serializer.type(), new Serializer(serializer, true));
+        Serializer serializerWrapper = new Serializer(serializer, true);
+        serializerMap.put(serializer.type(), serializerWrapper);
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
-            serializerMap.put(serializer.primitiveType(), new Serializer(serializer, true));
+            serializerMap.put(serializer.primitiveType(), serializerWrapper);
         }
     }
 
     private static void add(InternalSerializer<?> serializer) {
         if (!checkOverrideable(serializer)) return;
-        serializerMap.put(serializer.type(), new Serializer(serializer, overrideable));
+        Serializer serializerWrapper = new Serializer(serializer, overrideable);
+        serializerMap.put(serializer.type(), serializerWrapper);
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
-            serializerMap.put(serializer.primitiveType(), new Serializer(serializer, overrideable));
+            serializerMap.put(serializer.primitiveType(), serializerWrapper);
         }
     }
 

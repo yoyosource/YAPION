@@ -16,7 +16,7 @@ public interface InternalSerializer<T> {
 
     String type();
     default String primitiveType() {
-        return "";
+        return null;
     }
     default boolean empty() {
         return false;
