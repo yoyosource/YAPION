@@ -21,6 +21,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.DeserializeData;
+import yapion.serializing.serializer.other.EnumSerializer;
 import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
 
@@ -29,6 +30,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude(context = "*")
@@ -69,6 +71,7 @@ public final class YAPIONDeserializer {
     private Object object;
     private final YAPIONObject yapionObject;
     private final ContextManager contextManager;
+    private TypeReMapper typeReMapper = new TypeReMapper();
 
     private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
 
@@ -90,11 +93,34 @@ public final class YAPIONDeserializer {
      * Serialize an YAPION Object to an Object.
      *
      * @param yapionObject to deserialize
+     * @param typeReMapper
+     * @return Object from the YAPIONObject to deserialize
+     */
+    public static Object deserialize(@NonNull YAPIONObject yapionObject, @NonNull TypeReMapper typeReMapper) {
+        return deserialize(yapionObject, "", typeReMapper);
+    }
+
+    /**
+     * Serialize an YAPION Object to an Object.
+     *
+     * @param yapionObject to deserialize
      * @param context the context for deserialization
      * @return Object from the YAPIONObject to deserialize
      */
     public static Object deserialize(@NonNull YAPIONObject yapionObject, String context) {
         return new YAPIONDeserializer(yapionObject, context).parse().getObject();
+    }
+
+    /**
+     * Serialize an YAPION Object to an Object.
+     *
+     * @param yapionObject to deserialize
+     * @param context the context for deserialization
+     * @param typeReMapper
+     * @return Object from the YAPIONObject to deserialize
+     */
+    public static Object deserialize(@NonNull YAPIONObject yapionObject, String context, @NonNull TypeReMapper typeReMapper) {
+        return new YAPIONDeserializer(yapionObject, context, typeReMapper).parse().getObject();
     }
 
     /**
@@ -108,10 +134,17 @@ public final class YAPIONDeserializer {
         this.yapionObject = yapionObject;
     }
 
+    public YAPIONDeserializer(@NonNull YAPIONObject yapionObject, String context, @NonNull TypeReMapper typeReMapper) {
+        contextManager = new ContextManager(context);
+        this.yapionObject = yapionObject;
+        this.typeReMapper = typeReMapper;
+    }
+
     private YAPIONDeserializer(@NonNull YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
         this.yapionObject = yapionObject;
         this.contextManager = yapionDeserializer.contextManager;
         this.pointerMap = yapionDeserializer.pointerMap;
+        this.typeReMapper = yapionDeserializer.typeReMapper;
     }
 
     /**
@@ -218,6 +251,12 @@ public final class YAPIONDeserializer {
     private Object serialize(YAPIONAnyType yapionAnyType, String type) {
         InternalSerializer<?> serializer = SerializeManager.get(type);
         if (serializer != null && !serializer.empty()) {
+            if (serializer instanceof EnumSerializer) {
+                YAPIONObject enumObject = (YAPIONObject) yapionAnyType;
+                String enumType = enumObject.getValue(ENUM_IDENTIFIER, "").get();
+                enumType = typeReMapper.remap(enumType);
+                enumObject.add(ENUM_IDENTIFIER, new YAPIONValue<>(enumType));
+            }
             return serializer.deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this));
         }
         return null;
@@ -226,6 +265,7 @@ public final class YAPIONDeserializer {
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parseObject(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>)yapionObject.getVariable(TYPE_IDENTIFIER).getValue()).get();
+        type = typeReMapper.remap(type);
         Object o = serialize(yapionObject, type);
         if (o != null) {
             object = o;

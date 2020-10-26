@@ -104,6 +104,7 @@ public final class ContextManager {
         return is(object.getClass());
     }
 
+    @SuppressWarnings({"java:S3011"})
     YAPIONInfo is(Object object, Field field) {
         is(object.getClass());
 

@@ -52,7 +52,7 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
         try {
             if (!Class.forName(type).isEnum()) return null;
             Enum<?>[] enums = (Enum<?>[]) Class.forName(type).getEnumConstants();
-            if (ordinal != -1 && enums[ordinal].name().equals(enumType)) {
+            if (ordinal >= 0 && ordinal < enums.length && enums[ordinal].name().equals(enumType)) {
                 return enums[ordinal];
             }
             for (Enum<?> e : enums) {
