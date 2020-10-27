@@ -31,11 +31,11 @@ public class URISerializer implements InternalSerializer<URI> {
     @Override
     public YAPIONAnyType serialize(SerializeData<URI> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+        yapionObject.add(TYPE_IDENTIFIER, type());
         try {
-            yapionObject.add("uri", new YAPIONValue<>((String) URI.class.getDeclaredField("string").get(serializeData.object)));
+            yapionObject.add("uri", (String) URI.class.getDeclaredField("string").get(serializeData.object));
         } catch (Exception e) {
-            yapionObject.add("uri", new YAPIONValue<>(""));
+            yapionObject.add("uri", "");
         }
         return yapionObject;
     }

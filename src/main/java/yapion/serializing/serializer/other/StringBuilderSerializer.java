@@ -8,8 +8,6 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONValue;
-import yapion.hierarchy.types.YAPIONVariable;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
@@ -30,8 +28,8 @@ public class StringBuilderSerializer implements InternalSerializer<StringBuilder
     @Override
     public YAPIONAnyType serialize(SerializeData<StringBuilder> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
-        yapionObject.add(new YAPIONVariable("string", new YAPIONValue<>(serializeData.object.toString())));
+        yapionObject.add(TYPE_IDENTIFIER, type());
+        yapionObject.add("string", serializeData.object.toString());
         return yapionObject;
     }
 

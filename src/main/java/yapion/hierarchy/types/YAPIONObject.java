@@ -242,6 +242,42 @@ public class YAPIONObject extends YAPIONMappingType {
         return add(new YAPIONVariable(name, value));
     }
 
+    public YAPIONObject add(String name, String value) {
+        return add(name, new YAPIONValue<>(value));
+    }
+
+    public YAPIONObject add(String name, char value) {
+        return add(name, new YAPIONValue<>(value));
+    }
+
+    public YAPIONObject add(String name, boolean value) {
+        return add(name, new YAPIONValue<>(value));
+    }
+
+    public YAPIONObject add(String name, byte value) {
+        return add(name, new YAPIONValue<>(value));
+    }
+
+    public YAPIONObject add(String name, short value) {
+        return add(name, new YAPIONValue<>(value));
+    }
+
+    public YAPIONObject add(String name, int value) {
+        return add(name, new YAPIONValue<>(value));
+    }
+
+    public YAPIONObject add(String name, long value) {
+        return add(name, new YAPIONValue<>(value));
+    }
+
+    public YAPIONObject add(String name, float value) {
+        return add(name, new YAPIONValue<>(value));
+    }
+
+    public YAPIONObject add(String name, double value) {
+        return add(name, new YAPIONValue<>(value));
+    }
+
     public YAPIONObject addOrPointer(YAPIONVariable variable) {
         discardReferenceValue();
         RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(variable.getValue(), this);

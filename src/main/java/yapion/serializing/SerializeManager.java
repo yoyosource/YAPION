@@ -161,7 +161,7 @@ public class SerializeManager {
             public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
                     YAPIONObject yapionObject = serializer.serialize(serializeData);
-                    yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+                    yapionObject.add(TYPE_IDENTIFIER, type());
                     return yapionObject;
                 } catch (Exception e) {
                     logger.error("An unexpected error occurred", e.getCause());
@@ -203,7 +203,7 @@ public class SerializeManager {
             public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
                     YAPIONObject yapionObject = new YAPIONObject();
-                    yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+                    yapionObject.add(TYPE_IDENTIFIER, type());
                     yapionObject.add("map", serializer.serialize(serializeData));
                     return yapionObject;
                 } catch (Exception e) {
@@ -244,7 +244,7 @@ public class SerializeManager {
             public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
                     YAPIONObject yapionObject = new YAPIONObject();
-                    yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+                    yapionObject.add(TYPE_IDENTIFIER, type());
                     yapionObject.add("list", serializer.serialize(serializeData));
                     return yapionObject;
                 } catch (Exception e) {
@@ -285,7 +285,7 @@ public class SerializeManager {
             public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
                     YAPIONObject yapionObject = new YAPIONObject();
-                    yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+                    yapionObject.add(TYPE_IDENTIFIER, type());
                     yapionObject.add("queue", serializeData.serialize(serializeData));
                     return yapionObject;
                 } catch (Exception e) {
@@ -326,7 +326,7 @@ public class SerializeManager {
             public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
                     YAPIONObject yapionObject = new YAPIONObject();
-                    yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+                    yapionObject.add(TYPE_IDENTIFIER, type());
                     yapionObject.add("set", serializer.serialize(serializeData));
                     return yapionObject;
                 } catch (Exception e) {

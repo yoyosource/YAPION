@@ -206,7 +206,7 @@ public class YAPIONUtils {
             if (s instanceof YAPIONPointer) {
                 Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", s);
                 if (!objectOptional.isPresent()) return;
-                output.add(path, new YAPIONValue<>("pointer@" + String.join(",", ((YAPIONObject)objectOptional.get()).getPath().getPath())));
+                output.add(path, "pointer@" + String.join(",", ((YAPIONObject)objectOptional.get()).getPath().getPath()));
             } else {
                 output.add(path, s);
             }

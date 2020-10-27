@@ -7,14 +7,10 @@ package yapion.serializing.serializer.objectConcurrent;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.types.YAPIONVariable;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.SerializeManager;
-import yapion.serializing.YAPIONDeserializer;
-import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
@@ -38,7 +34,7 @@ public class MapSerializerConcurrent implements InternalSerializer<ConcurrentMap
     @Override
     public YAPIONAnyType serialize(SerializeData<ConcurrentMap<?, ?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
+        yapionObject.add(TYPE_IDENTIFIER, type());
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add(new YAPIONVariable("values", yapionMap));
         for (Map.Entry<?, ?> entry : serializeData.object.entrySet()) {

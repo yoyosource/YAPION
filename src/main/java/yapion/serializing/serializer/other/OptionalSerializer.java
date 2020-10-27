@@ -8,8 +8,6 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONValue;
-import yapion.hierarchy.types.YAPIONVariable;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
@@ -32,9 +30,9 @@ public class OptionalSerializer implements InternalSerializer<Optional<?>> {
     @Override
     public YAPIONAnyType serialize(SerializeData<Optional<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
-        yapionObject.add(new YAPIONVariable("present", new YAPIONValue<>(serializeData.object.isPresent())));
-        serializeData.object.ifPresent(o -> yapionObject.add(new YAPIONVariable("value", serializeData.serialize(o))));
+        yapionObject.add(TYPE_IDENTIFIER, type());
+        yapionObject.add("present", serializeData.object.isPresent());
+        serializeData.object.ifPresent(o -> yapionObject.add("value", serializeData.serialize(o)));
         return yapionObject;
     }
 

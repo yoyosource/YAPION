@@ -255,7 +255,7 @@ public final class YAPIONDeserializer {
                 YAPIONObject enumObject = (YAPIONObject) yapionAnyType;
                 String enumType = enumObject.getValue(ENUM_IDENTIFIER, "").get();
                 enumType = typeReMapper.remap(enumType);
-                enumObject.add(ENUM_IDENTIFIER, new YAPIONValue<>(enumType));
+                enumObject.add(ENUM_IDENTIFIER, enumType);
             }
             return serializer.deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this));
         }

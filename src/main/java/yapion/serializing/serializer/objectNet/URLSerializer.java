@@ -34,12 +34,12 @@ public class URLSerializer implements InternalSerializer<URL> {
     @Override
     public YAPIONAnyType serialize(SerializeData<URL> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(type()));
+        yapionObject.add(TYPE_IDENTIFIER, type());
         try {
-            yapionObject.add("protocol", new YAPIONValue<>(serializeData.object.getProtocol()));
-            yapionObject.add("host", new YAPIONValue<>(serializeData.object.getHost()));
-            yapionObject.add("port", new YAPIONValue<>(serializeData.object.getPort()));
-            yapionObject.add("file", new YAPIONValue<>(serializeData.object.getFile()));
+            yapionObject.add("protocol", serializeData.object.getProtocol());
+            yapionObject.add("host", serializeData.object.getHost());
+            yapionObject.add("port", serializeData.object.getPort());
+            yapionObject.add("file", serializeData.object.getFile());
         } catch (Exception e) {
 
         }

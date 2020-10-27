@@ -7,19 +7,17 @@ package yapion.serializing.serializer.object;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONVariable;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.types.YAPIONVariable;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.SerializeManager;
-import yapion.serializing.YAPIONDeserializer;
-import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -37,7 +35,7 @@ public class SetSerializer implements InternalSerializer<Set> {
     @Override
     public YAPIONAnyType serialize(SerializeData<Set> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(type())));
+        yapionObject.add(TYPE_IDENTIFIER, type());
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add(new YAPIONVariable("values", yapionArray));
         Iterator iterator = serializeData.object.iterator();

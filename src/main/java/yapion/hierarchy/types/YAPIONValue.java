@@ -124,12 +124,12 @@ public class YAPIONValue<T> extends YAPIONValueType {
         }
         if (value instanceof Character) {
             YAPIONObject yapionObject = new YAPIONObject();
-            yapionObject.add(typeIdentifier.get(type), new YAPIONValue<>(value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")));
+            yapionObject.add(typeIdentifier.get(type), value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"));
             return yapionObject.toLossyJSONString();
         }
         if (value instanceof BigInteger || value instanceof BigDecimal) {
             YAPIONObject yapionObject = new YAPIONObject();
-            yapionObject.add(typeIdentifier.get(type), new YAPIONValue<>(value.toString()));
+            yapionObject.add(typeIdentifier.get(type), value.toString());
             return yapionObject.toLossyJSONString();
         }
         if (value == null) {
