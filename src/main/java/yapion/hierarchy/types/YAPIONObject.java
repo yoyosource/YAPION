@@ -14,6 +14,8 @@ import yapion.utils.RecursionUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -270,11 +272,19 @@ public class YAPIONObject extends YAPIONMappingType {
         return add(name, new YAPIONValue<>(value));
     }
 
+    public YAPIONObject add(String name, BigInteger value) {
+        return add(name, new YAPIONValue<>(value));
+    }
+
     public YAPIONObject add(String name, float value) {
         return add(name, new YAPIONValue<>(value));
     }
 
     public YAPIONObject add(String name, double value) {
+        return add(name, new YAPIONValue<>(value));
+    }
+
+    public YAPIONObject add(String name, BigDecimal value) {
         return add(name, new YAPIONValue<>(value));
     }
 
