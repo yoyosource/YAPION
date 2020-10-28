@@ -8,17 +8,14 @@ import org.objenesis.ObjenesisBase;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import yapion.annotations.object.YAPIONData;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -237,6 +234,26 @@ public class ReflectionsUtils {
             throw new YAPIONReflectionException(e.getMessage(), e.getCause());
         } catch (ClassNotFoundException e) {
             logger.info("Exception while creating an Object with normal Constructor because the specified class '" + className + "' was not found", e.getCause());
+            throw new YAPIONReflectionException(e.getMessage(), e.getCause());
+        }
+    }
+
+    public static Object accessField(String s, Object o) {
+        try {
+            return accessField(o.getClass().getDeclaredField(s), o);
+        } catch (NoSuchFieldException e) {
+            logger.info("Exception while getting a Field", e.getCause());
+            throw new YAPIONReflectionException(e.getMessage(), e.getCause());
+        }
+    }
+
+    @SuppressWarnings({"java:S3011"})
+    public static Object accessField(Field f, Object o) {
+        try {
+            f.setAccessible(true);
+            return f.get(o);
+        } catch (IllegalAccessException e) {
+            logger.info("Exception while accessing a Field", e.getCause());
             throw new YAPIONReflectionException(e.getMessage(), e.getCause());
         }
     }

@@ -47,7 +47,8 @@ The **yapion.parser.** package cannot be serialized because there is no need to 
 The **yapion.serializing.serializer.** package cannot be serialized because there are only InternalSerializer implementations present in that package.
 The **yapion.utils.** package cannot be serialized because there are only utilities and other helpful stuff in there.
 
-### As well as every Class in the following packages that are not specially handled by a Serializer (overrideable):
+### As well as every Class in the following packages that are not specially handled by a Serializer (overrideable by Serializer):
+- java.io
 - java.io.
 - java.net.
 - java.nio.

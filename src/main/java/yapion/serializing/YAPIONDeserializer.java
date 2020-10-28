@@ -20,6 +20,7 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.parser.YAPIONParser;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.serializer.other.EnumSerializer;
 import yapion.utils.ModifierUtils;
@@ -93,7 +94,7 @@ public final class YAPIONDeserializer {
      * Serialize an YAPION Object to an Object.
      *
      * @param yapionObject to deserialize
-     * @param typeReMapper
+     * @param typeReMapper the mapper to remap any '@type' variable to a new class
      * @return Object from the YAPIONObject to deserialize
      */
     public static Object deserialize(@NonNull YAPIONObject yapionObject, @NonNull TypeReMapper typeReMapper) {
@@ -116,7 +117,7 @@ public final class YAPIONDeserializer {
      *
      * @param yapionObject to deserialize
      * @param context the context for deserialization
-     * @param typeReMapper
+     * @param typeReMapper the mapper to remap any '@type' variable to a new class
      * @return Object from the YAPIONObject to deserialize
      */
     public static Object deserialize(@NonNull YAPIONObject yapionObject, String context, @NonNull TypeReMapper typeReMapper) {
@@ -134,6 +135,13 @@ public final class YAPIONDeserializer {
         this.yapionObject = yapionObject;
     }
 
+    /**
+     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.
+     *
+     * @param yapionObject to deserialize
+     * @param context the context for deserialization
+     * @param typeReMapper the mapper to remap any '@type' variable to a new class
+     */
     public YAPIONDeserializer(@NonNull YAPIONObject yapionObject, String context, @NonNull TypeReMapper typeReMapper) {
         contextManager = new ContextManager(context);
         this.yapionObject = yapionObject;

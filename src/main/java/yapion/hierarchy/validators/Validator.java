@@ -4,7 +4,6 @@
 
 package yapion.hierarchy.validators;
 
-import test.Test;
 import yapion.YAPIONUtils;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
@@ -12,9 +11,10 @@ import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.typeinterfaces.ObjectSearch;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.YAPIONSerializer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")

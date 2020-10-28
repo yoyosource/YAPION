@@ -15,7 +15,6 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.validators.Validator;
 import yapion.hierarchy.validators.ValidatorType;
 import yapion.hierarchy.validators.ValidatorVariable;
-import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONSerializer;
 
 import java.util.HashMap;
@@ -28,7 +27,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @YAPIONObjenesis
 public final class YAPIONPacket {
 
-    // Following context is cache
+    // Following context is cached
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
     private long lastModified = 0;
@@ -114,6 +113,7 @@ public final class YAPIONPacket {
      *
      * @return the specified YAPIONPacketIdentifier
      */
+    @SuppressWarnings({"java:S1452"})
     public YAPIONPacketIdentifier<?> getIdentifier() {
         return yapionPacketIdentifier;
     }

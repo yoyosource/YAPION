@@ -303,6 +303,10 @@ public class YAPIONObject extends YAPIONMappingType {
         return add(variable);
     }
 
+    public YAPIONObject addOrPointer(String name, YAPIONAnyType value) {
+        return addOrPointer(new YAPIONVariable(name, value));
+    }
+
     @Override
     public int size() {
         return variables.size();

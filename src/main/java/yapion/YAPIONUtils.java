@@ -191,8 +191,8 @@ public class YAPIONUtils {
 
     /**
      * The inputted {@link YAPIONObject} is flattened to one {@link YAPIONObject} as the
-     * main layer. Every value will be put under this and every structure will be removes
-     * as. This will also remove any information about maps arrays and such.
+     * main layer. Every value will be put under this and every structure will be removed.
+     * This will also remove any information about maps arrays and such.
      *
      * <br><br>(pointer@...) will represent a pointer
      *
