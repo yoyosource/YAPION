@@ -1,13 +1,11 @@
 package yapion.serializing;
 
 import yapion.exceptions.serializing.YAPIONClassTypeException;
-import yapion.serializing.serializer.other.YAPIONSerializerPacket;
-import yapion.utils.YAPIONTreeIterator;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TypeReMapper {
+public final class TypeReMapper {
 
     private Map<String, String> typeMappings = new HashMap<>();
 
@@ -49,21 +47,45 @@ public class TypeReMapper {
         typeMappings.put(fromType, toType);
     }
 
+    /**
+     * Add a class remapping from one {@link Class} type to another.
+     *
+     * @param fromType {@link Class} to map from
+     * @param toType {@link Class} to map to
+     */
     public TypeReMapper addClassMapping(String fromType, String toType) {
         putClass(fromType, toType);
         return this;
     }
 
+    /**
+     * Add a class remapping from one {@link Class} type to another.
+     *
+     * @param fromType {@link Class} to map from
+     * @param toType {@link Class} to map to
+     */
     public TypeReMapper addClassMapping(Class<?> fromType, String toType) {
         putClass(fromType.getTypeName(), toType);
         return this;
     }
 
+    /**
+     * Add a class remapping from one {@link Class} type to another.
+     *
+     * @param fromType {@link Class} to map from
+     * @param toType {@link Class} to map to
+     */
     public TypeReMapper addClassMapping(String fromType, Class<?> toType) {
         putClass(fromType, toType.getTypeName());
         return this;
     }
 
+    /**
+     * Add a class remapping from one {@link Class} type to another.
+     *
+     * @param fromType {@link Class} to map from
+     * @param toType {@link Class} to map to
+     */
     public TypeReMapper addClassMapping(Class<?> fromType, Class<?> toType) {
         putClass(fromType.getTypeName(), toType.getTypeName());
         return this;
@@ -84,26 +106,53 @@ public class TypeReMapper {
         typeMappings.put(fromType, toType);
     }
 
+    /**
+     * Add a type remapping from one {@link Package} to another.
+     *
+     * @param fromType {@link Package} to map from
+     * @param toType {@link Package} to map to
+     */
     public TypeReMapper addPackageMapping(String fromType, String toType) {
         putPackage(fromType, toType);
         return this;
     }
 
+    /**
+     * Add a type remapping from one {@link Package} to another.
+     *
+     * @param fromType {@link Package} to map from
+     * @param toType {@link Package} to map to
+     */
     public TypeReMapper addPackageMapping(Package fromType, String toType) {
         putPackage(fromType.getName() + ".", toType);
         return this;
     }
 
+    /**
+     * Add a type remapping from one {@link Package} to another.
+     *
+     * @param fromType {@link Package} to map from
+     * @param toType {@link Package} to map to
+     */
     public TypeReMapper addPackageMapping(String fromType, Package toType) {
         putPackage(fromType, toType.getName() + ".");
         return this;
     }
 
+    /**
+     * Add a type remapping from one {@link Package} to another.
+     *
+     * @param fromType {@link Package} to map from
+     * @param toType {@link Package} to map to
+     */
     public TypeReMapper addPackageMapping(Package fromType, Package toType) {
         putPackage(fromType.getName() + ".", toType.getName() + ".");
         return this;
     }
 
+    /**
+     * Clone this {@link TypeReMapper} and internal state.
+     */
     public TypeReMapper copy() {
         TypeReMapper typeReMapper = new TypeReMapper();
         typeMappings.forEach((s, s2) -> typeReMapper.typeMappings.put(s, s2));
