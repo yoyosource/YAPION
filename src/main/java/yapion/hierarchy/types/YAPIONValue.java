@@ -7,8 +7,8 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.YAPIONException;
+import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONValueType;
-import yapion.parser.JSONMapper;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -71,6 +71,11 @@ public class YAPIONValue<T> extends YAPIONValueType {
             cacheReferenceValue(getType().getReferenceValue() ^ calc(type));
         }
         return getReferenceValue();
+    }
+
+    @Override
+    public YAPIONAnyType copy() {
+        return new YAPIONValue<>(value);
     }
 
     @Override
@@ -304,17 +309,26 @@ public class YAPIONValue<T> extends YAPIONValueType {
     private static YAPIONValue tryParse(String s, int radix, ParseType parseType) {
         try {
             switch (parseType) {
-                case BYTE: return new YAPIONValue<>(Byte.parseByte(s, radix));
-                case SHORT: return new YAPIONValue<>(Short.parseShort(s, radix));
-                case INTEGER: return new YAPIONValue<>(Integer.parseInt(s, radix));
-                case LONG: return new YAPIONValue<>(Long.parseLong(s, radix));
-                case BIGINTEGER: return new YAPIONValue<>(new BigInteger(s));
+                case BYTE:
+                    return new YAPIONValue<>(Byte.parseByte(s, radix));
+                case SHORT:
+                    return new YAPIONValue<>(Short.parseShort(s, radix));
+                case INTEGER:
+                    return new YAPIONValue<>(Integer.parseInt(s, radix));
+                case LONG:
+                    return new YAPIONValue<>(Long.parseLong(s, radix));
+                case BIGINTEGER:
+                    return new YAPIONValue<>(new BigInteger(s));
 
-                case FLOAT: return new YAPIONValue<>(Float.parseFloat(s));
-                case DOUBLE: return new YAPIONValue<>(Double.parseDouble(s));
-                case BIGDECIMAL: return new YAPIONValue<>(new BigDecimal(s));
+                case FLOAT:
+                    return new YAPIONValue<>(Float.parseFloat(s));
+                case DOUBLE:
+                    return new YAPIONValue<>(Double.parseDouble(s));
+                case BIGDECIMAL:
+                    return new YAPIONValue<>(new BigDecimal(s));
 
-                default: break;
+                default:
+                    break;
             }
         } catch (NumberFormatException e) {
             // Ignored
@@ -330,7 +344,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
         BYTE("B"),
         SHORT("S"),
         INTEGER("I"),
-        LONG( "L"),
+        LONG("L"),
         BIGINTEGER("BI"),
 
         FLOAT("F"),

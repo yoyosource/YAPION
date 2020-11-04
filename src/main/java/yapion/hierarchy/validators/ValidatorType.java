@@ -27,12 +27,18 @@ public enum ValidatorType {
 
     static ValidatorType getByYAPIONType(YAPIONType yapionType) {
         switch (yapionType) {
-            case ANY: return ANY;
-            case ARRAY: return ARRAY;
-            case MAP: return MAP;
-            case OBJECT: return OBJECT;
-            case POINTER: return POINTER;
-            case VALUE: return VALUE;
+            case ANY:
+                return ANY;
+            case ARRAY:
+                return ARRAY;
+            case MAP:
+                return MAP;
+            case OBJECT:
+                return OBJECT;
+            case POINTER:
+                return POINTER;
+            case VALUE:
+                return VALUE;
         }
         return null;
     }

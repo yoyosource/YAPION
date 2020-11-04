@@ -4,12 +4,10 @@
 
 package yapion;
 
-import test.Test;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
-import yapion.hierarchy.types.YAPIONValue;
 import yapion.packet.YAPIONInputStream;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
@@ -202,14 +200,31 @@ public class YAPIONUtils {
     public static YAPIONObject flatten(YAPIONObject yapionObject) {
         YAPIONObject output = new YAPIONObject();
         walk(yapionObject, YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES).forEach(s -> {
-            String path = String.join(".", s.getPath().getPath());
+            String path = s.getPath().join(".");
             if (s instanceof YAPIONPointer) {
                 Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", s);
                 if (!objectOptional.isPresent()) return;
-                output.add(path, "pointer@" + String.join(",", ((YAPIONObject)objectOptional.get()).getPath().getPath()));
+                output.add(path, "@pointer:" + String.join(",", ((YAPIONObject) objectOptional.get()).getPath().getPath()));
             } else {
-                output.add(path, s);
+                output.add(path, s.copy());
             }
+        });
+        return output;
+    }
+
+    public static YAPIONObject unflatten(YAPIONObject yapionObject) {
+        YAPIONObject output = new YAPIONObject();
+        walk(yapionObject, YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES).forEach(s -> {
+            String[] path = s.getPath().join().split("\\.");
+            YAPIONObject current = output;
+            for (int i = 0; i < path.length - 1; i++) {
+                String p = path[i];
+                if (current.getVariable(p) == null) {
+                    current.add(p, new YAPIONObject());
+                }
+                current = current.getObject(p);
+            }
+            current.add(path[path.length - 1], s);
         });
         return output;
     }

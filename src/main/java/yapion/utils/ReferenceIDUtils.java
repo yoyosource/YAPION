@@ -45,7 +45,7 @@ public class ReferenceIDUtils {
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] bytes = digest.digest(s.getBytes(StandardCharsets.UTF_8));
-            long l = (long)bytes[0] << 56 | (long)bytes[1] << 48 | (long)bytes[2] << 40 | (long)bytes[3] << 32 | (long)bytes[4] << 24 | (long)bytes[5] << 16 | (long)bytes[6] << 8 | (long)bytes[7];
+            long l = (long) bytes[0] << 56 | (long) bytes[1] << 48 | (long) bytes[2] << 40 | (long) bytes[3] << 32 | (long) bytes[4] << 24 | (long) bytes[5] << 16 | (long) bytes[6] << 8 | (long) bytes[7];
             referenceIDMap.put(s, l);
             return l;
         } catch (NoSuchAlgorithmException e) {

@@ -4,20 +4,26 @@
 
 package test;
 
+import lombok.ToString;
+import yapion.YAPIONUtils;
 import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.annotations.deserialize.YAPIONLoad;
+import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONPostDeserialization;
 import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.annotations.serialize.YAPIONSave;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.YAPIONDeserializer;
+import yapion.serializing.YAPIONSerializer;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
-@YAPIONSave
-@YAPIONLoad
+@YAPIONData
+@ToString
 public class Test {
 
     public transient volatile double i = 10.0;
@@ -37,10 +43,25 @@ public class Test {
     private final HashMap<String, String> hashMap = new HashMap<>();
     private final LinkedHashMap<Integer, String> linkedHashMap = new LinkedHashMap<>();
 
-    @YAPIONPreDeserialization(context = "*")
-    @YAPIONPostDeserialization(context = "*")
+    @YAPIONPreDeserialization
+    @YAPIONPostDeserialization
     private void test() {
+        System.out.println(this);
+    }
 
+    public static void main(String[] args) {
+        Test test = new Test();
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(test);
+        System.out.println(yapionObject);
+        System.out.println(YAPIONUtils.flatten(yapionObject));
+        System.out.println();
+        System.out.println(YAPIONUtils.flatten(yapionObject).toYAPIONStringPrettified());
+        System.out.println();
+        System.out.println(YAPIONUtils.unflatten(YAPIONUtils.flatten(yapionObject)).toYAPIONStringPrettified());
+        System.out.println();
+        YAPIONDeserializer yapionDeserializer = new YAPIONDeserializer(yapionObject, "").parse();
+        System.out.println(yapionDeserializer.getObject());
+        System.out.println(yapionDeserializer.getDeserializeResult());
     }
 
     {

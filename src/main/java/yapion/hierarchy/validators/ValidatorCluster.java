@@ -80,9 +80,9 @@ public final class ValidatorCluster {
      * @param clusterMode the {@link ClusterMode} to use
      * @param yapionObject the {@link YAPIONObject} to validate
      * @return {@code true} if the specification of the {@code ClusterMode} are met
-     *         {@link ClusterMode#ANY_VALID} and {@link ClusterMode#LEAST_VALID} will behave the same
-     *         {@link ClusterMode#SPECIFIC_VALID} will behave as one and only one is valid
-     *         {@link ClusterMode#MOST_VALID} will behave as one valid or none valid
+     * {@link ClusterMode#ANY_VALID} and {@link ClusterMode#LEAST_VALID} will behave the same
+     * {@link ClusterMode#SPECIFIC_VALID} will behave as one and only one is valid
+     * {@link ClusterMode#MOST_VALID} will behave as one valid or none valid
      */
     public boolean validate(ClusterMode clusterMode, YAPIONObject yapionObject) {
         return validate(clusterMode, yapionObject, 1);

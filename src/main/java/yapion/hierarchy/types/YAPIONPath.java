@@ -31,6 +31,14 @@ public final class YAPIONPath {
         return Arrays.copyOf(path, path.length);
     }
 
+    public String join(String delimiter) {
+        return String.join(delimiter, path);
+    }
+
+    public String join() {
+        return join("");
+    }
+
     public int depth() {
         return path.length;
     }

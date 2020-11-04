@@ -75,6 +75,7 @@ public class SerializeManager {
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
     private static final GroupList nSerializerGroups = new GroupList();
     private static final GroupList oSerializerGroups = new GroupList();
+
     static {
         ClassIndex.getAnnotated(SerializerImplementation.class).forEach(SerializeManager::add);
         if (serializerMap.isEmpty()) {

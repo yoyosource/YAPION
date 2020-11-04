@@ -15,13 +15,17 @@ import yapion.serializing.data.SerializeData;
 public interface InternalSerializer<T> {
 
     String type();
+
     default String primitiveType() {
         return null;
     }
+
     default boolean empty() {
         return false;
     }
+
     YAPIONAnyType serialize(SerializeData<T> serializeData);
+
     T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData);
 
 }

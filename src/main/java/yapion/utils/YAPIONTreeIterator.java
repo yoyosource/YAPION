@@ -65,11 +65,11 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
     }
 
     public int availableValues() {
-        return (int)yapionAnyTypes.stream().filter(yapionAnyType -> yapionAnyType instanceof YAPIONValueType).count();
+        return (int) yapionAnyTypes.stream().filter(yapionAnyType -> yapionAnyType instanceof YAPIONValueType).count();
     }
 
     public int availableDatas() {
-        return (int)yapionAnyTypes.stream().filter(yapionAnyType -> yapionAnyType instanceof YAPIONDataType).count();
+        return (int) yapionAnyTypes.stream().filter(yapionAnyType -> yapionAnyType instanceof YAPIONDataType).count();
     }
 
     // private int max = 0;

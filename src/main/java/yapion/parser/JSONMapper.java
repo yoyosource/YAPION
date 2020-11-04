@@ -5,13 +5,16 @@
 package yapion.parser;
 
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.types.*;
 import yapion.hierarchy.typegroups.YAPIONMappingType;
+import yapion.hierarchy.types.*;
 import yapion.utils.ReflectionsUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static yapion.utils.IdentifierUtils.*;
 
@@ -150,11 +153,11 @@ public class JSONMapper {
     }
 
     private YAPIONValue<Byte> mapByteValue(YAPIONObject yapionObject) {
-        return new YAPIONValue<>(((byte)(int)yapionObject.getValue(BYTE_IDENTIFIER).get()));
+        return new YAPIONValue<>(((byte) (int) yapionObject.getValue(BYTE_IDENTIFIER).get()));
     }
 
     private YAPIONValue<Short> mapShortValue(YAPIONObject yapionObject) {
-        return new YAPIONValue<>(((short)(int)yapionObject.getValue(SHORT_IDENTIFIER).get()));
+        return new YAPIONValue<>(((short) (int) yapionObject.getValue(SHORT_IDENTIFIER).get()));
     }
 
     private YAPIONValue<Character> mapCharValue(YAPIONObject yapionObject) {
@@ -162,27 +165,27 @@ public class JSONMapper {
     }
 
     private YAPIONValue<Integer> mapIntValue(YAPIONObject yapionObject) {
-        return new YAPIONValue<>(((int)yapionObject.getValue(INT_IDENTIFIER).get()));
+        return new YAPIONValue<>(((int) yapionObject.getValue(INT_IDENTIFIER).get()));
     }
 
     private YAPIONValue<Float> mapFloatValue(YAPIONObject yapionObject) {
-        return new YAPIONValue<>(((float)(double)yapionObject.getValue(FLOAT_IDENTIFIER).get()));
+        return new YAPIONValue<>(((float) (double) yapionObject.getValue(FLOAT_IDENTIFIER).get()));
     }
 
     private YAPIONValue<Long> mapLongValue(YAPIONObject yapionObject) {
-        return new YAPIONValue<>(((long)(int)yapionObject.getValue(LONG_IDENTIFIER).get()));
+        return new YAPIONValue<>(((long) (int) yapionObject.getValue(LONG_IDENTIFIER).get()));
     }
 
     private YAPIONValue<Double> mapDoubleValue(YAPIONObject yapionObject) {
-        return new YAPIONValue<>(((double)yapionObject.getValue(DOUBLE_IDENTIFIER).get()));
+        return new YAPIONValue<>(((double) yapionObject.getValue(DOUBLE_IDENTIFIER).get()));
     }
 
     private YAPIONValue<BigInteger> mapBigIntegerValue(YAPIONObject yapionObject) {
-        return new YAPIONValue<>(new BigInteger((String)yapionObject.getValue(BIG_INTEGER_IDENTIFIER).get()));
+        return new YAPIONValue<>(new BigInteger((String) yapionObject.getValue(BIG_INTEGER_IDENTIFIER).get()));
     }
 
     private YAPIONValue<BigDecimal> mapBigDecimalValue(YAPIONObject yapionObject) {
-        return new YAPIONValue<>(new BigDecimal((String)yapionObject.getValue(BIG_DECIMAL_IDENTIFIER).get()));
+        return new YAPIONValue<>(new BigDecimal((String) yapionObject.getValue(BIG_DECIMAL_IDENTIFIER).get()));
     }
 
 }

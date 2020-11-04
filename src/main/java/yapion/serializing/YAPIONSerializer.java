@@ -8,13 +8,8 @@ import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.serializing.YAPIONSerializerException;
-import yapion.hierarchy.types.YAPIONType;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONVariable;
-import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONPointer;
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.types.*;
 import yapion.serializing.data.SerializeData;
 import yapion.utils.ModifierUtils;
 
@@ -74,12 +69,10 @@ public final class YAPIONSerializer {
     }
 
     /**
-     * @deprecated since 0.12.0 use {@link #parse(Object)} instead
-     *
      * @param object to parse
      * @param yapionSerializer to parse with
-     *
      * @return the {@link YAPIONAnyType} of the Object inputted
+     * @deprecated since 0.12.0 use {@link #parse(Object)} instead
      */
     @Deprecated
     public YAPIONAnyType parse(Object object, YAPIONSerializer yapionSerializer) {

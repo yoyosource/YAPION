@@ -11,7 +11,6 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONDataType;
 import yapion.hierarchy.typegroups.YAPIONMappingType;
-import yapion.parser.JSONMapper;
 import yapion.parser.YAPIONParserMapMapping;
 import yapion.parser.YAPIONParserMapObject;
 
@@ -274,7 +273,8 @@ public class YAPIONMap extends YAPIONMappingType {
     @Override
     public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String key) {
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
-            if (entry.getKey().toYAPIONString().equals(key)) return Optional.of(new YAPIONSearchResult<>(entry.getValue()));
+            if (entry.getKey().toYAPIONString().equals(key))
+                return Optional.of(new YAPIONSearchResult<>(entry.getValue()));
         }
         return Optional.empty();
     }

@@ -67,10 +67,10 @@ public final class YAPIONInputStream {
      *
      * @param yapionPacketReceiver the receiver
      * @param time the wait time of the internal receiver loop
-     *             this time should be between 1 and 1000 ms
-     *             and will be bounded to a value between it
-     *             when outside values are given if -1 is
-     *             given the default will be selected
+     * this time should be between 1 and 1000 ms
+     * and will be bounded to a value between it
+     * when outside values are given if -1 is
+     * given the default will be selected
      */
     public void setYAPIONPacketReceiver(YAPIONPacketReceiver yapionPacketReceiver, int time) {
         if (time == -1) time = DEFAULT_WAIT;

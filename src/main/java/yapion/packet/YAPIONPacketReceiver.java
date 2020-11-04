@@ -27,8 +27,10 @@ public class YAPIONPacketReceiver {
      * Creates an YAPIONPacketReceiver
      */
     public YAPIONPacketReceiver() {
-        handlerMap.put(ERROR_HANDLER, yapionPacket -> {});
-        handlerMap.put(EXCEPTION_HANDLER, yapionPacket -> {});
+        handlerMap.put(ERROR_HANDLER, yapionPacket -> {
+        });
+        handlerMap.put(EXCEPTION_HANDLER, yapionPacket -> {
+        });
     }
 
     /**
@@ -111,8 +113,8 @@ public class YAPIONPacketReceiver {
         };
         if (handler.runThread()) {
             Thread thread = new Thread(runnable);
-            thread.setName("handlePacket Thread");
-            thread.setDaemon(true);
+            thread.setName("Packet handler Thread (" + type + ")");
+            thread.setDaemon(handler.daemonThread());
             thread.start();
         } else {
             runnable.run();

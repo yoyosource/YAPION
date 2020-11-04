@@ -278,7 +278,7 @@ public final class YAPIONParser {
             int i = inputStream.read();
             if (i == -1) continue;
             time = System.currentTimeMillis();
-            c = (char)i;
+            c = (char) i;
 
             parseStep(lastChar, c);
         }
@@ -471,7 +471,7 @@ public final class YAPIONParser {
             if (current.length() != 0) {
                 add(new YAPIONValue<>(current.toString()));
             }
-            ((YAPIONMap)currentObject).finishMapping();
+            ((YAPIONMap) currentObject).finishMapping();
             currentObject = currentObject.getParent();
             reset();
             return;

@@ -19,7 +19,7 @@ public interface ValidationHook {
      * a complete validator for the whole Object, just for the data.
      *
      * @param path
-     * @return
+     * @return the new path
      */
     List<String> path(List<String> path);
 

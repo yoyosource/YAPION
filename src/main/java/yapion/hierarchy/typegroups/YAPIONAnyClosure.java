@@ -6,6 +6,7 @@ package yapion.hierarchy.typegroups;
 
 import yapion.hierarchy.typeinterfaces.ObjectOutput;
 
+@SuppressWarnings({"java:S1610"})
 public abstract class YAPIONAnyClosure implements ObjectOutput {
 
     public abstract long referenceValue();

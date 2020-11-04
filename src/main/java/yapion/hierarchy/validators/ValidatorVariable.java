@@ -77,7 +77,7 @@ public class ValidatorVariable {
         if (yapionAnyType.getType() != type.getType()) return false;
         if (type != ValidatorType.VALUE) return true;
         if (validation == null) return true;
-        Object o = ((YAPIONValue<?>)yapionAnyType).get();
+        Object o = ((YAPIONValue<?>) yapionAnyType).get();
         return validation.validate(o);
     }
 

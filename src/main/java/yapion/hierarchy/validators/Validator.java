@@ -25,6 +25,7 @@ public final class Validator {
 
     /**
      * JavaDoc found under {@link ValidationHook}
+     *
      * @param validationHook the {@link ValidationHook} to use
      */
     public Validator setValidationHook(ValidationHook validationHook) {

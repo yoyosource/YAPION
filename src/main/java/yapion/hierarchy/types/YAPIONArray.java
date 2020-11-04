@@ -215,9 +215,7 @@ public class YAPIONArray extends YAPIONDataType {
         array.set(index, yapionAnyType);
         return this;
     }
-
-
-
+    
     @Override
     public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String key) {
         try {

@@ -40,7 +40,7 @@ public final class YAPIONVariable extends YAPIONAnyClosure {
     }
 
     public long referenceValue() {
-        return ((long)name.length() ^ calc(name) ^ value.referenceValue()) & 0x7FFFFFFFFFFFFFFFL;
+        return ((long) name.length() ^ calc(name) ^ value.referenceValue()) & 0x7FFFFFFFFFFFFFFFL;
     }
 
     @Override

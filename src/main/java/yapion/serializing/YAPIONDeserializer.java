@@ -20,7 +20,6 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.parser.YAPIONParser;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.serializer.other.EnumSerializer;
 import yapion.utils.ModifierUtils;
@@ -62,8 +61,8 @@ public final class YAPIONDeserializer {
     }
 
     /**
-     * Discard the cache used by {@link #preDeserializationStep(Object)}
-     * and {@link #postDeserializationStep(Object)}.
+     * Discard the cache used by {@link #preDeserializationStep()}
+     * and {@link #postDeserializationStep()}.
      */
     public static void discardCache() {
         methodMap.clear();
@@ -73,6 +72,7 @@ public final class YAPIONDeserializer {
     private final YAPIONObject yapionObject;
     private final ContextManager contextManager;
     private TypeReMapper typeReMapper = new TypeReMapper();
+    private DeserializeResult deserializeResult = new DeserializeResult();
 
     private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
 
@@ -153,15 +153,14 @@ public final class YAPIONDeserializer {
         this.contextManager = yapionDeserializer.contextManager;
         this.pointerMap = yapionDeserializer.pointerMap;
         this.typeReMapper = yapionDeserializer.typeReMapper;
+        this.deserializeResult = yapionDeserializer.deserializeResult;
     }
 
     /**
-     * @deprecated since 0.12.0 use {@link #parse(YAPIONAnyType)} instead
-     *
      * @param yapionAnyType to parse
      * @param yapionDeserializer to parse with
-     *
      * @return the Object of the {@link YAPIONAnyType} inputted
+     * @deprecated since 0.12.0 use {@link #parse(YAPIONAnyType)} instead
      */
     @Deprecated
     public Object parse(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
@@ -239,15 +238,24 @@ public final class YAPIONDeserializer {
 
     public Class<?> getClass(String className) {
         switch (className) {
-            case "boolean": return boolean.class;
-            case "byte":    return byte.class;
-            case "short":   return short.class;
-            case "int":     return int.class;
-            case "long":    return long.class;
-            case "char":    return char.class;
-            case "float":   return float.class;
-            case "double":  return double.class;
-            default: break;
+            case "boolean":
+                return boolean.class;
+            case "byte":
+                return byte.class;
+            case "short":
+                return short.class;
+            case "int":
+                return int.class;
+            case "long":
+                return long.class;
+            case "char":
+                return char.class;
+            case "float":
+                return float.class;
+            case "double":
+                return double.class;
+            default:
+                break;
         }
         try {
             return Class.forName(className);
@@ -272,7 +280,7 @@ public final class YAPIONDeserializer {
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parseObject(YAPIONObject yapionObject) {
-        String type = ((YAPIONValue<String>)yapionObject.getVariable(TYPE_IDENTIFIER).getValue()).get();
+        String type = ((YAPIONValue<String>) yapionObject.getVariable(TYPE_IDENTIFIER).getValue()).get();
         type = typeReMapper.remap(type);
         Object o = serialize(yapionObject, type);
         if (o != null) {
@@ -291,9 +299,38 @@ public final class YAPIONDeserializer {
             } else {
                 object = ReflectionsUtils.constructObject(type, contextManager.is(clazz).data);
             }
-            preDeserializationStep(object);
+            preDeserializationStep();
             pointerMap.put(yapionObject, object);
 
+            for (String fieldName : yapionObject.getKeys()) {
+                if (fieldName.equals("@type")) continue;
+
+                Field field = null;
+                try {
+                    field = clazz.getDeclaredField(fieldName);
+                } catch (NoSuchFieldException | SecurityException e) {
+                    // Ignored
+                }
+                if (field == null) {
+                    deserializeResult.add(object, fieldName, yapionObject.getVariable(fieldName).getValue());
+                    continue;
+                }
+                field.setAccessible(true);
+                if (ModifierUtils.removed(field)) continue;
+                if (!contextManager.is(object, field).load) continue;
+
+                arrayType = remove(field.getType().getTypeName(), '[', ']');
+
+                YAPIONAnyType yapionAnyType = yapionObject.getVariable(field.getName()).getValue();
+                YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
+                if (isValid(field, yapionDeserializeType)) {
+                    field.set(object, serialize(yapionAnyType, yapionDeserializeType.type().getTypeName()));
+                } else {
+                    field.set(object, parse(yapionAnyType));
+                }
+            }
+
+            /*
             Field[] fields = object.getClass().getDeclaredFields();
             for (Field field : fields) {
                 field.setAccessible(true);
@@ -312,8 +349,8 @@ public final class YAPIONDeserializer {
                 } else {
                     field.set(object, parse(yapionAnyType));
                 }
-            }
-            postDeserializationStep(object);
+            }*/
+            postDeserializationStep();
         } catch (ClassNotFoundException e) {
             logger.trace("The class '" + type + "' was not found.", e.getCause());
         } catch (IllegalAccessException e) {
@@ -362,23 +399,21 @@ public final class YAPIONDeserializer {
         public ObjectCache(Object object) {
             Method[] methods = object.getClass().getDeclaredMethods();
             for (Method method : methods) {
+                if (method.getParameterCount() != 0) continue;
                 YAPIONPreDeserialization yapionPreDeserialization = method.getAnnotation(YAPIONPreDeserialization.class);
                 YAPIONPostDeserialization yapionPostDeserialization = method.getAnnotation(YAPIONPostDeserialization.class);
 
-                if (yapionPreDeserialization != null) cachePre(yapionPreDeserialization.context(), method);
-                if (yapionPostDeserialization != null) cachePost(yapionPostDeserialization.context(), method);
+                if (yapionPreDeserialization != null) cache(preCache, yapionPreDeserialization.context(), method);
+                if (yapionPostDeserialization != null) cache(postCache, yapionPostDeserialization.context(), method);
             }
         }
 
-        private void cachePre(String[] context, Method method) {
+        private void cache(Map<String, Method> cache, String[] context, Method method) {
             for (String s : context) {
-                preCache.put(s, method);
+                cache.put(s, method);
             }
-        }
-
-        private void cachePost(String[] context, Method method) {
-            for (String s : context) {
-                postCache.put(s, method);
+            if (context.length == 0) {
+                cache.put("", method);
             }
         }
 
@@ -395,7 +430,7 @@ public final class YAPIONDeserializer {
         }
     }
 
-    private void preDeserializationStep(Object object) {
+    private void preDeserializationStep() {
         String key = object.getClass().getTypeName();
         if (!methodMap.containsKey(key)) {
             methodMap.put(key, new ObjectCache(object));
@@ -403,7 +438,7 @@ public final class YAPIONDeserializer {
         methodMap.get(key).pre(object, contextManager);
     }
 
-    private void postDeserializationStep(Object object) {
+    private void postDeserializationStep() {
         String key = object.getClass().getTypeName();
         if (!methodMap.containsKey(key)) {
             methodMap.put(key, new ObjectCache(object));
@@ -419,12 +454,21 @@ public final class YAPIONDeserializer {
     }
 
     /**
-     * Get the internal parsed Object.
+     * Get the deserialized Object.
      *
      * @return Object from the YAPIONObject to deserialize
      */
     public Object getObject() {
         return object;
+    }
+
+    /**
+     * Get the {@link DeserializeResult}.
+     *
+     * @return {@link DeserializeResult} used by this instance
+     */
+    public DeserializeResult getDeserializeResult() {
+        return deserializeResult;
     }
 
 }

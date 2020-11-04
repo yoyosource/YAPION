@@ -42,11 +42,15 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
         return hasReferenceValue;
     }
 
+    public YAPIONAnyType copy() {
+        return null;
+    }
+
     // Depth System / Pretty YAPION String
     public final int getDepth() {
         int depth = 0;
         YAPIONAnyType yapionAnyType = this;
-        while ((yapionAnyType = yapionAnyType.getParent()) != null){
+        while ((yapionAnyType = yapionAnyType.getParent()) != null) {
             depth++;
         }
         return depth;
@@ -90,6 +94,10 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
 
     public final YAPIONAnyType getParent() {
         return parent;
+    }
+
+    public final boolean hasParent() {
+        return valuePresent;
     }
 
     // Parse Time
