@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
@@ -386,7 +387,7 @@ public class SerializeManager {
      * DeserializationGetter. Those are all
      * FunctionalInterfaces with just one method to override.
      * This makes the use off those interfaces really easy.
-     * If any of the three arguments is {@code null} an
+     * If any of the three arguments are {@code null} an
      * YAPIONException is thrown.
      *
      * @param typeGetter the TypeGetter
@@ -397,6 +398,9 @@ public class SerializeManager {
      */
     @SuppressWarnings({"java:S100"})
     public static <T> SerializerObject<T> SerializerObject(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONObject> serializationGetter, DeserializationGetter<T, YAPIONObject> deserializationGetter) {
+        if (typeGetter == null) throw new YAPIONException();
+        if (serializationGetter == null) throw new YAPIONException();
+        if (deserializationGetter == null) throw new YAPIONException();
         return new SerializerObject<T>() {
             @Override
             public Class<T> type() {
@@ -426,7 +430,7 @@ public class SerializeManager {
      * DeserializationGetter. Those are all
      * FunctionalInterfaces with just one method to override.
      * This makes the use off those interfaces really easy.
-     * If any of the three arguments is {@code null} an
+     * If any of the three arguments are {@code null} an
      * YAPIONException is thrown.
      *
      * @param typeGetter the TypeGetter
@@ -437,6 +441,9 @@ public class SerializeManager {
      */
     @SuppressWarnings({"java:S100"})
     public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONMap> serializationGetter, DeserializationGetter<T, YAPIONMap> deserializationGetter) {
+        if (typeGetter == null) throw new YAPIONException();
+        if (serializationGetter == null) throw new YAPIONException();
+        if (deserializationGetter == null) throw new YAPIONException();
         return new SerializerMap<T>() {
             @Override
             public Class<T> type() {
@@ -466,7 +473,7 @@ public class SerializeManager {
      * DeserializationGetter. Those are all
      * FunctionalInterfaces with just one method to override.
      * This makes the use off those interfaces really easy.
-     * If any of the three arguments is {@code null} an
+     * If any of the three arguments are {@code null} an
      * YAPIONException is thrown.
      *
      * @param typeGetter the TypeGetter
@@ -477,6 +484,9 @@ public class SerializeManager {
      */
     @SuppressWarnings({"java:S100"})
     public static <T extends List<?>> SerializerList<T> SerializerList(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
+        if (typeGetter == null) throw new YAPIONException();
+        if (serializationGetter == null) throw new YAPIONException();
+        if (deserializationGetter == null) throw new YAPIONException();
         return new SerializerList<T>() {
             @Override
             public Class<T> type() {
@@ -506,7 +516,7 @@ public class SerializeManager {
      * DeserializationGetter. Those are all
      * FunctionalInterfaces with just one method to override.
      * This makes the use off those interfaces really easy.
-     * If any of the three arguments is {@code null} an
+     * If any of the three arguments are {@code null} an
      * YAPIONException is thrown.
      *
      * @param typeGetter the TypeGetter
@@ -517,6 +527,9 @@ public class SerializeManager {
      */
     @SuppressWarnings({"java:S100"})
     public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
+        if (typeGetter == null) throw new YAPIONException();
+        if (serializationGetter == null) throw new YAPIONException();
+        if (deserializationGetter == null) throw new YAPIONException();
         return new SerializerQueue<T>() {
             @Override
             public Class<T> type() {
@@ -546,7 +559,7 @@ public class SerializeManager {
      * DeserializationGetter. Those are all
      * FunctionalInterfaces with just one method to override.
      * This makes the use off those interfaces really easy.
-     * If any of the three arguments is {@code null} an
+     * If any of the three arguments are {@code null} an
      * YAPIONException is thrown.
      *
      * @param typeGetter the TypeGetter
@@ -557,6 +570,9 @@ public class SerializeManager {
      */
     @SuppressWarnings({"java:S100"})
     public static <T extends Set<?>> SerializerSet<T> SerializerSet(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
+        if (typeGetter == null) throw new YAPIONException();
+        if (serializationGetter == null) throw new YAPIONException();
+        if (deserializationGetter == null) throw new YAPIONException();
         return new SerializerSet<T>() {
             @Override
             public Class<T> type() {

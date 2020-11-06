@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if (( $# != 2 )); then
+if (($# != 2)); then
   echo "Please enter all needed parameters"
   echo "1. Version"
   echo "2. Named Path"
@@ -32,7 +32,7 @@ git tag "V$version"
 
 echo "Should this commit be pushed? [Y/n]"
 read answer
-if [ "$answer" == "${answer#[Yy]}" ] ;then
+if [ "$answer" == "${answer#[Yy]}" ]; then
   echo "Use 'git push' and 'git push --tags' to manually push this to origin."
   exit
 fi

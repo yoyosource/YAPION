@@ -63,7 +63,7 @@ YAPION as a object notation has 5 types. Those are value, array, object, map (se
 Values are indicated by '(...)', arrays by '\[...]', objects by '{...}', map by '<...> and pointers by '->...', the 3 dots are representing the value, or the key value pairs.
 
 ### Benefits of YAPION
-- Most of the time JSON is nearly **1.15** to **1.4** time as long as the YAPION equivalent.
+- Most of the time JSON is nearly **1.15** to **1.4** time as long as the YAPION equivalent. This does not apply to the serialized stuff.
 - YAPION has native map support to easier serialize the Java counter part.
 - YAPION has native pointer support to easier serialize Java references to other Objects in multiple places.
 - YAPION's primitive types know what Java Type they should be.
@@ -139,27 +139,28 @@ Example for an YAPION map with Object to Object mapping
 ### Pointer
 These pointers point to another YAPION Object in the same serialization. For reconstructing the recursion this pointer points to the object it is referring to.
 A pointer is not a hash and is not intended to be secure. If 2 objects in your tree have the same pointer it will point to the first by default.
-All pointer shown in here are valid pointers but are mostly meaningless because a pointer gets constructed by your current object state.
-The list of prefixes for pointers is as follows: '0123456789ABCDEF'
+All pointers shown in here are valid pointers but are mostly meaningless because a pointer gets constructed by your current object state.
+The list of chars for pointers is as follows: '0123456789ABCDEF'
 ```
 Example for an YAPION pointer
 {hello->7FFFFFE53E6CBDFE}
 ```
 
 ## Code examples
-### Parsing
+### [Parsing](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/hierarchy)
+The [Parser](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/parser) itself is somewhere else.
 ```java
 YAPIONObject yapionObject = YAPIONParser.parse("[...]");
 YAPIONObject yapionObject = YAPIONParser.parse(new FileInputStream(new File([...])));
 ```
 
-### Serializing
+### [Serializing](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/serializing)
 ```java
 YAPIONObject yapionObject = YAPIONSerializer.serialize([...]);
 YAPIONObject yapionObject = YAPIONSerializer.serialize([...], "[...]");
 ```
 
-### Deserializing
+### [Deserializing](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/serializing)
 ```java
 Object object = YAPIONDeserializer.deserialize([...]);
 Object object = YAPIONDeserializer.deserialize([...], "[...]");
