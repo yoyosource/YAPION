@@ -4,6 +4,7 @@
 
 package yapion.packet;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
@@ -15,10 +16,10 @@ import java.util.Map;
 
 @YAPIONLoadExclude(context = "*")
 @YAPIONSaveExclude(context = "*")
+@Slf4j
 public class YAPIONPacketReceiver {
 
     private final Map<String, YAPIONPacketHandler> handlerMap = new HashMap<>();
-    private static final Logger logger = LoggerFactory.getLogger(YAPIONPacketReceiver.class);
 
     public static final String ERROR_HANDLER = "@error";
     public static final String EXCEPTION_HANDLER = "@exception";
@@ -107,7 +108,7 @@ public class YAPIONPacketReceiver {
             try {
                 handler.handlePacket(yapionPacket);
             } catch (Exception e) {
-                logger.warn(String.format("The packet handler with type '%s' threw an exception.", type), e.getCause());
+                log.warn(String.format("The packet handler with type '%s' threw an exception.", type), e.getCause());
                 if (!handler.ignoreException()) handleException(yapionPacket, e);
             }
         };
@@ -125,7 +126,7 @@ public class YAPIONPacketReceiver {
         try {
             handlerMap.get(ERROR_HANDLER).handlePacket(yapionPacket);
         } catch (Exception e) {
-            logger.warn("The packet handler with type '" + ERROR_HANDLER + "' threw an exception.", e.getCause());
+            log.warn("The packet handler with type '" + ERROR_HANDLER + "' threw an exception.", e.getCause());
             handleException(yapionPacket, e);
         }
     }
@@ -135,7 +136,7 @@ public class YAPIONPacketReceiver {
             yapionPacket.add(EXCEPTION_HANDLER, exception);
             handlerMap.get(EXCEPTION_HANDLER).handlePacket(yapionPacket);
         } catch (Exception e) {
-            logger.warn("The packet handler with type '" + EXCEPTION_HANDLER + "' threw an exception.", e.getCause());
+            log.warn("The packet handler with type '" + EXCEPTION_HANDLER + "' threw an exception.", e.getCause());
         }
     }
 

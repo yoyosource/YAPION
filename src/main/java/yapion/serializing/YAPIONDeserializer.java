@@ -5,6 +5,9 @@
 package yapion.serializing;
 
 import lombok.NonNull;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONDeserializeType;
@@ -34,6 +37,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
+@Slf4j
 public final class YAPIONDeserializer {
 
     private static int cacheSize = 100;
@@ -76,8 +80,6 @@ public final class YAPIONDeserializer {
     private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
 
     private String arrayType = "";
-
-    private static final Logger logger = LoggerFactory.getLogger(YAPIONDeserializer.class);
 
     /**
      * Serialize an YAPION Object to an Object.
@@ -354,11 +356,11 @@ public final class YAPIONDeserializer {
             }*/
             postDeserializationStep();
         } catch (ClassNotFoundException e) {
-            logger.trace("The class '" + type + "' was not found.", e.getCause());
+            log.warn("The class '" + type + "' was not found.", e.getCause());
         } catch (IllegalAccessException e) {
-            logger.trace("", e.getCause());
+            log.warn("", e.getCause());
         } catch (YAPIONReflectionException e) {
-            logger.trace("Exception while creating an Instance of the object '" + type + "'", e.getCause());
+            log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
@@ -395,8 +397,8 @@ public final class YAPIONDeserializer {
 
     private class ObjectCache {
 
-        private Map<String, Method> preCache = new HashMap<>();
-        private Map<String, Method> postCache = new HashMap<>();
+        private final Map<String, Method> preCache = new HashMap<>();
+        private final Map<String, Method> postCache = new HashMap<>();
 
         public ObjectCache(Object object) {
             Method[] methods = object.getClass().getDeclaredMethods();
