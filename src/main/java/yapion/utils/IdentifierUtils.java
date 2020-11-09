@@ -8,7 +8,7 @@ import yapion.hierarchy.types.*;
 import yapion.parser.JSONMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
-import yapion.serializing.serializer.other.EnumSerializer;
+import yapion.serializing.serializer.object.other.EnumSerializer;
 
 public class IdentifierUtils {
 

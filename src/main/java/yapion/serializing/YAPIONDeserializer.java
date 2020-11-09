@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.object.YAPIONPostDeserialization;
 import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONSaveExclude;
@@ -21,7 +20,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.DeserializeData;
-import yapion.serializing.serializer.other.EnumSerializer;
+import yapion.serializing.serializer.object.other.EnumSerializer;
 import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
 
@@ -265,13 +264,20 @@ public final class YAPIONDeserializer {
     }
 
     private Object serialize(YAPIONAnyType yapionAnyType, String type) {
-        InternalSerializer<?> serializer = SerializeManager.get(type);
+        InternalSerializer<?> serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
             if (serializer instanceof EnumSerializer) {
                 YAPIONObject enumObject = (YAPIONObject) yapionAnyType;
                 String enumType = enumObject.getValue(ENUM_IDENTIFIER, "").get();
                 enumType = typeReMapper.remap(enumType);
-                enumObject.add(ENUM_IDENTIFIER, enumType);
+
+                YAPIONObject enumCopyObject = new YAPIONObject();
+                enumCopyObject.add(TYPE_IDENTIFIER, Enum.class.getTypeName());
+                enumCopyObject.add(ENUM_IDENTIFIER, enumType);
+                enumCopyObject.add("value", enumObject.getValue("value", "").get());
+                enumCopyObject.add("ordinal", enumObject.getValue("ordinal", 0).get());
+
+                return serializer.deserialize(new DeserializeData<>(enumCopyObject, contextManager.get(), this));
             }
             return serializer.deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this));
         }
@@ -294,16 +300,12 @@ public final class YAPIONDeserializer {
                 throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
             }
 
-            if (clazz.getDeclaredAnnotation(YAPIONObjenesis.class) != null) {
-                object = ReflectionsUtils.constructObjectObjenesis(type);
-            } else {
-                object = ReflectionsUtils.constructObject(type, contextManager.is(clazz).data);
-            }
+            object = SerializeManager.getObjectInstance(clazz, type, contextManager);
             preDeserializationStep();
             pointerMap.put(yapionObject, object);
 
             for (String fieldName : yapionObject.getKeys()) {
-                if (fieldName.equals("@type")) continue;
+                if (fieldName.equals(TYPE_IDENTIFIER)) continue;
 
                 Field field = null;
                 try {
@@ -370,7 +372,7 @@ public final class YAPIONDeserializer {
         Class<?> clazz = yapionDeserializeType.type();
         while (!clazz.getTypeName().equals("java.lang.Object")) {
             for (Class<?> ifc : clazz.getInterfaces()) {
-                if (ifc.getTypeName().equals(type) && SerializeManager.get(yapionDeserializeType.type().getTypeName()) != null) {
+                if (ifc.getTypeName().equals(type) && SerializeManager.getInternalSerializer(yapionDeserializeType.type().getTypeName()) != null) {
                     return true;
                 }
             }

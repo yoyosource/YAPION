@@ -102,7 +102,7 @@ public final class YAPIONSerializer {
             if (object.getClass().isEnum()) {
                 type = "java.lang.Enum";
             }
-            InternalSerializer serializer = SerializeManager.get(type);
+            InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
             if (serializer != null && !serializer.empty()) {
                 return serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
             } else {
@@ -121,7 +121,7 @@ public final class YAPIONSerializer {
         if (object.getClass().isEnum()) {
             type = "java.lang.Enum";
         }
-        InternalSerializer serializer = SerializeManager.get(type);
+        InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
             this.yapionObject = (YAPIONObject) serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
             return this;

@@ -9,6 +9,7 @@ import org.atteo.classindex.ClassIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
@@ -76,6 +77,8 @@ public class SerializeManager {
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
     private static final GroupList nSerializerGroups = new GroupList();
     private static final GroupList oSerializerGroups = new GroupList();
+
+    private static final Map<Class<?>, InstanceFactoryInterface<?>> instanceFactoryMap = new HashMap<>();
 
     static {
         ClassIndex.getAnnotated(SerializerImplementation.class).forEach(SerializeManager::add);
@@ -373,7 +376,7 @@ public class SerializeManager {
     }
 
     @SuppressWarnings({"java:S1452"})
-    static InternalSerializer<?> get(String type) {
+    static InternalSerializer<?> getInternalSerializer(String type) {
         if (oSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
         InternalSerializer<?> serializer = serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
         if (serializer != null) return serializer;
@@ -382,29 +385,29 @@ public class SerializeManager {
     }
 
     /**
-     * Create a Object Serializer from three interfaces:
-     * TypeGetter, SerializationGetter and
-     * DeserializationGetter. Those are all
-     * FunctionalInterfaces with just one method to override.
-     * This makes the use off those interfaces really easy.
-     * If any of the three arguments are {@code null} an
-     * YAPIONException is thrown.
+     * Create a {@link SerializerQueue} from two interfaces:
+     * {@link SerializationGetter} and {@link DeserializationGetter}.
+     * Those are all FunctionalInterfaces with just one
+     * method to override. This makes the use off those
+     * interfaces really easy. If any of the three arguments
+     * are {@code null} an YAPIONException is thrown.
      *
-     * @param typeGetter the TypeGetter
+     * @param clazz the Class
      * @param serializationGetter the SerializationGetter
      * @param deserializationGetter the DeserializationGetter
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
+
     @SuppressWarnings({"java:S100"})
-    public static <T> SerializerObject<T> SerializerObject(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONObject> serializationGetter, DeserializationGetter<T, YAPIONObject> deserializationGetter) {
-        if (typeGetter == null) throw new YAPIONException();
+    public static <T> SerializerObject<T> SerializerObject(Class<T> clazz, SerializationGetter<T, YAPIONObject> serializationGetter, DeserializationGetter<T, YAPIONObject> deserializationGetter) {
+        if (clazz == null) throw new YAPIONException();
         if (serializationGetter == null) throw new YAPIONException();
         if (deserializationGetter == null) throw new YAPIONException();
         return new SerializerObject<T>() {
             @Override
             public Class<T> type() {
-                return typeGetter.type();
+                return clazz;
             }
 
             @Override
@@ -419,35 +422,30 @@ public class SerializeManager {
         };
     }
 
-    @SuppressWarnings({"java:S100"})
-    public static <T> SerializerObject<T> SerializerObject(Class<T> clazz, SerializationGetter<T, YAPIONObject> serializationGetter, DeserializationGetter<T, YAPIONObject> deserializationGetter) {
-        return SerializerObject(() -> clazz, serializationGetter, deserializationGetter);
-    }
-
     /**
-     * Create a Map Serializer from three interfaces:
-     * TypeGetter, SerializationGetter and
-     * DeserializationGetter. Those are all
-     * FunctionalInterfaces with just one method to override.
-     * This makes the use off those interfaces really easy.
-     * If any of the three arguments are {@code null} an
-     * YAPIONException is thrown.
+     * Create a {@link SerializerMap} from two interfaces:
+     * {@link SerializationGetter} and {@link DeserializationGetter}.
+     * Those are all FunctionalInterfaces with just one
+     * method to override. This makes the use off those
+     * interfaces really easy. If any of the three arguments
+     * are {@code null} an YAPIONException is thrown.
      *
-     * @param typeGetter the TypeGetter
+     * @param clazz the Class
      * @param serializationGetter the SerializationGetter
      * @param deserializationGetter the DeserializationGetter
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
+
     @SuppressWarnings({"java:S100"})
-    public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONMap> serializationGetter, DeserializationGetter<T, YAPIONMap> deserializationGetter) {
-        if (typeGetter == null) throw new YAPIONException();
+    public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(Class<T> clazz, SerializationGetter<T, YAPIONMap> serializationGetter, DeserializationGetter<T, YAPIONMap> deserializationGetter) {
+        if (clazz == null) throw new YAPIONException();
         if (serializationGetter == null) throw new YAPIONException();
         if (deserializationGetter == null) throw new YAPIONException();
         return new SerializerMap<T>() {
             @Override
             public Class<T> type() {
-                return typeGetter.type();
+                return clazz;
             }
 
             @Override
@@ -462,35 +460,30 @@ public class SerializeManager {
         };
     }
 
-    @SuppressWarnings({"java:S100"})
-    public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(Class<T> clazz, SerializationGetter<T, YAPIONMap> serializationGetter, DeserializationGetter<T, YAPIONMap> deserializationGetter) {
-        return SerializerMap(() -> clazz, serializationGetter, deserializationGetter);
-    }
-
     /**
-     * Create a List Serializer from three interfaces:
-     * TypeGetter, SerializationGetter and
-     * DeserializationGetter. Those are all
-     * FunctionalInterfaces with just one method to override.
-     * This makes the use off those interfaces really easy.
-     * If any of the three arguments are {@code null} an
-     * YAPIONException is thrown.
+     * Create a {@link SerializerList} from two interfaces:
+     * {@link SerializationGetter} and {@link DeserializationGetter}.
+     * Those are all FunctionalInterfaces with just one
+     * method to override. This makes the use off those
+     * interfaces really easy. If any of the three arguments
+     * are {@code null} an YAPIONException is thrown.
      *
-     * @param typeGetter the TypeGetter
+     * @param clazz the Class
      * @param serializationGetter the SerializationGetter
      * @param deserializationGetter the DeserializationGetter
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
+
     @SuppressWarnings({"java:S100"})
-    public static <T extends List<?>> SerializerList<T> SerializerList(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        if (typeGetter == null) throw new YAPIONException();
+    public static <T extends List<?>> SerializerList<T> SerializerList(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
+        if (clazz == null) throw new YAPIONException();
         if (serializationGetter == null) throw new YAPIONException();
         if (deserializationGetter == null) throw new YAPIONException();
         return new SerializerList<T>() {
             @Override
             public Class<T> type() {
-                return typeGetter.type();
+                return clazz;
             }
 
             @Override
@@ -505,35 +498,29 @@ public class SerializeManager {
         };
     }
 
-    @SuppressWarnings({"java:S100"})
-    public static <T extends List<?>> SerializerList<T> SerializerList(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        return SerializerList(() -> clazz, serializationGetter, deserializationGetter);
-    }
-
     /**
-     * Create a Queue Serializer from three interfaces:
-     * TypeGetter, SerializationGetter and
-     * DeserializationGetter. Those are all
-     * FunctionalInterfaces with just one method to override.
-     * This makes the use off those interfaces really easy.
-     * If any of the three arguments are {@code null} an
-     * YAPIONException is thrown.
+     * Create a {@link SerializerQueue} from two interfaces:
+     * {@link SerializationGetter} and {@link DeserializationGetter}.
+     * Those are all FunctionalInterfaces with just one
+     * method to override. This makes the use off those
+     * interfaces really easy. If any of the three arguments
+     * are {@code null} an YAPIONException is thrown.
      *
-     * @param typeGetter the TypeGetter
+     * @param clazz the Class
      * @param serializationGetter the SerializationGetter
      * @param deserializationGetter the DeserializationGetter
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
     @SuppressWarnings({"java:S100"})
-    public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        if (typeGetter == null) throw new YAPIONException();
+    public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
+        if (clazz == null) throw new YAPIONException();
         if (serializationGetter == null) throw new YAPIONException();
         if (deserializationGetter == null) throw new YAPIONException();
         return new SerializerQueue<T>() {
             @Override
             public Class<T> type() {
-                return typeGetter.type();
+                return clazz;
             }
 
             @Override
@@ -548,35 +535,29 @@ public class SerializeManager {
         };
     }
 
-    @SuppressWarnings({"java:S100"})
-    public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        return SerializerQueue(() -> clazz, serializationGetter, deserializationGetter);
-    }
-
     /**
-     * Create a Set Serializer from three interfaces:
-     * TypeGetter, SerializationGetter and
-     * DeserializationGetter. Those are all
-     * FunctionalInterfaces with just one method to override.
-     * This makes the use off those interfaces really easy.
-     * If any of the three arguments are {@code null} an
-     * YAPIONException is thrown.
+     * Create a {@link SerializerSet} from two interfaces:
+     * {@link SerializationGetter} and {@link DeserializationGetter}.
+     * Those are all FunctionalInterfaces with just one
+     * method to override. This makes the use off those
+     * interfaces really easy. If any of the three arguments
+     * are {@code null} an YAPIONException is thrown.
      *
-     * @param typeGetter the TypeGetter
+     * @param clazz the Class
      * @param serializationGetter the SerializationGetter
      * @param deserializationGetter the DeserializationGetter
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
     @SuppressWarnings({"java:S100"})
-    public static <T extends Set<?>> SerializerSet<T> SerializerSet(TypeGetter<T> typeGetter, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        if (typeGetter == null) throw new YAPIONException();
+    public static <T extends Set<?>> SerializerSet<T> SerializerSet(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
+        if (clazz == null) throw new YAPIONException();
         if (serializationGetter == null) throw new YAPIONException();
         if (deserializationGetter == null) throw new YAPIONException();
         return new SerializerSet<T>() {
             @Override
             public Class<T> type() {
-                return typeGetter.type();
+                return clazz;
             }
 
             @Override
@@ -589,18 +570,6 @@ public class SerializeManager {
                 return deserializationGetter.deserialize(deserializeData);
             }
         };
-    }
-
-    @SuppressWarnings({"java:S100"})
-    public static <T extends Set<?>> SerializerSet<T> SerializerSet(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        return SerializerSet(() -> clazz, serializationGetter, deserializationGetter);
-    }
-
-    @FunctionalInterface
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
-    public interface TypeGetter<T> {
-        Class<T> type();
     }
 
     @FunctionalInterface
@@ -615,6 +584,67 @@ public class SerializeManager {
     @YAPIONLoadExclude(context = "*")
     public interface DeserializationGetter<T, R extends YAPIONAnyType> {
         T deserialize(DeserializeData<R> deserializeData);
+    }
+
+    /**
+     * Add an {@link InstanceFactory} or {@link InstanceFactoryInterface}
+     * to the SerializerManager which will be used to create instances
+     * of a given {@link Class}. This can speed up the deserialization
+     * process because there are fewer reflection accesses.
+     *
+     * @param instanceFactory the factory
+     */
+    public static void add(InstanceFactoryInterface<?> instanceFactory) {
+        if (!instanceFactoryMap.containsKey(instanceFactory.type())) {
+            instanceFactoryMap.put(instanceFactory.type(), instanceFactory);
+        }
+    }
+
+    /**
+     * Create a {@link InstanceFactory} from one interface:
+     * {@link InstanceGetter}
+     * Which is a FunctionalInterface with just one method
+     * to override. This makes the use off this interface
+     * really easy. If any of the two arguments are
+     * {@code null} an YAPIONException is thrown.
+     *
+     * @param clazz the Class
+     * @param instanceGetter the InstanceGetter
+     * @param <T> the Instance type
+     * @return the InstanceFactory that wraps the Interface
+     */
+    public static <T> InstanceFactory<T> InstanceFactory(Class<T> clazz, InstanceGetter<T> instanceGetter) {
+        if (clazz == null) throw new YAPIONException();
+        if (instanceGetter == null) throw new YAPIONException();
+        return new InstanceFactory<T>() {
+            @Override
+            public Class type() {
+                return clazz;
+            }
+
+            @Override
+            public T instance() {
+                return instanceGetter.instance();
+            }
+        };
+    }
+
+    @FunctionalInterface
+    @YAPIONSaveExclude(context = "*")
+    @YAPIONLoadExclude(context = "*")
+    public interface InstanceGetter<T> {
+        T instance();
+    }
+
+    static Object getObjectInstance(Class<?> clazz, String type, ContextManager contextManager) {
+        if (instanceFactoryMap.containsKey(clazz)) {
+            return instanceFactoryMap.get(clazz).instance();
+        }
+        if (clazz.getDeclaredAnnotation(YAPIONObjenesis.class) != null) {
+            return ReflectionsUtils.constructObjectObjenesis(type);
+        } else {
+            return ReflectionsUtils.constructObject(type, contextManager.is(clazz).data);
+        }
     }
 
 }
