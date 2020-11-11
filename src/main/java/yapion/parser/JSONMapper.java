@@ -20,11 +20,11 @@ import static yapion.utils.IdentifierUtils.*;
 
 public class JSONMapper {
 
-    private YAPIONObject json;
+    private final YAPIONObject json;
     private YAPIONObject result = null;
 
-    private List<YAPIONObject> yapionObjectList = new ArrayList<>();
-    private List<YAPIONPointer> yapionPointerList = new ArrayList<>();
+    private final List<YAPIONObject> yapionObjectList = new ArrayList<>();
+    private final List<YAPIONPointer> yapionPointerList = new ArrayList<>();
 
     private JSONMapper(YAPIONObject json) {
         this.json = json;
@@ -173,7 +173,7 @@ public class JSONMapper {
     }
 
     private YAPIONValue<Long> mapLongValue(YAPIONObject yapionObject) {
-        return new YAPIONValue<>(((long) (int) yapionObject.getValue(LONG_IDENTIFIER).get()));
+        return new YAPIONValue<>(Long.parseLong(yapionObject.getValue(LONG_IDENTIFIER).get().toString()));
     }
 
     private YAPIONValue<Double> mapDoubleValue(YAPIONObject yapionObject) {

@@ -15,26 +15,33 @@ import java.util.Map;
 public class TestFactory {
 
     private static final Map<Integer, long[]> longMap = new HashMap<>();
+    private static final int round = 100;
+    private static final InstanceFactory<TestFactory> instanceFactory = new InstanceFactory<TestFactory>() {
+        @Override
+        public Class<TestFactory> type() {
+            return TestFactory.class;
+        }
+
+        @Override
+        public TestFactory instance() {
+            return new TestFactory();
+        }
+    };
 
     public static void main(String[] args) {
-        InstanceFactory<TestFactory> instanceFactory = new InstanceFactory<TestFactory>() {
-            @Override
-            public Class<TestFactory> type() {
-                return TestFactory.class;
-            }
-
-            @Override
-            public TestFactory instance() {
-                return new TestFactory();
-            }
-        };
         if (false) {
             instanceFactory.add();
         }
 
-        int round = 100;
+        benchmarkWithOffset(0, round);
+        instanceFactory.add();
+        benchmarkWithOffset(2, round);
+        System.out.println(YAPIONSerializer.serialize(longMap).toYAPIONStringPrettified());
+        System.out.println();
+        System.out.println(YAPIONSerializer.serialize(longMap).toYAPIONString());
+    }
 
-        /*
+    private static void benchmarkTest1() {
         long[] serializeWithoutFactory = new long[]{0, 0};
         long[] serializeWithFactory = new long[]{0, 0};
 
@@ -60,30 +67,23 @@ public class TestFactory {
         System.out.println("SERIALIZE: " + (serializeWithoutFactory[0] / (round / 2)) + "   DESERIALIZE: " + (serializeWithoutFactory[1] / (round / 2)));
         System.out.println("With Factory SERIALIZE");
         System.out.println("SERIALIZE: " + (serializeWithFactory[0] / (round / 2)) + "   DESERIALIZE: " + (serializeWithFactory[1] / (round / 2)));
-        */
-
-        benchmarkWithOffset(0, round);
-        instanceFactory.add();
-        benchmarkWithOffset(2, round);
-        System.out.println(longMap);
     }
 
     private static void benchmarkWithOffset(int offset, int rounds) {
-        for (int i = 0; i < 1024; i++) {
-            if (i != 0) {
-                System.out.println("ID: " + i);
-            }
+        int benchmarkOffset = 128 * 2;
+        for (int i = 0; i < 128; i++) {
+            System.out.println("ID: " + (i + benchmarkOffset));
             long[] benchmark = new long[]{0, 0};
             for (int j = 0; j < rounds; j++) {
-                long[] longs = benchmark(i);
+                long[] longs = benchmark(i + benchmarkOffset);
                 benchmark[0] += longs[0];
                 benchmark[1] += longs[1];
             }
-            if (!longMap.containsKey(i)) {
-                longMap.put(i, new long[4]);
+            if (!longMap.containsKey(i + benchmarkOffset)) {
+                longMap.put(i + benchmarkOffset, new long[4]);
             }
-            longMap.get(i)[offset + 0] = benchmark[0];
-            longMap.get(i)[offset + 1] = benchmark[1];
+            longMap.get(i + benchmarkOffset)[offset + 0] = benchmark[0] / rounds;
+            longMap.get(i + benchmarkOffset)[offset + 1] = benchmark[1] / rounds;
         }
     }
 
