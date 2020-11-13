@@ -157,7 +157,7 @@ public class YAPIONArray extends YAPIONDataType {
             }
         }
         if (!array.isEmpty()) {
-            outputStream.write(bytes("\n" + reducedIndent()));
+            outputStream.write(bytes(",\n" + reducedIndent()));
         }
         outputStream.write(bytes("]"));
     }
