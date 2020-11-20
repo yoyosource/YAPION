@@ -81,7 +81,7 @@ public class SerializeManager {
     static {
         ClassIndex.getAnnotated(SerializerImplementation.class).forEach(SerializeManager::add);
         if (serializerMap.isEmpty()) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(SerializeManager.class.getResourceAsStream("/yapion/" + SerializerImplementation.class.getSimpleName())));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(SerializeManager.class.getResourceAsStream("/yapion/" + SerializerImplementation.class.getTypeName())));
             bufferedReader.lines().forEach(s -> {
                 try {
                     add(Class.forName(s));
