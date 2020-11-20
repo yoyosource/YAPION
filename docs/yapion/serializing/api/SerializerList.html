@@ -27,8 +27,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":6,"i2":6,"i3":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -160,7 +160,7 @@ implements <a href="SerializerListInterface.html" title="interface in yapion.ser
 </a>
 <h3>Method Summary</h3>
 <div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t3" class="tableTab" onclick="show(4);">Abstract Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
+<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
 <div id="memberSummary_tabpanel" role="tabpanel">
 <table aria-labelledby="t0">
 <tr>
@@ -177,34 +177,6 @@ implements <a href="SerializerListInterface.html" title="interface in yapion.ser
  <a href="../SerializeManager.html#add(yapion.serializing.api.SerializerListInterface)"><code>SerializeManager.add(SerializerListInterface)</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
-<td class="colFirst"><code>abstract <a href="SerializerList.html" title="type parameter in SerializerList">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deserialize(yapion.hierarchy.types.YAPIONArray,yapion.serializing.YAPIONDeserializer)">deserialize</a></span>&#8203;(<a href="../../hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a>&nbsp;yapionArray,
-           <a href="../YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</code></th>
-<td class="colLast">
-<div class="block">This method is used to deserialize the type defined
- by <a href="#type()"><code>type()</code></a>.</div>
-</td>
-</tr>
-<tr class="altColor" id="i2">
-<td class="colFirst"><code>abstract <a href="../../hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serialize(T,yapion.serializing.YAPIONSerializer)">serialize</a></span>&#8203;(<a href="SerializerList.html" title="type parameter in SerializerList">T</a>&nbsp;object,
-         <a href="../YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a>&nbsp;yapionSerializer)</code></th>
-<td class="colLast">
-<div class="block">This method is used to serialize the type defined by
- <a href="#type()"><code>type()</code></a>.</div>
-</td>
-</tr>
-<tr class="rowColor" id="i3">
-<td class="colFirst"><code>abstract java.lang.Class&lt;<a href="SerializerList.html" title="type parameter in SerializerList">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#type()">type</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Describes the Class type this Serializer should be used for
- by the <a href="../YAPIONSerializer.html" title="class in yapion.serializing"><code>YAPIONSerializer</code></a> and <a href="../YAPIONDeserializer.html" title="class in yapion.serializing"><code>YAPIONDeserializer</code></a>
- this Serializer will be used preferably as it should suite
- the Class better than the internal fallback.</div>
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -215,6 +187,13 @@ implements <a href="SerializerListInterface.html" title="interface in yapion.ser
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
 <code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.yapion.serializing.api.SerializerListInterface">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;yapion.serializing.api.<a href="SerializerListInterface.html" title="interface in yapion.serializing.api">SerializerListInterface</a></h3>
+<code><a href="SerializerListInterface.html#deserialize(yapion.serializing.data.DeserializeData)">deserialize</a>, <a href="SerializerListInterface.html#serialize(yapion.serializing.data.SerializeData)">serialize</a>, <a href="SerializerListInterface.html#type()">type</a></code></li>
 </ul>
 </li>
 </ul>
@@ -251,92 +230,6 @@ implements <a href="SerializerListInterface.html" title="interface in yapion.ser
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="type()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>type</h4>
-<pre class="methodSignature">public abstract&nbsp;java.lang.Class&lt;<a href="SerializerList.html" title="type parameter in SerializerList">T</a>&gt;&nbsp;type()</pre>
-<div class="block">Describes the Class type this Serializer should be used for
- by the <a href="../YAPIONSerializer.html" title="class in yapion.serializing"><code>YAPIONSerializer</code></a> and <a href="../YAPIONDeserializer.html" title="class in yapion.serializing"><code>YAPIONDeserializer</code></a>
- this Serializer will be used preferably as it should suite
- the Class better than the internal fallback.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="SerializerListInterface.html#type()">type</a></code>&nbsp;in interface&nbsp;<code><a href="SerializerListInterface.html" title="interface in yapion.serializing.api">SerializerListInterface</a>&lt;<a href="SerializerList.html" title="type parameter in SerializerList">T</a> extends java.util.List&lt;?&gt;&gt;</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the Class Type this Serializer is for</dd>
-</dl>
-</li>
-</ul>
-<a id="serialize(java.util.List,yapion.serializing.YAPIONSerializer)">
-<!--   -->
-</a><a id="serialize(T,yapion.serializing.YAPIONSerializer)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>serialize</h4>
-<pre class="methodSignature">public abstract&nbsp;<a href="../../hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a>&nbsp;serialize&#8203;(<a href="SerializerList.html" title="type parameter in SerializerList">T</a>&nbsp;object,
-                                      <a href="../YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a>&nbsp;yapionSerializer)</pre>
-<div class="block">This method is used to serialize the type defined by
- <a href="#type()"><code>type()</code></a>. You will get the object to serialize
- as well as the current <a href="../YAPIONSerializer.html" title="class in yapion.serializing"><code>YAPIONSerializer</code></a> designated to
- this serialization. This serializer should be used to
- serialize any parts of the <code>Object</code> that are not
- primitive types. So anything that cannot be represented
- by <a href="../../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>. To use the serializer call
- <a href="../YAPIONSerializer.html#parse(java.lang.Object)"><code>YAPIONSerializer.parse(Object)</code></a>. You will need
- to provide the Object and the YAPIONSerializer will
- provide you with an <a href="../../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups"><code>YAPIONAnyType</code></a>. This is generic
- and can be an <a href="../../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types"><code>YAPIONObject</code></a>, <a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types"><code>YAPIONMap</code></a>,
- <a href="../../hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types"><code>YAPIONArray</code></a>, <a href="../../hierarchy/types/YAPIONPointer.html" title="class in yapion.hierarchy.types"><code>YAPIONPointer</code></a> or
- <a href="../../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>. So you should be able to handle any
- thing you can get or just handle it generically with
- <a href="../../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups"><code>YAPIONAnyType</code></a> to be safe.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="SerializerListInterface.html#serialize(T,yapion.serializing.YAPIONSerializer)">serialize</a></code>&nbsp;in interface&nbsp;<code><a href="SerializerListInterface.html" title="interface in yapion.serializing.api">SerializerListInterface</a>&lt;<a href="SerializerList.html" title="type parameter in SerializerList">T</a> extends java.util.List&lt;?&gt;&gt;</code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>object</code> - the <code>Object</code> to serialize</dd>
-<dd><code>yapionSerializer</code> - the current YAPIONSerializer</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the serialized version of the inputted Object</dd>
-</dl>
-</li>
-</ul>
-<a id="deserialize(yapion.hierarchy.types.YAPIONArray,yapion.serializing.YAPIONDeserializer)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>deserialize</h4>
-<pre class="methodSignature">public abstract&nbsp;<a href="SerializerList.html" title="type parameter in SerializerList">T</a>&nbsp;deserialize&#8203;(<a href="../../hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a>&nbsp;yapionArray,
-                              <a href="../YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</pre>
-<div class="block">This method is used to deserialize the type defined
- by <a href="#type()"><code>type()</code></a>. You will get the specified
- <a href="../../hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types"><code>YAPIONArray</code></a> as well as the current <a href="../YAPIONDeserializer.html" title="class in yapion.serializing"><code>YAPIONDeserializer</code></a> designed to
- this deserialization. This deserializer should be used to
- deserialize any parts of the <a href="../../hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types"><code>YAPIONArray</code></a> that are not
- <a href="../../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a> types. So anything that cannot be
- represented by <a href="../../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>. To use the serializer
- call <a href="../YAPIONDeserializer.html#parse(yapion.hierarchy.typegroups.YAPIONAnyType)"><code>YAPIONDeserializer.parse(YAPIONAnyType)</code></a>. You will
- need to provide the <a href="../../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups"><code>YAPIONAnyType</code></a> and the YAPIONDeserializer
- will provide you with an <code>Object</code>. This is generic
- and can be any Object. So you should be able to handle
- any thing generically.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="SerializerListInterface.html#deserialize(yapion.hierarchy.types.YAPIONArray,yapion.serializing.YAPIONDeserializer)">deserialize</a></code>&nbsp;in interface&nbsp;<code><a href="SerializerListInterface.html" title="interface in yapion.serializing.api">SerializerListInterface</a>&lt;<a href="SerializerList.html" title="type parameter in SerializerList">T</a> extends java.util.List&lt;?&gt;&gt;</code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>yapionArray</code> - The <a href="../../hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types"><code>YAPIONArray</code></a> to deserialize</dd>
-<dd><code>yapionDeserializer</code> - the current YAPIONDeserializer</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the deserialized version of the inputted <a href="../../hierarchy/types/YAPIONArray.html" title="class in yapion.hierarchy.types"><code>YAPIONArray</code></a></dd>
-</dl>
-</li>
-</ul>
 <a id="add()">
 <!--   -->
 </a>

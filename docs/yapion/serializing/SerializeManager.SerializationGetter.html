@@ -99,7 +99,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <main role="main">
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">yapion.serializing</a></div>
-<h2 title="Interface SerializeManager.SerializationGetter" class="title">Interface SerializeManager.SerializationGetter&lt;T,&#8203;R&gt;</h2>
+<h2 title="Interface SerializeManager.SerializationGetter" class="title">Interface SerializeManager.SerializationGetter&lt;T,&#8203;R extends <a href="../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&gt;</h2>
 </div>
 <div class="contentContainer">
 <div class="description">
@@ -115,7 +115,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 <hr>
 <pre>@FunctionalInterface
-public static interface <span class="typeNameLabel">SerializeManager.SerializationGetter&lt;T,&#8203;R&gt;</span></pre>
+public static interface <span class="typeNameLabel">SerializeManager.SerializationGetter&lt;T,&#8203;R extends <a href="../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&gt;</span></pre>
 </li>
 </ul>
 </div>
@@ -141,8 +141,7 @@ public static interface <span class="typeNameLabel">SerializeManager.Serializati
 <tbody>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code><a href="SerializeManager.SerializationGetter.html" title="type parameter in SerializeManager.SerializationGetter">R</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serialize(T,yapion.serializing.YAPIONSerializer)">serialize</a></span>&#8203;(<a href="SerializeManager.SerializationGetter.html" title="type parameter in SerializeManager.SerializationGetter">T</a>&nbsp;object,
-         <a href="YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a>&nbsp;yapionSerializer)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serialize(yapion.serializing.data.SerializeData)">serialize</a></span>&#8203;(<a href="data/SerializeData.html" title="class in yapion.serializing.data">SerializeData</a>&lt;<a href="SerializeManager.SerializationGetter.html" title="type parameter in SerializeManager.SerializationGetter">T</a>&gt;&nbsp;serializeData)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -165,16 +164,13 @@ public static interface <span class="typeNameLabel">SerializeManager.Serializati
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="serialize(java.lang.Object,yapion.serializing.YAPIONSerializer)">
-<!--   -->
-</a><a id="serialize(T,yapion.serializing.YAPIONSerializer)">
+<a id="serialize(yapion.serializing.data.SerializeData)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>serialize</h4>
-<pre class="methodSignature"><a href="SerializeManager.SerializationGetter.html" title="type parameter in SerializeManager.SerializationGetter">R</a>&nbsp;serialize&#8203;(<a href="SerializeManager.SerializationGetter.html" title="type parameter in SerializeManager.SerializationGetter">T</a>&nbsp;object,
-            <a href="YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a>&nbsp;yapionSerializer)</pre>
+<pre class="methodSignature"><a href="SerializeManager.SerializationGetter.html" title="type parameter in SerializeManager.SerializationGetter">R</a>&nbsp;serialize&#8203;(<a href="data/SerializeData.html" title="class in yapion.serializing.data">SerializeData</a>&lt;<a href="SerializeManager.SerializationGetter.html" title="type parameter in SerializeManager.SerializationGetter">T</a>&gt;&nbsp;serializeData)</pre>
 </li>
 </ul>
 </li>

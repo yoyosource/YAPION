@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10,"i7":42,"i8":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":42,"i11":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -139,9 +139,17 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(yapion.hierarchy.types.YAPIONObject,java.lang.String)">YAPIONDeserializer</a></span>&#8203;(@NonNull <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
-                  java.lang.String&nbsp;state)</code></th>
+                  java.lang.String&nbsp;context)</code></th>
 <td class="colLast">
-<div class="block">Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified state.</div>
+<div class="block">Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(yapion.hierarchy.types.YAPIONObject,java.lang.String,yapion.serializing.TypeReMapper)">YAPIONDeserializer</a></span>&#8203;(@NonNull <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
+                  java.lang.String&nbsp;context,
+                  @NonNull <a href="TypeReMapper.html" title="class in yapion.serializing">TypeReMapper</a>&nbsp;typeReMapper)</code></th>
+<td class="colLast">
+<div class="block">Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.</div>
 </td>
 </tr>
 </tbody>
@@ -176,45 +184,69 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>static java.lang.Object</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deserialize(yapion.hierarchy.types.YAPIONObject,java.lang.String)">deserialize</a></span>&#8203;(@NonNull <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
-           java.lang.String&nbsp;state)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deserialize(yapion.hierarchy.types.YAPIONObject,yapion.serializing.TypeReMapper)">deserialize</a></span>&#8203;(@NonNull <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
+           @NonNull <a href="TypeReMapper.html" title="class in yapion.serializing">TypeReMapper</a>&nbsp;typeReMapper)</code></th>
 <td class="colLast">
 <div class="block">Serialize an YAPION Object to an Object.</div>
 </td>
 </tr>
 <tr class="altColor" id="i2">
-<td class="colFirst"><code>static void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#discardCache()">discardCache</a></span>()</code></th>
+<td class="colFirst"><code>static java.lang.Object</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deserialize(yapion.hierarchy.types.YAPIONObject,java.lang.String)">deserialize</a></span>&#8203;(@NonNull <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
+           java.lang.String&nbsp;context)</code></th>
 <td class="colLast">
-<div class="block">Discard the cache used by <code>preDeserializationStep(Object)</code>
- and <code>postDeserializationStep(Object)</code>.</div>
+<div class="block">Serialize an YAPION Object to an Object.</div>
 </td>
 </tr>
 <tr class="rowColor" id="i3">
+<td class="colFirst"><code>static java.lang.Object</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deserialize(yapion.hierarchy.types.YAPIONObject,java.lang.String,yapion.serializing.TypeReMapper)">deserialize</a></span>&#8203;(@NonNull <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
+           java.lang.String&nbsp;context,
+           @NonNull <a href="TypeReMapper.html" title="class in yapion.serializing">TypeReMapper</a>&nbsp;typeReMapper)</code></th>
+<td class="colLast">
+<div class="block">Serialize an YAPION Object to an Object.</div>
+</td>
+</tr>
+<tr class="altColor" id="i4">
+<td class="colFirst"><code>static void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#discardCache()">discardCache</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Discard the cache used by <code>preDeserializationStep()</code>
+ and <code>postDeserializationStep()</code>.</div>
+</td>
+</tr>
+<tr class="rowColor" id="i5">
 <td class="colFirst"><code>java.lang.Class&lt;?&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClass(java.lang.String)">getClass</a></span>&#8203;(java.lang.String&nbsp;className)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i4">
+<tr class="altColor" id="i6">
+<td class="colFirst"><code><a href="DeserializeResult.html" title="class in yapion.serializing">DeserializeResult</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDeserializeResult()">getDeserializeResult</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get the <a href="DeserializeResult.html" title="class in yapion.serializing"><code>DeserializeResult</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getObject()">getObject</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the internal parsed Object.</div>
+<div class="block">Get the deserialized Object.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr class="altColor" id="i8">
 <td class="colFirst"><code><a href="YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse()">parse</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Parses the YAPIONObject to the Object.</div>
 </td>
 </tr>
-<tr class="altColor" id="i6">
+<tr class="rowColor" id="i9">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(yapion.hierarchy.typegroups.YAPIONAnyType)">parse</a></span>&#8203;(<a href="../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr class="altColor" id="i10">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(yapion.hierarchy.typegroups.YAPIONAnyType,yapion.serializing.YAPIONDeserializer)">parse</a></span>&#8203;(<a href="../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;yapionAnyType,
      <a href="YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</code></th>
@@ -224,7 +256,7 @@ extends java.lang.Object</pre>
 </div>
 </td>
 </tr>
-<tr class="altColor" id="i8">
+<tr class="rowColor" id="i11">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setCacheSize(int)">setCacheSize</a></span>&#8203;(int&nbsp;cacheSize)</code></th>
 <td class="colLast">
@@ -262,17 +294,37 @@ extends java.lang.Object</pre>
 <a id="&lt;init&gt;(yapion.hierarchy.types.YAPIONObject,java.lang.String)">
 <!--   -->
 </a>
+<ul class="blockList">
+<li class="blockList">
+<h4>YAPIONDeserializer</h4>
+<pre>public&nbsp;YAPIONDeserializer&#8203;(@NonNull
+                          @NonNull <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
+                          java.lang.String&nbsp;context)</pre>
+<div class="block">Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>yapionObject</code> - to deserialize</dd>
+<dd><code>context</code> - the context for deserialization</dd>
+</dl>
+</li>
+</ul>
+<a id="&lt;init&gt;(yapion.hierarchy.types.YAPIONObject,java.lang.String,yapion.serializing.TypeReMapper)">
+<!--   -->
+</a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>YAPIONDeserializer</h4>
 <pre>public&nbsp;YAPIONDeserializer&#8203;(@NonNull
                           @NonNull <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
-                          java.lang.String&nbsp;state)</pre>
-<div class="block">Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified state.</div>
+                          java.lang.String&nbsp;context,
+                          @NonNull
+                          @NonNull <a href="TypeReMapper.html" title="class in yapion.serializing">TypeReMapper</a>&nbsp;typeReMapper)</pre>
+<div class="block">Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>yapionObject</code> - to deserialize</dd>
-<dd><code>state</code> - the state for deserialization</dd>
+<dd><code>context</code> - the context for deserialization</dd>
+<dd><code>typeReMapper</code> - the mapper to remap any '@type' variable to a new class</dd>
 </dl>
 </li>
 </ul>
@@ -309,8 +361,8 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>discardCache</h4>
 <pre class="methodSignature">public static&nbsp;void&nbsp;discardCache()</pre>
-<div class="block">Discard the cache used by <code>preDeserializationStep(Object)</code>
- and <code>postDeserializationStep(Object)</code>.</div>
+<div class="block">Discard the cache used by <code>preDeserializationStep()</code>
+ and <code>postDeserializationStep()</code>.</div>
 </li>
 </ul>
 <a id="deserialize(yapion.hierarchy.types.YAPIONObject)">
@@ -330,6 +382,26 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
+<a id="deserialize(yapion.hierarchy.types.YAPIONObject,yapion.serializing.TypeReMapper)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>deserialize</h4>
+<pre class="methodSignature">public static&nbsp;java.lang.Object&nbsp;deserialize&#8203;(@NonNull
+                                           @NonNull <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
+                                           @NonNull
+                                           @NonNull <a href="TypeReMapper.html" title="class in yapion.serializing">TypeReMapper</a>&nbsp;typeReMapper)</pre>
+<div class="block">Serialize an YAPION Object to an Object.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>yapionObject</code> - to deserialize</dd>
+<dd><code>typeReMapper</code> - the mapper to remap any '@type' variable to a new class</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Object from the YAPIONObject to deserialize</dd>
+</dl>
+</li>
+</ul>
 <a id="deserialize(yapion.hierarchy.types.YAPIONObject,java.lang.String)">
 <!--   -->
 </a>
@@ -338,12 +410,34 @@ extends java.lang.Object</pre>
 <h4>deserialize</h4>
 <pre class="methodSignature">public static&nbsp;java.lang.Object&nbsp;deserialize&#8203;(@NonNull
                                            @NonNull <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
-                                           java.lang.String&nbsp;state)</pre>
+                                           java.lang.String&nbsp;context)</pre>
 <div class="block">Serialize an YAPION Object to an Object.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>yapionObject</code> - to deserialize</dd>
-<dd><code>state</code> - the state for deserialization</dd>
+<dd><code>context</code> - the context for deserialization</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Object from the YAPIONObject to deserialize</dd>
+</dl>
+</li>
+</ul>
+<a id="deserialize(yapion.hierarchy.types.YAPIONObject,java.lang.String,yapion.serializing.TypeReMapper)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>deserialize</h4>
+<pre class="methodSignature">public static&nbsp;java.lang.Object&nbsp;deserialize&#8203;(@NonNull
+                                           @NonNull <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
+                                           java.lang.String&nbsp;context,
+                                           @NonNull
+                                           @NonNull <a href="TypeReMapper.html" title="class in yapion.serializing">TypeReMapper</a>&nbsp;typeReMapper)</pre>
+<div class="block">Serialize an YAPION Object to an Object.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>yapionObject</code> - to deserialize</dd>
+<dd><code>context</code> - the context for deserialization</dd>
+<dd><code>typeReMapper</code> - the mapper to remap any '@type' variable to a new class</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Object from the YAPIONObject to deserialize</dd>
 </dl>
@@ -407,14 +501,28 @@ public&nbsp;java.lang.Object&nbsp;parse&#8203;(<a href="../hierarchy/typegroups/
 <a id="getObject()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getObject</h4>
 <pre class="methodSignature">public&nbsp;java.lang.Object&nbsp;getObject()</pre>
-<div class="block">Get the internal parsed Object.</div>
+<div class="block">Get the deserialized Object.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Object from the YAPIONObject to deserialize</dd>
+</dl>
+</li>
+</ul>
+<a id="getDeserializeResult()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getDeserializeResult</h4>
+<pre class="methodSignature">public&nbsp;<a href="DeserializeResult.html" title="class in yapion.serializing">DeserializeResult</a>&nbsp;getDeserializeResult()</pre>
+<div class="block">Get the <a href="DeserializeResult.html" title="class in yapion.serializing"><code>DeserializeResult</code></a>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="DeserializeResult.html" title="class in yapion.serializing"><code>DeserializeResult</code></a> used by this instance</dd>
 </dl>
 </li>
 </ul>

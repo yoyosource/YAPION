@@ -136,8 +136,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code><a href="SerializerMapInterface.html" title="type parameter in SerializerMapInterface">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deserialize(yapion.hierarchy.types.YAPIONMap,yapion.serializing.YAPIONDeserializer)">deserialize</a></span>&#8203;(<a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a>&nbsp;yapionMap,
-           <a href="../YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deserialize(yapion.serializing.data.DeserializeData)">deserialize</a></span>&#8203;(<a href="../data/DeserializeData.html" title="class in yapion.serializing.data">DeserializeData</a>&lt;<a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a>&gt;&nbsp;deserializeData)</code></th>
 <td class="colLast">
 <div class="block">This method is used to deserialize the type defined
  by <a href="#type()"><code>type()</code></a>.</div>
@@ -145,8 +144,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code><a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serialize(T,yapion.serializing.YAPIONSerializer)">serialize</a></span>&#8203;(<a href="SerializerMapInterface.html" title="type parameter in SerializerMapInterface">T</a>&nbsp;object,
-         <a href="../YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a>&nbsp;yapionSerializer)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serialize(yapion.serializing.data.SerializeData)">serialize</a></span>&#8203;(<a href="../data/SerializeData.html" title="class in yapion.serializing.data">SerializeData</a>&lt;<a href="SerializerMapInterface.html" title="type parameter in SerializerMapInterface">T</a>&gt;&nbsp;serializeData)</code></th>
 <td class="colLast">
 <div class="block">This method is used to serialize the type defined by
  <a href="#type()"><code>type()</code></a>.</div>
@@ -199,16 +197,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 </li>
 </ul>
-<a id="serialize(java.util.Map,yapion.serializing.YAPIONSerializer)">
-<!--   -->
-</a><a id="serialize(T,yapion.serializing.YAPIONSerializer)">
+<a id="serialize(yapion.serializing.data.SerializeData)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>serialize</h4>
-<pre class="methodSignature"><a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a>&nbsp;serialize&#8203;(<a href="SerializerMapInterface.html" title="type parameter in SerializerMapInterface">T</a>&nbsp;object,
-                    <a href="../YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a>&nbsp;yapionSerializer)</pre>
+<pre class="methodSignature"><a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a>&nbsp;serialize&#8203;(<a href="../data/SerializeData.html" title="class in yapion.serializing.data">SerializeData</a>&lt;<a href="SerializerMapInterface.html" title="type parameter in SerializerMapInterface">T</a>&gt;&nbsp;serializeData)</pre>
 <div class="block">This method is used to serialize the type defined by
  <a href="#type()"><code>type()</code></a>. You will get the object to serialize
  as well as the current <a href="../YAPIONSerializer.html" title="class in yapion.serializing"><code>YAPIONSerializer</code></a> designated to
@@ -226,21 +221,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <a href="../../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups"><code>YAPIONAnyType</code></a> to be safe.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>object</code> - the <code>Object</code> to serialize</dd>
-<dd><code>yapionSerializer</code> - the current YAPIONSerializer</dd>
+<dd><code>serializeData</code> - all data for serialization</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the serialized version of the inputted Object</dd>
 </dl>
 </li>
 </ul>
-<a id="deserialize(yapion.hierarchy.types.YAPIONMap,yapion.serializing.YAPIONDeserializer)">
+<a id="deserialize(yapion.serializing.data.DeserializeData)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>deserialize</h4>
-<pre class="methodSignature"><a href="SerializerMapInterface.html" title="type parameter in SerializerMapInterface">T</a>&nbsp;deserialize&#8203;(<a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a>&nbsp;yapionMap,
-              <a href="../YAPIONDeserializer.html" title="class in yapion.serializing">YAPIONDeserializer</a>&nbsp;yapionDeserializer)</pre>
+<pre class="methodSignature"><a href="SerializerMapInterface.html" title="type parameter in SerializerMapInterface">T</a>&nbsp;deserialize&#8203;(<a href="../data/DeserializeData.html" title="class in yapion.serializing.data">DeserializeData</a>&lt;<a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a>&gt;&nbsp;deserializeData)</pre>
 <div class="block">This method is used to deserialize the type defined
  by <a href="#type()"><code>type()</code></a>. You will get the specified
  <a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types"><code>YAPIONMap</code></a> as well as the current <a href="../YAPIONDeserializer.html" title="class in yapion.serializing"><code>YAPIONDeserializer</code></a> designed to
@@ -255,8 +248,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  any thing generically.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>yapionMap</code> - The <a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types"><code>YAPIONMap</code></a> to deserialize</dd>
-<dd><code>yapionDeserializer</code> - the current YAPIONDeserializer</dd>
+<dd><code>deserializeData</code> - all data for deserialization</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the deserialized version of the inputted <a href="../../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types"><code>YAPIONMap</code></a></dd>
 </dl>

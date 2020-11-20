@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -247,13 +247,18 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr class="rowColor" id="i5">
+<td class="colFirst"><code>static <a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unflatten(yapion.hierarchy.types.YAPIONObject)">unflatten</a></span>&#8203;(<a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i6">
 <td class="colFirst"><code>static java.util.stream.Stream&lt;<a href="hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#walk(yapion.hierarchy.types.YAPIONObject)">walk</a></span>&#8203;(<a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject)</code></th>
 <td class="colLast">
 <div class="block">The inputted <a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types"><code>YAPIONObject</code></a> is traversed depth first, values beforehand.</div>
 </td>
 </tr>
-<tr class="altColor" id="i6">
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>static java.util.stream.Stream&lt;<a href="hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#walk(yapion.hierarchy.types.YAPIONObject,yapion.utils.YAPIONTreeIterator.YAPIONTreeIteratorOption)">walk</a></span>&#8203;(<a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject,
     <a href="utils/YAPIONTreeIterator.YAPIONTreeIteratorOption.html" title="enum in yapion.utils">YAPIONTreeIterator.YAPIONTreeIteratorOption</a>&nbsp;option)</code></th>
@@ -439,13 +444,13 @@ extends java.lang.Object</pre>
 <a id="flatten(yapion.hierarchy.types.YAPIONObject)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>flatten</h4>
 <pre class="methodSignature">public static&nbsp;<a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;flatten&#8203;(<a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject)</pre>
 <div class="block">The inputted <a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types"><code>YAPIONObject</code></a> is flattened to one <a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types"><code>YAPIONObject</code></a> as the
- main layer. Every value will be put under this and every structure will be removes
- as. This will also remove any information about maps arrays and such.
+ main layer. Every value will be put under this and every structure will be removed.
+ This will also remove any information about maps arrays and such.
 
  <br><br>(pointer@...) will represent a pointer</div>
 <dl>
@@ -454,6 +459,15 @@ extends java.lang.Object</pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the flattened <a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types"><code>YAPIONObject</code></a> this is a new instance</dd>
 </dl>
+</li>
+</ul>
+<a id="unflatten(yapion.hierarchy.types.YAPIONObject)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>unflatten</h4>
+<pre class="methodSignature">public static&nbsp;<a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;unflatten&#8203;(<a href="hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;yapionObject)</pre>
 </li>
 </ul>
 </li>
