@@ -16,6 +16,7 @@ import yapion.parser.YAPIONParserMapObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
@@ -164,7 +165,7 @@ public class YAPIONMap extends YAPIONMappingType {
 
     @Override
     public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
-        final byte[] indent = bytes(",\n" + indent());
+        final byte[] indent = bytes("\n" + indent());
         long id = 0;
 
         outputStream.write(bytes("<"));
