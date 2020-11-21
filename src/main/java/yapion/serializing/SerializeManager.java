@@ -23,6 +23,7 @@ import yapion.serializing.serializer.SerializerImplementation;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
@@ -81,14 +82,17 @@ public class SerializeManager {
     static {
         ClassIndex.getAnnotated(SerializerImplementation.class).forEach(SerializeManager::add);
         if (serializerMap.isEmpty()) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(SerializeManager.class.getResourceAsStream("/yapion/" + SerializerImplementation.class.getTypeName())));
-            bufferedReader.lines().forEach(s -> {
-                try {
-                    add(Class.forName(s));
-                } catch (ClassNotFoundException e) {
-                    // Ignored
-                }
-            });
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(SerializeManager.class.getResourceAsStream("/yapion/" + SerializerImplementation.class.getTypeName())))) {
+                bufferedReader.lines().forEach(s -> {
+                    try {
+                        add(Class.forName(s));
+                    } catch (ClassNotFoundException e) {
+                        // Ignored
+                    }
+                });
+            } catch (IOException e) {
+                // Ignored
+            }
         }
 
         oSerializerGroups.add(() -> "yapion.annotations.");
