@@ -303,7 +303,7 @@ public final class YAPIONDeserializer {
         try {
             Class<?> clazz = Class.forName(type);
             if (!contextManager.is(clazz).load) {
-                throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
+                throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
             }
 
             object = SerializeManager.getObjectInstance(clazz, type, contextManager);

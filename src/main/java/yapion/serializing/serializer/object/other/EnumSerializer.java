@@ -6,6 +6,7 @@ package yapion.serializing.serializer.object.other;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
@@ -45,10 +46,12 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
         String enumType = yapionObject.getValue("value", "").get();
         int ordinal = -1;
         if (yapionObject.getValue("ordinal", 0) != null) {
-            ordinal = yapionObject.getValue("ordinal", 0).get();;
+            ordinal = yapionObject.getValue("ordinal", 0).get();
         }
         try {
-            if (!Class.forName(type).isEnum()) return null;
+            if (!Class.forName(type).isEnum()) {
+                throw new YAPIONDeserializerException("Class " + type + " is not an enum");
+            }
             Enum<?>[] enums = (Enum<?>[]) Class.forName(type).getEnumConstants();
             if (ordinal >= 0 && ordinal < enums.length && enums[ordinal].name().equals(enumType)) {
                 return enums[ordinal];
@@ -59,10 +62,11 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
                     return e;
                 }
             }
+            throw new YAPIONDeserializerException("Enum element not found: " + type + "[" + enumType + "]");
+
         } catch (ClassNotFoundException e) {
-            // Ignored
+            throw new YAPIONDeserializerException("Class not found: " + type);
         }
-        return null;
     }
 
 }
