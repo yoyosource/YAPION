@@ -151,7 +151,11 @@ public final class YAPIONDeserializer {
 
     private YAPIONDeserializer(@NonNull YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
         this.yapionObject = yapionObject;
-        this.contextManager = yapionDeserializer.contextManager;
+        if (yapionDeserializer.contextManager.isCascading()) {
+            this.contextManager = yapionDeserializer.contextManager;
+        } else {
+            this.contextManager = new ContextManager(yapionDeserializer.contextManager.get());
+        }
         this.pointerMap = yapionDeserializer.pointerMap;
         this.typeReMapper = yapionDeserializer.typeReMapper;
         this.deserializeResult = yapionDeserializer.deserializeResult;
