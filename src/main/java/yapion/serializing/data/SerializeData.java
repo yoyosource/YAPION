@@ -23,7 +23,7 @@ public class SerializeData<T> {
     private final YAPIONSerializer yapionSerializer;
 
     @SuppressWarnings({"java:S3011"})
-    public final YAPIONAnyType serialize(String fieldName) {
+    public final YAPIONAnyType serializeField(String fieldName) {
         try {
             Field field = object.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
