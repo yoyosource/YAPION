@@ -6,6 +6,7 @@ package yapion.packet;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.hierarchy.output.StreamOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONSerializer;
 
@@ -33,9 +34,8 @@ public final class YAPIONOutputStream {
      * @param yapionObject the YAPIONObject
      * @throws IOException {@link OutputStream#flush()}
      */
-    public void write(YAPIONObject yapionObject) throws IOException {
-        yapionObject.toOutputStream(outputStream);
-        outputStream.flush();
+    public void write(YAPIONObject yapionObject) {
+        yapionObject.toYAPION(new StreamOutput(outputStream)).flush();
     }
 
     /**
@@ -44,7 +44,7 @@ public final class YAPIONOutputStream {
      * @param yapionPacket the YAPIONPacket
      * @throws IOException {@link #write(YAPIONObject)}
      */
-    public void write(YAPIONPacket yapionPacket) throws IOException {
+    public void write(YAPIONPacket yapionPacket) {
         write(yapionPacket.getYAPION());
     }
 
@@ -54,7 +54,7 @@ public final class YAPIONOutputStream {
      * @param object the Object
      * @throws IOException {@link #write(YAPIONPacket)}
      */
-    public void write(Object object) throws IOException {
+    public void write(Object object) {
         write(YAPIONSerializer.serialize(object));
     }
 
@@ -65,7 +65,7 @@ public final class YAPIONOutputStream {
      * @param state the specified state
      * @throws IOException {@link #write(Object)}
      */
-    public void write(Object object, String state) throws IOException {
+    public void write(Object object, String state) {
         write(YAPIONSerializer.serialize(object, state));
     }
 

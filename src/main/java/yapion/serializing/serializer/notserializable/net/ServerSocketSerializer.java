@@ -2,7 +2,7 @@
 // YAPION
 // Copyright (C) 2019,2020 yoyosource
 
-package yapion.serializing.serializer.object.net;
+package yapion.serializing.serializer.notserializable.net;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
@@ -13,25 +13,25 @@ import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
-import java.net.Socket;
+import java.net.ServerSocket;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SerializerImplementation
-public class SocketSerializer implements InternalSerializer<Socket> {
+public class ServerSocketSerializer implements InternalSerializer<ServerSocket> {
 
     @Override
     public String type() {
-        return "java.net.Socket";
+        return "java.net.ServerSocket";
     }
 
     @Override
-    public YAPIONAnyType serialize(SerializeData<Socket> serializeData) {
+    public YAPIONAnyType serialize(SerializeData<ServerSocket> serializeData) {
         return new YAPIONValue<>(null);
     }
 
     @Override
-    public Socket deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+    public ServerSocket deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         return null;
     }
 }

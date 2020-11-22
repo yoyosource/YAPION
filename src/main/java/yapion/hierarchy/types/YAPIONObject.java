@@ -7,13 +7,13 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONRecursionException;
+import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONDataType;
 import yapion.hierarchy.typegroups.YAPIONMappingType;
 import yapion.utils.RecursionUtils;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -49,28 +49,29 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     @Override
-    public String toYAPIONString() {
-        StringBuilder st = new StringBuilder();
-        st.append("{");
+    public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
+        abstractOutput.consume("{");
         for (YAPIONVariable yapionVariable : variables) {
-            st.append(yapionVariable.toYAPIONString());
+            yapionVariable.toYAPION(abstractOutput);
         }
-        return st.append("}").toString();
+        abstractOutput.consume("}");
+        return abstractOutput;
     }
 
     @Override
-    public String toYAPIONStringPrettified() {
+    public < T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
         final String indent = "\n" + indent();
-        StringBuilder st = new StringBuilder();
-        st.append("{");
+        abstractOutput.consume("{");
         for (YAPIONVariable yapionVariable : variables) {
-            st.append(indent);
-            st.append(yapionVariable.toYAPIONStringPrettified());
+            abstractOutput.consume(indent);
+            yapionVariable.toYAPIONPrettified(abstractOutput);
         }
         if (!variables.isEmpty()) {
-            st.append("\n").append(reducedIndent());
+            abstractOutput.consume("\n");
+            abstractOutput.consume(reducedIndent());
         }
-        return st.append("}").toString();
+        abstractOutput.consume("}");
+        return abstractOutput;
     }
 
     @Override
@@ -81,29 +82,6 @@ public class YAPIONObject extends YAPIONMappingType {
     @Override
     public String toLossyJSONString() {
         return "{" + variables.stream().map(YAPIONVariable::toLossyJSONString).collect(Collectors.joining(",")) + "}";
-    }
-
-    @Override
-    public void toOutputStream(OutputStream outputStream) throws IOException {
-        outputStream.write(bytes("{"));
-        for (YAPIONVariable variable : variables) {
-            variable.toOutputStream(outputStream);
-        }
-        outputStream.write(bytes("}"));
-    }
-
-    @Override
-    public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
-        final byte[] indent = bytes("\n" + indent());
-        outputStream.write(bytes("{"));
-        for (YAPIONVariable variable : variables) {
-            outputStream.write(indent);
-            variable.toOutputStreamPrettified(outputStream);
-        }
-        if (!variables.isEmpty()) {
-            outputStream.write(bytes("\n" + reducedIndent()));
-        }
-        outputStream.write(bytes("}"));
     }
 
     @Override
@@ -349,7 +327,9 @@ public class YAPIONObject extends YAPIONMappingType {
 
     @Override
     public String toString() {
-        return toYAPIONString();
+        StringOutput stringOutput = new StringOutput();
+        toYAPION(stringOutput);
+        return stringOutput.getResult();
     }
 
     @Override

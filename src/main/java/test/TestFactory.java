@@ -6,6 +6,7 @@ package test;
 
 import lombok.ToString;
 import yapion.annotations.object.YAPIONData;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
@@ -40,9 +41,9 @@ public class TestFactory {
         benchmarkWithOffset(0, round);
         instanceFactory.add();
         benchmarkWithOffset(2, round);
-        System.out.println(YAPIONSerializer.serialize(longMap).toYAPIONStringPrettified());
+        System.out.println(YAPIONSerializer.serialize(longMap).toYAPIONPrettified(new StringOutput()).getResult());
         System.out.println();
-        System.out.println(YAPIONSerializer.serialize(longMap).toYAPIONString());
+        System.out.println(YAPIONSerializer.serialize(longMap).toYAPION(new StringOutput()).getResult());
     }
 
     private static void benchmarkTest1() {

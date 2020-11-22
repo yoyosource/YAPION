@@ -8,6 +8,8 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONDataType;
 import yapion.hierarchy.typegroups.YAPIONMappingType;
@@ -16,7 +18,6 @@ import yapion.parser.YAPIONParserMapObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
@@ -57,56 +58,59 @@ public class YAPIONMap extends YAPIONMappingType {
     public String getPath(YAPIONAnyType yapionAnyType) {
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             if (entry.getValue() == yapionAnyType) {
-                return entry.getKey().toYAPIONString();
+                return entry.getKey().toString();
             }
             if (entry.getKey() == yapionAnyType) {
-                return entry.getKey().toYAPIONString();
+                return entry.getKey().toString();
             }
         }
         return "";
     }
 
     @Override
-    public String toYAPIONString() {
+    public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
         long id = 0;
 
-        StringBuilder st = new StringBuilder();
-        st.append("<");
+        abstractOutput.consume("<");
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             String id1 = String.format("%01X", id++);
             String id2 = String.format("%01X", id++);
 
-            st.append(id1).append(":").append(id2);
-            st.append("#").append(id1).append(entry.getKey().toYAPIONString());
-            st.append("#").append(id2).append(entry.getValue().toYAPIONString());
+            abstractOutput.consume(id1 + ":" + id2);
+            abstractOutput.consume("#" + id1);
+            entry.getKey().toYAPION(abstractOutput);
+            abstractOutput.consume("#" + id2);
+            entry.getValue().toYAPION(abstractOutput);
         }
-        st.append(">");
-        return st.toString();
+        abstractOutput.consume(">");
+        return abstractOutput;
     }
 
     @Override
-    public String toYAPIONStringPrettified() {
+    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
         final String indent = "\n" + indent();
         long id = 0;
 
-        StringBuilder st = new StringBuilder();
-        st.append("<");
+        abstractOutput.consume("<");
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
-            st.append(indent);
+            abstractOutput.consume(indent);
             String id1 = String.format("%01X", id++);
             String id2 = String.format("%01X", id++);
 
-            st.append(id1).append(":").append(id2);
-            st.append(indent);
-            st.append("#").append(id1).append(entry.getKey().toYAPIONStringPrettified());
-            st.append(indent);
-            st.append("#").append(id2).append(entry.getValue().toYAPIONStringPrettified());
+            abstractOutput.consume(id1 + ":" + id2);
+            abstractOutput.consume(indent);
+            abstractOutput.consume("#" + id1);
+            entry.getKey().toYAPIONPrettified(abstractOutput);
+            abstractOutput.consume(indent);
+            abstractOutput.consume("#" + id2);
+            entry.getValue().toYAPIONPrettified(abstractOutput);
         }
         if (!variables.isEmpty()) {
-            st.append("\n").append(reducedIndent());
+            abstractOutput.consume("\n");
+            abstractOutput.consume(reducedIndent());
         }
-        st.append(">");
-        return st.toString();
+        abstractOutput.consume(">");
+        return abstractOutput;
     }
 
     @Override
@@ -143,49 +147,6 @@ public class YAPIONMap extends YAPIONMappingType {
             yapionObject.add("#" + id2, entry.getValue());
         }
         return yapionObject.toLossyJSONString();
-    }
-
-    @Override
-    public void toOutputStream(OutputStream outputStream) throws IOException {
-        long id = 0;
-
-        outputStream.write(bytes("<"));
-        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
-            String id1 = String.format("%01X", id++);
-            String id2 = String.format("%01X", id++);
-
-            outputStream.write(bytes(id1 + ":" + id2));
-            outputStream.write(bytes("#" + id1));
-            entry.getKey().toOutputStream(outputStream);
-            outputStream.write(bytes("#" + id2));
-            entry.getValue().toOutputStream(outputStream);
-        }
-        outputStream.write(bytes(">"));
-    }
-
-    @Override
-    public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
-        final byte[] indent = bytes("\n" + indent());
-        long id = 0;
-
-        outputStream.write(bytes("<"));
-        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
-            outputStream.write(indent);
-            String id1 = String.format("%01X", id++);
-            String id2 = String.format("%01X", id++);
-
-            outputStream.write(bytes(id1 + ":" + id2));
-            outputStream.write(indent);
-            outputStream.write(bytes("#" + id1));
-            entry.getKey().toOutputStreamPrettified(outputStream);
-            outputStream.write(indent);
-            outputStream.write(bytes("#" + id2));
-            entry.getValue().toOutputStreamPrettified(outputStream);
-        }
-        if (!variables.isEmpty()) {
-            outputStream.write(bytes("\n" + reducedIndent()));
-        }
-        outputStream.write(bytes(">"));
     }
 
     public YAPIONMap add(YAPIONAnyType key, YAPIONAnyType value) {
@@ -274,7 +235,7 @@ public class YAPIONMap extends YAPIONMappingType {
     @Override
     public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String key) {
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
-            if (entry.getKey().toYAPIONString().equals(key))
+            if (entry.getKey().toString().equals(key))
                 return Optional.of(new YAPIONSearchResult<>(entry.getValue()));
         }
         return Optional.empty();
@@ -282,7 +243,9 @@ public class YAPIONMap extends YAPIONMappingType {
 
     @Override
     public String toString() {
-        return toYAPIONString();
+        StringOutput stringOutput = new StringOutput();
+        toYAPION(stringOutput);
+        return stringOutput.getResult();
     }
 
     @Override

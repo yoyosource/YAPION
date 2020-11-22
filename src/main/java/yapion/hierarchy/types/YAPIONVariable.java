@@ -6,6 +6,8 @@ package yapion.hierarchy.types;
 
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
+import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyClosure;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 
@@ -45,23 +47,29 @@ public final class YAPIONVariable extends YAPIONAnyClosure {
 
     @Override
     public String toString() {
-        return toYAPIONString();
+        StringOutput stringOutput = new StringOutput();
+        toYAPION(stringOutput);
+        return stringOutput.getResult();
     }
 
     @Override
-    public String toYAPIONString() {
+    public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
         if (name.startsWith(" ")) {
-            return "\\" + name.replaceAll(PATTERN, REPLACEMENT) + value.toYAPIONString();
+            abstractOutput.consume("\\");
         }
-        return name.replaceAll(PATTERN, REPLACEMENT) + value.toYAPIONString();
+        abstractOutput.consume(name.replaceAll(PATTERN, REPLACEMENT));
+        value.toYAPION(abstractOutput);
+        return abstractOutput;
     }
 
     @Override
-    public String toYAPIONStringPrettified() {
+    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
         if (name.startsWith(" ")) {
-            return "\\" + name.replaceAll(PATTERN, REPLACEMENT) + value.toYAPIONStringPrettified();
+            abstractOutput.consume("\\");
         }
-        return name.replaceAll(PATTERN, REPLACEMENT) + value.toYAPIONStringPrettified();
+        abstractOutput.consume(name.replaceAll(PATTERN, REPLACEMENT));
+        value.toYAPIONPrettified(abstractOutput);
+        return abstractOutput;
     }
 
     public String toJSONString() {
@@ -71,20 +79,6 @@ public final class YAPIONVariable extends YAPIONAnyClosure {
     @Override
     public String toLossyJSONString() {
         return "\"" + name + "\":" + value.toLossyJSONString();
-    }
-
-    @Override
-    public void toOutputStream(OutputStream outputStream) throws IOException {
-        if (name.startsWith(" ")) outputStream.write("\\".getBytes(StandardCharsets.UTF_8));
-        outputStream.write(name.replaceAll(PATTERN, REPLACEMENT).getBytes(StandardCharsets.UTF_8));
-        value.toOutputStream(outputStream);
-    }
-
-    @Override
-    public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
-        if (name.startsWith(" ")) outputStream.write("\\".getBytes(StandardCharsets.UTF_8));
-        outputStream.write(name.replaceAll(PATTERN, REPLACEMENT).getBytes(StandardCharsets.UTF_8));
-        value.toOutputStreamPrettified(outputStream);
     }
 
     @Override

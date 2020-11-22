@@ -5,6 +5,7 @@
 package yapion;
 
 import yapion.exceptions.YAPIONException;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
@@ -143,7 +144,7 @@ public class YAPIONUtils {
             if (c == '{') {
                 try {
                     YAPIONObject yapionObject = YAPIONParser.parse(string.substring(i));
-                    i += yapionObject.toYAPIONString().length();
+                    i += yapionObject.toYAPION(new StringOutput()).length();
                     yapionObjects.add(yapionObject);
                 } catch (YAPIONException e) {
 

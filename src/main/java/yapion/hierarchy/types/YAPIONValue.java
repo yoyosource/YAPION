@@ -7,6 +7,8 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.YAPIONException;
+import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONValueType;
 
@@ -46,7 +48,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     private final T value;
-    private String type;
+    private final String type;
 
     public YAPIONValue(T value) {
         if (!validType(value)) {
@@ -78,48 +80,113 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return new YAPIONValue<>(value);
     }
 
-    @Override
-    public String toYAPIONString() {
-        if (value == null) return assembleOutput(type);
+    void toStrippedYAPION(AbstractOutput abstractOutput) {
+        if (value == null) {
+            abstractOutput.consume(type);
+            return;
+        }
         String string = value.toString().replaceAll("[()]", "\\\\$0");
         if (value instanceof String) {
-            return assembleString(string);
+            abstractOutput.consume(string);
+            return;
         }
         if (value instanceof Character) {
-            return assembleOutput("'" + string + "'");
+            abstractOutput.consume("'" + string + "'");
+            return;
         }
 
         if (value instanceof Byte) {
-            return assembleOutput(string + "B");
+            abstractOutput.consume(string + "B");
+            return;
         }
         if (value instanceof Short) {
-            return assembleOutput(string + "S");
+            abstractOutput.consume(string + "S");
+            return;
         }
         if (value instanceof Integer) {
-            return assembleOutput(string);
+            abstractOutput.consume(string);
+            return;
         }
         if (value instanceof Long) {
-            return assembleOutput(string + "L");
+            abstractOutput.consume(string + "L");
+            return;
         }
         if (value instanceof BigInteger) {
-            return assembleOutput(string + "BI");
+            abstractOutput.consume(string + "BI");
+            return;
         }
 
         if (value instanceof Float) {
-            return assembleOutput(string + "F");
+            abstractOutput.consume(string + "F");
+            return;
         }
         if (value instanceof Double) {
-            return assembleOutput(string);
+            abstractOutput.consume(string + "D");
+            return;
         }
         if (value instanceof BigDecimal) {
-            return assembleOutput(string + "BD");
+            abstractOutput.consume(string + "BD");
+            return;
         }
-        return assembleOutput(value.toString());
+        abstractOutput.consume(value.toString());
     }
 
     @Override
-    public String toYAPIONStringPrettified() {
-        return toYAPIONString();
+    public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
+        if (value == null) {
+            abstractOutput.consume(assembleOutput(type));
+            return abstractOutput;
+        }
+        String string = value.toString().replaceAll("[()]", "\\\\$0");
+        if (value instanceof String) {
+            abstractOutput.consume(assembleString(string));
+            return abstractOutput;
+        }
+        if (value instanceof Character) {
+            abstractOutput.consume(assembleOutput("'" + string + "'"));
+            return abstractOutput;
+        }
+
+        if (value instanceof Byte) {
+            abstractOutput.consume(assembleOutput(string + "B"));
+            return abstractOutput;
+        }
+        if (value instanceof Short) {
+            abstractOutput.consume(assembleOutput(string + "S"));
+            return abstractOutput;
+        }
+        if (value instanceof Integer) {
+            abstractOutput.consume(assembleOutput(string));
+            return abstractOutput;
+        }
+        if (value instanceof Long) {
+            abstractOutput.consume(assembleOutput(string + "L"));
+            return abstractOutput;
+        }
+        if (value instanceof BigInteger) {
+            abstractOutput.consume(assembleOutput(string + "BI"));
+            return abstractOutput;
+        }
+
+        if (value instanceof Float) {
+            abstractOutput.consume(assembleOutput(string + "F"));
+            return abstractOutput;
+        }
+        if (value instanceof Double) {
+            abstractOutput.consume(assembleOutput(string));
+            return abstractOutput;
+        }
+        if (value instanceof BigDecimal) {
+            abstractOutput.consume(assembleOutput(string + "BD"));
+            return abstractOutput;
+        }
+        abstractOutput.consume(assembleOutput(value.toString()));
+        return abstractOutput;
+    }
+
+    @Override
+    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
+        return toYAPION(abstractOutput);
     }
 
     @Override
@@ -160,16 +227,6 @@ public class YAPIONValue<T> extends YAPIONValueType {
             return "null";
         }
         return value.toString();
-    }
-
-    @Override
-    public void toOutputStream(OutputStream outputStream) throws IOException {
-        outputStream.write(bytes(toYAPIONString()));
-    }
-
-    @Override
-    public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
-        toOutputStream(outputStream);
     }
 
     @SuppressWarnings({"java:S3740"})
@@ -236,7 +293,9 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @Override
     public String toString() {
-        return toYAPIONString();
+        StringOutput stringOutput = new StringOutput();
+        toYAPION(stringOutput);
+        return stringOutput.getResult();
     }
 
     private String assembleOutput(String s) {

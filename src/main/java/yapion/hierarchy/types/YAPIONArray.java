@@ -7,12 +7,11 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
+import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONDataType;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -56,59 +55,46 @@ public class YAPIONArray extends YAPIONDataType {
         return "";
     }
 
-    @Override
-    public String toYAPIONString() {
-        StringBuilder st = new StringBuilder();
-        st.append("[");
+    public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
+        abstractOutput.consume("[");
         boolean b = false;
         for (YAPIONAnyType yapionAnyType : array) {
-            if (b) {
-                st.append(",");
-            }
+            if (b) abstractOutput.consume(",");
             if (yapionAnyType == null) {
-                st.append("null");
+                abstractOutput.consume("null");
+            } else if (yapionAnyType instanceof YAPIONValue) {
+                ((YAPIONValue) yapionAnyType).toStrippedYAPION(abstractOutput);
             } else {
-                String s = yapionAnyType.toYAPIONString();
-                if (yapionAnyType.getType() == YAPIONType.VALUE) {
-                    st.append(s, 1, s.length() - 1);
-                } else {
-                    st.append(s);
-                }
+                yapionAnyType.toYAPION(abstractOutput);
             }
             b = true;
         }
-        st.append("]");
-        return st.toString();
+        abstractOutput.consume("]");
+        return abstractOutput;
     }
 
     @Override
-    public String toYAPIONStringPrettified() {
+    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
         final String indent = "\n" + indent();
-        StringBuilder st = new StringBuilder();
-        st.append("[");
+        abstractOutput.consume("[");
         boolean b = false;
         for (YAPIONAnyType yapionAnyType : array) {
-            if (b) {
-                st.append(",");
-            }
-            st.append(indent);
+            if (b) abstractOutput.consume(",");
+            abstractOutput.consume(indent);
             if (yapionAnyType == null) {
-                st.append("null");
+                abstractOutput.consume("null");
+            } else if (yapionAnyType instanceof YAPIONValue) {
+                ((YAPIONValue) yapionAnyType).toStrippedYAPION(abstractOutput);
             } else {
-                String s = yapionAnyType.toYAPIONStringPrettified();
-                if (yapionAnyType.getType() == YAPIONType.VALUE) {
-                    st.append(s, 1, s.length() - 1);
-                } else {
-                    st.append(s);
-                }
+                yapionAnyType.toYAPIONPrettified(abstractOutput);
             }
             b = true;
         }
         if (!array.isEmpty()) {
-            st.append(",\n").append(reducedIndent());
+            abstractOutput.consume(",\n").consume(reducedIndent());
         }
-        st.append("]");
-        return st.toString();
+        abstractOutput.consume("]");
+        return abstractOutput;
     }
 
     @Override
@@ -119,47 +105,6 @@ public class YAPIONArray extends YAPIONDataType {
     @Override
     public String toLossyJSONString() {
         return "[" + array.stream().map(YAPIONAnyType::toLossyJSONString).collect(Collectors.joining(",")) + "]";
-    }
-
-    @Override
-    public void toOutputStream(OutputStream outputStream) throws IOException {
-        outputStream.write(bytes("["));
-        for (int i = 0; i < array.size(); i++) {
-            if (i != 0) {
-                outputStream.write(bytes(","));
-            }
-            YAPIONAnyType yapionAnyType = array.get(i);
-            if (yapionAnyType instanceof YAPIONValue) {
-                String s = yapionAnyType.toYAPIONString();
-                outputStream.write(s.substring(1, s.length() - 1).getBytes(StandardCharsets.UTF_8));
-            } else {
-                array.get(i).toOutputStream(outputStream);
-            }
-        }
-        outputStream.write(bytes("]"));
-    }
-
-    @Override
-    public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
-        final byte[] indent = bytes("\n" + indent());
-        outputStream.write(bytes("["));
-        for (int i = 0; i < array.size(); i++) {
-            if (i != 0) {
-                outputStream.write(",".getBytes(StandardCharsets.UTF_8));
-            }
-            outputStream.write(indent);
-            YAPIONAnyType yapionAnyType = array.get(i);
-            if (yapionAnyType instanceof YAPIONValue) {
-                String s = yapionAnyType.toYAPIONString();
-                outputStream.write(bytes(s.substring(1, s.length() - 1)));
-            } else {
-                array.get(i).toOutputStream(outputStream);
-            }
-        }
-        if (!array.isEmpty()) {
-            outputStream.write(bytes(",\n" + reducedIndent()));
-        }
-        outputStream.write(bytes("]"));
     }
 
     @Override
@@ -227,7 +172,9 @@ public class YAPIONArray extends YAPIONDataType {
 
     @Override
     public String toString() {
-        return toYAPIONString();
+        StringOutput stringOutput = new StringOutput();
+        toYAPION(stringOutput);
+        return stringOutput.getResult();
     }
 
     @Override

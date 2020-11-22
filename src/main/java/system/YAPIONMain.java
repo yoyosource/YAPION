@@ -13,6 +13,7 @@
 
 package system;
 
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 
@@ -66,8 +67,8 @@ public class YAPIONMain {
         String line = bufferedReader.readLine();
         System.out.println(line);
         System.out.println(line.length());
-        System.out.println(YAPIONParser.parseJSON(line).toYAPIONString());
-        System.out.println(YAPIONParser.parseJSON(line).toYAPIONString().length());
+        System.out.println(YAPIONParser.parseJSON(line).toYAPION(new StringOutput()).getResult());
+        System.out.println(YAPIONParser.parseJSON(line).toYAPION(new StringOutput()).getResult().length());
 
 
         // System.out.println(yapionObject.toBinaryYAPIONString());

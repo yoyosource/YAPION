@@ -7,6 +7,8 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONPointerException;
+import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.typegroups.YAPIONValueType;
 import yapion.utils.ReferenceIDUtils;
 
@@ -32,13 +34,15 @@ public class YAPIONPointer extends YAPIONValueType {
     }
 
     @Override
-    public String toYAPIONString() {
-        return "->" + getPointerIDString();
+    public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
+        abstractOutput.consume("->");
+        abstractOutput.consume(getPointerIDString());
+        return abstractOutput;
     }
 
     @Override
-    public String toYAPIONStringPrettified() {
-        return toYAPIONString();
+    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
+        return toYAPION(abstractOutput);
     }
 
     @Override
@@ -49,16 +53,6 @@ public class YAPIONPointer extends YAPIONValueType {
     @Override
     public String toLossyJSONString() {
         return "{\"" + POINTER_IDENTIFIER + "\":\"" + getPointerIDString() + "\"}";
-    }
-
-    @Override
-    public void toOutputStream(OutputStream outputStream) throws IOException {
-        outputStream.write(bytes(toYAPIONString()));
-    }
-
-    @Override
-    public void toOutputStreamPrettified(OutputStream outputStream) throws IOException {
-        toOutputStream(outputStream);
     }
 
     private long pointerID;
@@ -104,7 +98,9 @@ public class YAPIONPointer extends YAPIONValueType {
 
     @Override
     public String toString() {
-        return toYAPIONString();
+        StringOutput stringOutput = new StringOutput();
+        toYAPION(stringOutput);
+        return stringOutput.getResult();
     }
 
     @Override

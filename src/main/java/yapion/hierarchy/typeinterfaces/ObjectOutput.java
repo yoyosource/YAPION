@@ -4,8 +4,8 @@
 
 package yapion.hierarchy.typeinterfaces;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import yapion.hierarchy.output.AbstractOutput;
+
 import java.nio.charset.StandardCharsets;
 
 public interface ObjectOutput {
@@ -28,16 +28,16 @@ public interface ObjectOutput {
         return indent.substring(0, i);
     }
 
-    String toYAPIONString();
+    <T extends AbstractOutput> T toYAPION(T abstractOutput);
 
-    String toYAPIONStringPrettified();
+    <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput);
+
+    // <T extends AbstractOutput> T toJSON(T abstractOutput);
+
+    // <T extends AbstractOutput> T toJSONLossy(T abstractOutput);
 
     String toJSONString();
 
     String toLossyJSONString();
-
-    void toOutputStream(OutputStream outputStream) throws IOException;
-
-    void toOutputStreamPrettified(OutputStream outputStream) throws IOException;
 
 }
