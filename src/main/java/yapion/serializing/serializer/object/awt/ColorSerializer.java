@@ -1,15 +1,18 @@
 package yapion.serializing.serializer.object.awt;
 
+import lombok.experimental.FieldNameConstants;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.SerializerImplementation;
 
 import java.awt.*;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
+@SerializerImplementation
 public class ColorSerializer implements InternalSerializer<Color> {
 
     @Override
