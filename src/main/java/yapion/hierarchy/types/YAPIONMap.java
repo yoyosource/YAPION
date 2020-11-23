@@ -16,8 +16,6 @@ import yapion.hierarchy.typegroups.YAPIONMappingType;
 import yapion.parser.YAPIONParserMapMapping;
 import yapion.parser.YAPIONParserMapObject;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.*;
 
 import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
@@ -114,7 +112,7 @@ public class YAPIONMap extends YAPIONMappingType {
     }
 
     @Override
-    public String toJSONString() {
+    public <T extends AbstractOutput> T toJSON(T abstractOutput) {
         YAPIONObject yapionObject = new YAPIONObject();
         YAPIONArray mapping = new YAPIONArray();
         yapionObject.add(MAP_IDENTIFIER, mapping);
@@ -128,11 +126,12 @@ public class YAPIONMap extends YAPIONMappingType {
             yapionObject.add("#" + id1, entry.getKey());
             yapionObject.add("#" + id2, entry.getValue());
         }
-        return yapionObject.toJSONString();
+        yapionObject.toJSON(abstractOutput);
+        return abstractOutput;
     }
 
     @Override
-    public String toLossyJSONString() {
+    public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
         YAPIONObject yapionObject = new YAPIONObject();
         YAPIONArray mapping = new YAPIONArray();
         yapionObject.add(MAP_IDENTIFIER, mapping);
@@ -146,7 +145,8 @@ public class YAPIONMap extends YAPIONMappingType {
             yapionObject.add("#" + id1, entry.getKey());
             yapionObject.add("#" + id2, entry.getValue());
         }
-        return yapionObject.toLossyJSONString();
+        yapionObject.toJSONLossy(abstractOutput);
+        return abstractOutput;
     }
 
     public YAPIONMap add(YAPIONAnyType key, YAPIONAnyType value) {

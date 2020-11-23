@@ -46,13 +46,18 @@ public class YAPIONPointer extends YAPIONValueType {
     }
 
     @Override
-    public String toJSONString() {
-        return "{\"" + POINTER_IDENTIFIER + "\":\"" + getPointerIDString() + "\"}";
+    public <T extends AbstractOutput> T toJSON(T abstractOutput) {
+        abstractOutput.consume("{\"")
+                .consume(POINTER_IDENTIFIER)
+                .consume("\":\"")
+                .consume(getPointerIDString())
+                .consume("\"}");
+        return abstractOutput;
     }
 
     @Override
-    public String toLossyJSONString() {
-        return "{\"" + POINTER_IDENTIFIER + "\":\"" + getPointerIDString() + "\"}";
+    public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
+        return toJSON(abstractOutput);
     }
 
     private long pointerID;

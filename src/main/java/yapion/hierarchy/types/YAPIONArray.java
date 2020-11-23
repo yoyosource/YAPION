@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
@@ -98,13 +97,29 @@ public class YAPIONArray extends YAPIONDataType {
     }
 
     @Override
-    public String toJSONString() {
-        return "[" + array.stream().map(YAPIONAnyType::toJSONString).collect(Collectors.joining(",")) + "]";
+    public <T extends AbstractOutput> T toJSON(T abstractOutput) {
+        abstractOutput.consume("[");
+        boolean b = false;
+        for (YAPIONAnyType yapionAnyType : array) {
+            if (b) abstractOutput.consume(",");
+            yapionAnyType.toJSON(abstractOutput);
+            b = true;
+        }
+        abstractOutput.consume("]");
+        return abstractOutput;
     }
 
     @Override
-    public String toLossyJSONString() {
-        return "[" + array.stream().map(YAPIONAnyType::toLossyJSONString).collect(Collectors.joining(",")) + "]";
+    public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
+        abstractOutput.consume("[");
+        boolean b = false;
+        for (YAPIONAnyType yapionAnyType : array) {
+            if (b) abstractOutput.consume(",");
+            yapionAnyType.toJSONLossy(abstractOutput);
+            b = true;
+        }
+        abstractOutput.consume("]");
+        return abstractOutput;
     }
 
     @Override

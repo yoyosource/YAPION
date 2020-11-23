@@ -72,13 +72,18 @@ public final class YAPIONVariable extends YAPIONAnyClosure {
         return abstractOutput;
     }
 
-    public String toJSONString() {
-        return "\"" + name + "\":" + value.toJSONString();
+    @Override
+    public <T extends AbstractOutput> T toJSON(T abstractOutput) {
+        abstractOutput.consume("\"").consume(name).consume("\":");
+        value.toJSON(abstractOutput);
+        return abstractOutput;
     }
 
     @Override
-    public String toLossyJSONString() {
-        return "\"" + name + "\":" + value.toLossyJSONString();
+    public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
+        abstractOutput.consume("\"").consume(name).consume("\":");
+        value.toJSONLossy(abstractOutput);
+        return abstractOutput;
     }
 
     @Override

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
@@ -59,7 +58,7 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     @Override
-    public < T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
+    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
         final String indent = "\n" + indent();
         abstractOutput.consume("{");
         for (YAPIONVariable yapionVariable : variables) {
@@ -75,13 +74,29 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     @Override
-    public String toJSONString() {
-        return "{" + variables.stream().map(YAPIONVariable::toJSONString).collect(Collectors.joining(",")) + "}";
+    public <T extends AbstractOutput> T toJSON(T abstractOutput) {
+        abstractOutput.consume("{");
+        boolean b = false;
+        for (YAPIONVariable yapionVariable : variables) {
+            if (b) abstractOutput.consume(",");
+            yapionVariable.toJSON(abstractOutput);
+            b = true;
+        }
+        abstractOutput.consume("}");
+        return abstractOutput;
     }
 
     @Override
-    public String toLossyJSONString() {
-        return "{" + variables.stream().map(YAPIONVariable::toLossyJSONString).collect(Collectors.joining(",")) + "}";
+    public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
+        abstractOutput.consume("{");
+        boolean b = false;
+        for (YAPIONVariable yapionVariable : variables) {
+            if (b) abstractOutput.consume(",");
+            yapionVariable.toJSONLossy(abstractOutput);
+            b = true;
+        }
+        abstractOutput.consume("}");
+        return abstractOutput;
     }
 
     @Override

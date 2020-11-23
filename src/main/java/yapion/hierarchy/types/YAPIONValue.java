@@ -12,8 +12,6 @@ import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONValueType;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -190,43 +188,53 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     @Override
-    public String toJSONString() {
+    public <T extends AbstractOutput> T toJSON(T abstractOutput) {
         if (value instanceof String) {
-            return "\"" + ((String) value).replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
+            abstractOutput.consume("\"")
+                    .consume(value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"))
+                    .consume("\"");
+            return abstractOutput;
         }
         if (value instanceof Character) {
             YAPIONObject yapionObject = new YAPIONObject();
             yapionObject.add(typeIdentifier.get(type), value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"));
-            return yapionObject.toLossyJSONString();
+            yapionObject.toJSONLossy(abstractOutput);
+            return abstractOutput;
         }
         if (value instanceof BigInteger || value instanceof BigDecimal) {
             YAPIONObject yapionObject = new YAPIONObject();
             yapionObject.add(typeIdentifier.get(type), value.toString());
-            return yapionObject.toLossyJSONString();
+            yapionObject.toJSONLossy(abstractOutput);
+            return abstractOutput;
         }
         if (value == null) {
-            return "null";
+            abstractOutput.consume("null");
+            return abstractOutput;
         }
         if (typeIdentifier.containsKey(type)) {
             YAPIONObject yapionObject = new YAPIONObject();
             yapionObject.add(typeIdentifier.get(type), this);
-            return yapionObject.toLossyJSONString();
+            yapionObject.toJSONLossy(abstractOutput);
+            return abstractOutput;
         }
-        return value.toString();
+        abstractOutput.consume(value.toString());
+        return abstractOutput;
     }
 
     @Override
-    public String toLossyJSONString() {
-        if (value instanceof String) {
-            return "\"" + ((String) value).replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
-        }
-        if (value instanceof Character) {
-            return "\"" + value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
+    public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
+        if (value instanceof String || value instanceof Character) {
+            abstractOutput.consume("\"")
+                    .consume(value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"))
+                    .consume("\"");
+            return abstractOutput;
         }
         if (value == null) {
-            return "null";
+            abstractOutput.consume("null");
+            return abstractOutput;
         }
-        return value.toString();
+        abstractOutput.consume(value.toString());
+        return abstractOutput;
     }
 
     @SuppressWarnings({"java:S3740"})
