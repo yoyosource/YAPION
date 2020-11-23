@@ -1,6 +1,7 @@
 package yapion.notation;
 
 import org.junit.Test;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
@@ -13,7 +14,7 @@ public class NotationObjectsTest {
 
     @Test
     public void testObjectYAPION() {
-        assertThat(new YAPIONObject().toYAPIONString(), is("{}"));
+        assertThat(new YAPIONObject().toYAPION(new StringOutput()).getResult(), is("{}"));
     }
 
     @Test
@@ -23,7 +24,7 @@ public class NotationObjectsTest {
 
     @Test
     public void testMapYAPION() {
-        assertThat(new YAPIONMap().toYAPIONString(), is("<>"));
+        assertThat(new YAPIONMap().toYAPION(new StringOutput()).getResult(), is("<>"));
     }
 
     @Test
@@ -33,7 +34,7 @@ public class NotationObjectsTest {
 
     @Test
     public void testArrayYAPION() {
-        assertThat(new YAPIONArray().toYAPIONString(), is("[]"));
+        assertThat(new YAPIONArray().toYAPION(new StringOutput()).getResult(), is("[]"));
     }
 
     @Test

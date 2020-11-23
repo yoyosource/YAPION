@@ -1,6 +1,7 @@
 package yapion.notation;
 
 import org.junit.Test;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
@@ -14,7 +15,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testObjectObjectYAPION() {
-        assertThat(new YAPIONObject().add("object", new YAPIONObject()).toYAPIONString(), is("{object{}}"));
+        assertThat(new YAPIONObject().add("object", new YAPIONObject()).toYAPION(new StringOutput()).getResult(), is("{object{}}"));
     }
 
     @Test
@@ -24,7 +25,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testObjectArrayYAPION() {
-        assertThat(new YAPIONObject().add("array", new YAPIONArray()).toYAPIONString(), is("{array[]}"));
+        assertThat(new YAPIONObject().add("array", new YAPIONArray()).toYAPION(new StringOutput()).getResult(), is("{array[]}"));
     }
 
     @Test
@@ -34,7 +35,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testObjectMapYAPION() {
-        assertThat(new YAPIONObject().add("map", new YAPIONMap()).toYAPIONString(), is("{map<>}"));
+        assertThat(new YAPIONObject().add("map", new YAPIONMap()).toYAPION(new StringOutput()).getResult(), is("{map<>}"));
     }
 
     @Test
@@ -44,7 +45,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testArrayObjectYAPION() {
-        assertThat(new YAPIONArray().add(new YAPIONObject()).toYAPIONString(), is("[{}]"));
+        assertThat(new YAPIONArray().add(new YAPIONObject()).toYAPION(new StringOutput()).getResult(), is("[{}]"));
     }
 
     @Test
@@ -54,7 +55,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testArrayArrayYAPION() {
-        assertThat(new YAPIONArray().add(new YAPIONArray()).toYAPIONString(), is("[[]]"));
+        assertThat(new YAPIONArray().add(new YAPIONArray()).toYAPION(new StringOutput()).getResult(), is("[[]]"));
     }
 
     @Test
@@ -64,7 +65,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testArrayMapYAPION() {
-        assertThat(new YAPIONArray().add(new YAPIONMap()).toYAPIONString(), is("[<>]"));
+        assertThat(new YAPIONArray().add(new YAPIONMap()).toYAPION(new StringOutput()).getResult(), is("[<>]"));
     }
 
     @Test
@@ -74,7 +75,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testMapObjectYAPION() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>("object"), new YAPIONObject()).toYAPIONString(), is("<0:1#0(object)#1{}>"));
+        assertThat(new YAPIONMap().add(new YAPIONValue<>("object"), new YAPIONObject()).toYAPION(new StringOutput()).getResult(), is("<0:1#0(object)#1{}>"));
     }
 
     @Test
@@ -84,7 +85,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testMapArrayYAPION() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>("array"), new YAPIONArray()).toYAPIONString(), is("<0:1#0(array)#1[]>"));
+        assertThat(new YAPIONMap().add(new YAPIONValue<>("array"), new YAPIONArray()).toYAPION(new StringOutput()).getResult(), is("<0:1#0(array)#1[]>"));
     }
 
     @Test
@@ -94,7 +95,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testMapMapYAPION() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>("map"), new YAPIONMap()).toYAPIONString(), is("<0:1#0(map)#1<>>"));
+        assertThat(new YAPIONMap().add(new YAPIONValue<>("map"), new YAPIONMap()).toYAPION(new StringOutput()).getResult(), is("<0:1#0(map)#1<>>"));
     }
 
     @Test
