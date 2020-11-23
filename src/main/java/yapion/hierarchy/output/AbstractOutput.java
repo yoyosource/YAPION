@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 public abstract class AbstractOutput {
 
     public final AbstractOutput consume(String s) {
-        validCall();
+        validateMethodCall();
         internalConsume(s);
         return this;
     }
@@ -18,7 +18,7 @@ public abstract class AbstractOutput {
         return s.getBytes(StandardCharsets.UTF_8);
     }
 
-    protected final void validCall() {
+    private void validateMethodCall() {
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         if (stackTraceElements.length < 4) {
             throw new YAPIONException("Invalid calling class");

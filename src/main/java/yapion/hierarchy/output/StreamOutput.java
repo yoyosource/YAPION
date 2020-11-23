@@ -5,7 +5,7 @@ import yapion.exceptions.YAPIONException;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class StreamOutput extends AbstractOutput {
+public class StreamOutput extends AbstractOutput implements AutoCloseable {
 
     private final OutputStream outputStream;
 

@@ -12,7 +12,7 @@ public class FileOutput extends StreamOutput {
 
     @Override
     protected void internalConsume(String s) {
-        super.consume(s);
+        super.internalConsume(s);
     }
 
 }
