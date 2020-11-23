@@ -6,7 +6,13 @@ import java.nio.charset.StandardCharsets;
 
 public abstract class AbstractOutput {
 
-    public abstract AbstractOutput consume(String s);
+    public final AbstractOutput consume(String s) {
+        validCall();
+        internalConsume(s);
+        return this;
+    }
+
+    protected abstract void internalConsume(String s);
 
     protected final byte[] bytes(String s) {
         return s.getBytes(StandardCharsets.UTF_8);

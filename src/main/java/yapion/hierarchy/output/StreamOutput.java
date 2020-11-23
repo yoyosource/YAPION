@@ -14,14 +14,12 @@ public class StreamOutput extends AbstractOutput {
     }
 
     @Override
-    public AbstractOutput consume(String s) {
-        validCall();
+    protected void internalConsume(String s) {
         try {
             outputStream.write(bytes(s));
         } catch (IOException e) {
             throw new YAPIONException("Exception while writing data");
         }
-        return this;
     }
 
     public void flush() {
