@@ -64,11 +64,17 @@ public final class YAPIONSerializer {
 
     private YAPIONSerializer(@NonNull Object object, YAPIONSerializer yapionSerializer) {
         this.object = object;
-        if (yapionSerializer.contextManager.isCascading()) {
+        // TODO: Test this cascading feature
+        if (yapionSerializer.contextManager.willBeCascading(object.getClass()) && !yapionSerializer.contextManager.isCascading()) {
+            this.contextManager = new ContextManager(yapionSerializer.contextManager.get());
+        } else {
+            this.contextManager = yapionSerializer.contextManager;
+        }
+        /*if (yapionSerializer.contextManager.isCascading()) {
             this.contextManager = yapionSerializer.contextManager;
         } else {
             this.contextManager = new ContextManager(yapionSerializer.contextManager.get());
-        }
+        }*/
         this.pointerMap = yapionSerializer.pointerMap;
     }
 

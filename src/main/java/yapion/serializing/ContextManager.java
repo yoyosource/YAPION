@@ -19,7 +19,7 @@ import java.lang.reflect.Field;
 public final class ContextManager {
 
     private final String state;
-    private boolean emptyState;
+    private final boolean emptyState;
 
     public ContextManager(String state) {
         this.state = state;
@@ -83,6 +83,12 @@ public final class ContextManager {
     private boolean localLoad = false;
     private boolean localOptimize = false;
     private boolean localSave = false;
+
+    boolean willBeCascading(Class<?> clazz) {
+        YAPIONData yapionData = clazz.getDeclaredAnnotation(YAPIONData.class);
+        if (yapionData == null) return false;
+        return yapionData.cascading();
+    }
 
     YAPIONInfo is(Class<?> clazz) {
         if (is(clazz.getDeclaredAnnotation(YAPIONLoadExclude.class))) globalLoad = false;
