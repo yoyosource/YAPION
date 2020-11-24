@@ -27,8 +27,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":42,"i4":9,"i5":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
+var data = {"i0":10,"i1":10,"i2":10,"i3":9,"i4":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -158,7 +158,7 @@ extends java.lang.Object</pre>
 </a>
 <h3>Method Summary</h3>
 <div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="tableTab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t6" class="tableTab" onclick="show(32);">Deprecated Methods</button></div>
+<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="tableTab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
 <div id="memberSummary_tabpanel" role="tabpanel">
 <table aria-labelledby="t0">
 <tr>
@@ -187,23 +187,13 @@ extends java.lang.Object</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i3">
-<td class="colFirst"><code><a href="../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(java.lang.Object,yapion.serializing.YAPIONSerializer)">parse</a></span>&#8203;(java.lang.Object&nbsp;object,
-     <a href="YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a>&nbsp;yapionSerializer)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">since 0.12.0 use <a href="#parse(java.lang.Object)"><code>parse(Object)</code></a> instead</div>
-</div>
-</td>
-</tr>
-<tr class="altColor" id="i4">
 <td class="colFirst"><code>static <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serialize(java.lang.Object)">serialize</a></span>&#8203;(@NonNull java.lang.Object&nbsp;object)</code></th>
 <td class="colLast">
 <div class="block">Serialize an Object to an YAPION Object.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr class="altColor" id="i4">
 <td class="colFirst"><code>static <a href="../hierarchy/types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serialize(java.lang.Object,java.lang.String)">serialize</a></span>&#8203;(@NonNull java.lang.Object&nbsp;object,
          java.lang.String&nbsp;context)</code></th>
@@ -298,27 +288,6 @@ extends java.lang.Object</pre>
 <dd><code>context</code> - the context for serialization</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>YAPIONObject from the object to serialize</dd>
-</dl>
-</li>
-</ul>
-<a id="parse(java.lang.Object,yapion.serializing.YAPIONSerializer)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>parse</h4>
-<pre class="methodSignature">@Deprecated
-public&nbsp;<a href="../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;parse&#8203;(java.lang.Object&nbsp;object,
-                           <a href="YAPIONSerializer.html" title="class in yapion.serializing">YAPIONSerializer</a>&nbsp;yapionSerializer)</pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">since 0.12.0 use <a href="#parse(java.lang.Object)"><code>parse(Object)</code></a> instead</div>
-</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>object</code> - to parse</dd>
-<dd><code>yapionSerializer</code> - to parse with</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the <a href="../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups"><code>YAPIONAnyType</code></a> of the Object inputted</dd>
 </dl>
 </li>
 </ul>

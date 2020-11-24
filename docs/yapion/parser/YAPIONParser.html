@@ -335,8 +335,8 @@ extends java.lang.Object</pre>
  <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
  <br>{"@mapping":[]} will be interpreted as a map.
 
- <br><br>Some specialties for non Lossy JSON <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONString()"><code>ObjectOutput.toJSONString()</code></a>
- instead of <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toLossyJSONString()"><code>ObjectOutput.toLossyJSONString()</code></a> will be
+ <br><br>Some specialties for non Lossy JSON <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSON(T)"><code>ObjectOutput.toJSON(AbstractOutput)</code></a>
+ instead of <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONLossy(T)"><code>ObjectOutput.toJSONLossy(AbstractOutput)</code></a> will be
  the primitive types that are represented by an YAPIONObject
  instead.
  This is to ensure that Data loss will not happen.
@@ -352,13 +352,13 @@ extends java.lang.Object</pre>
 
  <br><br>You can find more information in the classes
  <a href="../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types"><code>YAPIONMap</code></a>, <a href="../hierarchy/types/YAPIONPointer.html" title="class in yapion.hierarchy.types"><code>YAPIONPointer</code></a> and <a href="../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>.
- These classes have the method <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONString()"><code>ObjectOutput.toJSONString()</code></a>
- and <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toLossyJSONString()"><code>ObjectOutput.toLossyJSONString()</code></a> overridden with a
+ These classes have the method <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSON(T)"><code>ObjectOutput.toJSON(AbstractOutput)</code></a>
+ and <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONLossy(T)"><code>ObjectOutput.toJSONLossy(AbstractOutput)</code></a> overridden with a
  specific implementation for these types. The difference
  between those methods should be the <a href="../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>
  implementation as it tries to not lose any data with
- <a href="../hierarchy/types/YAPIONValue.html#toJSONString()"><code>YAPIONValue.toJSONString()</code></a> and will discard some data
- by using <a href="../hierarchy/types/YAPIONValue.html#toLossyJSONString()"><code>YAPIONValue.toLossyJSONString()</code></a>. The data
+ <a href="../hierarchy/types/YAPIONValue.html#toJSON(T)"><code>YAPIONValue.toJSON(AbstractOutput)</code></a> and will discard some data
+ by using <a href="../hierarchy/types/YAPIONValue.html#toJSONLossy(T)"><code>YAPIONValue.toJSONLossy(AbstractOutput)</code></a>. The data
  that gets lost are the type of numbers, floating point
  numbers and the information whether or not the <code>String</code>
  was previously a <code>Character</code>.</div>
@@ -388,8 +388,8 @@ extends java.lang.Object</pre>
  <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
  <br>{"@mapping":[]} will be interpreted as a map.
 
- <br><br>Some specialties for non Lossy JSON <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONString()"><code>ObjectOutput.toJSONString()</code></a>
- instead of <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toLossyJSONString()"><code>ObjectOutput.toLossyJSONString()</code></a> will be
+ <br><br>Some specialties for non Lossy JSON <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSON(T)"><code>ObjectOutput.toJSON(AbstractOutput)</code></a>
+ instead of <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONLossy(T)"><code>ObjectOutput.toJSONLossy(AbstractOutput)</code></a> will be
  the primitive types that are represented by an YAPIONObject
  instead.
  This is to ensure that Data loss will not happen.
@@ -405,13 +405,13 @@ extends java.lang.Object</pre>
 
  <br><br>You can find more information in the classes
  <a href="../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types"><code>YAPIONMap</code></a>, <a href="../hierarchy/types/YAPIONPointer.html" title="class in yapion.hierarchy.types"><code>YAPIONPointer</code></a> and <a href="../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>.
- These classes have the method <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONString()"><code>ObjectOutput.toJSONString()</code></a>
- and <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toLossyJSONString()"><code>ObjectOutput.toLossyJSONString()</code></a> overridden with a
+ These classes have the method <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSON(T)"><code>ObjectOutput.toJSON(AbstractOutput)</code></a>
+ and <a href="../hierarchy/typeinterfaces/ObjectOutput.html#toJSONLossy(T)"><code>ObjectOutput.toJSONLossy(AbstractOutput)</code></a> overridden with a
  specific implementation for these types. The difference
  between those methods should be the <a href="../hierarchy/types/YAPIONValue.html" title="class in yapion.hierarchy.types"><code>YAPIONValue</code></a>
  implementation as it tries to not lose any data with
- <a href="../hierarchy/types/YAPIONValue.html#toJSONString()"><code>YAPIONValue.toJSONString()</code></a> and will discard some data
- by using <a href="../hierarchy/types/YAPIONValue.html#toLossyJSONString()"><code>YAPIONValue.toLossyJSONString()</code></a>. The data
+ <a href="../hierarchy/types/YAPIONValue.html#toJSON(T)"><code>YAPIONValue.toJSON(AbstractOutput)</code></a> and will discard some data
+ by using <a href="../hierarchy/types/YAPIONValue.html#toJSONLossy(T)"><code>YAPIONValue.toJSONLossy(AbstractOutput)</code></a>. The data
  that gets lost are the type of numbers, floating point
  numbers and the information whether or not the <code>String</code>
  was previously a <code>Character</code>.</div>

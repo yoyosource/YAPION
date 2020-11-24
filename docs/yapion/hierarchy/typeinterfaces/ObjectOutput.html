@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":18,"i1":18,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6};
+var data = {"i0":18,"i1":18,"i2":6,"i3":6,"i4":6,"i5":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -172,33 +172,23 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i2">
-<td class="colFirst"><code>java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toJSONString()">toJSONString</a></span>()</code></th>
+<td class="colFirst"><code>&lt;T extends <a href="../output/AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a>&gt;<br>T</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toJSON(T)">toJSON</a></span>&#8203;(T&nbsp;abstractOutput)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i3">
-<td class="colFirst"><code>java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toLossyJSONString()">toLossyJSONString</a></span>()</code></th>
+<td class="colFirst"><code>&lt;T extends <a href="../output/AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a>&gt;<br>T</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toJSONLossy(T)">toJSONLossy</a></span>&#8203;(T&nbsp;abstractOutput)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i4">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toOutputStream(java.io.OutputStream)">toOutputStream</a></span>&#8203;(java.io.OutputStream&nbsp;outputStream)</code></th>
+<td class="colFirst"><code>&lt;T extends <a href="../output/AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a>&gt;<br>T</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toYAPION(T)">toYAPION</a></span>&#8203;(T&nbsp;abstractOutput)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i5">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toOutputStreamPrettified(java.io.OutputStream)">toOutputStreamPrettified</a></span>&#8203;(java.io.OutputStream&nbsp;outputStream)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i6">
-<td class="colFirst"><code>java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toYAPIONString()">toYAPIONString</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i7">
-<td class="colFirst"><code>java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toYAPIONStringPrettified()">toYAPIONStringPrettified</a></span>()</code></th>
+<td class="colFirst"><code>&lt;T extends <a href="../output/AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a>&gt;<br>T</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toYAPIONPrettified(T)">toYAPIONPrettified</a></span>&#8203;(T&nbsp;abstractOutput)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -258,68 +248,48 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre class="methodSignature">default&nbsp;java.lang.String&nbsp;indent&#8203;(int&nbsp;i)</pre>
 </li>
 </ul>
-<a id="toYAPIONString()">
+<a id="toYAPION(yapion.hierarchy.output.AbstractOutput)">
+<!--   -->
+</a><a id="toYAPION(T)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>toYAPIONString</h4>
-<pre class="methodSignature">java.lang.String&nbsp;toYAPIONString()</pre>
+<h4>toYAPION</h4>
+<pre class="methodSignature">&lt;T extends <a href="../output/AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a>&gt;&nbsp;T&nbsp;toYAPION&#8203;(T&nbsp;abstractOutput)</pre>
 </li>
 </ul>
-<a id="toYAPIONStringPrettified()">
+<a id="toYAPIONPrettified(yapion.hierarchy.output.AbstractOutput)">
+<!--   -->
+</a><a id="toYAPIONPrettified(T)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>toYAPIONStringPrettified</h4>
-<pre class="methodSignature">java.lang.String&nbsp;toYAPIONStringPrettified()</pre>
+<h4>toYAPIONPrettified</h4>
+<pre class="methodSignature">&lt;T extends <a href="../output/AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a>&gt;&nbsp;T&nbsp;toYAPIONPrettified&#8203;(T&nbsp;abstractOutput)</pre>
 </li>
 </ul>
-<a id="toJSONString()">
+<a id="toJSON(yapion.hierarchy.output.AbstractOutput)">
+<!--   -->
+</a><a id="toJSON(T)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>toJSONString</h4>
-<pre class="methodSignature">java.lang.String&nbsp;toJSONString()</pre>
+<h4>toJSON</h4>
+<pre class="methodSignature">&lt;T extends <a href="../output/AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a>&gt;&nbsp;T&nbsp;toJSON&#8203;(T&nbsp;abstractOutput)</pre>
 </li>
 </ul>
-<a id="toLossyJSONString()">
+<a id="toJSONLossy(yapion.hierarchy.output.AbstractOutput)">
 <!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>toLossyJSONString</h4>
-<pre class="methodSignature">java.lang.String&nbsp;toLossyJSONString()</pre>
-</li>
-</ul>
-<a id="toOutputStream(java.io.OutputStream)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>toOutputStream</h4>
-<pre class="methodSignature">void&nbsp;toOutputStream&#8203;(java.io.OutputStream&nbsp;outputStream)
-             throws java.io.IOException</pre>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.io.IOException</code></dd>
-</dl>
-</li>
-</ul>
-<a id="toOutputStreamPrettified(java.io.OutputStream)">
+</a><a id="toJSONLossy(T)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>toOutputStreamPrettified</h4>
-<pre class="methodSignature">void&nbsp;toOutputStreamPrettified&#8203;(java.io.OutputStream&nbsp;outputStream)
-                       throws java.io.IOException</pre>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.io.IOException</code></dd>
-</dl>
+<h4>toJSONLossy</h4>
+<pre class="methodSignature">&lt;T extends <a href="../output/AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a>&gt;&nbsp;T&nbsp;toJSONLossy&#8203;(T&nbsp;abstractOutput)</pre>
 </li>
 </ul>
 </li>

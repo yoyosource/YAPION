@@ -7,6 +7,7 @@ yapion.exceptions.parser
 yapion.exceptions.serializing
 yapion.exceptions.utils
 yapion.exceptions.value
+yapion.hierarchy.output
 yapion.hierarchy.typegroups
 yapion.hierarchy.typeinterfaces
 yapion.hierarchy.types
@@ -17,8 +18,10 @@ yapion.serializing
 yapion.serializing.api
 yapion.serializing.data
 yapion.serializing.serializer
+yapion.serializing.serializer.notserializable.net
 yapion.serializing.serializer.notserializable.os
 yapion.serializing.serializer.notserializable.thread
+yapion.serializing.serializer.object.awt
 yapion.serializing.serializer.object.deque
 yapion.serializing.serializer.object.deque.concurrent
 yapion.serializing.serializer.object.list
