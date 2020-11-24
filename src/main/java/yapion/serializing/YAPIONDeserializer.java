@@ -5,15 +5,9 @@
 package yapion.serializing;
 
 import lombok.NonNull;
-import lombok.extern.log4j.Log4j;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.object.YAPIONPostDeserialization;
-import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.exceptions.utils.YAPIONReflectionException;
@@ -29,8 +23,10 @@ import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.IdentityHashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
 
 import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
@@ -39,37 +35,6 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @YAPIONLoadExclude(context = "*")
 @Slf4j
 public final class YAPIONDeserializer {
-
-    private static int cacheSize = 100;
-
-    private static final Map<String, ObjectCache> methodMap = new LinkedHashMap<String, ObjectCache>() {
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<String, ObjectCache> eldest) {
-            return size() > cacheSize;
-        }
-    };
-
-    /**
-     * Set the cache size of the internal cache to a specific
-     * number above 100. If you set a number below 100 it will
-     * default to 100.
-     *
-     * @param cacheSize the cache Size
-     */
-    public static void setCacheSize(int cacheSize) {
-        if (cacheSize < 100) {
-            cacheSize = 100;
-        }
-        YAPIONDeserializer.cacheSize = cacheSize;
-    }
-
-    /**
-     * Discard the cache used by {@link #preDeserializationStep()}
-     * and {@link #postDeserializationStep()}.
-     */
-    public static void discardCache() {
-        methodMap.clear();
-    }
 
     private Object object;
     private final YAPIONObject yapionObject;
@@ -303,7 +268,7 @@ public final class YAPIONDeserializer {
             }
 
             object = SerializeManager.getObjectInstance(clazz, type, contextManager);
-            preDeserializationStep();
+            MethodManager.preDeserializationStep(object, contextManager);
             pointerMap.put(yapionObject, object);
 
             for (String fieldName : yapionObject.getKeys()) {
@@ -354,7 +319,7 @@ public final class YAPIONDeserializer {
                     field.set(object, parse(yapionAnyType));
                 }
             }*/
-            postDeserializationStep();
+            MethodManager.postDeserializationStep(object, contextManager);
         } catch (ClassNotFoundException e) {
             log.warn("The class '" + type + "' was not found.", e.getCause());
         } catch (IllegalAccessException e) {
@@ -393,61 +358,6 @@ public final class YAPIONDeserializer {
             if (c != '\u0000') st.append(c);
         }
         return st.toString();
-    }
-
-    private class ObjectCache {
-
-        private final Map<String, Method> preCache = new HashMap<>();
-        private final Map<String, Method> postCache = new HashMap<>();
-
-        public ObjectCache(Object object) {
-            Method[] methods = object.getClass().getDeclaredMethods();
-            for (Method method : methods) {
-                if (method.getParameterCount() != 0) continue;
-                YAPIONPreDeserialization yapionPreDeserialization = method.getAnnotation(YAPIONPreDeserialization.class);
-                YAPIONPostDeserialization yapionPostDeserialization = method.getAnnotation(YAPIONPostDeserialization.class);
-
-                if (yapionPreDeserialization != null) cache(preCache, yapionPreDeserialization.context(), method);
-                if (yapionPostDeserialization != null) cache(postCache, yapionPostDeserialization.context(), method);
-            }
-        }
-
-        private void cache(Map<String, Method> cache, String[] context, Method method) {
-            for (String s : context) {
-                cache.put(s, method);
-            }
-            if (context.length == 0) {
-                cache.put("", method);
-            }
-        }
-
-        private void pre(Object object, ContextManager contextManager) {
-            String state = contextManager.get();
-            if (!preCache.containsKey(state)) return;
-            ReflectionsUtils.invokeMethod(preCache.get(state), object);
-        }
-
-        private void post(Object object, ContextManager contextManager) {
-            String state = contextManager.get();
-            if (!postCache.containsKey(state)) return;
-            ReflectionsUtils.invokeMethod(postCache.get(state), object);
-        }
-    }
-
-    private void preDeserializationStep() {
-        String key = object.getClass().getTypeName();
-        if (!methodMap.containsKey(key)) {
-            methodMap.put(key, new ObjectCache(object));
-        }
-        methodMap.get(key).pre(object, contextManager);
-    }
-
-    private void postDeserializationStep() {
-        String key = object.getClass().getTypeName();
-        if (!methodMap.containsKey(key)) {
-            methodMap.put(key, new ObjectCache(object));
-        }
-        methodMap.get(key).post(object, contextManager);
     }
 
     /**

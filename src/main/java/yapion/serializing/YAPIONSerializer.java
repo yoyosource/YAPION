@@ -36,7 +36,7 @@ public final class YAPIONSerializer {
      * @param object to serialize
      * @return YAPIONObject from the object to serialize
      */
-    public static YAPIONObject serialize(@NonNull() Object object) {
+    public static YAPIONObject serialize(@NonNull Object object) {
         return serialize(object, "");
     }
 
@@ -120,6 +120,7 @@ public final class YAPIONSerializer {
             throw new YAPIONSerializerException("No suitable serializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
         }
 
+        MethodManager.preSerializationStep(object, contextManager);
         YAPIONObject yapionObject = new YAPIONObject();
         if (!pointerMap.containsKey(object)) {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
@@ -164,6 +165,7 @@ public final class YAPIONSerializer {
             }
             yapionObject.add(new YAPIONVariable(name, yapionAnyType));
         }
+        MethodManager.postSerializationStep(object, contextManager);
         return this;
     }
 
