@@ -32,7 +32,6 @@ public final class YAPIONOutputStream {
      * Writing the YAPIONObject to the OutputStream.
      *
      * @param yapionObject the YAPIONObject
-     * @throws IOException {@link OutputStream#flush()}
      */
     public void write(YAPIONObject yapionObject) {
         yapionObject.toYAPION(new StreamOutput(outputStream)).flush();
@@ -42,7 +41,6 @@ public final class YAPIONOutputStream {
      * Writing the YAPIONPacket to the OutputStream.
      *
      * @param yapionPacket the YAPIONPacket
-     * @throws IOException {@link #write(YAPIONObject)}
      */
     public void write(YAPIONPacket yapionPacket) {
         write(yapionPacket.getYAPION());
@@ -52,7 +50,6 @@ public final class YAPIONOutputStream {
      * Writing the Object to the OutputStream.
      *
      * @param object the Object
-     * @throws IOException {@link #write(YAPIONPacket)}
      */
     public void write(Object object) {
         write(YAPIONSerializer.serialize(object));
@@ -63,7 +60,6 @@ public final class YAPIONOutputStream {
      *
      * @param object the Object
      * @param state the specified state
-     * @throws IOException {@link #write(Object)}
      */
     public void write(Object object, String state) {
         write(YAPIONSerializer.serialize(object, state));

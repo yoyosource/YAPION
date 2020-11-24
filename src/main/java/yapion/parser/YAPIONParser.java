@@ -8,6 +8,7 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.exceptions.utils.YAPIONIOException;
+import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typeinterfaces.ObjectOutput;
 import yapion.hierarchy.types.*;
@@ -55,8 +56,8 @@ public final class YAPIONParser {
      * <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
      * <br>{"@mapping":[]} will be interpreted as a map.
      *
-     * <br><br>Some specialties for non Lossy JSON {@link ObjectOutput#toJSONString()}
-     * instead of {@link ObjectOutput#toLossyJSONString()} will be
+     * <br><br>Some specialties for non Lossy JSON {@link ObjectOutput#toJSON(AbstractOutput)}
+     * instead of {@link ObjectOutput#toJSONLossy(AbstractOutput)} will be
      * the primitive types that are represented by an YAPIONObject
      * instead.
      * This is to ensure that Data loss will not happen.
@@ -72,13 +73,13 @@ public final class YAPIONParser {
      *
      * <br><br>You can find more information in the classes
      * {@link YAPIONMap}, {@link YAPIONPointer} and {@link YAPIONValue}.
-     * These classes have the method {@link ObjectOutput#toJSONString()}
-     * and {@link ObjectOutput#toLossyJSONString()} overridden with a
+     * These classes have the method {@link ObjectOutput#toJSON(AbstractOutput)}
+     * and {@link ObjectOutput#toJSONLossy(AbstractOutput)} overridden with a
      * specific implementation for these types. The difference
      * between those methods should be the {@link YAPIONValue}
      * implementation as it tries to not lose any data with
-     * {@link YAPIONValue#toJSONString()} and will discard some data
-     * by using {@link YAPIONValue#toLossyJSONString()}. The data
+     * {@link YAPIONValue#toJSON(AbstractOutput)} and will discard some data
+     * by using {@link YAPIONValue#toJSONLossy(AbstractOutput)}. The data
      * that gets lost are the type of numbers, floating point
      * numbers and the information whether or not the {@link String}
      * was previously a {@link Character}.
@@ -102,8 +103,8 @@ public final class YAPIONParser {
      * <br><br>{"@pointer":"0000000000000000"} will be interpreted as a pointer.
      * <br>{"@mapping":[]} will be interpreted as a map.
      *
-     * <br><br>Some specialties for non Lossy JSON {@link ObjectOutput#toJSONString()}
-     * instead of {@link ObjectOutput#toLossyJSONString()} will be
+     * <br><br>Some specialties for non Lossy JSON {@link ObjectOutput#toJSON(AbstractOutput)}
+     * instead of {@link ObjectOutput#toJSONLossy(AbstractOutput)} will be
      * the primitive types that are represented by an YAPIONObject
      * instead.
      * This is to ensure that Data loss will not happen.
@@ -119,13 +120,13 @@ public final class YAPIONParser {
      *
      * <br><br>You can find more information in the classes
      * {@link YAPIONMap}, {@link YAPIONPointer} and {@link YAPIONValue}.
-     * These classes have the method {@link ObjectOutput#toJSONString()}
-     * and {@link ObjectOutput#toLossyJSONString()} overridden with a
+     * These classes have the method {@link ObjectOutput#toJSON(AbstractOutput)}
+     * and {@link ObjectOutput#toJSONLossy(AbstractOutput)} overridden with a
      * specific implementation for these types. The difference
      * between those methods should be the {@link YAPIONValue}
      * implementation as it tries to not lose any data with
-     * {@link YAPIONValue#toJSONString()} and will discard some data
-     * by using {@link YAPIONValue#toLossyJSONString()}. The data
+     * {@link YAPIONValue#toJSON(AbstractOutput)} and will discard some data
+     * by using {@link YAPIONValue#toJSONLossy(AbstractOutput)}. The data
      * that gets lost are the type of numbers, floating point
      * numbers and the information whether or not the {@link String}
      * was previously a {@link Character}.
