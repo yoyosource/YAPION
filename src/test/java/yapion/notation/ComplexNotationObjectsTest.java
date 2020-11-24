@@ -20,7 +20,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testObjectObjectJSON() {
-        assertThat(new YAPIONObject().add("object", new YAPIONObject()).toJSONString(), is("{\"object\":{}}"));
+        assertThat(new YAPIONObject().add("object", new YAPIONObject()).toJSONLossy(new StringOutput()).getResult(), is("{\"object\":{}}"));
     }
 
     @Test
@@ -30,7 +30,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testObjectArrayJSON() {
-        assertThat(new YAPIONObject().add("array", new YAPIONArray()).toJSONString(), is("{\"array\":[]}"));
+        assertThat(new YAPIONObject().add("array", new YAPIONArray()).toJSONLossy(new StringOutput()).getResult(), is("{\"array\":[]}"));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testObjectMapJSON() {
-        assertThat(new YAPIONObject().add("map", new YAPIONMap()).toJSONString(), is("{\"map\":{\"@mapping\":[]}}"));
+        assertThat(new YAPIONObject().add("map", new YAPIONMap()).toJSONLossy(new StringOutput()).getResult(), is("{\"map\":{\"@mapping\":[]}}"));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testArrayObjectJSON() {
-        assertThat(new YAPIONArray().add(new YAPIONObject()).toJSONString(), is("[{}]"));
+        assertThat(new YAPIONArray().add(new YAPIONObject()).toJSONLossy(new StringOutput()).getResult(), is("[{}]"));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testArrayArrayJSON() {
-        assertThat(new YAPIONArray().add(new YAPIONArray()).toJSONString(), is("[[]]"));
+        assertThat(new YAPIONArray().add(new YAPIONArray()).toJSONLossy(new StringOutput()).getResult(), is("[[]]"));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testArrayMapJSON() {
-        assertThat(new YAPIONArray().add(new YAPIONMap()).toJSONString(), is("[{\"@mapping\":[]}]"));
+        assertThat(new YAPIONArray().add(new YAPIONMap()).toJSONLossy(new StringOutput()).getResult(), is("[{\"@mapping\":[]}]"));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testMapObjectJSON() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>("object"), new YAPIONObject()).toJSONString(), is("{\"@mapping\":[\"0:1\"],\"#0\":\"object\",\"#1\":{}}"));
+        assertThat(new YAPIONMap().add(new YAPIONValue<>("object"), new YAPIONObject()).toJSONLossy(new StringOutput()).getResult(), is("{\"@mapping\":[\"0:1\"],\"#0\":\"object\",\"#1\":{}}"));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testMapArrayJSON() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>("array"), new YAPIONArray()).toJSONString(), is("{\"@mapping\":[\"0:1\"],\"#0\":\"array\",\"#1\":[]}"));
+        assertThat(new YAPIONMap().add(new YAPIONValue<>("array"), new YAPIONArray()).toJSONLossy(new StringOutput()).getResult(), is("{\"@mapping\":[\"0:1\"],\"#0\":\"array\",\"#1\":[]}"));
     }
 
     @Test
@@ -100,7 +100,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testMapMapJSON() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>("map"), new YAPIONMap()).toJSONString(), is("{\"@mapping\":[\"0:1\"],\"#0\":\"map\",\"#1\":{\"@mapping\":[]}}"));
+        assertThat(new YAPIONMap().add(new YAPIONValue<>("map"), new YAPIONMap()).toJSONLossy(new StringOutput()).getResult(), is("{\"@mapping\":[\"0:1\"],\"#0\":\"map\",\"#1\":{\"@mapping\":[]}}"));
     }
 
 }

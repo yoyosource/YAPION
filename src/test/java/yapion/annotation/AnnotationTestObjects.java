@@ -11,11 +11,13 @@ public class AnnotationTestObjects {
     public static class PreTest {
 
         @YAPIONPreDeserialization(context = {"exception"})
+        @YAPIONPreSerialization(context = {"exception"})
         private void pre() {
             throw new IllegalArgumentException();
         }
 
         @YAPIONPreDeserialization(context = {"noException"})
+        @YAPIONPreSerialization(context = {"noException"})
         private void preOther() {
 
         }
@@ -26,11 +28,13 @@ public class AnnotationTestObjects {
     public static class PostTest {
 
         @YAPIONPostDeserialization(context = {"exception"})
+        @YAPIONPostSerialization(context = {"exception"})
         private void post() {
             throw new IllegalArgumentException();
         }
 
         @YAPIONPostDeserialization(context = "noException")
+        @YAPIONPostSerialization(context = {"noException"})
         private void postOther() {
 
         }
@@ -41,7 +45,7 @@ public class AnnotationTestObjects {
     public static class OptimizeTest {
 
         @YAPIONOptimize
-        private String s;
+        private final String s;
 
         public OptimizeTest(String s) {
             this.s = s;
@@ -56,7 +60,7 @@ public class AnnotationTestObjects {
 
         @YAPIONSave
         @YAPIONLoad(context = {"objenesis"})
-        private String s = "objenesis";
+        private final String s = "objenesis";
 
     }
 
@@ -65,7 +69,7 @@ public class AnnotationTestObjects {
     public static class FieldTypeTest1 {
 
         @YAPIONField(context = {"fieldOther"})
-        private String s = "some-string";
+        private final String s = "some-string";
 
     }
 
@@ -73,7 +77,7 @@ public class AnnotationTestObjects {
     public static class FieldTypeTest2 {
 
         @YAPIONField(context = {"fieldOther"})
-        private String s = "some-string";
+        private final String s = "some-string";
 
     }
 

@@ -19,7 +19,7 @@ public class NotationObjectsTest {
 
     @Test
     public void testObjectJSON() {
-        assertThat(new YAPIONObject().toJSONString(), is("{}"));
+        assertThat(new YAPIONObject().toJSONLossy(new StringOutput()).getResult(), is("{}"));
     }
 
     @Test
@@ -29,7 +29,7 @@ public class NotationObjectsTest {
 
     @Test
     public void testMapJSON() {
-        assertThat(new YAPIONMap().toJSONString(), is("{\"@mapping\":[]}"));
+        assertThat(new YAPIONMap().toJSONLossy(new StringOutput()).getResult(), is("{\"@mapping\":[]}"));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class NotationObjectsTest {
 
     @Test
     public void testArrayJSON() {
-        assertThat(new YAPIONArray().toJSONString(), is("[]"));
+        assertThat(new YAPIONArray().toJSONLossy(new StringOutput()).getResult(), is("[]"));
     }
 
 }

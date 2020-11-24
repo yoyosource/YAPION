@@ -5,6 +5,10 @@ import java.util.Map;
 
 public final class MethodManager {
 
+    private MethodManager() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static int cacheSize = 100;
 
     private static final Map<String, ObjectCache> methodMap = new LinkedHashMap<String, ObjectCache>() {

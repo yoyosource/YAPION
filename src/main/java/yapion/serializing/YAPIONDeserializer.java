@@ -326,8 +326,6 @@ public final class YAPIONDeserializer {
             log.warn("", e.getCause());
         } catch (YAPIONReflectionException e) {
             log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
         }
         return this;
     }

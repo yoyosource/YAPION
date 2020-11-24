@@ -5,6 +5,7 @@
 package test;
 
 import yapion.annotations.object.YAPIONData;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
@@ -21,9 +22,9 @@ public class TestData {
     public static void main(String[] args) {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestData(""));
         System.out.println(yapionObject);
-        System.out.println(YAPIONParser.mapJSON(YAPIONParser.parseJSON(yapionObject.toJSONString())));
-        System.out.println(yapionObject.toJSONString());
-        System.out.println(yapionObject.toLossyJSONString());
+        System.out.println(YAPIONParser.mapJSON(YAPIONParser.parseJSON(yapionObject.toJSON(new StringOutput()).getResult())));
+        System.out.println(yapionObject.toJSON(new StringOutput()).getResult());
+        System.out.println(yapionObject.toJSONLossy(new StringOutput()).getResult());
         Object object = YAPIONDeserializer.deserialize(yapionObject);
         System.out.println(object);
     }

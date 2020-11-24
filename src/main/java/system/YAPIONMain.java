@@ -135,7 +135,7 @@ public class YAPIONMain {
     // 42236 ms
 
     public static void test(YAPIONObject yapionObject) {
-        int lengthJSON = yapionObject.toJSONString().length();
+        int lengthJSON = yapionObject.toJSON(new StringOutput()).length();
         int lengthYAPION = yapionObject.toString().length();
         double factor = (double)lengthJSON / lengthYAPION;
         System.out.println("FACTOR: " + factor + "   JSON: " + lengthJSON + "   YAPION: " + lengthYAPION + "   DIV: " + (lengthJSON - lengthYAPION));
