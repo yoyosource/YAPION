@@ -1,6 +1,7 @@
 package yapion.serializing;
 
 import org.junit.Test;
+import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.parser.YAPIONParser;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -43,6 +44,21 @@ public class YAPIONDeserializerTest {
         assertThat(object, is(new TestEnum()));
     }
 
+    @Test(expected = YAPIONDeserializerException.class)
+    public void testEnumClassNotFound() {
+        YAPIONDeserializer.deserialize(YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestEnum)test1{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$Unknown)value(Hello)ordinal(0)}}"));
+    }
+
+    @Test(expected = YAPIONDeserializerException.class)
+    public void testEnumClassNoEnum() {
+        YAPIONDeserializer.deserialize(YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestEnum)test1{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$TestPrimitive)value(Hello)ordinal(0)}}"));
+    }
+
+    @Test(expected = YAPIONDeserializerException.class)
+    public void testEnumElementNotFound() {
+        YAPIONDeserializer.deserialize(YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestEnum)test1{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(NotHello)ordinal(0)}}"));
+    }
+
     @Test(expected = NullPointerException.class)
     public void testNPECheck() {
         YAPIONDeserializer.deserialize(null);
@@ -51,6 +67,12 @@ public class YAPIONDeserializerTest {
     @Test(expected = NullPointerException.class)
     public void testNPECheckState() {
         YAPIONDeserializer.deserialize(null, "some state");
+    }
+
+    @Test(expected = YAPIONDeserializerException.class)
+    public void testDeserializerMissingLoadAnnotation() {
+        // Resolved class has no Load annotation
+        Object object = YAPIONDeserializer.deserialize(YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$NoAnnotations)}"));
     }
 
 }

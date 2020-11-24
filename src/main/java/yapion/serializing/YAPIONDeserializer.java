@@ -116,7 +116,11 @@ public final class YAPIONDeserializer {
 
     private YAPIONDeserializer(@NonNull YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
         this.yapionObject = yapionObject;
-        this.contextManager = yapionDeserializer.contextManager;
+        if (yapionDeserializer.contextManager.isCascading()) {
+            this.contextManager = yapionDeserializer.contextManager;
+        } else {
+            this.contextManager = new ContextManager(yapionDeserializer.contextManager.get());
+        }
         this.pointerMap = yapionDeserializer.pointerMap;
         this.typeReMapper = yapionDeserializer.typeReMapper;
         this.deserializeResult = yapionDeserializer.deserializeResult;
@@ -264,7 +268,7 @@ public final class YAPIONDeserializer {
         try {
             Class<?> clazz = Class.forName(type);
             if (!contextManager.is(clazz).load) {
-                throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
+                throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
             }
 
             object = SerializeManager.getObjectInstance(clazz, type, contextManager);

@@ -28,4 +28,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface YAPIONData {
     String[] context() default {};
+
+    /**
+     * Cascade this annotation to instance properties / objects and their properties, too.
+     */
+    boolean cascading() default false;
 }

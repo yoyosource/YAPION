@@ -90,7 +90,12 @@ public final class ContextManager {
         if (is(clazz.getDeclaredAnnotation(YAPIONSaveExclude.class))) globalSave = false;
         globalSave = is(clazz.getDeclaredAnnotation(YAPIONSave.class));
 
-        yapionData = clazz.getDeclaredAnnotation(YAPIONData.class);
+        if (yapionData == null) {
+            yapionData = clazz.getDeclaredAnnotation(YAPIONData.class);
+        }
+        if (!isCascading()) {
+            yapionData = clazz.getDeclaredAnnotation(YAPIONData.class);
+        }
         if (yapionData != null) {
             boolean yapionDataBoolean = is(yapionData);
             globalLoad = globalLoad || yapionDataBoolean;
@@ -98,6 +103,10 @@ public final class ContextManager {
         }
 
         return new YAPIONInfo(globalLoad, globalSave, yapionData != null && globalLoad);
+    }
+
+    boolean isCascading() {
+        return yapionData != null && yapionData.cascading();
     }
 
     YAPIONInfo is(Object object) {

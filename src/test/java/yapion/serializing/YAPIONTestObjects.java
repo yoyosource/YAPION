@@ -123,6 +123,8 @@ public class YAPIONTestObjects {
 
     }
 
+    public static class NoAnnotations {}
+
     static String getUserHome() {
         return System.getProperty("user.home");
     }
