@@ -1,20 +1,18 @@
 package yapion.hierarchy.output;
 
-public class StringOutput extends AbstractOutput {
+public class StringOutput extends StringBuilderOutput {
 
-    private final StringBuilder st = new StringBuilder();
+    public StringOutput() {
+        super(new StringBuilder());
+    }
 
     @Override
     protected void internalConsume(String s) {
-        st.append(s);
+        super.internalConsume(s);
     }
 
     public String getResult() {
-        return st.toString();
-    }
-
-    public int length() {
-        return st.length();
+        return super.st.toString();
     }
 
 }

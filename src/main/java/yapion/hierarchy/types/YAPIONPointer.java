@@ -41,11 +41,6 @@ public class YAPIONPointer extends YAPIONValueType {
     }
 
     @Override
-    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
-        return toYAPION(abstractOutput);
-    }
-
-    @Override
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
         abstractOutput.consume("{\"")
                 .consume(POINTER_IDENTIFIER)

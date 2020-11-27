@@ -56,9 +56,13 @@ public class YAPIONArray extends YAPIONDataType {
 
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
         abstractOutput.consume("[");
+
+        final String indent = "\n" + indent();
         boolean b = false;
         for (YAPIONAnyType yapionAnyType : array) {
             if (b) abstractOutput.consume(",");
+            abstractOutput.consumePrettified(indent);
+
             if (yapionAnyType == null) {
                 abstractOutput.consume("null");
             } else if (yapionAnyType instanceof YAPIONValue) {
@@ -66,32 +70,14 @@ public class YAPIONArray extends YAPIONDataType {
             } else {
                 yapionAnyType.toYAPION(abstractOutput);
             }
-            b = true;
-        }
-        abstractOutput.consume("]");
-        return abstractOutput;
-    }
 
-    @Override
-    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
-        final String indent = "\n" + indent();
-        abstractOutput.consume("[");
-        boolean b = false;
-        for (YAPIONAnyType yapionAnyType : array) {
-            if (b) abstractOutput.consume(",");
-            abstractOutput.consume(indent);
-            if (yapionAnyType == null) {
-                abstractOutput.consume("null");
-            } else if (yapionAnyType instanceof YAPIONValue) {
-                ((YAPIONValue) yapionAnyType).toStrippedYAPION(abstractOutput);
-            } else {
-                yapionAnyType.toYAPIONPrettified(abstractOutput);
-            }
             b = true;
         }
+
         if (!array.isEmpty()) {
-            abstractOutput.consume(",\n").consume(reducedIndent());
+            abstractOutput.consumePrettified(",\n").consumePrettified(reducedIndent());
         }
+
         abstractOutput.consume("]");
         return abstractOutput;
     }

@@ -30,8 +30,6 @@ public interface ObjectOutput {
 
     <T extends AbstractOutput> T toYAPION(T abstractOutput);
 
-    <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput);
-
     <T extends AbstractOutput> T toJSON(T abstractOutput);
 
     <T extends AbstractOutput> T toJSONLossy(T abstractOutput);

@@ -63,16 +63,6 @@ public final class YAPIONVariable extends YAPIONAnyClosure {
     }
 
     @Override
-    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
-        if (name.startsWith(" ")) {
-            abstractOutput.consume("\\");
-        }
-        abstractOutput.consume(name.replaceAll(PATTERN, REPLACEMENT));
-        value.toYAPIONPrettified(abstractOutput);
-        return abstractOutput;
-    }
-
-    @Override
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
         abstractOutput.consume("\"").consume(name).consume("\":");
         value.toJSON(abstractOutput);

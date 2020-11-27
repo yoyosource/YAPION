@@ -183,11 +183,6 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     @Override
-    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
-        return toYAPION(abstractOutput);
-    }
-
-    @Override
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
         if (value instanceof String) {
             abstractOutput.consume("\"")

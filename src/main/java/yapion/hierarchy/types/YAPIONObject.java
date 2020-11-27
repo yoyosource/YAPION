@@ -50,25 +50,17 @@ public class YAPIONObject extends YAPIONMappingType {
     @Override
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
         abstractOutput.consume("{");
+
+        final String indent = "\n" + indent();
         for (YAPIONVariable yapionVariable : variables) {
+            abstractOutput.consumePrettified(indent);
             yapionVariable.toYAPION(abstractOutput);
         }
-        abstractOutput.consume("}");
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
-        final String indent = "\n" + indent();
-        abstractOutput.consume("{");
-        for (YAPIONVariable yapionVariable : variables) {
-            abstractOutput.consume(indent);
-            yapionVariable.toYAPIONPrettified(abstractOutput);
-        }
+        
         if (!variables.isEmpty()) {
-            abstractOutput.consume("\n");
-            abstractOutput.consume(reducedIndent());
+            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
         }
+        
         abstractOutput.consume("}");
         return abstractOutput;
     }

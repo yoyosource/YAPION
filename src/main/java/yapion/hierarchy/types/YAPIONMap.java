@@ -67,46 +67,31 @@ public class YAPIONMap extends YAPIONMappingType {
 
     @Override
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
-        long id = 0;
-
         abstractOutput.consume("<");
+
+        long id = 0;
+        final String indent = "\n" + indent();
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
+            abstractOutput.consumePrettified(indent);
+
             String id1 = String.format("%01X", id++);
             String id2 = String.format("%01X", id++);
 
             abstractOutput.consume(id1 + ":" + id2);
+            abstractOutput.consumePrettified(indent);
+
             abstractOutput.consume("#" + id1);
             entry.getKey().toYAPION(abstractOutput);
+            abstractOutput.consumePrettified(indent);
+
             abstractOutput.consume("#" + id2);
             entry.getValue().toYAPION(abstractOutput);
         }
-        abstractOutput.consume(">");
-        return abstractOutput;
-    }
 
-    @Override
-    public <T extends AbstractOutput> T toYAPIONPrettified(T abstractOutput) {
-        final String indent = "\n" + indent();
-        long id = 0;
-
-        abstractOutput.consume("<");
-        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
-            abstractOutput.consume(indent);
-            String id1 = String.format("%01X", id++);
-            String id2 = String.format("%01X", id++);
-
-            abstractOutput.consume(id1 + ":" + id2);
-            abstractOutput.consume(indent);
-            abstractOutput.consume("#" + id1);
-            entry.getKey().toYAPIONPrettified(abstractOutput);
-            abstractOutput.consume(indent);
-            abstractOutput.consume("#" + id2);
-            entry.getValue().toYAPIONPrettified(abstractOutput);
-        }
         if (!variables.isEmpty()) {
-            abstractOutput.consume("\n");
-            abstractOutput.consume(reducedIndent());
+            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
         }
+
         abstractOutput.consume(">");
         return abstractOutput;
     }

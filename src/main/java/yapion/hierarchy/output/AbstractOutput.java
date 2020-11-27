@@ -12,7 +12,19 @@ public abstract class AbstractOutput {
         return this;
     }
 
+    public final AbstractOutput consumePrettified(String s) {
+        validateMethodCall();
+        if (prettified()) {
+            internalConsume(s);
+        }
+        return this;
+    }
+
     protected abstract void internalConsume(String s);
+
+    protected boolean prettified() {
+        return false;
+    }
 
     protected final byte[] bytes(String s) {
         return s.getBytes(StandardCharsets.UTF_8);
