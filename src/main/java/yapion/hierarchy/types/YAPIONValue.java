@@ -208,6 +208,11 @@ public class YAPIONValue<T> extends YAPIONValueType {
         }
         if (typeIdentifier.containsKey(type)) {
             YAPIONObject yapionObject = new YAPIONObject();
+            for (int i = 0; i < getDepth(); i++) {
+                YAPIONObject object = new YAPIONObject();
+                yapionObject.add("", object);
+                yapionObject = object;
+            }
             yapionObject.add(typeIdentifier.get(type), this);
             yapionObject.toJSONLossy(abstractOutput);
             return abstractOutput;
