@@ -68,12 +68,20 @@ public class YAPIONObject extends YAPIONMappingType {
     @Override
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
         abstractOutput.consume("{");
+
+        final String indent = "\n" + indent();
         boolean b = false;
         for (YAPIONVariable yapionVariable : variables) {
             if (b) abstractOutput.consume(",");
+            abstractOutput.consumePrettified(indent);
             yapionVariable.toJSON(abstractOutput);
             b = true;
         }
+
+        if (!variables.isEmpty()) {
+            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
+        }
+
         abstractOutput.consume("}");
         return abstractOutput;
     }
@@ -81,12 +89,20 @@ public class YAPIONObject extends YAPIONMappingType {
     @Override
     public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
         abstractOutput.consume("{");
+
+        final String indent = "\n" + indent();
         boolean b = false;
         for (YAPIONVariable yapionVariable : variables) {
             if (b) abstractOutput.consume(",");
+            abstractOutput.consumePrettified(indent);
             yapionVariable.toJSONLossy(abstractOutput);
             b = true;
         }
+
+        if (!variables.isEmpty()) {
+            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
+        }
+
         abstractOutput.consume("}");
         return abstractOutput;
     }

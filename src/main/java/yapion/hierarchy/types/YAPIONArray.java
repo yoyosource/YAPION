@@ -85,12 +85,20 @@ public class YAPIONArray extends YAPIONDataType {
     @Override
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
         abstractOutput.consume("[");
+
+        final String indent = "\n" + indent();
         boolean b = false;
         for (YAPIONAnyType yapionAnyType : array) {
             if (b) abstractOutput.consume(",");
+            abstractOutput.consumePrettified(indent);
             yapionAnyType.toJSON(abstractOutput);
             b = true;
         }
+
+        if (!array.isEmpty()) {
+            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
+        }
+
         abstractOutput.consume("]");
         return abstractOutput;
     }
@@ -98,12 +106,20 @@ public class YAPIONArray extends YAPIONDataType {
     @Override
     public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
         abstractOutput.consume("[");
+
+        final String indent = "\n" + indent();
         boolean b = false;
         for (YAPIONAnyType yapionAnyType : array) {
             if (b) abstractOutput.consume(",");
+            abstractOutput.consumePrettified(indent);
             yapionAnyType.toJSONLossy(abstractOutput);
             b = true;
         }
+
+        if (!array.isEmpty()) {
+            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
+        }
+
         abstractOutput.consume("]");
         return abstractOutput;
     }
