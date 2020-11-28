@@ -99,11 +99,7 @@ public class YAPIONMap extends YAPIONMappingType {
     @Override
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
         YAPIONObject yapionObject = new YAPIONObject();
-        for (int i = 0; i < getDepth(); i++) {
-            YAPIONObject object = new YAPIONObject();
-            yapionObject.add("", object);
-            yapionObject = object;
-        }
+        yapionObject.setParent(this);
         YAPIONArray mapping = new YAPIONArray();
         yapionObject.add(MAP_IDENTIFIER, mapping);
 
@@ -117,17 +113,14 @@ public class YAPIONMap extends YAPIONMappingType {
             yapionObject.add("#" + id2, entry.getValue());
         }
         yapionObject.toJSON(abstractOutput);
+        yapionObject.removeParent();
         return abstractOutput;
     }
 
     @Override
     public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
         YAPIONObject yapionObject = new YAPIONObject();
-        for (int i = 0; i < getDepth(); i++) {
-            YAPIONObject object = new YAPIONObject();
-            yapionObject.add("", object);
-            yapionObject = object;
-        }
+        yapionObject.setParent(this);
         YAPIONArray mapping = new YAPIONArray();
         yapionObject.add(MAP_IDENTIFIER, mapping);
 
@@ -141,6 +134,7 @@ public class YAPIONMap extends YAPIONMappingType {
             yapionObject.add("#" + id2, entry.getValue());
         }
         yapionObject.toJSONLossy(abstractOutput);
+        yapionObject.removeParent();
         return abstractOutput;
     }
 
