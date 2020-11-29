@@ -31,14 +31,14 @@ public class FileSerializer implements InternalSerializer<File> {
     public YAPIONAnyType serialize(SerializeData<File> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add("absolutePath", serializeData.object.getAbsolutePath());
+        yapionObject.add("path", serializeData.object.getPath());
         return yapionObject;
     }
 
     @Override
     public File deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        return new File(yapionObject.getValue("absolutePath", "").get());
+        return new File(yapionObject.getValue("path", "").get());
     }
 
 }

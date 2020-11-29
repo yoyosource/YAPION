@@ -31,7 +31,7 @@ public class IdentifierUtils {
      * This variable is used in the {@link EnumSerializer}
      * for identifying an {@link Enum} by its {@link Class#getTypeName()}.
      * In the serialization this variable is used as the
-     * key of a {@link YAPIONVariable} and will be calles
+     * key of a {@link YAPIONVariable} and will be called
      * enum variable.
      */
     public static final String ENUM_IDENTIFIER = "@enum";
