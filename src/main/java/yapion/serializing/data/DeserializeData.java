@@ -27,18 +27,9 @@ public class DeserializeData<T extends YAPIONAnyType> {
         return new DeserializeData<>(object, context, yapionDeserializer);
     }
 
-    @SuppressWarnings({"java:S3011"})
     public boolean deserialize(String fieldName, Object object, YAPIONAnyType yapionAnyType) {
         Field field = ReflectionsUtils.getField(object.getClass(), fieldName);
-        if (field == null) return false;
-        try {
-            field.setAccessible(true);
-            field.set(object, deserialize(yapionAnyType));
-            return true;
-        } catch (IllegalAccessException e) {
-
-        }
-        return false;
+        return setField(field, deserialize(yapionAnyType));
     }
 
     public Object deserialize(YAPIONAnyType yapionAnyType) {
@@ -47,6 +38,11 @@ public class DeserializeData<T extends YAPIONAnyType> {
 
     public boolean setField(String fieldName, Object object, Object objectToSet) {
         Field field = ReflectionsUtils.getField(object.getClass(), fieldName);
+        return setField(field, objectToSet);
+    }
+
+    @SuppressWarnings({"java:S3011"})
+    private boolean setField(Field field, Object objectToSet) {
         if (field == null) return false;
         try {
             field.setAccessible(true);
