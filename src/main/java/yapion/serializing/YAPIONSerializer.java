@@ -46,11 +46,34 @@ public final class YAPIONSerializer {
      * Serialize an Object to an YAPION Object.
      *
      * @param object to serialize
+     * @param strict if serialization should be strict and check if any data would get lost while serialization
+     * @return YAPIONObject from the object to serialize
+     */
+    public static YAPIONObject serialize(@NonNull Object object, boolean strict) {
+        return serialize(object, "", strict);
+    }
+
+    /**
+     * Serialize an Object to an YAPION Object.
+     *
+     * @param object to serialize
      * @param context the context for serialization
      * @return YAPIONObject from the object to serialize
      */
     public static YAPIONObject serialize(@NonNull Object object, String context) {
         return new YAPIONSerializer(object, context).parse().getYAPIONObject();
+    }
+
+    /**
+     * Serialize an Object to an YAPION Object.
+     *
+     * @param object to serialize
+     * @param context the context for serialization
+     * @param strict if serialization should be strict and check if any data would get lost while serialization
+     * @return YAPIONObject from the object to serialize
+     */
+    public static YAPIONObject serialize(@NonNull Object object, String context, boolean strict) {
+        return new YAPIONSerializer(object, context, strict).parse().getYAPIONObject();
     }
 
     /**
