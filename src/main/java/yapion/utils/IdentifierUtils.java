@@ -10,6 +10,10 @@ import yapion.parser.JSONMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.serializer.object.other.EnumSerializer;
+import yapion.serializing.serializer.object.throwable.ErrorSerializer;
+import yapion.serializing.serializer.object.throwable.ExceptionSerializer;
+import yapion.serializing.serializer.object.throwable.RuntimeExceptionSerializer;
+import yapion.serializing.serializer.object.throwable.ThrowableSerializer;
 
 public class IdentifierUtils {
 
@@ -37,7 +41,14 @@ public class IdentifierUtils {
     public static final String ENUM_IDENTIFIER = "@enum";
 
     /**
-     *
+     * This variable is used in the {@link ThrowableSerializer},
+     * {@link ExceptionSerializer}, {@link RuntimeExceptionSerializer} and
+     * {@link ErrorSerializer} for identifying an {@link Throwable},
+     * {@link Exception}, {@link RuntimeException} and {@link Error}
+     * respectively by its {@link Class#getTypeName()}.
+     * In the serialization this variable is used as the
+     * key of a {@link YAPIONVariable} and will be called
+     * exception variable.
      */
     public static final String EXCEPTION_IDENTIFIER = "@exception";
 
