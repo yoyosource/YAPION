@@ -25,6 +25,7 @@ public class ThreadSerializer implements InternalSerializer<Thread> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Thread> serializeData) {
+        serializeData.signalDataLoss();
         return new YAPIONValue<>(null);
     }
 

@@ -5,10 +5,12 @@
 package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
+import org.graalvm.compiler.hotspot.phases.OnStackReplacementPhase;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.serializing.YAPIONDeserializer;
+import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
 
@@ -27,12 +29,13 @@ public class DeserializeData<T extends YAPIONAnyType> {
 
     @SuppressWarnings({"java:S3011"})
     public boolean deserialize(String fieldName, Object object, YAPIONAnyType yapionAnyType) {
+        Field field = ReflectionsUtils.getField(object.getClass(), fieldName);
+        if (field == null) return false;
         try {
-            Field field = object.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
             field.set(object, deserialize(yapionAnyType));
             return true;
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
 
         }
         return false;
@@ -40,6 +43,19 @@ public class DeserializeData<T extends YAPIONAnyType> {
 
     public Object deserialize(YAPIONAnyType yapionAnyType) {
         return yapionDeserializer.parse(yapionAnyType);
+    }
+
+    public boolean setField(String fieldName, Object object, Object objectToSet) {
+        Field field = ReflectionsUtils.getField(object.getClass(), fieldName);
+        if (field == null) return false;
+        try {
+            field.setAccessible(true);
+            field.set(object, objectToSet);
+            return true;
+        } catch (IllegalAccessException e) {
+
+        }
+        return false;
     }
 
 }

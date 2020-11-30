@@ -25,6 +25,7 @@ public class ProcessBuilderSerializer implements InternalSerializer<ProcessBuild
 
     @Override
     public YAPIONAnyType serialize(SerializeData<ProcessBuilder> serializeData) {
+        serializeData.signalDataLoss();
         return new YAPIONValue<>(null);
     }
 

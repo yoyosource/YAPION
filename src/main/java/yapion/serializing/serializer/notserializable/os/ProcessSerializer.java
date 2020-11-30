@@ -25,6 +25,7 @@ public class ProcessSerializer implements InternalSerializer<Process> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Process> serializeData) {
+        serializeData.signalDataLoss();
         return new YAPIONValue<>(null);
     }
 

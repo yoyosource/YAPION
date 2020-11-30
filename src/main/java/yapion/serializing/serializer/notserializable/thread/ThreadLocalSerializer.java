@@ -25,6 +25,7 @@ public class ThreadLocalSerializer implements InternalSerializer<ThreadLocal<?>>
 
     @Override
     public YAPIONAnyType serialize(SerializeData<ThreadLocal<?>> serializeData) {
+        serializeData.signalDataLoss();
         return new YAPIONValue<>(null);
     }
 

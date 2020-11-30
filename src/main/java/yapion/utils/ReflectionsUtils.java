@@ -4,6 +4,7 @@
 
 package yapion.utils;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.objenesis.ObjenesisBase;
 import org.objenesis.strategy.StdInstantiatorStrategy;
@@ -255,6 +256,52 @@ public class ReflectionsUtils {
             log.info("Exception while accessing a Field", e.getCause());
             throw new YAPIONReflectionException(e.getMessage(), e.getCause());
         }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(isException(YAPIONException.class));
+        System.out.println(isRuntimeException(YAPIONException.class));
+        System.out.println(isThrowable(YAPIONException.class));
+        System.out.println(isThrowable(YAPIONException.class));
+    }
+
+    public static boolean isException(Class<?> clazz) {
+        return isClassSuperclassOf(clazz, Exception.class);
+    }
+
+    public static boolean isRuntimeException(Class<?> clazz) {
+        return isClassSuperclassOf(clazz, RuntimeException.class);
+    }
+
+    public static boolean isError(Class<?> clazz) {
+        return isClassSuperclassOf(clazz, Error.class);
+    }
+
+    public static boolean isThrowable(Class<?> clazz) {
+        return isClassSuperclassOf(clazz, Throwable.class);
+    }
+
+    public static boolean isClassSuperclassOf(@NonNull Class<?> toCheck, @NonNull Class<?> superClass) {
+        if (toCheck == superClass) return true;
+        Class<?> superClassToCheck = toCheck.getSuperclass();
+        if (superClassToCheck == null) return false;
+        if (superClassToCheck == superClass) return true;
+        if (superClassToCheck == Object.class) return false;
+        return isClassSuperclassOf(superClassToCheck, superClass);
+    }
+
+    public static Field getField(Class<?> clazz, String name) {
+        if (clazz == null) return null;
+        Field field = null;
+        try {
+            field = clazz.getDeclaredField(name);
+        } catch (NoSuchFieldException e) {
+            // Ignored
+        }
+        if (field == null) {
+            return getField(clazz.getSuperclass(), name);
+        }
+        return field;
     }
 
 }

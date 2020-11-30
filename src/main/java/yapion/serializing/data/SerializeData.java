@@ -7,6 +7,7 @@ package yapion.serializing.data;
 import lombok.RequiredArgsConstructor;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.serializing.YAPIONSerializer;
@@ -22,6 +23,10 @@ public class SerializeData<T> {
     public final String context;
     private final YAPIONSerializer yapionSerializer;
 
+    public <R extends Object> SerializeData<R> clone(R object) {
+        return new SerializeData<>(object, context, yapionSerializer);
+    }
+
     @SuppressWarnings({"java:S3011"})
     public final YAPIONAnyType serializeField(String fieldName) {
         try {
@@ -35,6 +40,20 @@ public class SerializeData<T> {
 
     public final YAPIONAnyType serialize(Object o) {
         return yapionSerializer.parse(o);
+    }
+
+    public boolean isStrictSerialization() {
+        return yapionSerializer.isStrict();
+    }
+
+    public void signalDataLoss() {
+        signalDataLoss("");
+    }
+
+    public void signalDataLoss(String message) {
+        if (yapionSerializer.isStrict()) {
+            throw new YAPIONDataLossException(message);
+        }
     }
 
 }

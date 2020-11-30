@@ -25,6 +25,7 @@ public class ThreadGroupSerializer implements InternalSerializer<ThreadGroup> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<ThreadGroup> serializeData) {
+        serializeData.signalDataLoss();
         return new YAPIONValue<>(null);
     }
 

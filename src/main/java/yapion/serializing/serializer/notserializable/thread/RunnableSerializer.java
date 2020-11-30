@@ -25,6 +25,7 @@ public class RunnableSerializer implements InternalSerializer<Runnable> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Runnable> serializeData) {
+        serializeData.signalDataLoss();
         return new YAPIONValue<>(null);
     }
 

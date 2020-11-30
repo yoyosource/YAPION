@@ -27,6 +27,7 @@ public class ServerSocketSerializer implements InternalSerializer<ServerSocket> 
 
     @Override
     public YAPIONAnyType serialize(SerializeData<ServerSocket> serializeData) {
+        serializeData.signalDataLoss();
         return new YAPIONValue<>(null);
     }
 

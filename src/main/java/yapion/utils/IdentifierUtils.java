@@ -37,6 +37,11 @@ public class IdentifierUtils {
     public static final String ENUM_IDENTIFIER = "@enum";
 
     /**
+     *
+     */
+    public static final String EXCEPTION_IDENTIFIER = "@exception";
+
+    /**
      * This variable is used in the {@link YAPIONPointer#toJSON(AbstractOutput)}
      * implementation and {@link YAPIONPointer#toJSONLossy(AbstractOutput)} for
      * representation of an {@link YAPIONPointer} as a JSON object.

@@ -12,6 +12,7 @@ import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 import yapion.serializing.data.SerializeData;
 import yapion.utils.ModifierUtils;
+import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -27,6 +28,7 @@ public final class YAPIONSerializer {
     private final Object object;
     private YAPIONObject yapionObject;
     private final ContextManager contextManager;
+    private boolean strict = false;
 
     private Map<Object, YAPIONPointer> pointerMap = new IdentityHashMap<>();
 
@@ -62,6 +64,19 @@ public final class YAPIONSerializer {
         this.object = object;
     }
 
+    /**
+     * Creates a YAPIONSerializer for serializing an Object with a specified context.
+     *
+     * @param object to serialize
+     * @param context the context for serialization
+     * @param strict if serialization should be strict and check if any data would get lost while serialization
+     */
+    public YAPIONSerializer(@NonNull Object object, String context, boolean strict) {
+        contextManager = new ContextManager(context);
+        this.object = object;
+        this.strict = strict;
+    }
+
     private YAPIONSerializer(@NonNull Object object, YAPIONSerializer yapionSerializer) {
         this.object = object;
         // TODO: Test this cascading feature
@@ -76,6 +91,7 @@ public final class YAPIONSerializer {
             this.contextManager = new ContextManager(yapionSerializer.contextManager.get());
         }*/
         this.pointerMap = yapionSerializer.pointerMap;
+        this.strict = yapionSerializer.strict;
     }
 
     /**
@@ -117,8 +133,18 @@ public final class YAPIONSerializer {
         }
 
         String type = object.getClass().getTypeName();
-        if (object.getClass().isEnum()) {
+        Class<?> clazz = object.getClass();
+        if (clazz.isEnum()) {
             type = "java.lang.Enum";
+        }
+        if (ReflectionsUtils.isRuntimeException(clazz)) {
+            type = "java.lang.RuntimeException";
+        } else if (ReflectionsUtils.isException(clazz)) {
+            type = "java.lang.Exception";
+        } else if (ReflectionsUtils.isError(clazz)) {
+            type = "java.lang.Error";
+        } else if (ReflectionsUtils.isThrowable(clazz)) {
+            type = "java.lang.Throwable";
         }
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
@@ -177,6 +203,16 @@ public final class YAPIONSerializer {
         }
         MethodManager.postSerializationStep(object, contextManager);
         return this;
+    }
+
+    /**
+     * Returns whether the serialization should be strict and should
+     * not allow any data loss while serializing.
+     *
+     * @return {@code true} if data loss should be prohibited, {@code false} otherwise
+     */
+    public boolean isStrict() {
+        return strict;
     }
 
     /**
