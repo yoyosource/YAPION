@@ -5,7 +5,6 @@
 package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
-import org.graalvm.compiler.hotspot.phases.OnStackReplacementPhase;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
