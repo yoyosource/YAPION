@@ -49,9 +49,8 @@ public class DeserializeData<T extends YAPIONAnyType> {
             field.set(object, objectToSet);
             return true;
         } catch (IllegalAccessException e) {
-
+            return false;
         }
-        return false;
     }
 
 }
