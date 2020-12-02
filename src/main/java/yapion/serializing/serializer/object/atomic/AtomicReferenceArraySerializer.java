@@ -14,15 +14,13 @@ import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
-import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude
 @YAPIONLoadExclude
-// TODO: Change this version to the proper one
-@SerializerImplementation(since = "0.?.0")
+@SerializerImplementation(since = "0.20.0")
 public class AtomicReferenceArraySerializer implements InternalOverrideableSerializer<AtomicReferenceArray<?>> {
 
     @Override

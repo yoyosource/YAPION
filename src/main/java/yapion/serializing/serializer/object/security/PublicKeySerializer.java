@@ -15,14 +15,12 @@ import yapion.serializing.serializer.SerializerImplementation;
 
 import java.security.PublicKey;
 import java.util.Base64;
-import java.util.Random;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude
 @YAPIONLoadExclude
-// TODO: Change this version to the proper one
-@SerializerImplementation(since = "0.?.0")
+@SerializerImplementation(since = "0.20.0")
 public class PublicKeySerializer implements InternalSerializer<PublicKey> {
 
     @Override

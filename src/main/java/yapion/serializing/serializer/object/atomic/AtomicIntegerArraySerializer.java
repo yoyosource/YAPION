@@ -20,8 +20,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude
 @YAPIONLoadExclude
-// TODO: Change this version to the proper one
-@SerializerImplementation(since = "0.?.0")
+@SerializerImplementation(since = "0.20.0")
 public class AtomicIntegerArraySerializer implements InternalSerializer<AtomicIntegerArray> {
 
     @Override
