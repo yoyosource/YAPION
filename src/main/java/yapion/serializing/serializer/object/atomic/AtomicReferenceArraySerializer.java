@@ -9,12 +9,13 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
+import yapion.serializing.InternalOverrideableSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.concurrent.atomic.AtomicLongArray;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -22,37 +23,37 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @YAPIONLoadExclude
 // TODO: Change this version to the proper one
 @SerializerImplementation(since = "0.?.0")
-public class AtomicLongArraySerializer implements InternalSerializer<AtomicLongArray> {
+public class AtomicReferenceArraySerializer implements InternalOverrideableSerializer<AtomicReferenceArray<?>> {
 
     @Override
     public String type() {
-        return "java.util.concurrent.atomic.AtomicLongArray";
+        return "java.util.concurrent.atomic.AtomicReferenceArray";
     }
 
     @Override
-    public YAPIONAnyType serialize(SerializeData<AtomicLongArray> serializeData) {
+    public YAPIONAnyType serialize(SerializeData<AtomicReferenceArray<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
         yapionObject.add("length", serializeData.object.length());
 
-        long[] longs = new long[serializeData.object.length()];
-        for (int i = 0; i < longs.length; i++) {
-            longs[i] = serializeData.object.get(i);
+        Object[] objects = new Object[serializeData.object.length()];
+        for (int i = 0; i < objects.length; i++) {
+            objects[i] = serializeData.object.get(i);
         }
-        yapionObject.add("values", serializeData.serialize(longs));
+        yapionObject.add("values", serializeData.serialize(objects));
         return yapionObject;
     }
 
     @Override
-    public AtomicLongArray deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+    public AtomicReferenceArray<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         int length = yapionObject.getValue("length", 0).get();
         YAPIONArray yapionArray = yapionObject.getArray("values");
-        long[] longs = new long[length];
+        Object[] objects = new Object[length];
         for (int i = 0; i < length; i++) {
-            longs[i] = (Long) deserializeData.deserialize(yapionArray.get(i));
+            objects[i] = deserializeData.deserialize(yapionArray.get(i));
         }
-        return new AtomicLongArray(longs);
+        return new AtomicReferenceArray<>(objects);
     }
 
 }
