@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -197,13 +197,33 @@ extends java.lang.Object</pre>
 </tr>
 <tbody>
 <tr class="altColor" id="i0">
+<td class="colFirst"><code>&lt;R&gt;&nbsp;<a href="SerializeData.html" title="class in yapion.serializing.data">SerializeData</a>&lt;R&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#clone(R)">clone</a></span>&#8203;(R&nbsp;object)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i1">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isStrictSerialization()">isStrictSerialization</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i2">
 <td class="colFirst"><code><a href="../../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serialize(java.lang.Object)">serialize</a></span>&#8203;(java.lang.Object&nbsp;o)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr class="rowColor" id="i3">
 <td class="colFirst"><code><a href="../../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serializeField(java.lang.String)">serializeField</a></span>&#8203;(java.lang.String&nbsp;fieldName)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i4">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#signalDataLoss()">signalDataLoss</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i5">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#signalDataLoss(java.lang.String)">signalDataLoss</a></span>&#8203;(java.lang.String&nbsp;message)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -280,6 +300,17 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="clone(java.lang.Object)">
+<!--   -->
+</a><a id="clone(R)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clone</h4>
+<pre class="methodSignature">public&nbsp;&lt;R&gt;&nbsp;<a href="SerializeData.html" title="class in yapion.serializing.data">SerializeData</a>&lt;R&gt;&nbsp;clone&#8203;(R&nbsp;object)</pre>
+</li>
+</ul>
 <a id="serializeField(java.lang.String)">
 <!--   -->
 </a>
@@ -292,10 +323,37 @@ extends java.lang.Object</pre>
 <a id="serialize(java.lang.Object)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>serialize</h4>
 <pre class="methodSignature">public final&nbsp;<a href="../../hierarchy/typegroups/YAPIONAnyType.html" title="class in yapion.hierarchy.typegroups">YAPIONAnyType</a>&nbsp;serialize&#8203;(java.lang.Object&nbsp;o)</pre>
+</li>
+</ul>
+<a id="isStrictSerialization()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isStrictSerialization</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;isStrictSerialization()</pre>
+</li>
+</ul>
+<a id="signalDataLoss()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>signalDataLoss</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;signalDataLoss()</pre>
+</li>
+</ul>
+<a id="signalDataLoss(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>signalDataLoss</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;signalDataLoss&#8203;(java.lang.String&nbsp;message)</pre>
 </li>
 </ul>
 </li>

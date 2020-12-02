@@ -187,6 +187,17 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#EXCEPTION_IDENTIFIER">EXCEPTION_IDENTIFIER</a></span></code></th>
+<td class="colLast">
+<div class="block">This variable is used in the <a href="../serializing/serializer/object/throwable/ThrowableSerializer.html" title="class in yapion.serializing.serializer.object.throwable"><code>ThrowableSerializer</code></a>,
+ <a href="../serializing/serializer/object/throwable/ExceptionSerializer.html" title="class in yapion.serializing.serializer.object.throwable"><code>ExceptionSerializer</code></a>, <a href="../serializing/serializer/object/throwable/RuntimeExceptionSerializer.html" title="class in yapion.serializing.serializer.object.throwable"><code>RuntimeExceptionSerializer</code></a> and
+ <a href="../serializing/serializer/object/throwable/ErrorSerializer.html" title="class in yapion.serializing.serializer.object.throwable"><code>ErrorSerializer</code></a> for identifying an <code>Throwable</code>,
+ <code>Exception</code>, <code>RuntimeException</code> and <code>Error</code>
+ respectively by its <code>Class.getTypeName()</code>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#FLOAT_IDENTIFIER">FLOAT_IDENTIFIER</a></span></code></th>
 <td class="colLast">
 <div class="block">This variable is used in the <a href="../hierarchy/types/YAPIONValue.html#toJSON(T)"><code>YAPIONValue.toJSON(AbstractOutput)</code></a>
@@ -194,7 +205,7 @@ extends java.lang.Object</pre>
  notice into the JSON structure.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#INT_IDENTIFIER">INT_IDENTIFIER</a></span></code></th>
 <td class="colLast">
@@ -203,7 +214,7 @@ extends java.lang.Object</pre>
  notice into the JSON structure.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#LONG_IDENTIFIER">LONG_IDENTIFIER</a></span></code></th>
 <td class="colLast">
@@ -212,7 +223,7 @@ extends java.lang.Object</pre>
  notice into the JSON structure.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#MAP_IDENTIFIER">MAP_IDENTIFIER</a></span></code></th>
 <td class="colLast">
@@ -221,7 +232,7 @@ extends java.lang.Object</pre>
  representation of an <a href="../hierarchy/types/YAPIONMap.html" title="class in yapion.hierarchy.types"><code>YAPIONMap</code></a> as a JSON object.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#POINTER_IDENTIFIER">POINTER_IDENTIFIER</a></span></code></th>
 <td class="colLast">
@@ -230,7 +241,7 @@ extends java.lang.Object</pre>
  representation of an <a href="../hierarchy/types/YAPIONPointer.html" title="class in yapion.hierarchy.types"><code>YAPIONPointer</code></a> as a JSON object.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#SHORT_IDENTIFIER">SHORT_IDENTIFIER</a></span></code></th>
 <td class="colLast">
@@ -239,7 +250,7 @@ extends java.lang.Object</pre>
  notice into the JSON structure.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#TYPE_IDENTIFIER">TYPE_IDENTIFIER</a></span></code></th>
 <td class="colLast">
@@ -313,11 +324,32 @@ extends java.lang.Object</pre>
 <div class="block">This variable is used in the <a href="../serializing/serializer/object/other/EnumSerializer.html" title="class in yapion.serializing.serializer.object.other"><code>EnumSerializer</code></a>
  for identifying an <code>Enum</code> by its <code>Class.getTypeName()</code>.
  In the serialization this variable is used as the
- key of a <a href="../hierarchy/types/YAPIONVariable.html" title="class in yapion.hierarchy.types"><code>YAPIONVariable</code></a> and will be calles
+ key of a <a href="../hierarchy/types/YAPIONVariable.html" title="class in yapion.hierarchy.types"><code>YAPIONVariable</code></a> and will be called
  enum variable.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../constant-values.html#yapion.utils.IdentifierUtils.ENUM_IDENTIFIER">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="EXCEPTION_IDENTIFIER">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>EXCEPTION_IDENTIFIER</h4>
+<pre>public static final&nbsp;java.lang.String EXCEPTION_IDENTIFIER</pre>
+<div class="block">This variable is used in the <a href="../serializing/serializer/object/throwable/ThrowableSerializer.html" title="class in yapion.serializing.serializer.object.throwable"><code>ThrowableSerializer</code></a>,
+ <a href="../serializing/serializer/object/throwable/ExceptionSerializer.html" title="class in yapion.serializing.serializer.object.throwable"><code>ExceptionSerializer</code></a>, <a href="../serializing/serializer/object/throwable/RuntimeExceptionSerializer.html" title="class in yapion.serializing.serializer.object.throwable"><code>RuntimeExceptionSerializer</code></a> and
+ <a href="../serializing/serializer/object/throwable/ErrorSerializer.html" title="class in yapion.serializing.serializer.object.throwable"><code>ErrorSerializer</code></a> for identifying an <code>Throwable</code>,
+ <code>Exception</code>, <code>RuntimeException</code> and <code>Error</code>
+ respectively by its <code>Class.getTypeName()</code>.
+ In the serialization this variable is used as the
+ key of a <a href="../hierarchy/types/YAPIONVariable.html" title="class in yapion.hierarchy.types"><code>YAPIONVariable</code></a> and will be called
+ exception variable.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../constant-values.html#yapion.utils.IdentifierUtils.EXCEPTION_IDENTIFIER">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>

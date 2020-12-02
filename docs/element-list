@@ -21,6 +21,7 @@ yapion.serializing.serializer
 yapion.serializing.serializer.notserializable.net
 yapion.serializing.serializer.notserializable.os
 yapion.serializing.serializer.notserializable.thread
+yapion.serializing.serializer.object.atomic
 yapion.serializing.serializer.object.awt
 yapion.serializing.serializer.object.deque
 yapion.serializing.serializer.object.deque.concurrent
@@ -33,10 +34,13 @@ yapion.serializing.serializer.object.optional
 yapion.serializing.serializer.object.other
 yapion.serializing.serializer.object.queue
 yapion.serializing.serializer.object.queue.concurrent
+yapion.serializing.serializer.object.security
 yapion.serializing.serializer.object.set
 yapion.serializing.serializer.object.set.concurrent
 yapion.serializing.serializer.object.stack
 yapion.serializing.serializer.object.table
+yapion.serializing.serializer.object.text
+yapion.serializing.serializer.object.throwable
 yapion.serializing.serializer.object.time
 yapion.serializing.serializer.object.vector
 yapion.serializing.serializer.overrideable

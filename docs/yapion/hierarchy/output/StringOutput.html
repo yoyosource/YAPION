@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10};
+var data = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -65,7 +65,7 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
@@ -109,7 +109,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="AbstractOutput.html" title="class in yapion.hierarchy.output">yapion.hierarchy.output.AbstractOutput</a></li>
 <li>
 <ul class="inheritance">
+<li><a href="StringBuilderOutput.html" title="class in yapion.hierarchy.output">yapion.hierarchy.output.StringBuilderOutput</a></li>
+<li>
+<ul class="inheritance">
 <li>yapion.hierarchy.output.StringOutput</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -118,15 +123,36 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt>Direct Known Subclasses:</dt>
+<dd><code><a href="StringPrettifiedOutput.html" title="class in yapion.hierarchy.output">StringPrettifiedOutput</a></code></dd>
+</dl>
 <hr>
 <pre>public class <span class="typeNameLabel">StringOutput</span>
-extends <a href="AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a></pre>
+extends <a href="StringBuilderOutput.html" title="class in yapion.hierarchy.output">StringBuilderOutput</a></pre>
 </li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<ul class="blockList">
+<li class="blockList"><a id="fields.inherited.from.class.yapion.hierarchy.output.StringBuilderOutput">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;yapion.hierarchy.output.<a href="StringBuilderOutput.html" title="class in yapion.hierarchy.output">StringBuilderOutput</a></h3>
+<code><a href="StringBuilderOutput.html#st">st</a></code></li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <section role="region">
 <ul class="blockList">
@@ -179,21 +205,23 @@ extends <a href="AbstractOutput.html" title="class in yapion.hierarchy.output">A
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#internalConsume(java.lang.String)">internalConsume</a></span>&#8203;(java.lang.String&nbsp;s)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i2">
-<td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#length()">length</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 </tbody>
 </table>
 </div>
 </div>
 <ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.yapion.hierarchy.output.StringBuilderOutput">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;yapion.hierarchy.output.<a href="StringBuilderOutput.html" title="class in yapion.hierarchy.output">StringBuilderOutput</a></h3>
+<code><a href="StringBuilderOutput.html#length()">length</a></code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.yapion.hierarchy.output.AbstractOutput">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;yapion.hierarchy.output.<a href="AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a></h3>
-<code><a href="AbstractOutput.html#bytes(java.lang.String)">bytes</a>, <a href="AbstractOutput.html#consume(java.lang.String)">consume</a></code></li>
+<code><a href="AbstractOutput.html#bytes(java.lang.String)">bytes</a>, <a href="AbstractOutput.html#consume(java.lang.String)">consume</a>, <a href="AbstractOutput.html#consumePrettified(java.lang.String)">consumePrettified</a>, <a href="AbstractOutput.html#prettified()">prettified</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -245,27 +273,18 @@ extends <a href="AbstractOutput.html" title="class in yapion.hierarchy.output">A
 <h4>internalConsume</h4>
 <pre class="methodSignature">protected&nbsp;void&nbsp;internalConsume&#8203;(java.lang.String&nbsp;s)</pre>
 <dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="AbstractOutput.html#internalConsume(java.lang.String)">internalConsume</a></code>&nbsp;in class&nbsp;<code><a href="AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="StringBuilderOutput.html#internalConsume(java.lang.String)">internalConsume</a></code>&nbsp;in class&nbsp;<code><a href="StringBuilderOutput.html" title="class in yapion.hierarchy.output">StringBuilderOutput</a></code></dd>
 </dl>
 </li>
 </ul>
 <a id="getResult()">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>getResult</h4>
 <pre class="methodSignature">public&nbsp;java.lang.String&nbsp;getResult()</pre>
-</li>
-</ul>
-<a id="length()">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>length</h4>
-<pre class="methodSignature">public&nbsp;int&nbsp;length()</pre>
 </li>
 </ul>
 </li>
@@ -302,7 +321,7 @@ extends <a href="AbstractOutput.html" title="class in yapion.hierarchy.output">A
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>

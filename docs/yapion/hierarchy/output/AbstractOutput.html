@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":6};
+var data = {"i0":10,"i1":10,"i2":10,"i3":6,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -115,7 +115,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="StreamOutput.html" title="class in yapion.hierarchy.output">StreamOutput</a></code>, <code><a href="StringOutput.html" title="class in yapion.hierarchy.output">StringOutput</a></code></dd>
+<dd><code><a href="StreamOutput.html" title="class in yapion.hierarchy.output">StreamOutput</a></code>, <code><a href="StringBuilderOutput.html" title="class in yapion.hierarchy.output">StringBuilderOutput</a></code></dd>
 </dl>
 <hr>
 <pre>public abstract class <span class="typeNameLabel">AbstractOutput</span>
@@ -179,8 +179,18 @@ extends java.lang.Object</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i2">
+<td class="colFirst"><code><a href="AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#consumePrettified(java.lang.String)">consumePrettified</a></span>&#8203;(java.lang.String&nbsp;s)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i3">
 <td class="colFirst"><code>protected abstract void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#internalConsume(java.lang.String)">internalConsume</a></span>&#8203;(java.lang.String&nbsp;s)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i4">
+<td class="colFirst"><code>protected boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prettified()">prettified</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -238,6 +248,15 @@ extends java.lang.Object</pre>
 <pre class="methodSignature">public final&nbsp;<a href="AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a>&nbsp;consume&#8203;(java.lang.String&nbsp;s)</pre>
 </li>
 </ul>
+<a id="consumePrettified(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>consumePrettified</h4>
+<pre class="methodSignature">public final&nbsp;<a href="AbstractOutput.html" title="class in yapion.hierarchy.output">AbstractOutput</a>&nbsp;consumePrettified&#8203;(java.lang.String&nbsp;s)</pre>
+</li>
+</ul>
 <a id="internalConsume(java.lang.String)">
 <!--   -->
 </a>
@@ -245,6 +264,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>internalConsume</h4>
 <pre class="methodSignature">protected abstract&nbsp;void&nbsp;internalConsume&#8203;(java.lang.String&nbsp;s)</pre>
+</li>
+</ul>
+<a id="prettified()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>prettified</h4>
+<pre class="methodSignature">protected&nbsp;boolean&nbsp;prettified()</pre>
 </li>
 </ul>
 <a id="bytes(java.lang.String)">
