@@ -23,6 +23,7 @@ import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.security.PrivateKey;
 import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.Map;

@@ -58,7 +58,6 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
             }
             for (Enum<?> e : enums) {
                 if (e.name().equals(enumType)) {
-                    yapionObject.add("ordinal", new YAPIONValue<>(e.ordinal()));
                     return e;
                 }
             }
