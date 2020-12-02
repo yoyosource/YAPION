@@ -4,7 +4,7 @@
 
 package yapion.parser;
 
-import yapion.exceptions.YAPIONException;
+import yapion.exceptions.parser.JSONParserException;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
@@ -25,7 +25,7 @@ public class JSONParser {
 
     private static YAPIONObject parseObject(char[] chars) {
         if (!(chars[0] == '{' && chars[chars.length - 1] == '}')) {
-            throw new YAPIONException("No JSON Object");
+            throw new JSONParserException("No JSON Object");
         }
         YAPIONObject yapionObject = new YAPIONObject();
 
@@ -64,7 +64,7 @@ public class JSONParser {
                     char[] object = getArray(chars, i);
                     i += object.length;
                     if (!(object[0] == '[' && object[object.length - 1] == ']')) {
-                        throw new YAPIONException("No JSON Array");
+                        throw new JSONParserException("No JSON Array");
                     }
                     yapionObject.add(new YAPIONVariable(name, parseArray(object)));
                     continue;
@@ -86,7 +86,7 @@ public class JSONParser {
 
     private static YAPIONArray parseArray(char[] chars) {
         if (!(chars[0] == '[' && chars[chars.length - 1] == ']')) {
-            throw new YAPIONException("No JSON Array");
+            throw new JSONParserException("No JSON Array");
         }
         boolean escaped = false;
         boolean inString = false;

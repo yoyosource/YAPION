@@ -6,7 +6,9 @@ package yapion.utils;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.YAPIONException;
 
+import javax.swing.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -43,13 +45,14 @@ public class ReferenceIDUtils {
             return referenceIDMap.get(s);
         }
         try {
+            // TODO: Replace this by some other referenceID system before 1.0.0
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] bytes = digest.digest(s.getBytes(StandardCharsets.UTF_8));
             long l = (long) bytes[0] << 56 | (long) bytes[1] << 48 | (long) bytes[2] << 40 | (long) bytes[3] << 32 | (long) bytes[4] << 24 | (long) bytes[5] << 16 | (long) bytes[6] << 8 | (long) bytes[7];
             referenceIDMap.put(s, l);
             return l;
         } catch (NoSuchAlgorithmException e) {
-            return 0x0000000000000000L;
+            throw new YAPIONException("MD5 is not supported");
         }
     }
 
