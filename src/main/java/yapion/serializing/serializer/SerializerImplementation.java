@@ -15,5 +15,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.TYPE})
 public @interface SerializerImplementation {
-    String since() default "0.1.0";
+    String since();
 }

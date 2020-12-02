@@ -21,7 +21,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.17.0")
 public class StackSerializer implements InternalSerializer<Stack<?>> {
 
     @Override

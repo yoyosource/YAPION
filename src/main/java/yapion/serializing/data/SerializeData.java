@@ -23,7 +23,7 @@ public class SerializeData<T> {
     public final String context;
     private final YAPIONSerializer yapionSerializer;
 
-    public <R extends Object> SerializeData<R> clone(R object) {
+    public <R> SerializeData<R> clone(R object) {
         return new SerializeData<>(object, context, yapionSerializer);
     }
 
