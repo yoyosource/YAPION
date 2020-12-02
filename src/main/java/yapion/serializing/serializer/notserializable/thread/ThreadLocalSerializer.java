@@ -15,7 +15,7 @@ import yapion.serializing.serializer.SerializerImplementation;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.12.0")
 public class ThreadLocalSerializer implements InternalSerializer<ThreadLocal<?>> {
 
     @Override

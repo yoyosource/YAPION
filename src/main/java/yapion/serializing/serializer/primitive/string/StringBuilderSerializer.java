@@ -17,7 +17,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.2.0")
 public class StringBuilderSerializer implements InternalSerializer<StringBuilder> {
 
     @Override

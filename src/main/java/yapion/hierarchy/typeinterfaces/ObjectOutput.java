@@ -6,15 +6,9 @@ package yapion.hierarchy.typeinterfaces;
 
 import yapion.hierarchy.output.AbstractOutput;
 
-import java.nio.charset.StandardCharsets;
-
 public interface ObjectOutput {
 
     StringBuilder indent = new StringBuilder().append(" ");
-
-    default byte[] bytes(String s) {
-        return s.getBytes(StandardCharsets.UTF_8);
-    }
 
     default String indent(int i) {
         if (i > 4096) {

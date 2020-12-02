@@ -17,7 +17,7 @@ import java.math.BigInteger;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.2.0")
 public class BigIntegerSerializer implements InternalSerializer<BigInteger> {
 
     @Override

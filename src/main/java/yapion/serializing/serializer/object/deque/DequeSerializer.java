@@ -23,7 +23,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.7.0")
 public class DequeSerializer implements InternalSerializer<Deque<?>> {
 
     @Override

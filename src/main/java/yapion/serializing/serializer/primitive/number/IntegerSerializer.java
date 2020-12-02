@@ -15,7 +15,7 @@ import yapion.serializing.serializer.SerializerImplementation;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.2.0")
 public class IntegerSerializer implements InternalSerializer<Integer> {
 
     @Override

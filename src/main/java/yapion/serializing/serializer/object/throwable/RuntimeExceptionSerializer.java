@@ -15,14 +15,13 @@ import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 import yapion.utils.ReflectionsUtils;
 
-import java.util.Arrays;
-
 import static yapion.utils.IdentifierUtils.EXCEPTION_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+// TODO: Change this version to the proper one
+@SerializerImplementation(since = "0.?.0")
 public class RuntimeExceptionSerializer implements InternalSerializer<RuntimeException> {
 
     @Override

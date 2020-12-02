@@ -81,7 +81,7 @@ public class ReferenceIDUtils {
      * Formats the input to the standard reference ID structure.
      *
      * @param l the input to format
-     * @return the formated input
+     * @return the formatted input
      */
     public static String format(long l) {
         return String.format("%016X", l);

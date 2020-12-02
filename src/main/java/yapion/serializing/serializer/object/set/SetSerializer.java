@@ -24,7 +24,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S3740"})
-@SerializerImplementation
+@SerializerImplementation(since = "0.2.0")
 public class SetSerializer implements InternalSerializer<Set> {
 
     @Override

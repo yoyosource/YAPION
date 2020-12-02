@@ -15,7 +15,7 @@ import yapion.serializing.serializer.SerializerImplementation;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.11.0")
 public class BooleanSerializer implements InternalSerializer<Boolean> {
 
     @Override

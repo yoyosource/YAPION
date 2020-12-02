@@ -17,7 +17,7 @@ import yapion.serializing.serializer.SerializerImplementation;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.10.0")
 public class YAPIONArraySerializer implements InternalOverrideableSerializer<YAPIONArray> {
 
     @Override

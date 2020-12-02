@@ -17,7 +17,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+// TODO: Change this version to the proper one
+@SerializerImplementation(since = "0.?.0")
 public class StackTraceElementSerializer implements InternalSerializer<StackTraceElement> {
 
     @Override

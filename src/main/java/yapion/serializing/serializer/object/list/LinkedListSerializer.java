@@ -23,7 +23,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S3740"})
-@SerializerImplementation
+@SerializerImplementation(since = "0.3.0")
 public class LinkedListSerializer implements InternalSerializer<LinkedList> {
 
     @Override

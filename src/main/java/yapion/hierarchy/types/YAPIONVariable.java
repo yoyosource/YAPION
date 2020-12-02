@@ -88,4 +88,5 @@ public final class YAPIONVariable extends YAPIONAnyClosure {
     public int hashCode() {
         return Objects.hash(name, value);
     }
+
 }

@@ -21,7 +21,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.7.0")
 public class VectorSerializer implements InternalSerializer<Vector<?>> {
 
     @Override

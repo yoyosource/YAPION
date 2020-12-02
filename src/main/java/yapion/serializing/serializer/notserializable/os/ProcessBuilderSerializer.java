@@ -15,7 +15,7 @@ import yapion.serializing.serializer.SerializerImplementation;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.12.0")
 public class ProcessBuilderSerializer implements InternalSerializer<ProcessBuilder> {
 
     @Override

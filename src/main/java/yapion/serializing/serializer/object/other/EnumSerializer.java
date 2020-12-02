@@ -21,7 +21,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S1192"})
-@SerializerImplementation
+@SerializerImplementation(since = "0.10.0")
 public class EnumSerializer implements InternalSerializer<Enum<?>> {
 
     @Override

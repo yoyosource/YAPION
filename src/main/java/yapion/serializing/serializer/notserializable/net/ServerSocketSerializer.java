@@ -17,7 +17,7 @@ import java.net.ServerSocket;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.12.0")
 public class ServerSocketSerializer implements InternalSerializer<ServerSocket> {
 
     @Override

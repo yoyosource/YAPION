@@ -23,7 +23,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
-@SerializerImplementation
+@SerializerImplementation(since = "0.12.0")
 public class TransferQueueSerializer implements InternalSerializer<TransferQueue<?>> {
 
     @Override
