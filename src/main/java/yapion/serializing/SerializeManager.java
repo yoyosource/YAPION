@@ -61,6 +61,7 @@ public class SerializeManager {
 
         @Override
         public YAPIONAnyType serialize(SerializeData<Object> serializeData) {
+            serializeData.signalDataLoss();
             return new YAPIONValue<>(null);
         }
 
