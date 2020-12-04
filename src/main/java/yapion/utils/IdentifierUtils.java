@@ -53,6 +53,11 @@ public class IdentifierUtils {
     public static final String EXCEPTION_IDENTIFIER = "@exception";
 
     /**
+     *
+     */
+    public static final String KEY_IDENTIFIER = "@key";
+
+    /**
      * This variable is used in the {@link YAPIONPointer#toJSON(AbstractOutput)}
      * implementation and {@link YAPIONPointer#toJSONLossy(AbstractOutput)} for
      * representation of an {@link YAPIONPointer} as a JSON object.

@@ -16,6 +16,7 @@ import yapion.serializing.serializer.SerializerImplementation;
 import java.security.PrivateKey;
 import java.util.Base64;
 
+import static yapion.utils.IdentifierUtils.KEY_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude
@@ -29,9 +30,15 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
     }
 
     @Override
+    public Class<?> interfaceType() {
+        return PrivateKey.class;
+    }
+
+    @Override
     public YAPIONAnyType serialize(SerializeData<PrivateKey> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
+        yapionObject.add(KEY_IDENTIFIER, serializeData.object.getClass().getTypeName());
         yapionObject.add("format", serializeData.object.getFormat());
         yapionObject.add("algorithm", serializeData.object.getAlgorithm());
 
@@ -50,6 +57,7 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
     @Override
     public PrivateKey deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
+        String keyType = yapionObject.getValue(KEY_IDENTIFIER, "").get();
         String format = yapionObject.getValue("format", "").get();
         String algorithm = yapionObject.getValue("algorithm", "").get();
 

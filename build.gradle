@@ -103,7 +103,7 @@ publishing {
         maven(MavenPublication) {
             groupId = groupID
             artifactId = group
-            version = publication
+            version = publication + "-SNAPSHOT"
 
             from components.java
         }

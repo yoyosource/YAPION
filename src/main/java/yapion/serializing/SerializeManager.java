@@ -75,6 +75,7 @@ public class SerializeManager {
     private static final String internalSerializer = InternalSerializer.class.getTypeName();
 
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
+    private static final List<InternalSerializer<?>> interfaceTypeSerializer = new ArrayList<>();
     private static final GroupList nSerializerGroups = new GroupList();
     private static final GroupList oSerializerGroups = new GroupList();
 
@@ -136,6 +137,9 @@ public class SerializeManager {
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
             serializerMap.put(serializer.primitiveType(), serializerWrapper);
         }
+        if (serializer.interfaceType() != null) {
+            interfaceTypeSerializer.add(serializer);
+        }
     }
 
     private static void add(InternalSerializer<?> serializer) {
@@ -144,6 +148,9 @@ public class SerializeManager {
         serializerMap.put(serializer.type(), serializerWrapper);
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
             serializerMap.put(serializer.primitiveType(), serializerWrapper);
+        }
+        if (serializer.interfaceType() != null) {
+            interfaceTypeSerializer.add(serializer);
         }
     }
 
@@ -380,11 +387,26 @@ public class SerializeManager {
 
     @SuppressWarnings({"java:S1452"})
     static InternalSerializer<?> getInternalSerializer(String type) {
+        for (InternalSerializer<?> internalSerializer : interfaceTypeSerializer) {
+            if (implementsInterface(type, internalSerializer.interfaceType())) {
+                type = internalSerializer.type();
+                break;
+            }
+        }
+
         if (oSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
         InternalSerializer<?> serializer = serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
         if (serializer != null) return serializer;
         if (nSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
         return null;
+    }
+
+    private static boolean implementsInterface(String type, Class<?> clazz) {
+        try {
+            return clazz.isAssignableFrom(Class.forName(type));
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     /**

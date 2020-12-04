@@ -4,6 +4,7 @@
 
 package yapion.packet;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
@@ -12,6 +13,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.hierarchy.types.YAPIONVariable;
 import yapion.parser.YAPIONParser;
+import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
 
 import java.io.IOException;
@@ -28,6 +30,7 @@ public final class YAPIONInputStream {
 
     private final InputStream inputStream;
     private YAPIONPacketReceiver yapionPacketReceiver = null;
+    private TypeReMapper typeReMapper = new TypeReMapper();
 
     private YAPIONPacketIdentifier<?> staticIdentifier = null;
     private YAPIONPacketIdentifierCreator<?> dynamicIdentifier = null;
@@ -76,6 +79,17 @@ public final class YAPIONInputStream {
         if (time > HIGH_WAIT) time = HIGH_WAIT;
         this.yapionPacketReceiver = yapionPacketReceiver;
         thread(time);
+    }
+
+    /**
+     * Set a {@link TypeReMapper} to use for the deserialize call.
+     * This is useful to change {@link Package#toString()} or
+     * {@link Class#getTypeName()} to another value.
+     *
+     * @param typeReMapper the {@link TypeReMapper} to use
+     */
+    public void setTypeReMapper(@NonNull TypeReMapper typeReMapper) {
+        this.typeReMapper = typeReMapper;
     }
 
     private void thread(int time) {
@@ -143,7 +157,7 @@ public final class YAPIONInputStream {
      */
     public synchronized Object readObject() throws IOException {
         if (yapionPacketReceiver != null) throw new IOException();
-        return YAPIONDeserializer.deserialize(read());
+        return YAPIONDeserializer.deserialize(read(), typeReMapper);
     }
 
     /**

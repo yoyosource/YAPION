@@ -4,12 +4,7 @@
 
 package yapion.packet;
 
-import yapion.annotations.deserialize.YAPIONDeserializeType;
-import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.object.YAPIONObjenesis;
-import yapion.annotations.serialize.YAPIONSave;
-import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.annotations.object.YAPIONData;
 import yapion.exceptions.utils.YAPIONPacketException;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.validators.Validator;
@@ -22,38 +17,22 @@ import java.util.Map;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSave(context = "*")
-@YAPIONLoad(context = "*")
-@YAPIONObjenesis
+@YAPIONData
 public final class YAPIONPacket {
 
     // Following context is cached
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
-    private long lastModified = 0;
-
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
-    private long lastCreated = 0;
-
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
-    private YAPIONObject cache = null;
-
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
-    private String cacheString = null;
+    private transient long lastModified = 0;
+    private transient long lastCreated = 0;
+    private transient YAPIONObject cache = null;
+    private transient String cacheString = null;
 
     // Following is the Serialized values
     private final String type;
 
-    @YAPIONDeserializeType(type = HashMap.class)
     private final Map<String, Object> payload = new HashMap<>();
 
     // Following for the receiving side
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
-    private YAPIONPacketIdentifier<?> yapionPacketIdentifier = null;
+    private transient YAPIONPacketIdentifier<?> yapionPacketIdentifier = null;
 
     /**
      * Creates an YAPIONPacket with an specific type. If the type

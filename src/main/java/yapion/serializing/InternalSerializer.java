@@ -20,6 +20,10 @@ public interface InternalSerializer<T> {
         return null;
     }
 
+    default Class<?> interfaceType() {
+        return null;
+    }
+
     default boolean empty() {
         return false;
     }
