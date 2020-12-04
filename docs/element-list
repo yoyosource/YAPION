@@ -47,4 +47,7 @@ yapion.serializing.serializer.overrideable
 yapion.serializing.serializer.primitive
 yapion.serializing.serializer.primitive.number
 yapion.serializing.serializer.primitive.string
+yapion.serializing.wrapped
+yapion.serializing.wrapped.net
+yapion.serializing.wrapped.os
 yapion.utils
