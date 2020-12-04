@@ -280,15 +280,20 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return new YAPIONValue<>(s);
     }
 
-    static <T> boolean validType(T t) {
+    static <T> boolean validType(Class<?> t) {
         if (t == null) return true;
-        String typeName = t.getClass().getTypeName();
+        String typeName = t.getTypeName();
         for (int i = 0; i < allowedTypes.length; i++) {
             if (allowedTypes[i].endsWith(typeName)) {
                 return true;
             }
         }
         return false;
+    }
+
+    static <T> boolean validType(T t) {
+        if (t == null) return true;
+        return validType(t.getClass());
     }
 
     public T get() {

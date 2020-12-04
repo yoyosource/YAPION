@@ -195,6 +195,24 @@ public class YAPIONObject extends YAPIONMappingType {
         return null;
     }
 
+    public <T> YAPIONValue<T> getValue(String key, Class<T> type) {
+        if (!YAPIONValue.validType(type)) {
+            return null;
+        }
+        YAPIONVariable yapionVariable = getVariable(key);
+        if (yapionVariable == null) {
+            return null;
+        }
+        YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+        if (!(yapionAnyType instanceof YAPIONValue)) {
+            return null;
+        }
+        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getTypeName())) {
+            return null;
+        }
+        return (YAPIONValue<T>) yapionAnyType;
+    }
+
     public <T> YAPIONValue<T> getValue(String key, T type) {
         if (!YAPIONValue.validType(type)) {
             return null;
