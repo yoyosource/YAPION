@@ -25,7 +25,7 @@ import static yapion.utils.ReferenceIDUtils.calc;
 @YAPIONLoad(context = "*")
 public class YAPIONValue<T> extends YAPIONValueType {
 
-    private static final String[] allowedTypes = new String[]{
+    private static final String[] allowedTypes = new String[] {
             "java.lang.Boolean",
             "java.lang.Byte", "java.lang.Short", "java.lang.Integer", "java.lang.Long", "java.math.BigInteger",
             "java.lang.Float", "java.lang.Double", "java.math.BigDecimal",

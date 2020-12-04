@@ -8,9 +8,11 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
 
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,12 +26,17 @@ public class ReferenceIDUtils {
 
     private static int cacheSize = 100;
 
+    private static final Map<String, Long> referenceIDMapCache = new HashMap<>();
     private static final Map<String, Long> referenceIDMap = new LinkedHashMap<String, Long>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Long> eldest) {
             return size() > cacheSize;
         }
     };
+
+    static {
+        initCache();
+    }
 
     /**
      * Calculates the reference ID of a given String, primarily used for variable names.
@@ -40,6 +47,9 @@ public class ReferenceIDUtils {
      * @return the reference ID of the given String
      */
     public static long calc(String s) {
+        if (referenceIDMapCache.containsKey(s)) {
+            return referenceIDMapCache.get(s);
+        }
         if (referenceIDMap.containsKey(s)) {
             return referenceIDMap.get(s);
         }
@@ -84,6 +94,22 @@ public class ReferenceIDUtils {
      */
     public static String format(long l) {
         return String.format("%016X", l);
+    }
+
+    private static void initCache() {
+        for (String s : new String[] {"java.lang.Boolean", "java.lang.Byte", "java.lang.Short", "java.lang.Integer", "java.lang.Long", "java.math.BigInteger", "java.lang.Float", "java.lang.Double", "java.math.BigDecimal", "java.lang.String", "java.lang.Character"}) {
+            referenceIDMapCache.put(s, calc(s));
+        }
+
+        Field[] fields = IdentifierUtils.class.getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                String s = (String) field.get(null);
+                referenceIDMapCache.put(s, calc(s));
+            } catch (IllegalAccessException e) {
+
+            }
+        }
     }
 
 }
