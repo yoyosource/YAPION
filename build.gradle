@@ -88,9 +88,11 @@ sourceSets {
 
 javadoc {
     source = 'src/main/java/yapion'
+    // destinationDir = ''
     include("**/*.java")
-    exclude("${rootDir}/src/main/java/system",
-            "${rootDir}/src/main/java/test")
+    exclude("**/PublicKeySerializer.java")
+    exclude("src/main/java/system",
+            "src/main/java/test")
 }
 
 publishing {
@@ -103,7 +105,7 @@ publishing {
         maven(MavenPublication) {
             groupId = groupID
             artifactId = group
-            version = publication + "-SNAPSHOT"
+            version = publication
 
             from components.java
         }

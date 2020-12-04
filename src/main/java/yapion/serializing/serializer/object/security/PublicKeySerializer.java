@@ -4,8 +4,11 @@
 
 package yapion.serializing.serializer.object.security;
 
+import sun.security.provider.DSAPublicKeyImpl;
+import sun.security.rsa.RSAPublicKeyImpl;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
@@ -13,6 +16,7 @@ import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
+import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.util.Base64;
 
@@ -27,6 +31,11 @@ public class PublicKeySerializer implements InternalSerializer<PublicKey> {
     @Override
     public String type() {
         return "java.security.PublicKey";
+    }
+
+    @Override
+    public Class<?> interfaceType() {
+        return PublicKey.class;
     }
 
     @Override
@@ -59,9 +68,24 @@ public class PublicKeySerializer implements InternalSerializer<PublicKey> {
         String encodedString = yapionObject.getValue("encoded", "").get();
         byte[] encoded;
         if (encodedString == null) {
-            encoded = null;
+            throw new YAPIONException("'encoded' was null");
         } else {
             encoded = Base64.getDecoder().decode(encodedString);
+        }
+
+        if (keyType.equals("sun.security.rsa.RSAPublicKeyImpl")) {
+            try {
+                return RSAPublicKeyImpl.newKey(encoded);
+            } catch (InvalidKeyException e) {
+                throw new YAPIONException(e.getMessage(), e.getCause());
+            }
+        }
+        if (keyType.equals("sun.security.provider.DSAPublicKeyImpl")) {
+            try {
+                return new DSAPublicKeyImpl(encoded);
+            } catch (InvalidKeyException e) {
+                throw new YAPIONException(e.getMessage(), e.getCause());
+            }
         }
 
         return new PublicKey() {
