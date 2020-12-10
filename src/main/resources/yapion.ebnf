@@ -1,0 +1,44 @@
+/* Used in: https://bottlecaps.de/rr/ui */
+
+Object ::= '{' ( Character_Indent* Variable )* '}'
+Array ::= ( '[' ( Object | Array | Map | Pointer | Value_Comma_Escape | '(' Value ')') ( ',' ( Object | Array | Map | Pointer | Value_Comma_Escape | '(' Value ')' ) )* ']' ) | ( '[' ( Character_Indent+ ( Object | Array | Map | Pointer | Value_Comma_Escape | '(' Value ')' ) ',' )* ']' )
+Map ::= '<' ( Character_Indent* ( Digit_Hex+ ':' Digit_Hex+ | '#' Digit_Hex+ ( Object | Array | Map | Pointer | '(' Value ')' ) ) ','? )* '>'
+Pointer ::= '->' Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex
+
+Variable ::= ( '\' ' ' | Digit | Character_Upper | Character_Lower | Character_Special )( Digit | Character_Upper | Character_Lower | Character_Special | ' ' )* ( Object | Array | Map | Pointer | '(' Value ')' )
+
+Value_Comma_Escape ::= Value | '\,'
+
+Value ::= Value_Special | Value_Number | Value_Character | Value_String
+Value_Special ::= 'true' | 'false' | 'null'
+
+Value_Number ::= Value_Number_Whole | Value_Number_Fraction | Value_Number_Type
+Value_Number_Whole ::= '-'? ( Digit+ | ( '#' | '0x' | '0X' ) Digit_Hex+ )
+Value_Number_Fraction ::= '-'? ( Digit+ '.' | '.' Digit ) Digit*
+Value_Number_Type ::= Value_Number_Byte | Value_Number_Short | Value_Number_Integer | Value_Number_Long | Value_Number_BigInteger | Value_Number_Float | Value_Number_Double | Value_Number_BigDecimal
+
+Value_Number_Byte ::= Value_Number_Whole 'B'
+Value_Number_Short ::= Value_Number_Whole 'S'
+Value_Number_Integer ::= Value_Number_Whole 'I'
+Value_Number_Long ::= Value_Number_Whole 'L'
+Value_Number_BigInteger ::= Value_Number_Whole 'BI'
+Value_Number_Float ::= Value_Number_Fraction 'F'
+Value_Number_Double ::= Value_Number_Fraction 'D'
+Value_Number_BigDecimal ::= Value_Number_Fraction 'BD'
+
+Value_Character ::= "'" Character "'"
+/* Bei 'Character*' muss mindestens ein zeichen von Character_Upper oder Character_Lower oder Character_Escape oder Character_Special oder ' ' sein */
+Value_String ::= ( "'" Character Character+ "'" ) | ( '"' Character* '"' ) | ( Character* )
+
+Character ::= Digit | Character_Upper | Character_Lower | Character_Escape | Character_Special | ' '
+Digit ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+Digit_Hex ::= Digit | 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
+Character_Upper ::= [A-Z]
+Character_Lower ::= [a-z]
+Character_Escape ::= Character_Escape_Char ( 'n' | 't' )
+Character_Special ::= '!' | '"' | '#' | '$' | '%' | '&' | "'" | Character_Escape_Char '(' | Character_Escape_Char ')' | '*' | '+' | ',' | '-' | '.' | '/' | ':' | ';' | Character_Escape_Char '<' | '=' | Character_Escape_Char '>' | '?' | '@' | Character_Escape_Char '[' | Character_Escape_Char '\' | Character_Escape_Char ']' | '^' | '_' | '`' | Character_Escape_Char '{' | '|' | Character_Escape_Char '}' | '~'
+Character_Escape_Char ::= '\'
+Character_Indent ::= ' ' | #x0E
+
+/* Character_Upper ::= 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' */
+/* Character_Lower ::= 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' */
