@@ -19,8 +19,7 @@ import java.net.*;
 import java.nio.channels.SocketChannel;
 
 @YAPIONData
-// TODO
-@WrappedImplementation(since = "0.?.0")
+@WrappedImplementation(since = "0.20.1")
 public class WrappedSocket {
 
     @SuppressWarnings({"java:S2065"})
@@ -115,14 +114,17 @@ public class WrappedSocket {
 
     public void connect(SocketAddress endpoint) throws IOException {
         socket.connect(endpoint);
+        address = socket.getInetAddress();
     }
 
     public void connect(SocketAddress endpoint, int timeout) throws IOException {
         socket.connect(endpoint, timeout);
+        address = socket.getInetAddress();
     }
 
     public void bind(SocketAddress bindpoint) throws IOException {
         socket.bind(bindpoint);
+        address = socket.getInetAddress();
     }
 
     public InetAddress getInetAddress() {

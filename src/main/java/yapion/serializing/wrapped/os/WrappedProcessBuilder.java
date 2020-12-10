@@ -19,15 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 @YAPIONData
-// TODO
-@WrappedImplementation(since = "0.?.0")
+@WrappedImplementation(since = "0.20.1")
 public class WrappedProcessBuilder {
 
     @SuppressWarnings({"java:S2065"})
     private transient ProcessBuilder processBuilder;
 
     @YAPIONOptimize
-    private final List<String> command;
+    private List<String> command;
 
     public WrappedProcessBuilder(List<String> command) {
         processBuilder = new ProcessBuilder(command);
@@ -52,11 +51,15 @@ public class WrappedProcessBuilder {
     }
 
     public ProcessBuilder command(List<String> command) {
-        return processBuilder.command(command);
+        ProcessBuilder processBuilder = this.processBuilder.command(command);
+        this.command = command;
+        return processBuilder;
     }
 
     public ProcessBuilder command(String... command) {
-        return processBuilder.command(command);
+        ProcessBuilder processBuilder = this.processBuilder.command(command);
+        this.command = Arrays.asList(command);
+        return processBuilder;
     }
 
     public List<String> command() {

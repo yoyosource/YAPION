@@ -17,8 +17,7 @@ import java.net.*;
 import java.nio.channels.ServerSocketChannel;
 
 @YAPIONData
-// TODO
-@WrappedImplementation(since = "0.?.0")
+@WrappedImplementation(since = "0.20.1")
 public class WrappedServerSocket {
 
     @SuppressWarnings({"java:S2065"})
@@ -81,10 +80,13 @@ public class WrappedServerSocket {
 
     public void bind(SocketAddress endpoint) throws IOException {
         serverSocket.bind(endpoint);
+        bindAddr = serverSocket.getInetAddress();
     }
 
     public void bind(SocketAddress endpoint, int backlog) throws IOException {
         serverSocket.bind(endpoint, backlog);
+        bindAddr = serverSocket.getInetAddress();
+        this.backlog = backlog;
     }
 
     public InetAddress getInetAddress() {
