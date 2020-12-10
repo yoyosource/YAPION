@@ -43,7 +43,7 @@ public final class YAPIONOutputStream {
      * @param yapionPacket the YAPIONPacket
      */
     public void write(YAPIONPacket yapionPacket) {
-        write(yapionPacket.getYAPION());
+        write(yapionPacket.toYAPION());
     }
 
     /**

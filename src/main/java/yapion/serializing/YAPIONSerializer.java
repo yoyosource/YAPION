@@ -16,8 +16,7 @@ import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.IdentityHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -175,7 +174,11 @@ public final class YAPIONSerializer {
             return this;
         }
 
-        if (!contextManager.is(object).save) {
+        boolean saveWithoutAnnotation = false;
+        if (serializer != null && serializer.saveWithoutAnnotation()) {
+            saveWithoutAnnotation = true;
+        }
+        if (!contextManager.is(object).save && !saveWithoutAnnotation) {
             throw new YAPIONSerializerException("No suitable serializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
         }
 
@@ -187,22 +190,17 @@ public final class YAPIONSerializer {
         yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName())));
         this.yapionObject = yapionObject;
 
-        Field[] fields = object.getClass().getDeclaredFields();
-        for (Field field : fields) {
+        Class<?> objectClass = object.getClass();
+        for (Field field : ReflectionsUtils.getFields(objectClass)) {
             field.setAccessible(true);
             if (ModifierUtils.removed(field)) {
                 continue;
             }
             ContextManager.YAPIONInfo yapionInfo = contextManager.is(object, field);
-            if (!yapionInfo.save) continue;
+            if (!yapionInfo.save && !saveWithoutAnnotation) continue;
 
             String name = field.getName();
-            Object fieldObject = null;
-            try {
-                fieldObject = field.get(object);
-            } catch (Exception e) {
-                // Ignored
-            }
+            Object fieldObject = ReflectionsUtils.getValueOfField(field, object);
             if (fieldObject == null) {
                 if (!yapionInfo.optimize) {
                     yapionObject.add(new YAPIONVariable(name, new YAPIONValue<>(null)));

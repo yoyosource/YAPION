@@ -16,8 +16,7 @@ import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 public class ReflectionsUtils {
@@ -27,6 +26,35 @@ public class ReflectionsUtils {
     }
 
     private static final ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
+
+    private static int cacheSize = 100;
+    private static final Map<Class<?>, FieldCache> fieldCacheMap = new LinkedHashMap<Class<?>, FieldCache>() {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<Class<?>, FieldCache> eldest) {
+            return size() > cacheSize;
+        }
+    };
+
+    /**
+     * Set the cache size of the internal cache to a specific
+     * number above 100. If you set a number below 100 it will
+     * default to 100.
+     *
+     * @param cacheSize the cache Size
+     */
+    public static void setCacheSize(int cacheSize) {
+        if (cacheSize < 100) {
+            cacheSize = 100;
+        }
+        ReflectionsUtils.cacheSize = cacheSize;
+    }
+
+    /**
+     * Discard the cache used by {@link }
+     */
+    public static void discardCache() {
+        fieldCacheMap.clear();
+    }
 
     /**
      * Invokes a method with the given arguments on a given object
@@ -281,6 +309,14 @@ public class ReflectionsUtils {
         return isClassSuperclassOf(clazz, Throwable.class);
     }
 
+    public static boolean isClassSuperclassOf(@NonNull String toCheck, @NonNull Class<?> superClass) {
+        try {
+            return isClassSuperclassOf(Class.forName(toCheck), superClass);
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     public static boolean isClassSuperclassOf(@NonNull Class<?> toCheck, @NonNull Class<?> superClass) {
         if (toCheck == superClass) return true;
         Class<?> superClassToCheck = toCheck.getSuperclass();
@@ -290,18 +326,77 @@ public class ReflectionsUtils {
         return isClassSuperclassOf(superClassToCheck, superClass);
     }
 
-    public static Field getField(Class<?> clazz, String name) {
-        if (clazz == null) return null;
-        Field field = null;
+    public static boolean implementsInterface(String type, Class<?> clazz) {
         try {
-            field = clazz.getDeclaredField(name);
-        } catch (NoSuchFieldException e) {
-            // Ignored
+            return clazz.isAssignableFrom(Class.forName(type));
+        } catch (ClassNotFoundException e) {
+            return false;
         }
-        if (field == null) {
-            return getField(clazz.getSuperclass(), name);
+    }
+
+    private static class FieldCache {
+
+        private final Field[] fields;
+        private final Class<?> superClass;
+
+        private FieldCache(Class<?> clazz) {
+            fields = clazz.getDeclaredFields();
+            superClass = clazz.getSuperclass();
         }
-        return field;
+
+        private List<Field> fields() {
+            List<Field> accumulatedFields = new ArrayList<>(Arrays.asList(this.fields));
+            if (superClass != null) {
+                accumulatedFields.addAll(ReflectionsUtils.getFields(superClass));
+            }
+            return accumulatedFields;
+        }
+
+        private Field getField(String name) {
+            Optional<Field> optionalField = Arrays.stream(fields).filter(field -> field.getName().equals(name)).findAny();
+            if (optionalField.isPresent()) {
+                return optionalField.get();
+            }
+            if (superClass == null) return null;
+            return getFieldCache(superClass).getField(name);
+        }
+
+    }
+
+    private static FieldCache getFieldCache(Class<?> clazz) {
+        if (!fieldCacheMap.containsKey(clazz)) {
+            fieldCacheMap.put(clazz, new FieldCache(clazz));
+        }
+        return fieldCacheMap.get(clazz);
+    }
+
+    public static List<Field> getFields(Class<?> clazz) {
+        return getFieldCache(clazz).fields();
+    }
+
+    @SuppressWarnings({"java:S3011"})
+    public static Object getValueOfField(Field field, Object object) {
+        try {
+            field.setAccessible(true);
+            return field.get(object);
+        } catch (IllegalAccessException e) {
+            return null;
+        }
+    }
+
+    @SuppressWarnings({"java:S3011"})
+    public static boolean setValueOfField(Field field, Object object, Object value) {
+        try {
+            field.setAccessible(true);
+            field.set(object, value);
+            return true;
+        } catch (IllegalAccessException e) {
+            return false;
+        }
+    }
+
+    public static Field getField(Class<?> clazz, String name) {
+        return getFieldCache(clazz).getField(name);
     }
 
 }

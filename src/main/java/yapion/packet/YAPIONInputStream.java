@@ -30,10 +30,8 @@ public final class YAPIONInputStream {
 
     private final InputStream inputStream;
     private YAPIONPacketReceiver yapionPacketReceiver = null;
+    private YAPIONOutputStream respectiveOutputStream = null;
     private TypeReMapper typeReMapper = new TypeReMapper();
-
-    private YAPIONPacketIdentifier<?> staticIdentifier = null;
-    private YAPIONPacketIdentifierCreator<?> dynamicIdentifier = null;
 
     private Thread yapionInputStreamHandler = null;
     private boolean running = true;
@@ -106,11 +104,11 @@ public final class YAPIONInputStream {
                     handle();
                 } catch (Exception e) {
                     drop();
-                    if (yapionPacketReceiver != null) {
+                    /*if (yapionPacketReceiver != null) {
                         YAPIONPacket yapionPacket = new YAPIONPacket("");
                         addIdentifier(yapionPacket);
                         yapionPacketReceiver.handleException(yapionPacket, e);
-                    }
+                    }*/
                     log.warn("Something went wrong while handling the read object.", e.getCause());
                 }
             }
@@ -170,14 +168,8 @@ public final class YAPIONInputStream {
         inputStream.close();
     }
 
-    public synchronized void identifier(YAPIONPacketIdentifier<?> yapionPacketIdentifier) {
-        this.dynamicIdentifier = null;
-        this.staticIdentifier = yapionPacketIdentifier;
-    }
-
-    public synchronized void identifier(YAPIONPacketIdentifierCreator<?> yapionPacketIdentifierCreator) {
-        this.staticIdentifier = null;
-        this.dynamicIdentifier = yapionPacketIdentifierCreator;
+    void setRespectiveOutputStream(YAPIONOutputStream respectiveOutputStream) {
+        this.respectiveOutputStream = respectiveOutputStream;
     }
 
     private synchronized int handleAvailable() {
@@ -200,13 +192,8 @@ public final class YAPIONInputStream {
         if (!(object instanceof String)) return;
         if (!object.equals(YAPIONPacket.class.getTypeName())) return;
         YAPIONPacket yapionPacket = (YAPIONPacket) YAPIONDeserializer.deserialize(yapionObject);
-        addIdentifier(yapionPacket);
+        if (respectiveOutputStream != null) yapionPacket.setYAPIONOutputStream(respectiveOutputStream);
         yapionPacketReceiver.handle(yapionPacket);
-    }
-
-    private void addIdentifier(YAPIONPacket yapionPacket) {
-        if (staticIdentifier != null) yapionPacket.setYapionPacketIdentifier(staticIdentifier);
-        if (dynamicIdentifier != null) yapionPacket.setYapionPacketIdentifier(dynamicIdentifier.identifier());
     }
 
 }

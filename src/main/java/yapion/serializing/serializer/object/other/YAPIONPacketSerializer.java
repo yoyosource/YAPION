@@ -29,6 +29,26 @@ public class YAPIONPacketSerializer implements InternalSerializer<YAPIONPacket> 
     }
 
     @Override
+    public Class<?> classType() {
+        return YAPIONPacket.class;
+    }
+
+    @Override
+    public boolean saveWithoutAnnotation() {
+        return true;
+    }
+
+    @Override
+    public boolean loadWithoutAnnotation() {
+        return true;
+    }
+
+    @Override
+    public boolean createWithObjenesis() {
+        return true;
+    }
+
+    @Override
     public YAPIONAnyType serialize(SerializeData<YAPIONPacket> serializeData) {
         return null;
     }

@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+import static yapion.utils.ReflectionsUtils.implementsInterface;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -76,6 +77,7 @@ public class SerializeManager {
 
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
     private static final List<InternalSerializer<?>> interfaceTypeSerializer = new ArrayList<>();
+    private static final List<InternalSerializer<?>> classTypeSerializer = new ArrayList<>();
     private static final GroupList nSerializerGroups = new GroupList();
     private static final GroupList oSerializerGroups = new GroupList();
 
@@ -140,6 +142,9 @@ public class SerializeManager {
         if (serializer.interfaceType() != null) {
             interfaceTypeSerializer.add(serializer);
         }
+        if (serializer.classType() != null) {
+            classTypeSerializer.add(serializer);
+        }
     }
 
     private static void add(InternalSerializer<?> serializer) {
@@ -151,6 +156,9 @@ public class SerializeManager {
         }
         if (serializer.interfaceType() != null) {
             interfaceTypeSerializer.add(serializer);
+        }
+        if (serializer.classType() != null) {
+            classTypeSerializer.add(serializer);
         }
     }
 
@@ -393,20 +401,18 @@ public class SerializeManager {
                 break;
             }
         }
+        for (InternalSerializer<?> internalSerializer : classTypeSerializer) {
+            if (ReflectionsUtils.isClassSuperclassOf(type, internalSerializer.classType())) {
+                type = internalSerializer.type();
+                break;
+            }
+        }
 
         if (oSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
         InternalSerializer<?> serializer = serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
         if (serializer != null) return serializer;
         if (nSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
         return null;
-    }
-
-    private static boolean implementsInterface(String type, Class<?> clazz) {
-        try {
-            return clazz.isAssignableFrom(Class.forName(type));
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
     }
 
     /**
@@ -669,6 +675,17 @@ public class SerializeManager {
             return ReflectionsUtils.constructObjectObjenesis(type);
         } else {
             return ReflectionsUtils.constructObject(type, contextManager.is(clazz).data);
+        }
+    }
+
+    static Object getObjectInstance(Class<?> clazz, String type, boolean objenesis) {
+        if (instanceFactoryMap.containsKey(clazz)) {
+            return instanceFactoryMap.get(clazz).instance();
+        }
+        if (clazz.getDeclaredAnnotation(YAPIONObjenesis.class) != null) {
+            return ReflectionsUtils.constructObjectObjenesis(type);
+        } else {
+            return ReflectionsUtils.constructObject(type, objenesis);
         }
     }
 

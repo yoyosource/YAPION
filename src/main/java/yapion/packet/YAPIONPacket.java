@@ -5,184 +5,69 @@
 package yapion.packet;
 
 import yapion.annotations.object.YAPIONData;
-import yapion.exceptions.utils.YAPIONPacketException;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.validators.Validator;
-import yapion.hierarchy.validators.ValidatorType;
-import yapion.hierarchy.validators.ValidatorVariable;
 import yapion.serializing.YAPIONSerializer;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 @YAPIONData
-public final class YAPIONPacket {
+public abstract class YAPIONPacket {
 
-    // Following context is cached
-    private transient long lastModified = 0;
-    private transient long lastCreated = 0;
-    private transient YAPIONObject cache = null;
-    private transient String cacheString = null;
-
-    // Following is the Serialized values
-    private final String type;
-
-    private final Map<String, Object> payload = new HashMap<>();
-
-    // Following for the receiving side
-    private transient YAPIONPacketIdentifier<?> yapionPacketIdentifier = null;
+    private transient Exception exception;
+    private transient YAPIONOutputStream yapionOutputStream;
 
     /**
-     * Creates an YAPIONPacket with an specific type. If the type
-     * is {@code null} this constructor will throw an
-     * YAPIONPacketException. The type name "@error" and "@exception"
-     * are not allowed and will throw an YAPIONPacketException.
+     * Serialize this {@link YAPIONPacket} to a {@link YAPIONObject}.
      *
-     * @param type the specified type of packet
+     * @return a {@link YAPIONObject}
      */
-    public YAPIONPacket(String type) {
-        if (type == null) {
-            throw new YAPIONPacketException();
-        }
-        if (type.equals(YAPIONPacketReceiver.ERROR_HANDLER) || type.equals(YAPIONPacketReceiver.EXCEPTION_HANDLER)) {
-            throw new YAPIONPacketException();
-        }
-        this.type = type;
+    public final YAPIONObject toYAPION() {
+        return YAPIONSerializer.serialize(this);
     }
 
     /**
-     * Adds another key value pair to this YAPIONPacket.
+     * The type name returned by {@link Class#getTypeName()}.
      *
-     * @param key the key
-     * @param value the value
+     * @return result of {@link Class#getTypeName()}
      */
-    public YAPIONPacket add(String key, Object value) {
-        lastModified = System.currentTimeMillis();
-        payload.put(key, value);
-        return this;
+    public final String getType() {
+        return getClass().getTypeName();
     }
 
     /**
-     * Removes a key value pair from this YAPIONPacket.
+     * The exception that was thrown by the {@link YAPIONPacketHandler#handlePacket(YAPIONPacket)}
+     * method. You could for example log this {@link Exception} in the {@link YAPIONPacketHandler}
+     * set with {@link YAPIONPacketReceiver#setErrorHandler(YAPIONPacketHandler)}.
      *
-     * @param key the key
+     * @return the {@link Exception} that was thrown
      */
-    public YAPIONPacket remove(String key) {
-        lastModified = System.currentTimeMillis();
-        payload.remove(key);
-        return this;
+    public final Exception getException() {
+        return exception;
+    }
+
+    final void setException(Exception exception) {
+        this.exception = exception;
     }
 
     /**
-     * Gets a value of a specified key from this YAPIONPacket.
+     * Returns the {@link YAPIONOutputStream} set by {@link YAPIONSocket} and
+     * is the {@link OutputStream} to the {@link InputStream}.
      *
-     * @param key the key to retrieve
-     * @return the Object associated by the key
+     * @return the {@link YAPIONOutputStream} set by {@link YAPIONSocket}
      */
-    public Object get(String key) {
-        return payload.get(key);
+    public final YAPIONOutputStream getYAPIONOutputStream() {
+        return yapionOutputStream;
     }
 
     /**
-     * Gets the YAPIONPacketIdentifier from this YAPIONPacket.
-     * This value can return null when the value is not
-     * specified.
+     * Set the {@link YAPIONOutputStream} that corresponds to the {@link InputStream}.
+     * This normally gets called by {@link YAPIONInputStream} and will be set to the
+     * {@link YAPIONInputStream} by the {@link YAPIONSocket} corresponding to this.
      *
-     * @return the specified YAPIONPacketIdentifier
+     * @param yapionOutputStream the {@link YAPIONOutputStream} to set
      */
-    @SuppressWarnings({"java:S1452"})
-    public YAPIONPacketIdentifier<?> getIdentifier() {
-        return yapionPacketIdentifier;
+    public final void setYAPIONOutputStream(YAPIONOutputStream yapionOutputStream) {
+        this.yapionOutputStream = yapionOutputStream;
     }
-
-    YAPIONPacket setYapionPacketIdentifier(YAPIONPacketIdentifier<?> yapionPacketIdentifier) {
-        this.yapionPacketIdentifier = yapionPacketIdentifier;
-        return this;
-    }
-
-    /**
-     * Gets the type of this YAPIONPacket.
-     *
-     * @return the type
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * Returns the YAPION packet length that will be send.
-     *
-     * @return the length.
-     */
-    public long length() {
-        return toSendString().length();
-    }
-
-    /**
-     * Creates the YAPIONObject from this YAPIONPacket and caches it for further
-     * use. Using {@link #add(String, Object)} discards this cache. This method
-     * uses the {@link YAPIONSerializer} to serialize itself to the used
-     * YAPIONObject.
-     *
-     * @return the YAPIONObject
-     */
-    public YAPIONObject getYAPION() {
-        if (cache != null && lastModified == lastCreated) {
-            return cache;
-        }
-        lastCreated = lastModified;
-        cache = YAPIONSerializer.serialize(this);
-        return cache;
-    }
-
-    /**
-     * Creates a String from the YAPIONObject created by {@code getYAPION}.
-     * Creates the YAPIONObject along side creating the string. The string
-     * gets cached for further use. Using {@link #add(String, Object)}
-     * discards this cache.
-     *
-     * @return the String from the YAPIONObject
-     */
-    public String toSendString() {
-        if (cacheString != null && lastModified == lastCreated) {
-            return cacheString;
-        }
-        cacheString = getYAPION().toString();
-        return cacheString;
-    }
-
-    @Override
-    public String toString() {
-        return "YAPIONPacket{" +
-                "type='" + type + '\'' +
-                ", payload=" + payload +
-                '}';
-    }
-
-    /**
-     * Create an {@link Validator} that validates {@link YAPIONPacket}'s.
-     * This Validator is only for the meta-structure you
-     * should add you own checks for any value you can add
-     * to this packet.
-     *
-     * @return an {@link Validator} instance for an {@link YAPIONPacket}
-     */
-    public static Validator validator() {
-        Validator validator = new Validator();
-        validator.add(new ValidatorVariable(o -> o.toString().equals("yapion.packet.YAPIONPacket"), TYPE_IDENTIFIER).setType(ValidatorType.VALUE));
-        validator.add(new ValidatorVariable(o -> !o.toString().equals(YAPIONPacketReceiver.ERROR_HANDLER) && !o.toString().equals(YAPIONPacketReceiver.EXCEPTION_HANDLER), "type").setType(ValidatorType.VALUE));
-        validator.add(new ValidatorVariable("payload").setType(ValidatorType.MAP));
-        validator.setValidationHook((strings) -> {
-            String s = strings.get(0);
-            if (!(s.startsWith("(") && s.endsWith(")"))) {
-                strings.set(0, "(" + s + ")");
-            }
-            strings.add(0, "payload");
-            return strings;
-        });
-        return validator;
-    }
-
 }

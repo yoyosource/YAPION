@@ -5,10 +5,9 @@
 package yapion.packet;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONPacketException;
 
 import java.util.HashMap;
@@ -42,11 +41,11 @@ public class YAPIONPacketReceiver {
      * @param packetType the packet to handle
      * @param yapionPacketHandler the handler which handles the specified packet
      */
-    public YAPIONPacketReceiver add(String packetType, YAPIONPacketHandler yapionPacketHandler) {
+    public YAPIONPacketReceiver add(Class<? extends YAPIONPacket> packetType, YAPIONPacketHandler yapionPacketHandler) {
         if (yapionPacketHandler == null || packetType == null) {
             throw new YAPIONPacketException();
         }
-        handlerMap.put(packetType, yapionPacketHandler);
+        handlerMap.put(packetType.getTypeName(), yapionPacketHandler);
         return this;
     }
 
@@ -60,11 +59,11 @@ public class YAPIONPacketReceiver {
      * @param packetTypes the packets to handle
      * @param yapionPacketHandler the handler which handles the specified packets
      */
-    public YAPIONPacketReceiver add(String[] packetTypes, YAPIONPacketHandler yapionPacketHandler) {
+    public YAPIONPacketReceiver add(Class<? extends YAPIONPacket>[] packetTypes, YAPIONPacketHandler yapionPacketHandler) {
         if (packetTypes == null) {
             throw new YAPIONPacketException();
         }
-        for (String s : packetTypes) {
+        for (Class<? extends YAPIONPacket> s : packetTypes) {
             if (s == null) continue;
             add(s, yapionPacketHandler);
         }
@@ -72,17 +71,43 @@ public class YAPIONPacketReceiver {
     }
 
     /**
-     * A wrapper function to {@link #add(String, YAPIONPacketHandler)}
+     * A wrapper function to {@link #add(Class, YAPIONPacketHandler)}
      */
-    public YAPIONPacketReceiver add(YAPIONPacketHandler yapionPacketHandler, String packetType) {
+    public YAPIONPacketReceiver add(YAPIONPacketHandler yapionPacketHandler, Class<? extends YAPIONPacket> packetType) {
         return add(packetType, yapionPacketHandler);
     }
 
     /**
-     * A wrapper function to {@link #add(String[], YAPIONPacketHandler)}
+     * A wrapper function to {@link #add(Class[], YAPIONPacketHandler)}
      */
-    public YAPIONPacketReceiver add(YAPIONPacketHandler yapionPacketHandler, String... packetTypes) {
+    public YAPIONPacketReceiver add(YAPIONPacketHandler yapionPacketHandler, Class<? extends YAPIONPacket>... packetTypes) {
         return add(packetTypes, yapionPacketHandler);
+    }
+
+    /**
+     * Set the Exception {@link YAPIONPacketHandler} to do something when an exception gets thrown.
+     *
+     * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
+     */
+    public YAPIONPacketReceiver setExceptionHandler(YAPIONPacketHandler yapionPacketHandler) {
+        if (yapionPacketHandler == null) {
+            throw new YAPIONException();
+        }
+        handlerMap.put(EXCEPTION_HANDLER, yapionPacketHandler);
+        return this;
+    }
+
+    /**
+     * Set the Error {@link YAPIONPacketHandler} to do something when an error occurred.
+     *
+     * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
+     */
+    public YAPIONPacketReceiver setErrorHandler(YAPIONPacketHandler yapionPacketHandler) {
+        if (yapionPacketHandler == null) {
+            throw new YAPIONException();
+        }
+        handlerMap.put(ERROR_HANDLER, yapionPacketHandler);
+        return this;
     }
 
     /**
@@ -133,7 +158,7 @@ public class YAPIONPacketReceiver {
 
     void handleException(YAPIONPacket yapionPacket, Exception exception) {
         try {
-            yapionPacket.add(EXCEPTION_HANDLER, exception);
+            yapionPacket.setException(exception);
             handlerMap.get(EXCEPTION_HANDLER).handlePacket(yapionPacket);
         } catch (Exception e) {
             log.warn("The packet handler with type '" + EXCEPTION_HANDLER + "' threw an exception.", e.getCause());

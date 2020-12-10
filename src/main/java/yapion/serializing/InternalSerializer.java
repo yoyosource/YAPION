@@ -24,7 +24,23 @@ public interface InternalSerializer<T> {
         return null;
     }
 
+    default Class<?> classType() {
+        return null;
+    }
+
     default boolean empty() {
+        return false;
+    }
+
+    default boolean saveWithoutAnnotation() {
+        return false;
+    }
+
+    default boolean loadWithoutAnnotation() {
+        return false;
+    }
+
+    default boolean createWithObjenesis() {
         return false;
     }
 

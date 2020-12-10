@@ -236,8 +236,7 @@ public final class YAPIONDeserializer {
         }
     }
 
-    private Object serialize(YAPIONAnyType yapionAnyType, String type) {
-        InternalSerializer<?> serializer = SerializeManager.getInternalSerializer(type);
+    private Object serialize(InternalSerializer<?> serializer, YAPIONAnyType yapionAnyType) {
         if (serializer != null && !serializer.empty()) {
             if (serializer instanceof EnumSerializer) {
                 YAPIONObject enumObject = (YAPIONObject) yapionAnyType;
@@ -261,47 +260,52 @@ public final class YAPIONDeserializer {
     private YAPIONDeserializer parseObject(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>) yapionObject.getVariable(TYPE_IDENTIFIER).getValue()).get();
         type = typeReMapper.remap(type);
-        Object o = serialize(yapionObject, type);
+        InternalSerializer<?> serializer = SerializeManager.getInternalSerializer(type);
+        Object o = serialize(serializer, yapionObject);
         if (o != null) {
             object = o;
             return this;
         }
 
+        boolean loadWithoutAnnotation = false;
+        if (serializer != null) {
+            loadWithoutAnnotation = serializer.loadWithoutAnnotation();
+        }
+
+        boolean createWithObjenesis = false;
+        if (serializer != null) {
+            createWithObjenesis = serializer.createWithObjenesis();
+        }
+
         try {
             Class<?> clazz = Class.forName(type);
-            if (!contextManager.is(clazz).load) {
+            if (!contextManager.is(clazz).load && !loadWithoutAnnotation) {
                 throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
             }
 
-            object = SerializeManager.getObjectInstance(clazz, type, contextManager);
+            object = SerializeManager.getObjectInstance(clazz, type, contextManager.is(clazz).data || createWithObjenesis);
             MethodManager.preDeserializationStep(object, contextManager);
             pointerMap.put(yapionObject, object);
 
             for (String fieldName : yapionObject.getKeys()) {
                 if (fieldName.equals(TYPE_IDENTIFIER)) continue;
 
-                Field field = null;
-                try {
-                    field = clazz.getDeclaredField(fieldName);
-                } catch (NoSuchFieldException | SecurityException e) {
-                    // Ignored
-                }
+                Field field = ReflectionsUtils.getField(clazz, fieldName);
                 if (field == null) {
                     deserializeResult.add(object, fieldName, yapionObject.getVariable(fieldName).getValue());
                     continue;
                 }
-                field.setAccessible(true);
                 if (ModifierUtils.removed(field)) continue;
-                if (!contextManager.is(object, field).load) continue;
+                if (!contextManager.is(object, field).load && !loadWithoutAnnotation) continue;
 
                 arrayType = remove(field.getType().getTypeName(), '[', ']');
 
                 YAPIONAnyType yapionAnyType = yapionObject.getVariable(field.getName()).getValue();
                 YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
                 if (isValid(field, yapionDeserializeType)) {
-                    field.set(object, serialize(yapionAnyType, yapionDeserializeType.type().getTypeName()));
+                    ReflectionsUtils.setValueOfField(field, object, serialize(SerializeManager.getInternalSerializer(yapionDeserializeType.type().getTypeName()), yapionAnyType));
                 } else {
-                    field.set(object, parse(yapionAnyType));
+                    ReflectionsUtils.setValueOfField(field, object, parse(yapionAnyType));
                 }
             }
 
@@ -328,8 +332,6 @@ public final class YAPIONDeserializer {
             MethodManager.postDeserializationStep(object, contextManager);
         } catch (ClassNotFoundException e) {
             log.warn("The class '" + type + "' was not found.", e.getCause());
-        } catch (IllegalAccessException e) {
-            log.warn("", e.getCause());
         } catch (YAPIONReflectionException e) {
             log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
         }
