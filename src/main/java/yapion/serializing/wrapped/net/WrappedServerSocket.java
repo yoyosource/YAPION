@@ -1,8 +1,6 @@
-/*
- *  // SPDX-License-Identifier: Apache-2.0
- * // YAPION
- * // Copyright (C) 2019,2020 yoyosource
- */
+// SPDX-License-Identifier: Apache-2.0
+// YAPION
+// Copyright (C) 2019,2020 yoyosource
 
 package yapion.serializing.wrapped.net;
 
