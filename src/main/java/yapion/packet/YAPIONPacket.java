@@ -70,4 +70,5 @@ public abstract class YAPIONPacket {
     public final void setYAPIONOutputStream(YAPIONOutputStream yapionOutputStream) {
         this.yapionOutputStream = yapionOutputStream;
     }
+
 }

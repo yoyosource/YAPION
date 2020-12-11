@@ -18,6 +18,8 @@ import yapion.serializing.YAPIONDeserializer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -103,13 +105,8 @@ public final class YAPIONInputStream {
                 try {
                     handle();
                 } catch (Exception e) {
-                    drop();
-                    /*if (yapionPacketReceiver != null) {
-                        YAPIONPacket yapionPacket = new YAPIONPacket("");
-                        addIdentifier(yapionPacket);
-                        yapionPacketReceiver.handleException(yapionPacket, e);
-                    }*/
                     log.warn("Something went wrong while handling the read object.", e.getCause());
+                    drop();
                 }
             }
         });
@@ -119,7 +116,15 @@ public final class YAPIONInputStream {
 
     private void drop() {
         try {
-            while (inputStream.available() > 0) inputStream.read();
+            List<Byte> byteList = new ArrayList<>();
+            while (inputStream.available() > 0) {
+                byteList.add((byte) inputStream.read());
+            }
+            byte[] bytes = new byte[byteList.size()];
+            for (int i = 0; i < byteList.size(); i++) {
+                bytes[i] = byteList.get(i);
+            }
+            yapionPacketReceiver.handleDrop(new YAPIONDropPacket(bytes));
         } catch (IOException e) {
 
         }

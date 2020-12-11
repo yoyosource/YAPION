@@ -35,6 +35,10 @@ public class TestFactory {
     };
 
     public static void main(String[] args) {
+        if (true) {
+            benchmarkTest1();
+            return;
+        }
         if (false) {
             instanceFactory.add();
         }
@@ -58,7 +62,7 @@ public class TestFactory {
                 b = true;
                 System.out.println();
             }
-            long[] longs = benchmark(12);
+            long[] longs = benchmark(1024);
             if (!b) {
                 serializeWithoutFactory[0] += longs[0];
                 serializeWithoutFactory[1] += longs[1];
@@ -76,7 +80,8 @@ public class TestFactory {
     }
 
     private static void benchmarkWithOffset(int offset, int rounds) {
-        int benchmarkOffset = 128 * 2;
+        // int benchmarkOffset = 128 * 2;
+        int benchmarkOffset = 0;
         for (int i = 0; i < 128; i++) {
             System.out.println("ID: " + (i + benchmarkOffset));
             long[] benchmark = new long[]{0, 0};

@@ -12,6 +12,7 @@ import yapion.exceptions.utils.YAPIONPacketException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @YAPIONLoadExclude(context = "*")
 @YAPIONSaveExclude(context = "*")
@@ -20,8 +21,10 @@ public class YAPIONPacketReceiver {
 
     private final Map<String, YAPIONPacketHandler> handlerMap = new HashMap<>();
 
-    public static final String ERROR_HANDLER = "@error";
-    public static final String EXCEPTION_HANDLER = "@exception";
+    private static final String ERROR_HANDLER = "@error";
+    private static final String EXCEPTION_HANDLER = "@exception";
+    private static final String UNKNOWN_PACKET_HANDLER = "@unknown";
+    private static final String DROP_HANDLER = "@drop";
 
     /**
      * Creates an YAPIONPacketReceiver
@@ -30,6 +33,8 @@ public class YAPIONPacketReceiver {
         handlerMap.put(ERROR_HANDLER, yapionPacket -> {
         });
         handlerMap.put(EXCEPTION_HANDLER, yapionPacket -> {
+        });
+        handlerMap.put(UNKNOWN_PACKET_HANDLER, yapionPacket -> {
         });
     }
 
@@ -111,6 +116,32 @@ public class YAPIONPacketReceiver {
     }
 
     /**
+     * Set the Unknown {@link YAPIONPacketHandler} to do something when an unknown packet was handled occurred.
+     *
+     * @param yapionPacketHandler
+     */
+    public YAPIONPacketReceiver setUnknownHandler(YAPIONPacketHandler yapionPacketHandler) {
+        if (yapionPacketHandler == null) {
+            throw new YAPIONException();
+        }
+        handlerMap.put(UNKNOWN_PACKET_HANDLER, yapionPacketHandler);
+        return this;
+    }
+
+    /**
+     * Set the Drop {@link YAPIONPacketHandler} to do something when an date drop occurred.
+     *
+     * @param yapionPacketHandler
+     */
+    public YAPIONPacketReceiver setDropHandler(YAPIONPacketHandler yapionPacketHandler) {
+        if (yapionPacketHandler == null) {
+            throw new YAPIONException();
+        }
+        handlerMap.put(DROP_HANDLER, yapionPacketHandler);
+        return this;
+    }
+
+    /**
      * Handles an YAPIONPacket by calling the specified yapionPacketHandler
      * for the type of the packet. If the packet type is not found the
      * "@error" handler gets called. If any exception gets thrown the
@@ -122,19 +153,20 @@ public class YAPIONPacketReceiver {
     public void handle(YAPIONPacket yapionPacket) {
         String type = yapionPacket.getType();
         if (!handlerMap.containsKey(type)) {
-            handleError(yapionPacket);
+            handleUnknown(yapionPacket);
             return;
         }
-        handlePacket(yapionPacket, type, handlerMap.get(type));
+        handlePacket(yapionPacket, type, handlerMap.get(type), this::handleException);
     }
 
-    private void handlePacket(YAPIONPacket yapionPacket, String type, YAPIONPacketHandler handler) {
+    private void handlePacket(YAPIONPacket yapionPacket, String type, YAPIONPacketHandler handler, Consumer<YAPIONPacket> yapionPacketConsumer) {
         Runnable runnable = () -> {
             try {
                 handler.handlePacket(yapionPacket);
             } catch (Exception e) {
                 log.warn(String.format("The packet handler with type '%s' threw an exception.", type), e.getCause());
-                if (!handler.ignoreException()) handleException(yapionPacket, e);
+                yapionPacket.setException(e);
+                if (!handler.ignoreException()) yapionPacketConsumer.accept(yapionPacket);
             }
         };
         if (handler.runThread()) {
@@ -147,22 +179,20 @@ public class YAPIONPacketReceiver {
         }
     }
 
-    private void handleError(YAPIONPacket yapionPacket) {
-        try {
-            handlerMap.get(ERROR_HANDLER).handlePacket(yapionPacket);
-        } catch (Exception e) {
-            log.warn("The packet handler with type '" + ERROR_HANDLER + "' threw an exception.", e.getCause());
-            handleException(yapionPacket, e);
-        }
+    void handleDrop(YAPIONPacket yapionPacket) {
+        handlePacket(yapionPacket, DROP_HANDLER, handlerMap.get(DROP_HANDLER), this::handleError);
     }
 
-    void handleException(YAPIONPacket yapionPacket, Exception exception) {
-        try {
-            yapionPacket.setException(exception);
-            handlerMap.get(EXCEPTION_HANDLER).handlePacket(yapionPacket);
-        } catch (Exception e) {
-            log.warn("The packet handler with type '" + EXCEPTION_HANDLER + "' threw an exception.", e.getCause());
-        }
+    private void handleUnknown(YAPIONPacket yapionPacket) {
+        handlePacket(yapionPacket, UNKNOWN_PACKET_HANDLER, handlerMap.get(UNKNOWN_PACKET_HANDLER), this::handleError);
+    }
+
+    private void handleException(YAPIONPacket yapionPacket) {
+        handlePacket(yapionPacket, EXCEPTION_HANDLER, handlerMap.get(EXCEPTION_HANDLER), this::handleError);
+    }
+
+    private void handleError(YAPIONPacket yapionPacket) {
+        handlePacket(yapionPacket, ERROR_HANDLER, handlerMap.get(ERROR_HANDLER), packet -> {});
     }
 
 }
