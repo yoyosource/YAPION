@@ -124,7 +124,9 @@ public final class YAPIONInputStream {
             for (int i = 0; i < byteList.size(); i++) {
                 bytes[i] = byteList.get(i);
             }
-            yapionPacketReceiver.handleDrop(new YAPIONDropPacket(bytes));
+            YAPIONDropPacket yapionDropPacket = new YAPIONDropPacket(bytes);
+            if (respectiveOutputStream != null) yapionDropPacket.setYAPIONOutputStream(respectiveOutputStream);
+            yapionPacketReceiver.handleDrop(yapionDropPacket);
         } catch (IOException e) {
 
         }
