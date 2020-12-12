@@ -182,11 +182,11 @@ public final class YAPIONSerializer {
             throw new YAPIONSerializerException("No suitable serializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
         }
 
-        MethodManager.preSerializationStep(object, contextManager);
         YAPIONObject yapionObject = new YAPIONObject();
         if (!pointerMap.containsKey(object)) {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
         }
+        MethodManager.preSerializationStep(object, contextManager);
         yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName())));
         this.yapionObject = yapionObject;
 

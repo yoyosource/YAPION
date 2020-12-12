@@ -103,19 +103,6 @@ public class YAPIONPacketReceiver {
     }
 
     /**
-     * Set the Error {@link YAPIONPacketHandler} to do something when an error occurred.
-     *
-     * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
-     */
-    public YAPIONPacketReceiver setErrorHandler(YAPIONPacketHandler yapionPacketHandler) {
-        if (yapionPacketHandler == null) {
-            throw new YAPIONException();
-        }
-        handlerMap.put(ERROR_HANDLER, yapionPacketHandler);
-        return this;
-    }
-
-    /**
      * Set the Unknown {@link YAPIONPacketHandler} to do something when an unknown packet was handled occurred.
      *
      * @param yapionPacketHandler
@@ -138,6 +125,19 @@ public class YAPIONPacketReceiver {
             throw new YAPIONException();
         }
         handlerMap.put(DROP_HANDLER, yapionPacketHandler);
+        return this;
+    }
+
+    /**
+     * Set the Error {@link YAPIONPacketHandler} to do something when an error occurred.
+     *
+     * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
+     */
+    public YAPIONPacketReceiver setErrorHandler(YAPIONPacketHandler yapionPacketHandler) {
+        if (yapionPacketHandler == null) {
+            throw new YAPIONException();
+        }
+        handlerMap.put(ERROR_HANDLER, yapionPacketHandler);
         return this;
     }
 
