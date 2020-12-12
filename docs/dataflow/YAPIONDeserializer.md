@@ -1,5 +1,5 @@
 # YAPIONDeserializer
 
 <p align="center">
-	<img alt="Dataflow" src="../../flowcharts/YAPIONDeserializer.png">
+	<img alt="Dataflow" src="images/YAPIONDeserializer.png">
 </p>

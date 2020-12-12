@@ -1,5 +1,5 @@
 # YAPIONPacketReciever
 
 <p align="center">
-	<img alt="Dataflow" src="../../flowcharts/YAPIONPacketReciever.png">
+	<img alt="Dataflow" src="images/YAPIONPacketReciever.png">
 </p>
