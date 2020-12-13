@@ -9,3 +9,19 @@
 * [YAPIONPacketReciever](dataflow/YAPIONPacketReciever.md)
 * [YAPIONSerializer](dataflow/YAPIONSerializer.md)
 * [YAPIONDeserializer](dataflow/YAPIONDeserializer.md)
+
+## Code Examples
+
+### Getting Started
+
+* [Notation](examples/basics/Notation.md)
+* [Parser](examples/basics/Parser.md)
+* [Serialization](examples/basics/Serialization.md)
+* [Deserialization](examples/basics/Deserialization.md)
+
+### Advanced
+
+* [Classes and Packages](examples/advanced/TypeReMapper.md)
+* [Deserializier Result](examples/advanced/DeserializationResult.md)
+* [Hookes into Serialization/Deserialization](examples/advanced/MethodAnnotations.md)
+* [Packet System](examples/advanced/YAPIONPacket.md)
