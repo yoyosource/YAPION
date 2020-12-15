@@ -1,4 +1,4 @@
-# Serialization [WIP]
+# Serialization
 
 The serializer will serialize every field of the current instance as well as every superclass.
 As an example class we will use this:
