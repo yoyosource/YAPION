@@ -17,6 +17,7 @@
 * [Notation](examples/basics/Notation.md)
 * [Parser](examples/basics/Parser.md)
 * [Serialization](examples/basics/Serialization.md)
+* [Output](examples/basics/Output.md)
 * [Deserialization](examples/basics/Deserialization.md)
 
 ### Advanced
