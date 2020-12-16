@@ -23,6 +23,9 @@
 ### Advanced
 
 * [Classes and Packages](examples/advanced/TypeReMapper.md)
+* [Cascading](examples/advanced/Cascading.md)
 * [Deserializer Result](examples/advanced/DeserializationResult.md)
 * [Hooks into Serialization/Deserialization](examples/advanced/MethodAnnotations.md)
 * [Packet System](examples/advanced/YAPIONPacket.md)
+* [Factory](examples/advanced/FactoryAPI.md)
+* [Serializer](examples/advanced/SerializerAPI.md)
