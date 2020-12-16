@@ -5,10 +5,10 @@ As an example class we will use this:
 ```java
 public class Example {
     
-    // This will not be saves as it is 'static'
+    // This will not be saved as it is 'static'
     private static int i = 0;
     
-    // This will not be saves as it is 'transient'
+    // This will not be saved as it is 'transient'
     private transient long l = 0;
     
     private int integer = 0;
@@ -26,10 +26,10 @@ import yapion.annotations.serialize.YAPIONSave;
 @YAPIONSave
 public class Example {
     
-    // This will not be saves as it is 'static'
+    // This will not be saved as it is 'static'
     private static int i = 0;
     
-    // This will not be saves as it is 'transient'
+    // This will not be saved as it is 'transient'
     private transient long l = 0;
     
     @YAPIONSave
@@ -48,10 +48,10 @@ import yapion.annotations.object.YAPIONData;
 @YAPIONData
 public class Example {
     
-    // This will not be saves as it is 'static'
+    // This will not be saved as it is 'static'
     private static int i = 0;
     
-    // This will not be saves as it is 'transient'
+    // This will not be saved as it is 'transient'
     private transient long l = 0;
     
     private int integer = 0;
