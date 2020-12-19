@@ -18,7 +18,7 @@ public class Example {
 }
 ```
 
-To give the serializer hints what to serialize and what not to serialize there are some Annotations that are useful.
+To give the serializer hints what to serialize and what not to serialize there are some annotations that are useful.
 Here the annotated example:
 ```java
 import yapion.annotations.serialize.YAPIONSave;
@@ -41,7 +41,7 @@ public class Example {
 }
 ```
 
-[YAPIONSave](https://github.com/yoyosource/YAPION/blob/master/src/main/java/yapion/annotations/serialize/YAPIONSave.java) defines that this should be serialized, If you just want to save everything from this class there is a shortcut. This shortcut imposes some [limitations](https://github.com/yoyosource/YAPION/blob/master/src/main/java/yapion/annotations/object/YAPIONData.java).
+[YAPIONSave](https://github.com/yoyosource/YAPION/blob/master/src/main/java/yapion/annotations/serialize/YAPIONSave.java) defines that this should be serialized, If you just want to save everything from this class there is the YAPIONData shortcut. This shortcut imposes some [limitations](https://github.com/yoyosource/YAPION/blob/master/src/main/java/yapion/annotations/object/YAPIONData.java).
 ```java
 import yapion.annotations.object.YAPIONData;
 
@@ -88,7 +88,7 @@ root YAPIONObject
    `- 'Hello World' Value.String
 ```
 
-If you 'extend' some class the fields of the superclass will also be serialized:
+If you 'extend' some class the fields of the superclass will be serialized, too:
 
 ```java
 import yapion.annotations.object.YAPIONData;
@@ -101,7 +101,7 @@ public class ExampleTwo extends Example {
 }
 ```
 
-The serialization code will look something like this:
+The serialization code then looks the same as in the example above:
 
 ```java
 import yapion.hierarchy.types.YAPIONObject;
@@ -130,7 +130,7 @@ root YAPIONObject
    `- 'ExampleTwo' Value.String
 ```
 
-If we expand example two, to also print the YAPIONObject in String format you will see:
+If we expand example two to also print the YAPIONObject in String format you will see:
 
 ```java
 import yapion.hierarchy.types.YAPIONObject;
@@ -140,10 +140,13 @@ public class ExampleSerializationTwo {
 
     public static void main(String[] args) {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new ExampleTwo());
-
-        // This will result in: '{@type(ExampleTwo)text(Hello World)integer(0)string(Hello World)}'
         System.out.println(yapionObject);
     }
 
 }
+```
+
+Output:
+```
+{@type(ExampleTwo)text(Hello World)integer(0)string(Hello World)}
 ```

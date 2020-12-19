@@ -64,7 +64,11 @@ public class Example {
 }
 ```
 
-The save and load annotation can be combined to the data annotation. But this comes with some [limiations](https://github.com/yoyosource/YAPION/blob/master/src/main/java/yapion/annotations/object/YAPIONData.java). If you use the load and save annotations you need a no args constructor for the object. This is because YAPION needs a way to create an instance of such objects. This has the result that every field has the default value defined in the class. When you use the YAPIONData annotation you do not need to create a no args constructor for the object but if some values are not loaded because they are declared transient or static they will have the java default value. So numbers 0, booleans false and every object null. For this example we will use the YAPIONData annotation as follows:
+The save and load annotations can be combined to the data annotation. This has some [limiations](https://github.com/yoyosource/YAPION/blob/master/src/main/java/yapion/annotations/object/YAPIONData.java). If you use the load and save annotations you need a no args constructor for the object.
+This is because YAPION needs a way to create an instance of such objects. The result of the constructor call is that each field has the value with which the field is initialized, or the value set in the constructor. Afterwards YAPION can set every value defined in the YAPIONObject.
+When you use the YAPIONData annotation you do not need to create a no args constructor for the object but if some values are not loaded because they are declared transient or static they will have the java type default value.
+So numbers are 0, booleans are false and every object is null.
+For this example we will use the YAPIONData annotation as follows:
 ```java
 import yapion.annotations.object.YAPIONData;
 
@@ -97,10 +101,10 @@ public class ExampleDeserialization {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new Example());
 
         // Now we need to deserialize back to an Example instance
-        // The deserializer will an generic Object and you need to cast it back to type you expect
+        // The deserializer will return an generic Object and you need to cast it to the type you expect
         Oject object = YAPIONDeserializer.deserialize(yapionObject);
 
-        // This is to cast the object:
+        // Cast the Object:
         Example example = (Example) object;
     }
 
@@ -131,10 +135,10 @@ public class ExampleSerializationTwo {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new ExampleTwo());
     
         // Now we need to deserialize back to an ExampleTwo instance
-        // The deserializer will an generic Object and you need to cast it back to type you expect
+        // The deserializer will return an generic Object and you need to cast it to the type you expect
         Oject object = YAPIONDeserializer.deserialize(yapionObject);
       
-        // This is to cast the object:
+        // Cast the Object:
         ExampleTwo exampleTwo = (ExampleTwo) object;
     }
 

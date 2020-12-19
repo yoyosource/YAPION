@@ -35,8 +35,14 @@ root YAPIONObject
 
 If you try to parse an YAPIONArray directly, the parser will throw you an exception. But you can still parse it if you just surround the input with Object start and end characters.
 
+Array:
 ```
 [0,1,"Hello World"]
+```
+
+Array wrapped in Object:
+```
+{[0,1,"Hello World"]}
 ```
 
 Parsing code:
