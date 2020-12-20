@@ -2,7 +2,7 @@
 
 ## JavaDoc
 
-* [Javadoc 0.21.0](javadoc/v0.21.0/)
+* [Javadoc 0.21.1](javadoc/v0.21.1/)
 * [Javadoc 0.20.2](javadoc/v0.20.2/)
 
 ## Dataflow [WIP]
