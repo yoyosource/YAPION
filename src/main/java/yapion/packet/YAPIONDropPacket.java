@@ -7,6 +7,7 @@
 package yapion.packet;
 
 import lombok.Getter;
+import yapion.packet.YAPIONPacket;
 
 @Getter
 public class YAPIONDropPacket extends YAPIONPacket {

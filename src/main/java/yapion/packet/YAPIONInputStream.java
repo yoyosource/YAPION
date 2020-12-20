@@ -198,7 +198,12 @@ public final class YAPIONInputStream {
         if (!(yapionAnyType instanceof YAPIONValue)) return;
         Object object = ((YAPIONValue) yapionAnyType).get();
         if (!(object instanceof String)) return;
-        object = YAPIONDeserializer.deserialize(yapionObject);
+        try {
+            object = YAPIONDeserializer.deserialize(yapionObject);
+        } catch (Exception e) {
+            yapionPacketReceiver.handleDeserializationException(new YAPIONDeserializationExceptionPacket(yapionObject));
+            return;
+        }
         if (!ReflectionsUtils.isClassSuperclassOf(object.getClass(), YAPIONPacket.class)) return;
         YAPIONPacket yapionPacket = (YAPIONPacket) object;
         if (respectiveOutputStream != null) yapionPacket.setYAPIONOutputStream(respectiveOutputStream);

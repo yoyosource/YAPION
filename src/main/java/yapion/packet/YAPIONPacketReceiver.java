@@ -25,6 +25,7 @@ public class YAPIONPacketReceiver {
     private static final String EXCEPTION_HANDLER = "@exception";
     private static final String UNKNOWN_PACKET_HANDLER = "@unknown";
     private static final String DROP_HANDLER = "@drop";
+    private static final String DESERIALIZE_EXCEPTION_HANDLER = "@deserialize";
 
     /**
      * Creates an YAPIONPacketReceiver
@@ -35,6 +36,10 @@ public class YAPIONPacketReceiver {
         handlerMap.put(EXCEPTION_HANDLER, yapionPacket -> {
         });
         handlerMap.put(UNKNOWN_PACKET_HANDLER, yapionPacket -> {
+        });
+        handlerMap.put(DROP_HANDLER, yapionPacket -> {
+        });
+        handlerMap.put(DESERIALIZE_EXCEPTION_HANDLER, yapionPacket -> {
         });
     }
 
@@ -116,7 +121,7 @@ public class YAPIONPacketReceiver {
     }
 
     /**
-     * Set the Drop {@link YAPIONPacketHandler} to do something when an date drop occurred.
+     * Set the Drop {@link YAPIONPacketHandler} to do something when a data drop occurred.
      *
      * @param yapionPacketHandler
      */
@@ -125,6 +130,19 @@ public class YAPIONPacketReceiver {
             throw new YAPIONException();
         }
         handlerMap.put(DROP_HANDLER, yapionPacketHandler);
+        return this;
+    }
+
+    /**
+     * Set the Deserialization Exception {@link YAPIONPacketHandler} to do something when a deserialization exception occurred.
+     *
+     * @param yapionPacketHandler
+     */
+    public YAPIONPacketReceiver setDeserializationExceptionHandler(YAPIONPacketHandler yapionPacketHandler) {
+        if (yapionPacketHandler == null) {
+            throw new YAPIONException();
+        }
+        handlerMap.put(DESERIALIZE_EXCEPTION_HANDLER, yapionPacketHandler);
         return this;
     }
 
@@ -181,6 +199,10 @@ public class YAPIONPacketReceiver {
 
     void handleDrop(YAPIONPacket yapionPacket) {
         handlePacket(yapionPacket, DROP_HANDLER, handlerMap.get(DROP_HANDLER), this::handleError);
+    }
+
+    void handleDeserializationException(YAPIONPacket yapionPacket) {
+        handlePacket(yapionPacket, DESERIALIZE_EXCEPTION_HANDLER, handlerMap.get(DROP_HANDLER), this::handleError);
     }
 
     private void handleUnknown(YAPIONPacket yapionPacket) {
