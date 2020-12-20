@@ -204,7 +204,9 @@ public final class YAPIONInputStream {
         try {
             object = YAPIONDeserializer.deserialize(yapionObject);
         } catch (Exception e) {
-            yapionPacketReceiver.handleDeserializationException(new YAPIONDeserializationExceptionPacket(yapionObject));
+            YAPIONDeserializationExceptionPacket yapionDeserializationExceptionPacket = new YAPIONDeserializationExceptionPacket(yapionObject);
+            yapionDeserializationExceptionPacket.setException(e);
+            yapionPacketReceiver.handleDeserializationException(yapionDeserializationExceptionPacket);
             return null;
         }
         if (!ReflectionsUtils.isClassSuperclassOf(object.getClass(), YAPIONPacket.class)) return new YAPIONHandleFailedPacket(yapionObject);
