@@ -9,7 +9,7 @@ package yapion.packet;
 import lombok.Getter;
 
 @Getter
-class YAPIONDropPacket extends YAPIONPacket {
+public class YAPIONDropPacket extends YAPIONPacket {
 
     private final byte[] droppedBytes;
     private final int length;
