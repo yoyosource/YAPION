@@ -15,6 +15,7 @@ import yapion.hierarchy.types.YAPIONVariable;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
+import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -197,8 +198,9 @@ public final class YAPIONInputStream {
         if (!(yapionAnyType instanceof YAPIONValue)) return;
         Object object = ((YAPIONValue) yapionAnyType).get();
         if (!(object instanceof String)) return;
-        if (!object.equals(YAPIONPacket.class.getTypeName())) return;
-        YAPIONPacket yapionPacket = (YAPIONPacket) YAPIONDeserializer.deserialize(yapionObject);
+        object = YAPIONDeserializer.deserialize(yapionObject);
+        if (!ReflectionsUtils.isClassSuperclassOf(object.getClass(), YAPIONPacket.class)) return;
+        YAPIONPacket yapionPacket = (YAPIONPacket) object;
         if (respectiveOutputStream != null) yapionPacket.setYAPIONOutputStream(respectiveOutputStream);
         yapionPacketReceiver.handle(yapionPacket);
     }

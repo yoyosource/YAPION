@@ -191,7 +191,8 @@ public final class YAPIONDeserializer {
             ints[i] = dimensions.removeFirst();
         }
 
-        while (arrayType.charAt(arrayType.length() - 1) == ']') {
+        // TODO: Make it possible to parse inner Arrays
+        while (arrayType.length() > 0 && arrayType.charAt(arrayType.length() - 1) == ']') {
             arrayType = arrayType.substring(0, arrayType.length() - 2);
         }
         Object array = null;
@@ -307,6 +308,8 @@ public final class YAPIONDeserializer {
                 } else {
                     ReflectionsUtils.setValueOfField(field, object, parse(yapionAnyType));
                 }
+
+                arrayType = "";
             }
 
             /*
