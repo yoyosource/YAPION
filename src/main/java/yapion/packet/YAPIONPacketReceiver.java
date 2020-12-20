@@ -26,6 +26,7 @@ public class YAPIONPacketReceiver {
     private static final String UNKNOWN_PACKET_HANDLER = "@unknown";
     private static final String DROP_HANDLER = "@drop";
     private static final String DESERIALIZE_EXCEPTION_HANDLER = "@deserialize";
+    private static final String HANDLE_FAILED_HANDLER = "@handle";
 
     /**
      * Creates an YAPIONPacketReceiver
@@ -40,6 +41,8 @@ public class YAPIONPacketReceiver {
         handlerMap.put(DROP_HANDLER, yapionPacket -> {
         });
         handlerMap.put(DESERIALIZE_EXCEPTION_HANDLER, yapionPacket -> {
+        });
+        handlerMap.put(HANDLE_FAILED_HANDLER, yapionPacket -> {
         });
     }
 
@@ -147,6 +150,19 @@ public class YAPIONPacketReceiver {
     }
 
     /**
+     * Set the HandleFailed {@link YAPIONPacketHandler} to do something when the internal {@link YAPIONInputStream}.handle() failed.
+     *
+     * @param yapionPacketHandler
+     */
+    public YAPIONPacketReceiver setHandleFailedHandler(YAPIONPacketHandler yapionPacketHandler) {
+        if (yapionPacketHandler == null) {
+            throw new YAPIONException();
+        }
+        handlerMap.put(HANDLE_FAILED_HANDLER, yapionPacketHandler);
+        return this;
+    }
+
+    /**
      * Set the Error {@link YAPIONPacketHandler} to do something when an error occurred.
      *
      * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
@@ -202,7 +218,11 @@ public class YAPIONPacketReceiver {
     }
 
     void handleDeserializationException(YAPIONPacket yapionPacket) {
-        handlePacket(yapionPacket, DESERIALIZE_EXCEPTION_HANDLER, handlerMap.get(DROP_HANDLER), this::handleError);
+        handlePacket(yapionPacket, DESERIALIZE_EXCEPTION_HANDLER, handlerMap.get(DESERIALIZE_EXCEPTION_HANDLER), this::handleError);
+    }
+
+    void handleHandleFailed(YAPIONPacket yapionPacket) {
+        handlePacket(yapionPacket, HANDLE_FAILED_HANDLER, handlerMap.get(HANDLE_FAILED_HANDLER), this::handleError);
     }
 
     private void handleUnknown(YAPIONPacket yapionPacket) {
