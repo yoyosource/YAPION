@@ -1,4 +1,4 @@
-# Parser [WIP]
+# Parser
 
 The parser is used to parse a String to a YAPIONObject. You can either use static calls or use an instance.
 As an example parsing this String would be:
