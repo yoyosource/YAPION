@@ -9,12 +9,12 @@ package yapion.packet;
 import lombok.Getter;
 
 @Getter
-public class YAPIONDropPacket extends YAPIONPacket {
+public class DropPacket extends YAPIONPacket {
 
     private final byte[] droppedBytes;
     private final int length;
 
-    YAPIONDropPacket(byte[] droppedBytes) {
+    DropPacket(byte[] droppedBytes) {
         this.droppedBytes = droppedBytes;
         this.length = droppedBytes.length;
     }

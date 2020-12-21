@@ -2,11 +2,11 @@ package yapion.packet;
 
 import yapion.hierarchy.types.YAPIONObject;
 
-public class YAPIONHandleFailedPacket extends YAPIONPacket {
+public class HandleFailedPacket extends YAPIONPacket {
 
     public YAPIONObject yapionObject;
 
-    public YAPIONHandleFailedPacket(YAPIONObject yapionObject) {
+    public HandleFailedPacket(YAPIONObject yapionObject) {
         this.yapionObject = yapionObject;
     }
 

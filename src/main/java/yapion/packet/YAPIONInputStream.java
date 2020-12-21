@@ -104,9 +104,9 @@ public final class YAPIONInputStream {
                 }
                 if (handleAvailable() == 0) continue;
                 try {
-                    YAPIONHandleFailedPacket yapionHandleFailedPacket = handle();
-                    if (yapionHandleFailedPacket != null) {
-                        yapionPacketReceiver.handleHandleFailed(yapionHandleFailedPacket);
+                    HandleFailedPacket handleFailedPacket = handle();
+                    if (handleFailedPacket != null) {
+                        yapionPacketReceiver.handleHandleFailed(handleFailedPacket);
                     }
                 } catch (Exception e) {
                     log.warn("Something went wrong while handling the read object.", e.getCause());
@@ -128,9 +128,9 @@ public final class YAPIONInputStream {
             for (int i = 0; i < byteList.size(); i++) {
                 bytes[i] = byteList.get(i);
             }
-            YAPIONDropPacket yapionDropPacket = new YAPIONDropPacket(bytes);
-            if (respectiveOutputStream != null) yapionDropPacket.setYAPIONOutputStream(respectiveOutputStream);
-            yapionPacketReceiver.handleDrop(yapionDropPacket);
+            DropPacket dropPacket = new DropPacket(bytes);
+            if (respectiveOutputStream != null) dropPacket.setYAPIONOutputStream(respectiveOutputStream);
+            yapionPacketReceiver.handleDrop(dropPacket);
         } catch (IOException e) {
 
         }
@@ -192,24 +192,24 @@ public final class YAPIONInputStream {
         }
     }
 
-    private synchronized YAPIONHandleFailedPacket handle() {
+    private synchronized HandleFailedPacket handle() {
         if (yapionPacketReceiver == null) return null;
         YAPIONObject yapionObject = YAPIONParser.parse(inputStream);
         YAPIONVariable variable = yapionObject.getVariable("@type");
-        if (variable == null) return new YAPIONHandleFailedPacket(yapionObject);
+        if (variable == null) return new HandleFailedPacket(yapionObject);
         YAPIONAnyType yapionAnyType = variable.getValue();
-        if (!(yapionAnyType instanceof YAPIONValue)) return new YAPIONHandleFailedPacket(yapionObject);
+        if (!(yapionAnyType instanceof YAPIONValue)) return new HandleFailedPacket(yapionObject);
         Object object = ((YAPIONValue) yapionAnyType).get();
-        if (!(object instanceof String)) return new YAPIONHandleFailedPacket(yapionObject);
+        if (!(object instanceof String)) return new HandleFailedPacket(yapionObject);
         try {
             object = YAPIONDeserializer.deserialize(yapionObject);
         } catch (Exception e) {
-            YAPIONDeserializationExceptionPacket yapionDeserializationExceptionPacket = new YAPIONDeserializationExceptionPacket(yapionObject);
-            yapionDeserializationExceptionPacket.setException(e);
-            yapionPacketReceiver.handleDeserializationException(yapionDeserializationExceptionPacket);
+            DeserializationExceptionPacket deserializationExceptionPacket = new DeserializationExceptionPacket(yapionObject);
+            deserializationExceptionPacket.setException(e);
+            yapionPacketReceiver.handleDeserializationException(deserializationExceptionPacket);
             return null;
         }
-        if (!ReflectionsUtils.isClassSuperclassOf(object.getClass(), YAPIONPacket.class)) return new YAPIONHandleFailedPacket(yapionObject);
+        if (!ReflectionsUtils.isClassSuperclassOf(object.getClass(), YAPIONPacket.class)) return new HandleFailedPacket(yapionObject);
         YAPIONPacket yapionPacket = (YAPIONPacket) object;
         if (respectiveOutputStream != null) yapionPacket.setYAPIONOutputStream(respectiveOutputStream);
         yapionPacketReceiver.handle(yapionPacket);
