@@ -11,19 +11,19 @@ import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONValueType;
+import yapion.hierarchy.types.value.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static yapion.utils.IdentifierUtils.*;
-import static yapion.utils.ReferenceIDUtils.calc;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
 public class YAPIONValue<T> extends YAPIONValueType {
+
+    private static final LinkedHashMap<String, ValueHandler<?>> valueHandlers = new LinkedHashMap<>();
 
     private static final String[] allowedTypes = new String[] {
             "java.lang.Boolean",
@@ -34,6 +34,22 @@ public class YAPIONValue<T> extends YAPIONValueType {
     private static final Map<String, String> typeIdentifier = new HashMap<>();
 
     static {
+        valueHandlers.put("java.lang.Boolean", new BooleanHandler());
+        valueHandlers.put(null, new NullHandler());
+
+        valueHandlers.put("java.lang.Byte", new ByteHandler());
+        valueHandlers.put("java.lang.Short", new ShortHandler());
+        valueHandlers.put("java.lang.Integer", new IntegerHandler());
+        valueHandlers.put("java.lang.Long", new LongHandler());
+        valueHandlers.put("java.math.BigInteger", new BigIntegerHandler());
+
+        valueHandlers.put("java.lang.Float", new FloatHandler());
+        valueHandlers.put("java.lang.Double", new DoubleHandler());
+        valueHandlers.put("java.math.BigDecimal", new BigDecimalHandler());
+
+        valueHandlers.put("java.lang.Character", new CharacterHandler());
+        valueHandlers.put("java.lang.String", new StringHandler());
+
         typeIdentifier.put(allowedTypes[1], BYTE_IDENTIFIER);
         typeIdentifier.put(allowedTypes[2], SHORT_IDENTIFIER);
         typeIdentifier.put(allowedTypes[3], INT_IDENTIFIER);
@@ -46,6 +62,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     private final T value;
+    private final ValueHandler<T> valueHandler;
     private final String type;
 
     public YAPIONValue(T value) {
@@ -53,6 +70,8 @@ public class YAPIONValue<T> extends YAPIONValueType {
             throw new YAPIONException("Invalid YAPIONValue type " + value.getClass().getTypeName() + " only " + String.join(", ", allowedTypes) + " allowed");
         }
         this.value = value;
+        this.valueHandler = (ValueHandler<T>) valueHandlers.get(value == null ? null : value.getClass().getTypeName());
+
         if (value == null) {
             this.type = "null";
         } else {
@@ -68,7 +87,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
     @Override
     public long referenceValue() {
         if (!hasReferenceValue()) {
-            cacheReferenceValue(getType().getReferenceValue() ^ calc(type));
+            cacheReferenceValue(getType().getReferenceValue() ^ valueHandler.referenceValue());
         }
         return getReferenceValue();
     }
@@ -79,106 +98,12 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     void toStrippedYAPION(AbstractOutput abstractOutput) {
-        if (value == null) {
-            abstractOutput.consume(type);
-            return;
-        }
-        String string = value.toString().replaceAll("[()]", "\\\\$0");
-        if (value instanceof String) {
-            abstractOutput.consume(string);
-            return;
-        }
-        if (value instanceof Character) {
-            abstractOutput.consume("'" + string + "'");
-            return;
-        }
-
-        if (value instanceof Byte) {
-            abstractOutput.consume(string + "B");
-            return;
-        }
-        if (value instanceof Short) {
-            abstractOutput.consume(string + "S");
-            return;
-        }
-        if (value instanceof Integer) {
-            abstractOutput.consume(string);
-            return;
-        }
-        if (value instanceof Long) {
-            abstractOutput.consume(string + "L");
-            return;
-        }
-        if (value instanceof BigInteger) {
-            abstractOutput.consume(string + "BI");
-            return;
-        }
-
-        if (value instanceof Float) {
-            abstractOutput.consume(string + "F");
-            return;
-        }
-        if (value instanceof Double) {
-            abstractOutput.consume(string + "D");
-            return;
-        }
-        if (value instanceof BigDecimal) {
-            abstractOutput.consume(string + "BD");
-            return;
-        }
-        abstractOutput.consume(value.toString());
+        abstractOutput.consume(valueHandler.output(value));
     }
 
     @Override
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
-        if (value == null) {
-            abstractOutput.consume(assembleOutput(type));
-            return abstractOutput;
-        }
-        String string = value.toString().replaceAll("[()]", "\\\\$0");
-        if (value instanceof String) {
-            abstractOutput.consume(assembleString(string));
-            return abstractOutput;
-        }
-        if (value instanceof Character) {
-            abstractOutput.consume(assembleOutput("'" + string + "'"));
-            return abstractOutput;
-        }
-
-        if (value instanceof Byte) {
-            abstractOutput.consume(assembleOutput(string + "B"));
-            return abstractOutput;
-        }
-        if (value instanceof Short) {
-            abstractOutput.consume(assembleOutput(string + "S"));
-            return abstractOutput;
-        }
-        if (value instanceof Integer) {
-            abstractOutput.consume(assembleOutput(string));
-            return abstractOutput;
-        }
-        if (value instanceof Long) {
-            abstractOutput.consume(assembleOutput(string + "L"));
-            return abstractOutput;
-        }
-        if (value instanceof BigInteger) {
-            abstractOutput.consume(assembleOutput(string + "BI"));
-            return abstractOutput;
-        }
-
-        if (value instanceof Float) {
-            abstractOutput.consume(assembleOutput(string + "F"));
-            return abstractOutput;
-        }
-        if (value instanceof Double) {
-            abstractOutput.consume(assembleOutput(string));
-            return abstractOutput;
-        }
-        if (value instanceof BigDecimal) {
-            abstractOutput.consume(assembleOutput(string + "BD"));
-            return abstractOutput;
-        }
-        abstractOutput.consume(assembleOutput(value.toString()));
+        abstractOutput.consume("(" + valueHandler.output(value) + ")");
         return abstractOutput;
     }
 
@@ -237,50 +162,34 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return abstractOutput;
     }
 
-    @SuppressWarnings({"java:S3740"})
+    @SuppressWarnings({"java:S3740", "java:S2789"})
     public static YAPIONValue parseValue(String s) {
-        if (s.equals("true") || s.equals("false")) {
-            return new YAPIONValue<>(s.equals("true"));
-        }
-        if (s.equals("null")) {
-            return new YAPIONValue<>(null);
-        }
-        if (s.startsWith("\"") && s.endsWith("\"")) {
-            return new YAPIONValue<>(s.substring(1, s.length() - 1));
-        }
-        if (s.startsWith("'") && s.endsWith("'")) {
-            if (s.length() == 3) {
-                return new YAPIONValue<>(s.charAt(1));
-            } else {
-                return new YAPIONValue<>(s.substring(1, s.length() - 1));
+        for (Map.Entry<String, ValueHandler<?>> valueHandlerEntry : valueHandlers.entrySet()) {
+            Optional<?> optional = valueHandlerEntry.getValue().preParse(s);
+            if (optional == null) {
+                return new YAPIONValue(null);
+            }
+            if (optional.isPresent()) {
+                System.out.println(s + " " + optional + " " + optional.get() + " " + optional.get().getClass().getTypeName());
+                return new YAPIONValue<>(optional.get());
             }
         }
-
-        if (s.matches(NUMBER_HEX)) {
-            YAPIONValue value = tryParse(s, 16, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER);
-            if (value != null) return value;
+        for (Map.Entry<String, ValueHandler<?>> valueHandlerEntry : valueHandlers.entrySet()) {
+            Optional<?> optional = valueHandlerEntry.getValue().parse(s);
+            if (optional.isPresent()) {
+                System.out.println(s + " " + optional + " " + optional.get() + " " + optional.get().getClass().getTypeName());
+                return new YAPIONValue<>(optional.get());
+            }
         }
-        YAPIONValue value1 = tryParse(s, 16, NUMBER_HEX, ParseType.BIGINTEGER, ParseType.LONG, ParseType.INTEGER, ParseType.SHORT, ParseType.BYTE);
-        if (value1 != null) return value1;
-
-        if (s.matches(NUMBER_NORMAL)) {
-            YAPIONValue value = tryParse(s, 10, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER);
-            if (value != null) return value;
-        }
-        YAPIONValue value2 = tryParse(s, 10, NUMBER_NORMAL, ParseType.BIGINTEGER, ParseType.LONG, ParseType.INTEGER, ParseType.SHORT, ParseType.BYTE, ParseType.BIGDECIMAL, ParseType.DOUBLE, ParseType.FLOAT);
-        if (value2 != null) return value2;
-
-        if (s.matches(NUMBER_FLOAT)) {
-            YAPIONValue value = tryParse(s, 10, ParseType.DOUBLE, ParseType.BIGDECIMAL);
-            if (value != null) return value;
-        }
-        YAPIONValue value3 = tryParse(s, 10, NUMBER_FLOAT, ParseType.BIGDECIMAL, ParseType.DOUBLE, ParseType.FLOAT);
-        if (value3 != null) return value3;
-
         return new YAPIONValue<>(s);
     }
 
-    static <T> boolean validType(Class<?> t) {
+    static <T> boolean validType(T t) {
+        if (t == null) return true;
+        return validType(t.getClass());
+    }
+
+    static boolean validType(Class<?> t) {
         if (t == null) return true;
         String typeName = t.getTypeName();
         for (int i = 0; i < allowedTypes.length; i++) {
@@ -289,11 +198,6 @@ public class YAPIONValue<T> extends YAPIONValueType {
             }
         }
         return false;
-    }
-
-    static <T> boolean validType(T t) {
-        if (t == null) return true;
-        return validType(t.getClass());
     }
 
     public T get() {
@@ -309,129 +213,6 @@ public class YAPIONValue<T> extends YAPIONValueType {
         StringOutput stringOutput = new StringOutput();
         toYAPION(stringOutput);
         return stringOutput.getResult();
-    }
-
-    private String assembleOutput(String s) {
-        return "(" + s + ")";
-    }
-
-    private String assembleString(String s) {
-        if (s.equals("true") || s.equals("false")) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.equals("null")) {
-            return assembleOutput('"' + s + '"');
-        }
-
-        if (s.matches(NUMBER_HEX)) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches(NUMBER_NORMAL)) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (s.matches(NUMBER_FLOAT)) {
-            return assembleOutput('"' + s + '"');
-        }
-
-        if (tryAssemble(s, NUMBER_HEX, ParseType.BYTE, ParseType.SHORT, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER)) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (tryAssemble(s, NUMBER_NORMAL, ParseType.BYTE, ParseType.SHORT, ParseType.INTEGER, ParseType.LONG, ParseType.BIGINTEGER)) {
-            return assembleOutput('"' + s + '"');
-        }
-        if (tryAssemble(s, NUMBER_FLOAT, ParseType.FLOAT, ParseType.DOUBLE, ParseType.BIGDECIMAL)) {
-            return assembleOutput('"' + s + '"');
-        }
-
-        return assembleOutput(s);
-    }
-
-    public static boolean tryAssemble(String s, String regex, ParseType... possibleTypes) {
-        for (int i = 0; i < possibleTypes.length; i++) {
-            if (!s.endsWith(possibleTypes[i].getSuffix())) continue;
-            String t = s.substring(0, s.length() - possibleTypes[i].getSuffix().length());
-            if (!t.matches(regex)) continue;
-            return true;
-        }
-        return false;
-    }
-
-    @SuppressWarnings({"java:S3740"})
-    private static YAPIONValue tryParse(String s, int radix, String regex, ParseType... possibleTypes) {
-        for (int i = 0; i < possibleTypes.length; i++) {
-            if (!s.endsWith(possibleTypes[i].getSuffix())) continue;
-            String t = s.substring(0, s.length() - possibleTypes[i].getSuffix().length());
-            if (!t.matches(regex)) continue;
-            YAPIONValue value = tryParse(t, radix, possibleTypes[i]);
-            if (value != null) return value;
-        }
-        return null;
-    }
-
-    @SuppressWarnings({"java:S3740"})
-    private static YAPIONValue tryParse(String s, int radix, ParseType... parseOrder) {
-        for (int i = 0; i < parseOrder.length; i++) {
-            YAPIONValue value = tryParse(s, radix, parseOrder[i]);
-            if (value != null) return value;
-        }
-        return null;
-    }
-
-    @SuppressWarnings({"java:S3740"})
-    private static YAPIONValue tryParse(String s, int radix, ParseType parseType) {
-        try {
-            switch (parseType) {
-                case BYTE:
-                    return new YAPIONValue<>(Byte.parseByte(s, radix));
-                case SHORT:
-                    return new YAPIONValue<>(Short.parseShort(s, radix));
-                case INTEGER:
-                    return new YAPIONValue<>(Integer.parseInt(s, radix));
-                case LONG:
-                    return new YAPIONValue<>(Long.parseLong(s, radix));
-                case BIGINTEGER:
-                    return new YAPIONValue<>(new BigInteger(s));
-
-                case FLOAT:
-                    return new YAPIONValue<>(Float.parseFloat(s));
-                case DOUBLE:
-                    return new YAPIONValue<>(Double.parseDouble(s));
-                case BIGDECIMAL:
-                    return new YAPIONValue<>(new BigDecimal(s));
-
-                default:
-                    break;
-            }
-        } catch (NumberFormatException e) {
-            // Ignored
-        }
-        return null;
-    }
-
-    private static final String NUMBER_NORMAL = "-?[0-9]+";
-    private static final String NUMBER_HEX = "-?(0[xX]|#)[0-9A-F]+";
-    private static final String NUMBER_FLOAT = "(-?[0-9]+\\.([0-9]+)?)|(-?\\.[0-9]+)";
-
-    private enum ParseType {
-        BYTE("B"),
-        SHORT("S"),
-        INTEGER("I"),
-        LONG("L"),
-        BIGINTEGER("BI"),
-
-        FLOAT("F"),
-        DOUBLE("D"),
-        BIGDECIMAL("BD");
-
-        private final String suffix;
-
-        ParseType(String suffix) {
-            this.suffix = suffix;
-        }
-
-        public String getSuffix() {
-            return suffix;
-        }
     }
 
     @Override

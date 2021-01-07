@@ -6,6 +6,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -89,6 +90,15 @@ public class YAPIONSerializerTest {
         // an internal serializer exists which returns a YAPIONObject.
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new ArrayList<String>());
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(java.util.ArrayList)values[]}"));
+    }
+
+    @Test
+    public void testStringListWithLongs() {
+        List<String> stringList = new ArrayList<>();
+        stringList.add("333276742632472577");
+
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(stringList);
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(java.util.ArrayList)values[\"333276742632472577\"]}"));
     }
 
 }
