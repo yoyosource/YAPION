@@ -180,6 +180,16 @@ public class YAPIONUtils {
         }
     }
 
+    /**
+     * The inputted {@link YAPIONObject} is traversed depth first, values beforehand.
+     * Outputs an {@link Stream} of {@link YAPIONAnyType} of all keys
+     * in the whole {@link YAPIONObject}. This method is inspired by {@link Files#walk(Path, FileVisitOption...)}
+     *
+     * @param yapionObject to traverse
+     * @param classToWalk the class of given type
+     * @param <T> the type to walk
+     * @return the {@link Stream} which contains all <T> of the {@link YAPIONObject}
+     */
     @SuppressWarnings({"java:S1181"})
     public static <T extends YAPIONAnyType> Stream<T> walk(YAPIONObject yapionObject, Class<T> classToWalk) {
         YAPIONTreeIterator iterator = new YAPIONTreeIterator(yapionObject, YAPIONTreeIteratorOption.TRAVERSE_ALL);
