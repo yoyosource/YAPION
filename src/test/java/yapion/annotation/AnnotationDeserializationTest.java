@@ -1,15 +1,16 @@
 package yapion.annotation;
 
 import org.junit.Test;
-import yapion.exceptions.YAPIONException;
+import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import static yapion.annotation.AnnotationTestObjects.*;
+import static yapion.annotation.AnnotationTestObjects.PostTest;
+import static yapion.annotation.AnnotationTestObjects.PreTest;
 
 public class AnnotationDeserializationTest {
 
-    @Test(expected = YAPIONException.class)
+    @Test(expected = YAPIONReflectionException.class)
     public void testPreException() {
         YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PreTest()), "exception");
     }
@@ -19,7 +20,7 @@ public class AnnotationDeserializationTest {
         YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PreTest()), "noException");
     }
 
-    @Test(expected = YAPIONException.class)
+    @Test(expected = YAPIONReflectionException.class)
     public void testPostException() {
         YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PostTest()), "exception");
     }

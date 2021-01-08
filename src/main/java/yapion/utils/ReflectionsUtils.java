@@ -66,7 +66,7 @@ public class ReflectionsUtils {
      * @return the possible return value
      */
     @SuppressWarnings({"java:S3011"})
-    public static Optional<Object> invokeMethod(String name, Object object, Parameter... parameters) {
+    public static MethodReturnValue<Object> invokeMethod(String name, Object object, Parameter... parameters) {
         Class<?>[] classes = new Class[parameters.length];
         Object[] objects = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
@@ -77,8 +77,8 @@ public class ReflectionsUtils {
         Class<?> clazz = object.getClass();
         boolean search = true;
         while (search) {
-            if (clazz.getTypeName().equals("java.lang.Object")) {
-                return Optional.empty();
+            if (clazz == null || clazz.getTypeName().equals("java.lang.Object")) {
+                return MethodReturnValue.empty();
             }
             try {
                 clazz.getDeclaredMethod(name, classes);
@@ -91,11 +91,10 @@ public class ReflectionsUtils {
         try {
             Method method = clazz.getDeclaredMethod(name, classes);
             method.setAccessible(true);
-            return Optional.ofNullable(method.invoke(object, objects));
+            return MethodReturnValue.of(method.invoke(object, objects));
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
             log.info("Exception while invoking a method '" + name + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
-            return Optional.empty();
+            return MethodReturnValue.empty();
         }
     }
 
@@ -109,7 +108,7 @@ public class ReflectionsUtils {
      * @return the possible return value
      */
     @SuppressWarnings({"java:S3011"})
-    public static Optional<Object> invokeMethod(String name, Object object, Object... parameters) {
+    public static MethodReturnValue<Object> invokeMethod(String name, Object object, Object... parameters) {
         Class<?>[] classes = new Class[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             classes[i] = parameters[i].getClass();
@@ -118,8 +117,8 @@ public class ReflectionsUtils {
         Class<?> clazz = object.getClass();
         boolean search = true;
         while (search) {
-            if (clazz.getTypeName().equals("java.lang.Object")) {
-                return Optional.empty();
+            if (clazz == null || clazz.getTypeName().equals("java.lang.Object")) {
+                return MethodReturnValue.empty();
             }
             try {
                 clazz.getDeclaredMethod(name, classes);
@@ -132,10 +131,10 @@ public class ReflectionsUtils {
         try {
             Method method = clazz.getDeclaredMethod(name, classes);
             method.setAccessible(true);
-            return Optional.ofNullable(method.invoke(object, parameters));
+            return MethodReturnValue.of(method.invoke(object, parameters));
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
             log.info("Exception while invoking a method '" + name + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
-            return Optional.empty();
+            return MethodReturnValue.empty();
         }
     }
 
@@ -148,7 +147,7 @@ public class ReflectionsUtils {
      * @param parameters the parameters that should be used
      * @return the possible return value
      */
-    public static Optional<Object> invokeMethod(Method method, Object object, Parameter... parameters) {
+    public static MethodReturnValue<Object> invokeMethod(Method method, Object object, Parameter... parameters) {
         Class<?>[] classes = new Class[parameters.length];
         Object[] objects = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
@@ -158,35 +157,10 @@ public class ReflectionsUtils {
 
         try {
             method.setAccessible(true);
-            return Optional.ofNullable(method.invoke(object, objects));
+            return MethodReturnValue.of(method.invoke(object, objects));
         } catch (SecurityException | IllegalAccessException | InvocationTargetException e) {
             log.info("Exception while invoking a method '" + method.getName() + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
-            throw new YAPIONException(e.getMessage(), e.getCause());
-        }
-    }
-
-    /**
-     * Invokes a method with the given arguments on a given object
-     * and return the possible return value.
-     *
-     * @param method the method to be called
-     * @param object the object on which the method should be called
-     * @param parameters the parameters that should be used
-     * @return the possible return value
-     */
-    public static Optional<Object> invokeMethod(Method method, Object object, Object... parameters) {
-        try {
-            method.setAccessible(true);
-            return Optional.ofNullable(method.invoke(object, parameters));
-        } catch (SecurityException | IllegalAccessException | InvocationTargetException e) {
-            Class<?>[] classes = new Class[parameters.length];
-            for (int i = 0; i < parameters.length; i++) {
-                classes[i] = parameters[i].getClass();
-            }
-
-            e.printStackTrace();
-            log.info("Exception while invoking a method '" + method.getName() + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
-            return Optional.empty();
+            throw new YAPIONReflectionException(e.getMessage(), e);
         }
     }
 

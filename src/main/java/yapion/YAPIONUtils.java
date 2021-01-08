@@ -13,6 +13,7 @@ import yapion.packet.YAPIONInputStream;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.utils.MethodReturnValue;
 import yapion.utils.ReflectionsUtils;
 import yapion.utils.YAPIONTreeIterator;
 import yapion.utils.YAPIONTreeIterator.YAPIONTreeIteratorOption;
@@ -21,7 +22,10 @@ import java.io.InputStream;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -176,6 +180,18 @@ public class YAPIONUtils {
         }
     }
 
+    @SuppressWarnings({"java:S1181"})
+    public static <T extends YAPIONAnyType> Stream<T> walk(YAPIONObject yapionObject, Class<T> classToWalk) {
+        YAPIONTreeIterator iterator = new YAPIONTreeIterator(yapionObject, YAPIONTreeIteratorOption.TRAVERSE_ALL);
+        try {
+            Spliterator<YAPIONAnyType> spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.DISTINCT);
+            return StreamSupport.stream(spliterator, false).filter(classToWalk::isInstance).map(classToWalk::cast).onClose(iterator::close);
+        } catch (Error | RuntimeException e) {
+            iterator.close();
+            throw e;
+        }
+    }
+
     /**
      * The inputted {@link YAPIONObject} is traversed depth first, values beforehand.
      * Outputs an {@link Stream} of {@link YAPIONAnyType} of all keys
@@ -193,7 +209,7 @@ public class YAPIONUtils {
      * main layer. Every value will be put under this and every structure will be removed.
      * This will also remove any information about maps arrays and such.
      *
-     * <br><br>(pointer@...) will represent a pointer
+     * <br><br>(@pointer:...) will represent a pointer
      *
      * @param yapionObject the {@link YAPIONObject} to flatten
      * @return the flattened {@link YAPIONObject} this is a new instance
@@ -203,7 +219,7 @@ public class YAPIONUtils {
         walk(yapionObject, YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES).forEach(s -> {
             String path = s.getPath().join(".");
             if (s instanceof YAPIONPointer) {
-                Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", s);
+                MethodReturnValue<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", s);
                 if (!objectOptional.isPresent()) return;
                 output.add(path, "@pointer:" + String.join(",", ((YAPIONObject) objectOptional.get()).getPath().getPath()));
             } else {

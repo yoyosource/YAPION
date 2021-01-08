@@ -18,16 +18,15 @@ import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.serializer.object.other.EnumSerializer;
+import yapion.utils.MethodReturnValue;
 import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.security.PrivateKey;
 import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Optional;
 
 import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
@@ -146,7 +145,7 @@ public final class YAPIONDeserializer {
     @SuppressWarnings({"java:S3740"})
     public Object parse(YAPIONAnyType yapionAnyType) {
         if (yapionAnyType instanceof YAPIONPointer) {
-            Optional<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", yapionAnyType);
+            MethodReturnValue<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", yapionAnyType);
             if (!objectOptional.isPresent()) {
                 return null;
             }
