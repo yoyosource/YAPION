@@ -13,7 +13,7 @@ public class AnnotationTestObjects {
         @YAPIONPreDeserialization(context = {"exception"})
         @YAPIONPreSerialization(context = {"exception"})
         private void pre() {
-            throw new IllegalArgumentException();
+            throw new UnsupportedOperationException();
         }
 
         @YAPIONPreDeserialization(context = {"noException"})
@@ -30,7 +30,7 @@ public class AnnotationTestObjects {
         @YAPIONPostDeserialization(context = {"exception"})
         @YAPIONPostSerialization(context = {"exception"})
         private void post() {
-            throw new IllegalArgumentException();
+            throw new UnsupportedOperationException();
         }
 
         @YAPIONPostDeserialization(context = "noException")

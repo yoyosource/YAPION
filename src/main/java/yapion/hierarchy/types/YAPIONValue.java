@@ -170,14 +170,12 @@ public class YAPIONValue<T> extends YAPIONValueType {
                 return new YAPIONValue(null);
             }
             if (optional.isPresent()) {
-                System.out.println(s + " " + optional + " " + optional.get() + " " + optional.get().getClass().getTypeName());
                 return new YAPIONValue<>(optional.get());
             }
         }
         for (Map.Entry<String, ValueHandler<?>> valueHandlerEntry : valueHandlers.entrySet()) {
             Optional<?> optional = valueHandlerEntry.getValue().parse(s);
             if (optional.isPresent()) {
-                System.out.println(s + " " + optional + " " + optional.get() + " " + optional.get().getClass().getTypeName());
                 return new YAPIONValue<>(optional.get());
             }
         }
