@@ -10,7 +10,7 @@ import yapion.serializing.SerializeManager;
 public abstract class InstanceFactory<T> implements InstanceFactoryInterface<T> {
 
     /**
-     * Add this ListSerializer to the SerializeManager by calling
+     * Add this InstanceFactory to the SerializeManager by calling
      * {@link SerializeManager#add(InstanceFactoryInterface)}.
      */
     public final void add() {
