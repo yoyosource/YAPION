@@ -2,6 +2,7 @@
 
 ## JavaDoc
 
+* [Javadoc 0.22.0k](javadoc/v0.22.0/)
 * [Javadoc 0.21.1](javadoc/v0.21.1/)
 * [Javadoc 0.20.2](javadoc/v0.20.2/)
 

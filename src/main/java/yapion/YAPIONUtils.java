@@ -188,7 +188,7 @@ public class YAPIONUtils {
      * @param yapionObject to traverse
      * @param classToWalk the class of given type
      * @param <T> the type to walk
-     * @return the {@link Stream} which contains all <T> of the {@link YAPIONObject}
+     * @return the {@link Stream} which contains all 'T' of the {@link YAPIONObject}
      */
     @SuppressWarnings({"java:S1181"})
     public static <T extends YAPIONAnyType> Stream<T> walk(YAPIONObject yapionObject, Class<T> classToWalk) {
