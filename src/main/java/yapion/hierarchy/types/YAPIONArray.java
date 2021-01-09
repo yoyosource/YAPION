@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types;
 
+import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
@@ -160,16 +161,14 @@ public class YAPIONArray extends YAPIONDataType {
         return array.get(index);
     }
 
-    public YAPIONArray add(YAPIONAnyType yapionAnyType) {
+    public YAPIONArray add(@NonNull YAPIONAnyType yapionAnyType) {
         discardReferenceValue();
         array.add(yapionAnyType);
-        if (yapionAnyType != null) {
-            yapionAnyType.setParent(this);
-        }
+        yapionAnyType.setParent(this);
         return this;
     }
 
-    public YAPIONArray set(int index, YAPIONAnyType yapionAnyType) {
+    public YAPIONArray set(int index, @NonNull YAPIONAnyType yapionAnyType) {
         discardReferenceValue();
         if (index < 0 || index >= length()) {
             return this;
@@ -179,7 +178,7 @@ public class YAPIONArray extends YAPIONDataType {
     }
     
     @Override
-    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String key) {
+    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(@NonNull String key) {
         try {
             return Optional.of(new YAPIONSearchResult<>(get(Integer.parseInt(key))));
         } catch (NumberFormatException | YAPIONArrayIndexOutOfBoundsException e) {

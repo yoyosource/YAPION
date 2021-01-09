@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types;
 
+import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSave;
@@ -138,7 +139,7 @@ public class YAPIONMap extends YAPIONMappingType {
         return abstractOutput;
     }
 
-    public YAPIONMap add(YAPIONAnyType key, YAPIONAnyType value) {
+    public YAPIONMap add(@NonNull YAPIONAnyType key, @NonNull YAPIONAnyType value) {
         discardReferenceValue();
         variables.put(key, value);
         value.setParent(this);
@@ -146,18 +147,18 @@ public class YAPIONMap extends YAPIONMappingType {
         return this;
     }
 
-    public YAPIONMap add(YAPIONVariable variable) {
+    public YAPIONMap add(@NonNull YAPIONVariable variable) {
         return add(new YAPIONValue<>(variable.getName()), variable.getValue());
     }
 
-    public YAPIONMap add(YAPIONParserMapObject variable) {
+    public YAPIONMap add(@NonNull YAPIONParserMapObject variable) {
         discardReferenceValue();
         mappingVariables.put(variable.variable.getName().substring(1), variable.variable.getValue());
         variable.variable.getValue().setParent(this);
         return this;
     }
 
-    public YAPIONMap add(YAPIONParserMapMapping mapping) {
+    public YAPIONMap add(@NonNull YAPIONParserMapMapping mapping) {
         discardReferenceValue();
         mappingList.add(mapping);
         return this;
@@ -213,7 +214,7 @@ public class YAPIONMap extends YAPIONMappingType {
         return this;
     }
 
-    public YAPIONAnyType get(YAPIONAnyType key) {
+    public YAPIONAnyType get(@NonNull YAPIONAnyType key) {
         return variables.get(key);
     }
 
@@ -222,7 +223,7 @@ public class YAPIONMap extends YAPIONMappingType {
     }
 
     @Override
-    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(String key) {
+    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(@NonNull String key) {
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             if (entry.getKey().toString().equals(key))
                 return Optional.of(new YAPIONSearchResult<>(entry.getValue()));
