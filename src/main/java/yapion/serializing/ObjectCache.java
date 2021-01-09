@@ -52,25 +52,25 @@ final class ObjectCache {
     void preSerialization(Object object, ContextManager contextManager) {
         String state = contextManager.get();
         if (!preSerializationCache.containsKey(state)) return;
-        ReflectionsUtils.invokeMethod(preSerializationCache.get(state), object);
+        ReflectionsUtils.invokeMethodObjectSystem(preSerializationCache.get(state), object);
     }
 
     void postSerialization(Object object, ContextManager contextManager) {
         String state = contextManager.get();
         if (!postSerializationCache.containsKey(state)) return;
-        ReflectionsUtils.invokeMethod(postSerializationCache.get(state), object);
+        ReflectionsUtils.invokeMethodObjectSystem(postSerializationCache.get(state), object);
     }
 
     void preDeserialization(Object object, ContextManager contextManager) {
         String state = contextManager.get();
         if (!preDeserializationCache.containsKey(state)) return;
-        ReflectionsUtils.invokeMethod(preDeserializationCache.get(state), object);
+        ReflectionsUtils.invokeMethodObjectSystem(preDeserializationCache.get(state), object);
     }
 
     void postDeserialization(Object object, ContextManager contextManager) {
         String state = contextManager.get();
         if (!postDeserializationCache.containsKey(state)) return;
-        ReflectionsUtils.invokeMethod(postDeserializationCache.get(state), object);
+        ReflectionsUtils.invokeMethodObjectSystem(postDeserializationCache.get(state), object);
     }
 
 }

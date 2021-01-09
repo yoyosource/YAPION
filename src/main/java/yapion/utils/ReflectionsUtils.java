@@ -14,6 +14,7 @@ import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONReflectionException;
+import yapion.exceptions.utils.YAPIONReflectionInvocationException;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -65,7 +66,6 @@ public class ReflectionsUtils {
      * @param parameters the parameters that should be used
      * @return the possible return value
      */
-    @SuppressWarnings({"java:S3011"})
     public static MethodReturnValue<Object> invokeMethod(String name, Object object, Parameter... parameters) {
         Class<?>[] classes = new Class[parameters.length];
         Object[] objects = new Object[parameters.length];
@@ -90,8 +90,7 @@ public class ReflectionsUtils {
 
         try {
             Method method = clazz.getDeclaredMethod(name, classes);
-            method.setAccessible(true);
-            return MethodReturnValue.of(method.invoke(object, objects));
+            return invokeMethodInternal(method, object, objects);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
             log.info("Exception while invoking a method '" + name + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
             return MethodReturnValue.empty();
@@ -107,7 +106,6 @@ public class ReflectionsUtils {
      * @param parameters the parameters that should be used
      * @return the possible return value
      */
-    @SuppressWarnings({"java:S3011"})
     public static MethodReturnValue<Object> invokeMethod(String name, Object object, Object... parameters) {
         Class<?>[] classes = new Class[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
@@ -130,8 +128,7 @@ public class ReflectionsUtils {
 
         try {
             Method method = clazz.getDeclaredMethod(name, classes);
-            method.setAccessible(true);
-            return MethodReturnValue.of(method.invoke(object, parameters));
+            return invokeMethodInternal(method, object, parameters);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
             log.info("Exception while invoking a method '" + name + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
             return MethodReturnValue.empty();
@@ -144,24 +141,28 @@ public class ReflectionsUtils {
      *
      * @param method the method to be called
      * @param object the object on which the method should be called
-     * @param parameters the parameters that should be used
      * @return the possible return value
      */
-    public static MethodReturnValue<Object> invokeMethod(Method method, Object object, Parameter... parameters) {
-        Class<?>[] classes = new Class[parameters.length];
-        Object[] objects = new Object[parameters.length];
-        for (int i = 0; i < parameters.length; i++) {
-            classes[i] = parameters[i].clazz;
-            objects[i] = parameters[i].object;
-        }
-
+    public static MethodReturnValue<Object> invokeMethodObjectSystem(Method method, Object object) {
         try {
-            method.setAccessible(true);
-            return MethodReturnValue.of(method.invoke(object, objects));
-        } catch (SecurityException | IllegalAccessException | InvocationTargetException e) {
-            log.info("Exception while invoking a method '" + method.getName() + "' on the object '" + object.getClass().getTypeName() + "' with the parameters of type '" + Arrays.toString(classes) + "'", e.getCause());
+            return invokeMethodInternal(method, object);
+        } catch (InvocationTargetException e) {
+            log.info("Exception in method call '" + method.getName() + "' on the object '" + object.getClass().getTypeName() + "' with no parameters", e.getCause());
+            throw new YAPIONReflectionInvocationException(e);
+        } catch (SecurityException | IllegalAccessException e) {
+            log.info("Exception while invoking a method '" + method.getName() + "' on the object '" + object.getClass().getTypeName() + "' with no parameters", e.getCause());
             throw new YAPIONReflectionException(e.getMessage(), e);
         }
+    }
+
+    @SuppressWarnings({"java:S3011"})
+    private static MethodReturnValue<Object> invokeMethodInternal(Method method, Object object, Object... objects) throws InvocationTargetException, IllegalAccessException {
+        method.setAccessible(true);
+        Object returnValue = method.invoke(object, objects);
+        if (method.getReturnType().equals(Void.TYPE)) {
+            return MethodReturnValue.empty();
+        }
+        return MethodReturnValue.of(returnValue);
     }
 
     @YAPIONSaveExclude(context = "*")
