@@ -82,6 +82,16 @@ public class AnnotationTestObjects {
     }
 
     @YAPIONData
+    public static class ClassC extends ClassB {
+
+        @YAPIONPreSerialization(context = "Test")
+        private void test() {
+
+        }
+
+    }
+
+    @YAPIONData
     public static class ClassB extends ClassA {
 
         @YAPIONPreSerialization
