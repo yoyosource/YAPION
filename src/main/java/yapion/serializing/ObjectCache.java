@@ -16,14 +16,22 @@ import java.util.Map;
 
 final class ObjectCache {
 
+    final Class<?> superClass;
+
     private final Map<String, Method> preSerializationCache = new HashMap<>();
     private final Map<String, Method> postSerializationCache = new HashMap<>();
 
     private final Map<String, Method> preDeserializationCache = new HashMap<>();
     private final Map<String, Method> postDeserializationCache = new HashMap<>();
 
-    ObjectCache(Object object) {
-        Method[] methods = object.getClass().getDeclaredMethods();
+    ObjectCache(Class<?> clazz) {
+        if (clazz.getSuperclass() == null) {
+            superClass = null;
+        } else {
+            superClass = clazz.getSuperclass();
+        }
+
+        Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
             if (method.getParameterCount() != 0) continue;
             YAPIONPreSerialization yapionPreSerialization = method.getAnnotation(YAPIONPreSerialization.class);

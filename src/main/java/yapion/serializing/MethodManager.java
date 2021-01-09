@@ -43,36 +43,48 @@ public final class MethodManager {
         methodMap.clear();
     }
 
-    static void preSerializationStep(Object object, ContextManager contextManager) {
-        String key = object.getClass().getTypeName();
-        if (!methodMap.containsKey(key)) {
-            methodMap.put(key, new ObjectCache(object));
+    static void preSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+        while (clazz != null) {
+            String key = clazz.getTypeName();
+            if (!methodMap.containsKey(key)) {
+                methodMap.put(key, new ObjectCache(clazz));
+            }
+            methodMap.get(key).preSerialization(object, contextManager);
+            clazz = methodMap.get(key).superClass;
         }
-        methodMap.get(key).preSerialization(object, contextManager);
     }
 
-    static void postSerializationStep(Object object, ContextManager contextManager) {
-        String key = object.getClass().getTypeName();
-        if (!methodMap.containsKey(key)) {
-            methodMap.put(key, new ObjectCache(object));
+    static void postSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+        while (clazz != null) {
+            String key = clazz.getTypeName();
+            if (!methodMap.containsKey(key)) {
+                methodMap.put(key, new ObjectCache(clazz));
+            }
+            methodMap.get(key).postSerialization(object, contextManager);
+            clazz = methodMap.get(key).superClass;
         }
-        methodMap.get(key).postSerialization(object, contextManager);
     }
 
-    static void preDeserializationStep(Object object, ContextManager contextManager) {
-        String key = object.getClass().getTypeName();
-        if (!methodMap.containsKey(key)) {
-            methodMap.put(key, new ObjectCache(object));
+    static void preDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+        while (clazz != null) {
+            String key = clazz.getTypeName();
+            if (!methodMap.containsKey(key)) {
+                methodMap.put(key, new ObjectCache(clazz));
+            }
+            methodMap.get(key).preDeserialization(object, contextManager);
+            clazz = methodMap.get(key).superClass;
         }
-        methodMap.get(key).preDeserialization(object, contextManager);
     }
 
-    static void postDeserializationStep(Object object, ContextManager contextManager) {
-        String key = object.getClass().getTypeName();
-        if (!methodMap.containsKey(key)) {
-            methodMap.put(key, new ObjectCache(object));
+    static void postDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+        while (clazz != null) {
+            String key = clazz.getTypeName();
+            if (!methodMap.containsKey(key)) {
+                methodMap.put(key, new ObjectCache(clazz));
+            }
+            methodMap.get(key).postDeserialization(object, contextManager);
+            clazz = methodMap.get(key).superClass;
         }
-        methodMap.get(key).postDeserialization(object, contextManager);
     }
 
 }

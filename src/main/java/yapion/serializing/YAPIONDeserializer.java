@@ -284,7 +284,7 @@ public final class YAPIONDeserializer {
             }
 
             object = SerializeManager.getObjectInstance(clazz, type, contextManager.is(clazz).data || createWithObjenesis);
-            MethodManager.preDeserializationStep(object, contextManager);
+            MethodManager.preDeserializationStep(object, object.getClass(), contextManager);
             pointerMap.put(yapionObject, object);
 
             for (String fieldName : yapionObject.getKeys()) {
@@ -331,7 +331,7 @@ public final class YAPIONDeserializer {
                     field.set(object, parse(yapionAnyType));
                 }
             }*/
-            MethodManager.postDeserializationStep(object, contextManager);
+            MethodManager.postDeserializationStep(object, object.getClass(), contextManager);
         } catch (ClassNotFoundException e) {
             log.warn("The class '" + type + "' was not found.", e.getCause());
         } catch (YAPIONReflectionException e) {

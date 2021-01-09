@@ -147,10 +147,10 @@ public class ReflectionsUtils {
         try {
             return invokeMethodInternal(method, object);
         } catch (InvocationTargetException e) {
-            log.info("Exception in method call '" + method.getName() + "' on the object '" + object.getClass().getTypeName() + "' with no parameters", e.getCause());
+            log.info("Exception in method call '" + method.getName() + "' declared in class '" + method.getDeclaringClass().getTypeName() + "' on the object '" + object.getClass().getTypeName() + "' with no parameters", e.getCause());
             throw new YAPIONReflectionInvocationException(e);
         } catch (SecurityException | IllegalAccessException e) {
-            log.info("Exception while invoking a method '" + method.getName() + "' on the object '" + object.getClass().getTypeName() + "' with no parameters", e.getCause());
+            log.info("Exception while invoking a method '" + method.getName() + "' declared in class '" + method.getDeclaringClass().getTypeName() + "' on the object '" + object.getClass().getTypeName() + "' with no parameters", e.getCause());
             throw new YAPIONReflectionException(e.getMessage(), e);
         }
     }

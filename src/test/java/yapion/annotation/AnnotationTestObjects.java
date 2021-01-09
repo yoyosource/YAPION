@@ -81,4 +81,23 @@ public class AnnotationTestObjects {
 
     }
 
+    @YAPIONData
+    public static class ClassB extends ClassA {
+
+        @YAPIONPreSerialization
+        private void test() {
+
+        }
+
+    }
+
+    public static class ClassA {
+
+        @YAPIONPreSerialization
+        private void test2() {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
 }

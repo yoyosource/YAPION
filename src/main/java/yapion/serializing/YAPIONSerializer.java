@@ -186,7 +186,7 @@ public final class YAPIONSerializer {
         if (!pointerMap.containsKey(object)) {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
         }
-        MethodManager.preSerializationStep(object, contextManager);
+        MethodManager.preSerializationStep(object, object.getClass(), contextManager);
         yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName())));
         this.yapionObject = yapionObject;
 
@@ -222,7 +222,7 @@ public final class YAPIONSerializer {
             }
             yapionObject.add(new YAPIONVariable(name, yapionAnyType));
         }
-        MethodManager.postSerializationStep(object, contextManager);
+        MethodManager.postSerializationStep(object, object.getClass(), contextManager);
         return this;
     }
 
