@@ -181,8 +181,8 @@ public final class YAPIONDeserializer {
                 case OBJECT:
                     primitive = false;
                     YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
-                    if (yapionObject.getVariable(TYPE_IDENTIFIER) != null) {
-                        type = ((YAPIONValue<String>) yapionObject.getVariable(TYPE_IDENTIFIER).getValue()).get();
+                    if (yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER) != null) {
+                        type = ((YAPIONValue<String>) yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER)).get();
                         break;
                     }
                 case MAP:
@@ -354,7 +354,7 @@ public final class YAPIONDeserializer {
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parseObject(YAPIONObject yapionObject) {
-        String type = ((YAPIONValue<String>) yapionObject.getVariable(TYPE_IDENTIFIER).getValue()).get();
+        String type = ((YAPIONValue<String>) yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER)).get();
         type = typeReMapper.remap(type);
         InternalSerializer<?> serializer = SerializeManager.getInternalSerializer(type);
         Object o = serialize(serializer, yapionObject);
@@ -388,7 +388,7 @@ public final class YAPIONDeserializer {
 
                 Field field = ReflectionsUtils.getField(clazz, fieldName);
                 if (field == null) {
-                    deserializeResult.add(object, fieldName, yapionObject.getVariable(fieldName).getValue());
+                    deserializeResult.add(object, fieldName, yapionObject.getYAPIONAnyType(fieldName));
                     continue;
                 }
                 if (ModifierUtils.removed(field)) continue;
@@ -396,7 +396,7 @@ public final class YAPIONDeserializer {
 
                 arrayType = field.getType().getTypeName();
 
-                YAPIONAnyType yapionAnyType = yapionObject.getVariable(field.getName()).getValue();
+                YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(field.getName());
                 YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
                 if (isValid(field, yapionDeserializeType)) {
                     ReflectionsUtils.setValueOfField(field, object, serialize(SerializeManager.getInternalSerializer(yapionDeserializeType.type().getTypeName()), yapionAnyType));

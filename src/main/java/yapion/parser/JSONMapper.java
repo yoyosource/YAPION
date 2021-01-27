@@ -60,16 +60,11 @@ public class JSONMapper {
 
     private YAPIONObject mapObject(YAPIONObject json) {
         yapionObjectList.add(json);
-        List<YAPIONVariable> toChange = new ArrayList<>(json.size());
         for (String s : json.getKeys()) {
-            YAPIONVariable variable = json.getVariable(s);
-            toChange.add(new YAPIONVariable(variable.getName(), map(variable.getValue())));
+            YAPIONAnyType yapionAnyType = json.getYAPIONAnyType(s);
+            if (yapionAnyType == null) continue;
+            json.add(s, map(yapionAnyType));
         }
-
-        for (YAPIONVariable variable : toChange) {
-            json.add(variable);
-        }
-
         return json;
     }
 
@@ -144,8 +139,8 @@ public class JSONMapper {
         YAPIONMap yapionMap = new YAPIONMap();
         for (int i = 0; i < mapping.length(); i++) {
             String[] mapped = ((YAPIONValue<String>) mapping.get(i)).get().split(":");
-            YAPIONAnyType key = map(yapionObject.getVariable("#" + mapped[0]).getValue());
-            YAPIONAnyType value = map(yapionObject.getVariable("#" + mapped[1]).getValue());
+            YAPIONAnyType key = map(yapionObject.getYAPIONAnyType("#" + mapped[0]));
+            YAPIONAnyType value = map(yapionObject.getYAPIONAnyType("#" + mapped[1]));
 
             yapionMap.add(key, value);
         }

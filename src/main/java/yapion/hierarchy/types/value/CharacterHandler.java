@@ -12,15 +12,7 @@ public class CharacterHandler implements ValueHandler<Character> {
 
     @Override
     public String output(Character character) {
-        if (character < 0x20) {
-            return "'\\u" + String.format("%04X", (short) (char) character) + "'";
-        } else if (character > 0x7F) {
-            return "'\\u" + String.format("%04X", (short) (char) character) + "'";
-        } else if (character == '(' || character == ')') {
-            return "'\\" + character + "'";
-        } else {
-            return "'" + character + "'";
-        }
+        return "'" + charToUTFEscape(character) + "'";
     }
 
     @Override

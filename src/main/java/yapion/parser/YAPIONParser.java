@@ -4,6 +4,7 @@
 
 package yapion.parser;
 
+import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
@@ -377,17 +378,17 @@ public final class YAPIONParser {
         throw new YAPIONParserException();
     }
 
-    private void add(YAPIONVariable yapionVariable) {
+    private void add(@NonNull String key, @NonNull YAPIONAnyType value) {
         if (currentObject instanceof YAPIONObject) {
-            ((YAPIONObject) currentObject).add(yapionVariable);
+            ((YAPIONObject) currentObject).add(key, value);
         } else if (currentObject instanceof YAPIONMap) {
-            if (yapionVariable.getName().startsWith("#")) {
-                ((YAPIONMap) currentObject).add(new YAPIONParserMapObject(yapionVariable));
+            if (key.startsWith("#")) {
+                ((YAPIONMap) currentObject).add(new YAPIONParserMapObject(key, value));
             } else {
-                ((YAPIONMap) currentObject).add(yapionVariable);
+                ((YAPIONMap) currentObject).add(new YAPIONValue<>(key), value);
             }
         } else if (currentObject instanceof YAPIONArray) {
-            ((YAPIONArray) currentObject).add(yapionVariable.getValue());
+            ((YAPIONArray) currentObject).add(value);
         }
     }
 
@@ -405,7 +406,7 @@ public final class YAPIONParser {
             push(YAPIONType.OBJECT);
             YAPIONObject yapionObject = new YAPIONObject();
             yapionObjectList.add(yapionObject);
-            add(new YAPIONVariable(key, yapionObject));
+            add(key, yapionObject);
             currentObject = yapionObject;
             key = "";
             return true;
@@ -413,7 +414,7 @@ public final class YAPIONParser {
         if (c == '[') {
             push(YAPIONType.ARRAY);
             YAPIONArray yapionArray = new YAPIONArray();
-            add(new YAPIONVariable(key, yapionArray));
+            add(key, yapionArray);
             currentObject = yapionArray;
             key = "";
             return true;
@@ -430,7 +431,7 @@ public final class YAPIONParser {
         if (c == '<') {
             push(YAPIONType.MAP);
             YAPIONMap yapionMap = new YAPIONMap();
-            add(new YAPIONVariable(key, yapionMap));
+            add(key, yapionMap);
             currentObject = yapionMap;
             key = "";
             return true;
@@ -459,7 +460,7 @@ public final class YAPIONParser {
         }
         if (!escaped && c == ')') {
             pop(YAPIONType.VALUE);
-            add(new YAPIONVariable(key, YAPIONValue.parseValue(current.toString())));
+            add(key, YAPIONValue.parseValue(current.toString()));
             reset();
         } else {
             if (escaped) {
@@ -485,7 +486,7 @@ public final class YAPIONParser {
             pop(YAPIONType.POINTER);
             YAPIONPointer yapionPointer = new YAPIONPointer(current.toString());
             yapionPointerList.add(yapionPointer);
-            add(new YAPIONVariable(key, yapionPointer));
+            add(key, yapionPointer);
             reset();
         }
     }
@@ -527,14 +528,14 @@ public final class YAPIONParser {
         if (!escaped) {
             if (c == ',') {
                 if (current.length() != 0) {
-                    add(new YAPIONVariable("", YAPIONValue.parseValue(current.toString())));
+                    add("", YAPIONValue.parseValue(current.toString()));
                 }
                 current = new StringBuilder();
                 return;
             }
             if (c == ']') {
                 if (current.length() != 0) {
-                    add(new YAPIONVariable("", YAPIONValue.parseValue(current.toString())));
+                    add("", YAPIONValue.parseValue(current.toString()));
                 }
                 pop(YAPIONType.ARRAY);
                 currentObject = currentObject.getParent();

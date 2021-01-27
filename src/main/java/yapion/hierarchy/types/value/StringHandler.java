@@ -15,16 +15,7 @@ public class StringHandler implements ValueHandler<String> {
     public String output(String s) {
         StringBuilder st = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (c < 0x20) {
-                st.append("\\u").append(String.format("%04X", (short) c));
-            } else if (c > 0x7F) {
-                st.append("\\u").append(String.format("%04X", (short) c));
-            } else if (c == '(' || c == ')') {
-                st.append("\\").append(c);
-            } else {
-                st.append(c);
-            }
+            st.append(charToUTFEscape(s.charAt(i)));
         }
         s = st.toString();
         if (s.equals("true") || s.equals("false") || s.equals("null")) {

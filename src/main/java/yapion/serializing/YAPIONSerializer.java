@@ -187,7 +187,7 @@ public final class YAPIONSerializer {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
         }
         MethodManager.preSerializationStep(object, object.getClass(), contextManager);
-        yapionObject.add(new YAPIONVariable(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName())));
+        yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName()));
         this.yapionObject = yapionObject;
 
         Class<?> objectClass = object.getClass();
@@ -203,13 +203,13 @@ public final class YAPIONSerializer {
             Object fieldObject = ReflectionsUtils.getValueOfField(field, object);
             if (fieldObject == null) {
                 if (!yapionInfo.optimize) {
-                    yapionObject.add(new YAPIONVariable(name, new YAPIONValue<>(null)));
+                    yapionObject.add(name, new YAPIONValue<>(null));
                 }
                 continue;
             }
 
             if (pointerMap.containsKey(fieldObject)) {
-                yapionObject.add(new YAPIONVariable(name, pointerMap.get(fieldObject)));
+                yapionObject.add(name, pointerMap.get(fieldObject));
                 continue;
             }
 
@@ -220,7 +220,7 @@ public final class YAPIONSerializer {
             if (yapionAnyType.getType() == YAPIONType.OBJECT) {
                 pointerMap.put(fieldObject, new YAPIONPointer((YAPIONObject) yapionAnyType));
             }
-            yapionObject.add(new YAPIONVariable(name, yapionAnyType));
+            yapionObject.add(name, yapionAnyType);
         }
         MethodManager.postSerializationStep(object, object.getClass(), contextManager);
         return this;

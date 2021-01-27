@@ -97,7 +97,6 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
 
     public static void main(String[] args) {
         SerializeManager.remove(YAPIONObject.class);
-        SerializeManager.remove(YAPIONVariable.class);
         SerializeManager.remove(YAPIONArray.class);
         SerializeManager.remove(YAPIONMap.class);
         SerializeManager.remove(YAPIONValue.class);

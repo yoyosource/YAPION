@@ -42,13 +42,11 @@ A **java.net.SocketServer** cannot be serialized as there is no way of freezing 
 
 ### As well as every Class in the following packages (not overrideable):
 The **yapion.annotations.** package cannot be serialized because there is no value in being able to serialize any annotation.
-The **yapion.exceptions.** package cannot be serialized because there is no nice way of serializing an exception.
 The **yapion.parser.** package cannot be serialized because there is no need to serialize the parser.
 The **yapion.serializing.serializer.** package cannot be serialized because there are only InternalSerializer implementations present in that package.
 The **yapion.utils.** package cannot be serialized because there are only utilities and other helpful stuff in there.
 
 ### As well as every Class in the following packages that are not specially handled by a Serializer (overrideable by Serializer):
-- java.io
 - java.io.
 - java.net.
 - java.nio.

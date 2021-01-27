@@ -9,7 +9,6 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONVariable;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
@@ -34,7 +33,7 @@ public class StackSerializer implements InternalSerializer<Stack<?>> {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
         YAPIONArray yapionArray = new YAPIONArray();
-        yapionObject.add(new YAPIONVariable("values", yapionArray));
+        yapionObject.add("values", yapionArray);
         for (int i = 0; i < serializeData.object.size(); i++) {
             yapionArray.add(serializeData.serialize(serializeData.object.get(i)));
         }

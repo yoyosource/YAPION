@@ -9,7 +9,6 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONVariable;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
@@ -36,7 +35,7 @@ public class MapSerializer implements InternalSerializer<Map> {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
         YAPIONMap yapionMap = new YAPIONMap();
-        yapionObject.add(new YAPIONVariable("values", yapionMap));
+        yapionObject.add("values", yapionMap);
         for (Object obj : serializeData.object.entrySet()) {
             Map.Entry entry = (Map.Entry)obj;
             yapionMap.add(serializeData.serialize(entry.getKey()), serializeData.serialize(entry.getValue()));

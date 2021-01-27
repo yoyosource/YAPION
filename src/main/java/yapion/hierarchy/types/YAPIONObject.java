@@ -19,12 +19,16 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
+import static yapion.utils.ReferenceIDUtils.calc;
+
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
 public class YAPIONObject extends YAPIONMappingType {
 
-    // private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
-    private final List<YAPIONVariable> variables = new ArrayList<>();
+    private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
+
+    private static final String PATTERN = "[({\\[<)}\\]>]";
+    private static final String REPLACEMENT = "\\\\$0";
 
     @Override
     public YAPIONType getType() {
@@ -39,8 +43,8 @@ public class YAPIONObject extends YAPIONMappingType {
         long referenceValue = 0;
         referenceValue += getDepth();
         referenceValue ^= getType().getReferenceValue();
-        for (YAPIONVariable variable : variables) {
-            referenceValue ^= variable.referenceValue() & 0x7FFFFFFFFFFFFFFFL;
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
+            referenceValue ^= ((long) entry.getKey().length() ^ calc(entry.getKey()) ^ entry.getValue().referenceValue()) & 0x7FFFFFFFFFFFFFFFL;
         }
         cacheReferenceValue(referenceValue);
         return referenceValue;
@@ -51,9 +55,13 @@ public class YAPIONObject extends YAPIONMappingType {
         abstractOutput.consume("{");
 
         final String indent = "\n" + indent();
-        for (YAPIONVariable yapionVariable : variables) {
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
             abstractOutput.consumePrettified(indent);
-            yapionVariable.toYAPION(abstractOutput);
+            if (entry.getKey().startsWith(" ")) {
+                abstractOutput.consume("\\");
+            }
+            abstractOutput.consume(entry.getKey().replaceAll(PATTERN, REPLACEMENT));
+            entry.getValue().toYAPION(abstractOutput);
         }
         
         if (!variables.isEmpty()) {
@@ -70,10 +78,11 @@ public class YAPIONObject extends YAPIONMappingType {
 
         final String indent = "\n" + indent();
         boolean b = false;
-        for (YAPIONVariable yapionVariable : variables) {
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
             if (b) abstractOutput.consume(",");
             abstractOutput.consumePrettified(indent);
-            yapionVariable.toJSON(abstractOutput);
+            abstractOutput.consume("\"").consume(entry.getKey()).consume("\":");
+            entry.getValue().toJSON(abstractOutput);
             b = true;
         }
 
@@ -91,10 +100,11 @@ public class YAPIONObject extends YAPIONMappingType {
 
         final String indent = "\n" + indent();
         boolean b = false;
-        for (YAPIONVariable yapionVariable : variables) {
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
             if (b) abstractOutput.consume(",");
             abstractOutput.consumePrettified(indent);
-            yapionVariable.toJSONLossy(abstractOutput);
+            abstractOutput.consume("\"").consume(entry.getKey()).consume("\":");
+            entry.getValue().toJSONLossy(abstractOutput);
             b = true;
         }
 
@@ -109,7 +119,7 @@ public class YAPIONObject extends YAPIONMappingType {
     @Override
     public String getPath(YAPIONAnyType yapionAnyType) {
         for (String s : getKeys()) {
-            if (getVariable(s).getValue() == yapionAnyType) {
+            if (getYAPIONAnyType(s) == yapionAnyType) {
                 return s;
             }
         }
@@ -117,11 +127,7 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     public List<String> getKeys() {
-        List<String> keys = new ArrayList<>();
-        for (YAPIONVariable yapionVariable : variables) {
-            keys.add(yapionVariable.getName());
-        }
-        return keys;
+        return new ArrayList<>(variables.keySet());
     }
 
     public boolean hasValue(@NonNull String key) {
@@ -129,38 +135,29 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     public boolean hasValue(@NonNull String key, YAPIONType yapionType) {
-        YAPIONVariable yapionVariable = getVariable(key);
-        if (yapionVariable == null) return false;
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return false;
         if (yapionType == YAPIONType.ANY) return true;
-        return yapionType == yapionVariable.getValue().getType();
+        return yapionType == yapionAnyType.getType();
     }
 
     public <T> boolean hasYAPIONValue(@NonNull String key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
             return false;
         }
-        YAPIONVariable yapionVariable = getVariable(key);
-        if (yapionVariable == null) return false;
-        YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return false;
         if (!(yapionAnyType instanceof YAPIONValue)) return false;
         return ((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getTypeName());
     }
 
-    public YAPIONVariable getVariable(@NonNull String key) {
-        for (YAPIONVariable yapionVariable : variables) {
-            if (yapionVariable.getName().equals(key)) {
-                return yapionVariable;
-            }
-        }
-        return null;
+    public YAPIONAnyType getYAPIONAnyType(@NonNull String key) {
+        return variables.get(key);
     }
 
     public YAPIONObject getObject(@NonNull String key) {
-        YAPIONVariable yapionVariable = getVariable(key);
-        if (yapionVariable == null) {
-            return null;
-        }
-        YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
         if (yapionAnyType instanceof YAPIONObject) {
             return (YAPIONObject) yapionAnyType;
         }
@@ -168,11 +165,8 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     public YAPIONArray getArray(@NonNull String key) {
-        YAPIONVariable yapionVariable = getVariable(key);
-        if (yapionVariable == null) {
-            return null;
-        }
-        YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
         if (yapionAnyType instanceof YAPIONArray) {
             return (YAPIONArray) yapionAnyType;
         }
@@ -180,11 +174,8 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     public YAPIONMap getMap(@NonNull String key) {
-        YAPIONVariable yapionVariable = getVariable(key);
-        if (yapionVariable == null) {
-            return null;
-        }
-        YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
         if (yapionAnyType instanceof YAPIONMap) {
             return (YAPIONMap) yapionAnyType;
         }
@@ -192,11 +183,8 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     public YAPIONPointer getPointer(@NonNull String key) {
-        YAPIONVariable yapionVariable = getVariable(key);
-        if (yapionVariable == null) {
-            return null;
-        }
-        YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
         if (yapionAnyType instanceof YAPIONPointer) {
             return (YAPIONPointer) yapionAnyType;
         }
@@ -205,11 +193,8 @@ public class YAPIONObject extends YAPIONMappingType {
 
     @SuppressWarnings({"java:S3740"})
     public YAPIONValue getValue(@NonNull String key) {
-        YAPIONVariable yapionVariable = getVariable(key);
-        if (yapionVariable == null) {
-            return null;
-        }
-        YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
         if (yapionAnyType instanceof YAPIONValue) {
             return (YAPIONValue) yapionAnyType;
         }
@@ -220,11 +205,8 @@ public class YAPIONObject extends YAPIONMappingType {
         if (!YAPIONValue.validType(type)) {
             return null;
         }
-        YAPIONVariable yapionVariable = getVariable(key);
-        if (yapionVariable == null) {
-            return null;
-        }
-        YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
         if (!(yapionAnyType instanceof YAPIONValue)) {
             return null;
         }
@@ -238,11 +220,8 @@ public class YAPIONObject extends YAPIONMappingType {
         if (!YAPIONValue.validType(type)) {
             return null;
         }
-        YAPIONVariable yapionVariable = getVariable(key);
-        if (yapionVariable == null) {
-            return null;
-        }
-        YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
         if (!(yapionAnyType instanceof YAPIONValue)) {
             return null;
         }
@@ -252,8 +231,8 @@ public class YAPIONObject extends YAPIONMappingType {
         return (YAPIONValue<T>) yapionAnyType;
     }
 
-    private void check(YAPIONVariable variable) {
-        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(variable, this);
+    private void check(YAPIONAnyType yapionAnyType) {
+        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(yapionAnyType, this);
         if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
             if (result.getRecursionType() == RecursionUtils.RecursionType.DIRECT) {
                 throw new YAPIONRecursionException("Direct Recursion failure. Use a pointer instead.");
@@ -263,25 +242,15 @@ public class YAPIONObject extends YAPIONMappingType {
         }
     }
 
-    public YAPIONObject add(@NonNull YAPIONVariable variable) {
-        check(variable);
-        discardReferenceValue();
-        for (int i = variables.size() - 1; i >= 0; i--) {
-            if (variables.get(i).getName().equals(variable.getName())) {
-                variables.remove(i).getValue().removeParent();
-
-                variables.add(i, variable);
-                variable.getValue().setParent(this);
-                return this;
-            }
-        }
-        variables.add(variable);
-        variable.getValue().setParent(this);
-        return this;
-    }
-
     public YAPIONObject add(@NonNull String name, @NonNull YAPIONAnyType value) {
-        return add(new YAPIONVariable(name, value));
+        check(value);
+        discardReferenceValue();
+        if (variables.containsKey(name)) {
+            variables.get(name).removeParent();
+        }
+        variables.put(name, value);
+        value.setParent(this);
+        return this;
     }
 
     public YAPIONObject add(@NonNull String name, String value) {
@@ -328,9 +297,9 @@ public class YAPIONObject extends YAPIONMappingType {
         return add(name, new YAPIONValue<>(value));
     }
 
-    public YAPIONObject addOrPointer(@NonNull YAPIONVariable variable) {
+    public YAPIONObject addOrPointer(@NonNull String name, @NonNull YAPIONAnyType value) {
         discardReferenceValue();
-        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(variable.getValue(), this);
+        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
         if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
             if (result.getYAPIONAny() == null) {
                 throw new YAPIONRecursionException("Pointer creation failure.");
@@ -338,32 +307,15 @@ public class YAPIONObject extends YAPIONMappingType {
             if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
                 throw new YAPIONRecursionException("Pointer creation failure.");
             }
-            variable = new YAPIONVariable(variable.getName(), new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+            add(name, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+            return this;
         }
-        return add(variable);
-    }
-
-    public YAPIONObject addOrPointer(@NonNull String name, @NonNull YAPIONAnyType value) {
-        return addOrPointer(new YAPIONVariable(name, value));
-    }
-
-    public YAPIONObject remove(@NonNull YAPIONVariable yapionVariable) {
-        for (int i = variables.size() - 1; i >= 0; i--) {
-            if (variables.get(i) == yapionVariable) {
-                variables.remove(i).getValue().removeParent();
-                break;
-            }
-        }
+        add(name, value);
         return this;
     }
 
     public YAPIONObject remove(@NonNull String name) {
-        for (int i = variables.size() - 1; i >= 0; i--) {
-            if (variables.get(i).getName().equals(name)) {
-                variables.remove(i).getValue().removeParent();
-                break;
-            }
-        }
+        variables.remove(name).removeParent();
         return this;
     }
 
@@ -375,8 +327,8 @@ public class YAPIONObject extends YAPIONMappingType {
     @Override
     public long deepSize() {
         long size = size();
-        for (YAPIONVariable yapionVariable : variables) {
-            YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
+            YAPIONAnyType yapionAnyType = entry.getValue();
             if (yapionAnyType instanceof YAPIONDataType) size += ((YAPIONDataType) yapionAnyType).deepSize();
         }
         return size;
@@ -394,17 +346,13 @@ public class YAPIONObject extends YAPIONMappingType {
 
     @Override
     public List<YAPIONAnyType> getAllValues() {
-        List<YAPIONAnyType> yapionAnyTypes = new ArrayList<>();
-        for (YAPIONVariable variable : variables) {
-            yapionAnyTypes.add(variable.getValue());
-        }
-        return yapionAnyTypes;
+        return new ArrayList<>(variables.values());
     }
 
     @Override
     public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(@NonNull String key) {
-        if (getVariable(key) == null) return Optional.empty();
-        return Optional.of(new YAPIONSearchResult<>(getVariable(key).getValue()));
+        if (getYAPIONAnyType(key) == null) return Optional.empty();
+        return Optional.of(new YAPIONSearchResult<>(getYAPIONAnyType(key)));
     }
 
     @Override

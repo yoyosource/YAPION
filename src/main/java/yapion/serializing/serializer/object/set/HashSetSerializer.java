@@ -9,7 +9,6 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONVariable;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
@@ -35,7 +34,7 @@ public class HashSetSerializer implements InternalSerializer<HashSet<?>> {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
         YAPIONArray yapionArray = new YAPIONArray();
-        yapionObject.add(new YAPIONVariable("values", yapionArray));
+        yapionObject.add("values", yapionArray);
         Iterator<?> iterator = serializeData.object.iterator();
         while (iterator.hasNext()) {
             yapionArray.add(serializeData.serialize(iterator.next()));

@@ -147,14 +147,10 @@ public class YAPIONMap extends YAPIONMappingType {
         return this;
     }
 
-    public YAPIONMap add(@NonNull YAPIONVariable variable) {
-        return add(new YAPIONValue<>(variable.getName()), variable.getValue());
-    }
-
     public YAPIONMap add(@NonNull YAPIONParserMapObject variable) {
         discardReferenceValue();
-        mappingVariables.put(variable.variable.getName().substring(1), variable.variable.getValue());
-        variable.variable.getValue().setParent(this);
+        mappingVariables.put(variable.key.substring(1), variable.value);
+        variable.value.setParent(this);
         return this;
     }
 

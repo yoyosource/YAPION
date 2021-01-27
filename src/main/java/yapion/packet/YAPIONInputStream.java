@@ -11,7 +11,6 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.hierarchy.types.YAPIONVariable;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
@@ -195,9 +194,8 @@ public final class YAPIONInputStream {
     private synchronized HandleFailedPacket handle() {
         if (yapionPacketReceiver == null) return null;
         YAPIONObject yapionObject = YAPIONParser.parse(inputStream);
-        YAPIONVariable variable = yapionObject.getVariable("@type");
-        if (variable == null) return new HandleFailedPacket(yapionObject);
-        YAPIONAnyType yapionAnyType = variable.getValue();
+        YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType("@type");
+        if (yapionAnyType == null) return new HandleFailedPacket(yapionObject);
         if (!(yapionAnyType instanceof YAPIONValue)) return new HandleFailedPacket(yapionObject);
         Object object = ((YAPIONValue) yapionAnyType).get();
         if (!(object instanceof String)) return new HandleFailedPacket(yapionObject);

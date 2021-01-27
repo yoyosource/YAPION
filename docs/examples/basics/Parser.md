@@ -49,6 +49,7 @@ Parsing code:
 ```java
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
+import yapion.exceptions.parser.YAPIONParserException;
 
 public class Example {
 

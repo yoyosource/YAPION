@@ -8,7 +8,6 @@ import yapion.exceptions.parser.JSONParserException;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.hierarchy.types.YAPIONVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +56,7 @@ public class JSONParser {
                     char[] object = getObject(chars, i);
                     i += object.length;
                     YAPIONObject subObject = parseObject(object);
-                    yapionObject.add(new YAPIONVariable(name, subObject));
+                    yapionObject.add(name, subObject);
                     continue;
                 }
                 if (chars[i] == '[') {
@@ -66,11 +65,11 @@ public class JSONParser {
                     if (!(object[0] == '[' && object[object.length - 1] == ']')) {
                         throw new JSONParserException("No JSON Array");
                     }
-                    yapionObject.add(new YAPIONVariable(name, parseArray(object)));
+                    yapionObject.add(name, parseArray(object));
                     continue;
                 }
 
-                yapionObject.add(new YAPIONVariable(name, YAPIONValue.parseValue(getValue(chars, i))));
+                yapionObject.add(name, YAPIONValue.parseValue(getValue(chars, i)));
                 continue;
             }
 

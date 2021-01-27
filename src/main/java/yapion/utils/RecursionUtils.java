@@ -7,7 +7,6 @@ package yapion.utils;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONVariable;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -41,17 +40,6 @@ public class RecursionUtils {
         public YAPIONAnyType getYAPIONAny() {
             return yapionAnyType;
         }
-    }
-
-    /**
-     * Checks if a variable is already given in the hierarchy.
-     *
-     * @param toCheck is the variable to test for
-     * @param instance is the instance of a hierarchy to check against
-     * @return {@link RecursionResult} with the {@link RecursionType} and the {@code instance} against which was checked.
-     */
-    public static RecursionResult checkRecursion(YAPIONVariable toCheck, YAPIONAnyType instance) {
-        return checkRecursion(toCheck.getValue(), instance);
     }
 
     /**
