@@ -26,8 +26,7 @@ public class IdentifierUtils {
      * and {@link YAPIONDeserializer} for identifying an
      * {@link YAPIONObject} type by its {@link Class#getTypeName()}.
      * In the serialization this variable is used as the
-     * key of a {@link YAPIONVariable} and will be called
-     * type variable.
+     * key of a the so called type variable.
      */
     public static final String TYPE_IDENTIFIER = "@type";
 
@@ -35,8 +34,7 @@ public class IdentifierUtils {
      * This variable is used in the {@link EnumSerializer}
      * for identifying an {@link Enum} by its {@link Class#getTypeName()}.
      * In the serialization this variable is used as the
-     * key of a {@link YAPIONVariable} and will be called
-     * enum variable.
+     * key of a so called enum variable.
      */
     public static final String ENUM_IDENTIFIER = "@enum";
 
@@ -47,8 +45,7 @@ public class IdentifierUtils {
      * {@link Exception}, {@link RuntimeException} and {@link Error}
      * respectively by its {@link Class#getTypeName()}.
      * In the serialization this variable is used as the
-     * key of a {@link YAPIONVariable} and will be called
-     * exception variable.
+     * key of a so called exception variable.
      */
     public static final String EXCEPTION_IDENTIFIER = "@exception";
 

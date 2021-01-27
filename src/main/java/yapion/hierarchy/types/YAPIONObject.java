@@ -14,6 +14,7 @@ import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONDataType;
 import yapion.hierarchy.typegroups.YAPIONMappingType;
 import yapion.utils.RecursionUtils;
+import yapion.utils.YAPIONVersion;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -25,10 +26,11 @@ import static yapion.utils.ReferenceIDUtils.calc;
 @YAPIONLoad(context = "*")
 public class YAPIONObject extends YAPIONMappingType {
 
-    private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
-
     private static final String PATTERN = "[({\\[<)}\\]>]";
     private static final String REPLACEMENT = "\\\\$0";
+
+    private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
+    private YAPIONVersion version = null;
 
     @Override
     public YAPIONType getType() {
@@ -52,6 +54,7 @@ public class YAPIONObject extends YAPIONMappingType {
 
     @Override
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
+        if (version == null) version = YAPIONVersion.latest;
         abstractOutput.consume("{");
 
         final String indent = "\n" + indent();
@@ -74,6 +77,7 @@ public class YAPIONObject extends YAPIONMappingType {
 
     @Override
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
+        if (version == null) version = YAPIONVersion.latest;
         abstractOutput.consume("{");
 
         final String indent = "\n" + indent();
@@ -96,6 +100,7 @@ public class YAPIONObject extends YAPIONMappingType {
 
     @Override
     public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
+        if (version == null) version = YAPIONVersion.latest;
         abstractOutput.consume("{");
 
         final String indent = "\n" + indent();
