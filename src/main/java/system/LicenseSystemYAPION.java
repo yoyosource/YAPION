@@ -122,7 +122,7 @@ public class LicenseSystemYAPION {
     private static long changedFiles = 0;
 
     private static final String longLicense = "/**\n" +
-            " * Copyright 2019,2020 yoyosource\n" +
+            " * Copyright 2019,2020,2021 yoyosource\n" +
             " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
             " * you may not use this file except in compliance with the License.\n" +
             " * You may obtain a copy of the License at\n" +
@@ -135,7 +135,7 @@ public class LicenseSystemYAPION {
             " */";
     private static final String shortLicense = "// SPDX-License-Identifier: Apache-2.0\n" +
             "// YAPION\n" +
-            "// Copyright (C) 2019,2020 yoyosource";
+            "// Copyright (C) 2019,2020,2021 yoyosource";
 
     private static String[] addLicense(String[] strings, File f) {
         if (!f.getAbsolutePath().endsWith(".java")) {

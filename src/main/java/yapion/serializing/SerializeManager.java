@@ -395,6 +395,7 @@ public class SerializeManager {
 
     @SuppressWarnings({"java:S1452"})
     static InternalSerializer<?> getInternalSerializer(String type) {
+        // Todo: Generic Map/List/Set/Queue serializer for custom types?
         for (InternalSerializer<?> internalSerializer : interfaceTypeSerializer) {
             if (implementsInterface(type, internalSerializer.interfaceType())) {
                 type = internalSerializer.type();

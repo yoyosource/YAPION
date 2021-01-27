@@ -214,6 +214,7 @@ public final class YAPIONParser {
     }
 
     private String generateErrorMessage() {
+        if (inputStream != null) return "";
         StringBuilder st = new StringBuilder();
         st.append(s);
         st.append("\n");
@@ -228,6 +229,7 @@ public final class YAPIONParser {
     }
 
     private boolean escaped = false;
+    private StringBuilder unicode = null;
     private StringBuilder current = new StringBuilder();
     private String key = "";
 
@@ -437,11 +439,36 @@ public final class YAPIONParser {
     }
 
     private void parseValue(char c) {
+        if (escaped && c == 'u') {
+            unicode = new StringBuilder();
+            escaped = false;
+            return;
+        }
+        if (unicode != null && unicode.length() < 4) {
+            unicode.append(c);
+            if (unicode.length() == 4) {
+                current.append((char) Integer.parseInt(unicode.toString(), 16));
+                unicode = null;
+            }
+            return;
+        }
+        if (escaped && c == '\\') {
+            current.append("\\");
+            escaped = false;
+            return;
+        }
         if (!escaped && c == ')') {
             pop(YAPIONType.VALUE);
             add(new YAPIONVariable(key, YAPIONValue.parseValue(current.toString())));
             reset();
         } else {
+            if (escaped) {
+                escaped = false;
+            }
+            if (c == '\\') {
+                escaped = true;
+                return;
+            }
             current.append(c);
         }
     }

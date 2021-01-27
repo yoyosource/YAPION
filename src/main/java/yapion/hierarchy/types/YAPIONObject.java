@@ -17,15 +17,13 @@ import yapion.utils.RecursionUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
 public class YAPIONObject extends YAPIONMappingType {
 
+    // private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
     private final List<YAPIONVariable> variables = new ArrayList<>();
 
     @Override
@@ -124,6 +122,28 @@ public class YAPIONObject extends YAPIONMappingType {
             keys.add(yapionVariable.getName());
         }
         return keys;
+    }
+
+    public boolean hasValue(@NonNull String key) {
+        return hasValue(key, YAPIONType.ANY);
+    }
+
+    public boolean hasValue(@NonNull String key, YAPIONType yapionType) {
+        YAPIONVariable yapionVariable = getVariable(key);
+        if (yapionVariable == null) return false;
+        if (yapionType == YAPIONType.ANY) return true;
+        return yapionType == yapionVariable.getValue().getType();
+    }
+
+    public <T> boolean hasYAPIONValue(@NonNull String key, Class<T> type) {
+        if (!YAPIONValue.validType(type)) {
+            return false;
+        }
+        YAPIONVariable yapionVariable = getVariable(key);
+        if (yapionVariable == null) return false;
+        YAPIONAnyType yapionAnyType = yapionVariable.getValue();
+        if (!(yapionAnyType instanceof YAPIONValue)) return false;
+        return ((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getTypeName());
     }
 
     public YAPIONVariable getVariable(@NonNull String key) {

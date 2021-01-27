@@ -5,6 +5,7 @@ import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class YAPIONSerializerTest {
     @Test
     public void testPrimitive() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestPrimitive());
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.serializing.YAPIONTestObjects$TestPrimitive)t(false)T(true)b(0B)B(0B)s(0S)S(0S)i(0)I(0)l(0L)L(0L)d(0.0)D(0.0)f(0.0F)F(0.0F)bi(0BI)bd(0BD)c(' ')C(' ')string()stringB{@type(java.lang.StringBuilder)string()}stringb{@type(java.lang.StringBuffer)string()}file{@type(java.io.File)path(" + getUserHome() + "/YAPI)}}"));
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.serializing.YAPIONTestObjects$TestPrimitive)t(false)T(true)b(0B)B(0B)s(0S)S(0S)i(0)I(0)l(0L)L(0L)d(0.0)D(0.0)f(0.0F)F(0.0F)bi(0BI)bd(0BD)c(' ')C(' ')string()stringB{@type(java.lang.StringBuilder)string()}stringb{@type(java.lang.StringBuffer)string()}file{@type(java.io.File)path(" + getUserHome() + File.separator + "YAPI)}}"));
     }
 
     @Test

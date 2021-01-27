@@ -188,11 +188,22 @@ public class ReflectionsUtils {
      */
     public static Object constructObjectObjenesis(String className) {
         try {
-            return objenesisBase.newInstance(Class.forName(className));
+            return constructObjectObjenesis(Class.forName(className));
         } catch (ClassNotFoundException e) {
             log.info("Exception while creating an Object with Objenesis because the specified class '" + className + "' was not found", e.getCause());
             return null;
         }
+    }
+
+    /**
+     * Construct an Object instance from a given {@link Class}.
+     * By using the {@link ObjenesisBase}.
+     *
+     * @param clazz the class to create an instance from
+     * @return an instance of the specified class
+     */
+    public static Object constructObjectObjenesis(Class<?> clazz) {
+        return objenesisBase.newInstance(clazz);
     }
 
     /**

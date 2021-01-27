@@ -46,6 +46,9 @@ dependencies {
 - rzwitserloot/lombok (https://github.com/rzwitserloot/lombok)
   - [V] 1.18.6
   - [L] MIT
+- classgraph/classgraph (https://github.com/classgraph/classgraph)
+  - [V] 4.8.46
+  - [L] MIT
 
 * [V] Version
 * [L] License

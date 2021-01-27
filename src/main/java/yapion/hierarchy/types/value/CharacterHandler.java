@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
+// YAPION
+// Copyright (C) 2019,2020 yoyosource
+
 package yapion.hierarchy.types.value;
 
 import java.util.Optional;
@@ -8,7 +12,15 @@ public class CharacterHandler implements ValueHandler<Character> {
 
     @Override
     public String output(Character character) {
-        return "'" + character + "'";
+        if (character < 0x20) {
+            return "'\\u" + String.format("%04X", (short) (char) character) + "'";
+        } else if (character > 0x7F) {
+            return "'\\u" + String.format("%04X", (short) (char) character) + "'";
+        } else if (character == '(' || character == ')') {
+            return "'\\" + character + "'";
+        } else {
+            return "'" + character + "'";
+        }
     }
 
     @Override

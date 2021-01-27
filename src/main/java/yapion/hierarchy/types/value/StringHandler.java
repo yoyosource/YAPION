@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
+// YAPION
+// Copyright (C) 2019,2020 yoyosource
+
 package yapion.hierarchy.types.value;
 
 import java.util.Optional;
@@ -9,7 +13,20 @@ public class StringHandler implements ValueHandler<String> {
 
     @Override
     public String output(String s) {
-        s = s.replaceAll("[()]", "\\\\$0");
+        StringBuilder st = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c < 0x20) {
+                st.append("\\u").append(String.format("%04X", (short) c));
+            } else if (c > 0x7F) {
+                st.append("\\u").append(String.format("%04X", (short) c));
+            } else if (c == '(' || c == ')') {
+                st.append("\\").append(c);
+            } else {
+                st.append(c);
+            }
+        }
+        s = st.toString();
         if (s.equals("true") || s.equals("false") || s.equals("null")) {
             return '"' + s + '"';
         }

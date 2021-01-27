@@ -2,6 +2,7 @@ package yapion.serializing;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.junit.BeforeClass;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.serialize.YAPIONSave;
@@ -124,6 +125,49 @@ public class YAPIONTestObjects {
     }
 
     public static class NoAnnotations {}
+
+    @YAPIONData
+    public static class TestInnerArray {
+
+        private List<long[][]> intList = new ArrayList<>();
+
+        {
+            intList.add(new long[][]{{0}, {1}, {2}});
+            intList.add(new long[][]{{1}, {2}, {3}});
+            intList.add(new long[][]{{2}, {3}, {4}});
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder st = new StringBuilder().append("Test{intList={");
+            boolean b = false;
+            for (long[][] ints : intList) {
+                if (b) {
+                    st.append(", ");
+                }
+                b = true;
+                st.append(ints.getClass().getTypeName()).append(Arrays.deepToString(ints));
+            }
+            return st.append("}}").toString();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof TestInnerArray)) return false;
+            TestInnerArray that = (TestInnerArray) o;
+            if (intList.size() != that.intList.size()) return false;
+            for (int i = 0; i < intList.size(); i++) {
+                if (!Arrays.deepEquals(intList.get(i), that.intList.get(i))) return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(intList);
+        }
+    }
 
     static String getUserHome() {
         return System.getProperty("user.home");

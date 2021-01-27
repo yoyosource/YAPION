@@ -164,9 +164,64 @@ public final class YAPIONDeserializer {
             return new YAPIONDeserializer((YAPIONObject) yapionAnyType, this).parse().getObject();
         }
         if (yapionAnyType instanceof YAPIONArray) {
+            arrayType = checkType((YAPIONArray) yapionAnyType);
             return parseArray((YAPIONArray) yapionAnyType);
         }
         return null;
+    }
+
+    @SuppressWarnings({"java:S128", "java:S1117", "unchecked"})
+    private String checkType(YAPIONArray yapionArray) {
+        if (!arrayType.isEmpty()) return arrayType;
+        String type = null;
+        boolean primitive = true;
+        for (int i = 0; i < yapionArray.length(); i++) {
+            YAPIONAnyType yapionAnyType = yapionArray.get(i);
+            switch (yapionAnyType.getType()) {
+                case OBJECT:
+                    primitive = false;
+                    YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
+                    if (yapionObject.getVariable(TYPE_IDENTIFIER) != null) {
+                        type = ((YAPIONValue<String>) yapionObject.getVariable(TYPE_IDENTIFIER).getValue()).get();
+                        break;
+                    }
+                case MAP:
+                    primitive = false;
+                    type = "java.lang.Object";
+                    break;
+                case VALUE:
+                    YAPIONValue<?> yapionValue = (YAPIONValue<?>) yapionAnyType;
+                    if (yapionValue.getValueType().equals("null")) {
+                        primitive = false;
+                        break;
+                    }
+                    if (type != null) {
+                        if (!yapionValue.getValueType().equals(type)) {
+                            type = "java.lang.Object";
+                        }
+                        break;
+                    }
+                    type = yapionValue.getValueType();
+                    break;
+                case ARRAY:
+                    String s = checkType((YAPIONArray) yapionAnyType);
+                    if (type != null) {
+                        if (getBoxed(s).equals(type)) {
+                            primitive = false;
+                            break;
+                        }
+                        if (!s.equals(type)) {
+                            type = "java.lang.Object";
+                        }
+                        break;
+                    }
+                    type = s;
+                default:
+                    break;
+            }
+        }
+        if (type == null) type = "java.lang.Object";
+        return primitive ? getPrimitive(type) : type;
     }
 
     private Object parseArray(YAPIONArray yapionArray) {
@@ -190,10 +245,7 @@ public final class YAPIONDeserializer {
             ints[i] = dimensions.removeFirst();
         }
 
-        // TODO: Make it possible to parse inner Arrays
-        while (arrayType.length() > 0 && arrayType.charAt(arrayType.length() - 1) == ']') {
-            arrayType = arrayType.substring(0, arrayType.length() - 2);
-        }
+        arrayType = arrayType.replace("[", "").replace("]", "");
         Object array = null;
         try {
             array = Array.newInstance(getClass(arrayType), ints);
@@ -208,7 +260,7 @@ public final class YAPIONDeserializer {
         return array;
     }
 
-    public Class<?> getClass(String className) {
+    private Class<?> getClass(String className) {
         switch (className) {
             case "boolean":
                 return boolean.class;
@@ -234,6 +286,50 @@ public final class YAPIONDeserializer {
         } catch (ClassNotFoundException e) {
             return Object.class;
         }
+    }
+
+    private String getPrimitive(String className) {
+        switch (className) {
+            case "java.lang.Boolean":
+                return "boolean";
+            case "java.lang.Byte":
+                return "byte";
+            case "java.lang.Short":
+                return "short";
+            case "java.lang.Integer":
+                return "int";
+            case "java.lang.Long":
+                return "long";
+            case "java.lang.Character":
+                return "char";
+            case "java.lang.Float":
+                return "float";
+            case "java.lang.Double":
+                return "double";
+        }
+        return className;
+    }
+
+    private String getBoxed(String className) {
+        switch (className) {
+            case "boolean":
+                return "java.lang.Boolean";
+            case "byte":
+                return "java.lang.Byte";
+            case "short":
+                return "java.lang.Short";
+            case "int":
+                return "java.lang.Integer";
+            case "long":
+                return "java.lang.Long";
+            case "char":
+                return "java.lang.Character";
+            case "float":
+                return "java.lang.Float";
+            case "double":
+                return "java.lang.Double";
+        }
+        return className;
     }
 
     private Object serialize(InternalSerializer<?> serializer, YAPIONAnyType yapionAnyType) {
@@ -298,7 +394,7 @@ public final class YAPIONDeserializer {
                 if (ModifierUtils.removed(field)) continue;
                 if (!contextManager.is(object, field).load && !loadWithoutAnnotation) continue;
 
-                arrayType = remove(field.getType().getTypeName(), '[', ']');
+                arrayType = field.getType().getTypeName();
 
                 YAPIONAnyType yapionAnyType = yapionObject.getVariable(field.getName()).getValue();
                 YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
@@ -354,18 +450,6 @@ public final class YAPIONDeserializer {
             clazz = clazz.getSuperclass();
         }
         return false;
-    }
-
-    private String remove(String s, char... chars) {
-        StringBuilder st = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            for (char d : chars) {
-                if (d == c) c = '\u0000';
-            }
-            if (c != '\u0000') st.append(c);
-        }
-        return st.toString();
     }
 
     /**
