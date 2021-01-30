@@ -36,6 +36,7 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<PrivateKey> serializeData) {
+        serializeData.signalDataLoss();
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
         yapionObject.add(KEY_IDENTIFIER, serializeData.object.getClass().getTypeName());

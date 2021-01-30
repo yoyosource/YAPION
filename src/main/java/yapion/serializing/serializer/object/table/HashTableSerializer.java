@@ -22,7 +22,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
 @SerializerImplementation(since = "0.7.0")
-public class TableSerializerHash implements InternalSerializer<Hashtable<?, ?>> {
+public class HashTableSerializer implements InternalSerializer<Hashtable<?, ?>> {
 
     @Override
     public String type() {
