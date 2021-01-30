@@ -13,12 +13,14 @@ import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONDataType;
 import yapion.hierarchy.typegroups.YAPIONMappingType;
+import yapion.hierarchy.typeinterfaces.ObjectOutput;
 import yapion.utils.RecursionUtils;
-import yapion.utils.YAPIONVersion;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import static yapion.utils.ReferenceIDUtils.calc;
 
@@ -30,7 +32,6 @@ public class YAPIONObject extends YAPIONMappingType {
     private static final String REPLACEMENT = "\\\\$0";
 
     private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
-    private YAPIONVersion version = null;
 
     @Override
     public YAPIONType getType() {
@@ -52,72 +53,44 @@ public class YAPIONObject extends YAPIONMappingType {
         return referenceValue;
     }
 
+    private <T extends AbstractOutput> void outputSystem(T abstractOutput, Consumer<T> commaConsumer, BiConsumer<String, T> nameConsumer, BiConsumer<YAPIONAnyType, T> valueConsumer) {
+        abstractOutput.consume("{");
+        final String indent = "\n" + indent();
+        boolean b = false;
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
+            if (b) commaConsumer.accept(abstractOutput);
+            b = true;
+
+            abstractOutput.consumePrettified(indent);
+            nameConsumer.accept(entry.getKey(), abstractOutput);
+            valueConsumer.accept(entry.getValue(), abstractOutput);
+        }
+        if (!variables.isEmpty()) abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
+        abstractOutput.consume("}");
+    }
+
     @Override
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
-        if (version == null) version = YAPIONVersion.latest;
-        abstractOutput.consume("{");
-
-        final String indent = "\n" + indent();
-        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            abstractOutput.consumePrettified(indent);
-            if (entry.getKey().startsWith(" ")) {
-                abstractOutput.consume("\\");
-            }
-            abstractOutput.consume(entry.getKey().replaceAll(PATTERN, REPLACEMENT));
-            entry.getValue().toYAPION(abstractOutput);
-        }
-        
-        if (!variables.isEmpty()) {
-            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
-        }
-        
-        abstractOutput.consume("}");
+        outputSystem(abstractOutput, t -> {}, (s, t) -> {
+            if (s.startsWith(" ")) t.consume("\\");
+            t.consume(s.replaceAll(PATTERN, REPLACEMENT));
+        }, ObjectOutput::toYAPION);
         return abstractOutput;
     }
 
     @Override
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
-        if (version == null) version = YAPIONVersion.latest;
-        abstractOutput.consume("{");
-
-        final String indent = "\n" + indent();
-        boolean b = false;
-        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            if (b) abstractOutput.consume(",");
-            abstractOutput.consumePrettified(indent);
-            abstractOutput.consume("\"").consume(entry.getKey()).consume("\":");
-            entry.getValue().toJSON(abstractOutput);
-            b = true;
-        }
-
-        if (!variables.isEmpty()) {
-            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
-        }
-
-        abstractOutput.consume("}");
+        outputSystem(abstractOutput, t -> t.consume(","), (s, t) -> {
+            t.consume("\"").consume(s).consume("\":");
+        }, ObjectOutput::toJSON);
         return abstractOutput;
     }
 
     @Override
     public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
-        if (version == null) version = YAPIONVersion.latest;
-        abstractOutput.consume("{");
-
-        final String indent = "\n" + indent();
-        boolean b = false;
-        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            if (b) abstractOutput.consume(",");
-            abstractOutput.consumePrettified(indent);
-            abstractOutput.consume("\"").consume(entry.getKey()).consume("\":");
-            entry.getValue().toJSONLossy(abstractOutput);
-            b = true;
-        }
-
-        if (!variables.isEmpty()) {
-            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
-        }
-
-        abstractOutput.consume("}");
+        outputSystem(abstractOutput, t -> t.consume(","), (s, t) -> {
+            t.consume("\"").consume(s).consume("\":");
+        }, ObjectOutput::toJSONLossy);
         return abstractOutput;
     }
 
@@ -169,6 +142,17 @@ public class YAPIONObject extends YAPIONMappingType {
         return null;
     }
 
+    public void getObject(@NonNull String key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (yapionAnyType instanceof YAPIONObject) {
+            valueConsumer.accept((YAPIONObject) yapionAnyType);
+        }
+    }
+
     public YAPIONArray getArray(@NonNull String key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
@@ -176,6 +160,17 @@ public class YAPIONObject extends YAPIONMappingType {
             return (YAPIONArray) yapionAnyType;
         }
         return null;
+    }
+
+    public void getArray(@NonNull String key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (yapionAnyType instanceof YAPIONArray) {
+            valueConsumer.accept((YAPIONArray) yapionAnyType);
+        }
     }
 
     public YAPIONMap getMap(@NonNull String key) {
@@ -187,6 +182,17 @@ public class YAPIONObject extends YAPIONMappingType {
         return null;
     }
 
+    public void getMap(@NonNull String key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (yapionAnyType instanceof YAPIONMap) {
+            valueConsumer.accept((YAPIONMap) yapionAnyType);
+        }
+    }
+
     public YAPIONPointer getPointer(@NonNull String key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
@@ -194,6 +200,17 @@ public class YAPIONObject extends YAPIONMappingType {
             return (YAPIONPointer) yapionAnyType;
         }
         return null;
+    }
+
+    public void getPointer(@NonNull String key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (yapionAnyType instanceof YAPIONPointer) {
+            valueConsumer.accept((YAPIONPointer) yapionAnyType);
+        }
     }
 
     @SuppressWarnings({"java:S3740"})
@@ -204,6 +221,17 @@ public class YAPIONObject extends YAPIONMappingType {
             return (YAPIONValue) yapionAnyType;
         }
         return null;
+    }
+
+    public void getValue(@NonNull String key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (yapionAnyType instanceof YAPIONValue) {
+            valueConsumer.accept((YAPIONValue) yapionAnyType);
+        }
     }
 
     public <T> YAPIONValue<T> getValue(@NonNull String key, Class<T> type) {
@@ -221,6 +249,24 @@ public class YAPIONObject extends YAPIONMappingType {
         return (YAPIONValue<T>) yapionAnyType;
     }
 
+    public <T> void getObject(@NonNull String key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
+        if (!YAPIONValue.validType(type)) {
+            return;
+        }
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (!(yapionAnyType instanceof YAPIONValue)) {
+            return;
+        }
+        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getTypeName())) {
+            return;
+        }
+        valueConsumer.accept((YAPIONValue<T>) yapionAnyType);
+    }
+
     public <T> YAPIONValue<T> getValue(@NonNull String key, T type) {
         if (!YAPIONValue.validType(type)) {
             return null;
@@ -234,6 +280,24 @@ public class YAPIONObject extends YAPIONMappingType {
             return null;
         }
         return (YAPIONValue<T>) yapionAnyType;
+    }
+
+    public <T> void getObject(@NonNull String key, T type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
+        if (!YAPIONValue.validType(type)) {
+            return;
+        }
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (!(yapionAnyType instanceof YAPIONValue)) {
+            return;
+        }
+        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getClass().getTypeName())) {
+            return;
+        }
+        valueConsumer.accept((YAPIONValue<T>) yapionAnyType);
     }
 
     private void check(YAPIONAnyType yapionAnyType) {

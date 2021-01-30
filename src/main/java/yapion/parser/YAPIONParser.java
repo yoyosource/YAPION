@@ -317,6 +317,7 @@ public final class YAPIONParser {
         if (!escaped && c == '}') {
             pop(YAPIONType.OBJECT);
             reset();
+            // ((YAPIONObject) currentObject).
             currentObject = currentObject.getParent();
             if (typeStack.isEmpty()) {
                 finished = true;
@@ -453,22 +454,17 @@ public final class YAPIONParser {
             }
             return;
         }
-        if (escaped && c == '\\') {
-            current.append("\\");
-            escaped = false;
-            return;
-        }
         if (!escaped && c == ')') {
             pop(YAPIONType.VALUE);
             add(key, YAPIONValue.parseValue(current.toString()));
             reset();
         } else {
-            if (escaped) {
-                escaped = false;
-            }
-            if (c == '\\') {
+            if (c == '\\' && !escaped) {
                 escaped = true;
                 return;
+            }
+            if (escaped) {
+                escaped = false;
             }
             current.append(c);
         }
