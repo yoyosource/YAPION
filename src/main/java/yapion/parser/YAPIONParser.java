@@ -324,6 +324,9 @@ public final class YAPIONParser {
             }
             return;
         }
+        if (parseUTF8Escape(c)) {
+            return;
+        }
         if (current.length() == 0 && c == ' ' && escaped) {
             current.append(c);
         }
@@ -331,11 +334,12 @@ public final class YAPIONParser {
             current.append(c);
         }
 
+        if (c == '\\' && !escaped) {
+            escaped = true;
+            return;
+        }
         if (escaped) {
             escaped = false;
-        }
-        if (c == '\\') {
-            escaped = true;
         }
     }
 
@@ -440,11 +444,11 @@ public final class YAPIONParser {
         return false;
     }
 
-    private void parseValue(char c) {
+    private boolean parseUTF8Escape(char c) {
         if (escaped && c == 'u') {
             unicode = new StringBuilder();
             escaped = false;
-            return;
+            return true;
         }
         if (unicode != null && unicode.length() < 4) {
             unicode.append(c);
@@ -452,6 +456,13 @@ public final class YAPIONParser {
                 current.append((char) Integer.parseInt(unicode.toString(), 16));
                 unicode = null;
             }
+            return true;
+        }
+        return false;
+    }
+
+    private void parseValue(char c) {
+        if (parseUTF8Escape(c)) {
             return;
         }
         if (!escaped && c == ')') {

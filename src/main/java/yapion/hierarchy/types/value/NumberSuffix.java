@@ -9,7 +9,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class NumberSuffix<T> {
+final class NumberSuffix<T> {
 
     static final String NUMBER_NORMAL = "-?[0-9]+";
     static final String NUMBER_HEX = "-?(0[xX]|#)[0-9A-F]+";

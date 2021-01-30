@@ -6,6 +6,7 @@ package yapion.hierarchy.types.value;
 
 import java.util.Optional;
 
+import static yapion.hierarchy.types.value.ValueUtils.charToUTFEscape;
 import static yapion.utils.ReferenceIDUtils.calc;
 
 public class CharacterHandler implements ValueHandler<Character> {

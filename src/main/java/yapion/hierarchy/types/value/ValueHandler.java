@@ -16,16 +16,4 @@ public interface ValueHandler<T> {
 
     long referenceValue();
 
-    default String charToUTFEscape(char c) {
-        if (c < 0x20) {
-            return "\\u" + (String.format("%04X", (short) c));
-        } else if (c > 0x7F) {
-            return "\\u" + (String.format("%04X", (short) c));
-        } else if (c == '(' || c == ')') {
-            return "\\" + c;
-        } else {
-            return c + "";
-        }
-    }
-
 }
