@@ -14,7 +14,6 @@ import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.typegroups.YAPIONDataType;
 import yapion.hierarchy.typegroups.YAPIONMappingType;
 import yapion.hierarchy.typeinterfaces.ObjectOutput;
-import yapion.hierarchy.types.value.ValueUtils;
 import yapion.utils.RecursionUtils;
 
 import java.math.BigDecimal;
@@ -23,6 +22,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.KEY;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 import static yapion.utils.ReferenceIDUtils.calc;
 
@@ -75,7 +75,7 @@ public class YAPIONObject extends YAPIONMappingType {
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
         outputSystem(abstractOutput, t -> {}, (s, t) -> {
             if (s.startsWith(" ")) t.consume("\\");
-            t.consume(stringToUTFEscapedString(s));
+            t.consume(stringToUTFEscapedString(s, KEY));
         }, ObjectOutput::toYAPION);
         return abstractOutput;
     }

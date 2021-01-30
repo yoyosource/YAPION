@@ -327,16 +327,17 @@ public final class YAPIONParser {
         if (parseUTF8Escape(c)) {
             return;
         }
-        if (current.length() == 0 && c == ' ' && escaped) {
-            current.append(c);
-        }
-        if (current.length() != 0 || (c != ' ' && c != '\n')) {
-            current.append(c);
-        }
-
         if (c == '\\' && !escaped) {
             escaped = true;
             return;
+        }
+        if (current.length() == 0 && c == ' ' && escaped) {
+            current.append(c);
+            escaped = false;
+            return;
+        }
+        if (current.length() != 0 || (c != ' ' && c != '\n')) {
+            current.append(c);
         }
         if (escaped) {
             escaped = false;
