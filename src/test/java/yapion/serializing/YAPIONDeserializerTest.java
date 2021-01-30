@@ -4,6 +4,8 @@ import org.junit.Test;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.parser.YAPIONParser;
 
+import java.io.File;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static yapion.serializing.YAPIONTestObjects.*;
@@ -36,7 +38,7 @@ public class YAPIONDeserializerTest {
 
     @Test
     public void testPrimitive() {
-        Object object = YAPIONDeserializer.deserialize(YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestPrimitive)t(false)T(true)b(0B)B(0B)s(0S)S(0S)i(0)I(0)l(0L)L(0L)d(0.0)D(0.0)f(0.0F)F(0.0F)bi(0BI)bd(0BD)c(' ')C(' ')string()stringB{@type(java.lang.StringBuilder)string()}stringb{@type(java.lang.StringBuffer)string()}file{@type(java.io.File)path(" + getUserHome() + "/YAPI)}}"));
+        Object object = YAPIONDeserializer.deserialize(YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestPrimitive)t(false)T(true)b(0B)B(0B)s(0S)S(0S)i(0)I(0)l(0L)L(0L)d(0.0)D(0.0)f(0.0F)F(0.0F)bi(0BI)bd(0BD)c(' ')C(' ')string()stringB{@type(java.lang.StringBuilder)string()}stringb{@type(java.lang.StringBuffer)string()}file{@type(java.io.File)path(" + getUserHome() + File.separator + "YAPI)}}"));
         TestPrimitive toEqual = new TestPrimitive();
         assertThat(object, is(toEqual));
         TestPrimitive primitive = (TestPrimitive) object;

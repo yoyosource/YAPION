@@ -45,4 +45,10 @@ public class YAPIONParserTest {
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a->0000000000000000}"));
     }
 
+    @Test
+    public void testBackslash() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{a(\\\\)}");
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a(\\\\)}"));
+    }
+
 }
