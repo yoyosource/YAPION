@@ -21,7 +21,7 @@ public interface ValueHandler<T> {
             return "\\u" + (String.format("%04X", (short) c));
         } else if (c > 0x7F) {
             return "\\u" + (String.format("%04X", (short) c));
-        } else if (c == '(' || c == ')' || c == '\\') {
+        } else if (c == '(' || c == ')') {
             return "\\" + c;
         } else {
             return c + "";

@@ -51,4 +51,10 @@ public class YAPIONParserTest {
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a(\\\\)}"));
     }
 
+    @Test
+    public void testUnicode() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{a(\\u0020)}");
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a( )}"));
+    }
+
 }

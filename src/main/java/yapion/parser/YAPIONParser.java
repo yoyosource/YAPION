@@ -464,6 +464,9 @@ public final class YAPIONParser {
                 return;
             }
             if (escaped) {
+                if (c != '(' && c != ')') {
+                    current.append('\\');
+                }
                 escaped = false;
             }
             current.append(c);
