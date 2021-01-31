@@ -4,6 +4,7 @@
 
 package yapion.hierarchy.types.value;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 public final class ValueUtils {
@@ -34,9 +35,10 @@ public final class ValueUtils {
     }
 
     public static String stringToUTFEscapedString(String s, EscapeCharacters escapeCharacters) {
+        byte[] bytes = s.getBytes(StandardCharsets.UTF_16BE);
         StringBuilder st = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            st.append(charToUTFEscape(s.charAt(i), escapeCharacters));
+        for (int i = 0; i < bytes.length; i += 2) {
+            st.append(charToUTFEscape((char)((bytes[i] << 8) | (bytes[i + 1] & 0xFF)), escapeCharacters));
         }
         return st.toString();
     }
@@ -44,7 +46,9 @@ public final class ValueUtils {
     public static String charToUTFEscape(char c, EscapeCharacters escapeCharacters) {
         if (c < 0x20) {
             return "\\u" + (String.format("%04X", (short) c));
-        } else if (c > 0x7F) {
+        } else if (c >= 0x7F && c < 0xA1) {
+            return "\\u" + (String.format("%04X", (short) c));
+        } else if (c > 0xFF) {
             return "\\u" + (String.format("%04X", (short) c));
         } else if (escapeCharacters.contains(c)) {
             return "\\" + c;

@@ -9,7 +9,7 @@ public class StringBuilderOutput extends AbstractOutput {
     protected StringBuilder st;
 
     public StringBuilderOutput(StringBuilder st) {
-        this.st = new StringBuilder();
+        this.st = st;
     }
 
     @Override

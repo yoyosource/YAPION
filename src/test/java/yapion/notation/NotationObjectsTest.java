@@ -30,6 +30,7 @@ public class NotationObjectsTest {
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a(\\\\)}"));
     }
 
+    /*
     @Test
     public void testUnicode() {
         YAPIONObject yapionObject = new YAPIONObject();
@@ -43,12 +44,27 @@ public class NotationObjectsTest {
         yapionObject.add("ß", "a");
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\u00DF(a)}"));
     }
+    */
 
     @Test
     public void testKeyCharacters() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\ !\"#$%&'\\(\\)*+,-./0123456789:;\\<=\\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\[\\\\]^_`abcdefghijklmnopqrstuvwxyz\\{|\\}~( !\"#$%&'\\(\\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}"));
+    }
+
+    @Test
+    public void testUmlauts() {
+        YAPIONObject yapionObject = new YAPIONObject();
+        yapionObject.add("äöü", "äöü");
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{äöü(äöü)}"));
+    }
+
+    @Test
+    public void testOutsideLatin1() {
+        YAPIONObject yapionObject = new YAPIONObject();
+        yapionObject.add("\u0000\u001F\u007E\u007F\u00A0\u00A1\u0100", "\u0000\u001F\u007E\u007F\u00A0\u00A1\u0100");
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\u0000\\u001F~\\u007F\\u00A0¡\\u0100(\\u0000\\u001F~\\u007F\\u00A0¡\\u0100)}"));
     }
 
     @Test
