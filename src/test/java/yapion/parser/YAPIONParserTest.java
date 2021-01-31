@@ -64,6 +64,15 @@ public class YAPIONParserTest {
     }
 
     @Test
+    public void testUnicodeKeyReparse() {
+        YAPIONObject yapionObject = new YAPIONObject();
+        yapionObject.add("§", "a");
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\u00A7(a)}"));
+        yapionObject = YAPIONParser.parse(yapionObject.toYAPION(new StringOutput()).getResult());
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\u00A7(a)}"));
+    }
+
+    @Test
     public void testCharacters() {
         YAPIONObject yapionObject = YAPIONParser.parse("{\\ !\"#$%&'\\(\\)*+,-./0123456789:;\\<=\\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\[\\\\]^_`abcdefghijklmnopqrstuvwxyz\\{|\\}~( !\"#$%&'\\(\\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}");
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\ !\"#$%&'\\(\\)*+,-./0123456789:;\\<=\\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\[\\\\]^_`abcdefghijklmnopqrstuvwxyz\\{|\\}~( !\"#$%&'\\(\\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}"));
