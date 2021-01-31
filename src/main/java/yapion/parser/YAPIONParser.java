@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -359,7 +360,7 @@ public final class YAPIONParser {
 
     private void push(YAPIONType YAPIONType) {
         typeStack.push(YAPIONType);
-        key = current.toString();
+        key = stringBuilderToUTF8String(current);
         current = new StringBuilder();
     }
 
@@ -468,7 +469,7 @@ public final class YAPIONParser {
         }
         if (!escaped && c == ')') {
             pop(YAPIONType.VALUE);
-            add(key, YAPIONValue.parseValue(current.toString()));
+            add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current)));
             reset();
         } else {
             if (c == '\\' && !escaped) {
@@ -495,7 +496,7 @@ public final class YAPIONParser {
         }
         if (current.length() == 16) {
             pop(YAPIONType.POINTER);
-            YAPIONPointer yapionPointer = new YAPIONPointer(current.toString());
+            YAPIONPointer yapionPointer = new YAPIONPointer(stringBuilderToUTF8String(current));
             yapionPointerList.add(yapionPointer);
             add(key, yapionPointer);
             reset();
@@ -509,7 +510,7 @@ public final class YAPIONParser {
         if (c == '>') {
             pop(YAPIONType.MAP);
             if (current.length() != 0) {
-                add(new YAPIONValue<>(current.toString()));
+                add(new YAPIONValue<>(stringBuilderToUTF8String(current)));
             }
             ((YAPIONMap) currentObject).finishMapping();
             currentObject = currentObject.getParent();
@@ -519,12 +520,12 @@ public final class YAPIONParser {
 
         if (c == '#') {
             if (current.length() != 0) {
-                add(new YAPIONValue<>(current.toString()));
+                add(new YAPIONValue<>(stringBuilderToUTF8String(current)));
             }
             current = new StringBuilder();
         } else if (c == ',') {
             if (current.length() != 0) {
-                add(new YAPIONValue<>(current.toString()));
+                add(new YAPIONValue<>(stringBuilderToUTF8String(current)));
             }
             current = new StringBuilder();
             return;
@@ -539,14 +540,14 @@ public final class YAPIONParser {
         if (!escaped) {
             if (c == ',') {
                 if (current.length() != 0) {
-                    add("", YAPIONValue.parseValue(current.toString()));
+                    add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current)));
                 }
                 current = new StringBuilder();
                 return;
             }
             if (c == ']') {
                 if (current.length() != 0) {
-                    add("", YAPIONValue.parseValue(current.toString()));
+                    add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current)));
                 }
                 pop(YAPIONType.ARRAY);
                 currentObject = currentObject.getParent();
@@ -561,6 +562,10 @@ public final class YAPIONParser {
             return;
         }
         current.append(c);
+    }
+
+    private String stringBuilderToUTF8String(StringBuilder st) {
+        return new String(st.toString().getBytes(), StandardCharsets.UTF_8);
     }
 
 }
