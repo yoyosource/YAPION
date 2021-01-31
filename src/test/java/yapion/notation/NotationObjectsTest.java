@@ -6,6 +6,9 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
+import yapion.utils.ReflectionsUtils;
+
+import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -35,14 +38,14 @@ public class NotationObjectsTest {
     public void testUnicode() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("a", "ß");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a(\\u00DF)}"));
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a(ß)}"));
     }
 
     @Test
     public void testUnicodeKey() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("ß", "a");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\u00DF(a)}"));
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{ß(a)}"));
     }
     */
 
