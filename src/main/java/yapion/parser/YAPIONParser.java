@@ -565,7 +565,7 @@ public final class YAPIONParser {
     }
 
     private String stringBuilderToUTF8String(StringBuilder st) {
-        return new String(st.toString().getBytes(), StandardCharsets.UTF_8);
+        return new String(st.toString().getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
     }
 
 }

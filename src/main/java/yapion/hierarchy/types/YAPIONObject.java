@@ -18,6 +18,7 @@ import yapion.utils.RecursionUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -29,9 +30,6 @@ import static yapion.utils.ReferenceIDUtils.calc;
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
 public class YAPIONObject extends YAPIONMappingType {
-
-    private static final String PATTERN = "[({\\[<)}\\]>]";
-    private static final String REPLACEMENT = "\\\\$0";
 
     private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
 
@@ -313,7 +311,32 @@ public class YAPIONObject extends YAPIONMappingType {
         }
     }
 
+    private String correctString(String s) {
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        boolean stillInYAPION = true;
+        boolean fromParser = false;
+        int index = 1;
+        while (index < stackTraceElements.length && stillInYAPION) {
+            stillInYAPION = false;
+            if (stackTraceElements[index].getClassName().startsWith("yapion.hierarchy.types.YAPION")) {
+                stillInYAPION = true;
+                index++;
+                continue;
+            }
+            if (stackTraceElements[index].getClassName().equals("yapion.parser.YAPIONParser")) {
+                fromParser = true;
+                break;
+            }
+        }
+        if (!fromParser) {
+            return new String(s.getBytes(), StandardCharsets.UTF_8);
+        }
+        return s;
+    }
+
     public YAPIONObject add(@NonNull String name, @NonNull YAPIONAnyType value) {
+        name = correctString(name);
+
         check(value);
         discardReferenceValue();
         if (variables.containsKey(name)) {
@@ -325,6 +348,7 @@ public class YAPIONObject extends YAPIONMappingType {
     }
 
     public YAPIONObject add(@NonNull String name, String value) {
+        value = correctString(value);
         return add(name, new YAPIONValue<>(value));
     }
 
