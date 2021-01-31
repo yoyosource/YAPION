@@ -34,7 +34,6 @@ public final class ValueUtils {
     }
 
     public static String stringToUTFEscapedString(String s, EscapeCharacters escapeCharacters) {
-        s = new String(s.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
         StringBuilder st = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             st.append(charToUTFEscape(s.charAt(i), escapeCharacters));
