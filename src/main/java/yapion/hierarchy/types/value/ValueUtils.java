@@ -4,7 +4,6 @@
 
 package yapion.hierarchy.types.value;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 public final class ValueUtils {

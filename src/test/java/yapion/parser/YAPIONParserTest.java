@@ -67,9 +67,9 @@ public class YAPIONParserTest {
     public void testUnicodeKeyReparse() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("§", "a");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\u00A7(a)}"));
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{§(a)}"));
         yapionObject = YAPIONParser.parse(yapionObject.toYAPION(new StringOutput()).getResult());
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\u00A7(a)}"));
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{§(a)}"));
     }
 
     @Test
