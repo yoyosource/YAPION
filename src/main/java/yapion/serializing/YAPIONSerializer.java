@@ -16,7 +16,8 @@ import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -27,7 +28,7 @@ public final class YAPIONSerializer {
     private final Object object;
     private YAPIONObject yapionObject;
     private final ContextManager contextManager;
-    private boolean strict = false;
+    private YAPIONSerializerFlags yapionSerializerFlags = new YAPIONSerializerFlags();
 
     private Map<Object, YAPIONPointer> pointerMap = new IdentityHashMap<>();
 
@@ -45,11 +46,11 @@ public final class YAPIONSerializer {
      * Serialize an Object to an YAPION Object.
      *
      * @param object to serialize
-     * @param strict if serialization should be strict and check if any data would get lost while serialization
+     * @param yapionSerializerFlags the flags used for this serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static YAPIONObject serialize(@NonNull Object object, boolean strict) {
-        return serialize(object, "", strict);
+    public static YAPIONObject serialize(@NonNull Object object, YAPIONSerializerFlags yapionSerializerFlags) {
+        return serialize(object, "", yapionSerializerFlags);
     }
 
     /**
@@ -68,11 +69,11 @@ public final class YAPIONSerializer {
      *
      * @param object to serialize
      * @param context the context for serialization
-     * @param strict if serialization should be strict and check if any data would get lost while serialization
+     * @param yapionSerializerFlags the flags used for this serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static YAPIONObject serialize(@NonNull Object object, String context, boolean strict) {
-        return new YAPIONSerializer(object, context, strict).parse().getYAPIONObject();
+    public static YAPIONObject serialize(@NonNull Object object, String context, YAPIONSerializerFlags yapionSerializerFlags) {
+        return new YAPIONSerializer(object, context, yapionSerializerFlags).parse().getYAPIONObject();
     }
 
     /**
@@ -91,12 +92,12 @@ public final class YAPIONSerializer {
      *
      * @param object to serialize
      * @param context the context for serialization
-     * @param strict if serialization should be strict and check if any data would get lost while serialization
+     * @param yapionSerializerFlags the flags used for this serialization
      */
-    public YAPIONSerializer(@NonNull Object object, String context, boolean strict) {
+    public YAPIONSerializer(@NonNull Object object, String context, YAPIONSerializerFlags yapionSerializerFlags) {
         contextManager = new ContextManager(context);
         this.object = object;
-        this.strict = strict;
+        this.yapionSerializerFlags = yapionSerializerFlags;
     }
 
     private YAPIONSerializer(@NonNull Object object, YAPIONSerializer yapionSerializer) {
@@ -113,7 +114,7 @@ public final class YAPIONSerializer {
             this.contextManager = new ContextManager(yapionSerializer.contextManager.get());
         }*/
         this.pointerMap = yapionSerializer.pointerMap;
-        this.strict = yapionSerializer.strict;
+        this.yapionSerializerFlags = yapionSerializer.yapionSerializerFlags;
     }
 
     /**
@@ -227,13 +228,12 @@ public final class YAPIONSerializer {
     }
 
     /**
-     * Returns whether the serialization should be strict and should
-     * not allow any data loss while serializing.
+     * Returns the flags this serialization should follow.
      *
-     * @return {@code true} if data loss should be prohibited, {@code false} otherwise
+     * @return the serialization flag holder
      */
-    public boolean isStrict() {
-        return strict;
+    public YAPIONSerializerFlags getYAPIONSerializerFlags() {
+        return yapionSerializerFlags;
     }
 
     /**

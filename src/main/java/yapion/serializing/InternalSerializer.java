@@ -14,6 +14,10 @@ import yapion.serializing.data.SerializeData;
 @YAPIONLoadExclude(context = "*")
 public interface InternalSerializer<T> {
 
+    default void init() {
+
+    }
+
     String type();
 
     default String primitiveType() {

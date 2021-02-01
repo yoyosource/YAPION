@@ -11,6 +11,9 @@ import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.YAPIONSerializerFlagDefault;
+import yapion.serializing.YAPIONSerializerFlagDefault.YAPIONSerializerFlagKey;
+import yapion.serializing.YAPIONSerializerFlags;
 
 import java.lang.reflect.Field;
 
@@ -42,18 +45,27 @@ public class SerializeData<T> {
         return yapionSerializer.parse(o);
     }
 
-    public boolean isStrictSerialization() {
-        return yapionSerializer.isStrict();
+    public YAPIONSerializerFlags getYAPIONSerializerFlags() {
+        return yapionSerializer.getYAPIONSerializerFlags();
+    }
+
+    public void isSet(YAPIONSerializerFlagKey key, Runnable allowed) {
+        isSet(key, allowed, () -> {});
+    }
+
+    public void isSet(YAPIONSerializerFlagKey key, Runnable allowed, Runnable disallowed) {
+        boolean b = yapionSerializer.getYAPIONSerializerFlags().isSet(key);
+        if (b) {
+            allowed.run();
+        } else {
+            disallowed.run();
+        }
     }
 
     public void signalDataLoss() {
-        signalDataLoss("");
-    }
-
-    public void signalDataLoss(String message) {
-        if (yapionSerializer.isStrict()) {
-            throw new YAPIONDataLossException(message);
-        }
+        isSet(YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION, () -> {
+            throw new YAPIONDataLossException("Some data would be discarded by serialization");
+        });
     }
 
 }

@@ -6,15 +6,20 @@ package yapion.serializing.serializer.object.throwable;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
+import yapion.serializing.YAPIONSerializerFlagDefault;
+import yapion.serializing.YAPIONSerializerFlags;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 import yapion.utils.ReflectionsUtils;
 
+import static yapion.serializing.YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION;
+import static yapion.serializing.YAPIONSerializerFlagDefault.ERROR_EXCEPTION;
 import static yapion.utils.IdentifierUtils.EXCEPTION_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -24,6 +29,12 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class ErrorSerializer implements InternalSerializer<Error> {
 
     @Override
+    public void init() {
+        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(DATA_LOSS_EXCEPTION, false));
+        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(ERROR_EXCEPTION, false));
+    }
+
+    @Override
     public String type() {
         return "java.lang.Error";
     }
@@ -31,6 +42,10 @@ public class ErrorSerializer implements InternalSerializer<Error> {
     @Override
     public YAPIONAnyType serialize(SerializeData<Error> serializeData) {
         serializeData.signalDataLoss();
+        serializeData.isSet(ERROR_EXCEPTION, () -> {
+            throw new YAPIONDataLossException();
+        });
+
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
         yapionObject.add(EXCEPTION_IDENTIFIER, serializeData.object.getClass().getTypeName());

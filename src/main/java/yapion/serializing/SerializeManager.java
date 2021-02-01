@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import static yapion.serializing.YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 import static yapion.utils.ReflectionsUtils.implementsInterface;
 
@@ -37,6 +38,10 @@ public class SerializeManager {
 
     private SerializeManager() {
         throw new IllegalStateException("Utility class");
+    }
+
+    static void init() {
+
     }
 
     @YAPIONSaveExclude(context = "*")
@@ -55,6 +60,10 @@ public class SerializeManager {
     private static final boolean overrideable;
     private static final Serializer defaultSerializer = new Serializer(null, false);
     private static final Serializer defaultNullSerializer = new Serializer(new InternalSerializer<Object>() {
+        {
+            YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(DATA_LOSS_EXCEPTION, false));
+        }
+
         @Override
         public String type() {
             return "";
@@ -134,6 +143,7 @@ public class SerializeManager {
 
     private static void add(InternalOverrideableSerializer<?> serializer) {
         if (!checkOverrideable(serializer)) return;
+        serializer.init();
         Serializer serializerWrapper = new Serializer(serializer, true);
         serializerMap.put(serializer.type(), serializerWrapper);
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
@@ -149,6 +159,7 @@ public class SerializeManager {
 
     private static void add(InternalSerializer<?> serializer) {
         if (!checkOverrideable(serializer)) return;
+        serializer.init();
         Serializer serializerWrapper = new Serializer(serializer, overrideable);
         serializerMap.put(serializer.type(), serializerWrapper);
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
