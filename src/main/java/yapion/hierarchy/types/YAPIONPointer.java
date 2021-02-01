@@ -9,11 +9,9 @@ import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONPointerException;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.typegroups.YAPIONValueType;
+import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.utils.ReferenceIDUtils;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -70,10 +68,12 @@ public class YAPIONPointer extends YAPIONValueType {
         this.pointerID = Long.parseLong(pointerID, 16);
     }
 
+    @SuppressWarnings("java:S1144")
     private void setYAPIONObject(YAPIONObject yapionObject) {
         this.yapionObject = yapionObject;
     }
 
+    @SuppressWarnings("java:S1144")
     private YAPIONObject getYAPIONObject() {
         return yapionObject;
     }

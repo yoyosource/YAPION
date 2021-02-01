@@ -2,7 +2,7 @@
 // YAPION
 // Copyright (C) 2019,2020,2021 yoyosource
 
-package yapion.hierarchy.typegroups;
+package yapion.hierarchy.api.groups;
 
 import java.util.List;
 

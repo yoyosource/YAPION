@@ -6,7 +6,7 @@ package yapion.serializing.serializer.object.other;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.packet.YAPIONPacket;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;

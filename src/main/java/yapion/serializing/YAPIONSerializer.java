@@ -8,7 +8,7 @@ import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.serializing.YAPIONSerializerException;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 import yapion.serializing.data.SerializeData;
 import yapion.utils.ModifierUtils;

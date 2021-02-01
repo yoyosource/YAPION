@@ -6,7 +6,7 @@ package yapion.serializing;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 
 import java.util.*;
 

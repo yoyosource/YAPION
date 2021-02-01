@@ -9,7 +9,7 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.YAPIONSerializerFlagDefault;
 import yapion.serializing.YAPIONSerializerFlagDefault.YAPIONSerializerFlagKey;

@@ -11,7 +11,7 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
@@ -41,7 +41,7 @@ public class SerializeManager {
     }
 
     static void init() {
-
+        // Init from YAPIONSerializerFlagDefault
     }
 
     @YAPIONSaveExclude(context = "*")
@@ -60,7 +60,9 @@ public class SerializeManager {
     private static final boolean overrideable;
     private static final Serializer defaultSerializer = new Serializer(null, false);
     private static final Serializer defaultNullSerializer = new Serializer(new InternalSerializer<Object>() {
-        {
+
+        @Override
+        public void init() {
             YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(DATA_LOSS_EXCEPTION, false));
         }
 

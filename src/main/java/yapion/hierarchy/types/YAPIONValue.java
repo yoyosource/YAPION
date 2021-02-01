@@ -9,8 +9,8 @@ import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.typegroups.YAPIONValueType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.types.value.*;
 
 import java.math.BigDecimal;
@@ -182,12 +182,12 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return new YAPIONValue<>(s);
     }
 
-    static <T> boolean validType(T t) {
+    public static <T> boolean validType(T t) {
         if (t == null) return true;
         return validType(t.getClass());
     }
 
-    static boolean validType(Class<?> t) {
+    public static boolean validType(Class<?> t) {
         if (t == null) return true;
         String typeName = t.getTypeName();
         for (int i = 0; i < allowedTypes.length; i++) {

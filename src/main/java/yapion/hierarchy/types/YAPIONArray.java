@@ -8,10 +8,15 @@ import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
+import yapion.exceptions.value.YAPIONRecursionException;
+import yapion.hierarchy.api.storage.ObjectAdd;
+import yapion.hierarchy.api.storage.ObjectRemove;
+import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.typegroups.YAPIONDataType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONDataType;
+import yapion.utils.RecursionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +25,7 @@ import java.util.Optional;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONArray extends YAPIONDataType {
+public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Integer>, ObjectAdd<YAPIONArray, Integer>, ObjectRemove<YAPIONArray, Integer> {
 
     private final List<YAPIONAnyType> array = new ArrayList<>();
 
@@ -43,16 +48,6 @@ public class YAPIONArray extends YAPIONDataType {
         }
         cacheReferenceValue(referenceValue);
         return referenceValue;
-    }
-
-    @Override
-    public String getPath(YAPIONAnyType yapionAnyType) {
-        for (int i = 0; i < array.size(); i++) {
-            if (array.get(i) == yapionAnyType) {
-                return i + "";
-            }
-        }
-        return "";
     }
 
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
@@ -126,6 +121,118 @@ public class YAPIONArray extends YAPIONDataType {
     }
 
     @Override
+    public String getPath(YAPIONAnyType yapionAnyType) {
+        for (int i = 0; i < array.size(); i++) {
+            if (array.get(i) == yapionAnyType) {
+                return i + "";
+            }
+        }
+        return "";
+    }
+
+    @Override
+    public boolean hasValue(@NonNull Integer key, YAPIONType yapionType) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return false;
+        if (yapionType == YAPIONType.ANY) return true;
+        return yapionType == yapionAnyType.getType();
+    }
+
+    @Override
+    public <T> boolean hasValue(@NonNull Integer key, Class<T> type) {
+        if (!YAPIONValue.validType(type)) {
+            return false;
+        }
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return false;
+        if (!(yapionAnyType instanceof YAPIONValue)) return false;
+        return ((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getTypeName());
+    }
+
+    public YAPIONAnyType getYAPIONAnyType(@NonNull Integer key) {
+        if (key > 0 && key < array.size()) {
+            return array.get(key);
+        }
+        return null;
+    }
+
+    private void check(YAPIONAnyType yapionAnyType) {
+        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(yapionAnyType, this);
+        if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+            if (result.getRecursionType() == RecursionUtils.RecursionType.DIRECT) {
+                throw new YAPIONRecursionException("Direct Recursion failure. Use a pointer instead.");
+            } else {
+                throw new YAPIONRecursionException("Back Reference failure. Use a pointer instead.");
+            }
+        }
+    }
+
+    private void checkIndex(Integer index) {
+        if (index < 0 || index >= length()) {
+            throw new YAPIONArrayIndexOutOfBoundsException("Index " + index + " out of bounds for length " + length());
+        }
+    }
+
+    public YAPIONArray add(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+        checkIndex(key);
+        check(value);
+        discardReferenceValue();
+        array.get(key).removeParent();
+        array.set(key, value);
+        value.setParent(this);
+        return this;
+    }
+
+    public YAPIONArray set(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+        return add(key, value);
+    }
+
+    public YAPIONArray add(@NonNull YAPIONAnyType value) {
+        discardReferenceValue();
+        array.add(value);
+        value.setParent(this);
+        return this;
+    }
+
+    @Override
+    public YAPIONArray addOrPointer(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+        discardReferenceValue();
+        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
+        if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+            if (result.getYAPIONAny() == null) {
+                throw new YAPIONRecursionException("Pointer creation failure.");
+            }
+            // TODO: maybe implement pointers to YAPIONMap and YAPIONArray?
+            if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
+                throw new YAPIONRecursionException("Pointer creation failure.");
+            }
+            add(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+            return this;
+        }
+        add(key, value);
+        return this;
+    }
+
+    @Override
+    public YAPIONArray remove(@NonNull Integer key) {
+        checkIndex(key);
+        discardReferenceValue();
+        array.get(key).removeParent();
+        array.remove((int) key);
+        return this;
+    }
+
+    @Override
+    public YAPIONAnyType removeAndGet(@NonNull Integer key) {
+        checkIndex(key);
+        discardReferenceValue();
+        YAPIONAnyType yapionAnyType = array.get(key);
+        array.remove((int) key);
+        yapionAnyType.removeParent();
+        return yapionAnyType;
+    }
+
+    @Override
     public int size() {
         return array.size();
     }
@@ -155,26 +262,8 @@ public class YAPIONArray extends YAPIONDataType {
     }
 
     public YAPIONAnyType get(int index) {
-        if (index < 0 || index >= length()) {
-            throw new YAPIONArrayIndexOutOfBoundsException("Index " + index + " out of bounds for length " + length());
-        }
+        checkIndex(index);
         return array.get(index);
-    }
-
-    public YAPIONArray add(@NonNull YAPIONAnyType yapionAnyType) {
-        discardReferenceValue();
-        array.add(yapionAnyType);
-        yapionAnyType.setParent(this);
-        return this;
-    }
-
-    public YAPIONArray set(int index, @NonNull YAPIONAnyType yapionAnyType) {
-        discardReferenceValue();
-        if (index < 0 || index >= length()) {
-            return this;
-        }
-        array.set(index, yapionAnyType);
-        return this;
     }
     
     @Override

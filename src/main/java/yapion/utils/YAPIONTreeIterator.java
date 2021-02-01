@@ -6,9 +6,9 @@ package yapion.utils;
 
 import test.Test;
 import yapion.YAPIONUtils;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.typegroups.YAPIONDataType;
-import yapion.hierarchy.typegroups.YAPIONValueType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONDataType;
+import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.types.*;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONSerializer;
@@ -77,7 +77,9 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
     @Override
     public YAPIONAnyType next() {
         while (true) {
-            if (!hasNext()) return null;
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
             // max = Math.max(max, yapionAnyTypes.size());
             // System.out.println("MAX: " + max + "   VALUES: " + availableValues() + "   DATAS: " + availableDatas() + "   AVAILABLE: " + available());
             YAPIONAnyType yapionAnyType = yapionAnyTypes.removeFirst();

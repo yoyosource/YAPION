@@ -2,20 +2,21 @@
 // YAPION
 // Copyright (C) 2019,2020,2021 yoyosource
 
-package yapion.hierarchy.typegroups;
+package yapion.hierarchy.api.groups;
 
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
-import yapion.hierarchy.typeinterfaces.ObjectPath;
-import yapion.hierarchy.typeinterfaces.ObjectSearch;
-import yapion.hierarchy.typeinterfaces.ObjectType;
+import yapion.hierarchy.api.ObjectOutput;
+import yapion.hierarchy.api.ObjectPath;
+import yapion.hierarchy.api.ObjectSearch;
+import yapion.hierarchy.api.ObjectType;
 import yapion.hierarchy.types.YAPIONPath;
 
 import java.util.Optional;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSearch, ObjectPath, ObjectType {
+public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectType, ObjectOutput {
 
     // Reference Value System
     private long referenceValue = 0;
@@ -42,8 +43,11 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
         return hasReferenceValue;
     }
 
+    /**
+     * Optional API.
+     */
     public YAPIONAnyType copy() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     // Depth System / Pretty YAPION String
@@ -103,6 +107,7 @@ public abstract class YAPIONAnyType extends YAPIONAnyClosure implements ObjectSe
     // Parse Time
     private long parseTime = 0;
 
+    @SuppressWarnings("java:S1144")
     private final void setParseTime(long time) {
         this.parseTime = time;
     }

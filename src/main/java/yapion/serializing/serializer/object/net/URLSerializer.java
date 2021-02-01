@@ -6,7 +6,7 @@ package yapion.serializing.serializer.object.net;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
@@ -38,7 +38,7 @@ public class URLSerializer implements InternalSerializer<URL> {
             yapionObject.add("port", serializeData.object.getPort());
             yapionObject.add("file", serializeData.object.getFile());
         } catch (Exception e) {
-
+            // Ignored
         }
         return yapionObject;
     }
@@ -52,13 +52,19 @@ public class URLSerializer implements InternalSerializer<URL> {
         String file = yapionObject.getValue("file", "").get();
         try {
             return new URL(protocol, host, port, file);
-        } catch (MalformedURLException e) {}
+        } catch (MalformedURLException e) {
+            // Ignored
+        }
         try {
             return new URL(protocol, host, file);
-        } catch (MalformedURLException e) {}
+        } catch (MalformedURLException e) {
+            // Ignored
+        }
         try {
             return new URL(host);
-        } catch (MalformedURLException e) {}
+        } catch (MalformedURLException e) {
+            // Ignored
+        }
         return null;
     }
 }

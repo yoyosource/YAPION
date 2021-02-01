@@ -6,7 +6,7 @@ package yapion.hierarchy.types;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 
 import java.util.Arrays;
 import java.util.LinkedList;

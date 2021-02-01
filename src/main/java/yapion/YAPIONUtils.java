@@ -5,8 +5,8 @@
 package yapion;
 
 import yapion.exceptions.YAPIONException;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.packet.YAPIONInputStream;
@@ -127,7 +127,7 @@ public class YAPIONUtils {
                     YAPIONParser.parse(string.substring(i));
                     return CheckResult.IS;
                 } catch (YAPIONException e) {
-
+                    // Ignored
                 }
             }
         }
@@ -151,7 +151,7 @@ public class YAPIONUtils {
                     i += yapionObject.toYAPION(new StringOutput()).length();
                     yapionObjects.add(yapionObject);
                 } catch (YAPIONException e) {
-
+                    // Ignored
                 }
             }
             i++;

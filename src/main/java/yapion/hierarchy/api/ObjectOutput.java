@@ -2,24 +2,24 @@
 // YAPION
 // Copyright (C) 2019,2020,2021 yoyosource
 
-package yapion.hierarchy.typeinterfaces;
+package yapion.hierarchy.api;
 
 import yapion.hierarchy.output.AbstractOutput;
 
 public interface ObjectOutput {
 
-    StringBuilder indent = new StringBuilder().append(" ");
+    StringBuilder indentString = new StringBuilder().append(" ");
 
     default String indent(int i) {
         if (i > 4096) {
-            return indent.toString();
+            return indentString.toString();
         }
-        if (i > indent.length()) {
-            while (indent.length() < i) {
-                indent.append(indent);
+        if (i > indentString.length()) {
+            while (indentString.length() < i) {
+                indentString.append(indentString);
             }
         }
-        return indent.substring(0, i);
+        return indentString.substring(0, i);
     }
 
     <T extends AbstractOutput> T toYAPION(T abstractOutput);

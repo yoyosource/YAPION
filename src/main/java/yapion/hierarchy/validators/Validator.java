@@ -8,7 +8,7 @@ import yapion.YAPIONUtils;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
-import yapion.hierarchy.typeinterfaces.ObjectSearch;
+import yapion.hierarchy.api.ObjectSearch;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 

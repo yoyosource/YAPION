@@ -4,7 +4,7 @@
 
 package yapion.hierarchy.validators;
 
-import yapion.hierarchy.typegroups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.packet.YAPIONPacket;
 
 import java.util.List;

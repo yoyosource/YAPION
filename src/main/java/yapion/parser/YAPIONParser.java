@@ -10,8 +10,8 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.exceptions.utils.YAPIONIOException;
 import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.typeinterfaces.ObjectOutput;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.types.*;
 import yapion.utils.ReflectionsUtils;
 

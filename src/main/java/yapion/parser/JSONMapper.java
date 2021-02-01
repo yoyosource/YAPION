@@ -4,8 +4,8 @@
 
 package yapion.parser;
 
-import yapion.hierarchy.typegroups.YAPIONAnyType;
-import yapion.hierarchy.typegroups.YAPIONMappingType;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONMappingType;
 import yapion.hierarchy.types.*;
 import yapion.utils.ReflectionsUtils;
 
