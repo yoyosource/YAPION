@@ -8,10 +8,12 @@ import lombok.NonNull;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public interface ObjectRetrieve<K> {
 
@@ -194,59 +196,105 @@ public interface ObjectRetrieve<K> {
         valueConsumer.accept((YAPIONValue<T>) yapionAnyType);
     }
 
-    default Supplier<YAPIONObject> ObjectRetriever(K key) {
-        return () -> getObject(key);
+    static <K> Function<ObjectRetrieve<K>, YAPIONObject> Object(K key) {
+        return kObjectRetrieve -> kObjectRetrieve.getObject(key);
     }
 
-    default Supplier<YAPIONMap> MapRetriever(K key) {
-        return () -> getMap(key);
+    static <K> Function<ObjectRetrieve<K>, YAPIONMap> Map(K key) {
+        return kObjectRetrieve -> kObjectRetrieve.getMap(key);
     }
 
-    default Supplier<YAPIONArray> ArrayRetriever(K key) {
-        return () -> getArray(key);
+    static <K> Function<ObjectRetrieve<K>, YAPIONArray> Array(K key) {
+        return kObjectRetrieve -> kObjectRetrieve.getArray(key);
     }
 
-    default Supplier<YAPIONPointer> PointerRetriever(K key) {
-        return () -> getPointer(key);
+    static <K> Function<ObjectRetrieve<K>, YAPIONPointer> Pointer(K key) {
+        return kObjectRetrieve -> kObjectRetrieve.getPointer(key);
     }
 
-    default Supplier<YAPIONValue> ValueRetriever(K key) {
-        return () -> getValue(key);
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue> Value(K key) {
+        return kObjectRetrieve -> kObjectRetrieve.getValue(key);
     }
 
-    default <T> Supplier<YAPIONValue<T>> ValueRetriever(K key, Class<T> clazz) {
-        return () -> getValue(key, clazz);
+    static <K, T> Function<ObjectRetrieve<K>, YAPIONValue<T>> Value(K key, Class<T> clazz) {
+        return kObjectRetrieve -> kObjectRetrieve.getValue(key, clazz);
     }
 
-    default Retriever retrieve(Supplier<? extends YAPIONAnyType>... suppliers) {
-        return new Retriever(suppliers);
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue<Boolean>> BoolValue(K key) {
+        return Value(key, Boolean.class);
     }
 
-    class Retriever {
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue<Byte>> ByteValue(K key) {
+        return Value(key, Byte.class);
+    }
 
-        private Supplier<? extends YAPIONAnyType>[] suppliers;
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue<Short>> ShortValue(K key) {
+        return Value(key, Short.class);
+    }
 
-        private Retriever(Supplier<? extends YAPIONAnyType>[] suppliers) {
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue<Integer>> IntValue(K key) {
+        return Value(key, Integer.class);
+    }
+
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue<Long>> LongValue(K key) {
+        return Value(key, Long.class);
+    }
+
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue<BigInteger>> BigIntegerValue(K key) {
+        return Value(key, BigInteger.class);
+    }
+
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue<Float>> FloatValue(K key) {
+        return Value(key, Float.class);
+    }
+
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue<Double>> DoubleValue(K key) {
+        return Value(key, Double.class);
+    }
+
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue<BigDecimal>> BigDecimalValue(K key) {
+        return Value(key, BigDecimal.class);
+    }
+
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue<Character>> CharValue(K key) {
+        return Value(key, Character.class);
+    }
+
+    static <K> Function<ObjectRetrieve<K>, YAPIONValue<String>> StringValue(K key) {
+        return Value(key, String.class);
+    }
+
+    default Retriever<K> retrieve(Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>... suppliers) {
+        return new Retriever<>(suppliers, this);
+    }
+
+    class Retriever<K> {
+
+        private Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>[] suppliers;
+        private ObjectRetrieve<K> objectRetrieve;
+
+        private Retriever(Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>[] suppliers, ObjectRetrieve<K> objectRetrieve) {
             this.suppliers = suppliers;
+            this.objectRetrieve = objectRetrieve;
         }
 
-        public Retriever result(Consumer<RetrieveResult> resultConsumer) {
+        public Retriever<K> result(Consumer<RetrieveResult> resultConsumer) {
             return result(resultConsumer, () -> {});
         }
 
-        public Retriever result(Runnable valueMissing) {
+        public Retriever<K> result(Runnable valueMissing) {
             return result(result -> {}, valueMissing);
         }
 
-        public Retriever result(Runnable valueMissing, Consumer<RetrieveResult> resultConsumer) {
+        public Retriever<K> result(Runnable valueMissing, Consumer<RetrieveResult> resultConsumer) {
             return result(resultConsumer, valueMissing);
         }
 
-        public Retriever result(Consumer<RetrieveResult> resultConsumer, Runnable valueMissing) {
+        public Retriever<K> result(Consumer<RetrieveResult> resultConsumer, Runnable valueMissing) {
             YAPIONAnyType[] yapionAnyTypes = new YAPIONAnyType[suppliers.length];
             int index = 0;
-            for (Supplier<? extends YAPIONAnyType> supplier : suppliers) {
-                YAPIONAnyType yapionAnyType = supplier.get();
+            for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
+                YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
                 if (yapionAnyType == null) {
                     valueMissing.run();
                     return this;
@@ -257,9 +305,9 @@ public interface ObjectRetrieve<K> {
             return this;
         }
 
-        public Retriever hasOne(Runnable containsOneKey) {
-            for (Supplier<? extends YAPIONAnyType> supplier : suppliers) {
-                YAPIONAnyType yapionAnyType = supplier.get();
+        public Retriever<K> hasOne(Runnable containsOneKey) {
+            for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
+                YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
                 if (yapionAnyType != null) {
                     containsOneKey.run();
                     return this;
@@ -268,19 +316,19 @@ public interface ObjectRetrieve<K> {
             return this;
         }
 
-        public Retriever hasNone(Runnable containsNoKey) {
-            for (Supplier<? extends YAPIONAnyType> supplier : suppliers) {
-                YAPIONAnyType yapionAnyType = supplier.get();
+        public Retriever<K> hasNone(Runnable containsNoKey) {
+            for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
+                YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
                 if (yapionAnyType != null) return this;
             }
             containsNoKey.run();
             return this;
         }
 
-        public Retriever every(Consumer<RetrieveResult> resultConsumer) {
+        public Retriever<K> every(Consumer<RetrieveResult> resultConsumer) {
             List<YAPIONAnyType> yapionAnyTypes = new ArrayList<>();
-            for (Supplier<? extends YAPIONAnyType> supplier : suppliers) {
-                YAPIONAnyType yapionAnyType = supplier.get();
+            for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
+                YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
                 if (yapionAnyType != null) yapionAnyTypes.add(yapionAnyType);
             }
             resultConsumer.accept(new RetrieveResult(yapionAnyTypes.toArray(new YAPIONAnyType[0])));
