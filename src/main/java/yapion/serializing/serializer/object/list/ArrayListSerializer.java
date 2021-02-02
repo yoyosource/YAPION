@@ -48,7 +48,7 @@ public class ArrayListSerializer implements InternalSerializer<ArrayList> {
         YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
         ArrayList<Object> list = new ArrayList<>(yapionArray.length());
         for (int i = 0; i < yapionArray.length(); i++) {
-            list.add(deserializeData.deserialize(yapionArray.get(i)));
+            list.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return list;
     }

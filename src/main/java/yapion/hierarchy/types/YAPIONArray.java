@@ -9,6 +9,7 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.exceptions.value.YAPIONRecursionException;
+import yapion.hierarchy.api.storage.ArrayAdd;
 import yapion.hierarchy.api.storage.ObjectAdd;
 import yapion.hierarchy.api.storage.ObjectRemove;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
@@ -25,7 +26,7 @@ import java.util.Optional;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Integer>, ObjectAdd<YAPIONArray, Integer>, ObjectRemove<YAPIONArray, Integer> {
+public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Integer>, ArrayAdd<YAPIONArray, Integer>, ObjectRemove<YAPIONArray, Integer> {
 
     private final List<YAPIONAnyType> array = new ArrayList<>();
 
@@ -150,10 +151,8 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
     }
 
     public YAPIONAnyType getYAPIONAnyType(@NonNull Integer key) {
-        if (key > 0 && key < array.size()) {
-            return array.get(key);
-        }
-        return null;
+        checkIndex(key);
+        return array.get(key);
     }
 
     private void check(YAPIONAnyType yapionAnyType) {
@@ -177,14 +176,19 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
         checkIndex(key);
         check(value);
         discardReferenceValue();
-        array.get(key).removeParent();
-        array.set(key, value);
+        array.add(key, value);
         value.setParent(this);
         return this;
     }
 
     public YAPIONArray set(@NonNull Integer key, @NonNull YAPIONAnyType value) {
-        return add(key, value);
+        checkIndex(key);
+        check(value);
+        discardReferenceValue();
+        array.get(key).removeParent();
+        array.set(key, value);
+        value.setParent(this);
+        return this;
     }
 
     public YAPIONArray add(@NonNull YAPIONAnyType value) {
@@ -210,6 +214,44 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
             return this;
         }
         add(key, value);
+        return this;
+    }
+
+    @Override
+    public YAPIONArray addOrPointer(@NonNull YAPIONAnyType value) {
+        discardReferenceValue();
+        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
+        if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+            if (result.getYAPIONAny() == null) {
+                throw new YAPIONRecursionException("Pointer creation failure.");
+            }
+            // TODO: maybe implement pointers to YAPIONMap and YAPIONArray?
+            if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
+                throw new YAPIONRecursionException("Pointer creation failure.");
+            }
+            add(new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+            return this;
+        }
+        add(value);
+        return this;
+    }
+
+    @Override
+    public YAPIONArray setOrPointer(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+        discardReferenceValue();
+        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
+        if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+            if (result.getYAPIONAny() == null) {
+                throw new YAPIONRecursionException("Pointer creation failure.");
+            }
+            // TODO: maybe implement pointers to YAPIONMap and YAPIONArray?
+            if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
+                throw new YAPIONRecursionException("Pointer creation failure.");
+            }
+            set(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+            return this;
+        }
+        set(key, value);
         return this;
     }
 
@@ -260,16 +302,11 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
     public List<YAPIONAnyType> getAllValues() {
         return array;
     }
-
-    public YAPIONAnyType get(int index) {
-        checkIndex(index);
-        return array.get(index);
-    }
     
     @Override
     public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(@NonNull String key) {
         try {
-            return Optional.of(new YAPIONSearchResult<>(get(Integer.parseInt(key))));
+            return Optional.of(new YAPIONSearchResult<>(getYAPIONAnyType(Integer.parseInt(key))));
         } catch (NumberFormatException | YAPIONArrayIndexOutOfBoundsException e) {
             return Optional.empty();
         }

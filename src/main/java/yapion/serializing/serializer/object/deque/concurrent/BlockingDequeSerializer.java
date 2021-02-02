@@ -49,7 +49,7 @@ public class BlockingDequeSerializer implements InternalSerializer<BlockingDeque
         YAPIONArray yapionArray = yapionObject.getArray("values");
         BlockingDeque<Object> deque = new LinkedBlockingDeque<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            deque.add(deserializeData.deserialize(yapionArray.get(i)));
+            deque.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return deque;
     }

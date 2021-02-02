@@ -48,7 +48,7 @@ public class LinkedBlockingDequeSerializer implements InternalSerializer<LinkedB
         YAPIONArray yapionArray = yapionObject.getArray("values");
         LinkedBlockingDeque<Object> deque = new LinkedBlockingDeque<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            deque.add(deserializeData.deserialize(yapionArray.get(i)));
+            deque.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return deque;
     }

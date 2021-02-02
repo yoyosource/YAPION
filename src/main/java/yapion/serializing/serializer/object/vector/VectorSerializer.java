@@ -47,7 +47,7 @@ public class VectorSerializer implements InternalSerializer<Vector<?>> {
         YAPIONArray yapionArray = yapionObject.getArray("values");
         Vector<Object> vector = new Vector<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            vector.add(deserializeData.deserialize(yapionArray.get(i)));
+            vector.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return vector;
     }

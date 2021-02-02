@@ -47,7 +47,7 @@ public class HashSetSerializer implements InternalSerializer<HashSet<?>> {
         YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
         HashSet<Object> set = new HashSet<>(yapionArray.length());
         for (int i = 0; i < yapionArray.length(); i++) {
-            set.add(deserializeData.deserialize(yapionArray.get(i)));
+            set.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return set;
     }

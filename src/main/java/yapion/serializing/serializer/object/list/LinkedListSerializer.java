@@ -48,7 +48,7 @@ public class LinkedListSerializer implements InternalSerializer<LinkedList> {
         YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
         LinkedList<Object> list = new LinkedList<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            list.add(deserializeData.deserialize(yapionArray.get(i)));
+            list.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return list;
     }

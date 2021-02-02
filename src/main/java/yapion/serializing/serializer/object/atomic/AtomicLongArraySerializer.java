@@ -49,7 +49,7 @@ public class AtomicLongArraySerializer implements InternalSerializer<AtomicLongA
         YAPIONArray yapionArray = yapionObject.getArray("values");
         long[] longs = new long[length];
         for (int i = 0; i < length; i++) {
-            longs[i] = (Long) deserializeData.deserialize(yapionArray.get(i));
+            longs[i] = (Long) deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
         }
         return new AtomicLongArray(longs);
     }

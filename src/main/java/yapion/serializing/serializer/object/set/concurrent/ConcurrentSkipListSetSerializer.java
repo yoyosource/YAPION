@@ -47,7 +47,7 @@ public class ConcurrentSkipListSetSerializer implements InternalSerializer<Concu
         YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
         ConcurrentSkipListSet<Object> set = new ConcurrentSkipListSet<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            set.add(deserializeData.deserialize(yapionArray.get(i)));
+            set.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return set;
     }

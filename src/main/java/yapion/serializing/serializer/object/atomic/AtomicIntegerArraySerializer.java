@@ -49,7 +49,7 @@ public class AtomicIntegerArraySerializer implements InternalSerializer<AtomicIn
         YAPIONArray yapionArray = yapionObject.getArray("values");
         int[] ints = new int[length];
         for (int i = 0; i < length; i++) {
-            ints[i] = (Integer) deserializeData.deserialize(yapionArray.get(i));
+            ints[i] = (Integer) deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
         }
         return new AtomicIntegerArray(ints);
     }

@@ -65,7 +65,7 @@ public class ErrorSerializer implements InternalSerializer<Error> {
         YAPIONArray yapionArray = yapionObject.getArray("stacktrace");
         StackTraceElement[] stackTraceElements = new StackTraceElement[yapionArray.length()];
         for (int i = 0; i < yapionArray.length(); i++) {
-            stackTraceElements[i] = (StackTraceElement) deserializeData.deserialize(yapionArray.get(i));
+            stackTraceElements[i] = (StackTraceElement) deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
         }
         deserializeData.setField("stackTrace", error, stackTraceElements);
         return error;

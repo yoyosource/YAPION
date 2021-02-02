@@ -176,7 +176,7 @@ public final class YAPIONDeserializer {
         String type = null;
         boolean primitive = true;
         for (int i = 0; i < yapionArray.length(); i++) {
-            YAPIONAnyType yapionAnyType = yapionArray.get(i);
+            YAPIONAnyType yapionAnyType = yapionArray.getYAPIONAnyType(i);
             switch (yapionAnyType.getType()) {
                 case OBJECT:
                     primitive = false;
@@ -233,7 +233,7 @@ public final class YAPIONDeserializer {
             if (current.length() <= 0) {
                 break;
             }
-            YAPIONAnyType yapionAnyType = current.get(0);
+            YAPIONAnyType yapionAnyType = current.getYAPIONAnyType(0);
             current = null;
             if (yapionAnyType instanceof YAPIONArray) {
                 current = (YAPIONArray) yapionAnyType;
@@ -255,7 +255,7 @@ public final class YAPIONDeserializer {
         if (array == null) return null;
 
         for (int i = 0; i < yapionArray.length(); i++) {
-            Array.set(array, i, parse(yapionArray.get(i)));
+            Array.set(array, i, parse(yapionArray.getYAPIONAnyType(i)));
         }
         return array;
     }

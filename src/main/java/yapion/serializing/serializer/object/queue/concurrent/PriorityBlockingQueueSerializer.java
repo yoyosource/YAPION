@@ -48,7 +48,7 @@ public class PriorityBlockingQueueSerializer implements InternalSerializer<Prior
         YAPIONArray yapionArray = yapionObject.getArray("values");
         PriorityBlockingQueue<Object> queue = new PriorityBlockingQueue<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            queue.add(deserializeData.deserialize(yapionArray.get(i)));
+            queue.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return queue;
     }

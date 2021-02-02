@@ -49,7 +49,7 @@ public class BlockingQueueSerializer implements InternalSerializer<BlockingQueue
         YAPIONArray yapionArray = yapionObject.getArray("values");
         BlockingQueue<Object> queue = new ArrayBlockingQueue<>(yapionArray.length());
         for (int i = 0; i < yapionArray.length(); i++) {
-            queue.add(deserializeData.deserialize(yapionArray.get(i)));
+            queue.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return queue;
     }

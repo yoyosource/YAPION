@@ -49,7 +49,7 @@ public class AtomicReferenceArraySerializer implements InternalOverrideableSeria
         YAPIONArray yapionArray = yapionObject.getArray("values");
         Object[] objects = new Object[length];
         for (int i = 0; i < length; i++) {
-            objects[i] = deserializeData.deserialize(yapionArray.get(i));
+            objects[i] = deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
         }
         return new AtomicReferenceArray<>(objects);
     }

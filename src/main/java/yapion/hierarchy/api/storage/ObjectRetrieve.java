@@ -129,6 +129,7 @@ public interface ObjectRetrieve<K> {
 
     default <T> YAPIONValue<T> getValue(@NonNull K key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
+            System.out.println("Not valid");
             return null;
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);

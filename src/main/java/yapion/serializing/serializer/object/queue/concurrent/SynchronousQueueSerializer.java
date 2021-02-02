@@ -48,7 +48,7 @@ public class SynchronousQueueSerializer implements InternalSerializer<Synchronou
         YAPIONArray yapionArray = yapionObject.getArray("values");
         SynchronousQueue<Object> queue = new SynchronousQueue<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            queue.add(deserializeData.deserialize(yapionArray.get(i)));
+            queue.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return queue;
     }

@@ -47,7 +47,7 @@ public class CopyOnWriteArrayListSerializer implements InternalSerializer<CopyOn
         YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
         CopyOnWriteArrayList<Object> list = new CopyOnWriteArrayList<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            list.add(deserializeData.deserialize(yapionArray.get(i)));
+            list.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return list;
     }

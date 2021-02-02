@@ -49,7 +49,7 @@ public class ExceptionSerializer implements InternalSerializer<Exception> {
         YAPIONArray yapionArray = yapionObject.getArray("stacktrace");
         StackTraceElement[] stackTraceElements = new StackTraceElement[yapionArray.length()];
         for (int i = 0; i < yapionArray.length(); i++) {
-            stackTraceElements[i] = (StackTraceElement) deserializeData.deserialize(yapionArray.get(i));
+            stackTraceElements[i] = (StackTraceElement) deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
         }
         deserializeData.setField("stackTrace", exception, stackTraceElements);
         return exception;

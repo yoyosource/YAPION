@@ -63,10 +63,10 @@ public class BufferedImageSerializer implements InternalSerializer<BufferedImage
         WritableRaster writableRaster = bufferedImage.getRaster();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                YAPIONArray pixel = (YAPIONArray) yapionArray.get(index);
+                YAPIONArray pixel = (YAPIONArray) yapionArray.getYAPIONAnyType(index);
                 int[] ints = new int[4];
                 for (int i = 0; i < ints.length; i++) {
-                    ints[i] = (int) deserializeData.deserialize(pixel.get(i));
+                    ints[i] = (int) deserializeData.deserialize(pixel.getYAPIONAnyType(i));
                 }
                 writableRaster.setPixel(x, y, ints);
                 index++;

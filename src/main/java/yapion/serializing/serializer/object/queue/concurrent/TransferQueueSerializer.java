@@ -49,7 +49,7 @@ public class TransferQueueSerializer implements InternalSerializer<TransferQueue
         YAPIONArray yapionArray = yapionObject.getArray("values");
         TransferQueue<Object> queue = new LinkedTransferQueue<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            queue.add(deserializeData.deserialize(yapionArray.get(i)));
+            queue.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
         return queue;
     }
