@@ -77,7 +77,7 @@ public class YAPIONPacketTest {
 
     private void sleep() {
         try {
-            Thread.sleep(50);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
 
         }
@@ -162,7 +162,7 @@ public class YAPIONPacketTest {
     }
 
     @Test
-    public void sendPlainYAPIONObjectNotPacketExceptionInHandleFailedHandlerAndError() throws Exception {
+    public void sendPlainYAPIONObjectNotPacketExceptionInHandleFailedHandlerAndErrorHandler() throws Exception {
         YAPIONObject yapionObject = YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestInnerArray)intList{@type(java.util.ArrayList)values[[[0L],[1L],[2L]],[[1L],[2L],[3L]],[[2L],[3L],[4L]]]}}");
 
         YAPIONSocket[] yapionSockets = connection();
@@ -201,6 +201,58 @@ public class YAPIONPacketTest {
         yapionSockets[0].write(new TestPacket());
         sleep();
         assertThat(result.get(), is(ExceptionHandler));
+    }
+
+    @Test
+    public void sendPingPongUnknown() throws Exception {
+        YAPIONSocket[] yapionSockets = connection();
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, new AtomicReference<>(null)).add(TestPacket.class, yapionPacket -> {
+            yapionSockets[1].write(new TestPacketTwo());
+        }));
+        AtomicReference<TestType> result = new AtomicReference<>(null);
+        yapionSockets[0].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[0].write(new TestPacket());
+        sleep();
+        assertThat(result.get(), is(UnknownHandler));
+    }
+
+    @Test
+    public void sendPingPong() throws Exception {
+        YAPIONSocket[] yapionSockets = connection();
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, new AtomicReference<>(null)).add(TestPacket.class, yapionPacket -> {
+            yapionSockets[1].write(new TestPacket());
+        }));
+        AtomicReference<TestType> result = new AtomicReference<>(null);
+        yapionSockets[0].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[0].write(new TestPacket());
+        sleep();
+        assertThat(result.get(), is(ValidHandler));
+    }
+
+    @Test
+    public void sendPongPingUnknown() throws Exception {
+        YAPIONSocket[] yapionSockets = connection();
+        yapionSockets[0].setYAPIONPacketReceiver(receiver(ValidHandler, new AtomicReference<>(null)).add(TestPacket.class, yapionPacket -> {
+            yapionSockets[0].write(new TestPacketTwo());
+        }));
+        AtomicReference<TestType> result = new AtomicReference<>(null);
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[1].write(new TestPacket());
+        sleep();
+        assertThat(result.get(), is(UnknownHandler));
+    }
+
+    @Test
+    public void sendPongPing() throws Exception {
+        YAPIONSocket[] yapionSockets = connection();
+        yapionSockets[0].setYAPIONPacketReceiver(receiver(ValidHandler, new AtomicReference<>(null)).add(TestPacket.class, yapionPacket -> {
+            yapionSockets[0].write(new TestPacket());
+        }));
+        AtomicReference<TestType> result = new AtomicReference<>(null);
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[1].write(new TestPacket());
+        sleep();
+        assertThat(result.get(), is(ValidHandler));
     }
 
 }
