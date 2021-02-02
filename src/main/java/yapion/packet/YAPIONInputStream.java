@@ -14,6 +14,7 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
+import yapion.utils.IdentifierUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
@@ -108,6 +109,7 @@ public final class YAPIONInputStream {
                         yapionPacketReceiver.handleHandleFailed(handleFailedPacket);
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     log.warn("Something went wrong while handling the read object.", e.getCause());
                     drop();
                 }
@@ -194,13 +196,13 @@ public final class YAPIONInputStream {
     private synchronized HandleFailedPacket handle() {
         if (yapionPacketReceiver == null) return null;
         YAPIONObject yapionObject = YAPIONParser.parse(inputStream);
-        YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType("@type");
+        YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(IdentifierUtils.TYPE_IDENTIFIER);
         if (yapionAnyType == null) return new HandleFailedPacket(yapionObject);
         if (!(yapionAnyType instanceof YAPIONValue)) return new HandleFailedPacket(yapionObject);
         Object object = ((YAPIONValue) yapionAnyType).get();
         if (!(object instanceof String)) return new HandleFailedPacket(yapionObject);
         try {
-            object = YAPIONDeserializer.deserialize(yapionObject);
+            object = new YAPIONDeserializer(yapionObject, "").parse().getObjectOrException();
         } catch (Exception e) {
             DeserializationExceptionPacket deserializationExceptionPacket = new DeserializationExceptionPacket(yapionObject);
             deserializationExceptionPacket.setException(e);

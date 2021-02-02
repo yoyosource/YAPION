@@ -234,7 +234,9 @@ public class YAPIONPacketReceiver {
     }
 
     private void handleError(YAPIONPacket yapionPacket) {
-        handlePacket(yapionPacket, ERROR_HANDLER, handlerMap.get(ERROR_HANDLER), packet -> {});
+        handlePacket(yapionPacket, ERROR_HANDLER, handlerMap.get(ERROR_HANDLER), packet -> {
+            throw new SecurityException(packet.getException().getMessage(), packet.getException());
+        });
     }
 
 }

@@ -10,6 +10,7 @@ import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
+import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -465,6 +466,16 @@ public final class YAPIONDeserializer {
      * @return Object from the YAPIONObject to deserialize
      */
     public Object getObject() {
+        return object;
+    }
+
+    /**
+     * Get the deserialized Object.
+     *
+     * @return Object from the YAPIONObject to deserialize
+     */
+    public Object getObjectOrException() {
+        if (object == null) throw new YAPIONSerializerException();
         return object;
     }
 
