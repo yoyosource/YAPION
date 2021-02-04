@@ -289,6 +289,94 @@ public interface ObjectRetrieve<K> {
         return new Retriever<>(suppliers, this);
     }
 
+    class RetrieveBuilder<K> {
+
+        private List<Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>> suppliers = new ArrayList<>();
+
+        public RetrieveBuilder<K> Object(K key) {
+            suppliers.add(ObjectRetrieve.Object(key));
+            return this;
+        }
+
+        public RetrieveBuilder<K> Map(K key) {
+            suppliers.add(ObjectRetrieve.Map(key));
+            return this;
+        }
+
+        public RetrieveBuilder<K> Array(K key) {
+            suppliers.add(ObjectRetrieve.Array(key));
+            return this;
+        }
+
+        public RetrieveBuilder<K> Pointer(K key) {
+            suppliers.add(ObjectRetrieve.Pointer(key));
+            return this;
+        }
+
+        public RetrieveBuilder<K> Value(K key) {
+            suppliers.add(ObjectRetrieve.Value(key));
+            return this;
+        }
+
+        public <T> RetrieveBuilder<K> Value(K key, Class<T> clazz) {
+            suppliers.add(ObjectRetrieve.Value(key, clazz));
+            return this;
+        }
+
+        public RetrieveBuilder<K> BoolValue(K key) {
+            return Value(key, Boolean.class);
+        }
+
+        public RetrieveBuilder<K> ByteValue(K key) {
+            return Value(key, Byte.class);
+        }
+
+        public RetrieveBuilder<K> ShortValue(K key) {
+            return Value(key, Short.class);
+        }
+
+        public RetrieveBuilder<K> IntValue(K key) {
+            return Value(key, Integer.class);
+        }
+
+        public RetrieveBuilder<K> LongValue(K key) {
+            return Value(key, Long.class);
+        }
+
+        public RetrieveBuilder<K> BigIntegerValue(K key) {
+            return Value(key, BigInteger.class);
+        }
+
+        public RetrieveBuilder<K> FloatValue(K key) {
+            return Value(key, Float.class);
+        }
+
+        public RetrieveBuilder<K> DoubleValue(K key) {
+            return Value(key, Double.class);
+        }
+
+        public RetrieveBuilder<K> BigDecimalValue(K key) {
+            return Value(key, BigDecimal.class);
+        }
+
+        public RetrieveBuilder<K> CharValue(K key) {
+            return Value(key, Character.class);
+        }
+
+        public RetrieveBuilder<K> StringValue(K key) {
+            return Value(key, String.class);
+        }
+
+        public Retriever<K> retrieve(ObjectRetrieve<K> objectRetrieve) {
+            Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>[] supplyArray = new Function[suppliers.size()];
+            for (int i = 0; i < supplyArray.length; i++) {
+                supplyArray[i] = suppliers.get(i);
+            }
+            return new Retriever<>(supplyArray, objectRetrieve);
+        }
+
+    }
+
     class Retriever<K> {
 
         private Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>[] suppliers;
