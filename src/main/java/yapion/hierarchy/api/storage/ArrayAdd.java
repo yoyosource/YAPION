@@ -5,6 +5,7 @@
 package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
+import yapion.annotations.utils.OptionalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 
@@ -62,6 +63,7 @@ public interface ArrayAdd<I, K> extends ObjectAdd<I, K> {
     /**
      * Optional API.
      */
+    @OptionalAPI
     default I addOrPointer(@NonNull YAPIONAnyType value) {
         throw new UnsupportedOperationException();
     }
@@ -115,6 +117,7 @@ public interface ArrayAdd<I, K> extends ObjectAdd<I, K> {
     /**
      * Optional API.
      */
+    @OptionalAPI
     default I setOrPointer(@NonNull K key, @NonNull YAPIONAnyType value) {
         throw new UnsupportedOperationException();
     }

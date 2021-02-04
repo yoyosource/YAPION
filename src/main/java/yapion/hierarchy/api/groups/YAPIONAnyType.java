@@ -6,6 +6,7 @@ package yapion.hierarchy.api.groups;
 
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
+import yapion.annotations.utils.OptionalAPI;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.ObjectPath;
 import yapion.hierarchy.api.ObjectSearch;
@@ -45,6 +46,7 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     /**
      * Optional API.
      */
+    @OptionalAPI
     public YAPIONAnyType copy() {
         throw new UnsupportedOperationException();
     }

@@ -97,18 +97,4 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
         yapionAnyTypes.clear();
     }
 
-    public static void main(String[] args) {
-        SerializeManager.remove(YAPIONObject.class);
-        SerializeManager.remove(YAPIONArray.class);
-        SerializeManager.remove(YAPIONMap.class);
-        SerializeManager.remove(YAPIONValue.class);
-        SerializeManager.remove(YAPIONPointer.class);
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new Test());
-        // yapionObject = YAPIONSerializer.serialize(yapionObject);
-        // yapionObject = YAPIONSerializer.serialize(yapionObject);
-        YAPIONUtils.walk(yapionObject).forEach(s -> {
-
-        });
-    }
-
 }

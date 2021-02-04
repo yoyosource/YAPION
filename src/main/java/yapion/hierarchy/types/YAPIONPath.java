@@ -43,4 +43,12 @@ public final class YAPIONPath {
         return path.length;
     }
 
+    public String get(int index) {
+        return path[index];
+    }
+
+    public String getLast() {
+        return get(path.length - 1);
+    }
+
 }
