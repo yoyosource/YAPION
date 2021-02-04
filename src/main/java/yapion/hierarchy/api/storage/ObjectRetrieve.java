@@ -5,6 +5,7 @@
 package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
+import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 
@@ -129,9 +130,9 @@ public interface ObjectRetrieve<K> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     default <T> YAPIONValue<T> getValue(@NonNull K key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
-            System.out.println("Not valid");
             return null;
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
@@ -145,6 +146,7 @@ public interface ObjectRetrieve<K> {
         return (YAPIONValue<T>) yapionAnyType;
     }
 
+    @SuppressWarnings("unchecked")
     default <T> void getValue(@NonNull K key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
         if (!YAPIONValue.validType(type)) {
             return;
@@ -163,6 +165,7 @@ public interface ObjectRetrieve<K> {
         valueConsumer.accept((YAPIONValue<T>) yapionAnyType);
     }
 
+    @SuppressWarnings("unchecked")
     default <T> YAPIONValue<T> getValue(@NonNull K key, T type) {
         if (!YAPIONValue.validType(type)) {
             return null;
@@ -178,6 +181,7 @@ public interface ObjectRetrieve<K> {
         return (YAPIONValue<T>) yapionAnyType;
     }
 
+    @SuppressWarnings("unchecked")
     default <T> void getValue(@NonNull K key, T type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
         if (!YAPIONValue.validType(type)) {
             return;
@@ -194,6 +198,23 @@ public interface ObjectRetrieve<K> {
             return;
         }
         valueConsumer.accept((YAPIONValue<T>) yapionAnyType);
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T> T getPlainValue(@NonNull K key) {
+        YAPIONValue<T> yapionValue = getValue(key);
+        if (yapionValue == null) throw new YAPIONRetrieveException("Key '" + key.toString() + "' has no YAPIONValue associated with it");
+        return yapionValue.get();
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T> void getPlainValue(@NonNull K key, Consumer<T> valueConsumer, Runnable noValue) {
+        YAPIONValue<T> yapionValue = getValue(key);
+        if (yapionValue == null) {
+            noValue.run();
+            return;
+        }
+        valueConsumer.accept(yapionValue.get());
     }
 
     static <K> Function<ObjectRetrieve<K>, YAPIONObject> Object(K key) {
@@ -335,6 +356,46 @@ public interface ObjectRetrieve<K> {
             return this;
         }
 
+        public RetrieveResult result() {
+            YAPIONAnyType[] yapionAnyTypes = new YAPIONAnyType[suppliers.length];
+            int index = 0;
+            for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
+                YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+                if (yapionAnyType == null) {
+                    return null;
+                }
+                yapionAnyTypes[index++] = yapionAnyType;
+            }
+            return new RetrieveResult(yapionAnyTypes);
+        }
+
+        public boolean hasOne() {
+            for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
+                YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+                if (yapionAnyType != null) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public boolean hasNone() {
+            for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
+                YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+                if (yapionAnyType != null) return false;
+            }
+            return true;
+        }
+
+        public RetrieveResult every() {
+            List<YAPIONAnyType> yapionAnyTypes = new ArrayList<>();
+            for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
+                YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+                if (yapionAnyType != null) yapionAnyTypes.add(yapionAnyType);
+            }
+            return new RetrieveResult(yapionAnyTypes.toArray(new YAPIONAnyType[0]));
+        }
+
     }
 
     class RetrieveResult {
@@ -392,7 +453,7 @@ public interface ObjectRetrieve<K> {
             return get(index);
         }
 
-        public YAPIONValue getValue(int index) {
+        public <T> YAPIONValue<T> getValue(int index) {
             return get(index);
         }
 

@@ -5,7 +5,6 @@ import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 
-import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 
