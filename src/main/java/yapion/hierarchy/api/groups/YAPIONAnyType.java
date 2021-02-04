@@ -13,34 +13,33 @@ import yapion.hierarchy.api.ObjectType;
 import yapion.hierarchy.types.YAPIONPath;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
 public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectType, ObjectOutput {
 
     // Reference Value System
-    private long referenceValue = 0;
-    private boolean hasReferenceValue = false;
+    private AtomicReference<Long> referenceValue = new AtomicReference<>(null);
 
     protected final void cacheReferenceValue(long referenceValue) {
-        this.referenceValue = referenceValue;
-        hasReferenceValue = true;
+        this.referenceValue.set(referenceValue);
     }
 
     protected final long getReferenceValue() {
-        return referenceValue;
+        return referenceValue.get();
     }
 
     protected final void discardReferenceValue() {
-        hasReferenceValue = false;
+        referenceValue.set(null);
         YAPIONAnyType yapionAnyType = this;
         while ((yapionAnyType = yapionAnyType.getParent()) != null) {
-            yapionAnyType.hasReferenceValue = false;
+            yapionAnyType.referenceValue.set(null);
         }
     }
 
     protected final boolean hasReferenceValue() {
-        return hasReferenceValue;
+        return referenceValue.get() != null;
     }
 
     /**
@@ -104,11 +103,15 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         return valuePresent;
     }
 
+    protected final boolean isValuePresent() {
+        return valuePresent;
+    }
+
     // Parse Time
     private long parseTime = 0;
 
     @SuppressWarnings("java:S1144")
-    private final void setParseTime(long time) {
+    private void setParseTime(long time) {
         this.parseTime = time;
     }
 
@@ -120,14 +123,17 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     }
 
     /**
-     * @return parseTime in milliseconds as double
+     * @return parseTime in milliseconds as a double
      */
     public final double getParseTimeMillis() {
         return parseTime / 1000000.0;
     }
 
-    protected final boolean isValuePresent() {
-        return valuePresent;
+    /**
+     * @return parseTime in milliseconds as a long
+     */
+    public final long getParseTimeMillisAsLong() {
+        return (long) (parseTime / 1000000.0);
     }
 
     // Traverse System
@@ -136,10 +142,10 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
             return Optional.of(new YAPIONSearchResult<>(this));
         }
         Optional<YAPIONSearchResult<?>> optional = Optional.of(new YAPIONSearchResult<>(this));
-        for (int i = 0; i < s.length; i++) {
-            if (s[i] == null) return Optional.empty();
+        for (String value : s) {
+            if (value == null) return Optional.empty();
             if (!optional.isPresent()) return Optional.empty();
-            optional = optional.get().value.get(s[i]);
+            optional = optional.get().value.get(value);
         }
         return optional;
     }
