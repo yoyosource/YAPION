@@ -2,10 +2,9 @@
 // YAPION
 // Copyright (C) 2019,2020,2021 yoyosource
 
-package yapion.hierarchy.api.retrieve;
+package yapion.hierarchy.api.storage;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.storage.ObjectRetrieve;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -16,6 +15,10 @@ import java.util.function.Function;
 public class RetrieveBuilder<K> {
 
     private List<Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>> suppliers = new ArrayList<>();
+
+    RetrieveBuilder() {
+
+    }
 
     public RetrieveBuilder<K> object(K key) {
         suppliers.add(kObjectRetrieve -> kObjectRetrieve.getObject(key));

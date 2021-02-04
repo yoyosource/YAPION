@@ -2,7 +2,7 @@
 // YAPION
 // Copyright (C) 2019,2020,2021 yoyosource
 
-package yapion.hierarchy.api.retrieve;
+package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
