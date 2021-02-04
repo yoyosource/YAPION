@@ -212,8 +212,4 @@ public interface ObjectRetrieve<K> {
         valueConsumer.accept(yapionValue.get());
     }
 
-    default RetrieveBuilder<K> retrieveBuilder()  {
-        return new RetrieveBuilder<>();
-    }
-
 }

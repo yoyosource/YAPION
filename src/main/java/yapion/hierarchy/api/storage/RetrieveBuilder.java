@@ -16,8 +16,20 @@ public class RetrieveBuilder<K> {
 
     private List<Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>> suppliers = new ArrayList<>();
 
-    RetrieveBuilder() {
+    private RetrieveBuilder() {
 
+    }
+
+    public static RetrieveBuilder<String> ObjectRetrieveBuilder() {
+        return new RetrieveBuilder<>();
+    }
+
+    public static RetrieveBuilder<YAPIONAnyType> MapRetrieveBuilder() {
+        return new RetrieveBuilder<>();
+    }
+
+    public static RetrieveBuilder<Integer> ArrayRetrieveBuilder() {
+        return new RetrieveBuilder<>();
     }
 
     public RetrieveBuilder<K> object(K key) {
