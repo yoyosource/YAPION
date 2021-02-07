@@ -60,7 +60,6 @@ public class SerializeManager {
     private static final boolean overrideable;
     private static final Serializer defaultSerializer = new Serializer(null, false);
     private static final Serializer defaultNullSerializer = new Serializer(new InternalSerializer<Object>() {
-
         @Override
         public void init() {
             YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(DATA_LOSS_EXCEPTION, false));

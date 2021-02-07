@@ -31,6 +31,11 @@ public class HashMapSerializer implements InternalSerializer<HashMap> {
     }
 
     @Override
+    public String primitiveType() {
+        return "java.util.Map";
+    }
+
+    @Override
     public YAPIONAnyType serialize(SerializeData<HashMap> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());

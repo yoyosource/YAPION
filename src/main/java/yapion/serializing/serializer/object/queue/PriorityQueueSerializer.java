@@ -30,6 +30,11 @@ public class PriorityQueueSerializer implements InternalSerializer<PriorityQueue
     }
 
     @Override
+    public String primitiveType() {
+        return "java.util.Queue";
+    }
+
+    @Override
     public YAPIONAnyType serialize(SerializeData<PriorityQueue<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());

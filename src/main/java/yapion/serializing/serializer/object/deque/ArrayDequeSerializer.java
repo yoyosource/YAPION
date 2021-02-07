@@ -30,6 +30,11 @@ public class ArrayDequeSerializer implements InternalSerializer<ArrayDeque<?>> {
     }
 
     @Override
+    public String primitiveType() {
+        return "java.util.Deque";
+    }
+
+    @Override
     public YAPIONAnyType serialize(SerializeData<ArrayDeque<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());

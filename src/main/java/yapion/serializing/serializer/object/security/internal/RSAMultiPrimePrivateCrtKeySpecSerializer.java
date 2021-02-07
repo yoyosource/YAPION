@@ -2,7 +2,7 @@
 // YAPION
 // Copyright (C) 2019,2020,2021 yoyosource
 
-package yapion.serializing.serializer.object.security.iternal;
+package yapion.serializing.serializer.object.security.internal;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;

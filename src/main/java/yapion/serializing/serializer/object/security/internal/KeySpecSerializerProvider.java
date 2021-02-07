@@ -2,14 +2,10 @@
 // YAPION
 // Copyright (C) 2019,2020,2021 yoyosource
 
-package yapion.serializing.serializer.object.security.iternal;
+package yapion.serializing.serializer.object.security.internal;
 
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.YAPIONDeserializer;
-import yapion.serializing.YAPIONSerializer;
-import yapion.serializing.YAPIONSerializerFlagDefault;
-import yapion.serializing.YAPIONSerializerFlags;
 
 import javax.crypto.interfaces.DHPrivateKey;
 import javax.crypto.interfaces.DHPublicKey;

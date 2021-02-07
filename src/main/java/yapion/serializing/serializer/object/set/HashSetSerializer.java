@@ -30,6 +30,11 @@ public class HashSetSerializer implements InternalSerializer<HashSet<?>> {
     }
 
     @Override
+    public String primitiveType() {
+        return "java.util.Set";
+    }
+
+    @Override
     public YAPIONAnyType serialize(SerializeData<HashSet<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());

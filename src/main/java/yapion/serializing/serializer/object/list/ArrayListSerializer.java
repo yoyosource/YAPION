@@ -31,6 +31,11 @@ public class ArrayListSerializer implements InternalSerializer<ArrayList> {
     }
 
     @Override
+    public String primitiveType() {
+        return "java.util.List";
+    }
+
+    @Override
     public YAPIONAnyType serialize(SerializeData<ArrayList> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());

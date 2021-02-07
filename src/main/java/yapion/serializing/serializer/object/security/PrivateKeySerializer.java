@@ -17,7 +17,7 @@ import yapion.serializing.YAPIONSerializerFlags;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
-import yapion.serializing.serializer.object.security.iternal.KeySpecSerializerProvider;
+import yapion.serializing.serializer.object.security.internal.KeySpecSerializerProvider;
 
 import java.security.PrivateKey;
 

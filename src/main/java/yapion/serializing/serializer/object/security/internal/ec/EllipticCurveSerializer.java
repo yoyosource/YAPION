@@ -2,7 +2,7 @@
 // YAPION
 // Copyright (C) 2019,2020,2021 yoyosource
 
-package yapion.serializing.serializer.object.security.iternal.parameterspec.ec;
+package yapion.serializing.serializer.object.security.internal.ec;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
