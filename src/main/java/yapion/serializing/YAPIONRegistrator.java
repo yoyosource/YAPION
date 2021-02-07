@@ -10,7 +10,6 @@ import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import system.YAPIONMain;
 import yapion.annotations.registration.YAPIONRegistratorProvider;
 import yapion.serializing.api.*;
 import yapion.utils.MethodReturnValue;
@@ -27,10 +26,6 @@ import java.util.function.Predicate;
 
 @Slf4j
 public final class YAPIONRegistrator {
-
-    public static void main(String[] args) {
-        registration(YAPIONMain.class);
-    }
 
     private YAPIONRegistrator() {
         throw new IllegalStateException("Utility class");
@@ -182,6 +177,8 @@ public final class YAPIONRegistrator {
             if (clazz == null) return;
             packages.add(clazz.getTypeName().substring(0, clazz.getTypeName().length() - clazz.getSimpleName().length() - 1));
         }
+
+        // Set<Method> methods = new Reflections(classes).getMethodsAnnotatedWith(YAPIONRegistratorProvider.class);
 
         ScanResult scanResult = new ClassGraph()
                 .whitelistPackages(packages.toArray(new String[0]))

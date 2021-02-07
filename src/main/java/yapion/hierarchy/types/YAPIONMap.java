@@ -199,7 +199,6 @@ public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIO
             if (result.getYAPIONAny() == null) {
                 throw new YAPIONRecursionException("Pointer creation failure.");
             }
-            // TODO: maybe implement pointers to YAPIONMap and YAPIONArray?
             if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
                 throw new YAPIONRecursionException("Pointer creation failure.");
             }

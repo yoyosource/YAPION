@@ -407,27 +407,6 @@ public final class YAPIONDeserializer {
 
                 arrayType = "";
             }
-
-            /*
-            Field[] fields = object.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (ModifierUtils.removed(field)) {
-                    continue;
-                }
-                if (!contextManager.is(object, field).load) continue;
-                if (yapionObject.getVariable(field.getName()) == null) continue;
-
-                arrayType = remove(field.getType().getTypeName(), '[', ']');
-
-                YAPIONAnyType yapionAnyType = yapionObject.getVariable(field.getName()).getValue();
-                YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
-                if (isValid(field, yapionDeserializeType)) {
-                    field.set(object, serialize(yapionAnyType, yapionDeserializeType.type().getTypeName()));
-                } else {
-                    field.set(object, parse(yapionAnyType));
-                }
-            }*/
             MethodManager.postDeserializationStep(object, object.getClass(), contextManager);
         } catch (ClassNotFoundException e) {
             log.warn("The class '" + type + "' was not found.", e.getCause());

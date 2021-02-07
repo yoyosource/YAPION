@@ -216,6 +216,7 @@ public final class YAPIONParser {
     }
 
     private String generateErrorMessage() {
+        // TODO: Fix inputStream null and String null
         if (inputStream != null) return "";
         StringBuilder st = new StringBuilder();
         st.append(s);

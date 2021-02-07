@@ -4,14 +4,10 @@
 
 package yapion.utils;
 
-import test.Test;
-import yapion.YAPIONUtils;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.groups.YAPIONValueType;
-import yapion.hierarchy.types.*;
-import yapion.serializing.SerializeManager;
-import yapion.serializing.YAPIONSerializer;
+import yapion.hierarchy.types.YAPIONObject;
 
 import java.io.Closeable;
 import java.util.*;

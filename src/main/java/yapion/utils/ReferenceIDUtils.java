@@ -104,13 +104,14 @@ public class ReferenceIDUtils {
         for (int i = 0; i < 8; i++) {
             l ^= s.length() << (i * 8);
         }
-        byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = s.getBytes(StandardCharsets.UTF_16BE);
         for (int i = 0; i < s.length(); i++) {
             byte b = bytes[i];
             for (int temp = 0; temp < 8; temp++) {
                 l += b << (long) (temp * 8);
             }
         }
+        l &= 0x7FFFFFFFFFFFFFFFL;
         referenceIDMap.put(s, l);
         return l;
     }

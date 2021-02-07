@@ -206,7 +206,6 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
             if (result.getYAPIONAny() == null) {
                 throw new YAPIONRecursionException("Pointer creation failure.");
             }
-            // TODO: maybe implement pointers to YAPIONMap and YAPIONArray?
             if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
                 throw new YAPIONRecursionException("Pointer creation failure.");
             }
@@ -225,7 +224,6 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
             if (result.getYAPIONAny() == null) {
                 throw new YAPIONRecursionException("Pointer creation failure.");
             }
-            // TODO: maybe implement pointers to YAPIONMap and YAPIONArray?
             if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
                 throw new YAPIONRecursionException("Pointer creation failure.");
             }
@@ -244,7 +242,6 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
             if (result.getYAPIONAny() == null) {
                 throw new YAPIONRecursionException("Pointer creation failure.");
             }
-            // TODO: maybe implement pointers to YAPIONMap and YAPIONArray?
             if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
                 throw new YAPIONRecursionException("Pointer creation failure.");
             }

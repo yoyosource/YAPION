@@ -11,7 +11,7 @@ The YAPION notation is heavily inspired by JSON and the enums in Java.
 ## Object
 An Object in YAPION starts and ends with the same character as in JSON so '{' and '}' respectively.
 An Object holds Key-Value-Pairs with a String key and any type as value. Key-Value-Pairs are not seperated
-by a colon. The Key and Value part is also not seperated by any special character. This results in a very
+by a comma. The Key and Value part is also not seperated by any special character. This results in a very
 compact notation.
 
 ### Example
@@ -21,7 +21,7 @@ compact notation.
 
 ## Array
 An Array in YAPION starts and ends with the same character as in JSON so '\[' and ']' respectively.
-An Array holds values with integers as keys. These values are seperated by colons and values do not need
+An Array holds values with integers as keys. These values are seperated by commas and values do not need
 any brackets surrounding it.
 
 ### Example
@@ -30,4 +30,26 @@ any brackets surrounding it.
 ```
 
 ## Map
-A Map in YAPION starts and ends with '<' '>' respectively.
+A Map in YAPION starts and ends with '<' and '>' respectively. This type can hold Key-Value-Pairs with any key to any value relationships.
+The values are stored like in an Object, but the mapping structure needs to be stored as well. This is done by the colon separator.
+
+### Example
+```
+<0:1#0{}#1{}>
+```
+
+## Pointer
+A Pointer points to an Object as a reference. This is used to deserialize an Object with all its referenced to other Objects in the hierarchy.
+
+### Example
+```
+a->0000000000000000
+```
+
+## Value
+
+
+### Example
+```
+(0)
+```
