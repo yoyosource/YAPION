@@ -23,11 +23,6 @@ import static yapion.serializing.YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION
 public class ProcessSerializer implements InternalSerializer<Process> {
 
     @Override
-    public void init() {
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(DATA_LOSS_EXCEPTION, false));
-    }
-
-    @Override
     public String type() {
         return "java.lang.Process";
     }

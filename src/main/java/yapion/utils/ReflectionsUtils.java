@@ -272,13 +272,6 @@ public class ReflectionsUtils {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(isException(YAPIONException.class));
-        System.out.println(isRuntimeException(YAPIONException.class));
-        System.out.println(isThrowable(YAPIONException.class));
-        System.out.println(isThrowable(YAPIONException.class));
-    }
-
     public static boolean isException(Class<?> clazz) {
         return isClassSuperclassOf(clazz, Exception.class);
     }

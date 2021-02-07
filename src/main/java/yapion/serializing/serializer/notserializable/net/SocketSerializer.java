@@ -25,11 +25,6 @@ import static yapion.serializing.YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION
 public class SocketSerializer implements InternalSerializer<Socket> {
 
     @Override
-    public void init() {
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(DATA_LOSS_EXCEPTION, false));
-    }
-
-    @Override
     public String type() {
         return "java.net.Socket";
     }

@@ -82,7 +82,7 @@ sourceSets {
             exclude 'system/**', 'test/**'
         }
         resources {
-            exclude '**/*.ebnf', '**/*.xhtml'
+            exclude '**/*.ebnf', '**/*.xhtml', "**/*.gitkeep"
         }
     }
     test {
@@ -90,7 +90,7 @@ sourceSets {
             srcDirs = ['src/test/java/']
         }
         resources {
-            exclude '**/*.ebnf', '**/*.xhtml'
+            exclude '**/*.ebnf', '**/*.xhtml', "**/*.gitkeep"
         }
     }
 }

@@ -30,7 +30,6 @@ public class ErrorSerializer implements InternalSerializer<Error> {
 
     @Override
     public void init() {
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(DATA_LOSS_EXCEPTION, false));
         YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(ERROR_EXCEPTION, false));
     }
 
