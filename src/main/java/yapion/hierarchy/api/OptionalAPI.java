@@ -2,14 +2,14 @@
 // YAPION
 // Copyright (C) 2019,2020,2021 yoyosource
 
-package yapion.annotations.utils;
+package yapion.hierarchy.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 @Target({ElementType.METHOD})
 public @interface OptionalAPI {
 }

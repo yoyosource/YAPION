@@ -22,8 +22,4 @@ public class YAPIONException extends RuntimeException {
         super(cause);
     }
 
-    protected YAPIONException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
-
 }

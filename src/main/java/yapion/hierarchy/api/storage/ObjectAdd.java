@@ -5,7 +5,7 @@
 package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
-import yapion.annotations.utils.OptionalAPI;
+import yapion.hierarchy.api.OptionalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 

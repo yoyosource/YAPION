@@ -83,7 +83,6 @@ public class SerializeManager {
         }
     }, false);
 
-    private static final String internalOverrideableSerializer = InternalOverrideableSerializer.class.getTypeName();
     private static final String internalSerializer = InternalSerializer.class.getTypeName();
 
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
@@ -112,6 +111,7 @@ public class SerializeManager {
 
         oSerializerGroups.add(() -> "yapion.annotations.");
         oSerializerGroups.add(() -> "yapion.exceptions.");
+        oSerializerGroups.add(() -> "yapion.hierarchy.");
         oSerializerGroups.add(() -> "yapion.parser.");
         oSerializerGroups.add(() -> "yapion.serializing.serializer");
         oSerializerGroups.add(() -> "yapion.utils.");
@@ -136,26 +136,8 @@ public class SerializeManager {
         String typeName = clazz.getInterfaces()[0].getTypeName();
         Object o = ReflectionsUtils.constructObjectObjenesis(className);
         if (o == null) return;
-        if (typeName.equals(internalOverrideableSerializer)) {
-            add((InternalOverrideableSerializer<?>) o);
-        } else if (typeName.equals(internalSerializer)) {
+        if (typeName.equals(internalSerializer)) {
             add((InternalSerializer<?>) o);
-        }
-    }
-
-    private static void add(InternalOverrideableSerializer<?> serializer) {
-        if (!checkOverrideable(serializer)) return;
-        serializer.init();
-        Serializer serializerWrapper = new Serializer(serializer, true);
-        serializerMap.put(serializer.type(), serializerWrapper);
-        if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
-            serializerMap.put(serializer.primitiveType(), serializerWrapper);
-        }
-        if (serializer.interfaceType() != null) {
-            interfaceTypeSerializer.add(serializer);
-        }
-        if (serializer.classType() != null) {
-            classTypeSerializer.add(serializer);
         }
     }
 
@@ -196,9 +178,7 @@ public class SerializeManager {
             @Override
             public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
-                    YAPIONObject yapionObject = serializer.serialize(serializeData);
-                    yapionObject.add(TYPE_IDENTIFIER, type());
-                    return yapionObject;
+                    return serializer.serialize(serializeData).add(TYPE_IDENTIFIER, type());
                 } catch (Exception e) {
                     log.error("An unexpected error occurred", e.getCause());
                 }
@@ -238,10 +218,7 @@ public class SerializeManager {
             @Override
             public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
-                    YAPIONObject yapionObject = new YAPIONObject();
-                    yapionObject.add(TYPE_IDENTIFIER, type());
-                    yapionObject.add("map", serializer.serialize(serializeData));
-                    return yapionObject;
+                    return new YAPIONObject().add(TYPE_IDENTIFIER, type()).add("map", serializer.serialize(serializeData));
                 } catch (Exception e) {
                     log.error("An unexpected error occurred", e.getCause());
                 }
@@ -279,10 +256,7 @@ public class SerializeManager {
             @Override
             public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
-                    YAPIONObject yapionObject = new YAPIONObject();
-                    yapionObject.add(TYPE_IDENTIFIER, type());
-                    yapionObject.add("list", serializer.serialize(serializeData));
-                    return yapionObject;
+                    return new YAPIONObject().add(TYPE_IDENTIFIER, type()).add("list", serializer.serialize(serializeData));
                 } catch (Exception e) {
                     log.error("An unexpected error occurred", e.getCause());
                 }
@@ -320,10 +294,7 @@ public class SerializeManager {
             @Override
             public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
-                    YAPIONObject yapionObject = new YAPIONObject();
-                    yapionObject.add(TYPE_IDENTIFIER, type());
-                    yapionObject.add("queue", serializeData.serialize(serializeData));
-                    return yapionObject;
+                    return new YAPIONObject().add(TYPE_IDENTIFIER, type()).add("queue", serializer.serialize(serializeData));
                 } catch (Exception e) {
                     log.error("An unexpected error occurred", e.getCause());
                 }
@@ -361,10 +332,7 @@ public class SerializeManager {
             @Override
             public YAPIONAnyType serialize(SerializeData<T> serializeData) {
                 try {
-                    YAPIONObject yapionObject = new YAPIONObject();
-                    yapionObject.add(TYPE_IDENTIFIER, type());
-                    yapionObject.add("set", serializer.serialize(serializeData));
-                    return yapionObject;
+                    return new YAPIONObject().add(TYPE_IDENTIFIER, type()).add("set", serializer.serialize(serializeData));
                 } catch (Exception e) {
                     log.error("An unexpected error occurred", e.getCause());
                 }
@@ -386,6 +354,16 @@ public class SerializeManager {
     }
 
     /**
+     * Remove a special Serializer with the Class type name.
+     *
+     * @param clazz the Class type name
+     */
+    public static void remove(Class<?> clazz) {
+        if (clazz == null) return;
+        remove(clazz.getTypeName());
+    }
+
+    /**
      * Remove a special Serializer with the type name.
      *
      * @param type the typeName to remove
@@ -394,16 +372,6 @@ public class SerializeManager {
         if (type == null) return;
         if (serializerMap.containsKey(type) && !serializerMap.get(type).overrideable) return;
         serializerMap.remove(type);
-    }
-
-    /**
-     * Remove a special Serializer with the Class type name.
-     *
-     * @param clazz the Class type name
-     */
-    public static void remove(Class<?> clazz) {
-        if (clazz == null) return;
-        remove(clazz.getTypeName());
     }
 
     @SuppressWarnings({"java:S1452"})
@@ -443,7 +411,6 @@ public class SerializeManager {
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
-
     @SuppressWarnings({"java:S100"})
     public static <T> SerializerObject<T> SerializerObject(Class<T> clazz, SerializationGetter<T, YAPIONObject> serializationGetter, DeserializationGetter<T, YAPIONObject> deserializationGetter) {
         if (clazz == null) throw new YAPIONException();
@@ -481,7 +448,6 @@ public class SerializeManager {
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
-
     @SuppressWarnings({"java:S100"})
     public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(Class<T> clazz, SerializationGetter<T, YAPIONMap> serializationGetter, DeserializationGetter<T, YAPIONMap> deserializationGetter) {
         if (clazz == null) throw new YAPIONException();
@@ -519,7 +485,6 @@ public class SerializeManager {
      * @param <T> the Type of this Serializer
      * @return the Serializer that wraps the Interfaces
      */
-
     @SuppressWarnings({"java:S100"})
     public static <T extends List<?>> SerializerList<T> SerializerList(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         if (clazz == null) throw new YAPIONException();
@@ -679,17 +644,6 @@ public class SerializeManager {
     @YAPIONLoadExclude(context = "*")
     public interface InstanceGetter<T> {
         T instance();
-    }
-
-    static Object getObjectInstance(Class<?> clazz, String type, ContextManager contextManager) {
-        if (instanceFactoryMap.containsKey(clazz)) {
-            return instanceFactoryMap.get(clazz).instance();
-        }
-        if (clazz.getDeclaredAnnotation(YAPIONObjenesis.class) != null) {
-            return ReflectionsUtils.constructObjectObjenesis(type);
-        } else {
-            return ReflectionsUtils.constructObject(type, contextManager.is(clazz).data);
-        }
     }
 
     static Object getObjectInstance(Class<?> clazz, String type, boolean objenesis) {

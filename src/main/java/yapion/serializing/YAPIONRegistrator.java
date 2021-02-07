@@ -4,10 +4,7 @@
 
 package yapion.serializing;
 
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ClassInfoList;
-import io.github.classgraph.ScanResult;
+import eu.infomas.annotation.AnnotationDetector;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.registration.YAPIONRegistratorProvider;
@@ -15,12 +12,12 @@ import yapion.serializing.api.*;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReflectionsUtils;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -172,41 +169,46 @@ public final class YAPIONRegistrator {
      */
     public static void registration(@NonNull Class<?>... classes) {
         if (classes.length == 0) return;
-        List<String> packages = new ArrayList<>();
-        for (Class<?> clazz : classes) {
-            if (clazz == null) return;
-            packages.add(clazz.getTypeName().substring(0, clazz.getTypeName().length() - clazz.getSimpleName().length() - 1));
+        String[] packages = Arrays.stream(classes).filter(Objects::nonNull).map(aClass -> aClass.getPackage().getName()).toArray(String[]::new);
+
+        AtomicReference<Set<Method>> atomicMethods = new AtomicReference<>(new HashSet<>());
+        AnnotationDetector annotationDetector = new AnnotationDetector(new AnnotationDetector.MethodReporter() {
+            @Override
+            public void reportMethodAnnotation(Class<? extends Annotation> annotation, String className, String methodName) {
+                try {
+                    Method method = Class.forName(className).getDeclaredMethod(methodName);
+                    if (Modifier.isStatic(method.getModifiers())) return;
+                    if (method.getReturnType() == Void.TYPE) return;
+                    if (method.getParameterCount() != 0) return;
+                    atomicMethods.get().add(method);
+                } catch (Exception e) {
+                    log.warn(e.getMessage(), e);
+                }
+            }
+
+            @Override
+            public Class<? extends Annotation>[] annotations() {
+                return new Class[]{YAPIONRegistratorProvider.class};
+            }
+        });
+
+        try {
+            annotationDetector.detect(packages);
+        } catch (IOException e) {
+            log.warn(e.getMessage(), e);
         }
 
-        // Set<Method> methods = new Reflections(classes).getMethodsAnnotatedWith(YAPIONRegistratorProvider.class);
+        Map<Class<?>, Set<Method>> optimizedMethods = new IdentityHashMap<>();
+        atomicMethods.get().forEach(method -> optimizedMethods.computeIfAbsent(method.getDeclaringClass(), aClass -> new HashSet<>()).add(method));
 
-        ScanResult scanResult = new ClassGraph()
-                .whitelistPackages(packages.toArray(new String[0]))
-                .ignoreMethodVisibility()
-                .enableAnnotationInfo()
-                .scan();
-        ClassInfoList classInfoList = scanResult.getAllClasses();
-
-        for (ClassInfo classInfo : classInfoList) {
-            List<Method> methods = new ArrayList<>();
-            Class<?> clazz = classInfo.loadClass();
-            for (Method method : clazz.getDeclaredMethods()) {
-                YAPIONRegistratorProvider yapionRegistratorProvider = method.getAnnotation(YAPIONRegistratorProvider.class);
-                if (yapionRegistratorProvider == null) continue;
-                if (Modifier.isStatic(method.getModifiers())) continue;
-                if (method.getReturnType() == Void.TYPE) continue;
-                if (method.getParameterCount() != 0) continue;
-                methods.add(method);
-            }
-            if (methods.isEmpty()) continue;
-            Object objectInstance = ReflectionsUtils.constructObjectObjenesis(classInfo.getName());
-
-            for (Method method : methods) {
+        optimizedMethods.forEach((clazz, methodSet) -> {
+            Object objectInstance = ReflectionsUtils.constructObjectObjenesis(clazz);
+            for (Method method : methodSet) {
                 MethodReturnValue<Object> objectMethodReturnValue = ReflectionsUtils.invokeMethodObjectSystem(method, objectInstance);
                 if (objectMethodReturnValue.isEmpty() || objectMethodReturnValue.get() == null) continue;
                 loadRegistrator(objectMethodReturnValue.get());
             }
-        }
+        });
     }
     
     private static boolean loadRegistrator(Object object) {

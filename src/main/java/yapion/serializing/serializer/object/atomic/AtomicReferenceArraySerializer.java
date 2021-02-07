@@ -9,7 +9,7 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalOverrideableSerializer;
+import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
@@ -21,7 +21,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @YAPIONSaveExclude
 @YAPIONLoadExclude
 @SerializerImplementation(since = "0.20.0")
-public class AtomicReferenceArraySerializer implements InternalOverrideableSerializer<AtomicReferenceArray<?>> {
+public class AtomicReferenceArraySerializer implements InternalSerializer<AtomicReferenceArray<?>> {
 
     @Override
     public String type() {

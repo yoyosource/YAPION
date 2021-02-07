@@ -44,8 +44,8 @@ dependencies {
 
     implementation 'org.objenesis:objenesis:3.1'
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
-    implementation 'io.github.classgraph:classgraph:4.8.46'
-    // implementation 'org.reflections:reflections:0.9.12'
+    // implementation 'io.github.classgraph:classgraph:4.8.46'
+    implementation 'eu.infomas:annotation-detector:3.0.5'
 
     testCompile 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest:2.2'
@@ -81,10 +81,16 @@ sourceSets {
             srcDirs = ['src/main/java']
             exclude 'system/**', 'test/**'
         }
+        resources {
+            exclude '**/*.ebnf', '**/*.xhtml'
+        }
     }
     test {
         java {
             srcDirs = ['src/test/java/']
+        }
+        resources {
+            exclude '**/*.ebnf', '**/*.xhtml'
         }
     }
 }

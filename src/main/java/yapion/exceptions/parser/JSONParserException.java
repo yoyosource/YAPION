@@ -24,8 +24,4 @@ public class JSONParserException extends YAPIONException {
         super(cause);
     }
 
-    protected JSONParserException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
-
 }

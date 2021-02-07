@@ -6,7 +6,7 @@ package yapion.hierarchy.api.groups;
 
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
-import yapion.annotations.utils.OptionalAPI;
+import yapion.hierarchy.api.OptionalAPI;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.ObjectPath;
 import yapion.hierarchy.api.ObjectSearch;

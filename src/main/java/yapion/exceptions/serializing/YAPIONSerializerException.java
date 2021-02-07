@@ -24,8 +24,4 @@ public class YAPIONSerializerException extends YAPIONException {
         super(cause);
     }
 
-    public YAPIONSerializerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
-
 }

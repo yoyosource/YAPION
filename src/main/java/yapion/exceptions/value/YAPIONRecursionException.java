@@ -24,8 +24,4 @@ public class YAPIONRecursionException extends YAPIONException {
         super(cause);
     }
 
-    protected YAPIONRecursionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
-
 }
