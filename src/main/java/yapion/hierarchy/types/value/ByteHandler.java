@@ -5,8 +5,9 @@
 package yapion.hierarchy.types.value;
 
 import java.util.Optional;
+import java.util.function.ToLongFunction;
 
-import static yapion.utils.ReferenceIDUtils.calc;
+import static yapion.utils.ReferenceIDUtils.referenceOld;
 
 public class ByteHandler implements ValueHandler<Byte> {
 
@@ -26,8 +27,8 @@ public class ByteHandler implements ValueHandler<Byte> {
     }
 
     @Override
-    public long referenceValue() {
-        return calc("java.lang.Byte");
+    public long referenceValue(ToLongFunction<String> referenceFunction) {
+        return referenceFunction.applyAsLong("java.lang.Byte");
     }
 
 }

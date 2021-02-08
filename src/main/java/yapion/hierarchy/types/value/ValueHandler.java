@@ -5,6 +5,7 @@
 package yapion.hierarchy.types.value;
 
 import java.util.Optional;
+import java.util.function.ToLongFunction;
 
 public interface ValueHandler<T> {
 
@@ -14,6 +15,6 @@ public interface ValueHandler<T> {
 
     Optional<T> parse(String s);
 
-    long referenceValue();
+    long referenceValue(ToLongFunction<String> referenceFunction);
 
 }

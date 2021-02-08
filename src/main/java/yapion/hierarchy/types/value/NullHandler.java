@@ -5,8 +5,9 @@
 package yapion.hierarchy.types.value;
 
 import java.util.Optional;
+import java.util.function.ToLongFunction;
 
-import static yapion.utils.ReferenceIDUtils.calc;
+import static yapion.utils.ReferenceIDUtils.referenceOld;
 
 public class NullHandler implements ValueHandler<Object> {
 
@@ -29,8 +30,8 @@ public class NullHandler implements ValueHandler<Object> {
     }
 
     @Override
-    public long referenceValue() {
-        return calc("null");
+    public long referenceValue(ToLongFunction<String> referenceFunction) {
+        return referenceFunction.applyAsLong("null");
     }
 
 }

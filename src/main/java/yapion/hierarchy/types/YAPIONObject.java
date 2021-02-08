@@ -22,10 +22,11 @@ import yapion.utils.RecursionUtils;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.ToLongFunction;
 
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.KEY;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
-import static yapion.utils.ReferenceIDUtils.calc;
+import static yapion.utils.ReferenceIDUtils.referenceOld;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
@@ -39,7 +40,7 @@ public class YAPIONObject extends YAPIONMappingType implements ObjectRetrieve<St
     }
 
     @Override
-    public long referenceValue() {
+    public long referenceValue(ToLongFunction<String> referenceFunction) {
         if (hasReferenceValue()) {
             return getReferenceValue();
         }
@@ -47,7 +48,7 @@ public class YAPIONObject extends YAPIONMappingType implements ObjectRetrieve<St
         referenceValue += getDepth();
         referenceValue ^= getType().getReferenceValue();
         for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            referenceValue ^= ((long) entry.getKey().length() ^ calc(entry.getKey()) ^ entry.getValue().referenceValue()) & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue ^= ((long) entry.getKey().length() ^ referenceOld(entry.getKey()) ^ entry.getValue().referenceValue(referenceFunction)) & 0x7FFFFFFFFFFFFFFFL;
         }
         cacheReferenceValue(referenceValue);
         return referenceValue;

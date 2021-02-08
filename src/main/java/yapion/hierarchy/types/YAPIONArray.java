@@ -9,20 +9,20 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.exceptions.value.YAPIONRecursionException;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ArrayAdd;
-import yapion.hierarchy.api.storage.ObjectAdd;
 import yapion.hierarchy.api.storage.ObjectRemove;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.utils.RecursionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.ToLongFunction;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
@@ -36,7 +36,7 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
     }
 
     @Override
-    public long referenceValue() {
+    public long referenceValue(ToLongFunction<String> referenceFunction) {
         if (hasReferenceValue()) {
             return getReferenceValue();
         }
@@ -45,7 +45,7 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
         referenceValue ^= getType().getReferenceValue();
         for (int i = 0; i < array.size(); i++) {
             referenceValue += i;
-            referenceValue ^= (array.get(i).referenceValue()) & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue ^= (array.get(i).referenceValue(referenceFunction)) & 0x7FFFFFFFFFFFFFFFL;
         }
         cacheReferenceValue(referenceValue);
         return referenceValue;

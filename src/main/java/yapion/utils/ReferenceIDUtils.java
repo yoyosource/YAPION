@@ -35,33 +35,16 @@ public class ReferenceIDUtils {
         }
     };
 
+    private static final Map<String, Long> referenceIDOldMapCache = new HashMap<>();
+    private static final Map<String, Long> referenceIDOldMap = new LinkedHashMap<String, Long>() {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, Long> eldest) {
+            return size() > cacheSize;
+        }
+    };
+
     static {
         initCache();
-    }
-
-    public static void main(String[] args) {
-        long totalTime = 0;
-        for (int i = 0; i < 100000000; i++) {
-            long time = System.nanoTime();
-            reference("Hello World");
-            time = System.nanoTime() - time;
-            totalTime += time;
-            if (i % 1000000 == 0) {
-                System.out.println("Time: " + time + "   " + (totalTime / (i + 1)));
-            }
-        }
-        System.out.println(totalTime / 100000000);
-
-        // 500000000
-        // reference
-        // 55 100000000
-        // 68 10000000
-        // 83 1000000
-
-        // reference2
-        // 293 100000000
-        // 327 10000000
-        // 550 1000000
     }
 
     /**
@@ -72,31 +55,10 @@ public class ReferenceIDUtils {
      * @param s the input string to calculate a reference ID from
      * @return the reference ID of the given String
      */
-    public static long calc(String s) {
+    public static long reference(String s) {
         if (referenceIDMap.containsKey(s)) {
             return referenceIDMap.get(s);
         }
-        if (referenceIDMapCache.containsKey(s)) {
-            return referenceIDMapCache.get(s);
-        }
-        if (false) {
-            long l = reference(s);
-            referenceIDMap.put(s, l);
-            return l;
-        }
-        try {
-            // TODO: Replace this by some other referenceID system before 1.0.0
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-            byte[] bytes = digest.digest(s.getBytes(StandardCharsets.UTF_8));
-            long value = (long) bytes[0] << 56 | (long) bytes[1] << 48 | (long) bytes[2] << 40 | (long) bytes[3] << 32 | (long) bytes[4] << 24 | (long) bytes[5] << 16 | (long) bytes[6] << 8 | (long) bytes[7];
-            referenceIDMap.put(s, value);
-            return value;
-        } catch (NoSuchAlgorithmException e) {
-            throw new YAPIONException("MD5 is not supported");
-        }
-    }
-
-    private static long reference(String s) {
         if (referenceIDMapCache.containsKey(s)) {
             return referenceIDMapCache.get(s);
         }
@@ -116,18 +78,29 @@ public class ReferenceIDUtils {
         return l;
     }
 
-    private static long reference2(String s) {
-        if (referenceIDMap.containsKey(s)) {
-            return referenceIDMap.get(s);
+    /**
+     * Calculates the reference ID of a given String, primarily used for variable names.
+     * This method caches the last 100 inputs for faster reference ID calculation.
+     * Use {@link #discardCache()} to discard this Cache.
+     *
+     * @param s the input string to calculate a reference ID from
+     * @return the reference ID of the given String
+     *
+     * @deprecated since 0.23.0
+     */
+    @Deprecated
+    public static long referenceOld(String s) {
+        if (referenceIDOldMap.containsKey(s)) {
+            return referenceIDOldMap.get(s);
         }
-        if (referenceIDMapCache.containsKey(s)) {
-            return referenceIDMapCache.get(s);
+        if (referenceIDOldMapCache.containsKey(s)) {
+            return referenceIDOldMapCache.get(s);
         }
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] bytes = digest.digest(s.getBytes(StandardCharsets.UTF_8));
             long value = (long) bytes[0] << 56 | (long) bytes[1] << 48 | (long) bytes[2] << 40 | (long) bytes[3] << 32 | (long) bytes[4] << 24 | (long) bytes[5] << 16 | (long) bytes[6] << 8 | (long) bytes[7];
-            referenceIDMap.put(s, value);
+            referenceIDOldMap.put(s, value);
             return value;
         } catch (NoSuchAlgorithmException e) {
             throw new YAPIONException("MD5 is not supported");
@@ -149,7 +122,7 @@ public class ReferenceIDUtils {
     }
 
     /**
-     * Discard the cache used by {@link #calc(String)}
+     * Discard the cache used by {@link #referenceOld(String)}
      */
     public static void discardCache() {
         referenceIDMap.clear();
@@ -171,7 +144,8 @@ public class ReferenceIDUtils {
             Field field = YAPIONValue.class.getDeclaredField("allowedTypes");
             field.setAccessible(true);
             for (String s : ((String[]) field.get(null))) {
-                referenceIDMapCache.put(s, calc(s));
+                referenceIDMapCache.put(s, reference(s));
+                referenceIDOldMapCache.put(s, referenceOld(s));
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             // Ignored
@@ -181,7 +155,8 @@ public class ReferenceIDUtils {
         for (Field field : fields) {
             try {
                 String s = (String) field.get(null);
-                referenceIDMapCache.put(s, calc(s));
+                referenceIDMapCache.put(s, reference(s));
+                referenceIDOldMapCache.put(s, referenceOld(s));
             } catch (IllegalAccessException e) {
                 // Ignored
             }

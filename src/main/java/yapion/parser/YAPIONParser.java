@@ -11,6 +11,7 @@ import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.*;
+import yapion.utils.ReferenceIDUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
@@ -33,6 +34,19 @@ public final class YAPIONParser {
      */
     public static YAPIONObject parse(String s) {
         return new YAPIONParser(s).parse().result();
+    }
+
+    /**
+     * Parses the String to an YAPIONObject.
+     *
+     * @param s the string to parse
+     * @return YAPIONObject parsed out of the string
+     *
+     * @deprecated since 0.23.0
+     */
+    @Deprecated
+    public static YAPIONObject parseOld(String s) {
+        return new YAPIONParser(s).oldReferenceID().parse().result();
     }
 
     /**
@@ -151,6 +165,24 @@ public final class YAPIONParser {
         return new YAPIONParser(inputStream).parse().result();
     }
 
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will not cancel even when
+     * the end of Stream is reached. It will only cancel after it has a
+     * complete and valid YAPIONObject or 1 second without any new
+     * Input passed.
+     *
+     * @param inputStream the inputStream to parse
+     * @return YAPIONObject parsed out of the string
+     *
+     * @deprecated since 0.23.0
+     */
+    @Deprecated
+    public static YAPIONObject parseOld(InputStream inputStream) {
+        return new YAPIONParser(inputStream).oldReferenceID().parse().result();
+    }
+
     private YAPIONObject result = null;
     private YAPIONAnyType currentObject = null;
     private String s;
@@ -177,6 +209,15 @@ public final class YAPIONParser {
      */
     public YAPIONParser(InputStream inputStream) {
         this.inputStream = inputStream;
+    }
+
+    /**
+     * @deprecated since 0.23.0
+     */
+    @Deprecated
+    public YAPIONParser oldReferenceID() {
+        oldReferenceID = true;
+        return this;
     }
 
     /**
@@ -227,6 +268,7 @@ public final class YAPIONParser {
         return st.toString();
     }
 
+    private boolean oldReferenceID = false;
     private boolean escaped = false;
     private StringBuilder unicode = null;
     private StringBuilder current = new StringBuilder();
@@ -345,7 +387,7 @@ public final class YAPIONParser {
     private void parseFinish() {
         Map<Long, YAPIONObject> yapionObjectMap = new HashMap<>();
         for (YAPIONObject yapionObject : yapionObjectList) {
-            yapionObjectMap.put(new YAPIONPointer(yapionObject).getPointerID(), yapionObject);
+            yapionObjectMap.put(yapionObject.referenceValue(oldReferenceID ? ReferenceIDUtils::referenceOld : ReferenceIDUtils::reference), yapionObject);
         }
         for (YAPIONPointer yapionPointer : yapionPointerList) {
             long id = yapionPointer.getPointerID();

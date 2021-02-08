@@ -5,8 +5,9 @@
 package yapion.hierarchy.types.value;
 
 import java.util.Optional;
+import java.util.function.ToLongFunction;
 
-import static yapion.utils.ReferenceIDUtils.calc;
+import static yapion.utils.ReferenceIDUtils.referenceOld;
 
 public class LongHandler implements ValueHandler<Long> {
 
@@ -26,8 +27,8 @@ public class LongHandler implements ValueHandler<Long> {
     }
 
     @Override
-    public long referenceValue() {
-        return calc("java.lang.Long");
+    public long referenceValue(ToLongFunction<String> referenceFunction) {
+        return referenceFunction.applyAsLong("java.lang.Long");
     }
 
 }

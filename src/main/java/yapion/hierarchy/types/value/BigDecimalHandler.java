@@ -6,8 +6,10 @@ package yapion.hierarchy.types.value;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.function.ToLongFunction;
 
-import static yapion.utils.ReferenceIDUtils.calc;
+import static yapion.utils.ReferenceIDUtils.reference;
+import static yapion.utils.ReferenceIDUtils.referenceOld;
 
 public class BigDecimalHandler implements ValueHandler<BigDecimal> {
 
@@ -27,8 +29,8 @@ public class BigDecimalHandler implements ValueHandler<BigDecimal> {
     }
 
     @Override
-    public long referenceValue() {
-        return calc("java.math.BigDecimal");
+    public long referenceValue(ToLongFunction<String> referenceFunction) {
+        return referenceFunction.applyAsLong("java.math.BigDecimal");
     }
 
 }

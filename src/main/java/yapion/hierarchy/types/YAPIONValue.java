@@ -16,6 +16,7 @@ import yapion.hierarchy.types.value.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.function.ToLongFunction;
 
 import static yapion.utils.IdentifierUtils.*;
 
@@ -85,9 +86,9 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     @Override
-    public long referenceValue() {
+    public long referenceValue(ToLongFunction<String> referenceFunction) {
         if (!hasReferenceValue()) {
-            cacheReferenceValue(getType().getReferenceValue() ^ valueHandler.referenceValue());
+            cacheReferenceValue(getType().getReferenceValue() ^ valueHandler.referenceValue(referenceFunction));
         }
         return getReferenceValue();
     }

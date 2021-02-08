@@ -23,6 +23,7 @@ import yapion.parser.YAPIONParserMapObject;
 import yapion.utils.RecursionUtils;
 
 import java.util.*;
+import java.util.function.ToLongFunction;
 
 import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
 
@@ -44,7 +45,7 @@ public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIO
     }
 
     @Override
-    public long referenceValue() {
+    public long referenceValue(ToLongFunction<String> referenceFunction) {
         if (hasReferenceValue()) {
             return getReferenceValue();
         }
@@ -52,7 +53,7 @@ public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIO
         referenceValue ^= getType().getReferenceValue();
         referenceValue += getDepth();
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> e : variables.entrySet()) {
-            referenceValue ^= (e.getKey().referenceValue() * e.getValue().referenceValue()) & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue ^= (e.getKey().referenceValue(referenceFunction) * e.getValue().referenceValue(referenceFunction)) & 0x7FFFFFFFFFFFFFFFL;
         }
         cacheReferenceValue(referenceValue);
         return referenceValue;
