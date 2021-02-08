@@ -18,8 +18,6 @@ import yapion.serializing.YAPIONSerializerFlags;
 import java.lang.reflect.Field;
 
 @RequiredArgsConstructor
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 public class SerializeData<T> {
 
     public final T object;

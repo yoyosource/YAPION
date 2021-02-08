@@ -4,12 +4,8 @@
 
 package yapion.serializing.api;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.serializing.SerializeManager;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S1610"})
 public abstract class SerializerObject<T> implements SerializerObjectInterface<T> {
 

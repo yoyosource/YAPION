@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.object.list;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -19,8 +17,6 @@ import java.util.LinkedList;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S3740"})
 @SerializerImplementation(since = "0.3.0")
 public class LinkedListSerializer implements InternalSerializer<LinkedList> {

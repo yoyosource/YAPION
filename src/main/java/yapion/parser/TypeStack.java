@@ -4,8 +4,6 @@
 
 package yapion.parser;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.hierarchy.types.YAPIONType;
@@ -13,8 +11,6 @@ import yapion.hierarchy.types.YAPIONType;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 public class TypeStack {
 
     private final LinkedList<YAPIONType> stack = new LinkedList<>();

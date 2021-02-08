@@ -274,7 +274,7 @@ public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIO
         }
 
         for (YAPIONParserMapMapping mapping : mappingList) {
-            String[] strings = mapping.mapping.get().split(":");
+            String[] strings = mapping.mapping.split(":");
             if (strings.length != 2) {
                 continue;
             }

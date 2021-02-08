@@ -93,25 +93,27 @@ public class SerializeManager {
     private static final Map<Class<?>, InstanceFactoryInterface<?>> instanceFactoryMap = new HashMap<>();
 
     static {
-        ClassIndex.getAnnotated(SerializerImplementation.class).forEach(SerializeManager::add);
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(SerializeManager.class.getResourceAsStream("/yapion/" + SerializerImplementation.class.getTypeName())))) {
+            bufferedReader.lines().forEach(s -> {
+                try {
+                    add(Class.forName(s));
+                } catch (ClassNotFoundException e) {
+                    log.warn(e.getMessage(), e);
+                }
+            });
+        } catch (IOException e) {
+            log.warn(e.getMessage(), e);
+        }
         if (serializerMap.isEmpty()) {
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(SerializeManager.class.getResourceAsStream("/yapion/" + SerializerImplementation.class.getTypeName())))) {
-                bufferedReader.lines().forEach(s -> {
-                    try {
-                        add(Class.forName(s));
-                    } catch (ClassNotFoundException e) {
-                        // Ignored
-                    }
-                });
-            } catch (IOException e) {
-                // Ignored
-            }
+            log.error("No Serializer was loaded. Please inspect.");
         }
 
         oSerializerGroups.add(() -> "yapion.annotations.");
         oSerializerGroups.add(() -> "yapion.exceptions.");
         oSerializerGroups.add(() -> "yapion.hierarchy.");
         oSerializerGroups.add(() -> "yapion.parser.");
+        oSerializerGroups.add(() -> "yapion.serializing.api");
+        oSerializerGroups.add(() -> "yapion.serializing.data");
         oSerializerGroups.add(() -> "yapion.serializing.serializer");
         oSerializerGroups.add(() -> "yapion.utils.");
         oSerializerGroups.build();

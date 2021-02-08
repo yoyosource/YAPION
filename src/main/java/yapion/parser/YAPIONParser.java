@@ -5,13 +5,11 @@
 package yapion.parser;
 
 import lombok.NonNull;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.exceptions.utils.YAPIONIOException;
-import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.ObjectOutput;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.*;
 import yapion.utils.ReflectionsUtils;
 
@@ -25,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 public final class YAPIONParser {
 
     /**
@@ -402,7 +398,7 @@ public final class YAPIONParser {
 
     private void add(YAPIONValue<String> yapionValue) {
         if (currentObject instanceof YAPIONMap) {
-            ((YAPIONMap) currentObject).add(new YAPIONParserMapMapping(yapionValue));
+            ((YAPIONMap) currentObject).add(new YAPIONParserMapMapping(yapionValue.get()));
         }
     }
 

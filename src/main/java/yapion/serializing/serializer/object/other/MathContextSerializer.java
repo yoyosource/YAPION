@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.object.other;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
@@ -18,8 +16,6 @@ import java.math.RoundingMode;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @SerializerImplementation(since = "0.13.1")
 public class MathContextSerializer implements InternalSerializer<MathContext> {
 

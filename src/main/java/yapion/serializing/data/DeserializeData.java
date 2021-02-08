@@ -14,8 +14,6 @@ import yapion.utils.ReflectionsUtils;
 import java.lang.reflect.Field;
 
 @RequiredArgsConstructor
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 public class DeserializeData<T extends YAPIONAnyType> {
 
     public final T object;

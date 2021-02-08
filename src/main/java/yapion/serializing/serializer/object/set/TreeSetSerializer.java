@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.object.set;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -19,8 +17,6 @@ import java.util.TreeSet;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @SerializerImplementation(since = "0.7.0")
 public class TreeSetSerializer implements InternalSerializer<TreeSet<?>> {
 

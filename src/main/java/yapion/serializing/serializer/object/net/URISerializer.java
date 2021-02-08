@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.object.net;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
@@ -17,8 +15,6 @@ import java.net.URI;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @SerializerImplementation(since = "0.12.0")
 public class URISerializer implements InternalSerializer<URI> {
 

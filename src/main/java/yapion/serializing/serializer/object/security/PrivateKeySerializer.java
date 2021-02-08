@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.object.security;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -26,8 +24,6 @@ import static yapion.serializing.YAPIONSerializerFlagDefault.PRIVATE_KEY_EXCEPTI
 import static yapion.utils.IdentifierUtils.KEY_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude
-@YAPIONLoadExclude
 @SerializerImplementation(since = "0.20.0")
 public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
 

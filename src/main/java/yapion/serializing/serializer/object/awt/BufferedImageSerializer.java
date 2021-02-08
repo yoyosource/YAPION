@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.object.awt;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -19,8 +17,6 @@ import java.awt.image.WritableRaster;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude
-@YAPIONLoadExclude
 @SerializerImplementation(since = "0.20.0")
 public class BufferedImageSerializer implements InternalSerializer<BufferedImage> {
 

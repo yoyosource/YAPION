@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.object.atomic;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
@@ -17,8 +15,6 @@ import java.util.concurrent.atomic.AtomicStampedReference;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude
-@YAPIONLoadExclude
 @SerializerImplementation(since = "0.20.0")
 public class AtomicStampedReferenceSerializer implements InternalSerializer<AtomicStampedReference<?>> {
 

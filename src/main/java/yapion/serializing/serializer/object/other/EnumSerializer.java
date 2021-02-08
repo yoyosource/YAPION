@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.object.other;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
@@ -17,8 +15,6 @@ import yapion.serializing.serializer.SerializerImplementation;
 import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S1192"})
 @SerializerImplementation(since = "0.10.0")
 public class EnumSerializer implements InternalSerializer<Enum<?>> {

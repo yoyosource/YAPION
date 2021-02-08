@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.object.throwable;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -18,8 +16,6 @@ import yapion.utils.ReflectionsUtils;
 import static yapion.utils.IdentifierUtils.EXCEPTION_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @SerializerImplementation(since = "0.20.0")
 public class ExceptionSerializer implements InternalSerializer<Exception> {
 

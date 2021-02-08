@@ -4,14 +4,10 @@
 
 package yapion.serializing.api;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.serializing.SerializeManager;
 
 import java.util.Set;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @SuppressWarnings({"java:S1610"})
 public abstract class SerializerSet<T extends Set<?>> implements SerializerSetInterface<T> {
 

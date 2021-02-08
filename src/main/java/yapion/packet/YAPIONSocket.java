@@ -5,12 +5,16 @@
 package yapion.packet;
 
 import lombok.NonNull;
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.TypeReMapper;
 
 import java.io.IOException;
 import java.net.Socket;
 
+@YAPIONLoadExclude(context = "*")
+@YAPIONSaveExclude(context = "*")
 public final class YAPIONSocket {
 
     private final Socket socket;

@@ -4,18 +4,10 @@
 
 package yapion.parser;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.types.YAPIONValue;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class YAPIONParserMapMapping {
-
-    public final YAPIONValue<String> mapping;
-
-    YAPIONParserMapMapping(YAPIONValue<String> mapping) {
-        this.mapping = mapping;
-    }
-
+    public final String mapping;
 }

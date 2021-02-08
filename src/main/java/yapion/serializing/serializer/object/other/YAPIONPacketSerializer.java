@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.object.other;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.packet.YAPIONPacket;
 import yapion.serializing.InternalSerializer;
@@ -13,8 +11,6 @@ import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @SerializerImplementation(since = "0.10.0")
 public class YAPIONPacketSerializer implements InternalSerializer<YAPIONPacket> {
 

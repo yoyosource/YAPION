@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.object.security.internal.ec;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
@@ -19,8 +17,6 @@ import java.security.spec.EllipticCurve;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude
-@YAPIONLoadExclude
 @SerializerImplementation(since = "0.23.0")
 public class EllipticCurveSerializer implements InternalSerializer<EllipticCurve> {
 

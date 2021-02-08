@@ -4,8 +4,6 @@
 
 package yapion.serializing.serializer.primitive.number;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
@@ -15,8 +13,6 @@ import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigDecimal;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @SerializerImplementation(since = "0.2.0")
 public class BigDecimalSerializer implements InternalSerializer<BigDecimal> {
 
