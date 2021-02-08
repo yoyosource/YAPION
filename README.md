@@ -46,9 +46,9 @@ dependencies {
 - rzwitserloot/lombok (https://github.com/rzwitserloot/lombok)
   - [V] 1.18.6
   - [L] MIT
-- classgraph/classgraph (https://github.com/classgraph/classgraph)
-  - [V] 4.8.46
-  - [L] MIT
+- rmuller/infomas-asl (https://github.com/rmuller/infomas-asl)
+  - [V] 3.0.5
+  - [L] Apache-2.0
 
 * [V] Version
 * [L] License
