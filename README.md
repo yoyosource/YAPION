@@ -53,11 +53,6 @@ dependencies {
 * [V] Version
 * [L] License
 
-## Tasks
-- More efficient JSON Parser (eliminate the Recursion)
-- More efficient JSON Mapper (eliminate the Recursion?)
-- Make Serializer and Deserializer event based, to eliminate the Recursive part (Queue, Serialize Callback: with result function, Done Callback: with serializer callback for dependency handling)
-
 ## Structure
 YAPION is heavily inspired by JSON and you can see some similarities between those object notations.
 Both have objects as a key, value map and arrays. An YAPION structure can only be an object. An object starts with '{' and ends with '}'. Complementary an array starts with '\[' ends with ']'.

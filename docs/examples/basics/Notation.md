@@ -47,7 +47,21 @@ a->0000000000000000
 ```
 
 ## Value
+A Value is a "primitive" Object just storing one type of data. This can be:
+- boolean
+- byte
+- short
+- char
+- int
+- float
+- long
+- double
+- BigInteger
+- BigDecimal
+- String
+- 'null'
 
+The value is surrounded by '(' and ')' in any Key-Value-Pair, except in Arrays. If a String is not ambigious you can remove the single or double quotes. If you want to have a String of length 1 that is ambigious you need to use double quotes. 
 
 ### Example
 ```
