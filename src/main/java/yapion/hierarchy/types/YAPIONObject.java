@@ -48,7 +48,7 @@ public class YAPIONObject extends YAPIONMappingType implements ObjectRetrieve<St
         referenceValue += getDepth();
         referenceValue ^= getType().getReferenceValue();
         for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            referenceValue ^= ((long) entry.getKey().length() ^ referenceOld(entry.getKey()) ^ entry.getValue().referenceValue(referenceFunction)) & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue ^= ((long) entry.getKey().length() ^ referenceFunction.applyAsLong(entry.getKey()) ^ entry.getValue().referenceValue(referenceFunction)) & 0x7FFFFFFFFFFFFFFFL;
         }
         cacheReferenceValue(referenceValue);
         return referenceValue;
