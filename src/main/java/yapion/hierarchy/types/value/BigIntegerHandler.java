@@ -8,9 +8,6 @@ import java.math.BigInteger;
 import java.util.Optional;
 import java.util.function.ToLongFunction;
 
-import static yapion.utils.ReferenceIDUtils.reference;
-import static yapion.utils.ReferenceIDUtils.referenceOld;
-
 public class BigIntegerHandler implements ValueHandler<BigInteger> {
 
     @Override

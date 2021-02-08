@@ -8,9 +8,6 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.ToLongFunction;
 
-import static yapion.utils.ReferenceIDUtils.reference;
-import static yapion.utils.ReferenceIDUtils.referenceOld;
-
 public class BigDecimalHandler implements ValueHandler<BigDecimal> {
 
     @Override

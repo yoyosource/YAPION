@@ -7,8 +7,6 @@ package yapion.hierarchy.types.value;
 import java.util.Optional;
 import java.util.function.ToLongFunction;
 
-import static yapion.utils.ReferenceIDUtils.referenceOld;
-
 public class BooleanHandler implements ValueHandler<Boolean> {
 
     @Override

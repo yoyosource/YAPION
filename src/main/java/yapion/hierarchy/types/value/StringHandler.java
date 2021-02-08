@@ -10,7 +10,6 @@ import java.util.function.ToLongFunction;
 import static yapion.hierarchy.types.value.NumberSuffix.*;
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
-import static yapion.utils.ReferenceIDUtils.referenceOld;
 
 public class StringHandler implements ValueHandler<String> {
 

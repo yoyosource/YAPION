@@ -9,7 +9,6 @@ import java.util.function.ToLongFunction;
 
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
 import static yapion.hierarchy.types.value.ValueUtils.charToUTFEscape;
-import static yapion.utils.ReferenceIDUtils.referenceOld;
 
 public class CharacterHandler implements ValueHandler<Character> {
 
