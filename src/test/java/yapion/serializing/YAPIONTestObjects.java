@@ -5,7 +5,9 @@ import lombok.ToString;
 import org.junit.BeforeClass;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.object.YAPIONData;
+import yapion.annotations.object.YAPIONField;
 import yapion.annotations.serialize.YAPIONSave;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
@@ -167,6 +169,63 @@ public class YAPIONTestObjects {
         public int hashCode() {
             return Objects.hash(intList);
         }
+    }
+
+    public interface CNC {
+
+    }
+
+    @YAPIONData(cascading = true)
+    public static class Cascading implements CNC {
+
+        private CNC cnc1;
+        private CNC cnc2 = null;
+
+        public Cascading(CNC cnc1) {
+            this.cnc1 = cnc1;
+        }
+
+        public Cascading(CNC cnc1, CNC cnc2) {
+            this.cnc1 = cnc1;
+            this.cnc2 = cnc2;
+        }
+
+    }
+
+    @YAPIONSave(context = "empty")
+    @YAPIONLoad(context = "empty")
+    public static class NonCascading implements CNC {
+
+        @YAPIONField(context = "empty")
+        private CNC cnc1;
+
+        private CNC cnc2 = null;
+
+        public NonCascading(CNC cnc1) {
+            this.cnc1 = cnc1;
+        }
+
+        public NonCascading(CNC cnc1, CNC cnc2) {
+            this.cnc1 = cnc1;
+            this.cnc2 = cnc2;
+        }
+
+    }
+
+    public static class NonSaved implements CNC {
+
+        private CNC cnc1;
+        private CNC cnc2 = null;
+
+        public NonSaved(CNC cnc1) {
+            this.cnc1 = cnc1;
+        }
+
+        public NonSaved(CNC cnc1, CNC cnc2) {
+            this.cnc1 = cnc1;
+            this.cnc2 = cnc2;
+        }
+
     }
 
     static String getUserHome() {
