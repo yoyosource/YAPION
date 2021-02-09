@@ -102,17 +102,11 @@ public final class YAPIONSerializer {
 
     private YAPIONSerializer(@NonNull Object object, YAPIONSerializer yapionSerializer) {
         this.object = object;
-        // TODO: Test this cascading feature
         if (yapionSerializer.contextManager.willBeCascading(object.getClass()) && !yapionSerializer.contextManager.isCascading()) {
             this.contextManager = new ContextManager(yapionSerializer.contextManager.get());
         } else {
             this.contextManager = yapionSerializer.contextManager;
         }
-        /*if (yapionSerializer.contextManager.isCascading()) {
-            this.contextManager = yapionSerializer.contextManager;
-        } else {
-            this.contextManager = new ContextManager(yapionSerializer.contextManager.get());
-        }*/
         this.pointerMap = yapionSerializer.pointerMap;
         this.yapionSerializerFlags = yapionSerializer.yapionSerializerFlags;
     }
@@ -185,6 +179,7 @@ public final class YAPIONSerializer {
 
         YAPIONObject yapionObject = new YAPIONObject();
         if (!pointerMap.containsKey(object)) {
+            // Todo: implement old mode maybe?
             pointerMap.put(object, new YAPIONPointer(yapionObject));
         }
         MethodManager.preSerializationStep(object, object.getClass(), contextManager);

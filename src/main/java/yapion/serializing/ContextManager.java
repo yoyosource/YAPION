@@ -11,8 +11,11 @@ import yapion.annotations.object.YAPIONField;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.hierarchy.types.YAPIONObject;
 
 import java.lang.reflect.Field;
+
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -87,7 +90,18 @@ public final class ContextManager {
     boolean willBeCascading(Class<?> clazz) {
         YAPIONData yapionData = clazz.getDeclaredAnnotation(YAPIONData.class);
         if (yapionData == null) return false;
-        return yapionData.cascading();
+        return yapionData.cascading() && is(yapionData.context());
+    }
+
+    boolean willBeCascading(YAPIONObject yapionObject) {
+        if (yapionObject.hasValue(TYPE_IDENTIFIER, String.class)) {
+            return true;
+        }
+        try {
+            return willBeCascading(Class.forName(yapionObject.getValue(TYPE_IDENTIFIER, String.class).get()));
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     YAPIONInfo is(Class<?> clazz) {

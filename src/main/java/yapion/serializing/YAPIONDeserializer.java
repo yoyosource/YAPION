@@ -117,11 +117,10 @@ public final class YAPIONDeserializer {
 
     private YAPIONDeserializer(@NonNull YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
         this.yapionObject = yapionObject;
-        // TODO: Implement this cascading feature
-        if (yapionDeserializer.contextManager.isCascading()) {
-            this.contextManager = yapionDeserializer.contextManager;
-        } else {
+        if (yapionDeserializer.contextManager.willBeCascading(yapionObject) && !yapionDeserializer.contextManager.isCascading()) {
             this.contextManager = new ContextManager(yapionDeserializer.contextManager.get());
+        } else {
+            this.contextManager = yapionDeserializer.contextManager;
         }
         this.pointerMap = yapionDeserializer.pointerMap;
         this.typeReMapper = yapionDeserializer.typeReMapper;
