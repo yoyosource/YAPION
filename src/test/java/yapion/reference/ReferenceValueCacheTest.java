@@ -44,7 +44,7 @@ public class ReferenceValueCacheTest {
         long referenceValue = yapionObject.referenceValue();
         time = System.nanoTime() - time;
 
-        assertThat(referenceValue, is(-193756839419922802L));
+        assertThat(referenceValue, is(-3431023820675245149L));
         assertThat(time, greaterThan(10000L));
     }
 
@@ -57,7 +57,7 @@ public class ReferenceValueCacheTest {
         long referenceValue = yapionObject.referenceValue();
         yapionArray.add(new YAPIONObject());
         assertThat(referenceValue, not(yapionObject.referenceValue()));
-        assertThat(referenceValue, is(-679689429068454551L));
+        assertThat(referenceValue, is(-1908874215808141702L));
         assertThat(yapionArray.referenceValue(), is(-8368003397389134876L));
     }
 

@@ -70,7 +70,7 @@ public class ReferenceIDUtils {
         for (int i = 0; i < s.length(); i++) {
             byte b = bytes[i];
             for (int temp = 0; temp < 8; temp++) {
-                l ^= b << (long) (temp * 8);
+                l ^= (long) b << (long) (temp * 8);
             }
         }
         l &= 0x7FFFFFFFFFFFFFFFL;

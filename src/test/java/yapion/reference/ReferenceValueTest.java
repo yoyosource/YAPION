@@ -31,57 +31,57 @@ public class ReferenceValueTest {
 
     @Test
     public void testVStringReferenceValue() {
-        assertThat(new YAPIONValue<>("").referenceValue(), is(-8852853624388309656L));
+        assertThat(new YAPIONValue<>("").referenceValue(), is(-3137590737166697415L));
     }
 
     @Test
     public void testVCharacterReferenceValue() {
-        assertThat(new YAPIONValue<>(' ').referenceValue(), is(-8852853624388309656L));
+        assertThat(new YAPIONValue<>(' ').referenceValue(), is(-5543246427876484258L));
     }
 
     @Test
     public void testVBooleanReferenceValue() {
-        assertThat(new YAPIONValue<>(false).referenceValue(), is(-8852853624388309656L));
+        assertThat(new YAPIONValue<>(false).referenceValue(), is(-3137590737166697415L));
     }
 
     @Test
     public void testVByteReferenceValue() {
-        assertThat(new YAPIONValue<>((byte)0).referenceValue(), is(-8852853624388309656L));
+        assertThat(new YAPIONValue<>((byte)0).referenceValue(), is(-5036317721349778857L));
     }
 
     @Test
     public void testVShortReferenceValue() {
-        assertThat(new YAPIONValue<>((short)0).referenceValue(), is(-8852853624388309656L));
+        assertThat(new YAPIONValue<>((short)0).referenceValue(), is(-5036317721349778857L));
     }
 
     @Test
     public void testVIntReferenceValue() {
-        assertThat(new YAPIONValue<>(0).referenceValue(), is(-8852853624388309656L));
+        assertThat(new YAPIONValue<>(0).referenceValue(), is(-3137590737166697415L));
     }
 
     @Test
     public void testVLongReferenceValue() {
-        assertThat(new YAPIONValue<>(0L).referenceValue(), is(-8852853624388309656L));
+        assertThat(new YAPIONValue<>(0L).referenceValue(), is(-5036317721349778857L));
     }
 
     @Test
     public void testVBIntReferenceValue() {
-        assertThat(new YAPIONValue<>(BigInteger.ZERO).referenceValue(), is(-8852853624388309656L));
+        assertThat(new YAPIONValue<>(BigInteger.ZERO).referenceValue(), is(-8563501763489816220L));
     }
 
     @Test
     public void testVFloatReferenceValue() {
-        assertThat(new YAPIONValue<>(0F).referenceValue(), is(-8852853624388309656L));
+        assertThat(new YAPIONValue<>(0F).referenceValue(), is(-5036317721349778857L));
     }
 
     @Test
     public void testVDoubleReferenceValue() {
-        assertThat(new YAPIONValue<>(0D).referenceValue(), is(-8852853624388309656L));
+        assertThat(new YAPIONValue<>(0D).referenceValue(), is(-3137590737166697415L));
     }
 
     @Test
     public void testVBDoubleReferenceValue() {
-        assertThat(new YAPIONValue<>(BigDecimal.ZERO).referenceValue(), is(-8852853624388309656L));
+        assertThat(new YAPIONValue<>(BigDecimal.ZERO).referenceValue(), is(-8563501763489816220L));
     }
 
 }
