@@ -4,8 +4,9 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.ReferenceFunction;
+
 import java.util.Optional;
-import java.util.function.ToLongFunction;
 
 import static yapion.hierarchy.types.value.NumberSuffix.*;
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
@@ -76,8 +77,8 @@ public class StringHandler implements ValueHandler<String> {
     }
 
     @Override
-    public long referenceValue(ToLongFunction<String> referenceFunction) {
-        return referenceFunction.applyAsLong("java.lang.String");
+    public long referenceValue(ReferenceFunction referenceFunction) {
+        return referenceFunction.stringToReferenceValue("java.lang.String");
     }
 
 }

@@ -4,19 +4,19 @@
 
 package yapion.hierarchy.api;
 
+import lombok.NonNull;
 import yapion.hierarchy.types.YAPIONType;
+import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
-
-import java.util.function.ToLongFunction;
 
 public interface ObjectType {
 
     YAPIONType getType();
 
     default long referenceValue() {
-        return referenceValue(ReferenceIDUtils::reference);
+        return referenceValue(ReferenceIDUtils.REFERENCE_FUNCTION);
     }
 
-    long referenceValue(ToLongFunction<String> referenceFunction);
+    long referenceValue(@NonNull ReferenceFunction referenceFunction);
 
 }

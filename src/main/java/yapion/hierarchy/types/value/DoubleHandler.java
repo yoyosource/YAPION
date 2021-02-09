@@ -4,8 +4,9 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.ReferenceFunction;
+
 import java.util.Optional;
-import java.util.function.ToLongFunction;
 
 public class DoubleHandler implements ValueHandler<Double> {
 
@@ -25,8 +26,8 @@ public class DoubleHandler implements ValueHandler<Double> {
     }
 
     @Override
-    public long referenceValue(ToLongFunction<String> referenceFunction) {
-        return referenceFunction.applyAsLong("java.lang.Double");
+    public long referenceValue(ReferenceFunction referenceFunction) {
+        return referenceFunction.stringToReferenceValue("java.lang.Double");
     }
 
 }

@@ -4,17 +4,18 @@
 
 package yapion.hierarchy.types;
 
+import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONPointerException;
+import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.api.groups.YAPIONValueType;
+import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.ToLongFunction;
 
 import static yapion.utils.IdentifierUtils.POINTER_IDENTIFIER;
 
@@ -28,7 +29,7 @@ public class YAPIONPointer extends YAPIONValueType {
     }
 
     @Override
-    public long referenceValue(ToLongFunction<String> referenceFunction) {
+    public long referenceValue(@NonNull ReferenceFunction referenceFunction) {
         return getType().getReferenceValue();
     }
 
@@ -55,10 +56,16 @@ public class YAPIONPointer extends YAPIONValueType {
     }
 
     private long pointerID;
+    private ReferenceFunction referenceFunction;
     private YAPIONObject yapionObject;
 
     public YAPIONPointer(YAPIONObject yapionObject) {
-        this.pointerID = yapionObject.referenceValue() & 0x7FFFFFFFFFFFFFFFL;
+        referenceFunction = ReferenceIDUtils.REFERENCE_FUNCTION;
+        this.yapionObject = yapionObject;
+    }
+
+    public YAPIONPointer(YAPIONObject yapionObject, ReferenceFunction referenceFunction) {
+        this.referenceFunction = referenceFunction;
         this.yapionObject = yapionObject;
     }
 
@@ -81,7 +88,7 @@ public class YAPIONPointer extends YAPIONValueType {
 
     public long getPointerID() {
         if (yapionObject != null) {
-            pointerID = yapionObject.referenceValue();
+            pointerID = yapionObject.referenceValue(referenceFunction);
         }
         return pointerID & 0x7FFFFFFFFFFFFFFFL;
     }

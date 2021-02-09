@@ -11,6 +11,7 @@ import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.*;
+import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 import yapion.utils.ReflectionsUtils;
 
@@ -46,7 +47,7 @@ public final class YAPIONParser {
      */
     @Deprecated
     public static YAPIONObject parseOld(String s) {
-        return new YAPIONParser(s).oldReferenceID().parse().result();
+        return new YAPIONParser(s).setReferenceFunction(ReferenceIDUtils.REFERENCE_FUNCTION_OLD).parse().result();
     }
 
     /**
@@ -180,7 +181,7 @@ public final class YAPIONParser {
      */
     @Deprecated
     public static YAPIONObject parseOld(InputStream inputStream) {
-        return new YAPIONParser(inputStream).oldReferenceID().parse().result();
+        return new YAPIONParser(inputStream).setReferenceFunction(ReferenceIDUtils.REFERENCE_FUNCTION_OLD).parse().result();
     }
 
     private YAPIONObject result = null;
@@ -211,12 +212,8 @@ public final class YAPIONParser {
         this.inputStream = inputStream;
     }
 
-    /**
-     * @deprecated since 0.23.0
-     */
-    @Deprecated
-    public YAPIONParser oldReferenceID() {
-        oldReferenceID = true;
+    public YAPIONParser setReferenceFunction(@NonNull ReferenceFunction referenceFunction) {
+        this.referenceFunction = referenceFunction;
         return this;
     }
 
@@ -268,7 +265,7 @@ public final class YAPIONParser {
         return st.toString();
     }
 
-    private boolean oldReferenceID = false;
+    private ReferenceFunction referenceFunction = ReferenceIDUtils.REFERENCE_FUNCTION;
     private boolean escaped = false;
     private StringBuilder unicode = null;
     private StringBuilder current = new StringBuilder();
@@ -387,7 +384,7 @@ public final class YAPIONParser {
     private void parseFinish() {
         Map<Long, YAPIONObject> yapionObjectMap = new HashMap<>();
         for (YAPIONObject yapionObject : yapionObjectList) {
-            yapionObjectMap.put(yapionObject.referenceValue(oldReferenceID ? ReferenceIDUtils::referenceOld : ReferenceIDUtils::reference), yapionObject);
+            yapionObjectMap.put(yapionObject.referenceValue(referenceFunction), yapionObject);
         }
         for (YAPIONPointer yapionPointer : yapionPointerList) {
             long id = yapionPointer.getPointerID();

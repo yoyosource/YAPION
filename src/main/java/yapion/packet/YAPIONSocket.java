@@ -37,7 +37,7 @@ public final class YAPIONSocket {
     }
 
     public void close() throws IOException {
-        socket.close();
+        // socket.close();
         yapionInputStream.close();
         yapionOutputStream.close();
     }

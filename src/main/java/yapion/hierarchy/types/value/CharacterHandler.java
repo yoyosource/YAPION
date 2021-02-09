@@ -4,8 +4,9 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.ReferenceFunction;
+
 import java.util.Optional;
-import java.util.function.ToLongFunction;
 
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
 import static yapion.hierarchy.types.value.ValueUtils.charToUTFEscape;
@@ -31,8 +32,8 @@ public class CharacterHandler implements ValueHandler<Character> {
     }
 
     @Override
-    public long referenceValue(ToLongFunction<String> referenceFunction) {
-        return referenceFunction.applyAsLong("java.lang.Character");
+    public long referenceValue(ReferenceFunction referenceFunction) {
+        return referenceFunction.stringToReferenceValue("java.lang.Character");
     }
 
 }

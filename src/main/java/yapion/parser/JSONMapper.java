@@ -48,7 +48,7 @@ public class JSONMapper {
     private void parseFinish() {
         Map<Long, YAPIONObject> yapionObjectMap = new HashMap<>();
         for (YAPIONObject yapionObject : yapionObjectList) {
-            yapionObjectMap.put(new YAPIONPointer(yapionObject).getPointerID(), yapionObject);
+            yapionObjectMap.put(yapionObject.referenceValue(), yapionObject);
         }
         for (YAPIONPointer yapionPointer : yapionPointerList) {
             long id = yapionPointer.getPointerID();

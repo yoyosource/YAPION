@@ -8,25 +8,24 @@ import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONRecursionException;
-import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.groups.YAPIONMappingType;
 import yapion.hierarchy.api.storage.ObjectAdd;
-import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.storage.ObjectRemove;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
+import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.output.StringOutput;
 import yapion.utils.RecursionUtils;
+import yapion.utils.ReferenceFunction;
 
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.ToLongFunction;
 
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.KEY;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
-import static yapion.utils.ReferenceIDUtils.referenceOld;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
@@ -40,17 +39,15 @@ public class YAPIONObject extends YAPIONMappingType implements ObjectRetrieve<St
     }
 
     @Override
-    public long referenceValue(ToLongFunction<String> referenceFunction) {
-        if (hasReferenceValue()) {
-            return getReferenceValue();
-        }
+    protected long referenceValueProvider(ReferenceFunction referenceFunction) {
         long referenceValue = 0;
         referenceValue += getDepth();
         referenceValue ^= getType().getReferenceValue();
         for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            referenceValue ^= ((long) entry.getKey().length() ^ referenceFunction.applyAsLong(entry.getKey()) ^ entry.getValue().referenceValue(referenceFunction)) & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue ^= (long) entry.getKey().length() & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue ^= referenceFunction.stringToReferenceValue(entry.getKey()) & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue ^= entry.getValue().referenceValue(referenceFunction) & 0x7FFFFFFFFFFFFFFFL;
         }
-        cacheReferenceValue(referenceValue);
         return referenceValue;
     }
 

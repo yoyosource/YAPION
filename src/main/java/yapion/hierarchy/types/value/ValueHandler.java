@@ -4,8 +4,9 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.ReferenceFunction;
+
 import java.util.Optional;
-import java.util.function.ToLongFunction;
 
 public interface ValueHandler<T> {
 
@@ -15,6 +16,6 @@ public interface ValueHandler<T> {
 
     Optional<T> parse(String s);
 
-    long referenceValue(ToLongFunction<String> referenceFunction);
+    long referenceValue(ReferenceFunction referenceFunction);
 
 }

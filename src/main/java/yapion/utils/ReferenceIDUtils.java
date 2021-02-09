@@ -4,6 +4,8 @@
 
 package yapion.utils;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
@@ -16,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.ToLongFunction;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -51,11 +54,20 @@ public class ReferenceIDUtils {
      * Calculates the reference ID of a given String, primarily used for variable names.
      * This method caches the last 100 inputs for faster reference ID calculation.
      * Use {@link #discardCache()} to discard this Cache.
-     *
-     * @param s the input string to calculate a reference ID from
-     * @return the reference ID of the given String
      */
-    public static long reference(String s) {
+    public static final ReferenceFunction REFERENCE_FUNCTION = new ReferenceFunction(ReferenceIDUtils::reference);
+
+    /**
+     * Calculates the reference ID of a given String, primarily used for variable names.
+     * This method caches the last 100 inputs for faster reference ID calculation.
+     * Use {@link #discardCache()} to discard this Cache.
+     *
+     * @deprecated since 0.23.0
+     */
+    @Deprecated
+    public static final ReferenceFunction REFERENCE_FUNCTION_OLD = new ReferenceFunction(ReferenceIDUtils::referenceOld);
+
+    private static long reference(String s) {
         if (referenceIDMap.containsKey(s)) {
             return referenceIDMap.get(s);
         }
@@ -78,18 +90,8 @@ public class ReferenceIDUtils {
         return l;
     }
 
-    /**
-     * Calculates the reference ID of a given String, primarily used for variable names.
-     * This method caches the last 100 inputs for faster reference ID calculation.
-     * Use {@link #discardCache()} to discard this Cache.
-     *
-     * @param s the input string to calculate a reference ID from
-     * @return the reference ID of the given String
-     *
-     * @deprecated since 0.23.0
-     */
     @Deprecated
-    public static long referenceOld(String s) {
+    private static long referenceOld(String s) {
         if (referenceIDOldMap.containsKey(s)) {
             return referenceIDOldMap.get(s);
         }

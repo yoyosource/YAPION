@@ -2,6 +2,7 @@ package yapion.packet;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
@@ -19,7 +20,7 @@ import static yapion.packet.YAPIONPacketTestObjects.TestType.*;
 
 public class YAPIONPacketTest {
 
-    private ServerSocket serverSocket;
+    private static ServerSocket serverSocket;
 
     @Before
     public void setUp() throws Exception {
@@ -31,7 +32,7 @@ public class YAPIONPacketTest {
         serverSocket.close();
     }
 
-    private synchronized YAPIONSocket[] connection() throws Exception {
+    private static synchronized YAPIONSocket[] connection() throws Exception {
         Socket socket = new Socket("127.0.0.1", 22222);
         Socket sSocket = serverSocket.accept();
         return new YAPIONSocket[]{new YAPIONSocket(sSocket), new YAPIONSocket(socket)};
@@ -76,10 +77,14 @@ public class YAPIONPacketTest {
     }
 
     private void sleep() {
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
+        sleep(20);
+    }
 
+    private void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -93,7 +98,7 @@ public class YAPIONPacketTest {
     public void sendKnownPacket() throws Exception {
         YAPIONSocket[] yapionSockets = connection();
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[0].write(new TestPacket());
         sleep();
         assertThat(result.get(), is(ValidHandler));
@@ -103,7 +108,7 @@ public class YAPIONPacketTest {
     public void sendUnknownPacket() throws Exception {
         YAPIONSocket[] yapionSockets = connection();
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[0].write(new TestPacketTwo());
         sleep();
         assertThat(result.get(), is(UnknownHandler));
@@ -113,7 +118,7 @@ public class YAPIONPacketTest {
     public void sendPlainYAPIONObject() throws Exception {
         YAPIONSocket[] yapionSockets = connection();
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[0].write(new YAPIONObject());
         sleep();
         assertThat(result.get(), is(HandleFailedHandler));
@@ -123,7 +128,7 @@ public class YAPIONPacketTest {
     public void sendPlainYAPIONObjectWithInvalidTypeObject() throws Exception {
         YAPIONSocket[] yapionSockets = connection();
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[0].write(new YAPIONObject().add(IdentifierUtils.TYPE_IDENTIFIER, new YAPIONObject()));
         sleep();
         assertThat(result.get(), is(HandleFailedHandler));
@@ -133,7 +138,7 @@ public class YAPIONPacketTest {
     public void sendPlainYAPIONObjectWithInvalidTypeValueType() throws Exception {
         YAPIONSocket[] yapionSockets = connection();
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[0].write(new YAPIONObject().add(IdentifierUtils.TYPE_IDENTIFIER, new YAPIONValue<>(0)));
         sleep();
         assertThat(result.get(), is(HandleFailedHandler));
@@ -143,7 +148,7 @@ public class YAPIONPacketTest {
     public void sendPlainYAPIONObjectWithInvalidTypeValue() throws Exception {
         YAPIONSocket[] yapionSockets = connection();
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[0].write(new YAPIONObject().add(IdentifierUtils.TYPE_IDENTIFIER, new YAPIONValue<>("hugo")));
         sleep();
         assertThat(result.get(), is(DeserializationExceptionHandler));
@@ -155,7 +160,7 @@ public class YAPIONPacketTest {
 
         YAPIONSocket[] yapionSockets = connection();
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[0].write(yapionObject);
         sleep();
         assertThat(result.get(), is(HandleFailedHandler));
@@ -171,9 +176,9 @@ public class YAPIONPacketTest {
             throw new SecurityException();
         }).setErrorHandler(yapionPacket -> {
             throw new SecurityException(yapionPacket.getException().getMessage(), yapionPacket.getException());
-        }));
+        }), 1);
         yapionSockets[0].write(yapionObject);
-        sleep();
+        sleep(400);
         assertThat(result.get(), is(DropHandler));
     }
 
@@ -185,7 +190,7 @@ public class YAPIONPacketTest {
         AtomicReference<TestType> result = new AtomicReference<>(null);
         yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result).setHandleFailedHandler(yapionPacket -> {
             throw new SecurityException();
-        }));
+        }), 1);
         yapionSockets[0].write(yapionObject);
         sleep();
         assertThat(result.get(), is(ErrorHandler));
@@ -197,7 +202,7 @@ public class YAPIONPacketTest {
         AtomicReference<TestType> result = new AtomicReference<>(null);
         yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result).add(TestPacket.class, yapionPacket -> {
             throw new SecurityException();
-        }));
+        }), 1);
         yapionSockets[0].write(new TestPacket());
         sleep();
         assertThat(result.get(), is(ExceptionHandler));
@@ -208,9 +213,9 @@ public class YAPIONPacketTest {
         YAPIONSocket[] yapionSockets = connection();
         yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, new AtomicReference<>(null)).add(TestPacket.class, yapionPacket -> {
             yapionSockets[1].write(new TestPacketTwo());
-        }));
+        }), 1);
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionSockets[0].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[0].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[0].write(new TestPacket());
         sleep();
         assertThat(result.get(), is(UnknownHandler));
@@ -221,9 +226,9 @@ public class YAPIONPacketTest {
         YAPIONSocket[] yapionSockets = connection();
         yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, new AtomicReference<>(null)).add(TestPacket.class, yapionPacket -> {
             yapionSockets[1].write(new TestPacket());
-        }));
+        }), 1);
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionSockets[0].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[0].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[0].write(new TestPacket());
         sleep();
         assertThat(result.get(), is(ValidHandler));
@@ -234,9 +239,9 @@ public class YAPIONPacketTest {
         YAPIONSocket[] yapionSockets = connection();
         yapionSockets[0].setYAPIONPacketReceiver(receiver(ValidHandler, new AtomicReference<>(null)).add(TestPacket.class, yapionPacket -> {
             yapionSockets[0].write(new TestPacketTwo());
-        }));
+        }), 1);
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[1].write(new TestPacket());
         sleep();
         assertThat(result.get(), is(UnknownHandler));
@@ -247,9 +252,9 @@ public class YAPIONPacketTest {
         YAPIONSocket[] yapionSockets = connection();
         yapionSockets[0].setYAPIONPacketReceiver(receiver(ValidHandler, new AtomicReference<>(null)).add(TestPacket.class, yapionPacket -> {
             yapionSockets[0].write(new TestPacket());
-        }));
+        }), 1);
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result));
+        yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[1].write(new TestPacket());
         sleep();
         assertThat(result.get(), is(ValidHandler));

@@ -4,8 +4,9 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.ReferenceFunction;
+
 import java.util.Optional;
-import java.util.function.ToLongFunction;
 
 public class BooleanHandler implements ValueHandler<Boolean> {
 
@@ -35,8 +36,8 @@ public class BooleanHandler implements ValueHandler<Boolean> {
     }
 
     @Override
-    public long referenceValue(ToLongFunction<String> referenceFunction) {
-        return referenceFunction.applyAsLong("java.lang.Boolean");
+    public long referenceValue(ReferenceFunction referenceFunction) {
+        return referenceFunction.stringToReferenceValue("java.lang.Boolean");
     }
 
 }

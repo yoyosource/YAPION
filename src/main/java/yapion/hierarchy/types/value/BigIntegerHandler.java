@@ -4,9 +4,10 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.ReferenceFunction;
+
 import java.math.BigInteger;
 import java.util.Optional;
-import java.util.function.ToLongFunction;
 
 public class BigIntegerHandler implements ValueHandler<BigInteger> {
 
@@ -26,8 +27,8 @@ public class BigIntegerHandler implements ValueHandler<BigInteger> {
     }
 
     @Override
-    public long referenceValue(ToLongFunction<String> referenceFunction) {
-        return referenceFunction.applyAsLong("java.math.BigInteger");
+    public long referenceValue(ReferenceFunction referenceFunction) {
+        return referenceFunction.stringToReferenceValue("java.math.BigInteger");
     }
 
 }

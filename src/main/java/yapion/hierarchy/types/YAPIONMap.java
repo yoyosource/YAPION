@@ -10,20 +10,20 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.value.YAPIONRecursionException;
-import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.groups.YAPIONMappingType;
 import yapion.hierarchy.api.storage.ObjectAdd;
 import yapion.hierarchy.api.storage.ObjectRemove;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
+import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.output.StringOutput;
 import yapion.parser.YAPIONParserMapMapping;
 import yapion.parser.YAPIONParserMapObject;
 import yapion.utils.RecursionUtils;
+import yapion.utils.ReferenceFunction;
 
 import java.util.*;
-import java.util.function.ToLongFunction;
 
 import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
 
@@ -45,17 +45,13 @@ public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIO
     }
 
     @Override
-    public long referenceValue(ToLongFunction<String> referenceFunction) {
-        if (hasReferenceValue()) {
-            return getReferenceValue();
-        }
+    protected long referenceValueProvider(ReferenceFunction referenceFunction) {
         long referenceValue = 0;
         referenceValue ^= getType().getReferenceValue();
         referenceValue += getDepth();
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> e : variables.entrySet()) {
             referenceValue ^= (e.getKey().referenceValue(referenceFunction) * e.getValue().referenceValue(referenceFunction)) & 0x7FFFFFFFFFFFFFFFL;
         }
-        cacheReferenceValue(referenceValue);
         return referenceValue;
     }
 

@@ -7,16 +7,16 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.YAPIONException;
-import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONValueType;
+import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.value.*;
+import yapion.utils.ReferenceFunction;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
-import java.util.function.ToLongFunction;
 
 import static yapion.utils.IdentifierUtils.*;
 
@@ -86,11 +86,8 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     @Override
-    public long referenceValue(ToLongFunction<String> referenceFunction) {
-        if (!hasReferenceValue()) {
-            cacheReferenceValue(getType().getReferenceValue() ^ valueHandler.referenceValue(referenceFunction));
-        }
-        return getReferenceValue();
+    protected long referenceValueProvider(ReferenceFunction referenceFunction) {
+        return getType().getReferenceValue() ^ valueHandler.referenceValue(referenceFunction);
     }
 
     @Override

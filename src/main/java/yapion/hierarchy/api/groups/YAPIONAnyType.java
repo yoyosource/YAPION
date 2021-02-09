@@ -4,14 +4,18 @@
 
 package yapion.hierarchy.api.groups;
 
+import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
+import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.OptionalAPI;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.ObjectPath;
 import yapion.hierarchy.api.ObjectSearch;
 import yapion.hierarchy.api.ObjectType;
 import yapion.hierarchy.types.YAPIONPath;
+import yapion.utils.ReferenceFunction;
+import yapion.utils.ReferenceIDUtils;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,6 +26,7 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
 
     // Reference Value System
     private AtomicReference<Long> referenceValue = new AtomicReference<>(null);
+    private ReferenceFunction referenceFunction = null;
 
     protected final void cacheReferenceValue(long referenceValue) {
         this.referenceValue.set(referenceValue);
@@ -41,6 +46,20 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
 
     protected final boolean hasReferenceValue() {
         return referenceValue.get() != null;
+    }
+
+    @Override
+    public long referenceValue(@NonNull ReferenceFunction referenceFunction) {
+        if (hasReferenceValue() && this.referenceFunction == referenceFunction) {
+            return getReferenceValue();
+        }
+        cacheReferenceValue(referenceValueProvider(referenceFunction));
+        this.referenceFunction = referenceFunction;
+        return getReferenceValue();
+    }
+
+    protected long referenceValueProvider(ReferenceFunction referenceFunction) {
+        throw new YAPIONException();
     }
 
     /**
