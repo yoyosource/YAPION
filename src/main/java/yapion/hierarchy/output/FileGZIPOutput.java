@@ -19,9 +19,4 @@ public class FileGZIPOutput extends StreamOutput {
         super(new GZIPOutputStream(new FileOutputStream(file), size));
     }
 
-    @Override
-    protected void internalConsume(String s) {
-        super.internalConsume(s);
-    }
-
 }
