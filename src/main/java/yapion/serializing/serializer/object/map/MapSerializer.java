@@ -46,7 +46,7 @@ public class MapSerializer implements InternalSerializer<Map<?, ?>> {
             YAPIONMap yapionMap = ((YAPIONObject) deserializeData.object).getMap("values");
             return DeserializeUtils.deserializeMap(deserializeData, yapionMap, (Map<Object, Object>) object);
         } catch (Exception e) {
-            throw new YAPIONDeserializerException();
+            throw new YAPIONDeserializerException(e.getMessage(), e);
         }
     }
 }

@@ -49,7 +49,7 @@ public class SetSerializer implements InternalSerializer<Set<?>> {
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return DeserializeUtils.deserializeSet(deserializeData, yapionArray, (Set<Object>) object);
         } catch (Exception e) {
-            throw new YAPIONDeserializerException();
+            throw new YAPIONDeserializerException(e.getMessage(), e);
         }
     }
 

@@ -46,7 +46,7 @@ public class QueueSerializer implements InternalSerializer<Queue<?>> {
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return DeserializeUtils.deserializeQueue(deserializeData, yapionArray, (Queue<Object>) object);
         } catch (Exception e) {
-            throw new YAPIONDeserializerException();
+            throw new YAPIONDeserializerException(e.getMessage(), e);
         }
     }
 }

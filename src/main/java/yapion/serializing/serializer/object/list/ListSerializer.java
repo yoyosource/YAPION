@@ -47,7 +47,7 @@ public class ListSerializer implements InternalSerializer<List<?>> {
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return DeserializeUtils.deserializeList(deserializeData, yapionArray, (List<Object>) object);
         } catch (Exception e) {
-            throw new YAPIONDeserializerException();
+            throw new YAPIONDeserializerException(e.getMessage(), e);
         }
     }
 }
