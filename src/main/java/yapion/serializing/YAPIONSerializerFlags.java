@@ -51,7 +51,7 @@ public final class YAPIONSerializerFlags {
     }
 
     /**
-     * Allow the special serialization denoted by {@param key}.
+     * Allow the special serialization denoted by <b>key</b>.
      *
      * @param key the special serialization to allow
      */
@@ -60,7 +60,7 @@ public final class YAPIONSerializerFlags {
     }
 
     /**
-     * Disallow the special serialization denoted by {@param key}.
+     * Disallow the special serialization denoted by <b>key</b>.
      *
      * @param key the special serialization to disallow
      */
@@ -69,7 +69,7 @@ public final class YAPIONSerializerFlags {
     }
 
     /**
-     * Set the allowance/disallowance of the special serialization denoted by {@param key}.
+     * Set the allowance/disallowance of the special serialization denoted by <b>key</b>.
      *
      * @param key the special serialization to set
      * @param value the value {@code true} of allow, {@code false} otherwise
@@ -79,7 +79,7 @@ public final class YAPIONSerializerFlags {
     }
 
     /**
-     * Returns if a given special serialization denoted by {@param key} is set to {@code true}.
+     * Returns if a given special serialization denoted by <b>key</b> is set to {@code true}.
      *
      * @param key the special serialization to check
      * @return {@code true} if set to true, {@code false} otherwise
