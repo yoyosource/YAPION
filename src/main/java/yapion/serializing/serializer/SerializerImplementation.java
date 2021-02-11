@@ -16,4 +16,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface SerializerImplementation {
     String since();
+    String initialSince() default "";
+    Class<?>[] standsFor() default {};
 }

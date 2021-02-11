@@ -2,7 +2,7 @@
 // YAPION
 // Copyright (C) 2019,2020,2021 yoyosource
 
-package yapion.serializing.serializer.object.queue.concurrent;
+package yapion.serializing.serializer.object.queue;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -11,8 +11,9 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
+import yapion.serializing.utils.DeserializeUtils;
+import yapion.serializing.utils.SerializeUtils;
 
-import java.util.Iterator;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
@@ -29,23 +30,12 @@ public class PriorityBlockingQueueSerializer implements InternalSerializer<Prior
     public YAPIONAnyType serialize(SerializeData<PriorityBlockingQueue<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
-        YAPIONArray yapionArray = new YAPIONArray();
-        yapionObject.add("values", yapionArray);
-        Iterator<?> iterator = serializeData.object.iterator();
-        while (iterator.hasNext()) {
-            yapionArray.add(serializeData.serialize(iterator.next()));
-        }
-        return yapionObject;
+        return SerializeUtils.serializeQueue(serializeData, yapionObject);
     }
 
     @Override
     public PriorityBlockingQueue<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        YAPIONArray yapionArray = yapionObject.getArray("values");
-        PriorityBlockingQueue<Object> queue = new PriorityBlockingQueue<>();
-        for (int i = 0; i < yapionArray.length(); i++) {
-            queue.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
-        }
-        return queue;
+        YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
+        return DeserializeUtils.deserializeQueue(deserializeData, yapionArray, new PriorityBlockingQueue<>(yapionArray.length()));
     }
 }

@@ -6,7 +6,6 @@ package yapion.serializing;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.atteo.classindex.ClassIndex;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
@@ -26,10 +25,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static yapion.serializing.YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 import static yapion.utils.ReflectionsUtils.implementsInterface;
+import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
 
 @YAPIONSaveExclude(context = "*")
 @YAPIONLoadExclude(context = "*")
@@ -377,25 +378,29 @@ public class SerializeManager {
 
     @SuppressWarnings({"java:S1452"})
     static InternalSerializer<?> getInternalSerializer(String type) {
-        // Todo: Generic Map/List/Set/Queue serializer for custom types?
-        for (InternalSerializer<?> internalSerializer : interfaceTypeSerializer) {
-            if (implementsInterface(type, internalSerializer.interfaceType())) {
-                type = internalSerializer.type();
-                break;
-            }
-        }
-        for (InternalSerializer<?> internalSerializer : classTypeSerializer) {
-            if (ReflectionsUtils.isClassSuperclassOf(type, internalSerializer.classType())) {
-                type = internalSerializer.type();
-                break;
-            }
-        }
+        InternalSerializer<?> initialSerializer = getInternalSerializerInternal(type);
+        if (initialSerializer != null) return initialSerializer;
 
-        if (oSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
-        InternalSerializer<?> serializer = serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
-        if (serializer != null) return serializer;
+        AtomicReference<String> currentType = new AtomicReference<>(type);
+        interfaceTypeSerializer.stream()
+                .filter(internalSerializer -> implementsInterface(currentType.get(), internalSerializer.interfaceType()))
+                .findFirst()
+                .ifPresent(serializer -> currentType.set(serializer.type()));
+        classTypeSerializer.stream()
+                .filter(internalSerializer -> isClassSuperclassOf(currentType.get(), internalSerializer.classType()))
+                .findFirst()
+                .ifPresent(serializer -> currentType.set(serializer.type()));
+        type = currentType.get();
+
+        InternalSerializer<?> internalSerializer = getInternalSerializerInternal(type);
+        if (internalSerializer != null) return internalSerializer;
         if (nSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
         return null;
+    }
+
+    private static InternalSerializer<?> getInternalSerializerInternal(String type) {
+        if (oSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
+        return serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
     }
 
     /**
