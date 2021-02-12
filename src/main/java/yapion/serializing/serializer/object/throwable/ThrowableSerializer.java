@@ -5,7 +5,6 @@
 package yapion.serializing.serializer.object.throwable;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
@@ -25,6 +24,11 @@ public class ThrowableSerializer implements InternalSerializer<Throwable> {
     }
 
     @Override
+    public Class<?> classType() {
+        return Throwable.class;
+    }
+
+    @Override
     public YAPIONAnyType serialize(SerializeData<Throwable> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
@@ -41,13 +45,7 @@ public class ThrowableSerializer implements InternalSerializer<Throwable> {
         Throwable throwable = (Throwable) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, "").get(), false);
         deserializeData.deserialize("detailMessage", throwable, yapionObject.getValue("message"));
         deserializeData.deserialize("cause", throwable, yapionObject.getObject("cause"));
-
-        YAPIONArray yapionArray = yapionObject.getArray("stacktrace");
-        StackTraceElement[] stackTraceElements = new StackTraceElement[yapionArray.length()];
-        for (int i = 0; i < yapionArray.length(); i++) {
-            stackTraceElements[i] = (StackTraceElement) deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
-        }
-        deserializeData.setField("stackTrace", throwable, stackTraceElements);
+        deserializeData.deserialize("stackTrace", throwable, yapionObject.getArray("stacktrace"));
         return throwable;
     }
 

@@ -272,22 +272,6 @@ public class ReflectionsUtils {
         }
     }
 
-    public static boolean isException(Class<?> clazz) {
-        return isClassSuperclassOf(clazz, Exception.class);
-    }
-
-    public static boolean isRuntimeException(Class<?> clazz) {
-        return isClassSuperclassOf(clazz, RuntimeException.class);
-    }
-
-    public static boolean isError(Class<?> clazz) {
-        return isClassSuperclassOf(clazz, Error.class);
-    }
-
-    public static boolean isThrowable(Class<?> clazz) {
-        return isClassSuperclassOf(clazz, Throwable.class);
-    }
-
     public static boolean isClassSuperclassOf(@NonNull String toCheck, @NonNull Class<?> superClass) {
         try {
             return isClassSuperclassOf(Class.forName(toCheck), superClass);

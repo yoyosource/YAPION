@@ -24,13 +24,21 @@ public class InvocationTargetExceptionSerializer implements InternalSerializer<I
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
         yapionObject.add("target", serializeData.serialize(serializeData.object.getCause()));
+        yapionObject.add("message", serializeData.object.getMessage());
+        yapionObject.add("cause", serializeData.serialize(serializeData.object.getCause()));
+        yapionObject.add("stacktrace", serializeData.serialize(serializeData.object.getStackTrace()));
         return yapionObject;
     }
 
     @Override
     public InvocationTargetException deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        return new InvocationTargetException((Throwable) deserializeData.deserialize(yapionObject.getObject("target")));
+        InvocationTargetException invocationTargetException = new InvocationTargetException(null);
+        deserializeData.deserialize("target", invocationTargetException, yapionObject.getObject("target"));
+        deserializeData.deserialize("detailMessage", invocationTargetException, yapionObject.getValue("message"));
+        deserializeData.deserialize("cause", invocationTargetException, yapionObject.getObject("cause"));
+        deserializeData.deserialize("stackTrace", invocationTargetException, yapionObject.getArray("stacktrace"));
+        return invocationTargetException;
     }
 
 }

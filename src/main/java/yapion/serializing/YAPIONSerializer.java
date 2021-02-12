@@ -154,15 +154,6 @@ public final class YAPIONSerializer {
         if (clazz.isEnum()) {
             type = "java.lang.Enum";
         }
-        if (ReflectionsUtils.isRuntimeException(clazz)) {
-            type = "java.lang.RuntimeException";
-        } else if (ReflectionsUtils.isException(clazz)) {
-            type = "java.lang.Exception";
-        } else if (ReflectionsUtils.isError(clazz)) {
-            type = "java.lang.Error";
-        } else if (ReflectionsUtils.isThrowable(clazz)) {
-            type = "java.lang.Throwable";
-        }
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
             this.yapionObject = (YAPIONObject) serializer.serialize(new SerializeData<>(object, contextManager.get(), this));

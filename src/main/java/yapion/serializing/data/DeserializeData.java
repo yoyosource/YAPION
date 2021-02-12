@@ -26,7 +26,7 @@ public class DeserializeData<T extends YAPIONAnyType> {
 
     public boolean deserialize(String fieldName, Object object, YAPIONAnyType yapionAnyType) {
         Field field = ReflectionsUtils.getField(object.getClass(), fieldName);
-        return setField(field, deserialize(yapionAnyType));
+        return setField(field, object, deserialize(yapionAnyType));
     }
 
     public Object deserialize(YAPIONAnyType yapionAnyType) {
@@ -35,11 +35,11 @@ public class DeserializeData<T extends YAPIONAnyType> {
 
     public boolean setField(String fieldName, Object object, Object objectToSet) {
         Field field = ReflectionsUtils.getField(object.getClass(), fieldName);
-        return setField(field, objectToSet);
+        return setField(field, object, objectToSet);
     }
 
     @SuppressWarnings({"java:S3011"})
-    private boolean setField(Field field, Object objectToSet) {
+    private boolean setField(Field field, Object object, Object objectToSet) {
         if (field == null) return false;
         try {
             field.setAccessible(true);

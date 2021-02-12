@@ -5,7 +5,6 @@
 package yapion.serializing.serializer.object.throwable;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
@@ -25,6 +24,11 @@ public class RuntimeExceptionSerializer implements InternalSerializer<RuntimeExc
     }
 
     @Override
+    public Class<?> classType() {
+        return RuntimeException.class;
+    }
+
+    @Override
     public YAPIONAnyType serialize(SerializeData<RuntimeException> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
@@ -41,13 +45,7 @@ public class RuntimeExceptionSerializer implements InternalSerializer<RuntimeExc
         RuntimeException runtimeException = (RuntimeException) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, "").get(), false);
         deserializeData.deserialize("detailMessage", runtimeException, yapionObject.getValue("message"));
         deserializeData.deserialize("cause", runtimeException, yapionObject.getObject("cause"));
-
-        YAPIONArray yapionArray = yapionObject.getArray("stacktrace");
-        StackTraceElement[] stackTraceElements = new StackTraceElement[yapionArray.length()];
-        for (int i = 0; i < yapionArray.length(); i++) {
-            stackTraceElements[i] = (StackTraceElement) deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
-        }
-        deserializeData.setField("stackTrace", runtimeException, stackTraceElements);
+        deserializeData.deserialize("stackTrace", runtimeException, yapionObject.getArray("stacktrace"));
         return runtimeException;
     }
 

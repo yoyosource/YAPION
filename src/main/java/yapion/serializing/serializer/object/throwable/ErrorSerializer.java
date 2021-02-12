@@ -6,7 +6,6 @@ package yapion.serializing.serializer.object.throwable;
 
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONSerializerFlagDefault;
@@ -34,6 +33,11 @@ public class ErrorSerializer implements InternalSerializer<Error> {
     }
 
     @Override
+    public Class<?> classType() {
+        return Error.class;
+    }
+
+    @Override
     public YAPIONAnyType serialize(SerializeData<Error> serializeData) {
         serializeData.signalDataLoss();
         serializeData.isSet(ERROR_EXCEPTION, () -> {
@@ -55,13 +59,7 @@ public class ErrorSerializer implements InternalSerializer<Error> {
         Error error = (Error) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, "").get(), false);
         deserializeData.deserialize("detailMessage", error, yapionObject.getValue("message"));
         deserializeData.deserialize("cause", error, yapionObject.getObject("cause"));
-
-        YAPIONArray yapionArray = yapionObject.getArray("stacktrace");
-        StackTraceElement[] stackTraceElements = new StackTraceElement[yapionArray.length()];
-        for (int i = 0; i < yapionArray.length(); i++) {
-            stackTraceElements[i] = (StackTraceElement) deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
-        }
-        deserializeData.setField("stackTrace", error, stackTraceElements);
+        deserializeData.deserialize("stackTrace", error, yapionObject.getArray("stacktrace"));
         return error;
     }
 
