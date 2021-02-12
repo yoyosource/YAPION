@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 @Slf4j
@@ -29,7 +28,7 @@ public final class YAPIONRegistrator {
     }
 
     private static Set<Predicate<Object>> registerPredicates = new HashSet<>();
-    private static Set<Function<Class<?>, MethodReturnValue<Object>>> constructFunctions = new HashSet<>();
+    private static Set<Class<?>> constructClass = new HashSet<>();
 
     static {
         registerPredicates.add(o -> {
@@ -92,48 +91,13 @@ public final class YAPIONRegistrator {
             return false;
         });
 
-        constructFunctions.add(o -> {
-            if (YAPIONSerializerRegistrator.class.isAssignableFrom(o)) {
-                return MethodReturnValue.of(ReflectionsUtils.constructObjectObjenesis(o));
-            }
-            return MethodReturnValue.empty();
-        });
-        constructFunctions.add(o -> {
-            if (InstanceFactoryInterface.class.isAssignableFrom(o)) {
-                return MethodReturnValue.of(ReflectionsUtils.constructObjectObjenesis(o));
-            }
-            return MethodReturnValue.empty();
-        });
-        constructFunctions.add(o -> {
-            if (SerializerListInterface.class.isAssignableFrom(o)) {
-                return MethodReturnValue.of(ReflectionsUtils.constructObjectObjenesis(o));
-            }
-            return MethodReturnValue.empty();
-        });
-        constructFunctions.add(o -> {
-            if (SerializerMapInterface.class.isAssignableFrom(o)) {
-                return MethodReturnValue.of(ReflectionsUtils.constructObjectObjenesis(o));
-            }
-            return MethodReturnValue.empty();
-        });
-        constructFunctions.add(o -> {
-            if (SerializerObjectInterface.class.isAssignableFrom(o)) {
-                return MethodReturnValue.of(ReflectionsUtils.constructObjectObjenesis(o));
-            }
-            return MethodReturnValue.empty();
-        });
-        constructFunctions.add(o -> {
-            if (SerializerQueueInterface.class.isAssignableFrom(o)) {
-                return MethodReturnValue.of(ReflectionsUtils.constructObjectObjenesis(o));
-            }
-            return MethodReturnValue.empty();
-        });
-        constructFunctions.add(o -> {
-            if (SerializerSetInterface.class.isAssignableFrom(o)) {
-                return MethodReturnValue.of(ReflectionsUtils.constructObjectObjenesis(o));
-            }
-            return MethodReturnValue.empty();
-        });
+        constructClass.add(YAPIONSerializerRegistrator.class);
+        constructClass.add(InstanceFactoryInterface.class);
+        constructClass.add(SerializerListInterface.class);
+        constructClass.add(SerializerMapInterface.class);
+        constructClass.add(SerializerObjectInterface.class);
+        constructClass.add(SerializerQueueInterface.class);
+        constructClass.add(SerializerSetInterface.class);
     }
 
     /**
@@ -222,9 +186,10 @@ public final class YAPIONRegistrator {
     }
 
     private static MethodReturnValue<Object> constructObject(Class<?> clazz) {
-        for (Function<Class<?>, MethodReturnValue<Object>> function : constructFunctions) {
-            MethodReturnValue<Object> objectMethodReturnValue = function.apply(clazz);
-            if (objectMethodReturnValue.isPresent()) return objectMethodReturnValue;
+        for (Class<?> cClazz : constructClass) {
+            if (cClazz.isAssignableFrom(clazz)) {
+                return MethodReturnValue.of(ReflectionsUtils.constructObjectObjenesis(clazz));
+            }
         }
         log.warn("Specified class (" + clazz.getTypeName() + ") is not any supported type");
         return MethodReturnValue.empty();
