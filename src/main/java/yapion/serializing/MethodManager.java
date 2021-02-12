@@ -44,47 +44,35 @@ public final class MethodManager {
     }
 
     static void preSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
-        while (clazz != null) {
-            String key = clazz.getTypeName();
-            if (!methodMap.containsKey(key)) {
-                methodMap.put(key, new ObjectCache(clazz));
-            }
-            methodMap.get(key).preSerialization(object, contextManager);
-            clazz = methodMap.get(key).superClass;
-        }
+        step(object, clazz, contextManager, ObjectCache::preSerialization);
     }
 
     static void postSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
-        while (clazz != null) {
-            String key = clazz.getTypeName();
-            if (!methodMap.containsKey(key)) {
-                methodMap.put(key, new ObjectCache(clazz));
-            }
-            methodMap.get(key).postSerialization(object, contextManager);
-            clazz = methodMap.get(key).superClass;
-        }
+        step(object, clazz, contextManager, ObjectCache::postSerialization);
     }
 
     static void preDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+        step(object, clazz, contextManager, ObjectCache::preDeserialization);
+    }
+
+    static void postDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+        step(object, clazz, contextManager, ObjectCache::postDeserialization);
+    }
+
+    private static void step(Object object, Class<?> clazz, ContextManager contextManager, TriConsumer<ObjectCache, Object, ContextManager> objectCacheConsumer) {
         while (clazz != null) {
             String key = clazz.getTypeName();
             if (!methodMap.containsKey(key)) {
                 methodMap.put(key, new ObjectCache(clazz));
             }
-            methodMap.get(key).preDeserialization(object, contextManager);
+            objectCacheConsumer.accept(methodMap.get(key), object, contextManager);
             clazz = methodMap.get(key).superClass;
         }
     }
 
-    static void postDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
-        while (clazz != null) {
-            String key = clazz.getTypeName();
-            if (!methodMap.containsKey(key)) {
-                methodMap.put(key, new ObjectCache(clazz));
-            }
-            methodMap.get(key).postDeserialization(object, contextManager);
-            clazz = methodMap.get(key).superClass;
-        }
+    @FunctionalInterface
+    private interface TriConsumer<X, Y, Z> {
+        void accept(X x, Y y, Z z);
     }
 
 }

@@ -25,11 +25,7 @@ final class ObjectCache {
     private final Map<String, Method> postDeserializationCache = new HashMap<>();
 
     ObjectCache(Class<?> clazz) {
-        if (clazz.getSuperclass() == null) {
-            superClass = null;
-        } else {
-            superClass = clazz.getSuperclass();
-        }
+        superClass = clazz.getSuperclass();
 
         Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
