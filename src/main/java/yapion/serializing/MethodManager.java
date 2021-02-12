@@ -4,7 +4,9 @@
 
 package yapion.serializing;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public final class MethodManager {
@@ -44,30 +46,40 @@ public final class MethodManager {
     }
 
     static void preSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
-        step(object, clazz, contextManager, ObjectCache::preSerialization);
+        step(object, clazz, contextManager, ObjectCache::preSerialization, false);
     }
 
     static void postSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
-        step(object, clazz, contextManager, ObjectCache::postSerialization);
+        step(object, clazz, contextManager, ObjectCache::postSerialization, true);
     }
 
     static void preDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
-        step(object, clazz, contextManager, ObjectCache::preDeserialization);
+        step(object, clazz, contextManager, ObjectCache::preDeserialization, false);
     }
 
     static void postDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
-        step(object, clazz, contextManager, ObjectCache::postDeserialization);
+        step(object, clazz, contextManager, ObjectCache::postDeserialization, true);
     }
 
-    private static void step(Object object, Class<?> clazz, ContextManager contextManager, TriConsumer<ObjectCache, Object, ContextManager> objectCacheConsumer) {
+    private static void step(Object object, Class<?> clazz, ContextManager contextManager, TriConsumer<ObjectCache, Object, ContextManager> objectCacheConsumer, boolean order) {
+        LinkedList<Class<?>> stepOrder = new LinkedList<>();
         while (clazz != null) {
             String key = clazz.getTypeName();
             if (!methodMap.containsKey(key)) {
                 methodMap.put(key, new ObjectCache(clazz));
             }
-            objectCacheConsumer.accept(methodMap.get(key), object, contextManager);
+            stepOrder.addLast(clazz);
             clazz = methodMap.get(key).superClass;
         }
+
+        Iterator<Class<?>> iterator = order ? stepOrder.iterator() : stepOrder.descendingIterator();
+        iterator.forEachRemaining(iClazz -> {
+            String key = iClazz.getTypeName();
+            if (!methodMap.containsKey(key)) {
+                methodMap.put(key, new ObjectCache(iClazz));
+            }
+            objectCacheConsumer.accept(methodMap.get(key), object, contextManager);
+        });
     }
 
     @FunctionalInterface
