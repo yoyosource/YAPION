@@ -64,12 +64,8 @@ public final class MethodManager {
     private static void step(Object object, Class<?> clazz, ContextManager contextManager, TriConsumer<ObjectCache, Object, ContextManager> objectCacheConsumer, boolean order) {
         LinkedList<Class<?>> stepOrder = new LinkedList<>();
         while (clazz != null) {
-            String key = clazz.getTypeName();
-            if (!methodMap.containsKey(key)) {
-                methodMap.put(key, new ObjectCache(clazz));
-            }
             stepOrder.addLast(clazz);
-            clazz = methodMap.get(key).superClass;
+            clazz = clazz.getSuperclass();
         }
 
         Iterator<Class<?>> iterator = order ? stepOrder.iterator() : stepOrder.descendingIterator();
