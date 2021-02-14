@@ -136,7 +136,11 @@ public final class YAPIONSerializer {
             }
             InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
             if (serializer != null && !serializer.empty()) {
-                return serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
+                YAPIONAnyType yapionAnyType = serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
+                if (yapionAnyType instanceof YAPIONObject) {
+                    pointerMap.put(object, new YAPIONPointer((YAPIONObject) yapionAnyType));
+                }
+                return yapionAnyType;
             } else {
                 return new YAPIONSerializer(object, this).parse().getYAPIONObject();
             }
@@ -157,6 +161,8 @@ public final class YAPIONSerializer {
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
             this.yapionObject = (YAPIONObject) serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
+            System.out.println(yapionObject);
+            pointerMap.put(object, new YAPIONPointer(yapionObject));
             return this;
         }
 

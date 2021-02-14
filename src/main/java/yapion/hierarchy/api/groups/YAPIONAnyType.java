@@ -53,8 +53,8 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         if (hasReferenceValue() && this.referenceFunction == referenceFunction) {
             return getReferenceValue();
         }
-        cacheReferenceValue(referenceValueProvider(referenceFunction));
         this.referenceFunction = referenceFunction;
+        cacheReferenceValue(referenceValueProvider(referenceFunction) & 0x7FFFFFFFFFFFFFFFL);
         return getReferenceValue();
     }
 

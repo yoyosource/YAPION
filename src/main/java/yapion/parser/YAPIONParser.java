@@ -5,12 +5,14 @@
 package yapion.parser;
 
 import lombok.NonNull;
+import yapion.YAPIONUtils;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.exceptions.utils.YAPIONIOException;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.*;
+import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 import yapion.utils.ReflectionsUtils;
