@@ -15,7 +15,7 @@ public class ReferenceValueCacheTest {
 
     @Test
     public void testObjectReferenceValue() {
-        assertThat(new YAPIONObject().referenceValue(), is(-60368722086380551L));
+        assertThat(new YAPIONObject().referenceValue(), is(9163003314768395257L));
     }
 
     @Test
@@ -25,41 +25,41 @@ public class ReferenceValueCacheTest {
 
     @Test
     public void testArrayReferenceValue() {
-        assertThat(new YAPIONArray().referenceValue(), is(-795052694222608354L));
+        assertThat(new YAPIONArray().referenceValue(), is(8428319342632167454L));
     }
 
     @Test
     public void testObjectReferenceValueDiscardOnAdd() {
         YAPIONObject yapionObject = new YAPIONObject();
-        assertThat(yapionObject.referenceValue(), is(-60368722086380551L));
+        assertThat(yapionObject.referenceValue(), is(9163003314768395257L));
         yapionObject.add("TEST", new YAPIONValue<>(0));
-        assertThat(yapionObject.referenceValue(), not(-60368722086380551L));
+        assertThat(yapionObject.referenceValue(), not(9163003314768395257L));
     }
 
     @Test
     public void testObjectReferenceValueDiscardOnAddOrPointer() {
         YAPIONObject yapionObject = new YAPIONObject();
-        assertThat(yapionObject.referenceValue(), is(-60368722086380551L));
+        assertThat(yapionObject.referenceValue(), is(9163003314768395257L));
         yapionObject.addOrPointer("TEST", new YAPIONValue<>(0));
-        assertThat(yapionObject.referenceValue(), not(-60368722086380551L));
+        assertThat(yapionObject.referenceValue(), not(9163003314768395257L));
     }
 
     @Test
     public void testObjectReferenceValueDiscardOnRemove() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("TEST", new YAPIONValue<>(0));
-        assertThat(yapionObject.referenceValue(), not(-60368722086380551L));
+        assertThat(yapionObject.referenceValue(), not(9163003314768395257L));
         yapionObject.remove("TEST");
-        assertThat(yapionObject.referenceValue(), is(-60368722086380551L));
+        assertThat(yapionObject.referenceValue(), is(9163003314768395257L));
     }
 
     @Test
     public void testObjectReferenceValueDiscardOnRemoveAndGet() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("TEST", new YAPIONValue<>(0));
-        assertThat(yapionObject.referenceValue(), not(-60368722086380551L));
+        assertThat(yapionObject.referenceValue(), not(9163003314768395257L));
         yapionObject.removeAndGet("TEST");
-        assertThat(yapionObject.referenceValue(), is(-60368722086380551L));
+        assertThat(yapionObject.referenceValue(), is(9163003314768395257L));
     }
 
     @Test
@@ -99,71 +99,71 @@ public class ReferenceValueCacheTest {
     @Test
     public void testArrayReferenceValueDiscardOnAdd() {
         YAPIONArray yapionArray = new YAPIONArray();
-        assertThat(yapionArray.referenceValue(), is(-795052694222608354L));
+        assertThat(yapionArray.referenceValue(), is(8428319342632167454L));
         yapionArray.add(new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(-795052694222608354L));
+        assertThat(yapionArray.referenceValue(), not(8428319342632167454L));
     }
 
     @Test
     public void testArrayReferenceValueDiscardOnAddOrPointer() {
         YAPIONArray yapionArray = new YAPIONArray();
-        assertThat(yapionArray.referenceValue(), is(-795052694222608354L));
+        assertThat(yapionArray.referenceValue(), is(8428319342632167454L));
         yapionArray.addOrPointer(new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(-795052694222608354L));
+        assertThat(yapionArray.referenceValue(), not(8428319342632167454L));
     }
 
     @Test
     public void testArrayReferenceValueDiscardOnSet() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONObject());
-        assertThat(yapionArray.referenceValue(), is(-8368003397389134874L));
+        assertThat(yapionArray.referenceValue(), is(855368639465640934L));
         yapionArray.set(0, new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(-8368003397389134874L));
+        assertThat(yapionArray.referenceValue(), not(855368639465640934L));
     }
 
     @Test
     public void testArrayReferenceValueDiscardOnSetOrPointer() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONObject());
-        assertThat(yapionArray.referenceValue(), is(-8368003397389134874L));
+        assertThat(yapionArray.referenceValue(), is(855368639465640934L));
         yapionArray.setOrPointer(0, new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(-8368003397389134874L));
+        assertThat(yapionArray.referenceValue(), not(855368639465640934L));
     }
 
     @Test
     public void testArrayReferenceValueDiscardOnAddWithIndex() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONObject());
-        assertThat(yapionArray.referenceValue(), is(-8368003397389134874L));
+        assertThat(yapionArray.referenceValue(), is(855368639465640934L));
         yapionArray.add(0, new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(-8368003397389134874L));
+        assertThat(yapionArray.referenceValue(), not(855368639465640934L));
     }
 
     @Test
     public void testArrayReferenceValueDiscardOnAddWithIndexOrPointer() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONObject());
-        assertThat(yapionArray.referenceValue(), is(-8368003397389134874L));
+        assertThat(yapionArray.referenceValue(), is(855368639465640934L));
         yapionArray.addOrPointer(0, new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(-8368003397389134874L));
+        assertThat(yapionArray.referenceValue(), not(855368639465640934L));
     }
 
     @Test
     public void testArrayReferenceValueDiscardOnRemove() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(-795052694222608354L));
+        assertThat(yapionArray.referenceValue(), not(8428319342632167454L));
         yapionArray.remove(0);
-        assertThat(yapionArray.referenceValue(), is(-795052694222608354L));
+        assertThat(yapionArray.referenceValue(), is(8428319342632167454L));
     }
 
     @Test
     public void testArrayReferenceValueDiscardOnRemoveAndGet() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(-795052694222608354L));
+        assertThat(yapionArray.referenceValue(), not(8428319342632167454L));
         yapionArray.removeAndGet(0);
-        assertThat(yapionArray.referenceValue(), is(-795052694222608354L));
+        assertThat(yapionArray.referenceValue(), is(8428319342632167454L));
     }
 
 }

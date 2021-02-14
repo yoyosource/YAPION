@@ -88,6 +88,7 @@ public class YAPIONPointer extends YAPIONValueType {
 
     public long getPointerID() {
         if (yapionObject != null) {
+            if (referenceFunction == null) referenceFunction = ReferenceIDUtils.REFERENCE_FUNCTION;
             pointerID = yapionObject.referenceValue(referenceFunction);
         }
         return pointerID & 0x7FFFFFFFFFFFFFFFL;
