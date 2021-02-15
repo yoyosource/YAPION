@@ -14,6 +14,7 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.groups.YAPIONMappingType;
 import yapion.hierarchy.api.storage.ObjectAdd;
+import yapion.hierarchy.api.storage.ObjectAdvancedOperations;
 import yapion.hierarchy.api.storage.ObjectRemove;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
@@ -29,7 +30,7 @@ import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIONAnyType>, ObjectAdd<YAPIONMap, YAPIONAnyType>, ObjectRemove<YAPIONMap, YAPIONAnyType> {
+public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIONAnyType>, ObjectAdd<YAPIONMap, YAPIONAnyType>, ObjectRemove<YAPIONMap, YAPIONAnyType>, ObjectAdvancedOperations<YAPIONMap, YAPIONAnyType> {
 
     private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
     @YAPIONSaveExclude(context = "*")
@@ -232,6 +233,21 @@ public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIO
         YAPIONAnyType yapionAnyType = variables.remove(key);
         yapionAnyType.removeParent();
         return yapionAnyType;
+    }
+
+    @Override
+    public YAPIONMap itself() {
+        return this;
+    }
+
+    @Override
+    public Iterator<YAPIONAnyType> iterator() {
+        return variables.values().iterator();
+    }
+
+    @Override
+    public Set<YAPIONAnyType> allKeys() {
+        return variables.keySet();
     }
 
     @Override

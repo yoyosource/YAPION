@@ -128,7 +128,7 @@ public interface ObjectRetrieve<K> {
     @SuppressWarnings("unchecked")
     default <T> YAPIONValue<T> getValue(@NonNull K key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
-            return null;
+            throw new YAPIONRetrieveException();
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
@@ -142,9 +142,25 @@ public interface ObjectRetrieve<K> {
     }
 
     @SuppressWarnings("unchecked")
+    default <T> YAPIONValue<T> getValueOrDefault(@NonNull K key, Class<T> type, T defaultValue) {
+        if (!YAPIONValue.validType(type)) {
+            throw new YAPIONRetrieveException();
+        }
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
+        if (!(yapionAnyType instanceof YAPIONValue)) {
+            return new YAPIONValue<>(defaultValue);
+        }
+        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getTypeName())) {
+            return new YAPIONValue<>(defaultValue);
+        }
+        return (YAPIONValue<T>) yapionAnyType;
+    }
+
+    @SuppressWarnings("unchecked")
     default <T> void getValue(@NonNull K key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
         if (!YAPIONValue.validType(type)) {
-            return;
+            throw new YAPIONRetrieveException();
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) {
@@ -163,7 +179,7 @@ public interface ObjectRetrieve<K> {
     @SuppressWarnings("unchecked")
     default <T> YAPIONValue<T> getValue(@NonNull K key, T type) {
         if (!YAPIONValue.validType(type)) {
-            return null;
+            throw new YAPIONRetrieveException();
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
@@ -177,9 +193,25 @@ public interface ObjectRetrieve<K> {
     }
 
     @SuppressWarnings("unchecked")
+    default <T> YAPIONValue<T> getValueOrDefault(@NonNull K key, T defaultValue) {
+        if (!YAPIONValue.validType(defaultValue)) {
+            throw new YAPIONRetrieveException();
+        }
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
+        if (!(yapionAnyType instanceof YAPIONValue)) {
+            return new YAPIONValue<>(defaultValue);
+        }
+        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(defaultValue.getClass().getTypeName())) {
+            return new YAPIONValue<>(defaultValue);
+        }
+        return (YAPIONValue<T>) yapionAnyType;
+    }
+
+    @SuppressWarnings("unchecked")
     default <T> void getValue(@NonNull K key, T type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
         if (!YAPIONValue.validType(type)) {
-            return;
+            throw new YAPIONRetrieveException();
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) {
@@ -200,6 +232,16 @@ public interface ObjectRetrieve<K> {
         YAPIONValue<T> yapionValue = getValue(key);
         if (yapionValue == null) throw new YAPIONRetrieveException("Key '" + key.toString() + "' has no YAPIONValue associated with it");
         return yapionValue.get();
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T> T getPlainValueOrDefault(@NonNull K key, T defaultValue) {
+        YAPIONValue<T> yapionValue = getValue(key);
+        if (yapionValue == null) {
+            return defaultValue;
+        } else {
+            return yapionValue.get();
+        }
     }
 
     @SuppressWarnings("unchecked")

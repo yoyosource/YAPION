@@ -12,6 +12,7 @@ import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ArrayAdd;
+import yapion.hierarchy.api.storage.ObjectAdvancedOperations;
 import yapion.hierarchy.api.storage.ObjectRemove;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
@@ -19,14 +20,13 @@ import yapion.hierarchy.output.StringOutput;
 import yapion.utils.RecursionUtils;
 import yapion.utils.ReferenceFunction;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Integer>, ArrayAdd<YAPIONArray, Integer>, ObjectRemove<YAPIONArray, Integer> {
+public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Integer>, ArrayAdd<YAPIONArray, Integer>, ObjectRemove<YAPIONArray, Integer>, ObjectAdvancedOperations<YAPIONArray, Integer> {
 
     private final List<YAPIONAnyType> array = new ArrayList<>();
 
@@ -265,6 +265,48 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
         array.remove((int) key);
         yapionAnyType.removeParent();
         return yapionAnyType;
+    }
+
+    @Override
+    public YAPIONArray itself() {
+        return this;
+    }
+
+    @Override
+    public Iterator<YAPIONAnyType> iterator() {
+        return array.iterator();
+    }
+
+    @Override
+    public Set<Integer> allKeys() {
+        Set<Integer> allKeys = new HashSet<>();
+        for (int i = 0; i < size(); i++) allKeys.add(i);
+        return allKeys;
+    }
+
+    @Override
+    public YAPIONArray addIfAbsent(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public YAPIONArray addIfAbsent(@NonNull Integer key, @NonNull YAPIONType yapionType, @NonNull YAPIONAnyType value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T> YAPIONArray addIfAbsent(@NonNull Integer key, @NonNull Class<T> type, @NonNull YAPIONAnyType value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T extends YAPIONAnyType> YAPIONArray computeIfAbsent(@NonNull Integer key, @NonNull Function<Integer, T> mappingFunction) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T extends YAPIONAnyType> YAPIONArray compute(@NonNull Integer key, @NonNull BiFunction<Integer, T, T> remappingFunction) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
