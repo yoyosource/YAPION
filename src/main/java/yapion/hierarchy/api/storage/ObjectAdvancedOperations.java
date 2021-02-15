@@ -13,7 +13,7 @@ import java.util.function.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectRetrieve<K>, ObjectRemove<I, K> {
+public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectRetrieve<K>, ObjectRemove<I, K>, Iterable<YAPIONAnyType> {
 
     I itself();
 
