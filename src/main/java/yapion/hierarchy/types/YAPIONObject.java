@@ -194,7 +194,7 @@ public class YAPIONObject extends YAPIONMappingType implements ObjectRetrieve<St
 
     @Override
     public Set<String> allKeys() {
-        return variables.keySet();
+        return new HashSet<>(variables.keySet());
     }
 
     @Override

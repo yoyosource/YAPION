@@ -122,11 +122,10 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
 
     default boolean retainAll(@NonNull Set<K> keys) {
         Set<K> allKeys = allKeys();
+        allKeys.removeAll(keys);
         boolean result = false;
         for (K key : allKeys) {
-            if (keys.contains(key)) continue;
-            remove(key);
-            result = true;
+            if (remove(key) != null) result = true;
         }
         return result;
     }
@@ -134,9 +133,7 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
     default boolean removeAll(@NonNull Set<K> keys) {
         boolean result = false;
         for (K key : keys) {
-            if (!hasValue(key)) continue;
-            remove(key);
-            result = true;
+            if (remove(key) != null) result = true;
         }
         return result;
     }
@@ -146,8 +143,7 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
         boolean result = false;
         for (K key : allKeys) {
             if (filter.test(getYAPIONAnyType(key))) continue;
-            remove(key);
-            result = true;
+            if (remove(key) != null) result = true;
         }
         return result;
     }
@@ -157,8 +153,7 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
         boolean result = false;
         for (K key : allKeys) {
             if (filter.test(key, getYAPIONAnyType(key))) continue;
-            remove(key);
-            result = true;
+            if (remove(key) != null) result = true;
         }
         return result;
     }
@@ -168,8 +163,7 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
         boolean result = false;
         for (K key : allKeys) {
             if (!filter.test(getYAPIONAnyType(key))) continue;
-            remove(key);
-            result = true;
+            if (remove(key) != null) result = true;
         }
         return result;
     }
@@ -179,8 +173,7 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
         boolean result = false;
         for (K key : allKeys) {
             if (!filter.test(key, getYAPIONAnyType(key))) continue;
-            remove(key);
-            result = true;
+            if (remove(key) != null) result = true;
         }
         return result;
     }

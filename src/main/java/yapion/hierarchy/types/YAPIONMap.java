@@ -247,7 +247,7 @@ public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIO
 
     @Override
     public Set<YAPIONAnyType> allKeys() {
-        return variables.keySet();
+        return new HashSet<>(variables.keySet());
     }
 
     @Override
