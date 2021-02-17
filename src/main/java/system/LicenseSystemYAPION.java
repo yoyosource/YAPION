@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019,2020,2021 yoyosource
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,8 +112,9 @@ public class LicenseSystemYAPION {
                     outputStream.write(new byte[]{'\n'});
                 }
                 outputStream.write(strings[i].getBytes());
-                outputStream.flush();
             }
+            outputStream.write(new byte[]{'\n'});
+            outputStream.flush();
         } catch (IOException e) {
             throw new IOException(e.getMessage());
         }
@@ -121,7 +122,7 @@ public class LicenseSystemYAPION {
 
     private static long changedFiles = 0;
 
-    private static final String longLicense = "/**\n" +
+    private static final String shortLicense = "/*\n" +
             " * Copyright 2019,2020,2021 yoyosource\n" +
             " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
             " * you may not use this file except in compliance with the License.\n" +
@@ -133,9 +134,6 @@ public class LicenseSystemYAPION {
             " * See the License for the specific language governing permissions and\n" +
             " * limitations under the License.\n" +
             " */";
-    private static final String shortLicense = "// SPDX-License-Identifier: Apache-2.0\n" +
-            "// YAPION\n" +
-            "// Copyright (C) 2019,2020,2021 yoyosource";
 
     private static String[] addLicense(String[] strings, File f) {
         if (!f.getAbsolutePath().endsWith(".java")) {
@@ -153,16 +151,8 @@ public class LicenseSystemYAPION {
         if (st.toString().startsWith(shortLicense)) {
             return strings;
         }
-        if (st.toString().startsWith(longLicense)) {
-            return strings;
-        }
         changedFiles++;
         changedFilesName.add(f.getName());
-
-        String license = shortLicense;
-        if (st.toString().startsWith("/**")) {
-            license = longLicense;
-        }
 
         st = new StringBuilder();
         for (int i = 0; i < strings.length; i++) {
@@ -174,7 +164,7 @@ public class LicenseSystemYAPION {
             }
         }
 
-        return (license + "\n\n" + st.toString()).split("\n");
+        return (shortLicense + "\n\n" + st.toString()).split("\n");
     }
 
 }
