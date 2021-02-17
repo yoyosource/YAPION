@@ -174,10 +174,7 @@ public final class YAPIONSerializer {
             return this;
         }
 
-        boolean saveWithoutAnnotation = false;
-        if (serializer != null && serializer.saveWithoutAnnotation()) {
-            saveWithoutAnnotation = true;
-        }
+        boolean saveWithoutAnnotation = serializer != null && serializer.saveWithoutAnnotation();
         if (!contextManager.is(object).save && !saveWithoutAnnotation) {
             throw new YAPIONSerializerException("No suitable serializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
         }

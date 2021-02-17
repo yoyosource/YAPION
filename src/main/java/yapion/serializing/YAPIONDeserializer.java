@@ -28,6 +28,7 @@ import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.serializer.object.other.EnumSerializer;
+import yapion.utils.ClassUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
@@ -215,7 +216,7 @@ public final class YAPIONDeserializer {
                 case ARRAY:
                     String s = checkType((YAPIONArray) yapionAnyType);
                     if (type != null) {
-                        if (getBoxed(s).equals(type)) {
+                        if (ClassUtils.getBoxed(s).equals(type)) {
                             primitive = false;
                             break;
                         }
@@ -230,7 +231,7 @@ public final class YAPIONDeserializer {
             }
         }
         if (type == null) type = "java.lang.Object";
-        return primitive ? getPrimitive(type) : type;
+        return primitive ? ClassUtils.getPrimitive(type) : type;
     }
 
     private Object parseArray(YAPIONArray yapionArray) {
@@ -257,7 +258,7 @@ public final class YAPIONDeserializer {
         arrayType = arrayType.replace("[", "").replace("]", "");
         Object array = null;
         try {
-            array = Array.newInstance(getClass(arrayType), ints);
+            array = Array.newInstance(ClassUtils.getClass(arrayType), ints);
         } catch (IllegalArgumentException | NegativeArraySizeException e) {
             // Ignored
         }
@@ -267,78 +268,6 @@ public final class YAPIONDeserializer {
             Array.set(array, i, parse(yapionArray.getYAPIONAnyType(i)));
         }
         return array;
-    }
-
-    private Class<?> getClass(String className) {
-        switch (className) {
-            case "boolean":
-                return boolean.class;
-            case "byte":
-                return byte.class;
-            case "short":
-                return short.class;
-            case "int":
-                return int.class;
-            case "long":
-                return long.class;
-            case "char":
-                return char.class;
-            case "float":
-                return float.class;
-            case "double":
-                return double.class;
-            default:
-                break;
-        }
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            return Object.class;
-        }
-    }
-
-    private String getPrimitive(String className) {
-        switch (className) {
-            case "java.lang.Boolean":
-                return "boolean";
-            case "java.lang.Byte":
-                return "byte";
-            case "java.lang.Short":
-                return "short";
-            case "java.lang.Integer":
-                return "int";
-            case "java.lang.Long":
-                return "long";
-            case "java.lang.Character":
-                return "char";
-            case "java.lang.Float":
-                return "float";
-            case "java.lang.Double":
-                return "double";
-        }
-        return className;
-    }
-
-    private String getBoxed(String className) {
-        switch (className) {
-            case "boolean":
-                return "java.lang.Boolean";
-            case "byte":
-                return "java.lang.Byte";
-            case "short":
-                return "java.lang.Short";
-            case "int":
-                return "java.lang.Integer";
-            case "long":
-                return "java.lang.Long";
-            case "char":
-                return "java.lang.Character";
-            case "float":
-                return "java.lang.Float";
-            case "double":
-                return "java.lang.Double";
-        }
-        return className;
     }
 
     private Object serialize(InternalSerializer<?> serializer, YAPIONAnyType yapionAnyType) {
@@ -373,15 +302,8 @@ public final class YAPIONDeserializer {
             return this;
         }
 
-        boolean loadWithoutAnnotation = false;
-        if (serializer != null) {
-            loadWithoutAnnotation = serializer.loadWithoutAnnotation();
-        }
-
-        boolean createWithObjenesis = false;
-        if (serializer != null) {
-            createWithObjenesis = serializer.createWithObjenesis();
-        }
+        boolean loadWithoutAnnotation = serializer != null && serializer.loadWithoutAnnotation();
+        boolean createWithObjenesis = serializer != null && serializer.createWithObjenesis();
 
         try {
             Class<?> clazz = Class.forName(type);
