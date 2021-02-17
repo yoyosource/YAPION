@@ -12,67 +12,68 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static yapion.serializing.YAPIONTestObjects.*;
+import static yapion.utils.YAPIONAssertion.isYAPION;
 
 public class YAPIONSerializerTest {
 
     @Test
     public void testObject() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestObject());
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.serializing.YAPIONTestObjects$TestObject)}"));
+        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestObject)}"));
     }
 
     @Test
     public void testObjectReparse() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestObject());
-        assertThat(YAPIONParser.parse(yapionObject.toString()).toString(), is(yapionObject.toString()));
+        assertThat(YAPIONParser.parse(yapionObject.toYAPION(new StringOutput()).getResult()), isYAPION(yapionObject));
     }
 
     @Test
     public void testMap() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestMap());
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.serializing.YAPIONTestObjects$TestMap)stringStringMap{@type(java.util.HashMap)values<(Hello1):(Hello1)(Hello):(Hello)(Hello2):(Hello2)>}hugoStringMap{@type(java.util.HashMap)values<>}hashMap{@type(java.util.HashMap)values<>}linkedHashMap{@type(java.util.LinkedHashMap)values<>}}"));
+        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestMap)stringStringMap{@type(java.util.HashMap)values<(Hello1):(Hello1)(Hello):(Hello)(Hello2):(Hello2)>}hugoStringMap{@type(java.util.HashMap)values<>}hashMap{@type(java.util.HashMap)values<>}linkedHashMap{@type(java.util.LinkedHashMap)values<>}}"));
     }
 
     @Test
     public void testMapReparse() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestMap());
-        assertThat(YAPIONParser.parse(yapionObject.toString()).toString(), is(yapionObject.toString()));
+        assertThat(YAPIONParser.parse(yapionObject.toYAPION(new StringOutput()).getResult()), isYAPION(yapionObject));
     }
 
     @Test
     public void testArray() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestArray());
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.serializing.YAPIONTestObjects$TestArray)strings[Hello World,null]strings1[[Hello World,null,null],[null,Hello World2,null],[null,null,Hello World3]]strings2{@type(java.util.ArrayList)values[Hello World,Hello World1,Hello World2,Hello World3]}strings3{@type(java.util.LinkedList)values[Hello World,Hello World1,Hello World2,Hello World3]}}"));
+        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestArray)strings[Hello World,null]strings1[[Hello World,null,null],[null,Hello World2,null],[null,null,Hello World3]]strings2{@type(java.util.ArrayList)values[Hello World,Hello World1,Hello World2,Hello World3]}strings3{@type(java.util.LinkedList)values[Hello World,Hello World1,Hello World2,Hello World3]}}"));
     }
 
     @Test
     public void testArrayReparse() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestArray());
-        assertThat(YAPIONParser.parse(yapionObject.toString()).toString(), is(yapionObject.toString()));
+        assertThat(YAPIONParser.parse(yapionObject.toYAPION(new StringOutput()).getResult()), isYAPION(yapionObject));
     }
 
     @Test
     public void testPrimitive() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestPrimitive());
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.serializing.YAPIONTestObjects$TestPrimitive)t(false)T(true)b(0B)B(0B)s(0S)S(0S)i(0)I(0)l(0L)L(0L)d(0.0)D(0.0)f(0.0F)F(0.0F)bi(0BI)bd(0BD)c(' ')C(' ')string()stringB{@type(java.lang.StringBuilder)string()}stringb{@type(java.lang.StringBuffer)string()}file{@type(java.io.File)path(" + getUserHome() + File.separator + "YAPI)}}"));
+        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestPrimitive)t(false)T(true)b(0B)B(0B)s(0S)S(0S)i(0)I(0)l(0L)L(0L)d(0.0)D(0.0)f(0.0F)F(0.0F)bi(0BI)bd(0BD)c(' ')C(' ')string()stringB{@type(java.lang.StringBuilder)string()}stringb{@type(java.lang.StringBuffer)string()}file{@type(java.io.File)path(" + getUserHome() + File.separator + "YAPI)}}"));
     }
 
     @Test
     public void testPrimitiveReparse() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestPrimitive());
-        assertThat(YAPIONParser.parse(yapionObject.toString()).toString(), is(yapionObject.toString()));
+        assertThat(YAPIONParser.parse(yapionObject.toYAPION(new StringOutput()).getResult()), isYAPION(yapionObject));
     }
 
     @Test
     public void testEnum() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestEnum());
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.serializing.YAPIONTestObjects$TestEnum)test1{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(Hello)ordinal(0)}test2{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(World)ordinal(1)}test3{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(Hugo)ordinal(2)}test4{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(My)ordinal(3)}test5{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(Name)ordinal(4)}}"));
+        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestEnum)test1{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(Hello)ordinal(0)}test2{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(World)ordinal(1)}test3{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(Hugo)ordinal(2)}test4{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(My)ordinal(3)}test5{@type(java.lang.Enum)@enum(yapion.serializing.YAPIONTestObjects$EnumerationTest)value(Name)ordinal(4)}}"));
     }
 
     @Test
     public void testEnumReparse() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestEnum());
-        assertThat(YAPIONParser.parse(yapionObject.toString()).toString(), is(yapionObject.toString()));
+        assertThat(YAPIONParser.parse(yapionObject.toYAPION(new StringOutput()).getResult()), isYAPION(yapionObject));
     }
 
     @Test(expected = NullPointerException.class)
@@ -90,7 +91,7 @@ public class YAPIONSerializerTest {
         // It should be possible to use objects as root objects for which
         // an internal serializer exists which returns a YAPIONObject.
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new ArrayList<String>());
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(java.util.ArrayList)values[]}"));
+        assertThat(yapionObject, isYAPION("{@type(java.util.ArrayList)values[]}"));
     }
 
     @Test
@@ -99,7 +100,7 @@ public class YAPIONSerializerTest {
         stringList.add("333276742632472577");
 
         YAPIONObject yapionObject = YAPIONSerializer.serialize(stringList);
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(java.util.ArrayList)values[\"333276742632472577\"]}"));
+        assertThat(yapionObject, isYAPION("{@type(java.util.ArrayList)values[\"333276742632472577\"]}"));
     }
 
 }

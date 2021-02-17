@@ -368,11 +368,15 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
         if (this == o) return true;
         if (!(o instanceof YAPIONArray)) return false;
         YAPIONArray that = (YAPIONArray) o;
-        return array.equals(that.array);
+        if (size() != that.size()) return false;
+        for (int i = 0; i < size(); i++) {
+            if (!array.get(i).equals(that.array.get(i))) return false;
+        }
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(array);
+        return (int) referenceValue();
     }
 }

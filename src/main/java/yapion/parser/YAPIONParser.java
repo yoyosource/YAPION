@@ -446,7 +446,7 @@ public final class YAPIONParser {
     }
 
     private void add(@NonNull String key, @NonNull YAPIONAnyType value) {
-        log.debug("add      [" + key + "=" + value + "]");
+        log.debug("add      ['" + key + "'='" + value + "']");
         if (currentObject instanceof YAPIONObject) {
             ((YAPIONObject) currentObject).add(key, value);
         } else if (currentObject instanceof YAPIONMap) {

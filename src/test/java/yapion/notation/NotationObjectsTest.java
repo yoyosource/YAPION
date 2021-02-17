@@ -12,13 +12,14 @@ import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static yapion.utils.YAPIONAssertion.isYAPION;
 // import static yapion.annotation.AnnotationTestObjects.*;
 
 public class NotationObjectsTest {
 
     @Test
     public void testObjectYAPION() {
-        assertThat(new YAPIONObject().toYAPION(new StringOutput()).getResult(), is("{}"));
+        assertThat(new YAPIONObject(), isYAPION("{}"));
     }
 
     @Test
@@ -30,7 +31,7 @@ public class NotationObjectsTest {
     public void testBackslash() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("a", "\\\\");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a(\\\\)}"));
+        assertThat(yapionObject, isYAPION("{a(\\\\)}"));
     }
 
     /*
@@ -53,26 +54,26 @@ public class NotationObjectsTest {
     public void testKeyCharacters() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\ !\"#$%&'\\(\\)*+,-./0123456789:;\\<=\\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\[\\\\]^_`abcdefghijklmnopqrstuvwxyz\\{|\\}~( !\"#$%&'\\(\\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}"));
+        assertThat(yapionObject, isYAPION("{\\ !\"#$%&'\\(\\)*+,-./0123456789:;\\<=\\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\[\\\\]^_`abcdefghijklmnopqrstuvwxyz\\{|\\}~( !\"#$%&'\\(\\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}"));
     }
 
     @Test
     public void testUmlauts() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("äöü", "äöü");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{äöü(äöü)}"));
+        assertThat(yapionObject, isYAPION("{äöü(äöü)}"));
     }
 
     @Test
     public void testOutsideLatin1() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("\u0000\u001F\u007E\u007F\u00A0\u00A1\u0100", "\u0000\u001F\u007E\u007F\u00A0\u00A1\u0100");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\u0000\\u001F~\\u007F\\u00A0¡\\u0100(\\u0000\\u001F~\\u007F\\u00A0¡\\u0100)}"));
+        assertThat(yapionObject, isYAPION("{\\u0000\\u001F~\\u007F\\u00A0¡\\u0100(\\u0000\\u001F~\\u007F\\u00A0¡\\u0100)}"));
     }
 
     @Test
     public void testMapYAPION() {
-        assertThat(new YAPIONMap().toYAPION(new StringOutput()).getResult(), is("<>"));
+        assertThat(new YAPIONMap(), isYAPION("<>"));
     }
 
     @Test
@@ -82,7 +83,7 @@ public class NotationObjectsTest {
 
     @Test
     public void testArrayYAPION() {
-        assertThat(new YAPIONArray().toYAPION(new StringOutput()).getResult(), is("[]"));
+        assertThat(new YAPIONArray(), isYAPION("[]"));
     }
 
     @Test

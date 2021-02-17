@@ -254,12 +254,18 @@ public class YAPIONObject extends YAPIONMappingType implements ObjectRetrieve<St
         if (this == o) return true;
         if (!(o instanceof YAPIONObject)) return false;
         YAPIONObject that = (YAPIONObject) o;
-        return variables.equals(that.variables);
+        if (!variables.keySet().equals(that.variables.keySet())) {
+            return false;
+        }
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
+            if (!entry.getValue().equals(that.variables.get(entry.getKey()))) return false;
+        }
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(variables);
+        return (int) referenceValue();
     }
 
 }

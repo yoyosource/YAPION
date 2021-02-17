@@ -308,12 +308,18 @@ public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIO
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof YAPIONMap)) return false;
-        YAPIONMap yapionMap = (YAPIONMap) o;
-        return variables.equals(yapionMap.variables);
+        YAPIONMap that = (YAPIONMap) o;
+        if (!variables.keySet().equals(that.variables.keySet())) {
+            return false;
+        }
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
+            if (!entry.getValue().equals(that.variables.get(entry.getKey()))) return false;
+        }
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(variables);
+        return (int) referenceValue();
     }
 }
