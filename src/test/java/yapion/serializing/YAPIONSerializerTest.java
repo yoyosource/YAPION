@@ -30,7 +30,7 @@ public class YAPIONSerializerTest {
     @Test
     public void testMap() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestMap());
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.serializing.YAPIONTestObjects$TestMap)stringStringMap{@type(java.util.HashMap)values<0:1#0(Hello1)#1(Hello1)2:3#2(Hello)#3(Hello)4:5#4(Hello2)#5(Hello2)>}hugoStringMap{@type(java.util.HashMap)values<>}hashMap{@type(java.util.HashMap)values<>}linkedHashMap{@type(java.util.LinkedHashMap)values<>}}"));
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.serializing.YAPIONTestObjects$TestMap)stringStringMap{@type(java.util.HashMap)values<(Hello1):(Hello1)(Hello):(Hello)(Hello2):(Hello2)>}hugoStringMap{@type(java.util.HashMap)values<>}hashMap{@type(java.util.HashMap)values<>}linkedHashMap{@type(java.util.LinkedHashMap)values<>}}"));
     }
 
     @Test

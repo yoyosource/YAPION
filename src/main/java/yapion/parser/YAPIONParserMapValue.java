@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-public class YAPIONParserMapObject {
-    public final String key;
+public class YAPIONParserMapValue {
     public final YAPIONAnyType value;
 }

@@ -161,7 +161,6 @@ public final class YAPIONSerializer {
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
             this.yapionObject = (YAPIONObject) serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
-            System.out.println(yapionObject);
             pointerMap.put(object, new YAPIONPointer(yapionObject));
             return this;
         }

@@ -72,7 +72,7 @@ public class JSONMapperTest {
     @Test
     public void testMapperMap() {
         YAPIONObject yapionObject = YAPIONParser.mapJSON("{\"map\":{\"@mapping\":[\"0:1\"],\"#0\":\"string1\",\"#1\":\"string2\"}}");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{map<0:1#0(string1)#1(string2)>}"));
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{map<(string1):(string2)>}"));
     }
 
 }

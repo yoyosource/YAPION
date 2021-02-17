@@ -19,8 +19,7 @@ import yapion.hierarchy.api.storage.ObjectRemove;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
-import yapion.parser.YAPIONParserMapMapping;
-import yapion.parser.YAPIONParserMapObject;
+import yapion.parser.YAPIONParserMapValue;
 import yapion.utils.RecursionUtils;
 import yapion.utils.ReferenceFunction;
 
@@ -33,12 +32,10 @@ import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
 public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIONAnyType>, ObjectAdd<YAPIONMap, YAPIONAnyType>, ObjectRemove<YAPIONMap, YAPIONAnyType>, ObjectAdvancedOperations<YAPIONMap, YAPIONAnyType> {
 
     private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
+
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
-    private final List<YAPIONParserMapMapping> mappingList = new ArrayList<>();
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
-    private final Map<String, YAPIONAnyType> mappingVariables = new LinkedHashMap<>();
+    private final List<YAPIONParserMapValue> yapionParserMapValues = new ArrayList<>();
 
     @Override
     public YAPIONType getType() {
@@ -60,22 +57,11 @@ public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIO
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
         abstractOutput.consume("<");
 
-        long id = 0;
         final String indent = "\n" + indent();
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             abstractOutput.consumePrettified(indent);
-
-            String id1 = String.format("%01X", id++);
-            String id2 = String.format("%01X", id++);
-
-            abstractOutput.consume(id1 + ":" + id2);
-            abstractOutput.consumePrettified(indent);
-
-            abstractOutput.consume("#" + id1);
             entry.getKey().toYAPION(abstractOutput);
-            abstractOutput.consumePrettified(indent);
-
-            abstractOutput.consume("#" + id2);
+            abstractOutput.consume(":");
             entry.getValue().toYAPION(abstractOutput);
         }
 
@@ -207,20 +193,6 @@ public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIO
         return this;
     }
 
-    public YAPIONMap add(@NonNull YAPIONParserMapObject variable) {
-        check(variable.value);
-        discardReferenceValue();
-        mappingVariables.put(variable.key.substring(1), variable.value);
-        variable.value.setParent(this);
-        return this;
-    }
-
-    public YAPIONMap add(@NonNull YAPIONParserMapMapping mapping) {
-        discardReferenceValue();
-        mappingList.add(mapping);
-        return this;
-    }
-
     public YAPIONMap remove(@NonNull YAPIONAnyType key) {
         discardReferenceValue();
         variables.remove(key).removeParent();
@@ -280,24 +252,27 @@ public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIO
         return new ArrayList<>(variables.values());
     }
 
-    public synchronized YAPIONMap finishMapping() {
+    // Internal method for Parser
+    private void add(@NonNull YAPIONParserMapValue variable) {
+        check(variable.value);
         discardReferenceValue();
-        if (mappingVariables.isEmpty()) {
-            return this;
+        yapionParserMapValues.add(variable);
+        variable.value.setParent(this);
+    }
+
+    // Internal method for Parser
+    private void finishMapping() {
+        discardReferenceValue();
+        if (yapionParserMapValues.isEmpty()) {
+            return;
         }
 
-        for (YAPIONParserMapMapping mapping : mappingList) {
-            String[] strings = mapping.mapping.split(":");
-            if (strings.length != 2) {
-                continue;
-            }
-
-            variables.put(mappingVariables.get(strings[0]), mappingVariables.get(strings[1]));
+        while (yapionParserMapValues.size() > 1) {
+            YAPIONParserMapValue yapionParserMapValue1 = yapionParserMapValues.remove(0);
+            YAPIONParserMapValue yapionParserMapValue2 = yapionParserMapValues.remove(0);
+            variables.put(yapionParserMapValue1.value, yapionParserMapValue2.value);
         }
-
-        mappingVariables.clear();
-        mappingList.clear();
-        return this;
+        yapionParserMapValues.clear();
     }
 
     public YAPIONAnyType get(@NonNull YAPIONAnyType key) {

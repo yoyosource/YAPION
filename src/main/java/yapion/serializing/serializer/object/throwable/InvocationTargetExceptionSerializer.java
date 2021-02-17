@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
+// YAPION
+// Copyright (C) 2019,2020,2021 yoyosource
+
 package yapion.serializing.serializer.object.throwable;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
