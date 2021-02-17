@@ -33,6 +33,18 @@ public interface SerializerObjectInterface<T> {
     Class<T> type();
 
     /**
+     * Returns {@code true} if {@link #type()} should be treated as
+     * an interface. {@link YAPIONSerializer} and {@link YAPIONDeserializer}
+     * will treat this return type as secondary choice if a more specific
+     * serializer is missing.
+     *
+     * @return {@code true} if {@link #type()} should be treated as an interface, {@code false} otherwise
+     */
+    default boolean isInterface() {
+        return false;
+    }
+
+    /**
      * This method is used to serialize the type defined by
      * {@link #type()}. You will get the object to serialize
      * as well as the current {@link YAPIONSerializer} designated to

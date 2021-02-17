@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import static yapion.serializing.YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
@@ -184,6 +185,12 @@ public class SerializeManager {
             @Override
             public String type() {
                 return serializer.type().getTypeName();
+            }
+
+            @Override
+            public Class<?> interfaceType() {
+                if (serializer.isInterface()) return serializer.type();
+                return null;
             }
 
             @Override
@@ -392,9 +399,9 @@ public class SerializeManager {
 
         AtomicReference<String> currentType = new AtomicReference<>(type);
         interfaceTypeSerializer.stream()
-                .filter(internalSerializer -> implementsInterface(currentType.get(), internalSerializer.interfaceType()))
-                .findFirst()
-                .ifPresent(serializer -> currentType.set(serializer.type()));
+                .filter(internalSerializer -> implementsInterface(currentType.get(), internalSerializer.interfaceType()) >= 0)
+                .min(Comparator.comparingInt(o -> implementsInterface(currentType.get(), o.interfaceType())))
+                .ifPresent(internalSerializer -> currentType.set(internalSerializer.type()));
         classTypeSerializer.stream()
                 .filter(internalSerializer -> isClassSuperclassOf(currentType.get(), internalSerializer.classType()))
                 .findFirst()

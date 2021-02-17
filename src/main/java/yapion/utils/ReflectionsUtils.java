@@ -24,6 +24,10 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.exceptions.utils.YAPIONReflectionInvocationException;
+import yapion.hierarchy.api.ObjectType;
+import yapion.hierarchy.api.storage.ObjectAdd;
+import yapion.hierarchy.api.storage.ObjectAdvancedOperations;
+import yapion.hierarchy.types.YAPIONObject;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -298,11 +302,33 @@ public class ReflectionsUtils {
         return isClassSuperclassOf(superClassToCheck, superClass);
     }
 
-    public static boolean implementsInterface(String type, Class<?> clazz) {
+    public static int implementsInterface(String type, Class<?> interfaceClass) {
         try {
-            return clazz.isAssignableFrom(Class.forName(type));
+            return implementsInterface(Class.forName(type), interfaceClass);
         } catch (ClassNotFoundException e) {
-            return false;
+            return -1;
+        }
+    }
+
+    public static int implementsInterface(Class<?> toCheck, Class<?> interfaceClass) {
+        if (!interfaceClass.isAssignableFrom(toCheck)) return -1;
+        Set<Class<?>> classesToCheck = new HashSet<>();
+        classesToCheck.add(toCheck);
+        int depth = 0;
+        while (true) {
+            Set<Class<?>> classesToCheckCopy = new HashSet<>();
+            for (Class<?> clazz : classesToCheck) {
+                if (clazz == null) continue;
+                if (clazz == interfaceClass) {
+                    return depth;
+                }
+                classesToCheckCopy.addAll(Arrays.asList(clazz.getInterfaces()));
+                classesToCheckCopy.add(clazz.getSuperclass());
+            }
+            depth++;
+            classesToCheck = new HashSet<>(classesToCheckCopy);
+            classesToCheckCopy.clear();
+            if (classesToCheck.isEmpty()) return -1;
         }
     }
 
