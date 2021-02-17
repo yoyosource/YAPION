@@ -35,7 +35,7 @@ The values are stored like in an Object, but the mapping structure needs to be s
 
 ### Example
 ```
-<0:1#0{}#1{}>
+<{}:{}>
 ```
 
 ## Pointer
