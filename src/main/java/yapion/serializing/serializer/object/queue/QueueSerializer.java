@@ -23,6 +23,7 @@ import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 import yapion.serializing.utils.DeserializeUtils;
 import yapion.serializing.utils.SerializeUtils;
+import yapion.utils.ReflectionsUtils;
 
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -54,8 +55,7 @@ public class QueueSerializer implements InternalSerializer<Queue<?>> {
     @Override
     public Queue<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
-            Object object = Class.forName(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get())
-                    .getDeclaredConstructor().newInstance();
+            Object object = ReflectionsUtils.constructObjectObjenesis(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get());
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return DeserializeUtils.deserializeQueue(deserializeData, yapionArray, (Queue<Object>) object);
         } catch (Exception e) {

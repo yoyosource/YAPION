@@ -23,6 +23,7 @@ import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 import yapion.serializing.utils.DeserializeUtils;
 import yapion.serializing.utils.SerializeUtils;
+import yapion.utils.ReflectionsUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -55,8 +56,7 @@ public class ListSerializer implements InternalSerializer<List<?>> {
     @Override
     public List<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
-            Object object = Class.forName(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get())
-                    .getDeclaredConstructor().newInstance();
+            Object object = ReflectionsUtils.constructObjectObjenesis(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get());
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return DeserializeUtils.deserializeList(deserializeData, yapionArray, (List<Object>) object);
         } catch (Exception e) {

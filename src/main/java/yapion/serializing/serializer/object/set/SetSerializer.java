@@ -23,6 +23,7 @@ import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 import yapion.serializing.utils.DeserializeUtils;
 import yapion.serializing.utils.SerializeUtils;
+import yapion.utils.ReflectionsUtils;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -57,8 +58,7 @@ public class SetSerializer implements InternalSerializer<Set<?>> {
     @Override
     public Set<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
-            Object object = Class.forName(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get())
-                    .getDeclaredConstructor().newInstance();
+            Object object = ReflectionsUtils.constructObjectObjenesis(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get());
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return DeserializeUtils.deserializeSet(deserializeData, yapionArray, (Set<Object>) object);
         } catch (Exception e) {

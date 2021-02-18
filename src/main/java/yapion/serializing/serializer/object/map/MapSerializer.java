@@ -23,6 +23,7 @@ import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 import yapion.serializing.utils.DeserializeUtils;
 import yapion.serializing.utils.SerializeUtils;
+import yapion.utils.ReflectionsUtils;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,8 +55,7 @@ public class MapSerializer implements InternalSerializer<Map<?, ?>> {
     @Override
     public Map<?, ?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
-            Object object = Class.forName(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get())
-                    .getDeclaredConstructor().newInstance();
+            Object object = ReflectionsUtils.constructObjectObjenesis(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get());
             YAPIONMap yapionMap = ((YAPIONObject) deserializeData.object).getMap("values");
             return DeserializeUtils.deserializeMap(deserializeData, yapionMap, (Map<Object, Object>) object);
         } catch (Exception e) {

@@ -55,6 +55,7 @@ dependencies {
 
 ## YAPION datatypes
 - [Minecraft](https://github.com/yoyosource/YAPION-datatypes-mc) datatypes and serialization of those.
+- [pcollections](https://github.com/yoyosource/YAPION-datatypes-pcollections) datatypes and serialization of those.
 
 # Structure
 YAPION is heavily inspired by JSON and you can see some similarities between those object notations.
