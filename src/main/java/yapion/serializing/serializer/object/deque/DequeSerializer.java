@@ -57,7 +57,7 @@ public class DequeSerializer implements InternalSerializer<Deque<?>> {
     @Override
     public Deque<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
-            Object object = ReflectionsUtils.constructObjectObjenesis(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get());
+            Object object = ReflectionsUtils.constructObject(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get(), false);
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return DeserializeUtils.deserializeDeque(deserializeData, yapionArray, (Deque<Object>) object);
         } catch (Exception e) {

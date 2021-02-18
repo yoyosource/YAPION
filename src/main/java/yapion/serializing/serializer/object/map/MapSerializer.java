@@ -55,7 +55,7 @@ public class MapSerializer implements InternalSerializer<Map<?, ?>> {
     @Override
     public Map<?, ?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
-            Object object = ReflectionsUtils.constructObjectObjenesis(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get());
+            Object object = ReflectionsUtils.constructObject(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get(), false);
             YAPIONMap yapionMap = ((YAPIONObject) deserializeData.object).getMap("values");
             return DeserializeUtils.deserializeMap(deserializeData, yapionMap, (Map<Object, Object>) object);
         } catch (Exception e) {
