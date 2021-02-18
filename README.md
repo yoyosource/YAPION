@@ -53,21 +53,24 @@ dependencies {
 * [V] Version
 * [L] License
 
-## Structure
+## YAPION datatypes
+- [Minecraft](https://github.com/yoyosource/YAPION-datatypes-mc) datatypes and serialization of those.
+
+# Structure
 YAPION is heavily inspired by JSON and you can see some similarities between those object notations.
 Both have objects as a key, value map and arrays. An YAPION structure can only be an object. An object starts with '{' and ends with '}'. Complementary an array starts with '\[' ends with ']'.
 The String representation of an YAPION Object or Array is mostly shorter than the JSON equivalent. This is achieved by eliminating most quotation marks and building the key value pairs in a enum like fashion.
 YAPION as a object notation has 5 types. Those are value, array, object, map (see: Map) and pointer (see: Pointer).
 Values are indicated by '(...)', arrays by '\[...]', objects by '{...}', map by '<...> and pointers by '->...', the 3 dots are representing the value, or the key value pairs.
 
-### Benefits of YAPION
+## Benefits of YAPION
 - Most of the time JSON is nearly **1.15** to **1.4** time as long as the YAPION equivalent. This does not apply to the serialized stuff.
 - YAPION has native map support to easier serialize the Java counter part.
 - YAPION has native pointer support to easier serialize Java references to other Objects in multiple places.
 - YAPION's primitive types know what Java Type they should be.
 
-### JSON Equivalent
-#### Objects, Key-Value pairs
+## JSON Equivalent
+### Objects, Key-Value pairs
 ```
 Example for an empty YAPION object
 JSON:   {}
@@ -97,7 +100,7 @@ Example for an YAPION object with "name":"yoyosource" and "owner":true as value 
 JSON:   {"name":"yoyosource","owner":true}
 YAPION: {name(yoyosource)owner(true)}
 ```
-#### Arrays
+### Arrays
 ```
 Example for an empty YAPION array
 JSON:   []
@@ -119,8 +122,8 @@ Example for embedding an YAPION array in another object.
 JSON:   {"contributor":[{"name":"yoyosource","owner":true},{"name":"chaoscaot444","owner":"false"}]}
 YAPION: {contributor[{name(yoyosource)owner(true)},{name(chaoscaot444)owner("false")}]}
 ```
-### YAPION Specific
-#### Maps
+## YAPION Specific
+### Maps
 ```
 Example for an empty YAPION map
 <>
@@ -134,7 +137,7 @@ Example for an YAPION map with Integer to String mapping
 Example for an YAPION map with Object to Object mapping
 <{}:{}>
 ```
-### Pointer
+## Pointer
 These pointers point to another YAPION Object in the same serialization. For reconstructing the recursion this pointer points to the object it is referring to.
 A pointer is not a hash and is not intended to be secure. If 2 objects in your tree have the same pointer it will point to the first by default.
 All pointers shown in here are valid pointers but are mostly meaningless because a pointer gets constructed by your current object state.
@@ -144,21 +147,21 @@ Example for an YAPION pointer
 {hello->7FFFFFE53E6CBDFE}
 ```
 
-## Code examples
-### [Parsing](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/hierarchy)
+# Code examples
+## [Parsing](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/hierarchy)
 The Parser itself is located [here](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/parser).
 ```java
 YAPIONObject yapionObject = YAPIONParser.parse("[...]");
 YAPIONObject yapionObject = YAPIONParser.parse(new FileInputStream(new File([...])));
 ```
 
-### [Serializing](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/serializing)
+## [Serializing](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/serializing)
 ```java
 YAPIONObject yapionObject = YAPIONSerializer.serialize([...]);
 YAPIONObject yapionObject = YAPIONSerializer.serialize([...], "[...]");
 ```
 
-### [Deserializing](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/serializing)
+## [Deserializing](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/serializing)
 ```java
 Object object = YAPIONDeserializer.deserialize([...]);
 Object object = YAPIONDeserializer.deserialize([...], "[...]");
