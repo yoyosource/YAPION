@@ -34,3 +34,4 @@
 * [Packet System](examples/advanced/YAPIONPacket.md)
 * [Factory](examples/advanced/FactoryAPI.md)
 * [Serializer](examples/advanced/SerializerAPI.md)
+* [YAPIONRegistrator](examples/advanced/YAPIONRegistrator.md)
