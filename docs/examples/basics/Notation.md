@@ -65,5 +65,15 @@ The value is surrounded by '(' and ')' in any Key-Value-Pair, except in Arrays. 
 
 ### Example
 ```
-(0)
+Boolean: (false), (true)
+Byte: (0B)
+Short: (0S)
+Char: ('a')
+Int: (0), (0I)
+Float (0F), (0.0F)
+Double (0D), (0.0D)
+BigInteger: (0BI)
+BigDecimal: (0BD)
+String: ('Hallo Welt'), ("Hallo Welt"), (Hallo Welt)
+'null': (null)
 ```
