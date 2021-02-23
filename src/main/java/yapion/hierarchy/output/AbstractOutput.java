@@ -40,7 +40,7 @@ public abstract class AbstractOutput {
     }
 
     protected final byte[] bytes(String s) {
-        return s.getBytes(StandardCharsets.UTF_8);
+        return s.getBytes(StandardCharsets.UTF_16BE);
     }
 
     private void validateMethodCall() {

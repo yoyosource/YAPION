@@ -13,17 +13,16 @@
 
 package yapion.hierarchy.output;
 
+import lombok.Getter;
+
 public class LengthOutput extends AbstractOutput {
 
+    @Getter
     private long length = 0;
 
     @Override
     protected void internalConsume(String s) {
         length += s.length();
-    }
-
-    public long getLength() {
-        return length;
     }
 
 }
