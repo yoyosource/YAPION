@@ -11,6 +11,8 @@ import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.output.StringPrettifiedOutput;
 import yapion.hierarchy.output.FileOutput;
 import yapion.hierarchy.output.FilePrettifiedOutput;
+import yapion.hierarchy.output.FileGZIPOutput;
+import yapion.hierarchy.output.LengthOutput;
 import yapion.hierarchy.output.StreamOutput;
 import yapion.hierarchy.output.StringPrettifiedOutput;
 import yapion.hierarchy.output.StringBuilderOutput;
@@ -28,11 +30,14 @@ public class ExampleSerializationTwo {
         String stringPrettifiedOutput = yapionObject.toYAPION(new StringPrettifiedOutput()).getResult();
 
         try {
-            // '<FILE>' should be replaces by your file. The result will be written into the file directly
+            // '<FILE>' should be replaced by your file. The result will be written into the file directly
             yapionObject.toYAPION(new FileOutput(new File("<FILE>"))).close();
 
-            // '<FILE>' should be replaces by your file. The result will be written into the file directly and will be prettified
+            // '<FILE>' should be replaced by your file. The result will be written into the file directly and will be prettified
             yapionObject.toYAPION(new FilePrettifiedOutput(new File("<FILE>"))).close();
+
+            // '<FILE>' should be replaced by your file. The result will be written into the file directly and will be prettified
+            yapionObject.toYAPION(new FileGZIPOutput(new File("<FILE>"))).close();
         } catch (IOException e) {
             // Ignored
         }
@@ -48,6 +53,9 @@ public class ExampleSerializationTwo {
 
         // '/*<STRING_BUILDER>*/' should be replaces by either a new StringBuilder or a StringBuilder to reuse. The output will be prettified.
         yapionObject.toYAPION(new StringBuilderPrettifiedOutput(/*<STRING_BUILDER>*/)).close();
+
+        // Get the length of the underlying yapionObject
+        yapionObject.toYAPION(new LengthOutput()).getLength();
     }
 
 }
