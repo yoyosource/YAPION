@@ -46,7 +46,6 @@ public final class YAPIONSocket {
     }
 
     public void close() throws IOException {
-        // socket.close();
         yapionInputStream.close();
         yapionOutputStream.close();
     }
