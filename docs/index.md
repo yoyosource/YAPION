@@ -26,6 +26,7 @@
 ### Advanced
 
 * [Classes and Packages](examples/advanced/TypeReMapper.md)
+* [Context](examples/advanced/Context.md)
 * [Cascading](examples/advanced/Cascading.md)
 * [Deserializer Result](examples/advanced/DeserializationResult.md)
 * [Hooks into Serialization/Deserialization](examples/advanced/MethodAnnotations.md)
