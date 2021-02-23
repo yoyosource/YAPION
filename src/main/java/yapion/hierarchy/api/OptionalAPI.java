@@ -18,6 +18,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This annotation will be put at any method that is optional to implement.
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.METHOD})
 public @interface OptionalAPI {
