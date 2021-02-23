@@ -341,7 +341,7 @@ public final class YAPIONParser {
     }
 
     private void parseStep(char lastChar, char c) {
-        log.debug(typeStack.toString() + " -> 0x" + String.format("%04X", (int) lastChar) + " 0x" + String.format("%04X", (int) c));
+        log.debug(typeStack.toString() + " -> 0x" + String.format("%04X", (int) lastChar) + " " + lastChar + " 0x" + String.format("%04X", (int) c) + " " + c);
         if (typeStack.isEmpty()) {
             initialType(c);
             return;
