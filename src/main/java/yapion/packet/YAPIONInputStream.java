@@ -211,7 +211,7 @@ public final class YAPIONInputStream {
         Object object = ((YAPIONValue) yapionAnyType).get();
         if (!(object instanceof String)) return new HandleFailedPacket(yapionObject);
         try {
-            object = new YAPIONDeserializer(yapionObject, "").parse().getObjectOrException();
+            object = new YAPIONDeserializer(yapionObject, "", typeReMapper).parse().getObjectOrException();
         } catch (Exception e) {
             DeserializationExceptionPacket deserializationExceptionPacket = new DeserializationExceptionPacket(yapionObject);
             deserializationExceptionPacket.setException(e);
