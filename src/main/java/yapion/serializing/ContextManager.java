@@ -34,6 +34,7 @@ public final class ContextManager {
     private final boolean emptyState;
 
     public ContextManager(String state) {
+        if (state == null) state = "";
         this.state = state;
         this.emptyState = state.isEmpty();
     }

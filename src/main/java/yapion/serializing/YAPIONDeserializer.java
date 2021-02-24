@@ -102,6 +102,16 @@ public final class YAPIONDeserializer {
     }
 
     /**
+     * Creates a YAPIONDeserializer for deserializing a YAPIONObject.
+     *
+     * @param yapionObject to deserialize
+     */
+    public YAPIONDeserializer(@NonNull YAPIONObject yapionObject) {
+        contextManager = new ContextManager("");
+        this.yapionObject = yapionObject;
+    }
+
+    /**
      * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.
      *
      * @param yapionObject to deserialize
