@@ -86,6 +86,16 @@ public final class YAPIONSerializer {
     }
 
     /**
+     * Creates a YAPIONSerializer for serializing an Object.
+     *
+     * @param object to serialize
+     */
+    public YAPIONSerializer(@NonNull Object object) {
+        contextManager = new ContextManager("");
+        this.object = object;
+    }
+
+    /**
      * Creates a YAPIONSerializer for serializing an Object with a specified context.
      *
      * @param object to serialize
