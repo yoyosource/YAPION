@@ -73,6 +73,12 @@ public interface YAPIONPacketHandler {
         return false;
     }
 
+    /**
+     * Close an OutputStream associated with this YAPIONPacket.
+     *
+     * @param yapionPacket the packet to use
+     * @return {@code true} if and only if the close was successful, {@code false} otherwise
+     */
     static boolean close(@NonNull YAPIONPacket yapionPacket) {
         if (yapionPacket.getYAPIONOutputStream() != null) {
             try {
