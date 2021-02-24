@@ -19,6 +19,7 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONPacketException;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -209,6 +210,14 @@ public class YAPIONPacketReceiver {
             } catch (Exception e) {
                 log.warn(String.format("The packet handler with type '%s' threw an exception.", type), e.getCause());
                 yapionPacket.setException(e);
+                if (handler.closeOnException() && yapionPacket.getYAPIONOutputStream() != null) {
+                    try {
+                        yapionPacket.getYAPIONOutputStream().close();
+                    } catch (IOException ex) {
+                        // Ignored
+                    }
+                    return;
+                }
                 if (!handler.ignoreException()) yapionPacketConsumer.accept(yapionPacket);
             }
         };

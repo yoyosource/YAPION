@@ -61,6 +61,17 @@ public interface YAPIONPacketHandler {
     }
 
     /**
+     * Specifies if the OutputStream and InputStream should be closed if an exception gets thrown.
+     * This will be evaluated before {@link #ignoreException()} is evaluated and will only take effect
+     * if used in conjunction with YAPIONSocket.
+     *
+     * @return {@code true} if it should get closed on exception, {@code false} otherwise
+     */
+    default boolean closeOnException() {
+        return false;
+    }
+
+    /**
      * Create a {@link YAPIONPacketHandler} by the different parameters
      *
      * @param yapionPacketConsumer the {@link Consumer} to handle the {@link YAPIONPacket}
