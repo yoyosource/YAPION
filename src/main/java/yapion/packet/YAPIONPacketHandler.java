@@ -13,9 +13,11 @@
 
 package yapion.packet;
 
+import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 @YAPIONLoadExclude(context = "*")
@@ -68,6 +70,18 @@ public interface YAPIONPacketHandler {
      * @return {@code true} if it should get closed on exception, {@code false} otherwise
      */
     default boolean closeOnException() {
+        return false;
+    }
+
+    static boolean close(@NonNull YAPIONPacket yapionPacket) {
+        if (yapionPacket.getYAPIONOutputStream() != null) {
+            try {
+                yapionPacket.getYAPIONOutputStream().close();
+                return true;
+            } catch (IOException e) {
+                return false;
+            }
+        }
         return false;
     }
 
