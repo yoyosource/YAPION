@@ -1,6 +1,6 @@
 # Packet System
 
-YAPION in itself has an extensive Packet system to use between programms. To create a custom packet you need to extend YAPIONPacket. Every field of this class will be saved and loaded back by the serialization call. You can implement the reading and writing of those packets into an InputStream/OutputStream by yourself, or just use my YAPIONInputStream and YAPIONOutputStream in conjunction with a YAPIONSocket. With the YAPIONInputStream you can use the YAPIONPacketReceiver with a YAPIONPacketHandler. A YAPIONPacketHandler is used to handle any incoming Packets from the YAPIONInputStream, and the YAPIONPacketReceiver is used to bundle YAPIONPacketHandler together. It will handle any incoming packets and call the specified YAPIONPacketHandler.
+YAPION in itself has an extensive packet system to use between programms. To create a custom packet you need to extend YAPIONPacket. Every field of this class will be saved and loaded back by the serialization call. You can implement the reading and writing of those packets into an Input/OutputStream by yourself, or just use my YAPIONInputStream and YAPIONOutputStream in conjunction with a YAPIONSocket. With the YAPIONInputStream you can use the YAPIONPacketReceiver with a YAPIONPacketHandler. A YAPIONPacketHandler is used to handle any incoming packets from the YAPIONInputStream, and the YAPIONPacketReceiver is used to bundle YAPIONPacketHandler together. It will handle any incoming packets and call the specified YAPIONPacketHandler.
 
 ```java
 import yapion.packet.YAPIONPacketReceiver;
@@ -17,7 +17,7 @@ public class ExampleReceiver {
 }
 ```
 
-There are some special receiver to keep in mind if using the YAPIONPacketReceiver. They handle Dropping of data or if deserialization fails or if an Exception was thrown in an user defined handle.
+With using the YAPIONPacketReceiver some special receivers should be kept in mind. They handle dropping of data, failure of deserialization or any thrown exception in an user defined handler.
 
 ```java
 import yapion.packet.YAPIONPacketReceiver;
@@ -52,7 +52,7 @@ public class ExampleReceiver {
 }
 ```
 
-All these handlers get used in conjunction with an YAPIONInputStream and the internal handling system of packets inside the YAPIONInputStream.
+All these handlers are used in conjunction with an YAPIONInputStream and the internal handling system of packets inside the YAPIONInputStream.
 
 ```java
 import yapion.hierarchy.output.StringOutput;
@@ -92,7 +92,7 @@ class ExamplePacket extends YAPIONPacket {
 }
 ```
 
-Do not get confused by 'toYAPION().toYAPION([...])' as the first call creates the 'YAPIONObject', and the other will be the normal Output call. If you use the YAPIONSocket instead of getting the InputStream and OutputStream from a Socket yourself, you can get the YAPIONOutputStream from the YAPIONPacket corresponding to the YAPIONInputStream. You can define some more behaviour on the YAPIONPacketHandler individual to the implementation.
+Do not get confused by 'toYAPION().toYAPION([...])' as the first call creates the 'YAPIONObject', and the next one will be the normal output call. If you use the YAPIONSocket instead of getting the InputStream and OutputStream from a socket yourself, you can get the YAPIONOutputStream from the YAPIONPacket corresponding to the YAPIONInputStream. You can define some more behaviour on the YAPIONPacketHandler individual for any implementation.
 
 ```java
 import yapion.packet.YAPIONPacket;
@@ -158,7 +158,7 @@ public class ExampleStaticHandler {
 }
 ```
 
-If you use all of this in conjunction you can create a complex protocol for a client-client or client-server even server-server application. One example is a time returning system, that returns the server time.
+If you use all of this in conjunction you can create a complex protocol for a client-client or client-server even server-server application. One example is a server time returning system.
 
 ```java
 import yapion.packet.YAPIONPacket;
@@ -237,7 +237,7 @@ public class ExamplePacket {
         serverReceiver.setUnknownHandler(new YAPIONPacketHandler() {
             @Override
             public void handlePacket(YAPIONPacket yapionPacket) {
-                
+                throw new SecurityException();
             }
 
             @Override
