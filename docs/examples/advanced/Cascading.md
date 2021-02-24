@@ -1,4 +1,4 @@
-# Cascading [WIP]
+# Cascading
 
 The cascading feature is useful for integrating YAPION in an existing project. You can use this if you want to serialize a deep and complex Object tree without adding YAPION annotations to every object. You just need to add the YAPIONData annotation to the top object.
 
