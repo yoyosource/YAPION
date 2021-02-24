@@ -158,4 +158,55 @@ public class ExampleStaticHandler {
 }
 ```
 
-If you use all of this in conjunction you can create a complex protocol for a client-client or client-server even server-server application.>
+If you use all of this in conjunction you can create a complex protocol for a client-client or client-server even server-server application. One example is a time returning system, that returns the server time.
+
+```java
+import yapion.packet.YAPIONPacket;
+import yapion.packet.YAPIONPacketReceiver;
+import yapion.packet.YAPIONSocket;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ExamplePacket {
+
+    public static void main(String[] args) throws IOException {
+        ServerSocket server = new ServerSocket(<PORT>)
+        Socket socket = new Socket("localhost", <PORT>);
+        Socket serverSocket = server.accept();
+
+        YAPIONSocket yapionSocket = new YAPIONSocket(socket);
+        YAPIONSocket serverYapionSocket = new YAPIONSocket(serverSocket);
+
+        YAPIONPacketReceiver serverReceiver = new YAPIONPacketReceiver();
+        serverReceiver.setUnknownHandler(yapionPacket -> {
+            try {
+                yapionPacket.getYAPIONOutputStream().close();
+            } catch (IOException e) {
+                throw new SecurityException(e.getMessage(), e);
+            }
+        });
+        serverReceiver.add(GetTimePacket.class, yapionPacket -> {
+            // Return the time after the Time Request
+            yapionPacket.getYAPIONOutputStream().write(new TimePacket());
+        });
+        serverYapionSocket.setYAPIONPacketReceiver(serverReceiver);
+
+        yapionSocket.write(new GetTimePacket());
+        TimePacket timePacket = (TimePacket) yapionSocket.readObject();
+        System.out.println(timePacket.time);
+    }
+
+}
+
+class GetTimePacket extends YAPIONPacket {
+
+}
+
+class TimePacket extends YAPIONPacket {
+
+    long time = System.currentTimeMillis();
+
+}
+```
