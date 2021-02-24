@@ -210,3 +210,61 @@ class TimePacket extends YAPIONPacket {
 
 }
 ```
+
+You can also use the internal `#closeOnException()` method declared in the 'YAPIONPacketHandler'.
+
+```java
+import yapion.packet.YAPIONPacket;
+import yapion.packet.YAPIONPacketHandler;
+import yapion.packet.YAPIONPacketReceiver;
+import yapion.packet.YAPIONSocket;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ExamplePacket {
+
+    public static void main(String[] args) throws IOException {
+        ServerSocket server = new ServerSocket(<PORT>)
+        Socket socket = new Socket("localhost", <PORT>);
+        Socket serverSocket = server.accept();
+
+        YAPIONSocket yapionSocket = new YAPIONSocket(socket);
+        YAPIONSocket serverYapionSocket = new YAPIONSocket(serverSocket);
+
+        YAPIONPacketReceiver serverReceiver = new YAPIONPacketReceiver();
+        serverReceiver.setUnknownHandler(new YAPIONPacketHandler() {
+            @Override
+            public void handlePacket(YAPIONPacket yapionPacket) {
+                
+            }
+
+            @Override
+            public boolean closeOnException() {
+                return true;
+            }
+        });
+        serverReceiver.add(GetTimePacket.class, yapionPacket -> {
+            // Return the time after the Time Request
+            yapionPacket.getYAPIONOutputStream().write(new TimePacket());
+        });
+        serverYapionSocket.setYAPIONPacketReceiver(serverReceiver);
+
+        yapionSocket.write(new GetTimePacket());
+        TimePacket timePacket = (TimePacket) yapionSocket.readObject();
+        System.out.println(timePacket.time);
+    }
+
+}
+
+class GetTimePacket extends YAPIONPacket {
+
+}
+
+class TimePacket extends YAPIONPacket {
+
+    long time = System.currentTimeMillis();
+
+}
+```
