@@ -1,6 +1,6 @@
 # Annotation
 
-Every annotation in a table with the supported values (2-4 row) and you can put it (6-8 row).
+Every annotation in a table with the supported values (2-4 row) and where you can put it (6-8 row).
 
 | Annotation                | context() | type() | cascading() | Usage                       | Type | Method | Field |
 |---------------------------|-----------|--------|-------------|-----------------------------|------|--------|-------|
