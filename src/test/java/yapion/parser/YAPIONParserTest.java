@@ -1,13 +1,36 @@
 package yapion.parser;
 
 import org.junit.Test;
+import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
+
+import java.io.InputStream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class YAPIONParserTest {
+
+    @Test(expected = NullPointerException.class)
+    public void testNullSafety() {
+        YAPIONParser.parse((InputStream) null);
+    }
+
+    @Test(expected = YAPIONParserException.class)
+    public void testStringError() {
+        YAPIONParser.parse("{{}");
+    }
+
+    @Test(expected = YAPIONParserException.class)
+    public void testTypeMismatch() {
+        YAPIONParser.parse("{]");
+    }
+
+    @Test(expected = YAPIONParserException.class)
+    public void testInitialType() {
+        YAPIONParser.parse("[]");
+    }
 
     @Test
     public void testEmpty() {
