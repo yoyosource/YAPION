@@ -16,25 +16,19 @@ package yapion.parser;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import yapion.exceptions.parser.YAPIONParserException;
-import yapion.exceptions.utils.YAPIONIOException;
 import yapion.hierarchy.api.ObjectOutput;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.types.*;
+import yapion.hierarchy.types.YAPIONMap;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONPointer;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
-import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 @Slf4j
 public final class YAPIONParser {
