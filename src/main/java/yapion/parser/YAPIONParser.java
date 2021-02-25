@@ -200,22 +200,85 @@ public final class YAPIONParser {
     private CharReader charReader;
 
     /**
-     * Creates a YAPIONParser for parsing an string to an YAPIONObject.
+     * Creates a YAPIONParser for parsing a string to an YAPIONObject.
      *
-     * @param s to parse from
+     * @param string to parse from
      */
-    public YAPIONParser(@NonNull String s) {
+    public YAPIONParser(@NonNull String string) {
         charReader = new CharReader() {
             private int index = 0;
 
             @Override
             char next() {
-                return s.charAt(index++);
+                return string.charAt(index++);
             }
 
             @Override
             boolean hasNext() {
-                return index < s.length();
+                return index < string.length();
+            }
+        };
+    }
+
+    /**
+     * Creates a YAPIONParser for parsing a StringBuilder to an YAPIONObject.
+     *
+     * @param stringBuilder to parse from
+     */
+    public YAPIONParser(@NonNull StringBuilder stringBuilder) {
+        charReader = new CharReader() {
+            private int index = 0;
+
+            @Override
+            char next() {
+                return stringBuilder.charAt(index++);
+            }
+
+            @Override
+            boolean hasNext() {
+                return index < stringBuilder.length();
+            }
+        };
+    }
+
+    /**
+     * Creates a YAPIONParser for parsing a byte array to an YAPIONObject.
+     *
+     * @param bytes to parse from
+     */
+    public YAPIONParser(@NonNull byte[] bytes) {
+        charReader = new CharReader() {
+            private int index = 0;
+
+            @Override
+            char next() {
+                return (char) bytes[index++];
+            }
+
+            @Override
+            boolean hasNext() {
+                return index < bytes.length;
+            }
+        };
+    }
+
+    /**
+     * Creates a YAPIONParser for parsing a char array to an YAPIONObject.
+     *
+     * @param chars to parse from
+     */
+    public YAPIONParser(@NonNull char[] chars) {
+        charReader = new CharReader() {
+            private int index = 0;
+
+            @Override
+            char next() {
+                return chars[index++];
+            }
+
+            @Override
+            boolean hasNext() {
+                return index < chars.length;
             }
         };
     }
