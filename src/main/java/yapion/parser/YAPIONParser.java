@@ -14,6 +14,7 @@
 package yapion.parser;
 
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.api.ObjectOutput;
@@ -25,7 +26,6 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -283,23 +283,31 @@ public final class YAPIONParser {
      * @param inputStream to parse from
      */
     public YAPIONParser(@NonNull InputStream inputStream) {
+        this(inputStream, false);
+    }
+
+    /**
+     * Creates a YAPIONParser for parsing an InputStream to an YAPIONObject.
+     *
+     * @param inputStream to parse from
+     * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
+     */
+    public YAPIONParser(@NonNull InputStream inputStream, boolean stopOnStreamEnd) {
         charReader = new CharReader() {
             @Override
+            @SneakyThrows
             char next() {
-                try {
-                    int i = inputStream.read();
-                    if (i == -1) {
-                        throw new ParserSkipException();
-                    }
-                    return (char) i;
-                } catch (IOException e) {
-                    throw new YAPIONParserException();
+                int i = inputStream.read();
+                if (i == -1 && !stopOnStreamEnd) {
+                    throw new ParserSkipException();
                 }
+                return (char) i;
             }
 
             @Override
+            @SneakyThrows
             boolean hasNext() {
-                return true;
+                return !stopOnStreamEnd || inputStream.available() > 0;
             }
         };
     }
