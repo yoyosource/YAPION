@@ -9,6 +9,7 @@ import java.io.InputStream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static yapion.utils.YAPIONAssertion.isYAPION;
 
 public class YAPIONParserTest {
 
@@ -32,73 +33,92 @@ public class YAPIONParserTest {
         YAPIONParser.parse("[]");
     }
 
+    @Test(expected = YAPIONParserException.class)
+    public void testEmptyString() {
+        YAPIONParser.parse("");
+    }
+
+    @Test
+    public void testCharArray() {
+        char[] chars = "{a()b{}c[]d<>}".toCharArray();
+        YAPIONObject yapionObject = new YAPIONParser(chars).parse().result();
+        assertThat(yapionObject, isYAPION("{a()b{}c[]d<>}"));
+    }
+
+    @Test
+    public void testByteArray() {
+        byte[] bytes = "{a()b{}c[]d<>}".getBytes();
+        YAPIONObject yapionObject = new YAPIONParser(bytes).parse().result();
+        assertThat(yapionObject, isYAPION("{a()b{}c[]d<>}"));
+    }
+
     @Test
     public void testEmpty() {
         YAPIONObject yapionObject = YAPIONParser.parse("{}");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{}"));
+        assertThat(yapionObject, isYAPION("{}"));
     }
 
     @Test
     public void testVariable() {
         YAPIONObject yapionObject = YAPIONParser.parse("{a()b(\"Hello\")c(true)d(\"true\")}");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a()b(Hello)c(true)d(\"true\")}"));
+        assertThat(yapionObject, isYAPION("{a()b(Hello)c(true)d(\"true\")}"));
     }
 
     @Test
     public void testBlank() {
         YAPIONObject yapionObject = YAPIONParser.parse("{   a()\\   b()()}");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a()\\   b()()}"));
+        assertThat(yapionObject, isYAPION("{a()\\   b()()}"));
     }
 
     @Test
     public void testArray() {
         YAPIONObject yapionObject = YAPIONParser.parse("{a[]b[[null,null],[],[]]}");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a[]b[[null,null],[],[]]}"));
+        assertThat(yapionObject, isYAPION("{a[]b[[null,null],[],[]]}"));
     }
 
     @Test
     public void testMap() {
         YAPIONObject yapionObject = YAPIONParser.parse("{a<>}");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a<>}"));
+        assertThat(yapionObject, isYAPION("{a<>}"));
     }
 
     @Test
     public void testPointer() {
         YAPIONObject yapionObject = YAPIONParser.parse("{a->0000000000000000}");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a->0000000000000000}"));
+        assertThat(yapionObject, isYAPION("{a->0000000000000000}"));
     }
 
     @Test
     public void testBackslash() {
         YAPIONObject yapionObject = YAPIONParser.parse("{a(\\\\)}");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a(\\\\)}"));
+        assertThat(yapionObject, isYAPION("{a(\\\\)}"));
     }
 
     @Test
     public void testUnicode() {
         YAPIONObject yapionObject = YAPIONParser.parse("{a(\\u0020)}");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{a( )}"));
+        assertThat(yapionObject, isYAPION("{a( )}"));
     }
 
     @Test
     public void testUnicodeKey() {
         YAPIONObject yapionObject = YAPIONParser.parse("{\\u0020(a)}");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\ (a)}"));
+        assertThat(yapionObject, isYAPION("{\\ (a)}"));
     }
 
     @Test
     public void testUnicodeKeyReparse() {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add("§", "a");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{§(a)}"));
+        yapionObject.add("\u0000", "a");
+        assertThat(yapionObject, isYAPION("{\\u0000(a)}"));
         yapionObject = YAPIONParser.parse(yapionObject.toYAPION(new StringOutput()).getResult());
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{§(a)}"));
+        assertThat(yapionObject, isYAPION("{\\u0000(a)}"));
     }
 
     @Test
     public void testCharacters() {
         YAPIONObject yapionObject = YAPIONParser.parse("{\\ !\"#$%&'\\(\\)*+,-./0123456789:;\\<=\\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\[\\\\]^_`abcdefghijklmnopqrstuvwxyz\\{|\\}~( !\"#$%&'\\(\\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\ !\"#$%&'\\(\\)*+,-./0123456789:;\\<=\\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\[\\\\]^_`abcdefghijklmnopqrstuvwxyz\\{|\\}~( !\"#$%&'\\(\\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}"));
+        assertThat(yapionObject, isYAPION("{\\ !\"#$%&'\\(\\)*+,-./0123456789:;\\<=\\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\[\\\\]^_`abcdefghijklmnopqrstuvwxyz\\{|\\}~( !\"#$%&'\\(\\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}"));
     }
 
 }

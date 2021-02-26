@@ -146,6 +146,9 @@ class YAPIONInternalParser {
         if (typeStack.isNotEmpty()) {
             throw new YAPIONParserException();
         }
+        if (count == 0) {
+            throw new YAPIONParserException();
+        }
 
         log.debug("pFinish  [init]");
         Map<Long, YAPIONObject> yapionObjectMap = new HashMap<>();

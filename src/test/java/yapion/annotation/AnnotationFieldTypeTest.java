@@ -2,14 +2,13 @@ package yapion.annotation;
 
 import org.junit.Test;
 import yapion.exceptions.serializing.YAPIONSerializerException;
-import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONSerializer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static yapion.annotation.AnnotationTestObjects.FieldTypeTest1;
 import static yapion.annotation.AnnotationTestObjects.FieldTypeTest2;
+import static yapion.utils.YAPIONAssertion.isYAPION;
 
 public class AnnotationFieldTypeTest {
 
@@ -24,7 +23,7 @@ public class AnnotationFieldTypeTest {
         // A context with name "fieldOther" defined in @YAPIONSave (but not in @YAPIONData, but this does not matter):
         // Field IS serialized
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new FieldTypeTest1(), "fieldOther");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.annotation.AnnotationTestObjects$FieldTypeTest1)s(some-string)}"));
+        assertThat(yapionObject, isYAPION("{@type(yapion.annotation.AnnotationTestObjects$FieldTypeTest1)s(some-string)}"));
     }
 
     @Test
@@ -32,7 +31,7 @@ public class AnnotationFieldTypeTest {
         // A context with name "type" defined in @YAPIONData (but not in @YAPIONSave, but this does not matter):
         // Field IS serialized
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new FieldTypeTest1(), "type");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.annotation.AnnotationTestObjects$FieldTypeTest1)s(some-string)}"));
+        assertThat(yapionObject, isYAPION("{@type(yapion.annotation.AnnotationTestObjects$FieldTypeTest1)s(some-string)}"));
     }
 
     @Test
@@ -40,7 +39,7 @@ public class AnnotationFieldTypeTest {
         // A context with name "other" defined in @YAPIONSave, but not in @YAPIONField:
         // Field is NOT serialized
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new FieldTypeTest2(), "other");
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.annotation.AnnotationTestObjects$FieldTypeTest2)}"));
+        assertThat(yapionObject, isYAPION("{@type(yapion.annotation.AnnotationTestObjects$FieldTypeTest2)}"));
     }
 
 }

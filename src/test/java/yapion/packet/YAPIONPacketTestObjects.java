@@ -3,7 +3,6 @@ package yapion.packet;
 public class YAPIONPacketTestObjects {
 
     public enum TestType {
-
         DropHandler,
         ErrorHandler,
         ExceptionHandler,
@@ -11,7 +10,6 @@ public class YAPIONPacketTestObjects {
         UnknownHandler,
         DeserializationExceptionHandler,
         ValidHandler
-
     }
 
     public static class TestPacket extends YAPIONPacket {

@@ -1,23 +1,22 @@
 package yapion.annotation;
 
 import org.junit.Test;
-import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static yapion.annotation.AnnotationTestObjects.*;
+import static yapion.annotation.AnnotationTestObjects.ObjenesisTest;
+import static yapion.utils.YAPIONAssertion.isYAPION;
 
 public class AnnotationObjensisTest {
 
     @Test
     public void testObjenesis() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new ObjenesisTest());
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.annotation.AnnotationTestObjects$ObjenesisTest)s(objenesis)}"));
+        assertThat(yapionObject, isYAPION("{@type(yapion.annotation.AnnotationTestObjects$ObjenesisTest)s(objenesis)}"));
         yapionObject = YAPIONSerializer.serialize(YAPIONDeserializer.deserialize(yapionObject, "noObjenesis"));
-        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{@type(yapion.annotation.AnnotationTestObjects$ObjenesisTest)s(null)}"));
+        assertThat(yapionObject, isYAPION("{@type(yapion.annotation.AnnotationTestObjects$ObjenesisTest)s(null)}"));
     }
 
 }
