@@ -20,11 +20,12 @@ import yapion.parser.YAPIONParser;
 
 public class YAPIONAssertion {
 
-    public static Matcher<YAPIONAnyType> isYAPION(String value) {
-        return Is.is(YAPIONParser.parse("{" + value + "}").getYAPIONAnyType(""));
+    @SuppressWarnings({"unchecked"})
+    public static <T extends YAPIONAnyType> Matcher<T> isYAPION(String value) {
+        return Is.is((T) YAPIONParser.parse("{" + value + "}").getYAPIONAnyType(""));
     }
 
-    public static Matcher<YAPIONAnyType> isYAPION(YAPIONAnyType yapionAnyType) {
+    public static <T extends YAPIONAnyType> Matcher<T> isYAPION(T yapionAnyType) {
         return Is.is(yapionAnyType);
     }
 
