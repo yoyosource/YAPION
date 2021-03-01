@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.object.queue;
 
+import com.sun.jmx.remote.internal.ArrayQueue;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -27,7 +28,10 @@ import yapion.utils.ReflectionsUtils;
 
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.SynchronousQueue;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -37,6 +41,11 @@ public class QueueSerializer implements InternalSerializer<Queue<?>> {
     @Override
     public String type() {
         return "java.util.Queue";
+    }
+
+    @Override
+    public Class<?> defaultImplementation() {
+        return ArrayQueue.class;
     }
 
     @Override
@@ -55,7 +64,7 @@ public class QueueSerializer implements InternalSerializer<Queue<?>> {
     @Override
     public Queue<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
-            Object object = ReflectionsUtils.constructObject(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get(), false);
+            Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false);
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return DeserializeUtils.deserializeQueue(deserializeData, yapionArray, (Queue<Object>) object);
         } catch (Exception e) {

@@ -55,6 +55,7 @@ public final class YAPIONDeserializer {
 
     private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
 
+    private boolean reducedMode = false;
     private String arrayType = "";
 
     /**
@@ -145,6 +146,7 @@ public final class YAPIONDeserializer {
         this.pointerMap = yapionDeserializer.pointerMap;
         this.typeReMapper = yapionDeserializer.typeReMapper;
         this.deserializeResult = yapionDeserializer.deserializeResult;
+        this.reducedMode = yapionDeserializer.reducedMode;
     }
 
     /**
@@ -336,9 +338,17 @@ public final class YAPIONDeserializer {
                 if (ModifierUtils.removed(field)) continue;
                 if (!contextManager.is(object, field).load && !loadWithoutAnnotation) continue;
 
-                arrayType = field.getType().getTypeName();
+                Class<?> fieldType = field.getType();
+                arrayType = fieldType.getTypeName();
 
                 YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(field.getName());
+                if (reducedMode && yapionAnyType instanceof YAPIONObject && !((YAPIONObject) yapionAnyType).hasValue(TYPE_IDENTIFIER, String.class)) {
+                    if (fieldType.isEnum()) {
+                        ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, "java.lang.Enum");
+                    } else {
+                        ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, arrayType);
+                    }
+                }
                 YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
                 if (isValid(field, yapionDeserializeType)) {
                     ReflectionsUtils.setValueOfField(field, object, serialize(SerializeManager.getInternalSerializer(yapionDeserializeType.type().getTypeName()), yapionAnyType));
@@ -371,6 +381,14 @@ public final class YAPIONDeserializer {
             clazz = clazz.getSuperclass();
         }
         return false;
+    }
+
+    /**
+     * Set the reducedMode for this deserialization.
+     */
+    public YAPIONDeserializer reducedMode(boolean reducedMode) {
+        this.reducedMode = reducedMode;
+        return this;
     }
 
     /**

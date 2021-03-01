@@ -259,4 +259,21 @@ public final class YAPIONSerializer {
         return yapionObject;
     }
 
+    /**
+     * Get the internal parsed YAPIONObject in reduced mode.
+     *
+     * @return YAPIONObject from the object to serialize
+     */
+    public YAPIONObject getReducedYAPIONObject() {
+        removeTypeVariables(yapionObject);
+        return yapionObject;
+    }
+
+    private static void removeTypeVariables(YAPIONObject yapionObject) {
+        yapionObject.stream().filter(yapionAnyType -> yapionAnyType instanceof YAPIONObject).forEach(yapionAnyType -> {
+            ((YAPIONObject) yapionAnyType).remove(TYPE_IDENTIFIER);
+            removeTypeVariables((YAPIONObject) yapionAnyType);
+        });
+    }
+
 }

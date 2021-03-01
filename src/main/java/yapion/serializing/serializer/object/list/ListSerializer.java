@@ -41,6 +41,11 @@ public class ListSerializer implements InternalSerializer<List<?>> {
     }
 
     @Override
+    public Class<?> defaultImplementation() {
+        return ArrayList.class;
+    }
+
+    @Override
     public Class<?> interfaceType() {
         return List.class;
     }
@@ -56,7 +61,7 @@ public class ListSerializer implements InternalSerializer<List<?>> {
     @Override
     public List<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
-            Object object = ReflectionsUtils.constructObject(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get(), false);
+            Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false);
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return DeserializeUtils.deserializeList(deserializeData, yapionArray, (List<Object>) object);
         } catch (Exception e) {

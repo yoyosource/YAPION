@@ -43,6 +43,11 @@ public class SetSerializer implements InternalSerializer<Set<?>> {
     }
 
     @Override
+    public Class<?> defaultImplementation() {
+        return HashSet.class;
+    }
+
+    @Override
     public Class<?> interfaceType() {
         return Set.class;
     }
@@ -58,7 +63,7 @@ public class SetSerializer implements InternalSerializer<Set<?>> {
     @Override
     public Set<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
-            Object object = ReflectionsUtils.constructObject(((YAPIONObject) deserializeData.object).getValue(TYPE_IDENTIFIER, String.class).get(), false);
+            Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false);
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return DeserializeUtils.deserializeSet(deserializeData, yapionArray, (Set<Object>) object);
         } catch (Exception e) {

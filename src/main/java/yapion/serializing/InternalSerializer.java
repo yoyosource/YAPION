@@ -29,6 +29,10 @@ public interface InternalSerializer<T> {
 
     String type();
 
+    default Class<?> defaultImplementation() {
+        return null;
+    }
+
     default String primitiveType() {
         return null;
     }

@@ -2,6 +2,8 @@ package yapion.serializing;
 
 import org.junit.Test;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
+import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 
 import java.io.File;
@@ -81,6 +83,22 @@ public class YAPIONDeserializerTest {
     public void testDeserializerMissingLoadAnnotation() {
         // Resolved class has no Load annotation
         Object object = YAPIONDeserializer.deserialize(YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$NoAnnotations)}"));
+    }
+
+    @Test
+    public void testReducedTypes() {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestReduced());
+        System.out.println(yapionObject);
+        removeTypeVariables(yapionObject);
+        System.out.println(yapionObject);
+        System.out.println(yapionObject.toJSON(new StringOutput()).getResult());
+        System.out.println(yapionObject.toJSONLossy(new StringOutput()).getResult());
+        Object object = new YAPIONDeserializer(yapionObject).reducedMode(true).parse().getObject();
+        TestReduced toEqual = new TestReduced();
+        assertThat(object, is(toEqual));
+        TestReduced primitive = (TestReduced) object;
+        assertThat(primitive.stringB.toString(), is(toEqual.stringB.toString()));
+        assertThat(primitive.stringb.toString(), is(toEqual.stringb.toString()));
     }
 
 }

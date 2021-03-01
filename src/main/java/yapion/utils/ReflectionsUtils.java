@@ -21,16 +21,15 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.exceptions.utils.YAPIONReflectionInvocationException;
-import yapion.hierarchy.api.ObjectType;
-import yapion.hierarchy.api.storage.ObjectAdd;
-import yapion.hierarchy.api.storage.ObjectAdvancedOperations;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.InternalSerializer;
 
 import java.lang.reflect.*;
 import java.util.*;
+
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @Slf4j
 public class ReflectionsUtils {
@@ -238,6 +237,24 @@ public class ReflectionsUtils {
             o = constructObject(cName, false);
         }
         return constructInstance(className, o);
+    }
+
+    /**
+     * Construct an Object instance from a given yapionObject.
+     * By using the {@link ObjenesisBase}, only with {@link YAPIONData}
+     * or {@link YAPIONObjenesis} or a NoArgument constructor.
+     *
+     * @param yapionObject the class to create an instance from
+     * @param internalSerializer the internalSerializer using it
+     * @param data branch to {@link #constructObjectObjenesis(String)}
+     * @return an instance of the specified class
+     */
+    public static Object constructObject(YAPIONObject yapionObject, InternalSerializer<?> internalSerializer, boolean data) {
+        String type = yapionObject.getPlainValue(TYPE_IDENTIFIER);
+        if (internalSerializer.interfaceType() != null && internalSerializer.defaultImplementation() != null && internalSerializer.interfaceType().getTypeName().equals(type)) {
+            type = internalSerializer.defaultImplementation().getTypeName();
+        }
+        return constructObject(type, data);
     }
 
     @SuppressWarnings({"java:S3011"})

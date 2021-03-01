@@ -2,12 +2,10 @@ package yapion.serializing;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.junit.BeforeClass;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONField;
 import yapion.annotations.serialize.YAPIONSave;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
@@ -17,6 +15,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 public class YAPIONTestObjects {
 
@@ -131,7 +131,7 @@ public class YAPIONTestObjects {
     @YAPIONData
     public static class TestInnerArray {
 
-        private List<long[][]> intList = new ArrayList<>();
+        private final List<long[][]> intList = new ArrayList<>();
 
         {
             intList.add(new long[][]{{0}, {1}, {2}});
@@ -178,7 +178,7 @@ public class YAPIONTestObjects {
     @YAPIONData(cascading = true)
     public static class Cascading implements CNC {
 
-        private CNC cnc1;
+        private final CNC cnc1;
         private CNC cnc2 = null;
 
         public Cascading(CNC cnc1) {
@@ -197,7 +197,7 @@ public class YAPIONTestObjects {
     public static class NonCascading implements CNC {
 
         @YAPIONField(context = "empty")
-        private CNC cnc1;
+        private final CNC cnc1;
 
         private CNC cnc2 = null;
 
@@ -214,7 +214,7 @@ public class YAPIONTestObjects {
 
     public static class NonSaved implements CNC {
 
-        private CNC cnc1;
+        private final CNC cnc1;
         private CNC cnc2 = null;
 
         public NonSaved(CNC cnc1) {
@@ -225,6 +225,76 @@ public class YAPIONTestObjects {
             this.cnc1 = cnc1;
             this.cnc2 = cnc2;
         }
+
+    }
+
+    @YAPIONData
+    @ToString
+    @EqualsAndHashCode
+    public static class TestReduced {
+
+        private final Map<String, String> stringStringMap = new HashMap<>();
+        private final Map<String, String> hugoStringMap = new HashMap<>();
+        private final HashMap<String, String> hashMap = new HashMap<>();
+        private final LinkedHashMap<Integer, String> linkedHashMap = new LinkedHashMap<>();
+        {
+            stringStringMap.put("Hello", "Hello");
+            stringStringMap.put("Hello1", "Hello1");
+            stringStringMap.put("Hello2", "Hello2");
+        }
+
+        private final String[] strings = new String[2];
+        private final String[][] strings1 = new String[3][3];
+        private final List<String> strings2 = new ArrayList<>();
+        private final List<String> strings3 = new LinkedList<>();
+        {
+            strings[0] = "Hello World";
+            strings1[0][0] = "Hello World";
+            strings1[1][1] = "Hello World2";
+            strings1[2][2] = "Hello World3";
+
+            strings2.add("Hello World");
+            strings2.add("Hello World1");
+            strings2.add("Hello World2");
+            strings2.add("Hello World3");
+
+            strings3.add("Hello World");
+            strings3.add("Hello World1");
+            strings3.add("Hello World2");
+            strings3.add("Hello World3");
+        }
+
+        private final boolean t = false;
+        private final Boolean T = true;
+        private final byte b = 0;
+        private final Byte B = 0;
+        private final short s = 0;
+        private final Short S = 0;
+        private final int i = 0;
+        private final Integer I = 0;
+        private final long l = 0;
+        private final Long L = 0L;
+        private final double d = 0;
+        private final Double D = 0D;
+        private final float f = 0;
+        private final Float F = 0F;
+        private final BigInteger bi = BigInteger.valueOf(0);
+        private final BigDecimal bd = BigDecimal.valueOf(0);
+
+        private final char c = ' ';
+        private final Character C = ' ';
+
+        private final String string = "";
+        @EqualsAndHashCode.Exclude final StringBuilder stringB = new StringBuilder();
+        @EqualsAndHashCode.Exclude final StringBuffer stringb = new StringBuffer();
+
+        private final File file = new File(getUserHome() + "/YAPI");
+
+        private final EnumerationTest test1 = EnumerationTest.Hello;
+        private final EnumerationTest test2 = EnumerationTest.World;
+        private final EnumerationTest test3 = EnumerationTest.Hugo;
+        private final EnumerationTest test4 = EnumerationTest.My;
+        private final EnumerationTest test5 = EnumerationTest.Name;
 
     }
 
@@ -281,6 +351,13 @@ public class YAPIONTestObjects {
 
     public static String decodeBase64(String base64) {
         return new String(Base64.getDecoder().decode(base64.getBytes()), StandardCharsets.UTF_8);
+    }
+
+    public static void removeTypeVariables(YAPIONObject yapionObject) {
+        yapionObject.stream().filter(yapionAnyType -> yapionAnyType instanceof YAPIONObject).forEach(yapionAnyType -> {
+            ((YAPIONObject) yapionAnyType).remove(TYPE_IDENTIFIER);
+            removeTypeVariables((YAPIONObject) yapionAnyType);
+        });
     }
 
 }
