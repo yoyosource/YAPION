@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import static yapion.serializing.YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
@@ -680,6 +681,14 @@ public class SerializeManager {
 
     public Set<String> listRegisteredSerializer() {
         return new HashSet<>(serializerMap.keySet());
+    }
+
+    public Set<Class<?>> listRegisteredInterfaceSerializer() {
+        return interfaceTypeSerializer.stream().map(InternalSerializer::interfaceType).collect(Collectors.toSet());
+    }
+
+    public Set<Class<?>> listRegisteredClassSerializer() {
+        return interfaceTypeSerializer.stream().map(InternalSerializer::classType).collect(Collectors.toSet());
     }
 
 }
