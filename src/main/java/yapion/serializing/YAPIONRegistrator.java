@@ -36,8 +36,8 @@ public final class YAPIONRegistrator {
         throw new IllegalStateException("Utility class");
     }
 
-    private static Set<Predicate<Object>> registerPredicates = new HashSet<>();
-    private static Set<Class<?>> constructClass = new HashSet<>();
+    private static final Set<Predicate<Object>> registerPredicates = new HashSet<>();
+    private static final Set<Class<?>> constructClass = new HashSet<>();
 
     static {
         registerPredicates.add(o -> {
@@ -49,43 +49,43 @@ public final class YAPIONRegistrator {
         });
 
         registerPredicates.add(o -> {
-            if (o instanceof InstanceFactoryInterface) {
-                SerializeManager.add((InstanceFactoryInterface<?>) o);
+            if (o instanceof InstanceFactory) {
+                SerializeManager.add((InstanceFactory<?>) o);
                 return true;
             }
             return false;
         });
         registerPredicates.add(o -> {
-            if (o instanceof SerializerListInterface) {
-                SerializeManager.add((SerializerListInterface<?>) o);
+            if (o instanceof SerializerList) {
+                SerializeManager.add((SerializerList<?>) o);
                 return true;
             }
             return false;
         });
         registerPredicates.add(o -> {
-            if (o instanceof SerializerMapInterface) {
-                SerializeManager.add((SerializerMapInterface<?>) o);
+            if (o instanceof SerializerMap) {
+                SerializeManager.add((SerializerMap<?>) o);
                 return true;
             }
             return false;
         });
         registerPredicates.add(o -> {
-            if (o instanceof SerializerObjectInterface) {
-                SerializeManager.add((SerializerObjectInterface<?>) o);
+            if (o instanceof SerializerObject) {
+                SerializeManager.add((SerializerObject<?>) o);
                 return true;
             }
             return false;
         });
         registerPredicates.add(o -> {
-            if (o instanceof SerializerQueueInterface) {
-                SerializeManager.add((SerializerQueueInterface<?>) o);
+            if (o instanceof SerializerQueue) {
+                SerializeManager.add((SerializerQueue<?>) o);
                 return true;
             }
             return false;
         });
         registerPredicates.add(o -> {
-            if (o instanceof SerializerSetInterface) {
-                SerializeManager.add((SerializerSetInterface<?>) o);
+            if (o instanceof SerializerSet) {
+                SerializeManager.add((SerializerSet<?>) o);
                 return true;
             }
             return false;
@@ -101,12 +101,12 @@ public final class YAPIONRegistrator {
         });
 
         constructClass.add(YAPIONSerializerRegistrator.class);
-        constructClass.add(InstanceFactoryInterface.class);
-        constructClass.add(SerializerListInterface.class);
-        constructClass.add(SerializerMapInterface.class);
-        constructClass.add(SerializerObjectInterface.class);
-        constructClass.add(SerializerQueueInterface.class);
-        constructClass.add(SerializerSetInterface.class);
+        constructClass.add(InstanceFactory.class);
+        constructClass.add(SerializerList.class);
+        constructClass.add(SerializerMap.class);
+        constructClass.add(SerializerObject.class);
+        constructClass.add(SerializerQueue.class);
+        constructClass.add(SerializerSet.class);
     }
 
     /**
@@ -124,19 +124,19 @@ public final class YAPIONRegistrator {
      *
      * <br><br>Constraints for the method return value:
      * <br>- Instance of type {@link YAPIONSerializerRegistrator}
-     * <br>- Instance of type {@link InstanceFactoryInterface}
-     * <br>- Instance of type {@link SerializerListInterface}
-     * <br>- Instance of type {@link SerializerMapInterface}
-     * <br>- Instance of type {@link SerializerObjectInterface}
-     * <br>- Instance of type {@link SerializerQueueInterface}
-     * <br>- Instance of type {@link SerializerSetInterface}
+     * <br>- Instance of type {@link InstanceFactory}
+     * <br>- Instance of type {@link SerializerList}
+     * <br>- Instance of type {@link SerializerMap}
+     * <br>- Instance of type {@link SerializerObject}
+     * <br>- Instance of type {@link SerializerQueue}
+     * <br>- Instance of type {@link SerializerSet}
      * <br>- Class of {@link YAPIONSerializerRegistrator}
-     * <br>- Class of {@link InstanceFactoryInterface}
-     * <br>- Class of {@link SerializerListInterface}
-     * <br>- Class of {@link SerializerMapInterface}
-     * <br>- Class of {@link SerializerObjectInterface}
-     * <br>- Class of {@link SerializerQueueInterface}
-     * <br>- Class of {@link SerializerSetInterface}
+     * <br>- Class of {@link InstanceFactory}
+     * <br>- Class of {@link SerializerList}
+     * <br>- Class of {@link SerializerMap}
+     * <br>- Class of {@link SerializerObject}
+     * <br>- Class of {@link SerializerQueue}
+     * <br>- Class of {@link SerializerSet}
      *
      * @param classes to scan the packages and any sub packages of
      */

@@ -18,13 +18,13 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-public interface SerializerBase<T, K extends YAPIONAnyType> {
+public abstract class SerializerBase<T, K extends YAPIONAnyType> {
 
-    Class<T> type();
-    K serialize(SerializeData<T> serializeData);
-    T deserialize(DeserializeData<K> deserializeData);
+    public abstract Class<T> type();
+    public abstract K serialize(SerializeData<T> serializeData);
+    public abstract T deserialize(DeserializeData<K> deserializeData);
 
-    default InternalSerializer<T> convert() {
+    public InternalSerializer<T> convert() {
         return new InternalSerializer<T>() {
             @Override
             public String type() {

@@ -28,56 +28,56 @@ public interface YAPIONSerializerRegistrator {
     void register();
 
     /**
-     * This method is a shortcut to register a {@link SerializerListInterface}.
+     * This method is a shortcut to register a {@link SerializerList}.
      *
-     * @param serializerListInterface the serializer to register
+     * @param serializerList the serializer to register
      */
-    default void register(SerializerListInterface<?> serializerListInterface) {
-        SerializeManager.add(serializerListInterface);
+    default void register(SerializerList<?> serializerList) {
+        SerializeManager.add(serializerList);
     }
 
     /**
-     * This method is a shortcut to register a {@link SerializerMapInterface}.
+     * This method is a shortcut to register a {@link SerializerMap}.
      *
-     * @param serializerMapInterface the serializer to register
+     * @param serializerMap the serializer to register
      */
-    default void register(SerializerMapInterface<?> serializerMapInterface) {
-        SerializeManager.add(serializerMapInterface);
+    default void register(SerializerMap<?> serializerMap) {
+        SerializeManager.add(serializerMap);
     }
 
     /**
-     * This method is a shortcut to register a {@link SerializerObjectInterface}.
+     * This method is a shortcut to register a {@link SerializerObject}.
      *
-     * @param serializerObjectInterface the serializer to register
+     * @param serializerObject the serializer to register
      */
-    default void register(SerializerObjectInterface<?> serializerObjectInterface) {
-        SerializeManager.add(serializerObjectInterface);
+    default void register(SerializerObject<?> serializerObject) {
+        SerializeManager.add(serializerObject);
     }
 
     /**
-     * This method is a shortcut to register a {@link SerializerQueueInterface}.
+     * This method is a shortcut to register a {@link SerializerQueue}.
      *
-     * @param serializerQueueInterface the serializer to register
+     * @param serializerQueue the serializer to register
      */
-    default void register(SerializerQueueInterface<?> serializerQueueInterface) {
-        SerializeManager.add(serializerQueueInterface);
+    default void register(SerializerQueue<?> serializerQueue) {
+        SerializeManager.add(serializerQueue);
     }
 
     /**
-     * This method is a shortcut to register a {@link SerializerSetInterface}.
+     * This method is a shortcut to register a {@link SerializerSet}.
      *
-     * @param serializerSetInterface the serializer to register
+     * @param serializerSet the serializer to register
      */
-    default void register(SerializerSetInterface<?> serializerSetInterface) {
-        SerializeManager.add(serializerSetInterface);
+    default void register(SerializerSet<?> serializerSet) {
+        SerializeManager.add(serializerSet);
     }
 
     /**
-     * This method is a shortcut to register a {@link InstanceFactoryInterface}.
+     * This method is a shortcut to register a {@link InstanceFactory}.
      *
      * @param instanceFactoryInterface the factory to register
      */
-    default void register(InstanceFactoryInterface<?> instanceFactoryInterface) {
+    default void register(InstanceFactory<?> instanceFactoryInterface) {
         SerializeManager.add(instanceFactoryInterface);
     }
 

@@ -100,7 +100,7 @@ public class SerializeManager {
     private static final GroupList nSerializerGroups = new GroupList();
     private static final GroupList oSerializerGroups = new GroupList();
 
-    private static final Map<Class<?>, InstanceFactoryInterface<?>> instanceFactoryMap = new HashMap<>();
+    private static final Map<Class<?>, InstanceFactory<?>> instanceFactoryMap = new HashMap<>();
 
     static {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(SerializeManager.class.getResourceAsStream("/yapion/" + SerializerImplementation.class.getTypeName())))) {
@@ -227,14 +227,14 @@ public class SerializeManager {
     }
 
     /**
-     * Add an {@link InstanceFactory} or {@link InstanceFactoryInterface}
+     * Add an {@link InstanceFactory} or {@link InstanceFactory}
      * to the SerializerManager which will be used to create instances
      * of a given {@link Class}. This can speed up the deserialization
      * process because there are fewer reflection accesses.
      *
      * @param instanceFactory the factory
      */
-    public static void add(InstanceFactoryInterface<?> instanceFactory) {
+    public static void add(InstanceFactory<?> instanceFactory) {
         if (!instanceFactoryMap.containsKey(instanceFactory.type())) {
             instanceFactoryMap.put(instanceFactory.type(), instanceFactory);
         }

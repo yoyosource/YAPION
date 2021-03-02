@@ -13,7 +13,6 @@
 
 package yapion.serializing.serializer.object.queue;
 
-import com.sun.jmx.remote.internal.ArrayQueue;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -28,10 +27,7 @@ import yapion.utils.ReflectionsUtils;
 
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.*;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -45,7 +41,7 @@ public class QueueSerializer implements InternalSerializer<Queue<?>> {
 
     @Override
     public Class<?> defaultImplementation() {
-        return ArrayQueue.class;
+        return ArrayBlockingQueue.class;
     }
 
     @Override
