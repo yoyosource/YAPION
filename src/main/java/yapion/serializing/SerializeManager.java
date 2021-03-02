@@ -679,15 +679,15 @@ public class SerializeManager {
         }
     }
 
-    public Set<String> listRegisteredSerializer() {
+    public static Set<String> listRegisteredSerializer() {
         return new HashSet<>(serializerMap.keySet());
     }
 
-    public Set<Class<?>> listRegisteredInterfaceSerializer() {
+    public static Set<Class<?>> listRegisteredInterfaceSerializer() {
         return interfaceTypeSerializer.stream().map(InternalSerializer::interfaceType).collect(Collectors.toSet());
     }
 
-    public Set<Class<?>> listRegisteredClassSerializer() {
+    public static Set<Class<?>> listRegisteredClassSerializer() {
         return interfaceTypeSerializer.stream().map(InternalSerializer::classType).collect(Collectors.toSet());
     }
 
