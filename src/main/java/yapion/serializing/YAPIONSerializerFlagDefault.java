@@ -18,9 +18,7 @@ import lombok.Getter;
 
 import java.security.PrivateKey;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A data structure to hold the default value of a specific {@link YAPIONSerializerFlagKey}.
@@ -28,7 +26,7 @@ import java.util.Set;
 @EqualsAndHashCode
 public final class YAPIONSerializerFlagDefault {
 
-    private static Map<String, YAPIONSerializerFlagKey> YAPION_FLAG_KEYS = new HashMap<>();
+    private static final Map<String, YAPIONSerializerFlagKey> YAPION_FLAG_KEYS = new HashMap<>();
 
     /**
      * The key to specify if data loss should be handled silently {@code false} or should throw an exception {@code true}.

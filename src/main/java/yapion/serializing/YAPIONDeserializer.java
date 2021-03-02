@@ -151,17 +151,6 @@ public final class YAPIONDeserializer {
 
     /**
      * @param yapionAnyType to parse
-     * @param yapionDeserializer to parse with
-     * @return the Object of the {@link YAPIONAnyType} inputted
-     * @deprecated since 0.12.0 use {@link #parse(YAPIONAnyType)} instead
-     */
-    @Deprecated
-    public Object parse(YAPIONAnyType yapionAnyType, YAPIONDeserializer yapionDeserializer) {
-        return parse(yapionAnyType);
-    }
-
-    /**
-     * @param yapionAnyType to parse
      * @return the Object of the {@link YAPIONAnyType} inputted
      */
     @SuppressWarnings({"java:S3740"})
