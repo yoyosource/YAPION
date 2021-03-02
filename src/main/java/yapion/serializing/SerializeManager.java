@@ -18,11 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONMap;
-import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.api.*;
 import yapion.serializing.data.DeserializeData;
@@ -172,7 +168,7 @@ public class SerializeManager {
         return !serializerMap.containsKey(serializer.type()) || serializerMap.get(serializer.type()).overrideable;
     }
 
-    public static <T> void add(SerializerBaseInterface<T, ?> serializer) {
+    public static <T> void add(SerializerBase<T, ?> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
         add(serializer.convert());

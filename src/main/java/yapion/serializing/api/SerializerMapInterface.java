@@ -22,7 +22,7 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.Map;
 
-public interface SerializerMapInterface<T extends Map<?, ?>> extends SerializerBaseInterface<T, YAPIONMap> {
+public interface SerializerMapInterface<T extends Map<?, ?>> extends SerializerBase<T, YAPIONMap> {
 
     /**
      * Describes the Class type this Serializer should be used for

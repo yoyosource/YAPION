@@ -21,7 +21,7 @@ import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-public interface SerializerObjectInterface<T> extends SerializerBaseInterface<T, YAPIONObject> {
+public interface SerializerObjectInterface<T> extends SerializerBase<T, YAPIONObject> {
 
     /**
      * Describes the Class type this Serializer should be used for

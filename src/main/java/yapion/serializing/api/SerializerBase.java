@@ -18,7 +18,7 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-public interface SerializerBaseInterface<T, K extends YAPIONAnyType> {
+public interface SerializerBase<T, K extends YAPIONAnyType> {
 
     Class<T> type();
     K serialize(SerializeData<T> serializeData);
@@ -28,18 +28,18 @@ public interface SerializerBaseInterface<T, K extends YAPIONAnyType> {
         return new InternalSerializer<T>() {
             @Override
             public String type() {
-                return SerializerBaseInterface.this.type().getTypeName();
+                return SerializerBase.this.type().getTypeName();
             }
 
             @Override
             public YAPIONAnyType serialize(SerializeData<T> serializeData) {
-                return SerializerBaseInterface.this.serialize(serializeData);
+                return SerializerBase.this.serialize(serializeData);
             }
 
             @Override
             @SuppressWarnings("unchecked")
             public T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-                return SerializerBaseInterface.this.deserialize((DeserializeData<K>) deserializeData);
+                return SerializerBase.this.deserialize((DeserializeData<K>) deserializeData);
             }
         };
     }
