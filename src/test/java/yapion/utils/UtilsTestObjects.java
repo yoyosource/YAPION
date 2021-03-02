@@ -13,20 +13,14 @@
 
 package yapion.utils;
 
-import org.hamcrest.Matcher;
-import org.hamcrest.core.Is;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.parser.YAPIONParser;
+public class UtilsTestObjects {
 
-public class YAPIONAssertion {
+    public static class UtilModifierTest {
 
-    @SuppressWarnings({"unchecked"})
-    public static <T extends YAPIONAnyType> Matcher<T> isYAPION(String value) {
-        return Is.is((T) YAPIONParser.parse("{" + value + "}").getYAPIONAnyType(""));
-    }
+        private static final int i = 0;
+        private final transient int j = 0;
+        private final int k = 0;
 
-    public static <T extends YAPIONAnyType> Matcher<T> isYAPION(T yapionAnyType) {
-        return Is.is(yapionAnyType);
     }
 
 }

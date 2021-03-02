@@ -11,27 +11,25 @@
  * limitations under the License.
  */
 
-package yapion.packet;
+package yapion.utils;
 
-public class YAPIONPacketTestObjects {
+import org.junit.Test;
 
-    public enum TestType {
-        DropHandler,
-        ErrorHandler,
-        ExceptionHandler,
-        HandleFailedHandler,
-        UnknownHandler,
-        DeserializationExceptionHandler,
-        ValidHandler
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+public class ReferenceIDTest {
+
+    @Test
+    public void testReferenceOld() {
+        long referenceID = ReferenceIDUtils.REFERENCE_FUNCTION_OLD.stringToReferenceValue("");
+        assertThat(referenceID, is(-19964L));
     }
 
-    public static class TestPacket extends YAPIONPacket {
-
+    @Test
+    public void testReference() {
+        long referenceID = ReferenceIDUtils.REFERENCE_FUNCTION.stringToReferenceValue("");
+        assertThat(referenceID, is(9029615197434853002L));
     }
-
-    public static class TestPacketTwo extends YAPIONPacket {
-
-    }
-
 
 }

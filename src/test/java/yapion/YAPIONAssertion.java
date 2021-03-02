@@ -11,27 +11,22 @@
  * limitations under the License.
  */
 
-package yapion.packet;
+package yapion;
 
-public class YAPIONPacketTestObjects {
+import org.hamcrest.Matcher;
+import org.hamcrest.core.Is;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.parser.YAPIONParser;
 
-    public enum TestType {
-        DropHandler,
-        ErrorHandler,
-        ExceptionHandler,
-        HandleFailedHandler,
-        UnknownHandler,
-        DeserializationExceptionHandler,
-        ValidHandler
+public class YAPIONAssertion {
+
+    @SuppressWarnings({"unchecked"})
+    public static <T extends YAPIONAnyType> Matcher<T> isYAPION(String value) {
+        return Is.is((T) YAPIONParser.parse("{" + value + "}").getYAPIONAnyType(""));
     }
 
-    public static class TestPacket extends YAPIONPacket {
-
+    public static <T extends YAPIONAnyType> Matcher<T> isYAPION(T yapionAnyType) {
+        return Is.is(yapionAnyType);
     }
-
-    public static class TestPacketTwo extends YAPIONPacket {
-
-    }
-
 
 }
