@@ -15,6 +15,24 @@ package yapion.utils;
 
 public class UtilsTestObjects {
 
+    public static class UtilReflectionsTest {
+
+        private final int i = 0;
+
+    }
+
+    public static class UtilReflectionsTestExtends extends UtilModifierTest {
+
+        private final int i = 0;
+
+    }
+
+    public static class UtilReflectionsTestExtendsTwo extends UtilModifierTest {
+
+        private final int j = 0;
+
+    }
+
     public static class UtilModifierTest {
 
         private static final int i = 0;

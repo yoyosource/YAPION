@@ -47,8 +47,20 @@ public class ReflectionsTest {
 
     @Test
     public void testGetFields() {
-        List<Field> fieldList = ReflectionsUtils.getFields(HashMap.class);
-        assertThat(fieldList.size(), is(15));
+        List<Field> fieldList = ReflectionsUtils.getFields(UtilsTestObjects.UtilReflectionsTest.class);
+        assertThat(fieldList.size(), is(1));
+    }
+
+    @Test
+    public void testGetFieldsExtends() {
+        List<Field> fieldList = ReflectionsUtils.getFields(UtilsTestObjects.UtilReflectionsTestExtends.class);
+        assertThat(fieldList.size(), is(4));
+    }
+
+    @Test
+    public void testGetFieldsExtendsTwo() {
+        List<Field> fieldList = ReflectionsUtils.getFields(UtilsTestObjects.UtilReflectionsTestExtendsTwo.class);
+        assertThat(fieldList.size(), is(4));
     }
 
 }
