@@ -13,10 +13,10 @@
 
 package yapion.parser;
 
-abstract class CharReader {
+interface CharReader {
 
-    abstract char next();
+    char next();
 
-    abstract boolean hasNext();
+    boolean hasNext();
 
 }
