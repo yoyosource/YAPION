@@ -22,7 +22,7 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.List;
 
-public interface SerializerListInterface<T extends List<?>> {
+public interface SerializerListInterface<T extends List<?>> extends SerializerBaseInterface<T, YAPIONArray> {
 
     /**
      * Describes the Class type this Serializer should be used for

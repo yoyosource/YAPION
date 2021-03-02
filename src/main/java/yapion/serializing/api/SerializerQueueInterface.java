@@ -22,7 +22,7 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.Queue;
 
-public interface SerializerQueueInterface<T extends Queue<?>> {
+public interface SerializerQueueInterface<T extends Queue<?>> extends SerializerBaseInterface<T, YAPIONArray> {
 
     /**
      * Describes the Class type this Serializer should be used for

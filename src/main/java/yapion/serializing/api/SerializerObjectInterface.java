@@ -15,12 +15,13 @@ package yapion.serializing.api;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
+import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-public interface SerializerObjectInterface<T> {
+public interface SerializerObjectInterface<T> extends SerializerBaseInterface<T, YAPIONObject> {
 
     /**
      * Describes the Class type this Serializer should be used for
@@ -85,4 +86,30 @@ public interface SerializerObjectInterface<T> {
      */
     T deserialize(DeserializeData<YAPIONObject> deserializeData);
 
+    @Override
+    default InternalSerializer<T> convert() {
+        return new InternalSerializer<T>() {
+            @Override
+            public String type() {
+                return SerializerObjectInterface.this.type().getTypeName();
+            }
+
+            @Override
+            public Class<?> interfaceType() {
+                if (SerializerObjectInterface.this.isInterface()) return SerializerObjectInterface.this.type();
+                return null;
+            }
+
+            @Override
+            public YAPIONAnyType serialize(SerializeData<T> serializeData) {
+                return SerializerObjectInterface.this.serialize(serializeData);
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+                return SerializerObjectInterface.this.deserialize((DeserializeData<YAPIONObject>) deserializeData);
+            }
+        };
+    }
 }
