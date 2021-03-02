@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing;
+package yapion.serializing.utils;
 
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
