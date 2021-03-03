@@ -27,6 +27,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
+import static yapion.hierarchy.types.value.FractionNumberHandler.*;
+import static yapion.hierarchy.types.value.WholeNumberHandler.*;
 import static yapion.utils.IdentifierUtils.*;
 
 @YAPIONSave(context = "*")
