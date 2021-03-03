@@ -97,8 +97,9 @@ public class SerializeManager {
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
     private static final List<InternalSerializer<?>> interfaceTypeSerializer = new ArrayList<>();
     private static final List<InternalSerializer<?>> classTypeSerializer = new ArrayList<>();
-    private static final GroupList nSerializerGroups = new GroupList();
-    private static final GroupList oSerializerGroups = new GroupList();
+
+    private static final Set<String> nSerializerGroups = new HashSet<>();
+    private static final Set<String> oSerializerGroups = new HashSet<>();
 
     private static final Map<Class<?>, InstanceFactory<?>> instanceFactoryMap = new HashMap<>();
 
@@ -118,24 +119,22 @@ public class SerializeManager {
             log.error("No Serializer was loaded. Please inspect.");
         }
 
-        oSerializerGroups.add(() -> "yapion.annotations.");
-        oSerializerGroups.add(() -> "yapion.exceptions.");
-        oSerializerGroups.add(() -> "yapion.hierarchy.");
-        oSerializerGroups.add(() -> "yapion.parser.");
-        oSerializerGroups.add(() -> "yapion.serializing.api");
-        oSerializerGroups.add(() -> "yapion.serializing.data");
-        oSerializerGroups.add(() -> "yapion.serializing.serializer");
-        oSerializerGroups.add(() -> "yapion.utils.");
-        oSerializerGroups.build();
+        oSerializerGroups.add("yapion.annotations.");
+        oSerializerGroups.add("yapion.exceptions.");
+        oSerializerGroups.add("yapion.hierarchy.");
+        oSerializerGroups.add("yapion.parser.");
+        oSerializerGroups.add("yapion.serializing.api");
+        oSerializerGroups.add("yapion.serializing.data");
+        oSerializerGroups.add("yapion.serializing.serializer");
+        oSerializerGroups.add("yapion.utils.");
 
-        nSerializerGroups.add(() -> "java.io.");
-        nSerializerGroups.add(() -> "java.net.");
-        nSerializerGroups.add(() -> "java.nio.");
-        nSerializerGroups.add(() -> "java.security.");
-        nSerializerGroups.add(() -> "java.text.");
-        nSerializerGroups.add(() -> "java.time.");
-        nSerializerGroups.add(() -> "java.util.");
-        nSerializerGroups.build();
+        nSerializerGroups.add("java.io.");
+        nSerializerGroups.add("java.net.");
+        nSerializerGroups.add("java.nio.");
+        nSerializerGroups.add("java.security.");
+        nSerializerGroups.add("java.text.");
+        nSerializerGroups.add("java.time.");
+        nSerializerGroups.add("java.util.");
         overrideable = true;
     }
 
@@ -217,13 +216,17 @@ public class SerializeManager {
 
         InternalSerializer<?> internalSerializer = getInternalSerializerInternal(type);
         if (internalSerializer != null) return internalSerializer;
-        if (nSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
+        if (contains(type, nSerializerGroups)) return defaultNullSerializer.internalSerializer;
         return null;
     }
 
     private static InternalSerializer<?> getInternalSerializerInternal(String type) {
-        if (oSerializerGroups.contains(type)) return defaultNullSerializer.internalSerializer;
+        if (contains(type, oSerializerGroups)) return defaultNullSerializer.internalSerializer;
         return serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
+    }
+
+    private static boolean contains(String s, Set<String> strings) {
+        return strings.stream().anyMatch(s::startsWith);
     }
 
     /**
