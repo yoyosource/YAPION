@@ -1,11 +1,9 @@
 /* Used in: https://bottlecaps.de/rr/ui */
 
-Object ::= '{' ( Character_Indent* Variable )* '}'
+Object ::= '{' ( Character_Indent* ( '\' ' ' | Digit | Character_Upper | Character_Lower | Character_Special )( Digit | Character_Upper | Character_Lower | Character_Special | ' ' )* ( Object | Array | Map | Pointer | '(' Value ')' ) )* '}'
 Array ::= ( '[' ( Object | Array | Map | Pointer | Value_Comma_Escape | '(' Value ')') ( ',' ( Object | Array | Map | Pointer | Value_Comma_Escape | '(' Value ')' ) )* ']' ) | ( '[' ( Character_Indent+ ( Object | Array | Map | Pointer | Value_Comma_Escape | '(' Value ')' ) ',' )* ']' )
-Map ::= '<' ( Character_Indent* ( Digit_Hex+ ':' Digit_Hex+ | '#' Digit_Hex+ ( Object | Array | Map | Pointer | '(' Value ')' ) ) ','? )* '>'
+Map ::= '<' ( ( Object | Array | Map | Pointer | '(' Value ')' ) ':' ( Object | Array | Map | Pointer | '(' Value ')' ) )* '>'
 Pointer ::= '->' Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex Digit_Hex
-
-Variable ::= ( '\' ' ' | Digit | Character_Upper | Character_Lower | Character_Special )( Digit | Character_Upper | Character_Lower | Character_Special | ' ' )* ( Object | Array | Map | Pointer | '(' Value ')' )
 
 Value_Comma_Escape ::= Value | '\,'
 
