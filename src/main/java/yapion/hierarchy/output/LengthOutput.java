@@ -20,9 +20,23 @@ public class LengthOutput extends AbstractOutput {
     @Getter
     private long length = 0;
 
+    @Getter
+    private long prettifiedLength = 0;
+
+    @Override
+    protected boolean internalConsumePrettified(String s) {
+        prettifiedLength += s.length();
+        return false;
+    }
+
     @Override
     protected void internalConsume(String s) {
         length += s.length();
+        prettifiedLength += s.length();
     }
 
+    @Override
+    protected boolean prettified() {
+        return true;
+    }
 }

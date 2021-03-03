@@ -27,10 +27,14 @@ public abstract class AbstractOutput {
 
     public final AbstractOutput consumePrettified(String s) {
         validateMethodCall();
-        if (prettified()) {
+        if (prettified() && internalConsumePrettified(s)) {
             internalConsume(s);
         }
         return this;
+    }
+
+    protected boolean internalConsumePrettified(String s) {
+        return true;
     }
 
     protected abstract void internalConsume(String s);

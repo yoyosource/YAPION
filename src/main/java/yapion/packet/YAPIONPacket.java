@@ -13,14 +13,12 @@
 
 package yapion.packet;
 
-import yapion.annotations.object.YAPIONData;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONSerializer;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-@YAPIONData
 public abstract class YAPIONPacket {
 
     private transient Exception exception;
@@ -72,7 +70,7 @@ public abstract class YAPIONPacket {
     /**
      * Set the {@link YAPIONOutputStream} that corresponds to the {@link InputStream}.
      * This normally gets called by {@link YAPIONInputStream} and will be set to the
-     * {@link YAPIONInputStream} by the {@link YAPIONSocket} corresponding to this.
+     * {@link YAPIONOutputStream} by the {@link YAPIONSocket} corresponding to this.
      *
      * @param yapionOutputStream the {@link YAPIONOutputStream} to set
      */
