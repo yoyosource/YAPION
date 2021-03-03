@@ -41,7 +41,7 @@ public class QueueSerializer implements InternalSerializer<Queue<?>> {
 
     @Override
     public Class<?> defaultImplementation() {
-        return ArrayBlockingQueue.class;
+        return PriorityQueue.class;
     }
 
     @Override

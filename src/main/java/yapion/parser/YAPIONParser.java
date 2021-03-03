@@ -190,8 +190,8 @@ public final class YAPIONParser {
         return new YAPIONParser(inputStream).setReferenceFunction(ReferenceIDUtils.REFERENCE_FUNCTION_OLD).parse().result();
     }
 
-    private YAPIONInternalParser yapionInternalParser = new YAPIONInternalParser();
-    private CharReader charReader;
+    private final YAPIONInternalParser yapionInternalParser = new YAPIONInternalParser();
+    private final CharReader charReader;
 
     /**
      * Creates a YAPIONParser for parsing a string to an YAPIONObject.
@@ -203,12 +203,12 @@ public final class YAPIONParser {
             private int index = 0;
 
             @Override
-            char next() {
+            public char next() {
                 return string.charAt(index++);
             }
 
             @Override
-            boolean hasNext() {
+            public boolean hasNext() {
                 return index < string.length();
             }
         };
@@ -224,12 +224,12 @@ public final class YAPIONParser {
             private int index = 0;
 
             @Override
-            char next() {
+            public char next() {
                 return stringBuilder.charAt(index++);
             }
 
             @Override
-            boolean hasNext() {
+            public boolean hasNext() {
                 return index < stringBuilder.length();
             }
         };
@@ -245,12 +245,12 @@ public final class YAPIONParser {
             private int index = 0;
 
             @Override
-            char next() {
+            public char next() {
                 return (char) bytes[index++];
             }
 
             @Override
-            boolean hasNext() {
+            public boolean hasNext() {
                 return index < bytes.length;
             }
         };
@@ -266,12 +266,12 @@ public final class YAPIONParser {
             private int index = 0;
 
             @Override
-            char next() {
+            public char next() {
                 return chars[index++];
             }
 
             @Override
-            boolean hasNext() {
+            public boolean hasNext() {
                 return index < chars.length;
             }
         };
@@ -296,7 +296,7 @@ public final class YAPIONParser {
         charReader = new CharReader() {
             @Override
             @SneakyThrows
-            char next() {
+            public char next() {
                 int i = inputStream.read();
                 if (i == -1 && !stopOnStreamEnd) {
                     throw new ParserSkipException();
@@ -306,7 +306,7 @@ public final class YAPIONParser {
 
             @Override
             @SneakyThrows
-            boolean hasNext() {
+            public boolean hasNext() {
                 return !stopOnStreamEnd || inputStream.available() > 0;
             }
         };

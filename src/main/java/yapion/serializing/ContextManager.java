@@ -104,7 +104,7 @@ public final class ContextManager {
     }
 
     boolean willBeCascading(YAPIONObject yapionObject) {
-        if (yapionObject.hasValue(TYPE_IDENTIFIER, String.class)) {
+        if (!yapionObject.hasValue(TYPE_IDENTIFIER, String.class)) {
             return true;
         }
         try {
@@ -208,13 +208,6 @@ public final class ContextManager {
         public final boolean save;
         public final boolean optimize;
         public final boolean data;
-
-        private YAPIONInfo(boolean load, boolean save) {
-            this.load = load;
-            this.save = save;
-            this.optimize = false;
-            this.data = false;
-        }
 
         private YAPIONInfo(boolean load, boolean save, boolean data) {
             this.load = load;
