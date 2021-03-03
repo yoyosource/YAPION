@@ -163,7 +163,7 @@ public class YAPIONPacketTest {
         AtomicReference<TestType> result = new AtomicReference<>(null);
         yapionSockets[1].setYAPIONPacketReceiver(receiver(ValidHandler, result), 1);
         yapionSockets[0].write(new YAPIONObject().add(IdentifierUtils.TYPE_IDENTIFIER, new YAPIONValue<>("hugo")));
-        sleep();
+        sleep(200);
         assertThat(result.get(), is(DeserializationExceptionHandler));
     }
 
