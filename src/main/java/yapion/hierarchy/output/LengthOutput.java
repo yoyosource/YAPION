@@ -31,8 +31,9 @@ public class LengthOutput extends AbstractOutput {
 
     @Override
     protected void internalConsume(String s) {
-        length += s.length();
-        prettifiedLength += s.length();
+        int stringLength = s.length();
+        length += stringLength;
+        prettifiedLength += stringLength;
     }
 
     @Override

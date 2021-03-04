@@ -14,9 +14,6 @@
 package yapion.parser;
 
 interface CharReader {
-
     char next();
-
     boolean hasNext();
-
 }
