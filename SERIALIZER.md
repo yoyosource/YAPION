@@ -43,7 +43,9 @@
 - OptionalLongSerializer
 - OptionalSerializer
 ## object.other
+- EnumMapSerializer
 - EnumSerializer
+- EnumSetSerializer
 - FileSerializer
 - MathContextSerializer
 - RandomSerializer

@@ -14,8 +14,6 @@
 package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -37,19 +35,23 @@ public class SerializeData<T> {
         return new SerializeData<>(object, context, yapionSerializer);
     }
 
-    @SuppressWarnings({"java:S3011"})
     public final YAPIONAnyType serializeField(String fieldName) {
-        try {
-            Field field = object.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return serialize(field.get(object));
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new YAPIONSerializerException();
-        }
+        return serialize(getField(fieldName));
     }
 
     public final YAPIONAnyType serialize(Object o) {
         return yapionSerializer.parse(o);
+    }
+
+    @SuppressWarnings({"java:S3011"})
+    public final Object getField(String fieldName) {
+        try {
+            Field field = object.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field.get(object);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new YAPIONSerializerException();
+        }
     }
 
     public YAPIONSerializerFlags getYAPIONSerializerFlags() {
