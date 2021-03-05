@@ -1,3 +1,5 @@
+import java.util.function.Consumer
+
 plugins {
     id 'java'
     id 'application'
@@ -302,3 +304,30 @@ task licenseProject {
 }
 build.dependsOn licenseProject
 shadowJar.dependsOn licenseProject
+
+task createSerializerMD {
+    description 'Update the Serializer.md'
+    group "Build"
+
+    doLast {
+        File serializer = new File("${rootDir}/SERIALIZER.md")
+        serializer.write("# Serializer\n")
+        String currentGroup = ""
+
+        File file = new File("${buildDir}/classes/java/main/META-INF/annotations/yapion.serializing.serializer.SerializerImplementation")
+        file.readLines().forEach(new Consumer<String>() {
+            @Override
+            void accept(String s) {
+                if (!s.contains(".")) return
+                String group = s.substring(0, s.lastIndexOf(".")).substring(30)
+                String name = s.substring(s.lastIndexOf(".") + 1)
+
+                if (group != currentGroup) {
+                    currentGroup = group
+                    serializer.append("## " + group + "\n")
+                }
+                serializer.append("- " + name + "\n")
+            }
+        })
+    }
+}
