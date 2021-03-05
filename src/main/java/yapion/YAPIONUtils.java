@@ -73,7 +73,7 @@ public class YAPIONUtils {
          * likely you should not count on this. If you want
          * to be sure use {@link YAPIONParser#parse(String)}
          * or {@link YAPIONParser#parse(InputStream)} and
-         * check if any exception get thrown.
+         * check if any exception gets thrown.
          * This does not say anything about the string containing
          * a YAPION object.
          */
