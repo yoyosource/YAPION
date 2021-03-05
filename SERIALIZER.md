@@ -62,20 +62,20 @@
 - PrivateKeySerializer
 - PublicKeySerializer
 ## object.security.internal
-- DHKeySpecSerializer
-- DSAKeySpecSerializer
-- ECKeySpecSerializer
-- RSAKeySpecSerializer
-- RSAMultiPrimePrivateCrtKeySpecSerializer
-- RSAPrivateCrtKeySpecSerializer
+- DHKeySpecSerializer (1)
+- DSAKeySpecSerializer (1)
+- ECKeySpecSerializer (1)
+- RSAKeySpecSerializer (1)
+- RSAMultiPrimePrivateCrtKeySpecSerializer (1)
+- RSAPrivateCrtKeySpecSerializer (1)
 ## object.security.internal.ec
-- ECFieldF2mSerializer
-- ECFieldFpSerializer
-- ECParameterSpecSerializer
-- ECPointSerializer
-- EllipticCurveSerializer
+- ECFieldF2mSerializer (1)
+- ECFieldFpSerializer (1)
+- ECParameterSpecSerializer (1)
+- ECPointSerializer (1)
+- EllipticCurveSerializer (1)
 ## object.security.internal.rsa
-- RSAOtherPrimeInfoSerializer
+- RSAOtherPrimeInfoSerializer (1)
 ## object.set
 - SetSerializer
 ## object.stack
@@ -128,3 +128,5 @@
 - StringBufferSerializer
 - StringBuilderSerializer
 - StringSerializer
+# Foot Notes
+- (1) not advised to use directly, use either PrivateKey or PublicKey instead

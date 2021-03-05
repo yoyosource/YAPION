@@ -326,8 +326,15 @@ task createSerializerMD {
                     currentGroup = group
                     serializer.append("## " + group + "\n")
                 }
+                if (group.contains("security.internal")) {
+                    serializer.append("- " + name + " (1)\n")
+                    return
+                }
                 serializer.append("- " + name + "\n")
             }
         })
+
+        serializer.append("# Foot Notes\n")
+        serializer.append("- (1) not advised to use directly, use either PrivateKey or PublicKey instead")
     }
 }
