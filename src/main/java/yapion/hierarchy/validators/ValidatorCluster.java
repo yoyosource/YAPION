@@ -20,7 +20,7 @@ import java.util.List;
 
 public final class ValidatorCluster {
 
-    private List<Validator> validatorList = new ArrayList<>();
+    private final List<Validator> validatorList = new ArrayList<>();
 
     /**
      * Add a new {@link Validator} to this {@link ValidatorCluster}.
@@ -109,16 +109,33 @@ public final class ValidatorCluster {
         int valid = 0;
         for (Validator validator : validatorList) {
             if (validator.validate(yapionObject)) valid++;
+            // Optimization for some "clusterMode"'s
+            switch (clusterMode) {
+                case ANY_VALID:
+                    if (valid > 0) return true;
+                    break;
+                case LEAST_VALID:
+                    if (valid >= validNumber) return true;
+                    break;
+                case NONE_VALID:
+                    if (valid != 0) return false;
+                    break;
+                case MOST_VALID:
+                    if (valid > validNumber) return false;
+                    break;
+                default:
+                    break;
+            }
         }
         switch (clusterMode) {
             case ANY_VALID:
-                return valid > 0;
+                return false; // valid > 0
             case LEAST_VALID:
                 return valid >= validNumber;
             case ALL_VALID:
                 return valid == validatorList.size();
             case NONE_VALID:
-                return valid == 0;
+                return true; // valid == 0
             case MOST_VALID:
                 return valid <= validNumber;
             case SPECIFIC_VALID:
