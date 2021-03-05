@@ -14,6 +14,7 @@
 package yapion.serializing.serializer.object.security.internal;
 
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.serializer.SerializerImplementation;
 
 import javax.crypto.interfaces.DHPrivateKey;
 import javax.crypto.interfaces.DHPublicKey;
@@ -22,6 +23,7 @@ import javax.crypto.spec.DHPublicKeySpec;
 import java.math.BigInteger;
 import java.security.KeyFactory;
 
+@SerializerImplementation(since = "0.23.0")
 public class DHKeySpecSerializer implements KeySpecSerializer<DHPrivateKey, DHPublicKey> {
 
     @Override

@@ -16,6 +16,7 @@ package yapion.serializing.serializer.object.security.internal;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;
@@ -26,6 +27,7 @@ import java.security.spec.ECPoint;
 import java.security.spec.ECPrivateKeySpec;
 import java.security.spec.ECPublicKeySpec;
 
+@SerializerImplementation(since = "0.23.0")
 public class ECKeySpecSerializer implements KeySpecSerializer<ECPrivateKey, ECPublicKey> {
 
     @Override

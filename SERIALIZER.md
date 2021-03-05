@@ -61,6 +61,13 @@
 - KeyPairSerializer
 - PrivateKeySerializer
 - PublicKeySerializer
+## object.security.internal
+- DHKeySpecSerializer
+- DSAKeySpecSerializer
+- ECKeySpecSerializer
+- RSAKeySpecSerializer
+- RSAMultiPrimePrivateCrtKeySpecSerializer
+- RSAPrivateCrtKeySpecSerializer
 ## object.security.internal.ec
 - ECFieldF2mSerializer
 - ECFieldFpSerializer

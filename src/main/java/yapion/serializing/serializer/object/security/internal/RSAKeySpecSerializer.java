@@ -14,6 +14,7 @@
 package yapion.serializing.serializer.object.security.internal;
 
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;
@@ -22,6 +23,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
+@SerializerImplementation(since = "0.23.0")
 public class RSAKeySpecSerializer implements KeySpecSerializer<RSAPrivateKey, RSAPublicKey> {
 
     @Override

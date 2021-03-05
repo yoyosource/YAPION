@@ -14,6 +14,7 @@
 package yapion.serializing.serializer.object.security.internal;
 
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;
@@ -22,6 +23,7 @@ import java.security.interfaces.DSAPublicKey;
 import java.security.spec.DSAPrivateKeySpec;
 import java.security.spec.DSAPublicKeySpec;
 
+@SerializerImplementation(since = "0.23.0")
 public class DSAKeySpecSerializer implements KeySpecSerializer<DSAPrivateKey, DSAPublicKey> {
 
     @Override

@@ -18,6 +18,7 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;
@@ -26,6 +27,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAMultiPrimePrivateCrtKeySpec;
 import java.security.spec.RSAOtherPrimeInfo;
 
+@SerializerImplementation(since = "0.23.0")
 public class RSAMultiPrimePrivateCrtKeySpecSerializer implements KeySpecSerializer<RSAMultiPrimePrivateCrtKey, RSAPublicKey> {
 
     @Override
