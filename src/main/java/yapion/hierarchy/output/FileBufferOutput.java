@@ -17,10 +17,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class FileOutput extends StreamOutput {
+public class FileBufferOutput extends StreamBufferOutput {
 
-    public FileOutput(File file) throws IOException {
+    public FileBufferOutput(File file) throws IOException {
         super(new FileOutputStream(file));
+    }
+
+    public FileBufferOutput(File file, int bufferSize) throws IOException {
+        super(new FileOutputStream(file), bufferSize);
     }
 
 }

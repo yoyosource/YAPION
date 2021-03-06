@@ -16,11 +16,20 @@ package yapion.hierarchy.output;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.zip.GZIPOutputStream;
 
-public class FileOutput extends StreamOutput {
+public class FileBufferGZIPOutput extends StreamBufferOutput {
 
-    public FileOutput(File file) throws IOException {
-        super(new FileOutputStream(file));
+    public FileBufferGZIPOutput(File file) throws IOException {
+        super(new GZIPOutputStream(new FileOutputStream(file)));
+    }
+
+    public FileBufferGZIPOutput(File file, int size) throws IOException {
+        super(new GZIPOutputStream(new FileOutputStream(file), size));
+    }
+
+    public FileBufferGZIPOutput(File file, int size, int bufferSize) throws IOException {
+        super(new GZIPOutputStream(new FileOutputStream(file), size), bufferSize);
     }
 
 }

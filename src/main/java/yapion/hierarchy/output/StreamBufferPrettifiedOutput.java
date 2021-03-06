@@ -13,14 +13,21 @@
 
 package yapion.hierarchy.output;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.OutputStream;
 
-public class FileOutput extends StreamOutput {
+public class StreamBufferPrettifiedOutput extends StreamBufferOutput {
 
-    public FileOutput(File file) throws IOException {
-        super(new FileOutputStream(file));
+    public StreamBufferPrettifiedOutput(OutputStream outputStream) {
+        super(outputStream);
+    }
+
+    public StreamBufferPrettifiedOutput(OutputStream outputStream, int bufferSize) {
+        super(outputStream, bufferSize);
+    }
+
+    @Override
+    protected boolean prettified() {
+        return true;
     }
 
 }
