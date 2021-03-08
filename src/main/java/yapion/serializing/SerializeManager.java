@@ -67,7 +67,7 @@ public class SerializeManager {
         }
     }
 
-    private static final boolean overrideable;
+    private static final boolean OVERRIDEABLE;
     private static final Serializer defaultSerializer = new Serializer(null, false);
     private static final Serializer defaultNullSerializer = new Serializer(new InternalSerializer<Object>() {
         @Override
@@ -92,7 +92,7 @@ public class SerializeManager {
         }
     }, false);
 
-    private static final String internalSerializer = InternalSerializer.class.getTypeName();
+    private static final String INTERNAL_SERIALIZER = InternalSerializer.class.getTypeName();
 
     private static final Map<String, Serializer> serializerMap = new HashMap<>();
     private static final List<InternalSerializer<?>> interfaceTypeSerializer = new ArrayList<>();
@@ -135,18 +135,18 @@ public class SerializeManager {
         nSerializerGroups.add("java.text.");
         nSerializerGroups.add("java.time.");
         nSerializerGroups.add("java.util.");
-        overrideable = true;
+        OVERRIDEABLE = true;
     }
 
     private static void add(Class<?> clazz) {
-        if (overrideable) return;
+        if (OVERRIDEABLE) return;
         String className = clazz.getTypeName();
         if (!className.startsWith("yapion.serializing.serializer")) return;
         if (clazz.getInterfaces().length != 1) return;
         String typeName = clazz.getInterfaces()[0].getTypeName();
         Object o = ReflectionsUtils.constructObjectObjenesis(className);
         if (o == null) return;
-        if (typeName.equals(internalSerializer)) {
+        if (typeName.equals(INTERNAL_SERIALIZER)) {
             add((InternalSerializer<?>) o);
         }
     }
@@ -154,7 +154,7 @@ public class SerializeManager {
     private static void add(InternalSerializer<?> serializer) {
         if (!checkOverrideable(serializer)) return;
         serializer.init();
-        Serializer serializerWrapper = new Serializer(serializer, overrideable);
+        Serializer serializerWrapper = new Serializer(serializer, OVERRIDEABLE);
         serializerMap.put(serializer.type(), serializerWrapper);
         if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
             serializerMap.put(serializer.primitiveType(), serializerWrapper);

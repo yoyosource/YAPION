@@ -99,10 +99,11 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
 
     Iterator<YAPIONAnyType> iterator();
 
+    @Override
     default Spliterator<YAPIONAnyType> spliterator() {
         return Spliterators.spliteratorUnknownSize(iterator(), 0);
     }
-
+    
     default Stream<YAPIONAnyType> stream() {
         return StreamSupport.stream(spliterator(), false);
     }

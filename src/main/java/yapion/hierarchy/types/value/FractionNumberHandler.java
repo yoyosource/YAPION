@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import java.math.BigDecimal;
@@ -32,13 +33,13 @@ public class FractionNumberHandler {
         }
 
         @Override
-        public Optional<Float> preParse(String s) {
+        public MethodReturnValue<Float> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.FLOAT);
         }
 
         @Override
-        public Optional<Float> parse(String s) {
-            return Optional.empty();
+        public MethodReturnValue<Float> parse(String s) {
+            return MethodReturnValue.empty();
         }
 
         @Override
@@ -56,12 +57,12 @@ public class FractionNumberHandler {
         }
 
         @Override
-        public Optional<Double> preParse(String s) {
+        public MethodReturnValue<Double> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.DOUBLE);
         }
 
         @Override
-        public Optional<Double> parse(String s) {
+        public MethodReturnValue<Double> parse(String s) {
             return NumberSuffix.trySuffixLessValueParse(s, NumberSuffix.DOUBLE);
         }
 
@@ -80,12 +81,12 @@ public class FractionNumberHandler {
         }
 
         @Override
-        public Optional<BigDecimal> preParse(String s) {
+        public MethodReturnValue<BigDecimal> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.BIG_DECIMAL);
         }
 
         @Override
-        public Optional<BigDecimal> parse(String s) {
+        public MethodReturnValue<BigDecimal> parse(String s) {
             return NumberSuffix.trySuffixLessValueParse(s, NumberSuffix.BIG_DECIMAL);
         }
 

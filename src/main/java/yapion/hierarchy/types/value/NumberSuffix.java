@@ -13,6 +13,8 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.MethodReturnValue;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Optional;
@@ -48,31 +50,31 @@ final class NumberSuffix<T> {
         return suffix;
     }
 
-    public static <T> Optional<T> tryValueParse(String input, NumberSuffix<T> numberSuffix) {
+    public static <T> MethodReturnValue<T> tryValueParse(String input, NumberSuffix<T> numberSuffix) {
         if (input.length() < numberSuffix.suffix.length()) {
-            return Optional.empty();
+            return MethodReturnValue.empty();
         }
         if (!input.endsWith(numberSuffix.suffix)) {
-            return Optional.empty();
+            return MethodReturnValue.empty();
         }
         try {
-            return Optional.of(numberSuffix.numberMapper.apply(input.substring(0, input.length() - numberSuffix.suffix.length())));
+            return MethodReturnValue.of(numberSuffix.numberMapper.apply(input.substring(0, input.length() - numberSuffix.suffix.length())));
         } catch (NumberFormatException e) {
             // Ignored
         }
-        return Optional.empty();
+        return MethodReturnValue.empty();
     }
 
-    public static <T> Optional<T> trySuffixLessValueParse(String input, NumberSuffix<T> numberSuffix) {
+    public static <T> MethodReturnValue<T> trySuffixLessValueParse(String input, NumberSuffix<T> numberSuffix) {
         try {
             if (!input.endsWith(numberSuffix.suffix)) {
-                if (numberSuffix == BYTE || numberSuffix == SHORT) return Optional.empty();
-                return Optional.of(numberSuffix.numberMapper.apply(input));
+                if (numberSuffix == BYTE || numberSuffix == SHORT) return MethodReturnValue.empty();
+                return MethodReturnValue.of(numberSuffix.numberMapper.apply(input));
             }
         } catch (NumberFormatException e) {
             // Ignored
         }
-        return Optional.empty();
+        return MethodReturnValue.empty();
     }
 
     public static <T> boolean tryValueAssemble(String input, NumberSuffix<T> numberSuffix) {

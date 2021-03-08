@@ -13,14 +13,12 @@
 
 package yapion.packet;
 
+import lombok.RequiredArgsConstructor;
 import yapion.hierarchy.types.YAPIONObject;
 
+@RequiredArgsConstructor
 public class HandleFailedPacket extends YAPIONPacket {
 
-    public YAPIONObject yapionObject;
-
-    public HandleFailedPacket(YAPIONObject yapionObject) {
-        this.yapionObject = yapionObject;
-    }
+    public final YAPIONObject yapionObject;
 
 }

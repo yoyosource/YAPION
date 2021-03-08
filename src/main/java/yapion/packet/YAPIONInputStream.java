@@ -142,7 +142,7 @@ public final class YAPIONInputStream {
             if (respectiveOutputStream != null) dropPacket.setYAPIONOutputStream(respectiveOutputStream);
             yapionPacketReceiver.handleDrop(dropPacket);
         } catch (IOException e) {
-
+            // Ignored
         }
     }
 

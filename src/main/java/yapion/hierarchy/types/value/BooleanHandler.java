@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import java.util.Optional;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class BooleanHandler implements ValueHandler<Boolean> {
 
     @Override
+    @SuppressWarnings("java:S5411")
     public String output(Boolean aBoolean) {
         if (aBoolean) {
             return "true";
@@ -29,19 +31,19 @@ public class BooleanHandler implements ValueHandler<Boolean> {
     }
 
     @Override
-    public Optional<Boolean> preParse(String s) {
-        return Optional.empty();
+    public MethodReturnValue<Boolean> preParse(String s) {
+        return MethodReturnValue.empty();
     }
 
     @Override
-    public Optional<Boolean> parse(String s) {
+    public MethodReturnValue<Boolean> parse(String s) {
         if (s.equals("true")) {
-            return Optional.of(true);
+            return MethodReturnValue.of(true);
         }
         if (s.equals("false")) {
-            return Optional.of(false);
+            return MethodReturnValue.of(false);
         }
-        return Optional.empty();
+        return MethodReturnValue.empty();
     }
 
     @Override

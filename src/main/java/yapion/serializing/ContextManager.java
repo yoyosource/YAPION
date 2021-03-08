@@ -93,10 +93,6 @@ public final class ContextManager {
     private boolean globalSave = false;
     private YAPIONData yapionData = null;
 
-    private boolean localLoad = false;
-    private boolean localOptimize = false;
-    private boolean localSave = false;
-
     boolean willBeCascading(Class<?> clazz) {
         YAPIONData yapionData = clazz.getDeclaredAnnotation(YAPIONData.class);
         if (yapionData == null) return false;
@@ -165,7 +161,7 @@ public final class ContextManager {
             // ignored
         }
 
-        localLoad = localDefault; // no field ignore for enum values (if not explicitly defined)
+        boolean localLoad = localDefault; // no field ignore for enum values (if not explicitly defined)
         if (yapionLoadExclude != null && yapionLoad == null) {
             localLoad = !is(yapionLoadExclude);
         } else if (yapionLoadExclude == null && yapionLoad != null) {
@@ -175,9 +171,9 @@ public final class ContextManager {
             localLoad = is(yapionLoad);
         }
 
-        localOptimize = is(yapionOptimize);
+        boolean localOptimize = is(yapionOptimize);
 
-        localSave = localDefault; // no field ignore for enum values (if not explicitly defined)
+        boolean localSave = localDefault; // no field ignore for enum values (if not explicitly defined)
         if (yapionSaveExclude != null && yapionSave == null) {
             localSave = !is(yapionSaveExclude);
         } else if (yapionSaveExclude == null && yapionSave != null) {

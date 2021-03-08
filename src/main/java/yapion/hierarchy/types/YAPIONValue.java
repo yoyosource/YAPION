@@ -21,6 +21,7 @@ import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.value.*;
+import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import java.math.BigDecimal;
@@ -174,8 +175,8 @@ public class YAPIONValue<T> extends YAPIONValueType {
     @SuppressWarnings({"java:S3740", "java:S2789"})
     public static YAPIONValue parseValue(String s) {
         for (Map.Entry<String, ValueHandler<?>> valueHandlerEntry : valueHandlers.entrySet()) {
-            Optional<?> optional = valueHandlerEntry.getValue().preParse(s);
-            if (optional == null) {
+            MethodReturnValue<?> optional = valueHandlerEntry.getValue().preParse(s);
+            if (optional.isPresent() && !optional.nonNullValuePresent()) {
                 return new YAPIONValue(null);
             }
             if (optional.isPresent()) {
@@ -183,7 +184,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
             }
         }
         for (Map.Entry<String, ValueHandler<?>> valueHandlerEntry : valueHandlers.entrySet()) {
-            Optional<?> optional = valueHandlerEntry.getValue().parse(s);
+            MethodReturnValue<?> optional = valueHandlerEntry.getValue().parse(s);
             if (optional.isPresent()) {
                 return new YAPIONValue<>(optional.get());
             }

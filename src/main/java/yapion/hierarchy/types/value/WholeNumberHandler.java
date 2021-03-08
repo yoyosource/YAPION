@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import java.math.BigInteger;
@@ -32,13 +33,13 @@ public class WholeNumberHandler {
         }
 
         @Override
-        public Optional<Byte> preParse(String s) {
+        public MethodReturnValue<Byte> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.BYTE);
         }
 
         @Override
-        public Optional<Byte> parse(String s) {
-            return Optional.empty();
+        public MethodReturnValue<Byte> parse(String s) {
+            return MethodReturnValue.empty();
         }
 
         @Override
@@ -56,13 +57,13 @@ public class WholeNumberHandler {
         }
 
         @Override
-        public Optional<Short> preParse(String s) {
+        public MethodReturnValue<Short> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.SHORT);
         }
 
         @Override
-        public Optional<Short> parse(String s) {
-            return Optional.empty();
+        public MethodReturnValue<Short> parse(String s) {
+            return MethodReturnValue.empty();
         }
 
         @Override
@@ -80,12 +81,12 @@ public class WholeNumberHandler {
         }
 
         @Override
-        public Optional<Integer> preParse(String s) {
+        public MethodReturnValue<Integer> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.INTEGER);
         }
 
         @Override
-        public Optional<Integer> parse(String s) {
+        public MethodReturnValue<Integer> parse(String s) {
             return NumberSuffix.trySuffixLessValueParse(s, NumberSuffix.INTEGER);
         }
 
@@ -104,12 +105,12 @@ public class WholeNumberHandler {
         }
 
         @Override
-        public Optional<Long> preParse(String s) {
+        public MethodReturnValue<Long> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.LONG);
         }
 
         @Override
-        public Optional<Long> parse(String s) {
+        public MethodReturnValue<Long> parse(String s) {
             return NumberSuffix.trySuffixLessValueParse(s, NumberSuffix.LONG);
         }
 
@@ -128,12 +129,12 @@ public class WholeNumberHandler {
         }
 
         @Override
-        public Optional<BigInteger> preParse(String s) {
+        public MethodReturnValue<BigInteger> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.BIG_INTEGER);
         }
 
         @Override
-        public Optional<BigInteger> parse(String s) {
+        public MethodReturnValue<BigInteger> parse(String s) {
             return NumberSuffix.trySuffixLessValueParse(s, NumberSuffix.BIG_INTEGER);
         }
 

@@ -19,7 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class YAPIONReflectionInvocationException extends YAPIONException {
 
-    private Throwable target;
+    private final Throwable target;
 
     public YAPIONReflectionInvocationException(InvocationTargetException invocationTargetException) {
         super(invocationTargetException.getTargetException().getMessage(), invocationTargetException.getTargetException() );

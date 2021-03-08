@@ -25,18 +25,18 @@ public class TypeStack {
     private final LinkedList<YAPIONType> stack = new LinkedList<>();
     private final LinkedList<Long> timeStack = new LinkedList<>();
 
-    public void push(YAPIONType YAPIONType) {
-        stack.push(YAPIONType);
+    public void push(YAPIONType yapionType) {
+        stack.push(yapionType);
         timeStack.push(System.nanoTime());
     }
 
-    public YAPIONType pop(YAPIONType YAPIONType) {
+    public YAPIONType pop(YAPIONType yapionType) {
         if (empty()) {
             throw new YAPIONArrayIndexOutOfBoundsException();
         }
         timeStack.pop();
         YAPIONType current = stack.pop();
-        if (current != YAPIONType) {
+        if (current != yapionType) {
             throw new YAPIONParserException();
         }
         return current;

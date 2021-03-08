@@ -33,6 +33,7 @@ public abstract class AbstractOutput {
         return this;
     }
 
+    @SuppressWarnings("java:S1172")
     protected boolean internalConsumePrettified(String s) {
         return true;
     }

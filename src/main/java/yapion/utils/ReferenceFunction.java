@@ -21,10 +21,10 @@ import java.util.function.ToLongFunction;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReferenceFunction {
 
-    private final ToLongFunction<String> referenceFunction;
+    private final ToLongFunction<String> reference;
 
     public long stringToReferenceValue(String s) {
-        return referenceFunction.applyAsLong(s);
+        return reference.applyAsLong(s);
     }
 
 }

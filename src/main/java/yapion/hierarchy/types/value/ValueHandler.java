@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import java.util.Optional;
@@ -21,9 +22,9 @@ public interface ValueHandler<T> {
 
     String output(T t);
 
-    Optional<T> preParse(String s);
+    MethodReturnValue<T> preParse(String s);
 
-    Optional<T> parse(String s);
+    MethodReturnValue<T> parse(String s);
 
     long referenceValue(ReferenceFunction referenceFunction);
 

@@ -65,8 +65,9 @@ public class ClassUtils {
                 return "float";
             case "java.lang.Double":
                 return "double";
+            default:
+                return className;
         }
-        return className;
     }
 
     public static String getBoxed(String className) {
@@ -87,8 +88,9 @@ public class ClassUtils {
                 return "java.lang.Float";
             case "double":
                 return "java.lang.Double";
+            default:
+                return className;
         }
-        return className;
     }
 
 }

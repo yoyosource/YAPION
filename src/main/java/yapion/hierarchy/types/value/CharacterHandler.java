@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import java.util.Optional;
@@ -28,16 +29,16 @@ public class CharacterHandler implements ValueHandler<Character> {
     }
 
     @Override
-    public Optional<Character> preParse(String s) {
-        return Optional.empty();
+    public MethodReturnValue<Character> preParse(String s) {
+        return MethodReturnValue.empty();
     }
 
     @Override
-    public Optional<Character> parse(String s) {
+    public MethodReturnValue<Character> parse(String s) {
         if (s.startsWith("'") && s.endsWith("'") && s.length() == 3) {
-            return Optional.of(s.charAt(1));
+            return MethodReturnValue.of(s.charAt(1));
         }
-        return Optional.empty();
+        return MethodReturnValue.empty();
     }
 
     @Override
