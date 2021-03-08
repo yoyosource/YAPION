@@ -5,7 +5,8 @@
 # YAPION
 **YAPION** is a slim and fast Object Notation specifically for Java Objects.
 It can handle recursive Object structures and state specific serialization and deserialization (SsS/D).
-This SsS/D is achieved by a self build annotation system used by YAPION. This object notation is designed for easy usage with complex Object structures and can do even more complex stuff fairly easy.   
+This SsS/D is achieved by a self build annotation system used by YAPION. This object notation is designed for easy usage with complex Object structures and can do even more complex stuff fairly easy.
+An extensive documentation can be found [here](https://yoyosource.github.io/YAPION/).   
 
 ## YAPION's naming
 ```
