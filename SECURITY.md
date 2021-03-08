@@ -9,4 +9,4 @@
 
 ## Reporting a Vulnerability
 
-Use the Issues to report a Vulnerability. Prefix the Issue name with "Vulnerability".
+Write an email to yapion.yoyosource@nidido.de explaining your vulnerability. In the subject use the word "Vulnerability" for quick reference.
