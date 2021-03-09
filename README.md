@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'yoyosource:YAPION:0.23.2'
+    implementation 'yoyosource:YAPION:0.24.0'
 }
 ```
 
