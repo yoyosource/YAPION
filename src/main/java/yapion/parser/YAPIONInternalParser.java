@@ -22,6 +22,7 @@ import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 import yapion.utils.ReflectionsUtils;
 
+import javax.swing.plaf.IconUIResource;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,7 +123,7 @@ class YAPIONInternalParser {
             }
             return;
         }
-        if (parseUTF8Escape(c)) {
+        if (parseSpecialEscape(c)) {
             return;
         }
         if (c == '\\' && !escaped) {
@@ -254,6 +255,26 @@ class YAPIONInternalParser {
         return false;
     }
 
+    private boolean parseSpecialEscape(char c) {
+        if (parseUTF8Escape(c)) return true;
+        if (!escaped) return false;
+        switch (c) {
+            case 'n':
+                current.append("\n");
+                break;
+            case 't':
+                current.append("\t");
+                break;
+            case 'r':
+                current.append("\r");
+                break;
+            default:
+                return false;
+        }
+        escaped = false;
+        return true;
+    }
+
     private boolean parseUTF8Escape(char c) {
         if (escaped && c == 'u') {
             log.debug("UTF8     [initial]");
@@ -274,7 +295,7 @@ class YAPIONInternalParser {
     }
 
     private void parseValue(char c) {
-        if (parseUTF8Escape(c)) {
+        if (parseSpecialEscape(c)) {
             return;
         }
         if (!escaped && c == ')') {
