@@ -326,8 +326,12 @@ task createSerializerMD {
                     currentGroup = group
                     serializer.append("## " + group + "\n")
                 }
-                if (group.contains("security.internal")) {
+                if (group.contains("notserializable")) {
                     serializer.append("- " + name + " (1)\n")
+                    return
+                }
+                if (group.contains("security.internal")) {
+                    serializer.append("- " + name + " (2)\n")
                     return
                 }
                 serializer.append("- " + name + "\n")
@@ -335,6 +339,7 @@ task createSerializerMD {
         })
 
         serializer.append("# Foot Notes\n")
-        serializer.append("- (1) not advised to use directly, use either PrivateKey or PublicKey instead")
+        serializer.append("- (1) not serializable because of some internal stuff\n")
+        serializer.append("- (2) not advised to use directly, use either PrivateKey or PublicKey instead\n")
     }
 }

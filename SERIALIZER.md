@@ -1,15 +1,15 @@
 # Serializer
 ## notserializable.net
-- ServerSocketSerializer
-- SocketSerializer
+- ServerSocketSerializer (1)
+- SocketSerializer (1)
 ## notserializable.os
-- ProcessBuilderSerializer
-- ProcessSerializer
+- ProcessBuilderSerializer (1)
+- ProcessSerializer (1)
 ## notserializable.thread
-- RunnableSerializer
-- ThreadGroupSerializer
-- ThreadLocalSerializer
-- ThreadSerializer
+- RunnableSerializer (1)
+- ThreadGroupSerializer (1)
+- ThreadLocalSerializer (1)
+- ThreadSerializer (1)
 ## object.atomic
 - AtomicBooleanSerializer
 - AtomicIntegerArraySerializer
@@ -62,20 +62,20 @@
 - PrivateKeySerializer
 - PublicKeySerializer
 ## object.security.internal
-- DHKeySpecSerializer (1)
-- DSAKeySpecSerializer (1)
-- ECKeySpecSerializer (1)
-- RSAKeySpecSerializer (1)
-- RSAMultiPrimePrivateCrtKeySpecSerializer (1)
-- RSAPrivateCrtKeySpecSerializer (1)
+- DHKeySpecSerializer (2)
+- DSAKeySpecSerializer (2)
+- ECKeySpecSerializer (2)
+- RSAKeySpecSerializer (2)
+- RSAMultiPrimePrivateCrtKeySpecSerializer (2)
+- RSAPrivateCrtKeySpecSerializer (2)
 ## object.security.internal.ec
-- ECFieldF2mSerializer (1)
-- ECFieldFpSerializer (1)
-- ECParameterSpecSerializer (1)
-- ECPointSerializer (1)
-- EllipticCurveSerializer (1)
+- ECFieldF2mSerializer (2)
+- ECFieldFpSerializer (2)
+- ECParameterSpecSerializer (2)
+- ECPointSerializer (2)
+- EllipticCurveSerializer (2)
 ## object.security.internal.rsa
-- RSAOtherPrimeInfoSerializer (1)
+- RSAOtherPrimeInfoSerializer (2)
 ## object.set
 - SetSerializer
 ## object.stack
@@ -129,4 +129,5 @@
 - StringBuilderSerializer
 - StringSerializer
 # Foot Notes
-- (1) not advised to use directly, use either PrivateKey or PublicKey instead
+- (1) not serializable because of some internal stuff
+- (2) not advised to use directly, use either PrivateKey or PublicKey instead
