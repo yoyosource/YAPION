@@ -15,6 +15,7 @@ package yapion.notation;
 
 import org.junit.Test;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.output.StringPrettifiedOutput;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
@@ -98,6 +99,13 @@ public class NotationObjectsTest {
     @Test
     public void testArrayJSON() {
         assertThat(new YAPIONArray().toJSONLossy(new StringOutput()).getResult(), is("[]"));
+    }
+
+    @Test
+    public void testPrettifiedYAPIONArrayOptimizationWithLastValue() {
+        YAPIONArray yapionArray = new YAPIONArray();
+        yapionArray.add(new YAPIONObject());
+        assertThat(yapionArray.toYAPION(new StringPrettifiedOutput()).getResult(), is("[\n  {}\n]"));
     }
 
 }
