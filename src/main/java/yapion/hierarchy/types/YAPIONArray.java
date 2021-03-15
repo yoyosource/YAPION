@@ -77,7 +77,10 @@ public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Intege
         }
 
         if (!array.isEmpty()) {
-            abstractOutput.consumePrettified(",\n").consumePrettified(reducedIndent());
+            if (array.get(array.size() - 1) instanceof YAPIONValue) {
+                abstractOutput.consumePrettified(",");
+            }
+            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
         }
 
         abstractOutput.consume("]");
