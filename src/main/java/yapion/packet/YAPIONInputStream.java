@@ -142,6 +142,7 @@ public final class YAPIONInputStream {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
+                if (heartBeatMode == null) continue;
                 if (heartBeatMode == HeartBeatType.SEND) {
                     respectiveOutputStream.write(new HeartBeatPacket());
                 }
@@ -226,7 +227,7 @@ public final class YAPIONInputStream {
      * @param heartBeatMode the specific mode to use
      * @param heartBeatTimeOut if {@param heartBeatMode} is either {@link HeartBeatType#RECEIVE} or {@link HeartBeatType#SEND_AND_RECEIVE} and no heartbeat packet was received for this amount of milliseconds the LostHeartBeatHandler gets called
      */
-    public void setHeartBeatMode(@NonNull HeartBeatType heartBeatMode, long heartBeatTimeOut) {
+    public void setHeartBeatMode(HeartBeatType heartBeatMode, long heartBeatTimeOut) {
         lastHeartbeat = System.currentTimeMillis();
         this.heartBeatMode = heartBeatMode;
         this.heartBeatTimeOut = heartBeatTimeOut;
