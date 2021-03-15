@@ -90,7 +90,7 @@ public class YAPIONPacketTest {
     }
 
     private void sleep() {
-        sleep(20);
+        sleep(50);
     }
 
     private void sleep(long time) {

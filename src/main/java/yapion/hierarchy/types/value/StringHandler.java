@@ -81,7 +81,7 @@ public class StringHandler implements ValueHandler<String> {
         if (s.startsWith("'") && s.endsWith("'") && s.length() > 3) {
             return MethodReturnValue.of(s.substring(1, s.length() - 1));
         }
-        if (s.startsWith("\"") && s.endsWith("\"")) {
+        if (s.startsWith("\"") && s.endsWith("\"") && s.length() > 1) {
             return MethodReturnValue.of(s.substring(1, s.length() - 1));
         }
         return MethodReturnValue.of(s);
