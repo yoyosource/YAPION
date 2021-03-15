@@ -52,6 +52,9 @@ public final class ValueUtils {
     }
 
     public static String charToUTFEscape(char c, EscapeCharacters escapeCharacters) {
+        if (c == '\n') return "\\n";
+        if (c == '\t') return "\\t";
+        if (c == '\r') return "\\r";
         if (c < 0x20) {
             return "\\u" + (String.format("%04X", (short) c));
         } else if (c >= 0x7F && c < 0xA1) {
