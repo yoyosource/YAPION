@@ -37,6 +37,10 @@ public final class YAPIONSocket {
         yapionInputStream.setRespectiveOutputStream(yapionOutputStream);
     }
 
+    public Socket getSocket() {
+        return socket;
+    }
+
     public YAPIONInputStream getYAPIONInputStream() {
         return yapionInputStream;
     }
@@ -48,6 +52,7 @@ public final class YAPIONSocket {
     public void close() throws IOException {
         yapionInputStream.close();
         yapionOutputStream.close();
+        socket.close();
     }
 
     public void setYAPIONPacketReceiver(YAPIONPacketReceiver yapionPacketReceiver) {
@@ -60,6 +65,10 @@ public final class YAPIONSocket {
 
     public void setTypeReMapper(@NonNull TypeReMapper typeReMapper) {
         yapionInputStream.setTypeReMapper(typeReMapper);
+    }
+
+    public void setHeartBeatMode(@NonNull HeartBeatType heartBeatMode, long heartBeatTimeOut) {
+        yapionInputStream.setHeartBeatMode(heartBeatMode, heartBeatTimeOut);
     }
 
     public int available() throws IOException {

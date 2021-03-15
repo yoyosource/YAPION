@@ -45,8 +45,13 @@ public final class YAPIONInputStream {
     private YAPIONOutputStream respectiveOutputStream = null;
     private TypeReMapper typeReMapper = new TypeReMapper();
 
-    private Thread yapionInputStreamHandler = null;
     private boolean running = true;
+    private Thread yapionInputStreamHandler = null;
+
+    private Thread yapionHeartBeatHandler = null;
+    private HeartBeatType heartBeatMode = null;
+    private long lastHeartbeat = 0;
+    private long heartBeatTimeOut = 10000;
 
     /**
      * Creates a YAPIONInputStream from an InputStream.
@@ -88,6 +93,7 @@ public final class YAPIONInputStream {
         if (time < LOW_WAIT) time = LOW_WAIT;
         if (time > HIGH_WAIT) time = HIGH_WAIT;
         this.yapionPacketReceiver = yapionPacketReceiver;
+        lastHeartbeat = System.currentTimeMillis();
         thread(time);
     }
 
@@ -126,6 +132,31 @@ public final class YAPIONInputStream {
         });
         yapionInputStreamHandler.setDaemon(true);
         yapionInputStreamHandler.start();
+
+        yapionHeartBeatHandler = new Thread(() -> {
+            while (running) {
+                try {
+                    long sleepTime = (heartBeatTimeOut - time) / 5;
+                    if (sleepTime < 50) sleepTime = 50;
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                if (heartBeatMode == HeartBeatType.SEND) {
+                    respectiveOutputStream.write(new HeartBeatPacket());
+                }
+                if (heartBeatMode == HeartBeatType.SEND_AND_RECEIVE) {
+                    respectiveOutputStream.write(new HeartBeatPacket());
+                }
+                if (System.currentTimeMillis() - lastHeartbeat > heartBeatTimeOut) {
+                    LostHeartBeatPacket lostHeartBeatPacket = new LostHeartBeatPacket(lastHeartbeat, System.currentTimeMillis() - lastHeartbeat, heartBeatTimeOut);
+                    if (respectiveOutputStream != null) lostHeartBeatPacket.setYAPIONOutputStream(respectiveOutputStream);
+                    yapionPacketReceiver.handleLostHeartBeat(lostHeartBeatPacket);
+                }
+            }
+        });
+        yapionHeartBeatHandler.setDaemon(true);
+        yapionHeartBeatHandler.start();
     }
 
     private void drop() {
@@ -189,6 +220,18 @@ public final class YAPIONInputStream {
         inputStream.close();
     }
 
+    /**
+     * Set the heartBeat mode desired for this connection. This takes effect when you call {@link #setYAPIONPacketReceiver(YAPIONPacketReceiver)} or {@link #setYAPIONPacketReceiver(YAPIONPacketReceiver, int)}.
+     *
+     * @param heartBeatMode the specific mode to use
+     * @param heartBeatTimeOut if {@param heartBeatMode} is either {@link HeartBeatType#RECEIVE} or {@link HeartBeatType#SEND_AND_RECEIVE} and no heartbeat packet was received for this amount of milliseconds the LostHeartBeatHandler gets called
+     */
+    public void setHeartBeatMode(@NonNull HeartBeatType heartBeatMode, long heartBeatTimeOut) {
+        lastHeartbeat = System.currentTimeMillis();
+        this.heartBeatMode = heartBeatMode;
+        this.heartBeatTimeOut = heartBeatTimeOut;
+    }
+
     void setRespectiveOutputStream(YAPIONOutputStream respectiveOutputStream) {
         this.respectiveOutputStream = respectiveOutputStream;
     }
@@ -221,6 +264,10 @@ public final class YAPIONInputStream {
         if (!ReflectionsUtils.isClassSuperclassOf(object.getClass(), YAPIONPacket.class)) return new HandleFailedPacket(yapionObject);
         YAPIONPacket yapionPacket = (YAPIONPacket) object;
         if (respectiveOutputStream != null) yapionPacket.setYAPIONOutputStream(respectiveOutputStream);
+        if (yapionPacket instanceof HeartBeatPacket && heartBeatMode != null && (heartBeatMode == HeartBeatType.RECEIVE || heartBeatMode == HeartBeatType.SEND_AND_RECEIVE)) {
+            lastHeartbeat = System.currentTimeMillis();
+            yapionPacketReceiver.handleHeartBeat(yapionPacket);
+        }
         yapionPacketReceiver.handle(yapionPacket);
         return null;
     }

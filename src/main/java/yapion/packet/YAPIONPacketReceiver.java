@@ -37,6 +37,8 @@ public class YAPIONPacketReceiver {
     private static final String DROP_HANDLER = "@drop";
     private static final String DESERIALIZE_EXCEPTION_HANDLER = "@deserialize";
     private static final String HANDLE_FAILED_HANDLER = "@handle";
+    private static final String HEART_BEAT_HANDLER = "@heartbeat";
+    private static final String LOST_HEART_BEAT_HANDLER = "@lost_heartbeat";
 
     /**
      * Creates an YAPIONPacketReceiver
@@ -53,6 +55,10 @@ public class YAPIONPacketReceiver {
         handlerMap.put(DESERIALIZE_EXCEPTION_HANDLER, yapionPacket -> {
         });
         handlerMap.put(HANDLE_FAILED_HANDLER, yapionPacket -> {
+        });
+        handlerMap.put(HEART_BEAT_HANDLER, yapionPacket -> {
+        });
+        handlerMap.put(LOST_HEART_BEAT_HANDLER, yapionPacket -> {
         });
     }
 
@@ -81,7 +87,9 @@ public class YAPIONPacketReceiver {
      *
      * @param packetTypes the packets to handle
      * @param yapionPacketHandler the handler which handles the specified packets
+     * @deprecated since 0.25.0
      */
+    @Deprecated
     public YAPIONPacketReceiver add(Class<? extends YAPIONPacket>[] packetTypes, YAPIONPacketHandler yapionPacketHandler) {
         if (packetTypes == null) {
             throw new YAPIONPacketException();
@@ -102,7 +110,10 @@ public class YAPIONPacketReceiver {
 
     /**
      * A wrapper function to {@link #add(Class[], YAPIONPacketHandler)}
+     *
+     * @deprecated since 0.25.0
      */
+    @Deprecated
     public YAPIONPacketReceiver add(YAPIONPacketHandler yapionPacketHandler, Class<? extends YAPIONPacket>... packetTypes) {
         return add(packetTypes, yapionPacketHandler);
     }
@@ -186,6 +197,32 @@ public class YAPIONPacketReceiver {
     }
 
     /**
+     * Set the Heartbeat {@link YAPIONPacketHandler} to do something when a heartbeat occurred.
+     *
+     * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
+     */
+    public YAPIONPacketReceiver setHeartBeatHandler(YAPIONPacketHandler yapionPacketHandler) {
+        if (yapionPacketHandler == null) {
+            throw new YAPIONException();
+        }
+        handlerMap.put(HEART_BEAT_HANDLER, yapionPacketHandler);
+        return this;
+    }
+
+    /**
+     * Set the Lost Heartbeat {@link YAPIONPacketHandler} to do something when the heartbeat did not occur.
+     *
+     * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
+     */
+    public YAPIONPacketReceiver setLostHeartBeatHandler(YAPIONPacketHandler yapionPacketHandler) {
+        if (yapionPacketHandler == null) {
+            throw new YAPIONException();
+        }
+        handlerMap.put(LOST_HEART_BEAT_HANDLER, yapionPacketHandler);
+        return this;
+    }
+
+    /**
      * Handles an YAPIONPacket by calling the specified yapionPacketHandler
      * for the type of the packet. If the packet type is not found the
      * "@error" handler gets called. If any exception gets thrown the
@@ -229,6 +266,14 @@ public class YAPIONPacketReceiver {
         } else {
             runnable.run();
         }
+    }
+
+    void handleHeartBeat(YAPIONPacket yapionPacket) {
+        handlePacket(yapionPacket, HEART_BEAT_HANDLER, handlerMap.get(HEART_BEAT_HANDLER), this::handleException);
+    }
+
+    void handleLostHeartBeat(YAPIONPacket yapionPacket) {
+        handlePacket(yapionPacket, LOST_HEART_BEAT_HANDLER, handlerMap.get(LOST_HEART_BEAT_HANDLER), this::handleException);
     }
 
     void handleDrop(YAPIONPacket yapionPacket) {

@@ -42,7 +42,7 @@ public final class YAPIONOutputStream {
      *
      * @param yapionObject the YAPIONObject
      */
-    public void write(YAPIONObject yapionObject) {
+    public synchronized void write(YAPIONObject yapionObject) {
         yapionObject.toYAPION(new StreamOutput(outputStream)).flush();
     }
 
@@ -79,7 +79,7 @@ public final class YAPIONOutputStream {
      *
      * @throws IOException {@link OutputStream#close()}
      */
-    public void close() throws IOException {
+    public synchronized void close() throws IOException {
         outputStream.close();
     }
 
