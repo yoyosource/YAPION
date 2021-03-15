@@ -134,4 +134,32 @@ public class YAPIONParserTest {
         assertThat(yapionObject, isYAPION("{\\ !\"#$%&'\\(\\)*+,-./0123456789:;\\<=\\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\[\\\\]^_`abcdefghijklmnopqrstuvwxyz\\{|\\}~( !\"#$%&'\\(\\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}"));
     }
 
+    @Test
+    public void testStringEscape() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{(\"\"\")}");
+        assertThat(yapionObject.getPlainValue(""), is("\""));
+        assertThat(yapionObject, isYAPION("{(\"\"\")}"));
+    }
+
+    @Test
+    public void testStringStartsAndEndsWith() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{(\"\"\"\")}");
+        assertThat(yapionObject.getPlainValue(""), is("\"\""));
+        assertThat(yapionObject, isYAPION("{(\"\"\"\")}"));
+    }
+
+    @Test
+    public void testStringStartsWith() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{(\"\"Hello world\")}");
+        assertThat(yapionObject.getPlainValue(""), is("\"Hello world"));
+        assertThat(yapionObject, isYAPION("{(\"\"Hello world\")}"));
+    }
+
+    @Test
+    public void testStringEndsWith() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{(\"Hello world\"\")}");
+        assertThat(yapionObject.getPlainValue(""), is("Hello world\""));
+        assertThat(yapionObject, isYAPION("{(\"Hello world\"\")}"));
+    }
+
 }

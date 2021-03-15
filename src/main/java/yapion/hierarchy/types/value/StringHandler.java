@@ -16,8 +16,6 @@ package yapion.hierarchy.types.value;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
-import java.util.Optional;
-
 import static yapion.hierarchy.types.value.NumberSuffix.*;
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
@@ -26,6 +24,9 @@ public class StringHandler implements ValueHandler<String> {
 
     @Override
     public String output(String s) {
+        if (s.equals("\"") || (s.startsWith("\"") && s.endsWith("\""))) {
+            return '"' + s + '"';
+        }
         s = stringToUTFEscapedString(s, VALUE);
         if (s.equals("true") || s.equals("false") || s.equals("null")) {
             return '"' + s + '"';
