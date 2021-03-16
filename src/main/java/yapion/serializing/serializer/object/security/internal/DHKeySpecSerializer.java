@@ -23,8 +23,6 @@ import javax.crypto.spec.DHPublicKeySpec;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 @SerializerImplementation(since = "0.23.0")
 public class DHKeySpecSerializer implements KeySpecSerializer<DHPrivateKey, DHPublicKey> {

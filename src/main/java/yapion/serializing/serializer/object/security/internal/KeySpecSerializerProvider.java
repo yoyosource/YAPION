@@ -74,7 +74,7 @@ public class KeySpecSerializerProvider {
 
     public static YAPIONObject serializePublicKey(PublicKey publicKey) throws GeneralSecurityException {
         KeySpecSerializer keySpecSerializer = retrieveKeySpecSerializer(publicKey.getClass());
-        if (keySpecSerializer == null) throw new YAPIONSerializerException("Unknown PrivateKey type");
+        if (keySpecSerializer == null) throw new YAPIONSerializerException("Unknown PublicKey type");
         return keySpecSerializer.serializePublicKey(publicKey);
     }
 
