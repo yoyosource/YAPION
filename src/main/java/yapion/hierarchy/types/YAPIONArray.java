@@ -21,9 +21,6 @@ import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ArrayAdd;
-import yapion.hierarchy.api.storage.ObjectAdvancedOperations;
-import yapion.hierarchy.api.storage.ObjectRemove;
-import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.utils.RecursionUtils;
@@ -35,7 +32,7 @@ import java.util.function.Function;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONArray extends YAPIONDataType implements ObjectRetrieve<Integer>, ArrayAdd<YAPIONArray, Integer>, ObjectRemove<YAPIONArray, Integer>, ObjectAdvancedOperations<YAPIONArray, Integer> {
+public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements ArrayAdd<YAPIONArray, Integer> {
 
     private final List<YAPIONAnyType> array = new ArrayList<>();
 

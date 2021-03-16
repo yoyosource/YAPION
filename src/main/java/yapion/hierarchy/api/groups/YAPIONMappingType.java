@@ -13,6 +13,6 @@
 
 package yapion.hierarchy.api.groups;
 
-public abstract class YAPIONMappingType extends YAPIONDataType {
+public abstract class YAPIONMappingType<I, K> extends YAPIONDataType<I, K> {
 
 }

@@ -21,10 +21,6 @@ import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.groups.YAPIONMappingType;
-import yapion.hierarchy.api.storage.ObjectAdd;
-import yapion.hierarchy.api.storage.ObjectAdvancedOperations;
-import yapion.hierarchy.api.storage.ObjectRemove;
-import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.utils.RecursionUtils;
@@ -39,7 +35,7 @@ import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONObject extends YAPIONMappingType implements ObjectRetrieve<String>, ObjectAdd<YAPIONObject, String>, ObjectRemove<YAPIONObject, String>, ObjectAdvancedOperations<YAPIONObject, String> {
+public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
 
     private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
 

@@ -22,10 +22,6 @@ import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.groups.YAPIONMappingType;
-import yapion.hierarchy.api.storage.ObjectAdd;
-import yapion.hierarchy.api.storage.ObjectAdvancedOperations;
-import yapion.hierarchy.api.storage.ObjectRemove;
-import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.parser.YAPIONParserMapValue;
@@ -38,7 +34,7 @@ import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONMap extends YAPIONMappingType implements ObjectRetrieve<YAPIONAnyType>, ObjectAdd<YAPIONMap, YAPIONAnyType>, ObjectRemove<YAPIONMap, YAPIONAnyType>, ObjectAdvancedOperations<YAPIONMap, YAPIONAnyType> {
+public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> {
 
     private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
 
