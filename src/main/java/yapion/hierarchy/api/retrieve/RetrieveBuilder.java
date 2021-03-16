@@ -11,19 +11,20 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.api.storage;
+package yapion.hierarchy.api.retrieve;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONDataType;
+import yapion.hierarchy.api.storage.ObjectRetrieve;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class RetrieveBuilder<K> {
 
-    private List<Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>> suppliers = new ArrayList<>();
+    private List<Query<YAPIONDataType<?, K>, ?>> suppliers = new ArrayList<>();
 
     private RetrieveBuilder() {
 
@@ -68,6 +69,11 @@ public class RetrieveBuilder<K> {
 
     public <T> RetrieveBuilder<K> value(K key, Class<T> clazz) {
         suppliers.add(kObjectRetrieve -> kObjectRetrieve.getValue(key, clazz));
+        return this;
+    }
+
+    public <T extends YAPIONAnyType> RetrieveBuilder<K> query(Query<YAPIONDataType<?, K>, T> query) {
+        suppliers.add(query);
         return this;
     }
 
@@ -117,7 +123,7 @@ public class RetrieveBuilder<K> {
 
     @SuppressWarnings("all")
     public Retriever<K> retrieve(ObjectRetrieve<K> objectRetrieve) {
-        Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>[] supplyArray = new Function[suppliers.size()];
+        Query<YAPIONDataType<?, K>, ?>[] supplyArray = new Query[suppliers.size()];
         for (int i = 0; i < supplyArray.length; i++) {
             supplyArray[i] = suppliers.get(i);
         }

@@ -11,21 +11,22 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.api.storage;
+package yapion.hierarchy.api.retrieve;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONDataType;
+import yapion.hierarchy.api.storage.ObjectRetrieve;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class Retriever<K> {
 
-    private Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>[] suppliers;
+    private Query<YAPIONDataType<?, K>, ?>[] suppliers;
     private ObjectRetrieve<K> objectRetrieve;
 
-    Retriever(Function<ObjectRetrieve<K>, ? extends YAPIONAnyType>[] suppliers, ObjectRetrieve<K> objectRetrieve) {
+    Retriever(Query<YAPIONDataType<?, K>, ?>[] suppliers, ObjectRetrieve<K> objectRetrieve) {
         this.suppliers = suppliers;
         this.objectRetrieve = objectRetrieve;
     }
@@ -45,8 +46,8 @@ public class Retriever<K> {
     public Retriever<K> result(Consumer<RetrieveResult> resultConsumer, Runnable valueMissing) {
         YAPIONAnyType[] yapionAnyTypes = new YAPIONAnyType[suppliers.length];
         int index = 0;
-        for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
-            YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+        for (Query<YAPIONDataType<?, K>, ? extends YAPIONAnyType> supplier : suppliers) {
+            YAPIONAnyType yapionAnyType = supplier.get((YAPIONDataType<?, K>) objectRetrieve);
             if (yapionAnyType == null) {
                 valueMissing.run();
                 return this;
@@ -58,8 +59,8 @@ public class Retriever<K> {
     }
 
     public Retriever<K> hasOne(Runnable containsOneKey) {
-        for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
-            YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+        for (Query<YAPIONDataType<?, K>, ? extends YAPIONAnyType> supplier : suppliers) {
+            YAPIONAnyType yapionAnyType = supplier.get((YAPIONDataType<?, K>) objectRetrieve);
             if (yapionAnyType != null) {
                 containsOneKey.run();
                 return this;
@@ -69,8 +70,8 @@ public class Retriever<K> {
     }
 
     public Retriever<K> hasNone(Runnable containsNoKey) {
-        for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
-            YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+        for (Query<YAPIONDataType<?, K>, ? extends YAPIONAnyType> supplier : suppliers) {
+            YAPIONAnyType yapionAnyType = supplier.get((YAPIONDataType<?, K>) objectRetrieve);
             if (yapionAnyType != null) return this;
         }
         containsNoKey.run();
@@ -79,8 +80,8 @@ public class Retriever<K> {
 
     public Retriever<K> every(Consumer<RetrieveResult> resultConsumer) {
         List<YAPIONAnyType> yapionAnyTypes = new ArrayList<>();
-        for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
-            YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+        for (Query<YAPIONDataType<?, K>, ? extends YAPIONAnyType> supplier : suppliers) {
+            YAPIONAnyType yapionAnyType = supplier.get((YAPIONDataType<?, K>) objectRetrieve);
             if (yapionAnyType != null) yapionAnyTypes.add(yapionAnyType);
         }
         resultConsumer.accept(new RetrieveResult(yapionAnyTypes.toArray(new YAPIONAnyType[0])));
@@ -90,8 +91,8 @@ public class Retriever<K> {
     public RetrieveResult result() {
         YAPIONAnyType[] yapionAnyTypes = new YAPIONAnyType[suppliers.length];
         int index = 0;
-        for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
-            YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+        for (Query<YAPIONDataType<?, K>, ? extends YAPIONAnyType> supplier : suppliers) {
+            YAPIONAnyType yapionAnyType = supplier.get((YAPIONDataType<?, K>) objectRetrieve);
             if (yapionAnyType == null) {
                 return null;
             }
@@ -101,8 +102,8 @@ public class Retriever<K> {
     }
 
     public boolean hasOne() {
-        for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
-            YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+        for (Query<YAPIONDataType<?, K>, ? extends YAPIONAnyType> supplier : suppliers) {
+            YAPIONAnyType yapionAnyType = supplier.get((YAPIONDataType<?, K>) objectRetrieve);
             if (yapionAnyType != null) {
                 return true;
             }
@@ -111,8 +112,8 @@ public class Retriever<K> {
     }
 
     public boolean hasNone() {
-        for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
-            YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+        for (Query<YAPIONDataType<?, K>, ? extends YAPIONAnyType> supplier : suppliers) {
+            YAPIONAnyType yapionAnyType = supplier.get((YAPIONDataType<?, K>) objectRetrieve);
             if (yapionAnyType != null) return false;
         }
         return true;
@@ -120,8 +121,8 @@ public class Retriever<K> {
 
     public RetrieveResult every() {
         List<YAPIONAnyType> yapionAnyTypes = new ArrayList<>();
-        for (Function<ObjectRetrieve<K>, ? extends YAPIONAnyType> supplier : suppliers) {
-            YAPIONAnyType yapionAnyType = supplier.apply(objectRetrieve);
+        for (Query<YAPIONDataType<?, K>, ? extends YAPIONAnyType> supplier : suppliers) {
+            YAPIONAnyType yapionAnyType = supplier.get((YAPIONDataType<?, K>) objectRetrieve);
             if (yapionAnyType != null) yapionAnyTypes.add(yapionAnyType);
         }
         return new RetrieveResult(yapionAnyTypes.toArray(new YAPIONAnyType[0]));

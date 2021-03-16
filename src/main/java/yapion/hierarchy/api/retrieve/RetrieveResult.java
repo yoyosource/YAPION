@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.api.storage;
+package yapion.hierarchy.api.retrieve;
 
 import lombok.NonNull;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -46,16 +46,6 @@ public class RetrieveResult {
         return (T) yapionAnyTypes[index];
     }
 
-    @SuppressWarnings({"unchecked"})
-    public <T extends YAPIONAnyType> T get(int index, T t) {
-        return (T) yapionAnyTypes[index];
-    }
-
-    @SuppressWarnings({"unchecked"})
-    public <T extends YAPIONAnyType> T get(int index, Class<T> clazz) {
-        return (T) yapionAnyTypes[index];
-    }
-
     public YAPIONObject getObject(int index) {
         return get(index);
     }
@@ -74,16 +64,6 @@ public class RetrieveResult {
 
     public <T> YAPIONValue<T> getValue(int index) {
         return get(index);
-    }
-
-    @SuppressWarnings({"unchecked"})
-    public <T> YAPIONValue<T> getValue(int index, @NonNull T t) {
-        return (YAPIONValue<T>) getValue(index);
-    }
-
-    @SuppressWarnings({"unchecked"})
-    public <T> YAPIONValue<T> getValue(int index, @NonNull Class<T> t) {
-        return (YAPIONValue<T>) getValue(index);
     }
 
 }
