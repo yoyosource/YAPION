@@ -72,7 +72,7 @@ public class RetrieveBuilder<K> {
         return this;
     }
 
-    public <T extends YAPIONAnyType> RetrieveBuilder<K> query(Query<YAPIONDataType<?, K>, T> query) {
+    public RetrieveBuilder<K> query(Query<YAPIONDataType<?, K>, ?> query) {
         suppliers.add(query);
         return this;
     }
