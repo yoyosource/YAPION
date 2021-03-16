@@ -19,6 +19,7 @@ import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
@@ -31,7 +32,7 @@ import java.security.spec.ECPublicKeySpec;
 public class ECKeySpecSerializer implements KeySpecSerializer<ECPrivateKey, ECPublicKey> {
 
     @Override
-    public YAPIONObject serializePrivateKey(ECPrivateKey ecPrivateKey) throws Exception {
+    public YAPIONObject serializePrivateKey(ECPrivateKey ecPrivateKey) throws GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance(ecPrivateKey.getAlgorithm());
         ECPrivateKeySpec ecPrivateKeySpec = keyFactory.getKeySpec(ecPrivateKey, ECPrivateKeySpec.class);
 
@@ -42,7 +43,7 @@ public class ECKeySpecSerializer implements KeySpecSerializer<ECPrivateKey, ECPu
     }
 
     @Override
-    public ECPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public ECPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         BigInteger s = yapionObject.getValue("s", BigInteger.class).get();
         ECParameterSpec params = (ECParameterSpec) YAPIONDeserializer.deserialize(yapionObject.getObject("params"));
 
@@ -51,7 +52,7 @@ public class ECKeySpecSerializer implements KeySpecSerializer<ECPrivateKey, ECPu
     }
 
     @Override
-    public YAPIONObject serializePublicKey(ECPublicKey ecPublicKey) throws Exception {
+    public YAPIONObject serializePublicKey(ECPublicKey ecPublicKey) throws GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance(ecPublicKey.getAlgorithm());
         ECPublicKeySpec ecPublicKeySpec = keyFactory.getKeySpec(ecPublicKey, ECPublicKeySpec.class);
 
@@ -62,7 +63,7 @@ public class ECKeySpecSerializer implements KeySpecSerializer<ECPrivateKey, ECPu
     }
 
     @Override
-    public ECPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public ECPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         ECPoint w = (ECPoint) YAPIONDeserializer.deserialize(yapionObject.getObject("w"));
         ECParameterSpec params = (ECParameterSpec) YAPIONDeserializer.deserialize(yapionObject.getObject("params"));
 

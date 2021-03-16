@@ -17,6 +17,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.interfaces.DSAPrivateKey;
 import java.security.interfaces.DSAPublicKey;
@@ -27,7 +28,7 @@ import java.security.spec.DSAPublicKeySpec;
 public class DSAKeySpecSerializer implements KeySpecSerializer<DSAPrivateKey, DSAPublicKey> {
 
     @Override
-    public YAPIONObject serializePrivateKey(DSAPrivateKey dsaPrivateKey) throws Exception {
+    public YAPIONObject serializePrivateKey(DSAPrivateKey dsaPrivateKey) throws GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance(dsaPrivateKey.getAlgorithm());
         DSAPrivateKeySpec dsaPrivateKeySpec = keyFactory.getKeySpec(dsaPrivateKey, DSAPrivateKeySpec.class);
 
@@ -40,7 +41,7 @@ public class DSAKeySpecSerializer implements KeySpecSerializer<DSAPrivateKey, DS
     }
 
     @Override
-    public DSAPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public DSAPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         BigInteger x = yapionObject.getValue("x", BigInteger.class).get();
         BigInteger p = yapionObject.getValue("p", BigInteger.class).get();
         BigInteger q = yapionObject.getValue("q", BigInteger.class).get();
@@ -51,7 +52,7 @@ public class DSAKeySpecSerializer implements KeySpecSerializer<DSAPrivateKey, DS
     }
 
     @Override
-    public YAPIONObject serializePublicKey(DSAPublicKey dsaPublicKey) throws Exception {
+    public YAPIONObject serializePublicKey(DSAPublicKey dsaPublicKey) throws GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance(dsaPublicKey.getAlgorithm());
         DSAPublicKeySpec dsaPublicKeySpec = keyFactory.getKeySpec(dsaPublicKey, DSAPublicKeySpec.class);
 
@@ -64,7 +65,7 @@ public class DSAKeySpecSerializer implements KeySpecSerializer<DSAPrivateKey, DS
     }
 
     @Override
-    public DSAPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public DSAPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         BigInteger y = yapionObject.getValue("y", BigInteger.class).get();
         BigInteger p = yapionObject.getValue("p", BigInteger.class).get();
         BigInteger q = yapionObject.getValue("q", BigInteger.class).get();

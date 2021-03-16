@@ -26,6 +26,7 @@ import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 import yapion.serializing.serializer.object.security.internal.KeySpecSerializerProvider;
 
+import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 
 import static yapion.serializing.YAPIONSerializerFlagDefault.PRIVATE_KEY_AS_NULL;
@@ -68,7 +69,7 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
 
         try {
             yapionObject.add("privateKey", KeySpecSerializerProvider.serializePrivateKey(serializeData.object));
-        } catch (Exception e) {
+        } catch (GeneralSecurityException e) {
             throw new YAPIONSerializerException(e.getMessage(), e);
         }
         return yapionObject;
@@ -83,7 +84,7 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
 
         try {
             return KeySpecSerializerProvider.deserializePrivateKey(Class.forName(key), privateKey, algorithm);
-        } catch (Exception e) {
+        } catch (GeneralSecurityException | ClassNotFoundException e) {
             throw new YAPIONSerializerException(e.getMessage(), e);
         }
     }

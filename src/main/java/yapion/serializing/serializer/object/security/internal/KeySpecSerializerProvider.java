@@ -18,7 +18,10 @@ import yapion.hierarchy.types.YAPIONObject;
 
 import javax.crypto.interfaces.DHPrivateKey;
 import javax.crypto.interfaces.DHPublicKey;
-import java.security.*;
+import java.security.GeneralSecurityException;
+import java.security.Key;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.interfaces.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,25 +60,25 @@ public class KeySpecSerializerProvider {
         return null;
     }
 
-    public static YAPIONObject serializePrivateKey(PrivateKey privateKey) throws Exception {
+    public static YAPIONObject serializePrivateKey(PrivateKey privateKey) throws GeneralSecurityException {
         KeySpecSerializer keySpecSerializer = retrieveKeySpecSerializer(privateKey.getClass());
         if (keySpecSerializer == null) throw new YAPIONSerializerException("Unknown PrivateKey type");
         return keySpecSerializer.serializePrivateKey(privateKey);
     }
 
-    public static PrivateKey deserializePrivateKey(Class<?> clazz, YAPIONObject yapionObject, String algorithm) throws Exception {
+    public static PrivateKey deserializePrivateKey(Class<?> clazz, YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         KeySpecSerializer keySpecSerializer = retrieveKeySpecSerializer(clazz);
         if (keySpecSerializer == null) throw new YAPIONSerializerException("Unknown PrivateKey type");
         return keySpecSerializer.deserializePrivateKey(yapionObject, algorithm);
     }
 
-    public static YAPIONObject serializePublicKey(PublicKey publicKey) throws Exception {
+    public static YAPIONObject serializePublicKey(PublicKey publicKey) throws GeneralSecurityException {
         KeySpecSerializer keySpecSerializer = retrieveKeySpecSerializer(publicKey.getClass());
         if (keySpecSerializer == null) throw new YAPIONSerializerException("Unknown PrivateKey type");
         return keySpecSerializer.serializePublicKey(publicKey);
     }
 
-    public static PublicKey deserializePublicKey(Class<?> clazz, YAPIONObject yapionObject, String algorithm) throws Exception {
+    public static PublicKey deserializePublicKey(Class<?> clazz, YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         KeySpecSerializer keySpecSerializer = retrieveKeySpecSerializer(clazz);
         if (keySpecSerializer == null) throw new YAPIONSerializerException("Unknown PublicKey type");
         return keySpecSerializer.deserializePublicKey(yapionObject, algorithm);

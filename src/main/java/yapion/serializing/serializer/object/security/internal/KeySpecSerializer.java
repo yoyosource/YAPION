@@ -15,15 +15,16 @@ package yapion.serializing.serializer.object.security.internal;
 
 import yapion.hierarchy.types.YAPIONObject;
 
+import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
 public interface KeySpecSerializer<PR extends PrivateKey, PU extends PublicKey> {
 
-    YAPIONObject serializePrivateKey(PR pr) throws Exception;
-    PR deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws Exception;
+    YAPIONObject serializePrivateKey(PR pr) throws GeneralSecurityException;
+    PR deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException;
 
-    YAPIONObject serializePublicKey(PU pu)throws Exception;
-    PU deserializePublicKey(YAPIONObject yapionObject, String algorithm)throws Exception;
+    YAPIONObject serializePublicKey(PU pu)throws GeneralSecurityException;
+    PU deserializePublicKey(YAPIONObject yapionObject, String algorithm)throws GeneralSecurityException;
 
 }

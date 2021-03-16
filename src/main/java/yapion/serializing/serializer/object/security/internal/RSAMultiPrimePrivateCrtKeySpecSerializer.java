@@ -21,6 +21,7 @@ import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAMultiPrimePrivateCrtKey;
 import java.security.interfaces.RSAPublicKey;
@@ -31,7 +32,7 @@ import java.security.spec.RSAOtherPrimeInfo;
 public class RSAMultiPrimePrivateCrtKeySpecSerializer implements KeySpecSerializer<RSAMultiPrimePrivateCrtKey, RSAPublicKey> {
 
     @Override
-    public YAPIONObject serializePrivateKey(RSAMultiPrimePrivateCrtKey rsaMultiPrimePrivateCrtKey) throws Exception {
+    public YAPIONObject serializePrivateKey(RSAMultiPrimePrivateCrtKey rsaMultiPrimePrivateCrtKey) throws GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance(rsaMultiPrimePrivateCrtKey.getAlgorithm());
         RSAMultiPrimePrivateCrtKeySpec rsaMultiPrimePrivateCrtKeySpec = keyFactory.getKeySpec(rsaMultiPrimePrivateCrtKey, RSAMultiPrimePrivateCrtKeySpec.class);
 
@@ -53,7 +54,7 @@ public class RSAMultiPrimePrivateCrtKeySpecSerializer implements KeySpecSerializ
     }
 
     @Override
-    public RSAMultiPrimePrivateCrtKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public RSAMultiPrimePrivateCrtKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         BigInteger modulus = yapionObject.getValue("modulus", BigInteger.class).get();
         BigInteger publicExponent = yapionObject.getValue("publicExponent", BigInteger.class).get();
         BigInteger privateExponent = yapionObject.getValue("privateExponent", BigInteger.class).get();
@@ -75,12 +76,12 @@ public class RSAMultiPrimePrivateCrtKeySpecSerializer implements KeySpecSerializ
     }
 
     @Override
-    public YAPIONObject serializePublicKey(RSAPublicKey rsaPublicKey) throws Exception {
+    public YAPIONObject serializePublicKey(RSAPublicKey rsaPublicKey) throws GeneralSecurityException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public RSAPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public RSAPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         throw new UnsupportedOperationException();
     }
 

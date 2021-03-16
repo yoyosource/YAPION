@@ -22,6 +22,7 @@ import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 import yapion.serializing.serializer.object.security.internal.KeySpecSerializerProvider;
 
+import java.security.GeneralSecurityException;
 import java.security.PublicKey;
 
 import static yapion.utils.IdentifierUtils.KEY_IDENTIFIER;
@@ -49,7 +50,7 @@ public class PublicKeySerializer implements InternalSerializer<PublicKey> {
 
         try {
             yapionObject.add("publicKey", KeySpecSerializerProvider.serializePublicKey(serializeData.object));
-        } catch (Exception e) {
+        } catch (GeneralSecurityException e) {
             throw new YAPIONSerializerException(e.getMessage(), e);
         }
         return yapionObject;
@@ -64,7 +65,7 @@ public class PublicKeySerializer implements InternalSerializer<PublicKey> {
 
         try {
             return KeySpecSerializerProvider.deserializePublicKey(Class.forName(key), publicKey, algorithm);
-        } catch (Exception e) {
+        } catch (GeneralSecurityException | ClassNotFoundException e) {
             throw new YAPIONSerializerException(e.getMessage(), e);
         }
     }

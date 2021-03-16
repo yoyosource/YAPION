@@ -17,6 +17,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.interfaces.RSAPublicKey;
@@ -26,7 +27,7 @@ import java.security.spec.RSAPrivateCrtKeySpec;
 public class RSAPrivateCrtKeySpecSerializer implements KeySpecSerializer<RSAPrivateCrtKey, RSAPublicKey> {
 
     @Override
-    public YAPIONObject serializePrivateKey(RSAPrivateCrtKey rsaPrivateCrtKey) throws Exception {
+    public YAPIONObject serializePrivateKey(RSAPrivateCrtKey rsaPrivateCrtKey) throws GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance(rsaPrivateCrtKey.getAlgorithm());
         RSAPrivateCrtKeySpec rsaPrivateCrtKeySpec = keyFactory.getKeySpec(rsaPrivateCrtKey, RSAPrivateCrtKeySpec.class);
 
@@ -43,7 +44,7 @@ public class RSAPrivateCrtKeySpecSerializer implements KeySpecSerializer<RSAPriv
     }
 
     @Override
-    public RSAPrivateCrtKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public RSAPrivateCrtKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         BigInteger modulus = yapionObject.getValue("modulus", BigInteger.class).get();
         BigInteger publicExponent = yapionObject.getValue("publicExponent", BigInteger.class).get();
         BigInteger privateExponent = yapionObject.getValue("privateExponent", BigInteger.class).get();
@@ -58,12 +59,12 @@ public class RSAPrivateCrtKeySpecSerializer implements KeySpecSerializer<RSAPriv
     }
 
     @Override
-    public YAPIONObject serializePublicKey(RSAPublicKey rsaPublicKey) throws Exception {
+    public YAPIONObject serializePublicKey(RSAPublicKey rsaPublicKey) throws GeneralSecurityException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public RSAPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public RSAPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         throw new UnsupportedOperationException();
     }
 

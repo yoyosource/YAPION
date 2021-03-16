@@ -21,13 +21,16 @@ import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHPrivateKeySpec;
 import javax.crypto.spec.DHPublicKeySpec;
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @SerializerImplementation(since = "0.23.0")
 public class DHKeySpecSerializer implements KeySpecSerializer<DHPrivateKey, DHPublicKey> {
 
     @Override
-    public YAPIONObject serializePrivateKey(DHPrivateKey dhPrivateKey) throws Exception {
+    public YAPIONObject serializePrivateKey(DHPrivateKey dhPrivateKey) throws GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance(dhPrivateKey.getAlgorithm());
         DHPrivateKeySpec dhPrivateKeySpec = keyFactory.getKeySpec(dhPrivateKey, DHPrivateKeySpec.class);
 
@@ -39,7 +42,7 @@ public class DHKeySpecSerializer implements KeySpecSerializer<DHPrivateKey, DHPu
     }
 
     @Override
-    public DHPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public DHPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         BigInteger x = yapionObject.getValue("x", BigInteger.class).get();
         BigInteger p = yapionObject.getValue("p", BigInteger.class).get();
         BigInteger g = yapionObject.getValue("g", BigInteger.class).get();
@@ -49,7 +52,7 @@ public class DHKeySpecSerializer implements KeySpecSerializer<DHPrivateKey, DHPu
     }
 
     @Override
-    public YAPIONObject serializePublicKey(DHPublicKey dhPublicKey) throws Exception {
+    public YAPIONObject serializePublicKey(DHPublicKey dhPublicKey) throws GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance(dhPublicKey.getAlgorithm());
         DHPublicKeySpec dhPublicKeySpec = keyFactory.getKeySpec(dhPublicKey, DHPublicKeySpec.class);
 
@@ -61,7 +64,7 @@ public class DHKeySpecSerializer implements KeySpecSerializer<DHPrivateKey, DHPu
     }
 
     @Override
-    public DHPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public DHPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         BigInteger y = yapionObject.getValue("y", BigInteger.class).get();
         BigInteger p = yapionObject.getValue("p", BigInteger.class).get();
         BigInteger g = yapionObject.getValue("g", BigInteger.class).get();

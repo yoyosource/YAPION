@@ -17,6 +17,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -27,7 +28,7 @@ import java.security.spec.RSAPublicKeySpec;
 public class RSAKeySpecSerializer implements KeySpecSerializer<RSAPrivateKey, RSAPublicKey> {
 
     @Override
-    public YAPIONObject serializePrivateKey(RSAPrivateKey rsaPrivateKey) throws Exception {
+    public YAPIONObject serializePrivateKey(RSAPrivateKey rsaPrivateKey) throws GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance(rsaPrivateKey.getAlgorithm());
         RSAPrivateKeySpec rsaPrivateKeySpec = keyFactory.getKeySpec(rsaPrivateKey, RSAPrivateKeySpec.class);
 
@@ -38,7 +39,7 @@ public class RSAKeySpecSerializer implements KeySpecSerializer<RSAPrivateKey, RS
     }
 
     @Override
-    public RSAPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public RSAPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         BigInteger modulus = yapionObject.getValue("modulus", BigInteger.class).get();
         BigInteger privateExponent = yapionObject.getValue("privateExponent", BigInteger.class).get();
 
@@ -47,7 +48,7 @@ public class RSAKeySpecSerializer implements KeySpecSerializer<RSAPrivateKey, RS
     }
 
     @Override
-    public YAPIONObject serializePublicKey(RSAPublicKey rsaPublicKey) throws Exception {
+    public YAPIONObject serializePublicKey(RSAPublicKey rsaPublicKey) throws GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance(rsaPublicKey.getAlgorithm());
         RSAPublicKeySpec rsaPublicKeySpec = keyFactory.getKeySpec(rsaPublicKey, RSAPublicKeySpec.class);
 
@@ -58,7 +59,7 @@ public class RSAKeySpecSerializer implements KeySpecSerializer<RSAPrivateKey, RS
     }
 
     @Override
-    public RSAPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws Exception {
+    public RSAPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         BigInteger modulus = yapionObject.getValue("modulus", BigInteger.class).get();
         BigInteger publicExponent = yapionObject.getValue("publicExponent", BigInteger.class).get();
 
