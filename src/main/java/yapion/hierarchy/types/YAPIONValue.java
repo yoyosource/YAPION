@@ -102,11 +102,6 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return getType().getReferenceValue() ^ valueHandler.referenceValue(referenceFunction);
     }
 
-    @Override
-    public YAPIONAnyType copy() {
-        return new YAPIONValue<>(value);
-    }
-
     void toStrippedYAPION(AbstractOutput abstractOutput) {
         abstractOutput.consume(valueHandler.output(value));
     }

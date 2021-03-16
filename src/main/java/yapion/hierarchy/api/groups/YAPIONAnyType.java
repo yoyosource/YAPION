@@ -18,7 +18,9 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.*;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONPath;
+import yapion.parser.YAPIONParser;
 import yapion.utils.ReferenceFunction;
 
 import java.util.Optional;
@@ -66,12 +68,8 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         throw new YAPIONException();
     }
 
-    /**
-     * Optional API.
-     */
-    @OptionalAPI
     public YAPIONAnyType copy() {
-        throw new UnsupportedOperationException();
+        return YAPIONParser.parse("{" + toYAPION(new StringOutput()).getResult() + "}").getYAPIONAnyType("");
     }
 
     // Depth System / Pretty YAPION String
