@@ -31,7 +31,7 @@ echo "Creating new tag with name 'V$version'"
 git tag "V$version"
 
 echo "Should this commit be pushed? [Y/n]"
-read answer
+read -r answer
 if [ "$answer" == "${answer#[Yy]}" ]; then
   echo "Use 'git push' and 'git push --tags' to manually push this to origin."
   exit
