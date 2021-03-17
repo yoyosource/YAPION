@@ -16,6 +16,9 @@ package yapion.hierarchy.api.retrieve;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
+import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONMap;
+import yapion.hierarchy.types.YAPIONObject;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -40,6 +43,18 @@ public class RetrieveBuilder<K> {
 
     public static RetrieveBuilder<Integer> ArrayRetrieveBuilder() {
         return new RetrieveBuilder<>();
+    }
+
+    public static Query<YAPIONObject, YAPIONObject> ObjectQuery() {
+        return input -> input;
+    }
+
+    public static Query<YAPIONMap, YAPIONMap> MapQuery() {
+        return input -> input;
+    }
+
+    public static Query<YAPIONArray, YAPIONArray> ArrayQuery() {
+        return input -> input;
     }
 
     public RetrieveBuilder<K> object(K key) {
