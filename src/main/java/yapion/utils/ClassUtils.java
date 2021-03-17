@@ -93,4 +93,30 @@ public class ClassUtils {
         }
     }
 
+    public static Class<?> getBoxed(Class<?> clazz) {
+        if (clazz == void.class) return Void.class;
+        if (clazz == boolean.class) return Boolean.class;
+        if (clazz == byte.class) return Byte.class;
+        if (clazz == short.class) return Short.class;
+        if (clazz == int.class) return Integer.class;
+        if (clazz == long.class) return Long.class;
+        if (clazz == char.class) return Character.class;
+        if (clazz == float.class) return Float.class;
+        if (clazz == double.class) return Double.class;
+        return clazz;
+    }
+
+    public static boolean isPrimitive(Class<?> clazz) {
+        if (clazz == void.class) return true;
+        if (clazz == boolean.class) return true;
+        if (clazz == byte.class) return true;
+        if (clazz == short.class) return true;
+        if (clazz == int.class) return true;
+        if (clazz == long.class) return true;
+        if (clazz == char.class) return true;
+        if (clazz == float.class) return true;
+        if (clazz == double.class) return true;
+        return false;
+    }
+
 }

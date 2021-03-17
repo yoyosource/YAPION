@@ -17,6 +17,7 @@ import lombok.NonNull;
 import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
+import yapion.utils.ClassUtils;
 
 import java.util.function.Consumer;
 
@@ -136,6 +137,9 @@ public interface ObjectRetrieve<K> {
 
     @SuppressWarnings("unchecked")
     default <T> YAPIONValue<T> getValue(@NonNull K key, Class<T> type) {
+        if (ClassUtils.isPrimitive(type)) {
+            return (YAPIONValue<T>) getValue(key, ClassUtils.getBoxed(type));
+        }
         if (!YAPIONValue.validType(type)) {
             throw new YAPIONRetrieveException();
         }
@@ -152,6 +156,13 @@ public interface ObjectRetrieve<K> {
 
     @SuppressWarnings("unchecked")
     default <T> YAPIONValue<T> getValueOrDefault(@NonNull K key, Class<T> type, T defaultValue) {
+        if (ClassUtils.isPrimitive(type)) {
+            YAPIONValue<?> yapionValue = getValue(key, ClassUtils.getBoxed(type));
+            if (yapionValue == null) {
+                return new YAPIONValue<>(defaultValue);
+            }
+            return (YAPIONValue<T>) yapionValue;
+        }
         if (!YAPIONValue.validType(type)) {
             throw new YAPIONRetrieveException();
         }
@@ -168,6 +179,14 @@ public interface ObjectRetrieve<K> {
 
     @SuppressWarnings("unchecked")
     default <T> void getValue(@NonNull K key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
+        if (ClassUtils.isPrimitive(type)) {
+            YAPIONValue<?> yapionValue = getValue(key, ClassUtils.getBoxed(type));
+            if (yapionValue == null) {
+                noValue.run();
+            }
+            valueConsumer.accept((YAPIONValue<T>) yapionValue);
+            return;
+        }
         if (!YAPIONValue.validType(type)) {
             throw new YAPIONRetrieveException();
         }
