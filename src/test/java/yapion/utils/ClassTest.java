@@ -18,6 +18,7 @@ import org.junit.Test;
 import java.util.HashMap;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.is;
 
 public class ClassTest {
@@ -42,6 +43,18 @@ public class ClassTest {
     @Test
     public void testConversionToPrimitive() {
         assertThat(ClassUtils.getPrimitive("java.lang.Boolean"), is("boolean"));
+    }
+
+    @Test
+    public void testIfPrimitive() {
+        assertThat(ClassUtils.isPrimitive(boolean.class), is(true));
+        assertThat(ClassUtils.isPrimitive(Boolean.class), is(false));
+    }
+
+    @Test
+    public void testClassConversionToBoxed() {
+        assertThat(ClassUtils.getBoxed(boolean.class), is(Boolean.class));
+        assertThat(ClassUtils.getBoxed(Boolean.class), is(Boolean.class));
     }
 
 }
