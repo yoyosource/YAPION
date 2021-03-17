@@ -17,7 +17,6 @@ import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import java.math.BigInteger;
-import java.util.Optional;
 
 public class WholeNumberHandler {
 

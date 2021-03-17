@@ -16,8 +16,6 @@ package yapion.hierarchy.types.value;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
-import java.util.Optional;
-
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
 import static yapion.hierarchy.types.value.ValueUtils.charToUTFEscape;
 

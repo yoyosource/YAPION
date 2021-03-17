@@ -16,8 +16,6 @@ package yapion.hierarchy.types.value;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
-import java.util.Optional;
-
 public interface ValueHandler<T> {
 
     String output(T t);
