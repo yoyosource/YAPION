@@ -11,31 +11,31 @@
  * limitations under the License.
  */
 
-package yapion.api.object;
+package yapion.api.value;
 
 import org.junit.Test;
-import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONType;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.utils.ReferenceIDUtils;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class ObjectTypeTest {
+public class ValueTypeTest {
 
     @Test
     public void testTypeValue() {
-        assertThat(new YAPIONObject().getType(), is(YAPIONType.OBJECT));
+        assertThat(new YAPIONValue<>("").getType(), is(YAPIONType.VALUE));
     }
 
     @Test
     public void testReferenceValue() {
-        assertThat(new YAPIONObject().referenceValue(), is(9163003314768395257L));
+        assertThat(new YAPIONValue<>("").referenceValue(), is(6085781299688078393L));
     }
 
     @Test
     public void testReferenceValueSpecificFunction() {
-        assertThat(new YAPIONObject().referenceValue(ReferenceIDUtils.REFERENCE_FUNCTION), is(9163003314768395257L));
+        assertThat(new YAPIONValue<>("").referenceValue(ReferenceIDUtils.REFERENCE_FUNCTION), is(6085781299688078393L));
     }
 
 }
