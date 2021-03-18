@@ -15,6 +15,7 @@ package yapion.api.object;
 
 import org.junit.Test;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.output.StringPrettifiedOutput;
 import yapion.hierarchy.types.YAPIONObject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,6 +36,36 @@ public class ObjectOutputTest {
     @Test
     public void testLossyJSON() {
         assertThat(new YAPIONObject().toJSONLossy(new StringOutput()).getResult(), is("{}"));
+    }
+
+    @Test
+    public void testPrettifiedYAPION() {
+        assertThat(new YAPIONObject().toYAPION(new StringPrettifiedOutput()).getResult(), is("{}"));
+    }
+
+    @Test
+    public void testPrettifiedJSON() {
+        assertThat(new YAPIONObject().toJSON(new StringPrettifiedOutput()).getResult(), is("{}"));
+    }
+
+    @Test
+    public void testPrettifiedLossyJSON() {
+        assertThat(new YAPIONObject().toJSONLossy(new StringPrettifiedOutput()).getResult(), is("{}"));
+    }
+
+    @Test
+    public void testPrettifiedYAPIONDepth() {
+        assertThat(new YAPIONObject().add("", new YAPIONObject()).toYAPION(new StringPrettifiedOutput()).getResult(), is("{\n  {}\n}"));
+    }
+
+    @Test
+    public void testPrettifiedJSONDepth() {
+        assertThat(new YAPIONObject().add("", new YAPIONObject()).toJSON(new StringPrettifiedOutput()).getResult(), is("{\n  \"\":{}\n}"));
+    }
+
+    @Test
+    public void testPrettifiedLossyJSONDepth() {
+        assertThat(new YAPIONObject().add("", new YAPIONObject()).toJSONLossy(new StringPrettifiedOutput()).getResult(), is("{\n  \"\":{}\n}"));
     }
 
 }

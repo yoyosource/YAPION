@@ -15,8 +15,8 @@ package yapion.api.array;
 
 import org.junit.Test;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.output.StringPrettifiedOutput;
 import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONObject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -36,6 +36,36 @@ public class ArrayOutputTest {
     @Test
     public void testLossyJSON() {
         assertThat(new YAPIONArray().toJSONLossy(new StringOutput()).getResult(), is("[]"));
+    }
+
+    @Test
+    public void testPrettifiedYAPION() {
+        assertThat(new YAPIONArray().toYAPION(new StringPrettifiedOutput()).getResult(), is("[]"));
+    }
+
+    @Test
+    public void testPrettifiedJSON() {
+        assertThat(new YAPIONArray().toJSON(new StringPrettifiedOutput()).getResult(), is("[]"));
+    }
+
+    @Test
+    public void testPrettifiedLossyJSON() {
+        assertThat(new YAPIONArray().toJSONLossy(new StringPrettifiedOutput()).getResult(), is("[]"));
+    }
+
+    @Test
+    public void testPrettifiedYAPIONDepth() {
+        assertThat(new YAPIONArray().add(new YAPIONArray()).toYAPION(new StringPrettifiedOutput()).getResult(), is("[\n  []\n]"));
+    }
+
+    @Test
+    public void testPrettifiedJSONDepth() {
+        assertThat(new YAPIONArray().add(new YAPIONArray()).toJSON(new StringPrettifiedOutput()).getResult(), is("[\n  []\n]"));
+    }
+
+    @Test
+    public void testPrettifiedLossyJSONDepth() {
+        assertThat(new YAPIONArray().add(new YAPIONArray()).toJSONLossy(new StringPrettifiedOutput()).getResult(), is("[\n  []\n]"));
     }
 
 }
