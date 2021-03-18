@@ -237,6 +237,7 @@ public interface ObjectRetrieve<K> {
     }
 
     @SuppressWarnings("unchecked")
+    @Deprecated
     default <T> void getValue(@NonNull K key, T type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
         if (!YAPIONValue.validType(type)) {
             throw new YAPIONRetrieveException();
