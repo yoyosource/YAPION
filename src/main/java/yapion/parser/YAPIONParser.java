@@ -16,6 +16,7 @@ package yapion.parser;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import yapion.annotations.DeprecationInfo;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.output.AbstractOutput;
@@ -52,6 +53,7 @@ public final class YAPIONParser {
      * @deprecated since 0.23.0
      */
     @Deprecated
+    @DeprecationInfo(since = "0.23.0")
     public static YAPIONObject parseOld(String s) {
         return new YAPIONParser(s).setReferenceFunction(ReferenceIDUtils.REFERENCE_FUNCTION_OLD).parse().result();
     }
@@ -186,6 +188,7 @@ public final class YAPIONParser {
      * @deprecated since 0.23.0
      */
     @Deprecated
+    @DeprecationInfo(since = "0.23.0")
     public static YAPIONObject parseOld(InputStream inputStream) {
         return new YAPIONParser(inputStream).setReferenceFunction(ReferenceIDUtils.REFERENCE_FUNCTION_OLD).parse().result();
     }

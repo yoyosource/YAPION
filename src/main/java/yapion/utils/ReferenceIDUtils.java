@@ -13,6 +13,7 @@
 
 package yapion.utils;
 
+import yapion.annotations.DeprecationInfo;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
@@ -97,6 +98,7 @@ public class ReferenceIDUtils {
     }
 
     @Deprecated
+    @DeprecationInfo(since = "0.23.0")
     private static long referenceOld(String s) {
         if (referenceIDOldMap.containsKey(s)) {
             return referenceIDOldMap.get(s);

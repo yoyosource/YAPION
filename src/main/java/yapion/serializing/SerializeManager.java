@@ -15,6 +15,7 @@ package yapion.serializing;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import yapion.annotations.DeprecationInfo;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
@@ -271,6 +272,7 @@ public class SerializeManager {
      */
     @SuppressWarnings({"java:S100"})
     @Deprecated
+    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#SerializerObject")
     public static <T> SerializerObject<T> SerializerObject(Class<T> clazz, SerializeManagerUtils.SerializationGetter<T, YAPIONObject> serializationGetter, SerializeManagerUtils.DeserializationGetter<T, YAPIONObject> deserializationGetter) {
         return SerializeManagerUtils.SerializerObject(clazz, serializationGetter, deserializationGetter);
     }
@@ -280,6 +282,7 @@ public class SerializeManager {
      */
     @SuppressWarnings({"java:S100"})
     @Deprecated
+    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#SerializerMap")
     public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(Class<T> clazz, SerializeManagerUtils.SerializationGetter<T, YAPIONMap> serializationGetter, SerializeManagerUtils.DeserializationGetter<T, YAPIONMap> deserializationGetter) {
         return SerializeManagerUtils.SerializerMap(clazz, serializationGetter, deserializationGetter);
     }
@@ -289,6 +292,7 @@ public class SerializeManager {
      */
     @SuppressWarnings({"java:S100"})
     @Deprecated
+    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#SerializerList")
     public static <T extends List<?>> SerializerList<T> SerializerList(Class<T> clazz, SerializeManagerUtils.SerializationGetter<T, YAPIONArray> serializationGetter, SerializeManagerUtils.DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return SerializeManagerUtils.SerializerList(clazz, serializationGetter, deserializationGetter);
     }
@@ -298,6 +302,7 @@ public class SerializeManager {
      */
     @SuppressWarnings({"java:S100"})
     @Deprecated
+    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#SerializerQueue")
     public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(Class<T> clazz, SerializeManagerUtils.SerializationGetter<T, YAPIONArray> serializationGetter, SerializeManagerUtils.DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return SerializeManagerUtils.SerializerQueue(clazz, serializationGetter, deserializationGetter);
     }
@@ -307,6 +312,7 @@ public class SerializeManager {
      */
     @SuppressWarnings({"java:S100"})
     @Deprecated
+    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#SerializerSet")
     public static <T extends Set<?>> SerializerSet<T> SerializerSet(Class<T> clazz, SerializeManagerUtils.SerializationGetter<T, YAPIONArray> serializationGetter, SerializeManagerUtils.DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return SerializeManagerUtils.SerializerSet(clazz, serializationGetter, deserializationGetter);
     }
@@ -316,6 +322,7 @@ public class SerializeManager {
      */
     @SuppressWarnings({"java:S100"})
     @Deprecated
+    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#InstanceFactory")
     public static <T> InstanceFactory<T> InstanceFactory(Class<T> clazz, SerializeManagerUtils.InstanceGetter<T> instanceGetter) {
         return SerializeManagerUtils.InstanceFactory(clazz, instanceGetter);
     }

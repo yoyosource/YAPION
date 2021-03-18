@@ -14,6 +14,7 @@
 package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
+import yapion.annotations.DeprecationInfo;
 import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
@@ -238,6 +239,7 @@ public interface ObjectRetrieve<K> {
 
     @SuppressWarnings("unchecked")
     @Deprecated
+    @DeprecationInfo(since = "0.25.0")
     default <T> void getValue(@NonNull K key, T type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
         if (!YAPIONValue.validType(type)) {
             throw new YAPIONRetrieveException();
