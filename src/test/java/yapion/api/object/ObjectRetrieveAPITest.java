@@ -297,7 +297,6 @@ public class ObjectRetrieveAPITest {
     @Test(expected = SecurityException.class)
     public void testGetValueNullWithConsumer() {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add("", "");
         yapionObject.getValue("", String.class, new Consumer<YAPIONValue<String>>() {
             @Override
             public void accept(YAPIONValue<String> yapionValue) {
@@ -313,20 +312,20 @@ public class ObjectRetrieveAPITest {
     public void testGetValueByValue() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("", "");
-        assertThat(yapionObject.getValue("", ""), is(""));
+        assertThat(yapionObject.getValue("", "").get(), is(""));
     }
 
     @Test
     public void testGetValueOrDefaultByValue() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("", "");
-        assertThat(yapionObject.getValueOrDefault("", "Hello World"), is(""));
+        assertThat(yapionObject.getValueOrDefault("", "Hello World").get(), is(""));
     }
 
     @Test
     public void testGetValueNullOrDefaultByValue() {
         YAPIONObject yapionObject = new YAPIONObject();
-        assertThat(yapionObject.getValueOrDefault("", "Hello World"), is("Hello World"));
+        assertThat(yapionObject.getValueOrDefault("", "Hello World").get(), is("Hello World"));
     }
 
     @Test
