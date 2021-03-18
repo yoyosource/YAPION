@@ -11,30 +11,30 @@
  * limitations under the License.
  */
 
-package yapion.api.object;
+package yapion.api.map;
 
 import org.junit.Test;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONMap;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class ObjectOutputTest {
+public class MapOutputTest {
 
     @Test
     public void testYAPION() {
-        assertThat(new YAPIONObject().toYAPION(new StringOutput()).getResult(), is("{}"));
+        assertThat(new YAPIONMap().toYAPION(new StringOutput()).getResult(), is("<>"));
     }
 
     @Test
     public void testJSON() {
-        assertThat(new YAPIONObject().toJSON(new StringOutput()).getResult(), is("{}"));
+        assertThat(new YAPIONMap().toJSON(new StringOutput()).getResult(), is("{\"@mapping\":[]}"));
     }
 
     @Test
     public void testLossyJSON() {
-        assertThat(new YAPIONObject().toJSONLossy(new StringOutput()).getResult(), is("{}"));
+        assertThat(new YAPIONMap().toJSONLossy(new StringOutput()).getResult(), is("{\"@mapping\":[]}"));
     }
 
 }

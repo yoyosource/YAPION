@@ -11,30 +11,31 @@
  * limitations under the License.
  */
 
-package yapion.api.object;
+package yapion.api.array;
 
 import org.junit.Test;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class ObjectOutputTest {
+public class ArrayOutputTest {
 
     @Test
     public void testYAPION() {
-        assertThat(new YAPIONObject().toYAPION(new StringOutput()).getResult(), is("{}"));
+        assertThat(new YAPIONArray().toYAPION(new StringOutput()).getResult(), is("[]"));
     }
 
     @Test
     public void testJSON() {
-        assertThat(new YAPIONObject().toJSON(new StringOutput()).getResult(), is("{}"));
+        assertThat(new YAPIONArray().toJSON(new StringOutput()).getResult(), is("[]"));
     }
 
     @Test
     public void testLossyJSON() {
-        assertThat(new YAPIONObject().toJSONLossy(new StringOutput()).getResult(), is("{}"));
+        assertThat(new YAPIONArray().toJSONLossy(new StringOutput()).getResult(), is("[]"));
     }
 
 }

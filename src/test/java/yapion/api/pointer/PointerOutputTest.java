@@ -11,30 +11,30 @@
  * limitations under the License.
  */
 
-package yapion.api.object;
+package yapion.api.pointer;
 
 import org.junit.Test;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONPointer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class ObjectOutputTest {
+public class PointerOutputTest {
 
     @Test
     public void testYAPION() {
-        assertThat(new YAPIONObject().toYAPION(new StringOutput()).getResult(), is("{}"));
+        assertThat(new YAPIONPointer("0000000000000000").toYAPION(new StringOutput()).getResult(), is("->0000000000000000"));
     }
 
     @Test
     public void testJSON() {
-        assertThat(new YAPIONObject().toJSON(new StringOutput()).getResult(), is("{}"));
+        assertThat(new YAPIONPointer("0000000000000000").toJSON(new StringOutput()).getResult(), is("{\"@pointer\":\"0000000000000000\"}"));
     }
 
     @Test
     public void testLossyJSON() {
-        assertThat(new YAPIONObject().toJSONLossy(new StringOutput()).getResult(), is("{}"));
+        assertThat(new YAPIONPointer("0000000000000000").toJSONLossy(new StringOutput()).getResult(), is("{\"@pointer\":\"0000000000000000\"}"));
     }
 
 }
