@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.api;
 
+import lombok.EqualsAndHashCode;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
 import java.util.Optional;
@@ -23,6 +24,7 @@ public interface ObjectSearch {
 
     Optional<YAPIONSearchResult<?>> get(String key);
 
+    @EqualsAndHashCode
     class YAPIONSearchResult<T extends YAPIONAnyType> {
 
         public final T value;

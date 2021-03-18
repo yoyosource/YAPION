@@ -11,10 +11,11 @@
  * limitations under the License.
  */
 
-package yapion.api.object;
+package yapion.api.array;
 
 import org.junit.Test;
 import yapion.hierarchy.api.ObjectSearch;
+import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 
 import java.util.Optional;
@@ -22,32 +23,32 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class ObjectSearchTest {
+public class ArraySearchTest {
 
     @Test
     public void getOne() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        assertThat(yapionObject.get(""), is(Optional.empty()));
+        YAPIONArray yapionArray = new YAPIONArray();
+        assertThat(yapionArray.get("0"), is(Optional.empty()));
     }
 
     @Test
     public void getOneValid() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add("", new YAPIONObject());
-        assertThat(yapionObject.get(""), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONObject()))));
+        YAPIONArray yapionArray = new YAPIONArray();
+        yapionArray.add(new YAPIONArray());
+        assertThat(yapionArray.get("0"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONArray()))));
     }
 
     @Test
     public void getDepth() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        assertThat(yapionObject.get("", ""), is(Optional.empty()));
+        YAPIONArray yapionArray = new YAPIONArray();
+        assertThat(yapionArray.get("0", "0"), is(Optional.empty()));
     }
 
     @Test
     public void getDepthValid() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add("", new YAPIONObject().add("", new YAPIONObject()));
-        assertThat(yapionObject.get("", ""), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONObject()))));
+        YAPIONArray yapionArray = new YAPIONArray();
+        yapionArray.add(new YAPIONArray().add(new YAPIONArray()));
+        assertThat(yapionArray.get("0", "0"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONArray()))));
     }
 
 }

@@ -11,43 +11,45 @@
  * limitations under the License.
  */
 
-package yapion.api.object;
+package yapion.api.map;
 
 import org.junit.Test;
 import yapion.hierarchy.api.ObjectSearch;
+import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
 
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class ObjectSearchTest {
+public class MapSearchTest {
 
     @Test
     public void getOne() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        assertThat(yapionObject.get(""), is(Optional.empty()));
+        YAPIONMap yapionMap = new YAPIONMap();
+        assertThat(yapionMap.get(""), is(Optional.empty()));
     }
 
     @Test
     public void getOneValid() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add("", new YAPIONObject());
-        assertThat(yapionObject.get(""), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONObject()))));
+        YAPIONMap yapionMap = new YAPIONMap();
+        yapionMap.add(new YAPIONValue<>(""), new YAPIONMap());
+        assertThat(yapionMap.get("()"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONMap()))));
     }
 
     @Test
     public void getDepth() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        assertThat(yapionObject.get("", ""), is(Optional.empty()));
+        YAPIONMap yapionMap = new YAPIONMap();
+        assertThat(yapionMap.get("", ""), is(Optional.empty()));
     }
 
     @Test
     public void getDepthValid() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add("", new YAPIONObject().add("", new YAPIONObject()));
-        assertThat(yapionObject.get("", ""), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONObject()))));
+        YAPIONMap yapionMap = new YAPIONMap();
+        yapionMap.add(new YAPIONValue<>(""), new YAPIONMap().add(new YAPIONValue<>(""), new YAPIONMap()));
+        assertThat(yapionMap.get("()", "()"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONMap()))));
     }
 
 }
