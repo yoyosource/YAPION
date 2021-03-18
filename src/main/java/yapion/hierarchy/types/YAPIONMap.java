@@ -153,7 +153,7 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return false;
         if (!(yapionAnyType instanceof YAPIONValue)) return false;
-        return ((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getTypeName());
+        return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
     }
 
     public YAPIONAnyType getYAPIONAnyType(@NonNull YAPIONAnyType key) {

@@ -211,6 +211,10 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return type;
     }
 
+    public boolean isValidCastType(String type) {
+        return this.type.equalsIgnoreCase(type) || this.type.equalsIgnoreCase("null");
+    }
+
     @Override
     public String toString() {
         StringOutput stringOutput = new StringOutput();

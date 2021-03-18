@@ -152,7 +152,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return false;
         if (!(yapionAnyType instanceof YAPIONValue)) return false;
-        return ((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getTypeName());
+        return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
     }
 
     public YAPIONAnyType getYAPIONAnyType(@NonNull Integer key) {

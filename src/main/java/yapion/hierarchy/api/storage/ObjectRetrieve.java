@@ -148,7 +148,7 @@ public interface ObjectRetrieve<K> {
         if (!(yapionAnyType instanceof YAPIONValue)) {
             return null;
         }
-        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getTypeName())) {
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName())) {
             return null;
         }
         return (YAPIONValue<T>) yapionAnyType;
@@ -167,11 +167,11 @@ public interface ObjectRetrieve<K> {
             throw new YAPIONRetrieveException();
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) return null;
+        if (yapionAnyType == null) return new YAPIONValue<>(defaultValue);
         if (!(yapionAnyType instanceof YAPIONValue)) {
             return new YAPIONValue<>(defaultValue);
         }
-        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getTypeName())) {
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName())) {
             return new YAPIONValue<>(defaultValue);
         }
         return (YAPIONValue<T>) yapionAnyType;
@@ -198,7 +198,7 @@ public interface ObjectRetrieve<K> {
         if (!(yapionAnyType instanceof YAPIONValue)) {
             return;
         }
-        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getTypeName())) {
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName())) {
             return;
         }
         valueConsumer.accept((YAPIONValue<T>) yapionAnyType);
@@ -214,7 +214,7 @@ public interface ObjectRetrieve<K> {
         if (!(yapionAnyType instanceof YAPIONValue)) {
             return null;
         }
-        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getClass().getTypeName())) {
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getClass().getTypeName())) {
             return null;
         }
         return (YAPIONValue<T>) yapionAnyType;
@@ -226,11 +226,11 @@ public interface ObjectRetrieve<K> {
             throw new YAPIONRetrieveException();
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) return null;
+        if (yapionAnyType == null) return new YAPIONValue<>(defaultValue);
         if (!(yapionAnyType instanceof YAPIONValue)) {
             return new YAPIONValue<>(defaultValue);
         }
-        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(defaultValue.getClass().getTypeName())) {
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(defaultValue.getClass().getTypeName())) {
             return new YAPIONValue<>(defaultValue);
         }
         return (YAPIONValue<T>) yapionAnyType;
@@ -249,7 +249,7 @@ public interface ObjectRetrieve<K> {
         if (!(yapionAnyType instanceof YAPIONValue)) {
             return;
         }
-        if (!((YAPIONValue) yapionAnyType).getValueType().equalsIgnoreCase(type.getClass().getTypeName())) {
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getClass().getTypeName())) {
             return;
         }
         valueConsumer.accept((YAPIONValue<T>) yapionAnyType);
