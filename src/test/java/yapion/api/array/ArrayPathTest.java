@@ -11,38 +11,39 @@
  * limitations under the License.
  */
 
-package yapion.api.object;
+package yapion.api.array;
 
 import org.junit.Test;
+import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class ObjectPathTest {
+public class ArrayPathTest {
 
     @Test
     public void testGetPathByValue() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        YAPIONObject yapionObject1 = new YAPIONObject();
-        yapionObject.add("test", yapionObject1);
-        assertThat(yapionObject.getPath(yapionObject1), is("test"));
+        YAPIONArray yapionArray = new YAPIONArray();
+        YAPIONArray yapionArray1 = new YAPIONArray();
+        yapionArray.add(yapionArray1);
+        assertThat(yapionArray.getPath(yapionArray1), is("0"));
     }
 
     @Test
     public void testGetPath() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        YAPIONObject yapionObject1 = new YAPIONObject();
-        yapionObject.add("test", yapionObject1);
-        assertThat(yapionObject1.getPath().getPath(), is(new String[]{"test"}));
+        YAPIONArray yapionArray = new YAPIONArray();
+        YAPIONArray yapionArray1 = new YAPIONArray();
+        yapionArray.add(yapionArray1);
+        assertThat(yapionArray1.getPath().getPath(), is(new String[]{"0"}));
     }
 
     @Test
     public void testGetDepth() {
-        YAPIONObject yapionObject = new YAPIONObject();
-        YAPIONObject yapionObject1 = new YAPIONObject();
-        yapionObject.add("test", yapionObject1);
-        assertThat(yapionObject1.getDepth(), is(1));
+        YAPIONArray yapionArray = new YAPIONArray();
+        YAPIONArray yapionArray1 = new YAPIONArray();
+        yapionArray.add(yapionArray1);
+        assertThat(yapionArray1.getDepth(), is(1));
     }
 
 }
