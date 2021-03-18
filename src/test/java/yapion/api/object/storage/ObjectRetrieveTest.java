@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.api.object;
+package yapion.api.object.storage;
 
 import org.junit.Test;
 import yapion.hierarchy.types.*;
@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class ObjectRetrieveAPITest {
+public class ObjectRetrieveTest {
 
     @Test
     public void testNotHasValue() {

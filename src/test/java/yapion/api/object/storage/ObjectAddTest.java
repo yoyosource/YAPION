@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.api.object;
+package yapion.api.object.storage;
 
-public class ObjectRemoveAPITest {
+public class ObjectAddTest {
 }

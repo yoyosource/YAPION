@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.api.array;
+package yapion.api.array.storage;
 
 import org.junit.Test;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
@@ -23,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.is;
 
-public class ArrayRetrieveAPITest {
+public class ArrayRetrieveTest {
 
     @Test(expected = YAPIONArrayIndexOutOfBoundsException.class)
     public void testNotHasValue() {

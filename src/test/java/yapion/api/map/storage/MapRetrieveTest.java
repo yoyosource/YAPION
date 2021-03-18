@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.api.map;
+package yapion.api.map.storage;
 
 import org.junit.Test;
 import yapion.hierarchy.types.*;
@@ -22,7 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.is;
 
-public class MapRetrieveAPITest {
+public class MapRetrieveTest {
 
     @Test
     public void testNotHasValue() {
