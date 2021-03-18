@@ -31,7 +31,8 @@ public class ObjectRetrieveAPITest {
 
     @Test
     public void testHasValue() {
-        YAPIONObject yapionObject = new YAPIONObject().add("", "");
+        YAPIONObject yapionObject = new YAPIONObject();
+        yapionObject.add("", "");
         assertThat(yapionObject.hasValue(""), is(true));
     }
 

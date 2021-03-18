@@ -33,7 +33,8 @@ public class ArrayRetrieveAPITest {
 
     @Test
     public void testHasValue() {
-        YAPIONArray yapionArray = new YAPIONArray().add("");
+        YAPIONArray yapionArray = new YAPIONArray();
+        yapionArray.add("");
         assertThat(yapionArray.hasValue(0), is(true));
     }
 
