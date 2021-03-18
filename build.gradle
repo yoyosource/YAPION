@@ -292,21 +292,6 @@ task buildProject {
 }
 build.finalizedBy(buildProject)
 
-task licenseProject {
-    description 'Add the License to every file'
-    group "Build"
-
-    mustRunAfter classes
-
-    doLast {
-        def command = "java -classpath ${buildDir}/classes/java/main system.LicenseSystem${groupName} ${buildDir}"
-        def retval = command.execute().text
-        print(retval)
-    }
-}
-build.dependsOn licenseProject
-shadowJar.dependsOn licenseProject
-
 task createSerializerMD {
     description 'Update the Serializer.md'
     group "Build"
