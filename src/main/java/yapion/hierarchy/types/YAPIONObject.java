@@ -174,17 +174,23 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
     }
 
     public YAPIONObject remove(@NonNull String key) {
-        discardReferenceValue();
-        variables.remove(key).removeParent();
+        if (variables.containsKey(key)) {
+            discardReferenceValue();
+            variables.remove(key).removeParent();
+        }
         return this;
     }
 
     @Override
     public YAPIONAnyType removeAndGet(@NonNull String key) {
-        discardReferenceValue();
-        YAPIONAnyType yapionAnyType = variables.remove(key);
-        yapionAnyType.removeParent();
-        return yapionAnyType;
+        if (variables.containsKey(key)) {
+            discardReferenceValue();
+            YAPIONAnyType yapionAnyType = variables.remove(key);
+            yapionAnyType.removeParent();
+            return yapionAnyType;
+        } else {
+            return null;
+        }
     }
 
     @Override

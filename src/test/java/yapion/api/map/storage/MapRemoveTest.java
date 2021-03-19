@@ -11,38 +11,50 @@
  * limitations under the License.
  */
 
-package yapion.api.map;
+package yapion.api.map.storage;
 
 import org.junit.Test;
 import yapion.hierarchy.types.YAPIONMap;
+import yapion.hierarchy.types.YAPIONValue;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
-public class MapPathTest {
+public class MapRemoveTest {
 
     @Test
-    public void testGetPathByValue() {
+    public void testRemoveNotSetValue() {
         YAPIONMap yapionMap = new YAPIONMap();
-        YAPIONMap yapionMap1 = new YAPIONMap();
-        yapionMap.add("test", yapionMap1);
-        assertThat(yapionMap.getPath(yapionMap1), is("(test)"));
+        try {
+            yapionMap.remove("");
+        } catch (Exception e) {
+            throw new AssertionError(e.getMessage(), e);
+        }
     }
 
     @Test
-    public void testGetPath() {
+    public void testRemoveValue() {
         YAPIONMap yapionMap = new YAPIONMap();
-        YAPIONMap yapionMap1 = new YAPIONMap();
-        yapionMap.add("test", yapionMap1);
-        assertThat(yapionMap1.getPath().getPath(), is(new String[]{"(test)"}));
+        yapionMap.add("", "");
+        try {
+            yapionMap.remove("");
+        } catch (Exception e) {
+            throw new AssertionError(e.getMessage(), e);
+        }
     }
 
     @Test
-    public void testGetDepth() {
+    public void testRemoveAndGetNotSetValue() {
         YAPIONMap yapionMap = new YAPIONMap();
-        YAPIONMap yapionMap1 = new YAPIONMap();
-        yapionMap.add("test", yapionMap1);
-        assertThat(yapionMap1.getDepth(), is(1));
+        assertThat(yapionMap.removeAndGet(""), nullValue());
+    }
+
+    @Test
+    public void testRemoveAndGetValue() {
+        YAPIONMap yapionMap = new YAPIONMap();
+        yapionMap.add("", "");
+        assertThat(yapionMap.removeAndGet(""), is(new YAPIONValue<>("")));
     }
 
 }

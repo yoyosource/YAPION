@@ -17,7 +17,6 @@ import org.junit.Test;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.output.StringPrettifiedOutput;
 import yapion.hierarchy.types.YAPIONMap;
-import yapion.hierarchy.types.YAPIONValue;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -56,17 +55,17 @@ public class MapOutputTest {
 
     @Test
     public void testPrettifiedYAPIONDepth() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>(""), new YAPIONMap()).toYAPION(new StringPrettifiedOutput()).getResult(), is("<\n  ():<>\n>"));
+        assertThat(new YAPIONMap().add("", new YAPIONMap()).toYAPION(new StringPrettifiedOutput()).getResult(), is("<\n  ():<>\n>"));
     }
 
     @Test
     public void testPrettifiedJSONDepth() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>(""), new YAPIONMap()).toJSON(new StringPrettifiedOutput()).getResult(), is("{\n    \"@mapping\":[\n      \"0:1\"\n    ],\n    \"#0\":\"\",\n    \"#1\":{\n      \"@mapping\":[]\n    }\n  }"));
+        assertThat(new YAPIONMap().add("", new YAPIONMap()).toJSON(new StringPrettifiedOutput()).getResult(), is("{\n    \"@mapping\":[\n      \"0:1\"\n    ],\n    \"#0\":\"\",\n    \"#1\":{\n      \"@mapping\":[]\n    }\n  }"));
     }
 
     @Test
     public void testPrettifiedLossyJSONDepth() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>(""), new YAPIONMap()).toJSONLossy(new StringPrettifiedOutput()).getResult(), is("{\n    \"@mapping\":[\n      \"0:1\"\n    ],\n    \"#0\":\"\",\n    \"#1\":{\n      \"@mapping\":[]\n    }\n  }"));
+        assertThat(new YAPIONMap().add("", new YAPIONMap()).toJSONLossy(new StringPrettifiedOutput()).getResult(), is("{\n    \"@mapping\":[\n      \"0:1\"\n    ],\n    \"#0\":\"\",\n    \"#1\":{\n      \"@mapping\":[]\n    }\n  }"));
     }
 
 }

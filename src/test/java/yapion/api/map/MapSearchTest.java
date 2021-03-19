@@ -16,7 +16,6 @@ package yapion.api.map;
 import org.junit.Test;
 import yapion.hierarchy.api.ObjectSearch;
 import yapion.hierarchy.types.YAPIONMap;
-import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 
 import java.util.Optional;
@@ -35,7 +34,7 @@ public class MapSearchTest {
     @Test
     public void getOneValid() {
         YAPIONMap yapionMap = new YAPIONMap();
-        yapionMap.add(new YAPIONValue<>(""), new YAPIONMap());
+        yapionMap.add("", new YAPIONMap());
         assertThat(yapionMap.get("()"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONMap()))));
     }
 
@@ -48,7 +47,7 @@ public class MapSearchTest {
     @Test
     public void getDepthValid() {
         YAPIONMap yapionMap = new YAPIONMap();
-        yapionMap.add(new YAPIONValue<>(""), new YAPIONMap().add(new YAPIONValue<>(""), new YAPIONMap()));
+        yapionMap.add("", new YAPIONMap().add(new YAPIONValue<>(""), new YAPIONMap()));
         assertThat(yapionMap.get("()", "()"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONMap()))));
     }
 
