@@ -24,6 +24,7 @@ import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.groups.YAPIONMappingType;
 import yapion.hierarchy.api.storage.MapAdd;
 import yapion.hierarchy.api.storage.MapRemove;
+import yapion.hierarchy.api.storage.MapRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.parser.YAPIONParserMapValue;
@@ -36,7 +37,7 @@ import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
 
 @YAPIONSave(context = "*")
 @YAPIONLoad(context = "*")
-public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> implements MapAdd<YAPIONMap>, MapRemove<YAPIONMap> {
+public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> implements MapAdd<YAPIONMap>, MapRemove<YAPIONMap>, MapRetrieve {
 
     private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
 
