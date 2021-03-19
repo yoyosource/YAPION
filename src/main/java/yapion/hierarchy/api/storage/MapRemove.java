@@ -26,27 +26,27 @@ public interface MapRemove<I> extends ObjectRemove<I, YAPIONAnyType> {
         return remove(new YAPIONValue<>(key));
     }
 
-    default I remove(@NonNull char key) {
+    default I remove(char key) {
         return remove(new YAPIONValue<>(key));
     }
 
-    default I remove(@NonNull boolean key) {
+    default I remove(boolean key) {
         return remove(new YAPIONValue<>(key));
     }
 
-    default I remove(@NonNull byte key) {
+    default I remove(byte key) {
         return remove(new YAPIONValue<>(key));
     }
 
-    default I remove(@NonNull short key) {
+    default I remove(short key) {
         return remove(new YAPIONValue<>(key));
     }
 
-    default I remove(@NonNull int key) {
+    default I remove(int key) {
         return remove(new YAPIONValue<>(key));
     }
 
-    default I remove(@NonNull long key) {
+    default I remove(long key) {
         return remove(new YAPIONValue<>(key));
     }
 
@@ -54,11 +54,11 @@ public interface MapRemove<I> extends ObjectRemove<I, YAPIONAnyType> {
         return remove(new YAPIONValue<>(key));
     }
 
-    default I remove(@NonNull float key) {
+    default I remove(float key) {
         return remove(new YAPIONValue<>(key));
     }
 
-    default I remove(@NonNull double key) {
+    default I remove(double key) {
         return remove(new YAPIONValue<>(key));
     }
 
@@ -70,27 +70,27 @@ public interface MapRemove<I> extends ObjectRemove<I, YAPIONAnyType> {
         return removeAndGet(new YAPIONValue<>(key));
     }
 
-    default YAPIONAnyType removeAndGet(@NonNull char key) {
+    default YAPIONAnyType removeAndGet(char key) {
         return removeAndGet(new YAPIONValue<>(key));
     }
 
-    default YAPIONAnyType removeAndGet(@NonNull boolean key) {
+    default YAPIONAnyType removeAndGet(boolean key) {
         return removeAndGet(new YAPIONValue<>(key));
     }
 
-    default YAPIONAnyType removeAndGet(@NonNull byte key) {
+    default YAPIONAnyType removeAndGet(byte key) {
         return removeAndGet(new YAPIONValue<>(key));
     }
 
-    default YAPIONAnyType removeAndGet(@NonNull short key) {
+    default YAPIONAnyType removeAndGet(short key) {
         return removeAndGet(new YAPIONValue<>(key));
     }
 
-    default YAPIONAnyType removeAndGet(@NonNull int key) {
+    default YAPIONAnyType removeAndGet(int key) {
         return removeAndGet(new YAPIONValue<>(key));
     }
 
-    default YAPIONAnyType removeAndGet(@NonNull long key) {
+    default YAPIONAnyType removeAndGet(long key) {
         return removeAndGet(new YAPIONValue<>(key));
     }
 
@@ -98,11 +98,11 @@ public interface MapRemove<I> extends ObjectRemove<I, YAPIONAnyType> {
         return removeAndGet(new YAPIONValue<>(key));
     }
 
-    default YAPIONAnyType removeAndGet(@NonNull float key) {
+    default YAPIONAnyType removeAndGet(float key) {
         return removeAndGet(new YAPIONValue<>(key));
     }
 
-    default YAPIONAnyType removeAndGet(@NonNull double key) {
+    default YAPIONAnyType removeAndGet(double key) {
         return removeAndGet(new YAPIONValue<>(key));
     }
 

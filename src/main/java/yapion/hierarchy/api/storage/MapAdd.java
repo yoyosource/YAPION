@@ -70,291 +70,291 @@ public interface MapAdd<I> extends ObjectAdd<I, YAPIONAnyType> {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull char key, @NonNull YAPIONAnyType value) {
+    default I add(char key, @NonNull YAPIONAnyType value) {
         return add(new YAPIONValue<>(key), value);
     }
 
-    default I add(@NonNull char key, String value) {
+    default I add(char key, String value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull char key, char value) {
+    default I add(char key, char value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull char key, boolean value) {
+    default I add(char key, boolean value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull char key, byte value) {
+    default I add(char key, byte value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull char key, short value) {
+    default I add(char key, short value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull char key, int value) {
+    default I add(char key, int value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull char key, long value) {
+    default I add(char key, long value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull char key, BigInteger value) {
+    default I add(char key, BigInteger value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull char key, float value) {
+    default I add(char key, float value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull char key, double value) {
+    default I add(char key, double value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull char key, BigDecimal value) {
+    default I add(char key, BigDecimal value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull boolean key, @NonNull YAPIONAnyType value) {
+    default I add(boolean key, @NonNull YAPIONAnyType value) {
         return add(new YAPIONValue<>(key), value);
     }
 
-    default I add(@NonNull boolean key, String value) {
+    default I add(boolean key, String value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull boolean key, char value) {
+    default I add(boolean key, char value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull boolean key, boolean value) {
+    default I add(boolean key, boolean value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull boolean key, byte value) {
+    default I add(boolean key, byte value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull boolean key, short value) {
+    default I add(boolean key, short value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull boolean key, int value) {
+    default I add(boolean key, int value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull boolean key, long value) {
+    default I add(boolean key, long value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull boolean key, BigInteger value) {
+    default I add(boolean key, BigInteger value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull boolean key, float value) {
+    default I add(boolean key, float value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull boolean key, double value) {
+    default I add(boolean key, double value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull boolean key, BigDecimal value) {
+    default I add(boolean key, BigDecimal value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull byte key, @NonNull YAPIONAnyType value) {
+    default I add(byte key, @NonNull YAPIONAnyType value) {
         return add(new YAPIONValue<>(key), value);
     }
 
-    default I add(@NonNull byte key, String value) {
+    default I add(byte key, String value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull byte key, char value) {
+    default I add(byte key, char value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull byte key, boolean value) {
+    default I add(byte key, boolean value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull byte key, byte value) {
+    default I add(byte key, byte value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull byte key, short value) {
+    default I add(byte key, short value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull byte key, int value) {
+    default I add(byte key, int value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull byte key, long value) {
+    default I add(byte key, long value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull byte key, BigInteger value) {
+    default I add(byte key, BigInteger value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull byte key, float value) {
+    default I add(byte key, float value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull byte key, double value) {
+    default I add(byte key, double value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull byte key, BigDecimal value) {
+    default I add(byte key, BigDecimal value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull short key, @NonNull YAPIONAnyType value) {
+    default I add(short key, @NonNull YAPIONAnyType value) {
         return add(new YAPIONValue<>(key), value);
     }
 
-    default I add(@NonNull short key, String value) {
+    default I add(short key, String value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull short key, char value) {
+    default I add(short key, char value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull short key, boolean value) {
+    default I add(short key, boolean value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull short key, byte value) {
+    default I add(short key, byte value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull short key, short value) {
+    default I add(short key, short value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull short key, int value) {
+    default I add(short key, int value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull short key, long value) {
+    default I add(short key, long value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull short key, BigInteger value) {
+    default I add(short key, BigInteger value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull short key, float value) {
+    default I add(short key, float value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull short key, double value) {
+    default I add(short key, double value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull short key, BigDecimal value) {
+    default I add(short key, BigDecimal value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull int key, @NonNull YAPIONAnyType value) {
+    default I add(int key, @NonNull YAPIONAnyType value) {
         return add(new YAPIONValue<>(key), value);
     }
 
-    default I add(@NonNull int key, String value) {
+    default I add(int key, String value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull int key, char value) {
+    default I add(int key, char value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull int key, boolean value) {
+    default I add(int key, boolean value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull int key, byte value) {
+    default I add(int key, byte value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull int key, short value) {
+    default I add(int key, short value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull int key, int value) {
+    default I add(int key, int value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull int key, long value) {
+    default I add(int key, long value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull int key, BigInteger value) {
+    default I add(int key, BigInteger value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull int key, float value) {
+    default I add(int key, float value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull int key, double value) {
+    default I add(int key, double value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull int key, BigDecimal value) {
+    default I add(int key, BigDecimal value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull long key, @NonNull YAPIONAnyType value) {
+    default I add(long key, @NonNull YAPIONAnyType value) {
         return add(new YAPIONValue<>(key), value);
     }
 
-    default I add(@NonNull long key, String value) {
+    default I add(long key, String value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull long key, char value) {
+    default I add(long key, char value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull long key, boolean value) {
+    default I add(long key, boolean value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull long key, byte value) {
+    default I add(long key, byte value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull long key, short value) {
+    default I add(long key, short value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull long key, int value) {
+    default I add(long key, int value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull long key, long value) {
+    default I add(long key, long value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull long key, BigInteger value) {
+    default I add(long key, BigInteger value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull long key, float value) {
+    default I add(long key, float value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull long key, double value) {
+    default I add(long key, double value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull long key, BigDecimal value) {
+    default I add(long key, BigDecimal value) {
         return add(key, new YAPIONValue<>(value));
     }
 
@@ -406,99 +406,99 @@ public interface MapAdd<I> extends ObjectAdd<I, YAPIONAnyType> {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull float key, @NonNull YAPIONAnyType value) {
+    default I add(float key, @NonNull YAPIONAnyType value) {
         return add(new YAPIONValue<>(key), value);
     }
 
-    default I add(@NonNull float key, String value) {
+    default I add(float key, String value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull float key, char value) {
+    default I add(float key, char value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull float key, boolean value) {
+    default I add(float key, boolean value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull float key, byte value) {
+    default I add(float key, byte value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull float key, short value) {
+    default I add(float key, short value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull float key, int value) {
+    default I add(float key, int value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull float key, long value) {
+    default I add(float key, long value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull float key, BigInteger value) {
+    default I add(float key, BigInteger value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull float key, float value) {
+    default I add(float key, float value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull float key, double value) {
+    default I add(float key, double value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull float key, BigDecimal value) {
+    default I add(float key, BigDecimal value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull double key, @NonNull YAPIONAnyType value) {
+    default I add(double key, @NonNull YAPIONAnyType value) {
         return add(new YAPIONValue<>(key), value);
     }
 
-    default I add(@NonNull double key, String value) {
+    default I add(double key, String value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull double key, char value) {
+    default I add(double key, char value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull double key, boolean value) {
+    default I add(double key, boolean value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull double key, byte value) {
+    default I add(double key, byte value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull double key, short value) {
+    default I add(double key, short value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull double key, int value) {
+    default I add(double key, int value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull double key, long value) {
+    default I add(double key, long value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull double key, BigInteger value) {
+    default I add(double key, BigInteger value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull double key, float value) {
+    default I add(double key, float value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull double key, double value) {
+    default I add(double key, double value) {
         return add(key, new YAPIONValue<>(value));
     }
 
-    default I add(@NonNull double key, BigDecimal value) {
+    default I add(double key, BigDecimal value) {
         return add(key, new YAPIONValue<>(value));
     }
 
@@ -554,27 +554,27 @@ public interface MapAdd<I> extends ObjectAdd<I, YAPIONAnyType> {
         return addOrPointer(new YAPIONValue<>(key), value);
     }
 
-    default I addOrPointer(@NonNull char key, @NonNull YAPIONAnyType value) {
+    default I addOrPointer(char key, @NonNull YAPIONAnyType value) {
         return addOrPointer(new YAPIONValue<>(key), value);
     }
 
-    default I addOrPointer(@NonNull boolean key, @NonNull YAPIONAnyType value) {
+    default I addOrPointer(boolean key, @NonNull YAPIONAnyType value) {
         return addOrPointer(new YAPIONValue<>(key), value);
     }
 
-    default I addOrPointer(@NonNull byte key, @NonNull YAPIONAnyType value) {
+    default I addOrPointer(byte key, @NonNull YAPIONAnyType value) {
         return addOrPointer(new YAPIONValue<>(key), value);
     }
 
-    default I addOrPointer(@NonNull short key, @NonNull YAPIONAnyType value) {
+    default I addOrPointer(short key, @NonNull YAPIONAnyType value) {
         return addOrPointer(new YAPIONValue<>(key), value);
     }
 
-    default I addOrPointer(@NonNull int key, @NonNull YAPIONAnyType value) {
+    default I addOrPointer(int key, @NonNull YAPIONAnyType value) {
         return addOrPointer(new YAPIONValue<>(key), value);
     }
 
-    default I addOrPointer(@NonNull long key, @NonNull YAPIONAnyType value) {
+    default I addOrPointer(long key, @NonNull YAPIONAnyType value) {
         return addOrPointer(new YAPIONValue<>(key), value);
     }
 
@@ -582,11 +582,11 @@ public interface MapAdd<I> extends ObjectAdd<I, YAPIONAnyType> {
         return addOrPointer(new YAPIONValue<>(key), value);
     }
 
-    default I addOrPointer(@NonNull float key, @NonNull YAPIONAnyType value) {
+    default I addOrPointer(float key, @NonNull YAPIONAnyType value) {
         return addOrPointer(new YAPIONValue<>(key), value);
     }
 
-    default I addOrPointer(@NonNull double key, @NonNull YAPIONAnyType value) {
+    default I addOrPointer(double key, @NonNull YAPIONAnyType value) {
         return addOrPointer(new YAPIONValue<>(key), value);
     }
 
