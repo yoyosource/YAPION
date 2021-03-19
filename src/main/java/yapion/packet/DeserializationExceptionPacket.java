@@ -13,16 +13,13 @@
 
 package yapion.packet;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import yapion.hierarchy.types.YAPIONObject;
 
 @Getter
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class DeserializationExceptionPacket extends YAPIONPacket {
-
     private YAPIONObject yapionObject;
-
-    DeserializationExceptionPacket(YAPIONObject yapionObject) {
-        this.yapionObject = yapionObject;
-    }
-
 }
