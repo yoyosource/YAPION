@@ -1,0 +1,130 @@
+# HEADER
+/*
+ * Copyright 2019,2020,2021 yoyosource
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package yapion.hierarchy.api.storage;
+
+import lombok.NonNull;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.*;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.function.Consumer;
+
+public interface MapRetrieve extends ObjectRetrieve<YAPIONAnyType> {
+
+# FOOTER
+}
+
+# TEMPLATES
+## LIST PUSH
+- @NonNull String
+- char
+- boolean
+- byte
+- short
+- int
+- long
+- @NonNull BigInteger
+- float
+- double
+- @NonNull BigDecimal
+
+default boolean hasValue($0 key) {
+    return hasValue(new YAPIONValue<>(key));
+}
+
+default boolean hasValue($0 key, YAPIONType yapionType) {
+    return hasValue(new YAPIONValue<>(key), yapionType);
+}
+
+default <T> boolean hasValue($0 key, Class<T> type) {
+    return hasValue(new YAPIONValue<>(key), type);
+}
+
+default YAPIONAnyType getYAPIONAnyType($0 key) {
+    return getYAPIONAnyType(new YAPIONValue<>(key));
+}
+
+default YAPIONObject getObject($0 key) {
+    return getObject(new YAPIONValue<>(key));
+}
+
+default void getObject($0 key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
+    getObject(new YAPIONValue<>(key), valueConsumer, noValue);
+}
+
+default YAPIONArray getArray($0 key) {
+    return getArray(new YAPIONValue<>(key));
+}
+
+default void getArray($0 key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
+    getArray(new YAPIONValue<>(key), valueConsumer, noValue);
+}
+
+default YAPIONMap getMap($0 key) {
+    return getMap(new YAPIONValue<>(key));
+}
+
+default void getMap($0 key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
+    getMap(new YAPIONValue<>(key), valueConsumer, noValue);
+}
+
+default YAPIONPointer getPointer($0 key) {
+    return getPointer(new YAPIONValue<>(key));
+}
+
+default void getPointer($0 key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
+    getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
+}
+
+default YAPIONValue getValue($0 key) {
+    return getValue(new YAPIONValue<>(key));
+}
+
+default void getValue($0 key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
+    getValue(new YAPIONValue<>(key), valueConsumer, noValue);
+}
+
+default <T> YAPIONValue<T> getValue($0 key, Class<T> type) {
+    return getValue(new YAPIONValue<>(key), type);
+}
+
+default <T> YAPIONValue<T> getValueOrDefault($0 key, Class<T> type, T defaultValue) {
+    return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
+}
+
+default <T> void getValue($0 key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
+    getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
+}
+
+default <T> YAPIONValue<T> getValue($0 key, T type) {
+    return getValue(new YAPIONValue<>(key), type);
+}
+
+default <T> YAPIONValue<T> getValueOrDefault($0 key, T defaultValue) {
+    return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
+}
+
+default <T> T getPlainValue($0 key) {
+    return getPlainValue(new YAPIONValue<>(key));
+}
+
+default <T> T getPlainValueOrDefault($0 key, T defaultValue) {
+    return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
+}
+
+default <T> void getPlainValue($0 key, Consumer<T> valueConsumer, Runnable noValue) {
+    getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
+}
