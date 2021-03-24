@@ -22,7 +22,6 @@ import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 import yapion.utils.ReflectionsUtils;
 
-import javax.swing.plaf.IconUIResource;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
