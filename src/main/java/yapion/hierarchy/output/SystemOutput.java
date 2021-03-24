@@ -13,11 +13,11 @@
 
 package yapion.hierarchy.output;
 
-public class SystemOutput extends AbstractOutput {
+public class SystemOutput extends StreamOutput {
 
-    @Override
-    protected void internalConsume(String s) {
-        System.out.println(s);
+    @SuppressWarnings({"java:S106"})
+    public SystemOutput() {
+        super(System.out);
     }
 
 }
