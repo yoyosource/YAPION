@@ -15,34 +15,31 @@ package yapion.packet;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.parser.YAPIONParser;
+import yapion.io.YAPIONInputStream;
+import yapion.io.YAPIONOutputStream;
+import yapion.io.YAPIONSocket;
 import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.utils.IdentifierUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @Slf4j
-public final class YAPIONInputStream {
+public final class YAPIONPacketStream {
 
     public static final int DEFAULT_WAIT = 10;
     public static final int LOW_WAIT = 1;
     public static final int HIGH_WAIT = 1000;
 
-    private final InputStream inputStream;
+    private final YAPIONInputStream yapionInputStream;
     private YAPIONPacketReceiver yapionPacketReceiver = null;
-    private YAPIONOutputStream respectiveOutputStream = null;
+    private final YAPIONOutputStream yapionOutputStream;
     private TypeReMapper typeReMapper = new TypeReMapper();
 
     private boolean running = true;
@@ -53,13 +50,13 @@ public final class YAPIONInputStream {
     private long lastHeartbeat = 0;
     private long heartBeatTimeOut = 10000;
 
-    /**
-     * Creates a YAPIONInputStream from an InputStream.
-     *
-     * @param inputStream the InputStream
-     */
-    public YAPIONInputStream(InputStream inputStream) {
-        this.inputStream = inputStream;
+    public YAPIONPacketStream(YAPIONSocket yapionSocket) {
+        this(yapionSocket.getYAPIONInputStream(), yapionSocket.getYAPIONOutputStream());
+    }
+
+    public YAPIONPacketStream(YAPIONInputStream yapionInputStream, YAPIONOutputStream yapionOutputStream) {
+        this.yapionInputStream = yapionInputStream;
+        this.yapionOutputStream = yapionOutputStream;
     }
 
     /**
@@ -144,14 +141,14 @@ public final class YAPIONInputStream {
                 }
                 if (heartBeatMode == null) continue;
                 if (heartBeatMode == HeartBeatType.SEND) {
-                    respectiveOutputStream.write(new HeartBeatPacket());
+                    yapionOutputStream.write(new HeartBeatPacket());
                 }
                 if (heartBeatMode == HeartBeatType.SEND_AND_RECEIVE) {
-                    respectiveOutputStream.write(new HeartBeatPacket());
+                    yapionOutputStream.write(new HeartBeatPacket());
                 }
                 if (System.currentTimeMillis() - lastHeartbeat > heartBeatTimeOut) {
                     LostHeartBeatPacket lostHeartBeatPacket = new LostHeartBeatPacket(lastHeartbeat, System.currentTimeMillis() - lastHeartbeat, heartBeatTimeOut);
-                    if (respectiveOutputStream != null) lostHeartBeatPacket.setYAPIONOutputStream(respectiveOutputStream);
+                    if (yapionOutputStream != null) lostHeartBeatPacket.setYAPIONPacketStream(this);
                     yapionPacketReceiver.handleLostHeartBeat(lostHeartBeatPacket);
                 }
             }
@@ -163,62 +160,19 @@ public final class YAPIONInputStream {
     private void drop() {
         try {
             List<Byte> byteList = new ArrayList<>();
-            while (inputStream.available() > 0) {
-                byteList.add((byte) inputStream.read());
+            while (yapionInputStream.available() > 0) {
+                byteList.add((byte) yapionInputStream.readByte());
             }
             byte[] bytes = new byte[byteList.size()];
             for (int i = 0; i < byteList.size(); i++) {
                 bytes[i] = byteList.get(i);
             }
             DropPacket dropPacket = new DropPacket(bytes);
-            if (respectiveOutputStream != null) dropPacket.setYAPIONOutputStream(respectiveOutputStream);
+            if (yapionOutputStream != null) dropPacket.setYAPIONPacketStream(this);
             yapionPacketReceiver.handleDrop(dropPacket);
         } catch (IOException e) {
             // Ignored
         }
-    }
-
-    /**
-     * Returns an estimate of bytes to be able to read.
-     *
-     * @return the estimated byte count
-     * @throws IOException {@link YAPIONPacketReceiver} not null or {@link InputStream#available()}
-     */
-    public synchronized int available() throws IOException {
-        if (yapionPacketReceiver != null) throw new IOException();
-        return inputStream.available();
-    }
-
-    /**
-     * Read and parses the next YAPIONObject.
-     *
-     * @return the next YAPIONObject
-     * @throws IOException {@link YAPIONPacketReceiver} not null
-     */
-    public synchronized YAPIONObject read() throws IOException {
-        if (yapionPacketReceiver != null) throw new IOException();
-        return YAPIONParser.parse(inputStream);
-    }
-
-    /**
-     * Read, parses and deserialized the next YAPIONObject.
-     *
-     * @return the next Object
-     * @throws IOException {@link YAPIONPacketReceiver} not null
-     */
-    public synchronized Object readObject() throws IOException {
-        if (yapionPacketReceiver != null) throw new IOException();
-        return YAPIONDeserializer.deserialize(read(), typeReMapper);
-    }
-
-    /**
-     * Closes this InputStream and tries to close the handler Thread
-     *
-     * @throws IOException {@link InputStream#close()}
-     */
-    public synchronized void close() throws IOException {
-        running = false;
-        inputStream.close();
     }
 
     /**
@@ -233,14 +187,10 @@ public final class YAPIONInputStream {
         this.heartBeatTimeOut = heartBeatTimeOut;
     }
 
-    void setRespectiveOutputStream(YAPIONOutputStream respectiveOutputStream) {
-        this.respectiveOutputStream = respectiveOutputStream;
-    }
-
     private synchronized int handleAvailable() {
         if (yapionPacketReceiver == null) return 0;
         try {
-            return inputStream.available();
+            return yapionInputStream.available();
         } catch (IOException e) {
             return 0;
         }
@@ -248,7 +198,7 @@ public final class YAPIONInputStream {
 
     private synchronized HandleFailedPacket handle() {
         if (yapionPacketReceiver == null) return null;
-        YAPIONObject yapionObject = YAPIONParser.parse(inputStream);
+        YAPIONObject yapionObject = yapionInputStream.read();
         YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(IdentifierUtils.TYPE_IDENTIFIER);
         if (yapionAnyType == null) return new HandleFailedPacket(yapionObject);
         if (!(yapionAnyType instanceof YAPIONValue)) return new HandleFailedPacket(yapionObject);
@@ -264,13 +214,27 @@ public final class YAPIONInputStream {
         }
         if (!ReflectionsUtils.isClassSuperclassOf(object.getClass(), YAPIONPacket.class)) return new HandleFailedPacket(yapionObject);
         YAPIONPacket yapionPacket = (YAPIONPacket) object;
-        if (respectiveOutputStream != null) yapionPacket.setYAPIONOutputStream(respectiveOutputStream);
+        if (yapionOutputStream != null) yapionPacket.setYAPIONPacketStream(this);
         if (yapionPacket instanceof HeartBeatPacket && heartBeatMode != null && (heartBeatMode == HeartBeatType.RECEIVE || heartBeatMode == HeartBeatType.SEND_AND_RECEIVE)) {
             lastHeartbeat = System.currentTimeMillis();
             yapionPacketReceiver.handleHeartBeat(yapionPacket);
         }
         yapionPacketReceiver.handle(yapionPacket);
         return null;
+    }
+
+    public void close() throws IOException {
+        running = false;
+        yapionInputStream.close();
+        yapionOutputStream.close();
+    }
+
+    public void write(YAPIONPacket yapionPacket) {
+        yapionOutputStream.write(yapionPacket);
+    }
+
+    public void write(YAPIONObject yapionObject) {
+        yapionOutputStream.write(yapionObject);
     }
 
 }

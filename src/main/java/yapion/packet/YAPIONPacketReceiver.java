@@ -174,7 +174,7 @@ public class YAPIONPacketReceiver {
     }
 
     /**
-     * Set the HandleFailed {@link YAPIONPacketHandler} to do something when the internal {@link YAPIONInputStream}.handle() failed.
+     * Set the HandleFailed {@link YAPIONPacketHandler} to do something when the internal {@link YAPIONPacketStream}.handle() failed.
      *
      * @param yapionPacketHandler
      */
@@ -250,9 +250,9 @@ public class YAPIONPacketReceiver {
             } catch (Exception e) {
                 log.warn(String.format("The packet handler with type '%s' threw an exception.", type), e.getCause());
                 yapionPacket.setException(e);
-                if (handler.closeOnException() && yapionPacket.getYAPIONOutputStream() != null) {
+                if (handler.closeOnException() && yapionPacket.getYAPIONPacketStream() != null) {
                     try {
-                        yapionPacket.getYAPIONOutputStream().close();
+                        yapionPacket.getYAPIONPacketStream().close();
                     } catch (IOException ex) {
                         // Ignored
                     }

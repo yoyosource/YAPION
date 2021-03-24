@@ -14,6 +14,8 @@
 package yapion.packet;
 
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.io.YAPIONOutputStream;
+import yapion.io.YAPIONSocket;
 import yapion.serializing.YAPIONSerializer;
 
 import java.io.InputStream;
@@ -22,7 +24,7 @@ import java.io.OutputStream;
 public abstract class YAPIONPacket {
 
     private transient Exception exception;
-    private transient YAPIONOutputStream yapionOutputStream;
+    private transient YAPIONPacketStream yapionPacketStream;
 
     /**
      * Serialize this {@link YAPIONPacket} to a {@link YAPIONObject}.
@@ -63,19 +65,19 @@ public abstract class YAPIONPacket {
      *
      * @return the {@link YAPIONOutputStream} set by {@link YAPIONSocket}
      */
-    public final YAPIONOutputStream getYAPIONOutputStream() {
-        return yapionOutputStream;
+    public final YAPIONPacketStream getYAPIONPacketStream() {
+        return yapionPacketStream;
     }
 
     /**
      * Set the {@link YAPIONOutputStream} that corresponds to the {@link InputStream}.
-     * This normally gets called by {@link YAPIONInputStream} and will be set to the
+     * This normally gets called by {@link YAPIONPacketStream} and will be set to the
      * {@link YAPIONOutputStream} by the {@link YAPIONSocket} corresponding to this.
      *
-     * @param yapionOutputStream the {@link YAPIONOutputStream} to set
+     * @param yapionPacketStream the {@link YAPIONOutputStream} to set
      */
-    public final void setYAPIONOutputStream(YAPIONOutputStream yapionOutputStream) {
-        this.yapionOutputStream = yapionOutputStream;
+    public final void setYAPIONPacketStream(YAPIONPacketStream yapionPacketStream) {
+        this.yapionPacketStream = yapionPacketStream;
     }
 
 }

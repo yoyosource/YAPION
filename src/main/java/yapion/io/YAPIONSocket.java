@@ -11,13 +11,12 @@
  * limitations under the License.
  */
 
-package yapion.packet;
+package yapion.io;
 
-import lombok.NonNull;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.TypeReMapper;
+import yapion.packet.YAPIONPacket;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -34,7 +33,6 @@ public final class YAPIONSocket {
         this.socket = socket;
         yapionInputStream = new YAPIONInputStream(socket.getInputStream());
         yapionOutputStream = new YAPIONOutputStream(socket.getOutputStream());
-        yapionInputStream.setRespectiveOutputStream(yapionOutputStream);
     }
 
     public Socket getSocket() {
@@ -53,22 +51,6 @@ public final class YAPIONSocket {
         yapionInputStream.close();
         yapionOutputStream.close();
         socket.close();
-    }
-
-    public void setYAPIONPacketReceiver(YAPIONPacketReceiver yapionPacketReceiver) {
-        yapionInputStream.setYAPIONPacketReceiver(yapionPacketReceiver);
-    }
-
-    public void setYAPIONPacketReceiver(YAPIONPacketReceiver yapionPacketReceiver, int time) {
-        yapionInputStream.setYAPIONPacketReceiver(yapionPacketReceiver, time);
-    }
-
-    public void setTypeReMapper(@NonNull TypeReMapper typeReMapper) {
-        yapionInputStream.setTypeReMapper(typeReMapper);
-    }
-
-    public void setHeartBeatMode(@NonNull HeartBeatType heartBeatMode, long heartBeatTimeOut) {
-        yapionInputStream.setHeartBeatMode(heartBeatMode, heartBeatTimeOut);
     }
 
     public int available() throws IOException {

@@ -18,7 +18,6 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
-import yapion.packet.YAPIONInputStream;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;

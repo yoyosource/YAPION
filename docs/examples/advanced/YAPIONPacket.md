@@ -163,7 +163,7 @@ If you use all of this in conjunction you can create a complex protocol for a cl
 ```java
 import yapion.packet.YAPIONPacket;
 import yapion.packet.YAPIONPacketReceiver;
-import yapion.packet.YAPIONSocket;
+import yapion.io.YAPIONSocket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -217,7 +217,7 @@ You can also use the internal `#closeOnException()` method declared in the 'YAPI
 import yapion.packet.YAPIONPacket;
 import yapion.packet.YAPIONPacketHandler;
 import yapion.packet.YAPIONPacketReceiver;
-import yapion.packet.YAPIONSocket;
+import yapion.io.YAPIONSocket;
 
 import java.io.IOException;
 import java.net.ServerSocket;

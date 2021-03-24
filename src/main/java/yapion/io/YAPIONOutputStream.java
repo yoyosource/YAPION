@@ -11,21 +11,20 @@
  * limitations under the License.
  */
 
-package yapion.packet;
+package yapion.io;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.utils.YAPIONIOException;
 import yapion.hierarchy.output.StreamOutput;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.packet.YAPIONPacket;
 import yapion.serializing.YAPIONSerializer;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
-public final class YAPIONOutputStream {
+public class YAPIONOutputStream implements AutoCloseable {
 
+    private boolean closed = false;
     private final OutputStream outputStream;
 
     /**
@@ -41,8 +40,11 @@ public final class YAPIONOutputStream {
      * Writing the YAPIONObject to the OutputStream.
      *
      * @param yapionObject the YAPIONObject
+     *
+     * @throws YAPIONIOException if the outputStream was closed
      */
     public synchronized void write(YAPIONObject yapionObject) {
+        if (closed) throw new YAPIONIOException();
         yapionObject.toYAPION(new StreamOutput(outputStream)).flush();
     }
 
@@ -50,8 +52,11 @@ public final class YAPIONOutputStream {
      * Writing the YAPIONPacket to the OutputStream.
      *
      * @param yapionPacket the YAPIONPacket
+     *
+     * @throws YAPIONIOException if the outputStream was closed
      */
     public void write(YAPIONPacket yapionPacket) {
+        if (closed) throw new YAPIONIOException();
         write(yapionPacket.toYAPION());
     }
 
@@ -59,8 +64,11 @@ public final class YAPIONOutputStream {
      * Writing the Object to the OutputStream.
      *
      * @param object the Object
+     *
+     * @throws YAPIONIOException if the outputStream was closed
      */
     public void write(Object object) {
+        if (closed) throw new YAPIONIOException();
         write(YAPIONSerializer.serialize(object));
     }
 
@@ -69,8 +77,11 @@ public final class YAPIONOutputStream {
      *
      * @param object the Object
      * @param state the specified state
+     *
+     * @throws YAPIONIOException if the outputStream was closed
      */
     public void write(Object object, String state) {
+        if (closed) throw new YAPIONIOException();
         write(YAPIONSerializer.serialize(object, state));
     }
 
@@ -80,6 +91,8 @@ public final class YAPIONOutputStream {
      * @throws IOException {@link OutputStream#close()}
      */
     public synchronized void close() throws IOException {
+        if (closed) return;
+        closed = true;
         outputStream.close();
     }
 
