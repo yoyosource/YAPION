@@ -13,6 +13,7 @@
 
 package yapion.packet;
 
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -39,6 +40,8 @@ public final class YAPIONPacketStream {
 
     private final YAPIONInputStream yapionInputStream;
     private YAPIONPacketReceiver yapionPacketReceiver = null;
+
+    @Getter
     private final YAPIONOutputStream yapionOutputStream;
     private TypeReMapper typeReMapper = new TypeReMapper();
 
@@ -231,10 +234,6 @@ public final class YAPIONPacketStream {
 
     public void write(YAPIONPacket yapionPacket) {
         yapionOutputStream.write(yapionPacket);
-    }
-
-    public void write(YAPIONObject yapionObject) {
-        yapionOutputStream.write(yapionObject);
     }
 
 }
