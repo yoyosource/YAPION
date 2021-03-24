@@ -38,6 +38,8 @@ public final class YAPIONPacketStream {
     public static final int LOW_WAIT = 1;
     public static final int HIGH_WAIT = 1000;
 
+    private YAPIONSocket yapionSocket;
+
     private final YAPIONInputStream yapionInputStream;
     private YAPIONPacketReceiver yapionPacketReceiver = null;
 
@@ -55,11 +57,13 @@ public final class YAPIONPacketStream {
 
     public YAPIONPacketStream(YAPIONSocket yapionSocket) {
         this(yapionSocket.getYAPIONInputStream(), yapionSocket.getYAPIONOutputStream());
+        this.yapionSocket = yapionSocket;
     }
 
     public YAPIONPacketStream(YAPIONInputStream yapionInputStream, YAPIONOutputStream yapionOutputStream) {
         this.yapionInputStream = yapionInputStream;
         this.yapionOutputStream = yapionOutputStream;
+        this.yapionSocket = null;
     }
 
     /**
@@ -228,6 +232,7 @@ public final class YAPIONPacketStream {
 
     public void close() throws IOException {
         running = false;
+        if (yapionSocket != null) yapionSocket.close();
         yapionInputStream.close();
         yapionOutputStream.close();
     }
