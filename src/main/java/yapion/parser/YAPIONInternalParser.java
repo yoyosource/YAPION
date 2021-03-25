@@ -144,10 +144,10 @@ class YAPIONInternalParser {
 
     private void parseFinish() {
         if (typeStack.isNotEmpty()) {
-            throw new YAPIONParserException();
+            throw new YAPIONParserException("Object is not closed correctly");
         }
         if (count == 0) {
-            throw new YAPIONParserException();
+            throw new YAPIONParserException("No parse steps were done");
         }
 
         log.debug("pFinish  [init]");
@@ -194,7 +194,7 @@ class YAPIONInternalParser {
             return;
         }
         log.debug("initial  [EXCEPTION] -> 0x" + String.format("%04X", (int) c));
-        throw new YAPIONParserException();
+        throw new YAPIONParserException("Initial char is not '{'");
     }
 
     private void add(@NonNull String key, @NonNull YAPIONAnyType value) {
@@ -365,7 +365,7 @@ class YAPIONInternalParser {
                 return;
             }
         }
-        if (everyType(c, lastChar)) {
+        if (current.length() == 0 && everyType(c, lastChar)) {
             return;
         }
         if (current.length() == 0 && (c == ' ' || c == '\n') && !escaped) {

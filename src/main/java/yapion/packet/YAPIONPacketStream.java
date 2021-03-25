@@ -38,8 +38,9 @@ public final class YAPIONPacketStream {
     public static final int LOW_WAIT = 1;
     public static final int HIGH_WAIT = 1000;
 
-    private YAPIONSocket yapionSocket;
+    private YAPIONSocket yapionSocket = null;
 
+    @Getter
     private final YAPIONInputStream yapionInputStream;
     private YAPIONPacketReceiver yapionPacketReceiver = null;
 
@@ -49,7 +50,6 @@ public final class YAPIONPacketStream {
 
     private boolean running = true;
     private Thread yapionInputStreamHandler = null;
-
     private Thread yapionHeartBeatHandler = null;
     private HeartBeatType heartBeatMode = null;
     private long lastHeartbeat = 0;
@@ -63,7 +63,6 @@ public final class YAPIONPacketStream {
     public YAPIONPacketStream(YAPIONInputStream yapionInputStream, YAPIONOutputStream yapionOutputStream) {
         this.yapionInputStream = yapionInputStream;
         this.yapionOutputStream = yapionOutputStream;
-        this.yapionSocket = null;
     }
 
     /**

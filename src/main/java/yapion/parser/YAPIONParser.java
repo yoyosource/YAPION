@@ -335,7 +335,7 @@ public final class YAPIONParser {
             log.debug("parse    [finished]");
         } catch (YAPIONParserException e) {
             log.debug("parse    [YAPIONParserException]");
-            throw new YAPIONParserException(((e.getMessage() != null ? e.getMessage() + "\n" : "\n") + generateErrorMessage()), e);
+            throw new YAPIONParserException(((e.getMessage() != null ? e.getMessage() : "") + " (" + generateErrorMessage() + ")"), e);
         }
         return this;
     }
@@ -346,7 +346,12 @@ public final class YAPIONParser {
      * @return the YAPIONObject
      */
     public YAPIONObject result() {
-        return yapionInternalParser.finish();
+        try {
+            return yapionInternalParser.finish();
+        } catch (YAPIONParserException e) {
+            log.debug("parse    [YAPIONParserException]");
+            throw new YAPIONParserException(((e.getMessage() != null ? e.getMessage() : "") + " (" + generateErrorMessage() + ")"), e);
+        }
     }
 
     private String generateErrorMessage() {

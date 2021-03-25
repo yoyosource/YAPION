@@ -162,4 +162,17 @@ public class YAPIONParserTest {
         assertThat(yapionObject, isYAPION("{(\"Hello world\"\")}"));
     }
 
+    @Test
+    public void testArrayStringWithPointer() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{[a->b,b->c]}");
+        assertThat(yapionObject, isYAPION("{[a->b,b->c]}"));
+    }
+
+    @Test
+    public void testArrayWithAnyType() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{[{},[],(),->0000000000000000,<>]}");
+        assertThat(yapionObject.getArray("").getObject(0), is(new YAPIONObject()));
+        assertThat(yapionObject, isYAPION("{[{},[],(),->0000000000000000,<>]}"));
+    }
+
 }
