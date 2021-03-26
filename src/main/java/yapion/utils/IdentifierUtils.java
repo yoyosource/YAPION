@@ -19,10 +19,15 @@ import yapion.parser.JSONMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.serializer.object.other.EnumSerializer;
+import yapion.serializing.serializer.object.security.PrivateKeySerializer;
+import yapion.serializing.serializer.object.security.PublicKeySerializer;
 import yapion.serializing.serializer.object.throwable.ErrorSerializer;
 import yapion.serializing.serializer.object.throwable.ExceptionSerializer;
 import yapion.serializing.serializer.object.throwable.RuntimeExceptionSerializer;
 import yapion.serializing.serializer.object.throwable.ThrowableSerializer;
+
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 public class IdentifierUtils {
 
@@ -59,7 +64,11 @@ public class IdentifierUtils {
     public static final String EXCEPTION_IDENTIFIER = "@exception";
 
     /**
-     *
+     * This variable is used in the {@link PrivateKeySerializer} and
+     * {@link PublicKeySerializer} for identifying an {@link PublicKey}
+     * and {@link PrivateKey} respectively by its {@link Class#getTypeName()}.
+     * In the serialization this variable is used as the key of a so called
+     * key variable.
      */
     public static final String KEY_IDENTIFIER = "@key";
 
