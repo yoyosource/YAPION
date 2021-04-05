@@ -19,6 +19,17 @@ import yapion.utils.ReferenceFunction;
 public class BooleanHandler implements ValueHandler<Boolean> {
 
     @Override
+    public boolean allowed(char c) {
+        if (c == 't' || c == 'r' || c == 'u' || c == 'e') {
+            return true;
+        }
+        if (c == 'f' || c == 'a' || c == 'l' || c == 's') {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     @SuppressWarnings("java:S5411")
     public String output(Boolean aBoolean) {
         if (aBoolean) {

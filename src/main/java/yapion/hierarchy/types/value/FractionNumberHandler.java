@@ -27,6 +27,11 @@ public class FractionNumberHandler {
     public static class FloatHandler implements ValueHandler<Float> {
 
         @Override
+        public boolean allowed(char c) {
+            return (c >= '0' && c <= '9') || c == '-' || c == 'F';
+        }
+
+        @Override
         public String output(Float aFloat) {
             return aFloat + NumberSuffix.FLOAT.getSuffix();
         }
@@ -51,6 +56,11 @@ public class FractionNumberHandler {
     public static class DoubleHandler implements ValueHandler<Double> {
 
         @Override
+        public boolean allowed(char c) {
+            return (c >= '0' && c <= '9') || c == '-' || c == 'D';
+        }
+
+        @Override
         public String output(Double aDouble) {
             return aDouble + "";
         }
@@ -73,6 +83,11 @@ public class FractionNumberHandler {
     }
 
     public static class BigDecimalHandler implements ValueHandler<BigDecimal> {
+
+        @Override
+        public boolean allowed(char c) {
+            return (c >= '0' && c <= '9') || c == '-' || c == 'B' || c == 'D';
+        }
 
         @Override
         public String output(BigDecimal bigDecimal) {

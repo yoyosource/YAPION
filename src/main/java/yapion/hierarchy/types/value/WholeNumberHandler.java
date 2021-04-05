@@ -27,6 +27,11 @@ public class WholeNumberHandler {
     public static class ByteHandler implements ValueHandler<Byte> {
 
         @Override
+        public boolean allowed(char c) {
+            return (c >= '0' && c <= '9') || c == 'x' || c == 'X' || c == '#' || c == '-' || c == 'B';
+        }
+
+        @Override
         public String output(Byte aByte) {
             return aByte + NumberSuffix.BYTE.getSuffix();
         }
@@ -49,6 +54,11 @@ public class WholeNumberHandler {
     }
 
     public static class ShortHandler implements ValueHandler<Short> {
+
+        @Override
+        public boolean allowed(char c) {
+            return (c >= '0' && c <= '9') || c == 'x' || c == 'X' || c == '#' || c == '-' || c == 'S';
+        }
 
         @Override
         public String output(Short aShort) {
@@ -75,6 +85,11 @@ public class WholeNumberHandler {
     public static class IntegerHandler implements ValueHandler<Integer> {
 
         @Override
+        public boolean allowed(char c) {
+            return (c >= '0' && c <= '9') || c == 'x' || c == 'X' || c == '#' || c == '-' || c == 'I';
+        }
+
+        @Override
         public String output(Integer integer) {
             return integer + "";
         }
@@ -99,6 +114,11 @@ public class WholeNumberHandler {
     public static class LongHandler implements ValueHandler<Long> {
 
         @Override
+        public boolean allowed(char c) {
+            return (c >= '0' && c <= '9') || c == 'x' || c == 'X' || c == '#' || c == '-' || c == 'L';
+        }
+
+        @Override
         public String output(Long aLong) {
             return aLong + NumberSuffix.LONG.getSuffix();
         }
@@ -121,6 +141,11 @@ public class WholeNumberHandler {
     }
 
     public static class BigIntegerHandler implements ValueHandler<BigInteger> {
+
+        @Override
+        public boolean allowed(char c) {
+            return (c >= '0' && c <= '9') || c == 'x' || c == 'X' || c == '#' || c == '-' || c == 'B' || c == 'I';
+        }
 
         @Override
         public String output(BigInteger bigInteger) {

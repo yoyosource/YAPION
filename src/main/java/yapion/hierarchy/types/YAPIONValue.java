@@ -16,7 +16,6 @@ package yapion.hierarchy.types;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.YAPIONException;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
@@ -36,6 +35,7 @@ import static yapion.utils.IdentifierUtils.*;
 @YAPIONLoad(context = "*")
 public class YAPIONValue<T> extends YAPIONValueType {
 
+    private static final Set<ValueHandler<?>> allValueHandlers;
     private static final LinkedHashMap<String, ValueHandler<?>> valueHandlers = new LinkedHashMap<>();
 
     private static final String[] allowedTypes = new String[] {
@@ -45,6 +45,10 @@ public class YAPIONValue<T> extends YAPIONValueType {
             "java.lang.String", "java.lang.Character"
     };
     private static final Map<String, String> typeIdentifier = new HashMap<>();
+
+    public static Set<ValueHandler<?>> allValueHandlers() {
+        return new HashSet<>(allValueHandlers);
+    }
 
     static {
         valueHandlers.put("java.lang.Boolean", new BooleanHandler());
@@ -62,6 +66,8 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
         valueHandlers.put("java.lang.Character", new CharacterHandler());
         valueHandlers.put("java.lang.String", new StringHandler());
+
+        allValueHandlers = new HashSet<>(valueHandlers.values());
 
         typeIdentifier.put(allowedTypes[1], BYTE_IDENTIFIER);
         typeIdentifier.put(allowedTypes[2], SHORT_IDENTIFIER);
@@ -169,8 +175,13 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @SuppressWarnings({"java:S3740", "java:S2789"})
     public static YAPIONValue parseValue(String s) {
-        for (Map.Entry<String, ValueHandler<?>> valueHandlerEntry : valueHandlers.entrySet()) {
-            MethodReturnValue<?> optional = valueHandlerEntry.getValue().preParse(s);
+        return parseValue(s, allValueHandlers);
+    }
+
+    @SuppressWarnings({"java:S3740", "java:S2789"})
+    public static YAPIONValue parseValue(String s, Set<ValueHandler<?>> possibleValueHandler) {
+        for (ValueHandler<?> valueHandler : possibleValueHandler) {
+            MethodReturnValue<?> optional = valueHandler.preParse(s);
             if (optional.isPresent() && !optional.nonNullValuePresent()) {
                 return new YAPIONValue(null);
             }
@@ -178,8 +189,8 @@ public class YAPIONValue<T> extends YAPIONValueType {
                 return new YAPIONValue<>(optional.get());
             }
         }
-        for (Map.Entry<String, ValueHandler<?>> valueHandlerEntry : valueHandlers.entrySet()) {
-            MethodReturnValue<?> optional = valueHandlerEntry.getValue().parse(s);
+        for (ValueHandler<?> valueHandler : possibleValueHandler) {
+            MethodReturnValue<?> optional = valueHandler.parse(s);
             if (optional.isPresent()) {
                 return new YAPIONValue<>(optional.get());
             }

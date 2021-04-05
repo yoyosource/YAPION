@@ -17,7 +17,6 @@ import yapion.utils.MethodReturnValue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Optional;
 import java.util.function.Function;
 
 final class NumberSuffix<T> {

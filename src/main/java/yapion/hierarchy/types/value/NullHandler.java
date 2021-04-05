@@ -19,6 +19,11 @@ import yapion.utils.ReferenceFunction;
 public class NullHandler implements ValueHandler<Object> {
 
     @Override
+    public boolean allowed(char c) {
+        return c == 'n' || c == 'u' || c == 'l';
+    }
+
+    @Override
     public String output(Object o) {
         return "null";
     }

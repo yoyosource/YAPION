@@ -18,6 +18,8 @@ import yapion.utils.ReferenceFunction;
 
 public interface ValueHandler<T> {
 
+    boolean allowed(char c);
+
     String output(T t);
 
     MethodReturnValue<T> preParse(String s);

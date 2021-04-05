@@ -23,6 +23,11 @@ import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 public class StringHandler implements ValueHandler<String> {
 
     @Override
+    public boolean allowed(char c) {
+        return true;
+    }
+
+    @Override
     public String output(String s) {
         if (s.equals("\"") || (s.startsWith("\"") && s.endsWith("\""))) {
             return '"' + s + '"';

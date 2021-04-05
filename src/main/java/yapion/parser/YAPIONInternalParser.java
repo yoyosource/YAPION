@@ -18,15 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
+import yapion.hierarchy.types.value.ValueHandler;
 import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 class YAPIONInternalParser {
@@ -61,6 +59,9 @@ class YAPIONInternalParser {
     // All Objects and Pointers
     private final List<YAPIONObject> yapionObjectList = new ArrayList<>();
     private final List<YAPIONPointer> yapionPointerList = new ArrayList<>();
+
+    // YAPIONValue type specifications
+    private final Set<ValueHandler<?>> valueHandlerSet = new HashSet<>();
 
     void setReferenceFunction(ReferenceFunction referenceFunction) {
         this.referenceFunction = referenceFunction;
@@ -170,6 +171,11 @@ class YAPIONInternalParser {
         typeStack.push(yapionType);
         key = stringBuilderToUTF8String(current);
         current = new StringBuilder();
+
+        if (yapionType == YAPIONType.VALUE) {
+            valueHandlerSet.clear();
+            valueHandlerSet.addAll(YAPIONValue.allValueHandlers());
+        }
     }
 
     private void pop(YAPIONType yapionType) {
@@ -299,9 +305,10 @@ class YAPIONInternalParser {
         }
         if (!escaped && c == ')') {
             pop(YAPIONType.VALUE);
-            add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current)));
+            add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerSet));
             reset();
         } else {
+            valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed(c));
             if (c == '\\' && !escaped) {
                 escaped = true;
                 return;
