@@ -61,7 +61,7 @@ class YAPIONInternalParser {
     private final List<YAPIONPointer> yapionPointerList = new ArrayList<>();
 
     // YAPIONValue type specifications
-    private final Set<ValueHandler<?>> valueHandlerSet = new HashSet<>();
+    private final List<ValueHandler<?>> valueHandlerSet = new ArrayList<>();
 
     void setReferenceFunction(ReferenceFunction referenceFunction) {
         this.referenceFunction = referenceFunction;

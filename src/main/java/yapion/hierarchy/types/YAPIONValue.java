@@ -35,7 +35,7 @@ import static yapion.utils.IdentifierUtils.*;
 @YAPIONLoad(context = "*")
 public class YAPIONValue<T> extends YAPIONValueType {
 
-    private static final Set<ValueHandler<?>> allValueHandlers;
+    private static final List<ValueHandler<?>> allValueHandlers;
     private static final LinkedHashMap<String, ValueHandler<?>> valueHandlers = new LinkedHashMap<>();
 
     private static final String[] allowedTypes = new String[] {
@@ -46,8 +46,8 @@ public class YAPIONValue<T> extends YAPIONValueType {
     };
     private static final Map<String, String> typeIdentifier = new HashMap<>();
 
-    public static Set<ValueHandler<?>> allValueHandlers() {
-        return new HashSet<>(allValueHandlers);
+    public static List<ValueHandler<?>> allValueHandlers() {
+        return new ArrayList<>(allValueHandlers);
     }
 
     static {
@@ -67,7 +67,10 @@ public class YAPIONValue<T> extends YAPIONValueType {
         valueHandlers.put("java.lang.Character", new CharacterHandler());
         valueHandlers.put("java.lang.String", new StringHandler());
 
-        allValueHandlers = new HashSet<>(valueHandlers.values());
+        allValueHandlers = new ArrayList<>();
+        for (Map.Entry<String, ValueHandler<?>> entry : valueHandlers.entrySet()) {
+            allValueHandlers.add(entry.getValue());
+        }
 
         typeIdentifier.put(allowedTypes[1], BYTE_IDENTIFIER);
         typeIdentifier.put(allowedTypes[2], SHORT_IDENTIFIER);
@@ -179,7 +182,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     @SuppressWarnings({"java:S3740", "java:S2789"})
-    public static YAPIONValue parseValue(String s, Set<ValueHandler<?>> possibleValueHandler) {
+    public static YAPIONValue parseValue(String s, List<ValueHandler<?>> possibleValueHandler) {
         for (ValueHandler<?> valueHandler : possibleValueHandler) {
             MethodReturnValue<?> optional = valueHandler.preParse(s);
             if (optional.isPresent() && !optional.nonNullValuePresent()) {
