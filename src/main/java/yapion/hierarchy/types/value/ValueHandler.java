@@ -18,7 +18,7 @@ import yapion.utils.ReferenceFunction;
 
 public interface ValueHandler<T> {
 
-    boolean allowed(char c);
+    boolean allowed(char c, int length);
 
     String output(T t);
 

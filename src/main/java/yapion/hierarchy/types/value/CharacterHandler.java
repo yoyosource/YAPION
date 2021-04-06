@@ -16,17 +16,23 @@ package yapion.hierarchy.types.value;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
 import static yapion.hierarchy.types.value.ValueUtils.charToUTFEscape;
 
 public class CharacterHandler implements ValueHandler<Character> {
 
     @Override
-    public boolean allowed(char c) {
-        return true;
+    public boolean allowed(char c, int length) {
+        if (length == 0 && c == '\'') {
+            return true;
+        }
+        if (length == 1) {
+            return true;
+        }
+        if (length == 2 && c == '\'') {
+            return true;
+        }
+        return false;
     }
 
     @Override

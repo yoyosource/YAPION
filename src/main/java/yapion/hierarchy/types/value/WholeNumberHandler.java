@@ -27,8 +27,14 @@ public class WholeNumberHandler {
     public static class ByteHandler implements ValueHandler<Byte> {
 
         @Override
-        public boolean allowed(char c) {
-            return (c >= '0' && c <= '9') || c == 'x' || c == 'X' || c == '#' || c == '-' || c == 'B';
+        public boolean allowed(char c, int length) {
+            if (length == 0 && (c == '-' || c == '#' || c == '0')) {
+                return true;
+            }
+            if (length == 1 && (c == 'x' || c == 'X' || c == '#')) {
+                return true;
+            }
+            return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
         }
 
         @Override
@@ -56,8 +62,14 @@ public class WholeNumberHandler {
     public static class ShortHandler implements ValueHandler<Short> {
 
         @Override
-        public boolean allowed(char c) {
-            return (c >= '0' && c <= '9') || c == 'x' || c == 'X' || c == '#' || c == '-' || c == 'S';
+        public boolean allowed(char c, int length) {
+            if (length == 0 && (c == '-' || c == '#' || c == '0')) {
+                return true;
+            }
+            if (length == 1 && (c == 'x' || c == 'X' || c == '#')) {
+                return true;
+            }
+            return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'S';
         }
 
         @Override
@@ -85,8 +97,14 @@ public class WholeNumberHandler {
     public static class IntegerHandler implements ValueHandler<Integer> {
 
         @Override
-        public boolean allowed(char c) {
-            return (c >= '0' && c <= '9') || c == 'x' || c == 'X' || c == '#' || c == '-' || c == 'I';
+        public boolean allowed(char c, int length) {
+            if (length == 0 && (c == '-' || c == '#' || c == '0')) {
+                return true;
+            }
+            if (length == 1 && (c == 'x' || c == 'X' || c == '#')) {
+                return true;
+            }
+            return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'I';
         }
 
         @Override
@@ -114,8 +132,14 @@ public class WholeNumberHandler {
     public static class LongHandler implements ValueHandler<Long> {
 
         @Override
-        public boolean allowed(char c) {
-            return (c >= '0' && c <= '9') || c == 'x' || c == 'X' || c == '#' || c == '-' || c == 'L';
+        public boolean allowed(char c, int length) {
+            if (length == 0 && (c == '-' || c == '#' || c == '0')) {
+                return true;
+            }
+            if (length == 1 && (c == 'x' || c == 'X' || c == '#')) {
+                return true;
+            }
+            return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'L';
         }
 
         @Override
@@ -143,8 +167,14 @@ public class WholeNumberHandler {
     public static class BigIntegerHandler implements ValueHandler<BigInteger> {
 
         @Override
-        public boolean allowed(char c) {
-            return (c >= '0' && c <= '9') || c == 'x' || c == 'X' || c == '#' || c == '-' || c == 'B' || c == 'I';
+        public boolean allowed(char c, int length) {
+            if (length == 0 && (c == '-' || c == '#' || c == '0')) {
+                return true;
+            }
+            if (length == 1 && (c == 'x' || c == 'X' || c == '#')) {
+                return true;
+            }
+            return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'I';
         }
 
         @Override

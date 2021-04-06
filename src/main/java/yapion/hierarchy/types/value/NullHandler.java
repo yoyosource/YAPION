@@ -19,8 +19,20 @@ import yapion.utils.ReferenceFunction;
 public class NullHandler implements ValueHandler<Object> {
 
     @Override
-    public boolean allowed(char c) {
-        return c == 'n' || c == 'u' || c == 'l';
+    public boolean allowed(char c, int length) {
+        if (length == 0 && c == 'n') {
+            return true;
+        }
+        if (length == 1 && c == 'u') {
+            return true;
+        }
+        if (length == 2 && c == 'l') {
+            return true;
+        }
+        if (length == 3 && c == 'l') {
+            return true;
+        }
+        return false;
     }
 
     @Override

@@ -19,11 +19,20 @@ import yapion.utils.ReferenceFunction;
 public class BooleanHandler implements ValueHandler<Boolean> {
 
     @Override
-    public boolean allowed(char c) {
-        if (c == 't' || c == 'r' || c == 'u' || c == 'e') {
+    public boolean allowed(char c, int length) {
+        if (length == 0 && (c == 't' || c == 'f')) {
             return true;
         }
-        if (c == 'f' || c == 'a' || c == 'l' || c == 's') {
+        if (length == 1 && (c == 'r' || c == 'a')) {
+            return true;
+        }
+        if (length == 2 && (c == 'u' || c == 'l')) {
+            return true;
+        }
+        if (length == 3 && (c == 'e' || c == 's')) {
+            return true;
+        }
+        if (length == 4 && c == 'e') {
             return true;
         }
         return false;

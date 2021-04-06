@@ -23,7 +23,7 @@ import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 public class StringHandler implements ValueHandler<String> {
 
     @Override
-    public boolean allowed(char c) {
+    public boolean allowed(char c, int length) {
         return true;
     }
 

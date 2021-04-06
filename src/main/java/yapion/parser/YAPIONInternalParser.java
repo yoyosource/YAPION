@@ -304,21 +304,23 @@ class YAPIONInternalParser {
             return;
         }
         if (!escaped && c == ')') {
+            log.debug("ValueHandler to use -> " + valueHandlerSet);
             pop(YAPIONType.VALUE);
             add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerSet));
             reset();
         } else {
-            valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed(c));
             if (c == '\\' && !escaped) {
                 escaped = true;
                 return;
             }
             if (escaped) {
                 if (c != '(' && c != ')') {
+                    valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed('\\', stringBuilderToUTF8String(current).length()));
                     current.append('\\');
                 }
                 escaped = false;
             }
+            valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed(c, stringBuilderToUTF8String(current).length()));
             current.append(c);
         }
     }
