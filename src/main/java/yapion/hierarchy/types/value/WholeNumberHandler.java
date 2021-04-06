@@ -13,16 +13,14 @@
 
 package yapion.hierarchy.types.value;
 
+import lombok.experimental.UtilityClass;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import java.math.BigInteger;
 
+@UtilityClass
 public class WholeNumberHandler {
-
-    private WholeNumberHandler() {
-        throw new IllegalStateException("Utility Class");
-    }
 
     public static class ByteHandler implements ValueHandler<Byte> {
 

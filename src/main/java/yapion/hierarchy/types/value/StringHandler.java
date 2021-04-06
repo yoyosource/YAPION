@@ -20,7 +20,7 @@ import static yapion.hierarchy.types.value.NumberSuffix.*;
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 
-public class StringHandler implements ValueHandler<String> {
+public final class StringHandler implements ValueHandler<String> {
 
     @Override
     public boolean allowed(char c, int length) {

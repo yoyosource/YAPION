@@ -19,7 +19,7 @@ import yapion.utils.ReferenceFunction;
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
 import static yapion.hierarchy.types.value.ValueUtils.charToUTFEscape;
 
-public class CharacterHandler implements ValueHandler<Character> {
+public final class CharacterHandler implements ValueHandler<Character> {
 
     @Override
     public boolean allowed(char c, int length) {

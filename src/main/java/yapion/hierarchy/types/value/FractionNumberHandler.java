@@ -13,16 +13,14 @@
 
 package yapion.hierarchy.types.value;
 
+import lombok.experimental.UtilityClass;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import java.math.BigDecimal;
 
+@UtilityClass
 public class FractionNumberHandler {
-
-    private FractionNumberHandler() {
-        throw new IllegalStateException("Utility Class");
-    }
 
     public static class FloatHandler implements ValueHandler<Float> {
 

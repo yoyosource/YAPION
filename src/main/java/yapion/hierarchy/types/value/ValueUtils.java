@@ -13,13 +13,12 @@
 
 package yapion.hierarchy.types.value;
 
+import lombok.experimental.UtilityClass;
+
 import java.nio.charset.StandardCharsets;
 
+@UtilityClass
 public final class ValueUtils {
-
-    private ValueUtils() {
-        throw new IllegalStateException("Utility class");
-    }
 
     public enum EscapeCharacters {
 

@@ -16,7 +16,7 @@ package yapion.hierarchy.types.value;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
-public class NullHandler implements ValueHandler<Object> {
+public final class NullHandler implements ValueHandler<Object> {
 
     @Override
     public boolean allowed(char c, int length) {
