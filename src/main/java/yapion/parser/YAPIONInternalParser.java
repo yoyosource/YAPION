@@ -87,7 +87,7 @@ class YAPIONInternalParser {
     }
 
     private void step(char c) {
-        log.debug(typeStack.toString() + " ->  0x" + String.format("%04X", (int) c) + " " + c);
+        log.debug("{} -> {}", typeStack.toString(), (int) c);
         if (typeStack.isEmpty()) {
             initialType(c);
             return;
@@ -109,38 +109,7 @@ class YAPIONInternalParser {
             default:
                 break;
         }
-
-        if (everyType(c, lastChar)) {
-            return;
-        }
-        if (!escaped && c == '}') {
-            pop(YAPIONType.OBJECT);
-            reset();
-            // ((YAPIONObject) currentObject).
-            currentObject = currentObject.getParent();
-            if (typeStack.isEmpty()) {
-                finished = true;
-            }
-            return;
-        }
-        if (parseSpecialEscape(c)) {
-            return;
-        }
-        if (c == '\\' && !escaped) {
-            escaped = true;
-            return;
-        }
-        if (current.length() == 0 && c == ' ' && escaped) {
-            current.append(c);
-            escaped = false;
-            return;
-        }
-        if (current.length() != 0 || (c != ' ' && c != '\n')) {
-            current.append(c);
-        }
-        if (escaped) {
-            escaped = false;
-        }
+        parseObject(c, lastChar);
     }
 
     private void parseFinish() {
@@ -167,7 +136,7 @@ class YAPIONInternalParser {
     }
 
     private void push(YAPIONType yapionType) {
-        log.debug("push     [" + yapionType + "]");
+        log.debug("push     [{}]", yapionType);
         typeStack.push(yapionType);
         key = stringBuilderToUTF8String(current);
         current = new StringBuilder();
@@ -177,13 +146,13 @@ class YAPIONInternalParser {
     }
 
     private void pop(YAPIONType yapionType) {
-        log.debug("pop      [" + yapionType + "]");
+        log.debug("pop      [{}]", yapionType);
         ReflectionsUtils.invokeMethod("setParseTime", currentObject, new ReflectionsUtils.Parameter(long.class, typeStack.peekTime()));
         typeStack.pop(yapionType);
     }
 
     private void reset() {
-        log.debug("reset    [" + current + ", " + key + "]");
+        log.debug("reset    [{}, {}]", current, key);
         current = new StringBuilder();
         key = "";
     }
@@ -197,16 +166,16 @@ class YAPIONInternalParser {
             currentObject = result;
             return;
         }
-        log.debug("initial  [EXCEPTION] -> 0x" + String.format("%04X", (int) c));
+        log.debug("initial  [EXCEPTION] -> {}", (int)c);
         throw new YAPIONParserException("Initial char is not '{'");
     }
 
     private void add(@NonNull String key, @NonNull YAPIONAnyType value) {
-        log.debug("add      ['" + key + "'='" + value + "']");
+        log.debug("add      ['{}'='{}']", key, value);
         if (currentObject instanceof YAPIONObject) {
             ((YAPIONObject) currentObject).add(key, value);
         } else if (currentObject instanceof YAPIONMap) {
-            ReflectionsUtils.invokeMethod("add", (YAPIONMap) currentObject, new ReflectionsUtils.Parameter(YAPIONParserMapValue.class, new YAPIONParserMapValue(value)));
+            ((YAPIONMap) currentObject).add(new YAPIONParserMapValue(value));
         } else if (currentObject instanceof YAPIONArray) {
             ((YAPIONArray) currentObject).add(value);
         }
@@ -258,6 +227,39 @@ class YAPIONInternalParser {
         return false;
     }
 
+    private void parseObject(char c, char lastChar) {
+        if (everyType(c, lastChar)) {
+            return;
+        }
+        if (!escaped && c == '}') {
+            pop(YAPIONType.OBJECT);
+            reset();
+            currentObject = currentObject.getParent();
+            if (typeStack.isEmpty()) {
+                finished = true;
+            }
+            return;
+        }
+        if (parseSpecialEscape(c)) {
+            return;
+        }
+        if (c == '\\' && !escaped) {
+            escaped = true;
+            return;
+        }
+        if (current.length() == 0 && c == ' ' && escaped) {
+            current.append(c);
+            escaped = false;
+            return;
+        }
+        if (current.length() != 0 || (c != ' ' && c != '\n')) {
+            current.append(c);
+        }
+        if (escaped) {
+            escaped = false;
+        }
+    }
+
     private boolean parseSpecialEscape(char c) {
         if (parseUTF8Escape(c)) return true;
         if (!escaped) return false;
@@ -287,7 +289,7 @@ class YAPIONInternalParser {
         }
         if (unicode != null && unicode.length() < 4) {
             unicode.append(c);
-            log.debug("UTF8     [" + unicode + "]");
+            log.debug("UTF8     [{}]", unicode);
             if (unicode.length() == 4) {
                 current.append((char) Integer.parseInt(unicode.toString(), 16));
                 unicode = null;
@@ -302,7 +304,7 @@ class YAPIONInternalParser {
             return;
         }
         if (!escaped && c == ')') {
-            log.debug("ValueHandler to use -> " + valueHandlerSet);
+            log.debug("ValueHandler to use -> {}", valueHandlerSet);
             pop(YAPIONType.VALUE);
             add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerSet));
             reset();

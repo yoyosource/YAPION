@@ -276,7 +276,7 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> imple
     }
 
     // Internal method for Parser
-    private void add(@NonNull YAPIONParserMapValue variable) {
+    public void add(@NonNull YAPIONParserMapValue variable) {
         check(variable.value);
         discardReferenceValue();
         yapionParserMapValues.add(variable);
