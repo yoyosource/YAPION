@@ -358,25 +358,20 @@ class YAPIONInternalParser {
 
     private void parseArray(char c, char lastChar) {
         key = "";
-        if (!escaped) {
+        if (!escaped && (c == ',' || c == ']')) {
+            if (current.length() != 0) {
+                add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerSet));
+            }
             if (c == ',') {
-                if (current.length() != 0) {
-                    add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerSet));
-                }
                 current = new StringBuilder();
                 valueHandlerSet.clear();
                 valueHandlerSet.addAll(YAPIONValue.allValueHandlers());
                 return;
             }
-            if (c == ']') {
-                if (current.length() != 0) {
-                    add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerSet));
-                }
-                pop(YAPIONType.ARRAY);
-                currentObject = currentObject.getParent();
-                reset();
-                return;
-            }
+            pop(YAPIONType.ARRAY);
+            currentObject = currentObject.getParent();
+            reset();
+            return;
         }
         if (current.length() == 0 && everyType(c, lastChar)) {
             return;
