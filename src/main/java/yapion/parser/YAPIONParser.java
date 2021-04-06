@@ -202,19 +202,7 @@ public final class YAPIONParser {
      * @param string to parse from
      */
     public YAPIONParser(@NonNull String string) {
-        charReader = new CharReader() {
-            private int index = 0;
-
-            @Override
-            public char next() {
-                return string.charAt(index++);
-            }
-
-            @Override
-            public boolean hasNext() {
-                return index < string.length();
-            }
-        };
+        this(string.toCharArray());
     }
 
     /**
@@ -223,17 +211,20 @@ public final class YAPIONParser {
      * @param stringBuilder to parse from
      */
     public YAPIONParser(@NonNull StringBuilder stringBuilder) {
+        char[] chars = new char[stringBuilder.length()];
+        stringBuilder.getChars(0, stringBuilder.length(), chars, 0);
         charReader = new CharReader() {
             private int index = 0;
+            private int available = chars.length;
 
             @Override
             public char next() {
-                return stringBuilder.charAt(index++);
+                return chars[index++];
             }
 
             @Override
             public boolean hasNext() {
-                return index < stringBuilder.length();
+                return index < available;
             }
         };
     }
@@ -246,6 +237,7 @@ public final class YAPIONParser {
     public YAPIONParser(@NonNull byte[] bytes) {
         charReader = new CharReader() {
             private int index = 0;
+            private int available = bytes.length;
 
             @Override
             public char next() {
@@ -254,7 +246,7 @@ public final class YAPIONParser {
 
             @Override
             public boolean hasNext() {
-                return index < bytes.length;
+                return index < available;
             }
         };
     }
@@ -267,6 +259,7 @@ public final class YAPIONParser {
     public YAPIONParser(@NonNull char[] chars) {
         charReader = new CharReader() {
             private int index = 0;
+            private int available = chars.length;
 
             @Override
             public char next() {
@@ -275,7 +268,7 @@ public final class YAPIONParser {
 
             @Override
             public boolean hasNext() {
-                return index < chars.length;
+                return index < available;
             }
         };
     }
@@ -297,6 +290,8 @@ public final class YAPIONParser {
      */
     public YAPIONParser(@NonNull InputStream inputStream, boolean stopOnStreamEnd) {
         charReader = new CharReader() {
+            int available = -1;
+
             @Override
             @SneakyThrows
             public char next() {
@@ -304,13 +299,17 @@ public final class YAPIONParser {
                 if (i == -1 && !stopOnStreamEnd) {
                     throw new ParserSkipException();
                 }
+                available--;
                 return (char) i;
             }
 
             @Override
             @SneakyThrows
             public boolean hasNext() {
-                return !stopOnStreamEnd || inputStream.available() > 0;
+                if (available <= 0) {
+                    available = inputStream.available();
+                }
+                return !stopOnStreamEnd || available > 0;
             }
         };
     }

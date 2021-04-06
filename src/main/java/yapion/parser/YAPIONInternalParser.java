@@ -172,10 +172,8 @@ class YAPIONInternalParser {
         key = stringBuilderToUTF8String(current);
         current = new StringBuilder();
 
-        if (yapionType == YAPIONType.VALUE) {
-            valueHandlerSet.clear();
-            valueHandlerSet.addAll(YAPIONValue.allValueHandlers());
-        }
+        valueHandlerSet.clear();
+        valueHandlerSet.addAll(YAPIONValue.allValueHandlers());
     }
 
     private void pop(YAPIONType yapionType) {
@@ -315,12 +313,12 @@ class YAPIONInternalParser {
             }
             if (escaped) {
                 if (c != '(' && c != ')') {
-                    valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed('\\', stringBuilderToUTF8String(current).length()));
+                    valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed('\\', current.length()));
                     current.append('\\');
                 }
                 escaped = false;
             }
-            valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed(c, stringBuilderToUTF8String(current).length()));
+            valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed(c, current.length()));
             current.append(c);
         }
     }
@@ -359,14 +357,16 @@ class YAPIONInternalParser {
         if (!escaped) {
             if (c == ',') {
                 if (current.length() != 0) {
-                    add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current)));
+                    add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerSet));
                 }
                 current = new StringBuilder();
+                valueHandlerSet.clear();
+                valueHandlerSet.addAll(YAPIONValue.allValueHandlers());
                 return;
             }
             if (c == ']') {
                 if (current.length() != 0) {
-                    add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current)));
+                    add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerSet));
                 }
                 pop(YAPIONType.ARRAY);
                 currentObject = currentObject.getParent();
@@ -380,6 +380,7 @@ class YAPIONInternalParser {
         if (current.length() == 0 && (c == ' ' || c == '\n') && !escaped) {
             return;
         }
+        valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed(c, current.length()));
         current.append(c);
     }
 
