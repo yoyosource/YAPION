@@ -21,10 +21,12 @@ import yapion.hierarchy.types.*;
 import yapion.hierarchy.types.value.ValueHandler;
 import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
-import yapion.utils.ReflectionsUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 class YAPIONInternalParser {
@@ -130,7 +132,7 @@ class YAPIONInternalParser {
             long id = yapionPointer.getPointerID();
             YAPIONObject yapionObject = yapionObjectMap.get(id);
             if (yapionObject == null) continue;
-            ReflectionsUtils.invokeMethod("setYAPIONObject", yapionPointer, yapionObject);
+            yapionPointer.setYAPIONObject(yapionObject);
         }
         log.debug("pFinish  [done]");
     }
@@ -147,7 +149,7 @@ class YAPIONInternalParser {
 
     private void pop(YAPIONType yapionType) {
         log.debug("pop      [{}]", yapionType);
-        ReflectionsUtils.invokeMethod("setParseTime", currentObject, new ReflectionsUtils.Parameter(long.class, typeStack.peekTime()));
+        currentObject.setParseTime(typeStack.peekTime());
         typeStack.pop(yapionType);
     }
 
@@ -166,7 +168,7 @@ class YAPIONInternalParser {
             currentObject = result;
             return;
         }
-        log.debug("initial  [EXCEPTION] -> {}", (int)c);
+        log.debug("initial  [EXCEPTION] -> {}", (int) c);
         throw new YAPIONParserException("Initial char is not '{'");
     }
 
@@ -348,7 +350,7 @@ class YAPIONInternalParser {
         }
         if (c == '>') {
             pop(YAPIONType.MAP);
-            ReflectionsUtils.invokeMethod("finishMapping", (YAPIONMap) currentObject);
+            ((YAPIONMap) currentObject).finishMapping();
             currentObject = currentObject.getParent();
             reset();
         }

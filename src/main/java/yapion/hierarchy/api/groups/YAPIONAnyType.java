@@ -134,10 +134,10 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     }
 
     // Parse Time
-    private long parseTime = 0;
+    private long parseTime = -1;
 
-    @SuppressWarnings("java:S1144")
-    private void setParseTime(long time) {
+    public void setParseTime(long time) {
+        if (parseTime != -1) return;
         this.parseTime = time;
     }
 

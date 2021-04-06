@@ -284,7 +284,7 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> imple
     }
 
     // Internal method for Parser
-    private void finishMapping() {
+    public void finishMapping() {
         discardReferenceValue();
         if (yapionParserMapValues.isEmpty()) {
             return;

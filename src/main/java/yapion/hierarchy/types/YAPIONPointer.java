@@ -66,7 +66,7 @@ public class YAPIONPointer extends YAPIONValueType {
 
     private long pointerID;
     private ReferenceFunction referenceFunction;
-    private YAPIONObject yapionObject;
+    private YAPIONObject yapionObject = null;
 
     public YAPIONPointer(YAPIONObject yapionObject) {
         referenceFunction = ReferenceIDUtils.REFERENCE_FUNCTION;
@@ -85,13 +85,12 @@ public class YAPIONPointer extends YAPIONValueType {
         this.pointerID = Long.parseLong(pointerID, 16);
     }
 
-    @SuppressWarnings("java:S1144")
-    private void setYAPIONObject(YAPIONObject yapionObject) {
+    public void setYAPIONObject(YAPIONObject yapionObject) {
+        if (this.yapionObject != null || yapionObject == null) return;
         this.yapionObject = yapionObject;
     }
 
-    @SuppressWarnings("java:S1144")
-    private YAPIONObject getYAPIONObject() {
+    public YAPIONObject getYAPIONObject() {
         return yapionObject;
     }
 
