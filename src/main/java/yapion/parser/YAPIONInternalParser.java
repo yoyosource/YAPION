@@ -122,19 +122,21 @@ class YAPIONInternalParser {
             throw new YAPIONParserException("No parse steps were done");
         }
 
-        log.debug("pFinish  [init]");
-        Map<Long, YAPIONObject> yapionObjectMap = new HashMap<>();
-        for (YAPIONObject yapionObject : yapionObjectList) {
-            yapionObjectMap.put(yapionObject.referenceValue(referenceFunction), yapionObject);
+        if (!yapionPointerList.isEmpty()) {
+            log.debug("pFinish  [init]");
+            Map<Long, YAPIONObject> yapionObjectMap = new HashMap<>();
+            for (YAPIONObject yapionObject : yapionObjectList) {
+                yapionObjectMap.put(yapionObject.referenceValue(referenceFunction), yapionObject);
+            }
+            log.debug("pFinish  [setPointer]");
+            for (YAPIONPointer yapionPointer : yapionPointerList) {
+                long id = yapionPointer.getPointerID();
+                YAPIONObject yapionObject = yapionObjectMap.get(id);
+                if (yapionObject == null) continue;
+                yapionPointer.setYAPIONObject(yapionObject);
+            }
+            log.debug("pFinish  [done]");
         }
-        log.debug("pFinish  [setPointer]");
-        for (YAPIONPointer yapionPointer : yapionPointerList) {
-            long id = yapionPointer.getPointerID();
-            YAPIONObject yapionObject = yapionObjectMap.get(id);
-            if (yapionObject == null) continue;
-            yapionPointer.setYAPIONObject(yapionObject);
-        }
-        log.debug("pFinish  [done]");
     }
 
     private void push(YAPIONType yapionType) {
