@@ -89,7 +89,7 @@ class YAPIONInternalParser {
     }
 
     private void step(char c) {
-        log.debug("{} -> {}", typeStack.toString(), (int) c);
+        log.debug("{} -> {}", typeStack, (int) c);
         if (typeStack.isEmpty()) {
             initialType(c);
             return;
