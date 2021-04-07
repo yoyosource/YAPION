@@ -47,7 +47,13 @@ public class YAPIONValue<T> extends YAPIONValueType {
     private static final Map<String, String> typeIdentifier = new HashMap<>();
 
     public static List<ValueHandler<?>> allValueHandlers() {
-        return new ArrayList<>(allValueHandlers);
+        if (allValueHandlers.size() != allowedTypes.length) {
+            allValueHandlers.clear();
+            for (Map.Entry<String, ValueHandler<?>> entry : valueHandlers.entrySet()) {
+                allValueHandlers.add(entry.getValue());
+            }
+        }
+        return allValueHandlers;
     }
 
     static {
@@ -178,7 +184,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @SuppressWarnings({"java:S3740", "java:S2789"})
     public static YAPIONValue parseValue(String s) {
-        return parseValue(s, allValueHandlers);
+        return parseValue(s, allValueHandlers());
     }
 
     @SuppressWarnings({"java:S3740", "java:S2789"})

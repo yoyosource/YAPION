@@ -98,20 +98,19 @@ class YAPIONInternalParser {
         switch (typeStack.peek()) {
             case POINTER:
                 parsePointer(c);
-                return;
+                break;
             case ARRAY:
                 parseArray(c, lastChar);
-                return;
+                break;
             case VALUE:
                 parseValue(c);
-                return;
+                break;
             case MAP:
                 parseMap(c, lastChar);
-                return;
-            default:
                 break;
+            default:
+                parseObject(c, lastChar);
         }
-        parseObject(c, lastChar);
     }
 
     private void parseFinish() {
