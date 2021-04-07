@@ -378,6 +378,9 @@ class YAPIONInternalParser {
         if (current.length() == 0 && everyType(c, lastChar)) {
             return;
         }
+        if (current.length() == 1 && lastChar == '-' && everyType(c, lastChar)) {
+            return;
+        }
         if (current.length() == 0 && (c == ' ' || c == '\n') && !escaped) {
             return;
         }
