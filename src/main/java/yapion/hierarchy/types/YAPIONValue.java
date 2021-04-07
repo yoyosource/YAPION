@@ -19,6 +19,7 @@ import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.types.utils.ValueHandlerList;
 import yapion.hierarchy.types.value.*;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
@@ -35,7 +36,7 @@ import static yapion.utils.IdentifierUtils.*;
 @YAPIONLoad(context = "*")
 public class YAPIONValue<T> extends YAPIONValueType {
 
-    private static final List<ValueHandler<?>> allValueHandlers;
+    private static final ValueHandlerList VALUE_HANDLER_LIST;
     private static final LinkedHashMap<String, ValueHandler<?>> valueHandlers = new LinkedHashMap<>();
 
     private static final String[] allowedTypes = new String[] {
@@ -46,14 +47,8 @@ public class YAPIONValue<T> extends YAPIONValueType {
     };
     private static final Map<String, String> typeIdentifier = new HashMap<>();
 
-    public static List<ValueHandler<?>> allValueHandlers() {
-        if (allValueHandlers.size() != allowedTypes.length) {
-            allValueHandlers.clear();
-            for (Map.Entry<String, ValueHandler<?>> entry : valueHandlers.entrySet()) {
-                allValueHandlers.add(entry.getValue());
-            }
-        }
-        return allValueHandlers;
+    public static ValueHandlerList allValueHandlers() {
+        return VALUE_HANDLER_LIST;
     }
 
     static {
@@ -73,9 +68,9 @@ public class YAPIONValue<T> extends YAPIONValueType {
         valueHandlers.put("java.lang.Character", new CharacterHandler());
         valueHandlers.put("java.lang.String", new StringHandler());
 
-        allValueHandlers = new ArrayList<>();
+        VALUE_HANDLER_LIST = new ValueHandlerList(valueHandlers.size());
         for (Map.Entry<String, ValueHandler<?>> entry : valueHandlers.entrySet()) {
-            allValueHandlers.add(entry.getValue());
+            VALUE_HANDLER_LIST.add(entry.getValue());
         }
 
         typeIdentifier.put(allowedTypes[1], BYTE_IDENTIFIER);
@@ -184,7 +179,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @SuppressWarnings({"java:S3740", "java:S2789"})
     public static YAPIONValue parseValue(String s) {
-        return parseValue(s, allValueHandlers());
+        return parseValue(s, VALUE_HANDLER_LIST.toArrayList());
     }
 
     @SuppressWarnings({"java:S3740", "java:S2789"})

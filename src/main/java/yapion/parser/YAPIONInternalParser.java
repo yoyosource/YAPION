@@ -63,7 +63,7 @@ class YAPIONInternalParser {
     private final List<YAPIONPointer> yapionPointerList = new ArrayList<>();
 
     // YAPIONValue type specifications
-    private final List<ValueHandler<?>> valueHandlerSet = new ArrayList<>();
+    private final List<ValueHandler<?>> valueHandlerList = new ArrayList<>();
 
     void setReferenceFunction(ReferenceFunction referenceFunction) {
         this.referenceFunction = referenceFunction;
@@ -144,8 +144,8 @@ class YAPIONInternalParser {
         key = stringBuilderToUTF8String(current);
         current = new StringBuilder();
 
-        valueHandlerSet.clear();
-        valueHandlerSet.addAll(YAPIONValue.allValueHandlers());
+        valueHandlerList.clear();
+        YAPIONValue.allValueHandlers().toArrayList(valueHandlerList);
     }
 
     private void pop(YAPIONType yapionType) {
@@ -307,9 +307,9 @@ class YAPIONInternalParser {
             return;
         }
         if (!escaped && c == ')') {
-            log.debug("ValueHandler to use -> {}", valueHandlerSet);
+            log.debug("ValueHandler to use -> {}", valueHandlerList);
             pop(YAPIONType.VALUE);
-            add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerSet));
+            add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             reset();
         } else {
             if (c == '\\' && !escaped) {
@@ -318,12 +318,12 @@ class YAPIONInternalParser {
             }
             if (escaped) {
                 if (c != '(' && c != ')') {
-                    valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed('\\', current.length()));
+                    valueHandlerList.removeIf(valueHandler -> !valueHandler.allowed('\\', current.length()));
                     current.append('\\');
                 }
                 escaped = false;
             }
-            valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed(c, current.length()));
+            valueHandlerList.removeIf(valueHandler -> !valueHandler.allowed(c, current.length()));
             current.append(c);
         }
     }
@@ -361,12 +361,12 @@ class YAPIONInternalParser {
         key = "";
         if (!escaped && (c == ',' || c == ']')) {
             if (current.length() != 0) {
-                add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerSet));
+                add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             }
             if (c == ',') {
                 current = new StringBuilder();
-                valueHandlerSet.clear();
-                valueHandlerSet.addAll(YAPIONValue.allValueHandlers());
+                valueHandlerList.clear();
+                YAPIONValue.allValueHandlers().toArrayList(valueHandlerList);
                 return;
             }
             pop(YAPIONType.ARRAY);
@@ -383,7 +383,7 @@ class YAPIONInternalParser {
         if (current.length() == 0 && (c == ' ' || c == '\n') && !escaped) {
             return;
         }
-        valueHandlerSet.removeIf(valueHandler -> !valueHandler.allowed(c, current.length()));
+        valueHandlerList.removeIf(valueHandler -> !valueHandler.allowed(c, current.length()));
         current.append(c);
     }
 
