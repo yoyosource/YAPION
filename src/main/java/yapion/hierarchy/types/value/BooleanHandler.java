@@ -20,22 +20,20 @@ public final class BooleanHandler implements ValueHandler<Boolean> {
 
     @Override
     public boolean allowed(char c, int length) {
-        if (length == 0 && (c == 't' || c == 'f')) {
-            return true;
+        switch (length) {
+            case 0:
+                return c == 't' || c == 'f';
+            case 1:
+                return c == 'r' || c == 'a';
+            case 2:
+                return c == 'u' || c == 'l';
+            case 3:
+                return c == 'e' || c == 's';
+            case 4:
+                return c == 'e';
+            default:
+                return false;
         }
-        if (length == 1 && (c == 'r' || c == 'a')) {
-            return true;
-        }
-        if (length == 2 && (c == 'u' || c == 'l')) {
-            return true;
-        }
-        if (length == 3 && (c == 'e' || c == 's')) {
-            return true;
-        }
-        if (length == 4 && c == 'e') {
-            return true;
-        }
-        return false;
     }
 
     @Override

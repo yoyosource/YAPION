@@ -26,13 +26,14 @@ public class FractionNumberHandler {
 
         @Override
         public boolean allowed(char c, int length) {
-            if (length == 0 && (c == '.' || c == '-')) {
-                return true;
+            switch (length) {
+                case 0:
+                    return c == '.' || c == '-';
+                case 1:
+                    return c == '.';
+                default:
+                    return (c >= '0' && c <= '9') || c == '.' || c == 'F';
             }
-            if (length == 1 && c == '.') {
-                return true;
-            }
-            return (c >= '0' && c <= '9') || c == '.' || c == 'F';
         }
 
         @Override
@@ -61,13 +62,14 @@ public class FractionNumberHandler {
 
         @Override
         public boolean allowed(char c, int length) {
-            if (length == 0 && (c == '.' || c == '-')) {
-                return true;
+            switch (length) {
+                case 0:
+                    return c == '.' || c == '-';
+                case 1:
+                    return c == '.';
+                default:
+                    return (c >= '0' && c <= '9') || c == '.' || c == 'D';
             }
-            if (length == 1 && c == '.') {
-                return true;
-            }
-            return (c >= '0' && c <= '9') || c == '.' || c == 'D';
         }
 
         @Override
@@ -96,13 +98,14 @@ public class FractionNumberHandler {
 
         @Override
         public boolean allowed(char c, int length) {
-            if (length == 0 && (c == '.' || c == '-')) {
-                return true;
+            switch (length) {
+                case 0:
+                    return c == '.' || c == '-';
+                case 1:
+                    return c == '.';
+                default:
+                    return (c >= '0' && c <= '9') || c == '.' || c == 'B' || c == 'D';
             }
-            if (length == 1 && c == '.') {
-                return true;
-            }
-            return (c >= '0' && c <= '9') || c == '.' || c == 'B' || c == 'D';
         }
 
         @Override

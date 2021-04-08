@@ -20,19 +20,17 @@ public final class NullHandler implements ValueHandler<Object> {
 
     @Override
     public boolean allowed(char c, int length) {
-        if (length == 0 && c == 'n') {
-            return true;
+        switch (length) {
+            case 0:
+                return c == 'n';
+            case 1:
+                return c == 'u';
+            case 2:
+            case 3:
+                return c == 'l';
+            default:
+                return false;
         }
-        if (length == 1 && c == 'u') {
-            return true;
-        }
-        if (length == 2 && c == 'l') {
-            return true;
-        }
-        if (length == 3 && c == 'l') {
-            return true;
-        }
-        return false;
     }
 
     @Override

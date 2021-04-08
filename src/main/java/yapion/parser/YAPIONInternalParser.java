@@ -23,10 +23,7 @@ import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 class YAPIONInternalParser {
@@ -60,10 +57,10 @@ class YAPIONInternalParser {
 
     // All Objects and Pointers
     private final List<YAPIONObject> yapionObjectList = new ArrayList<>();
-    private final List<YAPIONPointer> yapionPointerList = new ArrayList<>();
+    private final List<YAPIONPointer> yapionPointerList = new LinkedList<>();
 
     // YAPIONValue type specifications
-    private final List<ValueHandler<?>> valueHandlerList = new ArrayList<>();
+    private final List<ValueHandler<?>> valueHandlerList = new LinkedList<>();
 
     void setReferenceFunction(ReferenceFunction referenceFunction) {
         this.referenceFunction = referenceFunction;

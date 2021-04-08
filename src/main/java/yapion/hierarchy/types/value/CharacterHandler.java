@@ -23,16 +23,15 @@ public final class CharacterHandler implements ValueHandler<Character> {
 
     @Override
     public boolean allowed(char c, int length) {
-        if (length == 0 && c == '\'') {
-            return true;
+        switch (length) {
+            case 0:
+            case 2:
+                return c == '\'';
+            case 1:
+                return true;
+            default:
+                return false;
         }
-        if (length == 1) {
-            return true;
-        }
-        if (length == 2 && c == '\'') {
-            return true;
-        }
-        return false;
     }
 
     @Override

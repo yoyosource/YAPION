@@ -26,13 +26,14 @@ public class WholeNumberHandler {
 
         @Override
         public boolean allowed(char c, int length) {
-            if (length == 0 && (c == '-' || c == '#' || c == '0')) {
-                return true;
+            switch (length) {
+                case 0:
+                    return c == '-' || c == '#' || c == '0';
+                case 1:
+                    return c == 'x' || c == 'X' || c == '#';
+                default:
+                    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
             }
-            if (length == 1 && (c == 'x' || c == 'X' || c == '#')) {
-                return true;
-            }
-            return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
         }
 
         @Override
@@ -61,13 +62,14 @@ public class WholeNumberHandler {
 
         @Override
         public boolean allowed(char c, int length) {
-            if (length == 0 && (c == '-' || c == '#' || c == '0')) {
-                return true;
+            switch (length) {
+                case 0:
+                    return c == '-' || c == '#' || c == '0';
+                case 1:
+                    return c == 'x' || c == 'X' || c == '#';
+                default:
+                    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'S';
             }
-            if (length == 1 && (c == 'x' || c == 'X' || c == '#')) {
-                return true;
-            }
-            return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'S';
         }
 
         @Override
@@ -96,13 +98,14 @@ public class WholeNumberHandler {
 
         @Override
         public boolean allowed(char c, int length) {
-            if (length == 0 && (c == '-' || c == '#' || c == '0')) {
-                return true;
+            switch (length) {
+                case 0:
+                    return c == '-' || c == '#' || c == '0';
+                case 1:
+                    return c == 'x' || c == 'X' || c == '#';
+                default:
+                    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'I';
             }
-            if (length == 1 && (c == 'x' || c == 'X' || c == '#')) {
-                return true;
-            }
-            return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'I';
         }
 
         @Override
@@ -131,13 +134,14 @@ public class WholeNumberHandler {
 
         @Override
         public boolean allowed(char c, int length) {
-            if (length == 0 && (c == '-' || c == '#' || c == '0')) {
-                return true;
+            switch (length) {
+                case 0:
+                    return c == '-' || c == '#' || c == '0';
+                case 1:
+                    return c == 'x' || c == 'X' || c == '#';
+                default:
+                    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'L';
             }
-            if (length == 1 && (c == 'x' || c == 'X' || c == '#')) {
-                return true;
-            }
-            return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'L';
         }
 
         @Override
@@ -166,13 +170,14 @@ public class WholeNumberHandler {
 
         @Override
         public boolean allowed(char c, int length) {
-            if (length == 0 && (c == '-' || c == '#' || c == '0')) {
-                return true;
+            switch (length) {
+                case 0:
+                    return c == '-' || c == '#' || c == '0';
+                case 1:
+                    return c == 'x' || c == 'X' || c == '#';
+                default:
+                    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'I';
             }
-            if (length == 1 && (c == 'x' || c == 'X' || c == '#')) {
-                return true;
-            }
-            return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'I';
         }
 
         @Override
