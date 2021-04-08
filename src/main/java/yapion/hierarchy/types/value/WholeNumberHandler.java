@@ -32,6 +32,7 @@ public class WholeNumberHandler {
                 case 1:
                     if (c == 'x' || c == 'X' || c == '#') return true;
                 default:
+                    if (length > 5) return false;
                     return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
             }
         }
@@ -68,6 +69,7 @@ public class WholeNumberHandler {
                 case 1:
                     if (c == 'x' || c == 'X' || c == '#') return true;
                 default:
+                    if (length > 8) return false;
                     return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'S';
             }
         }
@@ -104,6 +106,7 @@ public class WholeNumberHandler {
                 case 1:
                     if (c == 'x' || c == 'X' || c == '#') return true;
                 default:
+                    if (length > 12) return false;
                     return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'I';
             }
         }
@@ -140,6 +143,7 @@ public class WholeNumberHandler {
                 case 1:
                     if (c == 'x' || c == 'X' || c == '#') return true;
                 default:
+                    if (length > 20) return false;
                     return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'L';
             }
         }

@@ -32,6 +32,7 @@ public class FractionNumberHandler {
                 case 1:
                     if (c == '.') return true;
                 default:
+                    if (length > 20) return false;
                     return (c >= '0' && c <= '9') || c == '.' || c == 'F';
             }
         }
@@ -68,6 +69,7 @@ public class FractionNumberHandler {
                 case 1:
                     if (c == '.') return true;
                 default:
+                    if (length > 40) return false;
                     return (c >= '0' && c <= '9') || c == '.' || c == 'D';
             }
         }
