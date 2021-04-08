@@ -57,15 +57,15 @@ public class TypeStack {
     }
 
     private boolean empty() {
-        return (stack.isEmpty());
+        return stack.isEmpty();
     }
 
     public boolean isEmpty() {
-        return (stack.isEmpty());
+        return stack.isEmpty();
     }
 
     public boolean isNotEmpty() {
-        return !(stack.isEmpty());
+        return !stack.isEmpty();
     }
 
     @Override
