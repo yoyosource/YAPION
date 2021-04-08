@@ -28,7 +28,7 @@ public class FractionNumberHandler {
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    if (c == '.' || c == '-') return true;
+                    if (c == '-') return true;
                 case 1:
                     if (c == '.') return true;
                 default:
@@ -65,7 +65,7 @@ public class FractionNumberHandler {
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    if (c == '.' || c == '-') return true;
+                    if (c == '-') return true;
                 case 1:
                     if (c == '.') return true;
                 default:
@@ -102,7 +102,7 @@ public class FractionNumberHandler {
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    if (c == '.' || c == '-') return true;
+                    if (c == '-') return true;
                 case 1:
                     if (c == '.') return true;
                 default:
