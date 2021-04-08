@@ -175,4 +175,9 @@ public class YAPIONParserTest {
         assertThat(yapionObject, isYAPION("{[{},[],(),->0000000000000000,<>]}"));
     }
 
+    @Test
+    public void testFileInputStream() {
+        YAPIONParser.parse(YAPIONParserTest.class.getResourceAsStream("/test.yapion"));
+    }
+
 }
