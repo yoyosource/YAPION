@@ -28,9 +28,9 @@ public class WholeNumberHandler {
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    return c == '-' || c == '#' || c == '0';
+                    if (c == '-' || c == '#' || c == '0') return true;
                 case 1:
-                    return c == 'x' || c == 'X' || c == '#';
+                    if (c == 'x' || c == 'X' || c == '#') return true;
                 default:
                     return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
             }
@@ -64,9 +64,9 @@ public class WholeNumberHandler {
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    return c == '-' || c == '#' || c == '0';
+                    if (c == '-' || c == '#' || c == '0') return true;
                 case 1:
-                    return c == 'x' || c == 'X' || c == '#';
+                    if (c == 'x' || c == 'X' || c == '#') return true;
                 default:
                     return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'S';
             }
@@ -100,9 +100,9 @@ public class WholeNumberHandler {
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    return c == '-' || c == '#' || c == '0';
+                    if (c == '-' || c == '#' || c == '0') return true;
                 case 1:
-                    return c == 'x' || c == 'X' || c == '#';
+                    if (c == 'x' || c == 'X' || c == '#') return true;
                 default:
                     return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'I';
             }
@@ -136,9 +136,9 @@ public class WholeNumberHandler {
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    return c == '-' || c == '#' || c == '0';
+                    if (c == '-' || c == '#' || c == '0') return true;
                 case 1:
-                    return c == 'x' || c == 'X' || c == '#';
+                    if (c == 'x' || c == 'X' || c == '#') return true;
                 default:
                     return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'L';
             }
@@ -172,9 +172,9 @@ public class WholeNumberHandler {
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    return c == '-' || c == '#' || c == '0';
+                    if (c == '-' || c == '#' || c == '0') return true;
                 case 1:
-                    return c == 'x' || c == 'X' || c == '#';
+                    if (c == 'x' || c == 'X' || c == '#') return true;
                 default:
                     return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'I';
             }
