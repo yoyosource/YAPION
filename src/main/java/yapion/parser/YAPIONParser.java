@@ -359,6 +359,7 @@ public final class YAPIONParser {
      * is reached. It will only cancel after it has a complete and
      * valid YAPIONObject.
      */
+    @SuppressWarnings({"java:S1141"})
     public YAPIONParser parse() {
         try {
             log.debug("parse    [init]");
