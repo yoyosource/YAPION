@@ -27,7 +27,7 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -45,6 +45,17 @@ public final class YAPIONParser {
     }
 
     /**
+     * Parses the File content to an YAPIONObject.
+     *
+     * @param file the file content to parse
+     * @return The YAPIONObject parsed out of the file content
+     * @throws IOException by FileInputStream creation
+     */
+    public static YAPIONObject parse(File file) throws IOException {
+        return new YAPIONParser(file).parse().result();
+    }
+
+    /**
      * Parses the String to an YAPIONObject.
      *
      * @param s the string to parse
@@ -56,6 +67,40 @@ public final class YAPIONParser {
     @DeprecationInfo(since = "0.23.0")
     public static YAPIONObject parseOld(String s) {
         return new YAPIONParser(s).setReferenceFunction(ReferenceIDUtils.REFERENCE_FUNCTION_OLD).parse().result();
+    }
+
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will not cancel even when
+     * the end of Stream is reached. It will only cancel after it has a
+     * complete and valid YAPIONObject or 1 second without any new
+     * Input passed.
+     *
+     * @param inputStream the inputStream to parse
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parse(InputStream inputStream) {
+        return new YAPIONParser(inputStream).parse().result();
+    }
+
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will not cancel even when
+     * the end of Stream is reached. It will only cancel after it has a
+     * complete and valid YAPIONObject or 1 second without any new
+     * Input passed.
+     *
+     * @param inputStream the inputStream to parse
+     * @return YAPIONObject parsed out of the string
+     *
+     * @deprecated since 0.23.0
+     */
+    @Deprecated
+    @DeprecationInfo(since = "0.23.0")
+    public static YAPIONObject parseOld(InputStream inputStream) {
+        return new YAPIONParser(inputStream).setReferenceFunction(ReferenceIDUtils.REFERENCE_FUNCTION_OLD).parse().result();
     }
 
     /**
@@ -157,40 +202,6 @@ public final class YAPIONParser {
      */
     public static YAPIONObject mapJSON(String s) {
         return JSONMapper.map(parseJSON(s));
-    }
-
-    /**
-     * Parses the InputStream to an YAPIONObject.
-     * This method only parses the next YAPIONObject and tries to read
-     * until the YAPIONObject is finished. It will not cancel even when
-     * the end of Stream is reached. It will only cancel after it has a
-     * complete and valid YAPIONObject or 1 second without any new
-     * Input passed.
-     *
-     * @param inputStream the inputStream to parse
-     * @return YAPIONObject parsed out of the string
-     */
-    public static YAPIONObject parse(InputStream inputStream) {
-        return new YAPIONParser(inputStream).parse().result();
-    }
-
-    /**
-     * Parses the InputStream to an YAPIONObject.
-     * This method only parses the next YAPIONObject and tries to read
-     * until the YAPIONObject is finished. It will not cancel even when
-     * the end of Stream is reached. It will only cancel after it has a
-     * complete and valid YAPIONObject or 1 second without any new
-     * Input passed.
-     *
-     * @param inputStream the inputStream to parse
-     * @return YAPIONObject parsed out of the string
-     *
-     * @deprecated since 0.23.0
-     */
-    @Deprecated
-    @DeprecationInfo(since = "0.23.0")
-    public static YAPIONObject parseOld(InputStream inputStream) {
-        return new YAPIONParser(inputStream).setReferenceFunction(ReferenceIDUtils.REFERENCE_FUNCTION_OLD).parse().result();
     }
 
     private final YAPIONInternalParser yapionInternalParser = new YAPIONInternalParser();
@@ -312,6 +323,16 @@ public final class YAPIONParser {
                 return !stopOnStreamEnd || available > 0;
             }
         };
+    }
+
+    /**
+     * Creates a YAPIONParser for parsing a file content to an YAPIONObject.
+     *
+     * @param file to parse from
+     * @throws IOException by FileInputStream creation
+     */
+    public YAPIONParser(File file) throws IOException {
+        this(new BufferedInputStream(new FileInputStream(file)), true);
     }
 
     public YAPIONParser setReferenceFunction(@NonNull ReferenceFunction referenceFunction) {
