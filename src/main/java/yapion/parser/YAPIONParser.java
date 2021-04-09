@@ -335,6 +335,17 @@ public final class YAPIONParser {
         this(new BufferedInputStream(new FileInputStream(file)), true);
     }
 
+    /**
+     * Creates a YAPIONParser for parsing a file content to an YAPIONObject.
+     *
+     * @param file to parse from
+     * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
+     * @throws IOException by FileInputStream creation
+     */
+    public YAPIONParser(File file, boolean stopOnStreamEnd) throws IOException {
+        this(new BufferedInputStream(new FileInputStream(file)), stopOnStreamEnd);
+    }
+
     public YAPIONParser setReferenceFunction(@NonNull ReferenceFunction referenceFunction) {
         yapionInternalParser.setReferenceFunction(referenceFunction);
         return this;
