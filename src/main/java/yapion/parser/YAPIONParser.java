@@ -362,7 +362,13 @@ public final class YAPIONParser {
     public YAPIONParser parse() {
         try {
             log.debug("parse    [init]");
-            parseInternal();
+            while (charReader.hasNext() && !yapionInternalParser.isFinished()) {
+                try {
+                    yapionInternalParser.advance(charReader.next());
+                } catch (ParserSkipException e) {
+                    // Ignored
+                }
+            }
             log.debug("parse    [finished]");
         } catch (YAPIONParserException e) {
             log.debug("parse    [YAPIONParserException]");
@@ -387,16 +393,6 @@ public final class YAPIONParser {
 
     private String generateErrorMessage() {
         return "Error after " + yapionInternalParser.count() + " reads";
-    }
-
-    private void parseInternal() {
-        while (charReader.hasNext() && !yapionInternalParser.isFinished()) {
-            try {
-                yapionInternalParser.advance(charReader.next());
-            } catch (ParserSkipException e) {
-                // Ignored
-            }
-        }
     }
 
     private static class ParserSkipException extends RuntimeException {}
