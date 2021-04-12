@@ -56,7 +56,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
         abstractOutput.consume("[");
 
-        final String indent = "\n" + indent();
+        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
         boolean b = false;
         for (YAPIONAnyType yapionAnyType : array) {
             if (b) abstractOutput.consume(",");
@@ -77,7 +77,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
             if (array.get(array.size() - 1) instanceof YAPIONValue) {
                 abstractOutput.consumePrettified(",");
             }
-            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
+            abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
         }
 
         abstractOutput.consume("]");
@@ -88,7 +88,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
         abstractOutput.consume("[");
 
-        final String indent = "\n" + indent();
+        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
         boolean b = false;
         for (YAPIONAnyType yapionAnyType : array) {
             if (b) abstractOutput.consume(",");
@@ -98,7 +98,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         }
 
         if (!array.isEmpty()) {
-            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
+            abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
         }
 
         abstractOutput.consume("]");
@@ -109,7 +109,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
         abstractOutput.consume("[");
 
-        final String indent = "\n" + indent();
+        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
         boolean b = false;
         for (YAPIONAnyType yapionAnyType : array) {
             if (b) abstractOutput.consume(",");
@@ -119,7 +119,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         }
 
         if (!array.isEmpty()) {
-            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
+            abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
         }
 
         abstractOutput.consume("]");

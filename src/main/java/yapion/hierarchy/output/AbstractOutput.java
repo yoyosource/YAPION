@@ -13,15 +13,33 @@
 
 package yapion.hierarchy.output;
 
+import lombok.Getter;
 import yapion.exceptions.YAPIONException;
 
 import java.nio.charset.StandardCharsets;
 
 public abstract class AbstractOutput {
 
+    @Getter
+    private Indentator indentator = Indentator.DEFAULT;
+
+    public final AbstractOutput setIndentator(Indentator indentator) {
+        this.indentator = indentator;
+        return this;
+    }
+
     public final AbstractOutput consume(String s) {
         validateMethodCall();
         internalConsume(s);
+        return this;
+    }
+
+    public final AbstractOutput consumeIndent(int indentLevel) {
+        validateMethodCall();
+        String s = indentator.indent(indentLevel);
+        if (prettified() && internalConsumePrettified(s)) {
+            internalConsume(s);
+        }
         return this;
     }
 

@@ -59,7 +59,7 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
 
     private <T extends AbstractOutput> void outputSystem(T abstractOutput, Consumer<T> commaConsumer, BiConsumer<String, T> nameConsumer, BiConsumer<YAPIONAnyType, T> valueConsumer) {
         abstractOutput.consume("{");
-        final String indent = "\n" + indent();
+        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
         boolean b = false;
         for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
             if (b) commaConsumer.accept(abstractOutput);
@@ -69,7 +69,7 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
             nameConsumer.accept(entry.getKey(), abstractOutput);
             valueConsumer.accept(entry.getValue(), abstractOutput);
         }
-        if (!variables.isEmpty()) abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
+        if (!variables.isEmpty()) abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
         abstractOutput.consume("}");
     }
 

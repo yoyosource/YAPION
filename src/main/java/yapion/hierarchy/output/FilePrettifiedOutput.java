@@ -13,9 +13,13 @@
 
 package yapion.hierarchy.output;
 
+import yapion.annotations.DeprecationInfo;
+
 import java.io.File;
 import java.io.IOException;
 
+@Deprecated
+@DeprecationInfo(since = "0.25.0", alternative = "FileOutput#(File, boolean)")
 public class FilePrettifiedOutput extends FileOutput {
 
     public FilePrettifiedOutput(File file) throws IOException {

@@ -23,4 +23,8 @@ public class FileOutput extends StreamOutput {
         super(new FileOutputStream(file));
     }
 
+    public FileOutput(File file, boolean prettified) throws IOException {
+        super(new FileOutputStream(file), prettified);
+    }
+
 }

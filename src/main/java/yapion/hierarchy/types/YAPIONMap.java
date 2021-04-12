@@ -65,7 +65,7 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> imple
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
         abstractOutput.consume("<");
 
-        final String indent = "\n" + indent();
+        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             abstractOutput.consumePrettified(indent);
             entry.getKey().toYAPION(abstractOutput);
@@ -74,7 +74,7 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> imple
         }
 
         if (!variables.isEmpty()) {
-            abstractOutput.consumePrettified("\n").consumePrettified(reducedIndent());
+            abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
         }
 
         abstractOutput.consume(">");

@@ -19,13 +19,12 @@ public class StringOutput extends StringBuilderOutput {
         super(new StringBuilder());
     }
 
-    @Override
-    protected void internalConsume(String s) {
-        super.internalConsume(s);
+    public StringOutput(boolean prettified) {
+        super(new StringBuilder(), prettified);
     }
 
     public String getResult() {
-        return super.st.toString();
+        return getStringBuilder().toString();
     }
 
 }

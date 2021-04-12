@@ -89,10 +89,6 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         return indent((getDepth() + 1) * 2);
     }
 
-    public final String reducedIndent() {
-        return indent(getDepth() * 2);
-    }
-
     // Path System
     @Override
     public final YAPIONPath getPath() {

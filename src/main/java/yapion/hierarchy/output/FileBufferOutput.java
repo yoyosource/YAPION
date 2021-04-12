@@ -23,8 +23,16 @@ public class FileBufferOutput extends StreamBufferOutput {
         super(new FileOutputStream(file));
     }
 
+    public FileBufferOutput(File file, boolean prettified) throws IOException {
+        super(new FileOutputStream(file), prettified);
+    }
+
     public FileBufferOutput(File file, int bufferSize) throws IOException {
         super(new FileOutputStream(file), bufferSize);
+    }
+
+    public FileBufferOutput(File file, int bufferSize, boolean prettified) throws IOException {
+        super(new FileOutputStream(file), bufferSize, prettified);
     }
 
 }

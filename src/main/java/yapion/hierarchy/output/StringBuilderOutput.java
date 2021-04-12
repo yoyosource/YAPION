@@ -15,10 +15,16 @@ package yapion.hierarchy.output;
 
 public class StringBuilderOutput extends AbstractOutput {
 
-    protected StringBuilder st;
+    protected final StringBuilder st;
+    private final boolean prettified;
 
     public StringBuilderOutput(StringBuilder st) {
+        this(st, false);
+    }
+
+    public StringBuilderOutput(StringBuilder st, boolean prettified) {
         this.st = st;
+        this.prettified = prettified;
     }
 
     @Override
@@ -26,8 +32,17 @@ public class StringBuilderOutput extends AbstractOutput {
         st.append(s);
     }
 
+    public StringBuilder getStringBuilder() {
+        return st;
+    }
+
     public int length() {
         return st.length();
+    }
+
+    @Override
+    protected boolean prettified() {
+        return prettified;
     }
 
 }

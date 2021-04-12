@@ -13,7 +13,7 @@
 
 package yapion.hierarchy.output;
 
-import yapion.exceptions.YAPIONException;
+import yapion.exceptions.utils.YAPIONIOException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -21,9 +21,15 @@ import java.io.OutputStream;
 public class StreamOutput extends AbstractOutput implements AutoCloseable {
 
     private final OutputStream outputStream;
+    private final boolean prettified;
 
     public StreamOutput(OutputStream outputStream) {
+        this(outputStream, false);
+    }
+
+    public StreamOutput(OutputStream outputStream, boolean prettified) {
         this.outputStream = outputStream;
+        this.prettified = prettified;
     }
 
     @Override
@@ -31,15 +37,20 @@ public class StreamOutput extends AbstractOutput implements AutoCloseable {
         try {
             outputStream.write(bytes(s));
         } catch (IOException e) {
-            throw new YAPIONException("Exception while writing data");
+            throw new YAPIONIOException("Exception while writing data");
         }
+    }
+
+    @Override
+    protected boolean prettified() {
+        return prettified;
     }
 
     public void flush() {
         try {
             outputStream.flush();
         } catch (IOException e) {
-            throw new YAPIONException("Exception while stream flushing");
+            throw new YAPIONIOException("Exception while stream flushing");
         }
     }
 
@@ -47,7 +58,7 @@ public class StreamOutput extends AbstractOutput implements AutoCloseable {
         try {
             outputStream.close();
         } catch (IOException e) {
-            throw new YAPIONException("Exception while stream closing");
+            throw new YAPIONIOException("Exception while stream closing");
         }
     }
 

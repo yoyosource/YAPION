@@ -13,15 +13,37 @@
 
 package yapion.hierarchy.output;
 
-import yapion.annotations.DeprecationInfo;
+import yapion.exceptions.utils.YAPIONIOException;
 
-@Deprecated
-@DeprecationInfo(since = "0.25.0", alternative = "StringOutput#(boolean)")
-public class StringPrettifiedOutput extends StringOutput {
+import java.io.IOException;
+import java.io.Writer;
+
+public class WriterOutput extends AbstractOutput {
+
+    private Writer writer;
+    private boolean prettified = false;
+
+    public WriterOutput(Writer writer) {
+        this.writer = writer;
+    }
+
+    public WriterOutput(Writer writer, boolean prettified) {
+        this.writer = writer;
+        this.prettified = prettified;
+    }
+
+    @Override
+    protected void internalConsume(String s) {
+        try {
+            writer.append(s);
+        } catch (IOException e) {
+            throw new YAPIONIOException(e.getMessage(), e);
+        }
+    }
 
     @Override
     protected boolean prettified() {
-        return true;
+        return prettified;
     }
 
 }

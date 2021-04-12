@@ -13,8 +13,12 @@
 
 package yapion.hierarchy.output;
 
+import yapion.annotations.DeprecationInfo;
+
 import java.io.OutputStream;
 
+@Deprecated
+@DeprecationInfo(since = "0.25.0", alternative = "StreamOutput#(OutputStream, boolean)")
 public class StreamPrettifiedOutput extends StreamOutput {
 
     public StreamPrettifiedOutput(OutputStream outputStream) {

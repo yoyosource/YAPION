@@ -20,4 +20,9 @@ public class SystemOutput extends StreamOutput {
         super(System.out);
     }
 
+    @SuppressWarnings({"java:S106"})
+    public SystemOutput(boolean prettified) {
+        super(System.out, prettified);
+    }
+
 }

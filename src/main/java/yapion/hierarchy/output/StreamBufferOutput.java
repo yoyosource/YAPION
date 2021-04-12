@@ -22,8 +22,16 @@ public class StreamBufferOutput extends StreamOutput {
         super(new BufferedOutputStream(outputStream));
     }
 
+    public StreamBufferOutput(OutputStream outputStream, boolean prettified) {
+        super(new BufferedOutputStream(outputStream), prettified);
+    }
+
     public StreamBufferOutput(OutputStream outputStream, int bufferSize) {
         super(new BufferedOutputStream(outputStream, bufferSize));
+    }
+
+    public StreamBufferOutput(OutputStream outputStream, int bufferSize, boolean prettified) {
+        super(new BufferedOutputStream(outputStream, bufferSize), prettified);
     }
 
 }

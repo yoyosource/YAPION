@@ -40,4 +40,5 @@ public class LengthOutput extends AbstractOutput {
     protected boolean prettified() {
         return true;
     }
+
 }
