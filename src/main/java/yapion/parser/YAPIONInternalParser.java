@@ -265,12 +265,15 @@ class YAPIONInternalParser {
         if (!escaped) return false;
         switch (c) {
             case 'n':
+                sortValueHandler('\n', current.length());
                 current.append("\n");
                 break;
             case 't':
+                sortValueHandler('\t', current.length());
                 current.append("\t");
                 break;
             case 'r':
+                sortValueHandler('\r', current.length());
                 current.append("\r");
                 break;
             default:
@@ -291,7 +294,9 @@ class YAPIONInternalParser {
             unicode.append(c);
             log.debug("UTF8     [{}]", unicode);
             if (unicode.length() == 4) {
-                current.append((char) Integer.parseInt(unicode.toString(), 16));
+                char unicodeChar = (char) Integer.parseInt(unicode.toString(), 16);
+                sortValueHandler(unicodeChar, current.length());
+                current.append(unicodeChar);
                 unicode = null;
             }
             return true;

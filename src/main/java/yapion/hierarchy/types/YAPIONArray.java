@@ -161,6 +161,9 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     private void check(YAPIONAnyType yapionAnyType) {
+        if (yapionAnyType instanceof YAPIONValue || yapionAnyType instanceof YAPIONPointer) {
+            return;
+        }
         RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(yapionAnyType, this);
         if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
             if (result.getRecursionType() == RecursionUtils.RecursionType.DIRECT) {
