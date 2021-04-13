@@ -16,7 +16,7 @@ package yapion.annotations;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 public @interface DeprecationInfo {
     String since();
     String alternative() default "none";
