@@ -13,9 +13,12 @@
 
 package yapion.hierarchy.output;
 
+import yapion.exceptions.YAPIONException;
+
 public abstract class Indentator {
 
     private static final StringBuilder indentString = new StringBuilder().append(" ");
+    private static final StringBuilder indentTab = new StringBuilder().append(" ");
 
     private static String growAndGetIndent(int indentLevel) {
         if (indentLevel < 0) {
@@ -30,6 +33,21 @@ public abstract class Indentator {
             }
         }
         return indentString.substring(0, indentLevel);
+    }
+
+    private static String growAndGetIndentTab(int indentLevel) {
+        if (indentLevel < 0) {
+            return "";
+        }
+        if (indentLevel > 4096) {
+            return indentTab.substring(0, 4096);
+        }
+        if (indentLevel > indentTab.length()) {
+            while (indentTab.length() < indentLevel) {
+                indentTab.append(indentTab);
+            }
+        }
+        return indentTab.substring(0, indentLevel);
     }
 
     public static final Indentator SINGLE_SPACE = new Indentator() {
@@ -53,12 +71,33 @@ public abstract class Indentator {
         }
     };
 
+    public static final Indentator SINGLE_TAB = new Indentator() {
+        @Override
+        public String indent(int indentLevel) {
+            return Indentator.growAndGetIndentTab(indentLevel);
+        }
+    };
+
     public static Indentator custom(int indentCount) {
         int indentMultiplier = Math.max(Math.min(indentCount, 16), 0);
         return new Indentator() {
             @Override
             public String indent(int indentLevel) {
                 return Indentator.growAndGetIndent(indentLevel * indentMultiplier);
+            }
+        };
+    }
+
+    public static Indentator custom(int indentCount, char indent) {
+        if (indent != ' ' && indent != '\t') throw new YAPIONException("Only Spaces and Tabs allowed");
+        if (indent == ' ') {
+            return custom(indentCount);
+        }
+        int indentMultiplier = Math.max(Math.min(indentCount, 16), 0);
+        return new Indentator() {
+            @Override
+            public String indent(int indentLevel) {
+                return Indentator.growAndGetIndentTab(indentLevel * indentMultiplier);
             }
         };
     }
