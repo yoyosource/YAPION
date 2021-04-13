@@ -53,6 +53,16 @@ public abstract class Indentator {
         }
     };
 
+    public static Indentator custom(int indentCount) {
+        int indentMultiplier = Math.max(Math.min(indentCount, 16), 0);
+        return new Indentator() {
+            @Override
+            public String indent(int indentLevel) {
+                return Indentator.growAndGetIndent(indentLevel * indentMultiplier);
+            }
+        };
+    }
+
     public abstract String indent(int indentLevel);
 
 }
