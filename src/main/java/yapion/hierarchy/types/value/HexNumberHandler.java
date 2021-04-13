@@ -17,32 +17,34 @@ import lombok.experimental.UtilityClass;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
-import java.math.BigInteger;
-
 @UtilityClass
-public class WholeNumberHandler {
+public class HexNumberHandler {
 
-    public static class ByteHandler implements ValueHandler<Byte> {
+    public static class ByteHexHandler implements ValueHandler<Byte> {
 
         @Override
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    if (c == '-') return true;
+                    return c == '-' || c == '0' || c == '#';
+                case 1:
+                    return c == '0' || c == 'x' || c == 'X' || c == '#';
+                case 2:
+                    if (c == 'x' || c == 'X') return true;
                 default:
                     if (length > 5) return false;
-                    return (c >= '0' && c <= '9') || c == 'B';
+                    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
             }
         }
 
         @Override
         public String output(Byte aByte) {
-            return aByte + NumberSuffix.BYTE.getSuffix();
+            return aByte + NumberSuffix.BYTE_HEX.getSuffix();
         }
 
         @Override
         public MethodReturnValue<Byte> preParse(String s) {
-            return NumberSuffix.tryValueParse(s, NumberSuffix.BYTE);
+            return NumberSuffix.tryValueParse(s, NumberSuffix.BYTE_HEX);
         }
 
         @Override
@@ -57,27 +59,31 @@ public class WholeNumberHandler {
 
     }
 
-    public static class ShortHandler implements ValueHandler<Short> {
+    public static class ShortHexHandler implements ValueHandler<Short> {
 
         @Override
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    if (c == '-') return true;
+                    return c == '-' || c == '0' || c == '#';
+                case 1:
+                    return c == '0' || c == 'x' || c == 'X' || c == '#';
+                case 2:
+                    if (c == 'x' || c == 'X') return true;
                 default:
                     if (length > 8) return false;
-                    return (c >= '0' && c <= '9') || c == 'S';
+                    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'S';
             }
         }
 
         @Override
         public String output(Short aShort) {
-            return aShort + NumberSuffix.SHORT.getSuffix();
+            return aShort + NumberSuffix.SHORT_HEX.getSuffix();
         }
 
         @Override
         public MethodReturnValue<Short> preParse(String s) {
-            return NumberSuffix.tryValueParse(s, NumberSuffix.SHORT);
+            return NumberSuffix.tryValueParse(s, NumberSuffix.SHORT_HEX);
         }
 
         @Override
@@ -92,16 +98,20 @@ public class WholeNumberHandler {
 
     }
 
-    public static class IntegerHandler implements ValueHandler<Integer> {
+    public static class IntegerHexHandler implements ValueHandler<Integer> {
 
         @Override
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    if (c == '-') return true;
+                    return c == '-' || c == '0' || c == '#';
+                case 1:
+                    return c == '0' || c == 'x' || c == 'X' || c == '#';
+                case 2:
+                    if (c == 'x' || c == 'X') return true;
                 default:
                     if (length > 12) return false;
-                    return (c >= '0' && c <= '9') || c == 'I';
+                    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'I';
             }
         }
 
@@ -112,12 +122,12 @@ public class WholeNumberHandler {
 
         @Override
         public MethodReturnValue<Integer> preParse(String s) {
-            return NumberSuffix.tryValueParse(s, NumberSuffix.INTEGER);
+            return NumberSuffix.tryValueParse(s, NumberSuffix.INTEGER_HEX);
         }
 
         @Override
         public MethodReturnValue<Integer> parse(String s) {
-            return NumberSuffix.trySuffixLessValueParse(s, NumberSuffix.INTEGER);
+            return NumberSuffix.trySuffixLessValueParse(s, NumberSuffix.INTEGER_HEX);
         }
 
         @Override
@@ -127,71 +137,41 @@ public class WholeNumberHandler {
 
     }
 
-    public static class LongHandler implements ValueHandler<Long> {
+    public static class LongHexHandler implements ValueHandler<Long> {
 
         @Override
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
-                    if (c == '-') return true;
+                    return c == '-' || c == '0' || c == '#';
+                case 1:
+                    return c == '0' || c == 'x' || c == 'X' || c == '#';
+                case 2:
+                    if (c == 'x' || c == 'X') return true;
                 default:
                     if (length > 20) return false;
-                    return (c >= '0' && c <= '9') || c == 'L';
+                    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') || c == 'L';
             }
         }
 
         @Override
         public String output(Long aLong) {
-            return aLong + NumberSuffix.LONG.getSuffix();
+            return aLong + NumberSuffix.LONG_HEX.getSuffix();
         }
 
         @Override
         public MethodReturnValue<Long> preParse(String s) {
-            return NumberSuffix.tryValueParse(s, NumberSuffix.LONG);
+            return NumberSuffix.tryValueParse(s, NumberSuffix.LONG_HEX);
         }
 
         @Override
         public MethodReturnValue<Long> parse(String s) {
-            return NumberSuffix.trySuffixLessValueParse(s, NumberSuffix.LONG);
+            return NumberSuffix.trySuffixLessValueParse(s, NumberSuffix.LONG_HEX);
         }
 
         @Override
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.lang.Long");
-        }
-
-    }
-
-    public static class BigIntegerHandler implements ValueHandler<BigInteger> {
-
-        @Override
-        public boolean allowed(char c, int length) {
-            switch (length) {
-                case 0:
-                    if (c == '-') return true;
-                default:
-                    return (c >= '0' && c <= '9') || c == 'B' || c == 'I';
-            }
-        }
-
-        @Override
-        public String output(BigInteger bigInteger) {
-            return bigInteger + NumberSuffix.BIG_INTEGER.getSuffix();
-        }
-
-        @Override
-        public MethodReturnValue<BigInteger> preParse(String s) {
-            return NumberSuffix.tryValueParse(s, NumberSuffix.BIG_INTEGER);
-        }
-
-        @Override
-        public MethodReturnValue<BigInteger> parse(String s) {
-            return NumberSuffix.trySuffixLessValueParse(s, NumberSuffix.BIG_INTEGER);
-        }
-
-        @Override
-        public long referenceValue(ReferenceFunction referenceFunction) {
-            return referenceFunction.stringToReferenceValue("java.math.BigInteger");
         }
 
     }

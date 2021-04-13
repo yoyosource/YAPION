@@ -21,6 +21,10 @@ import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.utils.ValueHandlerList;
 import yapion.hierarchy.types.value.*;
+import yapion.hierarchy.types.value.HexNumberHandler.ByteHexHandler;
+import yapion.hierarchy.types.value.HexNumberHandler.IntegerHexHandler;
+import yapion.hierarchy.types.value.HexNumberHandler.LongHexHandler;
+import yapion.hierarchy.types.value.HexNumberHandler.ShortHexHandler;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
@@ -68,10 +72,14 @@ public class YAPIONValue<T> extends YAPIONValueType {
         valueHandlers.put("java.lang.Character", new CharacterHandler());
         valueHandlers.put("java.lang.String", new StringHandler());
 
-        VALUE_HANDLER_LIST = new ValueHandlerList(valueHandlers.size());
+        VALUE_HANDLER_LIST = new ValueHandlerList(valueHandlers.size() + 4);
         for (Map.Entry<String, ValueHandler<?>> entry : valueHandlers.entrySet()) {
             VALUE_HANDLER_LIST.add(entry.getValue());
         }
+        VALUE_HANDLER_LIST.add(new ByteHexHandler());
+        VALUE_HANDLER_LIST.add(new ShortHexHandler());
+        VALUE_HANDLER_LIST.add(new IntegerHexHandler());
+        VALUE_HANDLER_LIST.add(new LongHexHandler());
 
         typeIdentifier.put(allowedTypes[1], BYTE_IDENTIFIER);
         typeIdentifier.put(allowedTypes[2], SHORT_IDENTIFIER);

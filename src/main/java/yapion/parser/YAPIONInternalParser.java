@@ -315,12 +315,12 @@ class YAPIONInternalParser {
             }
             if (escaped) {
                 if (c != '(' && c != ')') {
-                    valueHandlerList.removeIf(valueHandler -> !valueHandler.allowed('\\', current.length()));
+                    sortValueHandler('\\', current.length());
                     current.append('\\');
                 }
                 escaped = false;
             }
-            valueHandlerList.removeIf(valueHandler -> !valueHandler.allowed(c, current.length()));
+            sortValueHandler(c, current.length());
             current.append(c);
         }
     }
@@ -380,8 +380,12 @@ class YAPIONInternalParser {
         if (current.length() == 0 && isWhiteSpace(c) && !escaped) {
             return;
         }
-        valueHandlerList.removeIf(valueHandler -> !valueHandler.allowed(c, current.length()));
+        sortValueHandler(c, current.length());
         current.append(c);
+    }
+
+    public void sortValueHandler(char c, int length) {
+        valueHandlerList.removeIf(valueHandler -> !valueHandler.allowed(c, current.length()));
     }
 
     private String stringBuilderToUTF8String(StringBuilder st) {

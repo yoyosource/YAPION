@@ -25,11 +25,16 @@ final class NumberSuffix<T> {
     static final String NUMBER_HEX = "-?(0[xX]|#)[0-9A-F]+";
     static final String NUMBER_FLOAT = "(-?[0-9]+\\.([0-9]+)?)|(-?\\.[0-9]+)";
 
-    public static final NumberSuffix<Byte> BYTE = new NumberSuffix<>("B", Byte::decode, NUMBER_NORMAL, NUMBER_HEX);
-    public static final NumberSuffix<Short> SHORT = new NumberSuffix<>("S", Short::decode, NUMBER_NORMAL, NUMBER_HEX);
-    public static final NumberSuffix<Integer> INTEGER = new NumberSuffix<>("I", Integer::decode, NUMBER_NORMAL, NUMBER_HEX);
-    public static final NumberSuffix<Long> LONG = new NumberSuffix<>("L", Long::decode, NUMBER_NORMAL, NUMBER_HEX);
+    public static final NumberSuffix<Byte> BYTE = new NumberSuffix<>("B", Byte::parseByte, NUMBER_NORMAL);
+    public static final NumberSuffix<Short> SHORT = new NumberSuffix<>("S", Short::parseShort, NUMBER_NORMAL);
+    public static final NumberSuffix<Integer> INTEGER = new NumberSuffix<>("I", Integer::parseInt, NUMBER_NORMAL);
+    public static final NumberSuffix<Long> LONG = new NumberSuffix<>("L", Long::parseLong, NUMBER_NORMAL);
     public static final NumberSuffix<BigInteger> BIG_INTEGER = new NumberSuffix<>("BI", BigInteger::new, NUMBER_NORMAL);
+
+    public static final NumberSuffix<Byte> BYTE_HEX = new NumberSuffix<>("B", s -> Byte.parseByte(s, 16), NUMBER_HEX);
+    public static final NumberSuffix<Short> SHORT_HEX = new NumberSuffix<>("S", s -> Short.parseShort(s, 16), NUMBER_HEX);
+    public static final NumberSuffix<Integer> INTEGER_HEX = new NumberSuffix<>("I", s -> Integer.parseInt(s, 16), NUMBER_HEX);
+    public static final NumberSuffix<Long> LONG_HEX = new NumberSuffix<>("L", s -> Long.parseLong(s, 16), NUMBER_HEX);
 
     public static final NumberSuffix<Float> FLOAT = new NumberSuffix<>("F", Float::parseFloat, NUMBER_FLOAT);
     public static final NumberSuffix<Double> DOUBLE = new NumberSuffix<>("D", Double::parseDouble, NUMBER_FLOAT);
@@ -37,9 +42,9 @@ final class NumberSuffix<T> {
 
     private String suffix;
     private Function<String, T> numberMapper;
-    private String[] matcher;
+    private String matcher;
 
-    private NumberSuffix(String suffix, Function<String, T> numberMapper, String... matcher) {
+    private NumberSuffix(String suffix, Function<String, T> numberMapper, String matcher) {
         this.suffix = suffix;
         this.numberMapper = numberMapper;
         this.matcher = matcher;
@@ -79,10 +84,7 @@ final class NumberSuffix<T> {
     public static <T> boolean tryValueAssemble(String input, NumberSuffix<T> numberSuffix) {
         if (!input.endsWith(numberSuffix.suffix)) return false;
         String s = input.substring(0, input.length() - numberSuffix.suffix.length());
-        for (String match : numberSuffix.matcher) {
-            if (s.matches(match)) return true;
-        }
-        return false;
+        return s.matches(numberSuffix.matcher);
     }
 
 }
