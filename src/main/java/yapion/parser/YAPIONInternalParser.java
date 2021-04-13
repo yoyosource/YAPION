@@ -252,7 +252,7 @@ class YAPIONInternalParser {
             escaped = false;
             return;
         }
-        if (current.length() != 0 || (c != ' ' && c != '\n')) {
+        if (current.length() != 0 || !isWhiteSpace(c)) {
             current.append(c);
         }
         if (escaped) {
@@ -377,7 +377,7 @@ class YAPIONInternalParser {
         if (current.length() == 1 && lastChar == '-' && everyType(c, lastChar)) {
             return;
         }
-        if (current.length() == 0 && (c == ' ' || c == '\n') && !escaped) {
+        if (current.length() == 0 && isWhiteSpace(c) && !escaped) {
             return;
         }
         valueHandlerList.removeIf(valueHandler -> !valueHandler.allowed(c, current.length()));
@@ -386,6 +386,10 @@ class YAPIONInternalParser {
 
     private String stringBuilderToUTF8String(StringBuilder st) {
         return new String(st.toString().getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+    }
+
+    private boolean isWhiteSpace(char c) {
+        return c == ' ' || c == '\n' || c == '\t';
     }
 
 }
