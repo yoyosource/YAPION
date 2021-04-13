@@ -159,7 +159,7 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return this;
     }
 
-    @DeprecationInfo(since = "", alternative = "Use YAPIONObject#(String, YAPIONAnyType) instead, never use this")
+    @DeprecationInfo(since = "", alternative = "Use YAPIONObject#add(String, YAPIONAnyType) instead, never use this")
     public YAPIONObject addUnsafe(@NonNull String key, @NonNull YAPIONAnyType value) {
         discardReferenceValue();
         if (variables.containsKey(key)) {
