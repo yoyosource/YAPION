@@ -13,7 +13,9 @@
 
 package yapion.hierarchy.types;
 
+import jdk.internal.reflect.CallerSensitive;
 import lombok.NonNull;
+import yapion.annotations.DeprecationInfo;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONRecursionException;
@@ -158,19 +160,33 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return this;
     }
 
+    @CallerSensitive
+    @DeprecationInfo(since = "", alternative = "Use YAPIONObject#(String, YAPIONAnyType) instead, never use this")
+    public YAPIONObject addUnsafe(@NonNull String key, @NonNull YAPIONAnyType value) {
+        discardReferenceValue();
+        if (variables.containsKey(key)) {
+            variables.get(key).removeParent();
+        }
+        variables.put(key, value);
+        value.setParent(this);
+        return this;
+    }
+
     @Override
     public YAPIONObject addOrPointer(@NonNull String key, @NonNull YAPIONAnyType value) {
         discardReferenceValue();
-        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
-        if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
-            if (result.getYAPIONAny() == null) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
+        if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
+            if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+                if (result.getYAPIONAny() == null) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                add(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+                return this;
             }
-            if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
-            }
-            add(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
-            return this;
         }
         add(key, value);
         return this;

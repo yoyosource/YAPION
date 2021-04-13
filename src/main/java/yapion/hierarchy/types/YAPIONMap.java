@@ -189,25 +189,29 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> imple
     @Override
     public YAPIONMap addOrPointer(@NonNull YAPIONAnyType key, @NonNull YAPIONAnyType value) {
         discardReferenceValue();
-        RecursionUtils.RecursionResult resultKey = RecursionUtils.checkRecursion(key, this);
-        if (resultKey.getRecursionType() != RecursionUtils.RecursionType.NONE) {
-            if (resultKey.getYAPIONAny() == null) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
+        if (key.getType() != YAPIONType.VALUE && key.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult resultKey = RecursionUtils.checkRecursion(key, this);
+            if (resultKey.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+                if (resultKey.getYAPIONAny() == null) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                if (!(resultKey.getYAPIONAny() instanceof YAPIONObject)) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                key = new YAPIONPointer((YAPIONObject) resultKey.getYAPIONAny());
             }
-            if (!(resultKey.getYAPIONAny() instanceof YAPIONObject)) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
-            }
-            key = new YAPIONPointer((YAPIONObject) resultKey.getYAPIONAny());
         }
-        RecursionUtils.RecursionResult resultValue = RecursionUtils.checkRecursion(value, this);
-        if (resultValue.getRecursionType() != RecursionUtils.RecursionType.NONE) {
-            if (resultValue.getYAPIONAny() == null) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
+        if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult resultValue = RecursionUtils.checkRecursion(value, this);
+            if (resultValue.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+                if (resultValue.getYAPIONAny() == null) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                if (!(resultValue.getYAPIONAny() instanceof YAPIONObject)) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                value = new YAPIONPointer((YAPIONObject) resultValue.getYAPIONAny());
             }
-            if (!(resultValue.getYAPIONAny() instanceof YAPIONObject)) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
-            }
-            value = new YAPIONPointer((YAPIONObject) resultValue.getYAPIONAny());
         }
         add(key, value);
         return this;

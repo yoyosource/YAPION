@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Slf4j
-class YAPIONInternalParser {
+final class YAPIONInternalParser {
 
     // Parse steps done
     private int count = 0;
@@ -173,7 +173,7 @@ class YAPIONInternalParser {
     private void add(@NonNull String key, @NonNull YAPIONAnyType value) {
         log.debug("add      ['{}'='{}']", key, value);
         if (currentObject instanceof YAPIONObject) {
-            ((YAPIONObject) currentObject).add(key, value);
+            ((YAPIONObject) currentObject).addUnsafe(key, value);
         } else if (currentObject instanceof YAPIONMap) {
             ((YAPIONMap) currentObject).add(new YAPIONParserMapValue(value));
         } else if (currentObject instanceof YAPIONArray) {

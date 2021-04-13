@@ -209,16 +209,18 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     @Override
     public YAPIONArray addOrPointer(@NonNull Integer key, @NonNull YAPIONAnyType value) {
         discardReferenceValue();
-        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
-        if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
-            if (result.getYAPIONAny() == null) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
+        if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
+            if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+                if (result.getYAPIONAny() == null) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                add(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+                return this;
             }
-            if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
-            }
-            add(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
-            return this;
         }
         add(key, value);
         return this;
@@ -227,16 +229,18 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     @Override
     public YAPIONArray addOrPointer(@NonNull YAPIONAnyType value) {
         discardReferenceValue();
-        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
-        if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
-            if (result.getYAPIONAny() == null) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
+        if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
+            if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+                if (result.getYAPIONAny() == null) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                add(new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+                return this;
             }
-            if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
-            }
-            add(new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
-            return this;
         }
         add(value);
         return this;
@@ -245,16 +249,18 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     @Override
     public YAPIONArray setOrPointer(@NonNull Integer key, @NonNull YAPIONAnyType value) {
         discardReferenceValue();
-        RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
-        if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
-            if (result.getYAPIONAny() == null) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
+        if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
+            if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+                if (result.getYAPIONAny() == null) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                set(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+                return this;
             }
-            if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
-                throw new YAPIONRecursionException("Pointer creation failure.");
-            }
-            set(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
-            return this;
         }
         set(key, value);
         return this;
@@ -349,7 +355,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     public List<YAPIONAnyType> getAllValues() {
         return array;
     }
-    
+
     @Override
     public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(@NonNull String key) {
         try {
