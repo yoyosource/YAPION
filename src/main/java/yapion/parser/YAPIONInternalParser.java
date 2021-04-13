@@ -385,7 +385,7 @@ class YAPIONInternalParser {
     }
 
     public void sortValueHandler(char c, int length) {
-        valueHandlerList.removeIf(valueHandler -> !valueHandler.allowed(c, current.length()));
+        valueHandlerList.removeIf(valueHandler -> !valueHandler.allowed(c, length));
     }
 
     private String stringBuilderToUTF8String(StringBuilder st) {
