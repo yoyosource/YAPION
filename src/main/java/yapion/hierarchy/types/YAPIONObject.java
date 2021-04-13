@@ -13,7 +13,6 @@
 
 package yapion.hierarchy.types;
 
-import jdk.internal.reflect.CallerSensitive;
 import lombok.NonNull;
 import yapion.annotations.DeprecationInfo;
 import yapion.annotations.deserialize.YAPIONLoad;
@@ -160,7 +159,6 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return this;
     }
 
-    @CallerSensitive
     @DeprecationInfo(since = "", alternative = "Use YAPIONObject#(String, YAPIONAnyType) instead, never use this")
     public YAPIONObject addUnsafe(@NonNull String key, @NonNull YAPIONAnyType value) {
         discardReferenceValue();

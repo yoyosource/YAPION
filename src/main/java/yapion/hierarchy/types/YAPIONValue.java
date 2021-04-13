@@ -191,8 +191,8 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     @SuppressWarnings({"java:S3740", "java:S2789"})
-    public static YAPIONValue parseValue(String s, List<ValueHandler<?>> possibleValueHandler) {
-        for (ValueHandler<?> valueHandler : possibleValueHandler) {
+    public static YAPIONValue parseValue(String s, Iterable<ValueHandler<?>> valueHandlerIterator) {
+        for (ValueHandler<?> valueHandler : valueHandlerIterator) {
             MethodReturnValue<?> optional = valueHandler.preParse(s);
             if (optional.isPresent() && !optional.nonNullValuePresent()) {
                 return new YAPIONValue(null);
@@ -201,7 +201,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
                 return new YAPIONValue<>(optional.get());
             }
         }
-        for (ValueHandler<?> valueHandler : possibleValueHandler) {
+        for (ValueHandler<?> valueHandler : valueHandlerIterator) {
             MethodReturnValue<?> optional = valueHandler.parse(s);
             if (optional.isPresent()) {
                 return new YAPIONValue<>(optional.get());
