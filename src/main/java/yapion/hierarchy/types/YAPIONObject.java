@@ -134,7 +134,7 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
     }
 
     private void check(YAPIONAnyType yapionAnyType) {
-        if (yapionAnyType instanceof YAPIONValue || yapionAnyType instanceof YAPIONPointer) {
+        if (yapionAnyType.getType() == YAPIONType.VALUE || yapionAnyType.getType() == YAPIONType.POINTER) {
             return;
         }
         RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(yapionAnyType, this);
