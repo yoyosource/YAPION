@@ -79,3 +79,6 @@ root YAPIONObject
 ```
 
 To find out more about the [Parser](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/hierarchy) look here.
+
+## Version 0.25.0
+With version `0.25.0` you can also use a File with the static `parse` method.

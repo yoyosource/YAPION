@@ -1,4 +1,4 @@
-# Notation [WIP]
+# Notation
 The YAPION notation is heavily inspired by JSON and the enums in Java.
 
 ### Types
@@ -61,7 +61,7 @@ A Value is a "primitive" Object just storing one type of data. This can be:
 - String
 - 'null'
 
-The value is surrounded by '(' and ')' in any Key-Value-Pair, except in Arrays. If a String is not ambigious you can remove the single or double quotes. If you want to have a String of length 1 that is ambigious you need to use double quotes. 
+The value is surrounded by '(' and ')' in any Key-Value-Pair, except in Arrays. If a String is not ambiguous you can remove the single or double quotes. If you want to have a String of length 1 need to use double quotes. 
 
 ### Example
 ```

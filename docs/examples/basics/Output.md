@@ -60,3 +60,7 @@ public class ExampleSerializationTwo {
 
 }
 ```
+
+## Version 0.25.0
+As of Version `0.25.0` the OutputAPI was reworked and every `Prettified` implementation deprecated. You can now simply add a boolean to the constructor of the non `Prettified` implementation to prettify it.
+You can also use custom indentation, while prettifying, with the `Indentator` class. Use the `setIndentator` method on an `AbstractOutput` to set a custom Indentator.
