@@ -44,7 +44,11 @@ public class YAPIONInputStream implements AutoCloseable {
         return inputStream.read();
     }
 
-    @Override
+    /**
+     * Closes the InputStream.
+     *
+     * @throws IOException by {@link InputStream#close()}
+     */
     public void close() throws IOException {
         if (closed) return;
         closed = true;

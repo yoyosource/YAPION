@@ -88,7 +88,7 @@ public class YAPIONOutputStream implements AutoCloseable {
     /**
      * Closes the OutputStream.
      *
-     * @throws IOException {@link OutputStream#close()}
+     * @throws IOException by {@link OutputStream#close()}
      */
     public synchronized void close() throws IOException {
         if (closed) return;
