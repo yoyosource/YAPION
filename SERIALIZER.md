@@ -129,5 +129,5 @@
 - StringBuilderSerializer
 - StringSerializer
 # Foot Notes
-- (1) not serializable because of some internal stuff
+- (1) not serializable because of some internals
 - (2) not advised to use directly, use either PrivateKey or PublicKey instead

@@ -326,7 +326,7 @@ task createSerializerMD {
         })
 
         serializer.append("# Foot Notes\n")
-        serializer.append("- (1) not serializable because of some internal stuff\n")
+        serializer.append("- (1) not serializable because of some internals\n")
         serializer.append("- (2) not advised to use directly, use either PrivateKey or PublicKey instead\n")
     }
 }
