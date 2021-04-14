@@ -19,6 +19,7 @@ import yapion.parser.YAPIONParser;
 import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -28,7 +29,9 @@ public class YAPIONInputStream implements AutoCloseable {
     private final InputStream inputStream;
 
     /**
-     * Creates a YAPIONInputStream from an InputStream.
+     * Creates a YAPIONInputStream from an InputStream. It is encouraged to input some
+     * kind of {@link BufferedInputStream}. This will increase the {@link #read()} speed
+     * tremendously.
      *
      * @param inputStream the InputStream
      */
@@ -42,6 +45,14 @@ public class YAPIONInputStream implements AutoCloseable {
 
     public int readByte() throws IOException {
         return inputStream.read();
+    }
+
+    public long skip(long skip) throws IOException {
+        return inputStream.skip(skip);
+    }
+
+    public void skipNBytes(long skip) throws IOException {
+        inputStream.skipNBytes(skip);
     }
 
     /**
@@ -63,24 +74,24 @@ public class YAPIONInputStream implements AutoCloseable {
      * @throws YAPIONIOException if the inputStream was closed
      */
     public synchronized YAPIONObject read() {
-        if (closed) throw new YAPIONIOException();
+        if (closed) throw new YAPIONIOException("Reading from a closed Stream");
         return YAPIONParser.parse(inputStream);
     }
 
     /**
-     * Read, parses and deserialized the next YAPIONObject.
+     * Reads, parses and deserializes the next YAPIONObject.
      *
      * @return the next Object
      *
      * @throws YAPIONIOException if the inputStream was closed
      */
-    public synchronized Object readObject() {
-        if (closed) throw new YAPIONIOException();
+    public Object readObject() {
+        if (closed) throw new YAPIONIOException("Reading from a closed Stream");
         return YAPIONDeserializer.deserialize(read());
     }
 
     /**
-     * Read, parses and deserialized the next YAPIONObject.
+     * Reads, parses and deserializes the next YAPIONObject.
      *
      * @param typeReMapper the {@link TypeReMapper} to use
      *
@@ -88,8 +99,8 @@ public class YAPIONInputStream implements AutoCloseable {
      *
      * @throws YAPIONIOException if the inputStream was closed
      */
-    public synchronized Object readObject(TypeReMapper typeReMapper) {
-        if (closed) throw new YAPIONIOException();
+    public Object readObject(TypeReMapper typeReMapper) {
+        if (closed) throw new YAPIONIOException("Reading from a closed Stream");
         return YAPIONDeserializer.deserialize(read(), typeReMapper);
     }
 

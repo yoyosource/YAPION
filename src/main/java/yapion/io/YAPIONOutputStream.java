@@ -96,4 +96,12 @@ public class YAPIONOutputStream implements AutoCloseable {
         outputStream.close();
     }
 
+    /**
+     * Flushes the OutputStream
+     *
+     * @throws IOException by {@link OutputStream#flush()}
+     */
+    public synchronized void flush() throws IOException {
+        outputStream.flush();
+    }
 }
