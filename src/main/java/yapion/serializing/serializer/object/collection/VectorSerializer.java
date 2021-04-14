@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.object.stack;
+package yapion.serializing.serializer.object.collection;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -21,20 +21,20 @@ import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.SerializerImplementation;
 
-import java.util.Stack;
+import java.util.Vector;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@SerializerImplementation(since = "0.17.0")
-public class StackSerializer implements InternalSerializer<Stack<?>> {
+@SerializerImplementation(since = "0.7.0")
+public class VectorSerializer implements InternalSerializer<Vector<?>> {
 
     @Override
     public String type() {
-        return "java.util.Stack";
+        return "java.util.Vector";
     }
 
     @Override
-    public YAPIONAnyType serialize(SerializeData<Stack<?>> serializeData) {
+    public YAPIONAnyType serialize(SerializeData<Vector<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
         YAPIONArray yapionArray = new YAPIONArray();
@@ -47,13 +47,13 @@ public class StackSerializer implements InternalSerializer<Stack<?>> {
 
     @Override
     @SuppressWarnings({"java:S1149"})
-    public Stack<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+    public Vector<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         YAPIONArray yapionArray = yapionObject.getArray("values");
-        Stack<Object> stack = new Stack<>();
+        Vector<Object> vector = new Vector<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            stack.push(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
+            vector.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
-        return stack;
+        return vector;
     }
 }

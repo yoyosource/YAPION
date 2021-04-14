@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.object.table;
+package yapion.serializing.serializer.object.map;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONMap;

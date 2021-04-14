@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.object.deque;
+package yapion.serializing.serializer.object.collection;
 
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -25,48 +25,50 @@ import yapion.serializing.utils.DeserializeUtils;
 import yapion.serializing.utils.SerializeUtils;
 import yapion.utils.ReflectionsUtils;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@SerializerImplementation(since = "0.23.0", initialSince = "0.7.0, 0.12.0", standsFor = {Deque.class, ArrayDeque.class, BlockingDeque.class, LinkedBlockingDeque.class, ConcurrentLinkedDeque.class})
-public class DequeSerializer implements InternalSerializer<Deque<?>> {
+@SerializerImplementation(since = "0.23.0", initialSince = "0.3.0, 0.7.0, 0.12.0", standsFor = {Set.class, HashSet.class, LinkedHashSet.class, TreeSet.class, ConcurrentSkipListSet.class, CopyOnWriteArraySet.class})
+public class SetSerializer implements InternalSerializer<Set<?>> {
 
     @Override
     public String type() {
-        return "java.utils.Deque";
+        return "java.util.Set";
     }
 
     @Override
     public Class<?> defaultImplementation() {
-        return ArrayDeque.class;
+        return HashSet.class;
     }
 
     @Override
     public Class<?> interfaceType() {
-        return Deque.class;
+        return Set.class;
     }
 
     @Override
-    public YAPIONAnyType serialize(SerializeData<Deque<?>> serializeData) {
+    public YAPIONAnyType serialize(SerializeData<Set<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass().getTypeName());
-        return SerializeUtils.serializeDeque(serializeData, yapionObject);
+        return SerializeUtils.serializeSet(serializeData, yapionObject);
     }
 
     @SuppressWarnings({"unchecked"})
     @Override
-    public Deque<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+    public Set<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
             Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false);
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
-            return DeserializeUtils.deserializeDeque(deserializeData, yapionArray, (Deque<Object>) object);
+            return DeserializeUtils.deserializeSet(deserializeData, yapionArray, (Set<Object>) object);
         } catch (Exception e) {
             throw new YAPIONDeserializerException(e.getMessage(), e);
         }
     }
+
 }

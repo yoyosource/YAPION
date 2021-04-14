@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.object.queue;
+package yapion.serializing.serializer.object.collection;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -23,34 +23,28 @@ import yapion.serializing.serializer.SerializerImplementation;
 import yapion.serializing.utils.DeserializeUtils;
 import yapion.serializing.utils.SerializeUtils;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.12.0")
-public class ArrayBlockingQueueSerializer implements InternalSerializer<BlockingQueue<?>> {
+public class PriorityBlockingQueueSerializer implements InternalSerializer<PriorityBlockingQueue<?>> {
 
     @Override
     public String type() {
-        return "java.util.concurrent.ArrayBlockingQueue";
+        return "java.util.concurrent.PriorityBlockingQueue";
     }
 
     @Override
-    public String primitiveType() {
-        return "java.util.concurrent.BlockingQueue";
-    }
-
-    @Override
-    public YAPIONAnyType serialize(SerializeData<BlockingQueue<?>> serializeData) {
+    public YAPIONAnyType serialize(SerializeData<PriorityBlockingQueue<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
         return SerializeUtils.serializeQueue(serializeData, yapionObject);
     }
 
     @Override
-    public BlockingQueue<Object> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+    public PriorityBlockingQueue<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
-        return DeserializeUtils.deserializeQueue(deserializeData, yapionArray, new ArrayBlockingQueue<>(yapionArray.length()));
+        return DeserializeUtils.deserializeQueue(deserializeData, yapionArray, new PriorityBlockingQueue<>(yapionArray.length()));
     }
 }

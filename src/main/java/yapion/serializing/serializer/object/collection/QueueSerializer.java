@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.object.queue;
+package yapion.serializing.serializer.object.collection;
 
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
