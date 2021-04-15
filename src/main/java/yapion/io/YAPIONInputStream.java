@@ -51,10 +51,6 @@ public class YAPIONInputStream implements AutoCloseable {
         return inputStream.skip(skip);
     }
 
-    public void skipNBytes(long skip) throws IOException {
-        inputStream.skipNBytes(skip);
-    }
-
     /**
      * Closes the InputStream.
      *

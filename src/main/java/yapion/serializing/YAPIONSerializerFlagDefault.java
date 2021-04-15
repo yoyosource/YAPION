@@ -49,6 +49,16 @@ public final class YAPIONSerializerFlagDefault {
     public static final YAPIONSerializerFlagKey ERROR_EXCEPTION = new YAPIONSerializerFlagKey("error.exception");
 
     /**
+     * The key to specify if a Reflection should be serialized {@code false} or should result in an thrown exception {@code true}.
+     */
+    public static final YAPIONSerializerFlagKey REFLECTION_EXCEPTION = new YAPIONSerializerFlagKey("reflection.exception");
+
+    /**
+     * The key to specify if a Reflection should be serialized as {@code null} {@code true} or serialized properly {@code false}.
+     */
+    public static final YAPIONSerializerFlagKey REFLECTION_AS_NULL = new YAPIONSerializerFlagKey("reflection.as.null");
+
+    /**
      * Retrieve every flagKey specified in the current Runtime up until now.
      *
      * @return a String array with every {@link YAPIONSerializerFlagKey#keyName}
