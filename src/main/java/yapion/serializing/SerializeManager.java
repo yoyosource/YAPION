@@ -244,6 +244,17 @@ public class SerializeManager {
         }
     }
 
+    public static boolean hasFactory(Class<?> clazz) {
+        return instanceFactoryMap.containsKey(clazz);
+    }
+
+    public static Object getObjectInstance(Class<?> clazz) throws ClassNotFoundException {
+        if (!hasFactory(clazz)) {
+            throw new ClassNotFoundException("Factory for " + clazz.getTypeName() + " not found or defined.");
+        }
+        return instanceFactoryMap.get(clazz).instance();
+    }
+
     static Object getObjectInstance(Class<?> clazz, String type, boolean objenesis) {
         if (instanceFactoryMap.containsKey(clazz)) {
             return instanceFactoryMap.get(clazz).instance();

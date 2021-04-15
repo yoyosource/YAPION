@@ -15,6 +15,7 @@ package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.utils.ReflectionsUtils;
 
@@ -38,6 +39,14 @@ public class DeserializeData<T extends YAPIONAnyType> {
 
     public Object deserialize(YAPIONAnyType yapionAnyType) {
         return yapionDeserializer.parse(yapionAnyType);
+    }
+
+    public boolean hasFactory(Class<?> clazz) {
+        return SerializeManager.hasFactory(clazz);
+    }
+
+    public Object getInstance(Class<?> clazz) throws ClassNotFoundException {
+        return SerializeManager.getObjectInstance(clazz);
     }
 
     public boolean setField(String fieldName, Object object, Object objectToSet) {
