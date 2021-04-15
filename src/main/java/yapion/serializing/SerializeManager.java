@@ -122,7 +122,10 @@ public class SerializeManager {
 
         oSerializerGroups.add("yapion.annotations.");
         oSerializerGroups.add("yapion.exceptions.");
-        oSerializerGroups.add("yapion.hierarchy.");
+        oSerializerGroups.add("yapion.hierarchy.output");
+        oSerializerGroups.add("yapion.hierarchy.types.utils");
+        oSerializerGroups.add("yapion.hierarchy.types.value");
+        oSerializerGroups.add("yapion.hierarchy.validators");
         oSerializerGroups.add("yapion.parser.");
         oSerializerGroups.add("yapion.serializing.api");
         oSerializerGroups.add("yapion.serializing.data");

@@ -271,32 +271,12 @@ public final class YAPIONDeserializer {
         return array;
     }
 
-    private Object serialize(InternalSerializer<?> serializer, YAPIONAnyType yapionAnyType) {
-        if (serializer != null && !serializer.empty()) {
-            if (serializer instanceof EnumSerializer) {
-                YAPIONObject enumObject = (YAPIONObject) yapionAnyType;
-                String enumType = enumObject.getValue(ENUM_IDENTIFIER, "").get();
-                enumType = typeReMapper.remap(enumType);
-
-                YAPIONObject enumCopyObject = new YAPIONObject();
-                enumCopyObject.add(TYPE_IDENTIFIER, Enum.class.getTypeName());
-                enumCopyObject.add(ENUM_IDENTIFIER, enumType);
-                enumCopyObject.add("value", enumObject.getValue("value", "").get());
-                enumCopyObject.add("ordinal", enumObject.getValue("ordinal", 0).get());
-
-                return serializer.deserialize(new DeserializeData<>(enumCopyObject, contextManager.get(), this));
-            }
-            return serializer.deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this));
-        }
-        return null;
-    }
-
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parseObject(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>) yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER)).get();
         type = typeReMapper.remap(type);
         InternalSerializer<?> serializer = SerializeManager.getInternalSerializer(type);
-        Object o = serialize(serializer, yapionObject);
+        Object o = deserialize(serializer, yapionObject);
         if (o != null) {
             pointerMap.put(yapionObject, o);
             object = o;
@@ -339,8 +319,10 @@ public final class YAPIONDeserializer {
                     }
                 }
                 YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
-                if (isValid(field, yapionDeserializeType)) {
-                    ReflectionsUtils.setValueOfField(field, object, serialize(SerializeManager.getInternalSerializer(yapionDeserializeType.type().getTypeName()), yapionAnyType));
+                if (specialSet(field, yapionAnyType)) {
+                    ReflectionsUtils.setValueOfField(field, object, yapionAnyType);
+                } else if (isValid(field, yapionDeserializeType)) {
+                    ReflectionsUtils.setValueOfField(field, object, deserialize(SerializeManager.getInternalSerializer(yapionDeserializeType.type().getTypeName()), yapionAnyType));
                 } else {
                     ReflectionsUtils.setValueOfField(field, object, parse(yapionAnyType));
                 }
@@ -354,6 +336,11 @@ public final class YAPIONDeserializer {
             log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
         }
         return this;
+    }
+
+    private boolean specialSet(Field field, YAPIONAnyType yapionAnyType) {
+        Class<?> fieldType = field.getType();
+        return fieldType.isAssignableFrom(yapionAnyType.getClass()) && YAPIONAnyType.class.isAssignableFrom(fieldType);
     }
 
     private boolean isValid(Field field, YAPIONDeserializeType yapionDeserializeType) {
@@ -370,6 +357,26 @@ public final class YAPIONDeserializer {
             clazz = clazz.getSuperclass();
         }
         return false;
+    }
+
+    private Object deserialize(InternalSerializer<?> serializer, YAPIONAnyType yapionAnyType) {
+        if (serializer != null && !serializer.empty()) {
+            if (serializer instanceof EnumSerializer) {
+                YAPIONObject enumObject = (YAPIONObject) yapionAnyType;
+                String enumType = enumObject.getValue(ENUM_IDENTIFIER, "").get();
+                enumType = typeReMapper.remap(enumType);
+
+                YAPIONObject enumCopyObject = new YAPIONObject();
+                enumCopyObject.add(TYPE_IDENTIFIER, Enum.class.getTypeName());
+                enumCopyObject.add(ENUM_IDENTIFIER, enumType);
+                enumCopyObject.add("value", enumObject.getValue("value", "").get());
+                enumCopyObject.add("ordinal", enumObject.getValue("ordinal", 0).get());
+
+                return serializer.deserialize(new DeserializeData<>(enumCopyObject, contextManager.get(), this));
+            }
+            return serializer.deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this));
+        }
+        return null;
     }
 
     /**

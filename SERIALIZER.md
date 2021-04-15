@@ -114,6 +114,8 @@
 - YAPIONDiffSerializer
 ## object.yapion.packet
 - YAPIONPacketSerializer
+## object.yapion.types
+- YAPIONAnyTypeSerializer
 ## object.zip
 - Adler32Serializer
 - CRC32Serializer

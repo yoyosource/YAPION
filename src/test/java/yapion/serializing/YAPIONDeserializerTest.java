@@ -23,6 +23,7 @@ import java.io.File;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static yapion.YAPIONAssertion.isYAPION;
 import static yapion.serializing.YAPIONTestObjects.*;
 
 public class YAPIONDeserializerTest {
@@ -107,6 +108,13 @@ public class YAPIONDeserializerTest {
         TestReduced primitive = (TestReduced) object;
         assertThat(primitive.stringB.toString(), is(toEqual.stringB.toString()));
         assertThat(primitive.stringb.toString(), is(toEqual.stringb.toString()));
+    }
+
+    @Test
+    public void testYAPIONAnyTypeSerialization() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestYAPIONAnyType)yapionObject{Test(Test)}yapionMap<(Test):(Test)>yapionArray[Test]}");
+        TestYAPIONAnyType testYAPIONAnyType = (TestYAPIONAnyType) YAPIONDeserializer.deserialize(yapionObject);
+        assertThat(testYAPIONAnyType, is(new TestYAPIONAnyType()));
     }
 
 }

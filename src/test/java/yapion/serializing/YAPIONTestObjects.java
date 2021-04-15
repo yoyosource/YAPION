@@ -20,6 +20,8 @@ import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONField;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 
@@ -308,6 +310,17 @@ public class YAPIONTestObjects {
         private final EnumerationTest test3 = EnumerationTest.Hugo;
         private final EnumerationTest test4 = EnumerationTest.My;
         private final EnumerationTest test5 = EnumerationTest.Name;
+
+    }
+
+    @YAPIONData
+    @ToString
+    @EqualsAndHashCode
+    public static class TestYAPIONAnyType {
+
+        private YAPIONObject yapionObject = new YAPIONObject().add("Test", "Test");
+        private YAPIONMap yapionMap = new YAPIONMap().add("Test", "Test");
+        private YAPIONArray yapionArray = new YAPIONArray().add("Test");
 
     }
 

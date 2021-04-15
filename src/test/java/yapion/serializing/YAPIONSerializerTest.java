@@ -116,4 +116,10 @@ public class YAPIONSerializerTest {
         assertThat(yapionObject, isYAPION("{@type(java.util.ArrayList)values[\"333276742632472577\"]}"));
     }
 
+    @Test
+    public void testYAPIONAnyTypeSerialization() {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestYAPIONAnyType());
+        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestYAPIONAnyType)yapionObject{Test(Test)}yapionMap<(Test):(Test)>yapionArray[Test]}"));
+    }
+
 }
