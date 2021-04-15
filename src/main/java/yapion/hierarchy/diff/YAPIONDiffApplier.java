@@ -48,6 +48,11 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
         return this;
     }
 
+    public YAPIONDiffApplier<I, K, T> reverseApply(YAPIONDiff yapionDiff) {
+        yapionDiff.getDiffs().forEach(this::reverseApply);
+        return this;
+    }
+
     public <B extends DiffBase> YAPIONDiffApplier<I, K, T> apply(B diff) {
         switch (diff.type()) {
             case DELETE:
@@ -61,6 +66,24 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
             case CHANGE:
                 DiffChange diffChange = (DiffChange) diff;
                 applyInsert(diffChange.getPath(), diffChange.getTo());
+                break;
+        }
+        return this;
+    }
+
+    public <B extends DiffBase> YAPIONDiffApplier<I, K, T> reverseApply(B diff) {
+        switch (diff.type()) {
+            case DELETE:
+                DiffDelete diffDelete = (DiffDelete) diff;
+                reverseApplyDelete(diffDelete.getPath(), diffDelete.getDeleted());
+                break;
+            case INSERT:
+                DiffInsert diffInsert = (DiffInsert) diff;
+                reverseApplyInsert(diffInsert.getPath());
+                break;
+            case CHANGE:
+                DiffChange diffChange = (DiffChange) diff;
+                reverseApplyDelete(diffChange.getPath(), diffChange.getFrom());
                 break;
         }
         return this;
@@ -95,6 +118,38 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
         }
         if (yapionAnyType instanceof YAPIONArray) {
             ((YAPIONArray) yapionAnyType).add(Integer.parseInt(path[path.length - 1]), toInsert);
+        }
+    }
+
+    private void reverseApplyDelete(String[] path, YAPIONAnyType deleted) {
+        if (path.length == 0) {
+            return;
+        }
+        YAPIONAnyType yapionAnyType = resolvePath(path);
+        if (yapionAnyType instanceof YAPIONObject) {
+            ((YAPIONObject) yapionAnyType).add(path[path.length - 1], deleted);
+        }
+        if (yapionAnyType instanceof YAPIONMap) {
+            ((YAPIONMap) yapionAnyType).add(YAPIONParser.parse(path[path.length - 1]), deleted);
+        }
+        if (yapionAnyType instanceof YAPIONArray) {
+            ((YAPIONArray) yapionAnyType).add(Integer.parseInt(path[path.length - 1]), deleted);
+        }
+    }
+
+    private void reverseApplyInsert(String[] path) {
+        if (path.length == 0) {
+            return;
+        }
+        YAPIONAnyType yapionAnyType = resolvePath(path);
+        if (yapionAnyType instanceof YAPIONObject) {
+            ((YAPIONObject) yapionAnyType).remove(path[path.length - 1]);
+        }
+        if (yapionAnyType instanceof YAPIONMap) {
+            ((YAPIONMap) yapionAnyType).remove(YAPIONParser.parse(path[path.length - 1]));
+        }
+        if (yapionAnyType instanceof YAPIONArray) {
+            ((YAPIONArray) yapionAnyType).remove(Integer.parseInt(path[path.length - 1]));
         }
     }
 

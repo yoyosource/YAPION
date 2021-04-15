@@ -45,6 +45,10 @@ public class YAPIONDiff {
         System.out.println(second);
         YAPIONDiffApplier.diffApplierObject(first).apply(yapionDiff);
         System.out.println(first.equals(second));
+        YAPIONDiffApplier.diffApplierObject(first).reverseApply(yapionDiff);
+        System.out.println(first);
+        System.out.println(second);
+        System.out.println(first.equals(second));
     }
 
     @Getter
