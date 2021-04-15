@@ -60,7 +60,6 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
                 break;
             case CHANGE:
                 DiffChange diffChange = (DiffChange) diff;
-                applyDelete(diffChange.getPath());
                 applyInsert(diffChange.getPath(), diffChange.getTo());
                 break;
         }

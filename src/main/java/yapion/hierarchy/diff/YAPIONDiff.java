@@ -40,6 +40,11 @@ public class YAPIONDiff {
 
         YAPIONDiff yapionDiff = new YAPIONDiff(first, second);
         System.out.println(yapionDiff.diffs);
+
+        System.out.println(first);
+        System.out.println(second);
+        YAPIONDiffApplier.diffApplierObject(first).apply(yapionDiff);
+        System.out.println(first.equals(second));
     }
 
     @Getter
