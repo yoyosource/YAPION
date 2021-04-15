@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.object.other;
+package yapion.serializing.serializer.object.yapion.packet;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.packet.YAPIONPacket;

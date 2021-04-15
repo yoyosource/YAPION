@@ -45,8 +45,13 @@ public class DeserializeData<T extends YAPIONAnyType> {
         return SerializeManager.hasFactory(clazz);
     }
 
-    public Object getInstance(Class<?> clazz) throws ClassNotFoundException {
-        return SerializeManager.getObjectInstance(clazz);
+    public Object getGenericInstance(Class<?> clazz) throws ClassNotFoundException {
+        return SerializeManager.getGenericObjectInstance(clazz);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getInstance(Class<T> clazz) throws ClassNotFoundException {
+        return (T) SerializeManager.getObjectInstance(clazz);
     }
 
     public boolean setField(String fieldName, Object object, Object objectToSet) {

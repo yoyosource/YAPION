@@ -248,11 +248,19 @@ public class SerializeManager {
         return instanceFactoryMap.containsKey(clazz);
     }
 
-    public static Object getObjectInstance(Class<?> clazz) throws ClassNotFoundException {
+    public static Object getGenericObjectInstance(Class<?> clazz) throws ClassNotFoundException {
         if (!hasFactory(clazz)) {
             throw new ClassNotFoundException("Factory for " + clazz.getTypeName() + " not found or defined.");
         }
         return instanceFactoryMap.get(clazz).instance();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getObjectInstance(Class<T> clazz) throws ClassNotFoundException {
+        if (!hasFactory(clazz)) {
+            throw new ClassNotFoundException("Factory for " + clazz.getTypeName() + " not found or defined.");
+        }
+        return (T) instanceFactoryMap.get(clazz).instance();
     }
 
     static Object getObjectInstance(Class<?> clazz, String type, boolean objenesis) {

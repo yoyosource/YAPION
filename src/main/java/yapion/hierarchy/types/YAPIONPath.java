@@ -26,6 +26,10 @@ public final class YAPIONPath {
 
     private final String[] path;
 
+    public YAPIONPath(String[] path) {
+        this.path = path;
+    }
+
     public YAPIONPath(YAPIONAnyType yapionAnyType) {
         LinkedList<String> path = new LinkedList<>();
         YAPIONAnyType last = yapionAnyType;
