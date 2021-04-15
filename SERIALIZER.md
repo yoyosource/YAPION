@@ -25,11 +25,17 @@
 ## object.awt
 - BufferedImageSerializer
 - ColorSerializer
-## object.deque
+## object.collection
+- ArrayBlockingQueueSerializer
 - DequeSerializer
-## object.list
 - ListSerializer
+- PriorityBlockingQueueSerializer
+- QueueSerializer
+- SetSerializer
+- StackSerializer
+- VectorSerializer
 ## object.map
+- HashTableSerializer
 - MapSerializer
 ## object.net
 - Inet4AddressSerializer
@@ -43,6 +49,7 @@
 - OptionalLongSerializer
 - OptionalSerializer
 ## object.other
+- ClassSerializer
 - EnumMapSerializer
 - EnumSerializer
 - EnumSetSerializer
@@ -50,11 +57,10 @@
 - MathContextSerializer
 - RandomSerializer
 - UUIDSerializer
-- YAPIONPacketSerializer
-## object.queue
-- ArrayBlockingQueueSerializer
-- PriorityBlockingQueueSerializer
-- QueueSerializer
+## object.reflect
+- ConstructorSerializer
+- FieldSerializer
+- MethodSerializer
 ## object.regex
 - PatternSerializer
 ## object.security
@@ -76,12 +82,6 @@
 - EllipticCurveSerializer (2)
 ## object.security.internal.rsa
 - RSAOtherPrimeInfoSerializer (2)
-## object.set
-- SetSerializer
-## object.stack
-- StackSerializer
-## object.table
-- HashTableSerializer
 ## object.text
 - SimpleDateFormatSerializer
 ## object.throwable
@@ -107,8 +107,13 @@
 - ZoneIdSerializer
 - ZoneOffsetSerializer
 - ZonedDateTimeSerializer
-## object.vector
-- VectorSerializer
+## object.yapion.diff
+- DiffChangeSerializer
+- DiffDeleteSerializer
+- DiffInsertSerializer
+- YAPIONDiffSerializer
+## object.yapion.packet
+- YAPIONPacketSerializer
 ## object.zip
 - Adler32Serializer
 - CRC32Serializer
