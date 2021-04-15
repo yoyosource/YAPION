@@ -23,34 +23,6 @@ import java.util.List;
 
 public class YAPIONDiff {
 
-    public static void main(String[] args) {
-        YAPIONObject first = new YAPIONObject();
-        first.add("test", "Hello World");
-        first.add("test4", "Hello World");
-        first.add("test2", "Hello World");
-        first.add("object", new YAPIONObject());
-        first.add("objectInternal", new YAPIONObject().add("test", "test").add("test2", "test2").add("test3", ""));
-
-        YAPIONObject second = new YAPIONObject();
-        second.add("test", "Hello World2");
-        second.add("test3", "Hello World");
-        second.add("test4", "Hello World");
-        second.add("object", new YAPIONObject());
-        second.add("objectInternal", new YAPIONObject().add("test", "test").add("test2", "test3").add("test4", ""));
-
-        YAPIONDiff yapionDiff = new YAPIONDiff(first, second);
-        System.out.println(yapionDiff.diffs);
-
-        System.out.println(first);
-        System.out.println(second);
-        YAPIONDiffApplier.diffApplierObject(first).apply(yapionDiff);
-        System.out.println(first.equals(second));
-        YAPIONDiffApplier.diffApplierObject(first).reverseApply(yapionDiff);
-        System.out.println(first);
-        System.out.println(second);
-        System.out.println(first.equals(second));
-    }
-
     @Getter
     private List<DiffBase> diffs = new ArrayList<>();
 
