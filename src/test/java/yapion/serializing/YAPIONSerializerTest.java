@@ -14,6 +14,7 @@
 package yapion.serializing;
 
 import org.junit.Test;
+import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
@@ -120,6 +121,29 @@ public class YAPIONSerializerTest {
     public void testYAPIONAnyTypeSerialization() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestYAPIONAnyType());
         assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestYAPIONAnyType)yapionObject{Test(Test)}yapionMap<(Test):(Test)>yapionArray[Test]}"));
+    }
+
+    @Test
+    public void testYAPIONMultiContextAnnotation() {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestMultiContextAnnotation());
+        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestMultiContextAnnotation)}"));
+    }
+
+    @Test(expected = YAPIONSerializerException.class)
+    public void testYAPIONMultiContextAnnotationWrongContext() {
+        YAPIONSerializer.serialize(new TestMultiContextAnnotation(), "Hugo");
+    }
+
+    @Test
+    public void testYAPIONMultiContextAnnotationCorrectContext() {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestMultiContextAnnotation(), "Hello World");
+        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestMultiContextAnnotation)}"));
+    }
+
+    @Test
+    public void testYAPIONMultiContextAnnotationCorrectSecondContext() {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestMultiContextAnnotation(), "Hello");
+        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestMultiContextAnnotation)}"));
     }
 
 }

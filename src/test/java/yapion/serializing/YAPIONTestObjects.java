@@ -324,6 +324,14 @@ public class YAPIONTestObjects {
 
     }
 
+    @YAPIONSave(context = "Hello")
+    @YAPIONSave(context = "Hello World")
+    public static class TestMultiContextAnnotation {
+
+        private int i = 10;
+
+    }
+
     static String getUserHome() {
         return System.getProperty("user.home");
     }
