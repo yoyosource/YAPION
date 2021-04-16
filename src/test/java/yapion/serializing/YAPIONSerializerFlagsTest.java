@@ -33,7 +33,7 @@ public class YAPIONSerializerFlagsTest {
 
     @Test
     public void testFlagKeyConstructor() {
-        assertThat(YAPIONSerializerFlagDefault.flagKey("dataLoss.exception"), sameInstance(YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION));
+        assertThat(YAPIONSerializerFlagDefault.flagKey("base.dataLoss.exception"), sameInstance(YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION));
     }
 
     @Test

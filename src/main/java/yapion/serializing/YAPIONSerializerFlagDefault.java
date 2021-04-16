@@ -31,32 +31,32 @@ public final class YAPIONSerializerFlagDefault {
     /**
      * The key to specify if data loss should be handled silently {@code false} or should throw an exception {@code true}.
      */
-    public static final YAPIONSerializerFlagKey DATA_LOSS_EXCEPTION = new YAPIONSerializerFlagKey("dataLoss.exception");
+    public static final YAPIONSerializerFlagKey DATA_LOSS_EXCEPTION = new YAPIONSerializerFlagKey("base.dataLoss.exception");
 
     /**
      * The key to specify if a {@link PrivateKey} should be serialized {@code false} or should result in an thrown exception {@code true}.
      */
-    public static final YAPIONSerializerFlagKey PRIVATE_KEY_EXCEPTION = new YAPIONSerializerFlagKey("privateKey.exception");
+    public static final YAPIONSerializerFlagKey PRIVATE_KEY_EXCEPTION = new YAPIONSerializerFlagKey("base.privateKey.exception");
 
     /**
      * The key to specify if a {@link PrivateKey} should be serialized as {@code null} {@code true} or serialized properly {@code false}.
      */
-    public static final YAPIONSerializerFlagKey PRIVATE_KEY_AS_NULL = new YAPIONSerializerFlagKey("privateKey.as.null");
+    public static final YAPIONSerializerFlagKey PRIVATE_KEY_AS_NULL = new YAPIONSerializerFlagKey("base.privateKey.as.null");
 
     /**
      * The key to specify if a {@link Error} should be handled silently {@code false} or should throw an exception {@code true}.
      */
-    public static final YAPIONSerializerFlagKey ERROR_EXCEPTION = new YAPIONSerializerFlagKey("error.exception");
+    public static final YAPIONSerializerFlagKey ERROR_EXCEPTION = new YAPIONSerializerFlagKey("base.error.exception");
 
     /**
      * The key to specify if a Reflection should be serialized {@code false} or should result in an thrown exception {@code true}.
      */
-    public static final YAPIONSerializerFlagKey REFLECTION_EXCEPTION = new YAPIONSerializerFlagKey("reflection.exception");
+    public static final YAPIONSerializerFlagKey REFLECTION_EXCEPTION = new YAPIONSerializerFlagKey("base.reflection.exception");
 
     /**
      * The key to specify if a Reflection should be serialized as {@code null} {@code true} or serialized properly {@code false}.
      */
-    public static final YAPIONSerializerFlagKey REFLECTION_AS_NULL = new YAPIONSerializerFlagKey("reflection.as.null");
+    public static final YAPIONSerializerFlagKey REFLECTION_AS_NULL = new YAPIONSerializerFlagKey("base.reflection.as.null");
 
     /**
      * Retrieve every flagKey specified in the current Runtime up until now.
@@ -74,7 +74,12 @@ public final class YAPIONSerializerFlagDefault {
      * @return the {@link YAPIONSerializerFlagKey}
      */
     public static YAPIONSerializerFlagKey flagKey(String key) {
-        return YAPION_FLAG_KEYS.computeIfAbsent(key, YAPIONSerializerFlagKey::new);
+        if (YAPION_FLAG_KEYS.containsKey(key)) {
+            return YAPION_FLAG_KEYS.get(key);
+        }
+        YAPIONSerializerFlagKey yapionSerializerFlagKey = new YAPIONSerializerFlagKey(key);
+        YAPION_FLAG_KEYS.put(key, yapionSerializerFlagKey);
+        return yapionSerializerFlagKey;
     }
 
     /**
