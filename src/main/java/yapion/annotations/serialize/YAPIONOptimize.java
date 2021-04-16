@@ -13,12 +13,10 @@
 
 package yapion.annotations.serialize;
 
+import yapion.annotations.object.YAPIONField;
 import yapion.serializing.YAPIONSerializer;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * This annotation is for optimizing the YAPIONObject to remove Objects
@@ -31,6 +29,16 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
+@Repeatable(YAPIONOptimize.YAPIONOptimizes.class)
 public @interface YAPIONOptimize {
     String[] context() default {};
+
+    /**
+     * This is just a container to make the outer class {@link Repeatable}.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.FIELD})
+    @interface YAPIONOptimizes {
+        YAPIONOptimize[] value() default {};
+    }
 }

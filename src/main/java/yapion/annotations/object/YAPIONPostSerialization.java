@@ -15,10 +15,7 @@ package yapion.annotations.object;
 
 import yapion.serializing.YAPIONSerializer;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * This annotation describes one of the three steps in the process
@@ -37,6 +34,16 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
+@Repeatable(YAPIONPostSerialization.YAPIONPostSerializations.class)
 public @interface YAPIONPostSerialization {
     String[] context() default {};
+
+    /**
+     * This is just a container to make the outer class {@link Repeatable}.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
+    @interface YAPIONPostSerializations {
+        YAPIONPostSerialization[] value() default {};
+    }
 }

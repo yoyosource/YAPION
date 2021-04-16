@@ -18,10 +18,7 @@ import yapion.annotations.serialize.YAPIONSave;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * This annotation describes a combined {@link YAPIONLoad} and
@@ -34,6 +31,16 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
+@Repeatable(YAPIONField.YAPIONFields.class)
 public @interface YAPIONField {
     String[] context() default {};
+
+    /**
+     * This is just a container to make the outer class {@link Repeatable}.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.FIELD})
+    @interface YAPIONFields {
+        YAPIONField[] value() default {};
+    }
 }

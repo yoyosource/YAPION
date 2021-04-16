@@ -39,17 +39,33 @@ final class ObjectCache {
         Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
             if (method.getParameterCount() != 0) continue;
-            YAPIONPreSerialization yapionPreSerialization = method.getAnnotation(YAPIONPreSerialization.class);
-            YAPIONPostSerialization yapionPostSerialization = method.getAnnotation(YAPIONPostSerialization.class);
+            YAPIONPreSerialization[] yapionPreSerializations = method.getDeclaredAnnotationsByType(YAPIONPreSerialization.class);
+            YAPIONPostSerialization[] yapionPostSerializations = method.getDeclaredAnnotationsByType(YAPIONPostSerialization.class);
 
-            if (yapionPreSerialization != null) cache(preSerializationCache, yapionPreSerialization.context(), method);
-            if (yapionPostSerialization != null) cache(postSerializationCache, yapionPostSerialization.context(), method);
+            if (yapionPreSerializations != null) {
+                for (YAPIONPreSerialization yapionPreSerialization : yapionPreSerializations) {
+                    cache(preSerializationCache, yapionPreSerialization.context(), method);
+                }
+            }
+            if (yapionPostSerializations != null) {
+                for (YAPIONPostSerialization yapionPostSerialization : yapionPostSerializations) {
+                    cache(postSerializationCache, yapionPostSerialization.context(), method);
+                }
+            }
 
-            YAPIONPreDeserialization yapionPreDeserialization = method.getAnnotation(YAPIONPreDeserialization.class);
-            YAPIONPostDeserialization yapionPostDeserialization = method.getAnnotation(YAPIONPostDeserialization.class);
+            YAPIONPreDeserialization[] yapionPreDeserializations = method.getDeclaredAnnotationsByType(YAPIONPreDeserialization.class);
+            YAPIONPostDeserialization[] yapionPostDeserializations = method.getDeclaredAnnotationsByType(YAPIONPostDeserialization.class);
 
-            if (yapionPreDeserialization != null) cache(preDeserializationCache, yapionPreDeserialization.context(), method);
-            if (yapionPostDeserialization != null) cache(postDeserializationCache, yapionPostDeserialization.context(), method);
+            if (yapionPreDeserializations != null) {
+                for (YAPIONPreDeserialization yapionPreDeserialization : yapionPreDeserializations) {
+                    cache(preDeserializationCache, yapionPreDeserialization.context(), method);
+                }
+            }
+            if (yapionPostDeserializations != null) {
+                for (YAPIONPostDeserialization yapionPostDeserialization : yapionPostDeserializations) {
+                    cache(postDeserializationCache, yapionPostDeserialization.context(), method);
+                }
+            }
         }
     }
 

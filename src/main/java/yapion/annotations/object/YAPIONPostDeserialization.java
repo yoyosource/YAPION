@@ -16,10 +16,7 @@ package yapion.annotations.object;
 import org.objenesis.ObjenesisBase;
 import yapion.serializing.YAPIONDeserializer;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * This annotation describes one of the four steps in the process
@@ -41,6 +38,16 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
+@Repeatable(YAPIONPostDeserialization.YAPIONPostDeserializations.class)
 public @interface YAPIONPostDeserialization {
     String[] context() default {};
+
+    /**
+     * This is just a container to make the outer class {@link Repeatable}.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
+    @interface YAPIONPostDeserializations {
+        YAPIONPostDeserialization[] value() default {};
+    }
 }
