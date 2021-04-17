@@ -26,8 +26,15 @@ public interface InternalSerializer<T> {
     default void init() {
 
     }
-
+    
     String type();
+
+    /*default String type() {
+        Type type = getClass().getGenericInterfaces()[0];
+        ParameterizedType parameterizedType = (ParameterizedType) type;
+        parameterizedType = (ParameterizedType) parameterizedType.getActualTypeArguments()[0];
+        return parameterizedType.getRawType().getTypeName();
+    }*/
 
     default Class<?> defaultImplementation() {
         return null;
