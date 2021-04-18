@@ -311,7 +311,7 @@ public final class YAPIONDeserializer {
                 arrayType = fieldType.getTypeName();
 
                 YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(field.getName());
-                if (reducedMode && yapionAnyType instanceof YAPIONObject && !((YAPIONObject) yapionAnyType).hasValue(TYPE_IDENTIFIER, String.class)) {
+                if (reducedMode && yapionAnyType instanceof YAPIONObject && !((YAPIONObject) yapionAnyType).containsKey(TYPE_IDENTIFIER, String.class)) {
                     if (fieldType.isEnum()) {
                         ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, "java.lang.Enum");
                     } else {

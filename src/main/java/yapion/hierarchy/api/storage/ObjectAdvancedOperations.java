@@ -32,31 +32,31 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
 
     @OptionalAPI
     default I addIfAbsent(@NonNull K key, @NonNull YAPIONAnyType value) {
-        if (hasValue(key)) return itself();
+        if (containsKey(key)) return itself();
         return add(key, value);
     }
 
     @OptionalAPI
     default I addIfAbsent(@NonNull K key, @NonNull YAPIONType yapionType, @NonNull YAPIONAnyType value) {
-        if (hasValue(key, yapionType)) return itself();
+        if (containsKey(key, yapionType)) return itself();
         return add(key, value);
     }
 
     @OptionalAPI
     default <T> I addIfAbsent(@NonNull K key, @NonNull Class<T> type, @NonNull YAPIONAnyType value) {
-        if (hasValue(key, type)) return itself();
+        if (containsKey(key, type)) return itself();
         return add(key, value);
     }
 
     @OptionalAPI
     default <T extends YAPIONAnyType> I computeIfAbsent(@NonNull K key, @NonNull Function<K, T> mappingFunction) {
-        if (hasValue(key)) return itself();
+        if (containsKey(key)) return itself();
         return add(key, mappingFunction.apply(key));
     }
 
     @SuppressWarnings("unchecked")
     default <T extends YAPIONAnyType> I computeIfPresent(@NonNull K key, @NonNull BiFunction<K, T, T> remappingFunction) {
-        if (!hasValue(key)) return itself();
+        if (!containsKey(key)) return itself();
         T newValue = remappingFunction.apply(key, (T) getYAPIONAnyType(key));
         if (newValue == null) return remove(key);
         return add(key, newValue);
@@ -65,7 +65,7 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
     @SuppressWarnings("unchecked")
     @OptionalAPI
     default <T extends YAPIONAnyType> I compute(@NonNull K key, @NonNull BiFunction<K, T, T> remappingFunction) {
-        if (hasValue(key)) {
+        if (containsKey(key)) {
             T newValue = remappingFunction.apply(key, null);
             if (newValue == null) return itself();
             return add(key, newValue);
@@ -78,7 +78,7 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
 
     @SuppressWarnings("unchecked")
     default <T extends YAPIONAnyType> I merge(@NonNull K key, @NonNull T value, @NonNull BiFunction<K, T, T> remappingFunction) {
-        if (hasValue(key)) {
+        if (containsKey(key)) {
             YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
             if (yapionAnyType == null) {
                 return add(key, value);

@@ -155,6 +155,11 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
     }
 
+    @Override
+    public boolean containsValue(@NonNull YAPIONAnyType yapionAnyType) {
+        return array.contains(yapionAnyType);
+    }
+
     public YAPIONAnyType getYAPIONAnyType(@NonNull Integer key) {
         checkIndex(key);
         return array.get(key);
@@ -187,6 +192,18 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         array.add(key, value);
         value.setParent(this);
         return this;
+    }
+
+    @Override
+    public YAPIONAnyType addAndGetPrevious(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+        checkIndex(key);
+        check(value);
+        discardReferenceValue();
+        YAPIONAnyType previous = array.get(key);
+        previous.removeParent();
+        array.add(key, value);
+        value.setParent(this);
+        return previous;
     }
 
     public YAPIONArray set(@NonNull Integer key, @NonNull YAPIONAnyType value) {
@@ -224,6 +241,24 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         }
         add(key, value);
         return this;
+    }
+
+    @Override
+    public YAPIONAnyType addOrPointerAndGetPrevious(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+        discardReferenceValue();
+        if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
+            if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+                if (result.getYAPIONAny() == null) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                return addAndGetPrevious(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+            }
+        }
+        return addAndGetPrevious(key, value);
     }
 
     @Override

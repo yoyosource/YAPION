@@ -250,7 +250,7 @@ public class ReflectionsUtils {
      * @return an instance of the specified class
      */
     public static Object constructObject(YAPIONObject yapionObject, InternalSerializer<?> internalSerializer, boolean data) {
-        if (!yapionObject.hasValue(TYPE_IDENTIFIER, String.class)) {
+        if (!yapionObject.containsKey(TYPE_IDENTIFIER, String.class)) {
             throw new YAPIONReflectionException("YAPIONObject does not contain value for key '" + TYPE_IDENTIFIER + "'");
         }
         String type = yapionObject.getPlainValue(TYPE_IDENTIFIER);

@@ -77,4 +77,58 @@ public interface ObjectAdd<I, K> {
         throw new UnsupportedOperationException();
     }
 
+    YAPIONAnyType addAndGetPrevious(@NonNull K key, @NonNull YAPIONAnyType value);
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, String value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, char value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, boolean value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, byte value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, short value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, int value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, long value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, BigInteger value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, float value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, double value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, BigDecimal value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default YAPIONAnyType addOrPointerAndGetPrevious(@NonNull K key, @NonNull YAPIONAnyType value) {
+        throw new UnsupportedOperationException();
+    }
+
 }

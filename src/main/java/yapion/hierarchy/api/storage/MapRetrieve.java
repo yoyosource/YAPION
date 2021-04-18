@@ -14,6 +14,7 @@
 package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
+import yapion.annotations.DeprecationInfo;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 
@@ -23,136 +24,334 @@ import java.util.function.Consumer;
 
 public interface MapRetrieve extends ObjectRetrieve<YAPIONAnyType> {
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(@NonNull String key) {
-        return hasValue(new YAPIONValue<>(key));
+        return containsKey(new YAPIONValue<>(key));
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(char key) {
-        return hasValue(new YAPIONValue<>(key));
+        return containsKey(new YAPIONValue<>(key));
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(boolean key) {
-        return hasValue(new YAPIONValue<>(key));
+        return containsKey(new YAPIONValue<>(key));
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(byte key) {
-        return hasValue(new YAPIONValue<>(key));
+        return containsKey(new YAPIONValue<>(key));
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(short key) {
-        return hasValue(new YAPIONValue<>(key));
+        return containsKey(new YAPIONValue<>(key));
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(int key) {
-        return hasValue(new YAPIONValue<>(key));
+        return containsKey(new YAPIONValue<>(key));
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(long key) {
-        return hasValue(new YAPIONValue<>(key));
+        return containsKey(new YAPIONValue<>(key));
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(@NonNull BigInteger key) {
-        return hasValue(new YAPIONValue<>(key));
+        return containsKey(new YAPIONValue<>(key));
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(float key) {
-        return hasValue(new YAPIONValue<>(key));
+        return containsKey(new YAPIONValue<>(key));
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(double key) {
-        return hasValue(new YAPIONValue<>(key));
+        return containsKey(new YAPIONValue<>(key));
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(@NonNull BigDecimal key) {
-        return hasValue(new YAPIONValue<>(key));
+        return containsKey(new YAPIONValue<>(key));
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(@NonNull String key, YAPIONType yapionType) {
-        return hasValue(new YAPIONValue<>(key), yapionType);
+        return containsKey(new YAPIONValue<>(key), yapionType);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(char key, YAPIONType yapionType) {
-        return hasValue(new YAPIONValue<>(key), yapionType);
+        return containsKey(new YAPIONValue<>(key), yapionType);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(boolean key, YAPIONType yapionType) {
-        return hasValue(new YAPIONValue<>(key), yapionType);
+        return containsKey(new YAPIONValue<>(key), yapionType);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(byte key, YAPIONType yapionType) {
-        return hasValue(new YAPIONValue<>(key), yapionType);
+        return containsKey(new YAPIONValue<>(key), yapionType);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(short key, YAPIONType yapionType) {
-        return hasValue(new YAPIONValue<>(key), yapionType);
+        return containsKey(new YAPIONValue<>(key), yapionType);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(int key, YAPIONType yapionType) {
-        return hasValue(new YAPIONValue<>(key), yapionType);
+        return containsKey(new YAPIONValue<>(key), yapionType);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(long key, YAPIONType yapionType) {
-        return hasValue(new YAPIONValue<>(key), yapionType);
+        return containsKey(new YAPIONValue<>(key), yapionType);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(@NonNull BigInteger key, YAPIONType yapionType) {
-        return hasValue(new YAPIONValue<>(key), yapionType);
+        return containsKey(new YAPIONValue<>(key), yapionType);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(float key, YAPIONType yapionType) {
-        return hasValue(new YAPIONValue<>(key), yapionType);
+        return containsKey(new YAPIONValue<>(key), yapionType);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(double key, YAPIONType yapionType) {
-        return hasValue(new YAPIONValue<>(key), yapionType);
+        return containsKey(new YAPIONValue<>(key), yapionType);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(@NonNull BigDecimal key, YAPIONType yapionType) {
-        return hasValue(new YAPIONValue<>(key), yapionType);
+        return containsKey(new YAPIONValue<>(key), yapionType);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default <T> boolean hasValue(@NonNull String key, Class<T> type) {
-        return hasValue(new YAPIONValue<>(key), type);
+        return containsKey(new YAPIONValue<>(key), type);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default <T> boolean hasValue(char key, Class<T> type) {
-        return hasValue(new YAPIONValue<>(key), type);
+        return containsKey(new YAPIONValue<>(key), type);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default <T> boolean hasValue(boolean key, Class<T> type) {
-        return hasValue(new YAPIONValue<>(key), type);
+        return containsKey(new YAPIONValue<>(key), type);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default <T> boolean hasValue(byte key, Class<T> type) {
-        return hasValue(new YAPIONValue<>(key), type);
+        return containsKey(new YAPIONValue<>(key), type);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default <T> boolean hasValue(short key, Class<T> type) {
-        return hasValue(new YAPIONValue<>(key), type);
+        return containsKey(new YAPIONValue<>(key), type);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default <T> boolean hasValue(int key, Class<T> type) {
-        return hasValue(new YAPIONValue<>(key), type);
+        return containsKey(new YAPIONValue<>(key), type);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default <T> boolean hasValue(long key, Class<T> type) {
-        return hasValue(new YAPIONValue<>(key), type);
+        return containsKey(new YAPIONValue<>(key), type);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default <T> boolean hasValue(@NonNull BigInteger key, Class<T> type) {
-        return hasValue(new YAPIONValue<>(key), type);
+        return containsKey(new YAPIONValue<>(key), type);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default <T> boolean hasValue(float key, Class<T> type) {
-        return hasValue(new YAPIONValue<>(key), type);
+        return containsKey(new YAPIONValue<>(key), type);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default <T> boolean hasValue(double key, Class<T> type) {
-        return hasValue(new YAPIONValue<>(key), type);
+        return containsKey(new YAPIONValue<>(key), type);
     }
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default <T> boolean hasValue(@NonNull BigDecimal key, Class<T> type) {
-        return hasValue(new YAPIONValue<>(key), type);
+        return containsKey(new YAPIONValue<>(key), type);
+    }
+
+    default boolean containsKey(@NonNull String key) {
+        return containsKey(new YAPIONValue<>(key));
+    }
+
+    default boolean containsKey(char key) {
+        return containsKey(new YAPIONValue<>(key));
+    }
+
+    default boolean containsKey(boolean key) {
+        return containsKey(new YAPIONValue<>(key));
+    }
+
+    default boolean containsKey(byte key) {
+        return containsKey(new YAPIONValue<>(key));
+    }
+
+    default boolean containsKey(short key) {
+        return containsKey(new YAPIONValue<>(key));
+    }
+
+    default boolean containsKey(int key) {
+        return containsKey(new YAPIONValue<>(key));
+    }
+
+    default boolean containsKey(long key) {
+        return containsKey(new YAPIONValue<>(key));
+    }
+
+    default boolean containsKey(@NonNull BigInteger key) {
+        return containsKey(new YAPIONValue<>(key));
+    }
+
+    default boolean containsKey(float key) {
+        return containsKey(new YAPIONValue<>(key));
+    }
+
+    default boolean containsKey(double key) {
+        return containsKey(new YAPIONValue<>(key));
+    }
+
+    default boolean containsKey(@NonNull BigDecimal key) {
+        return containsKey(new YAPIONValue<>(key));
+    }
+
+    default boolean containsKey(@NonNull String key, YAPIONType yapionType) {
+        return containsKey(new YAPIONValue<>(key), yapionType);
+    }
+
+    default boolean containsKey(char key, YAPIONType yapionType) {
+        return containsKey(new YAPIONValue<>(key), yapionType);
+    }
+
+    default boolean containsKey(boolean key, YAPIONType yapionType) {
+        return containsKey(new YAPIONValue<>(key), yapionType);
+    }
+
+    default boolean containsKey(byte key, YAPIONType yapionType) {
+        return containsKey(new YAPIONValue<>(key), yapionType);
+    }
+
+    default boolean containsKey(short key, YAPIONType yapionType) {
+        return containsKey(new YAPIONValue<>(key), yapionType);
+    }
+
+    default boolean containsKey(int key, YAPIONType yapionType) {
+        return containsKey(new YAPIONValue<>(key), yapionType);
+    }
+
+    default boolean containsKey(long key, YAPIONType yapionType) {
+        return containsKey(new YAPIONValue<>(key), yapionType);
+    }
+
+    default boolean containsKey(@NonNull BigInteger key, YAPIONType yapionType) {
+        return containsKey(new YAPIONValue<>(key), yapionType);
+    }
+
+    default boolean containsKey(float key, YAPIONType yapionType) {
+        return containsKey(new YAPIONValue<>(key), yapionType);
+    }
+
+    default boolean containsKey(double key, YAPIONType yapionType) {
+        return containsKey(new YAPIONValue<>(key), yapionType);
+    }
+
+    default boolean containsKey(@NonNull BigDecimal key, YAPIONType yapionType) {
+        return containsKey(new YAPIONValue<>(key), yapionType);
+    }
+
+    default <T> boolean containsKey(@NonNull String key, Class<T> type) {
+        return containsKey(new YAPIONValue<>(key), type);
+    }
+
+    default <T> boolean containsKey(char key, Class<T> type) {
+        return containsKey(new YAPIONValue<>(key), type);
+    }
+
+    default <T> boolean containsKey(boolean key, Class<T> type) {
+        return containsKey(new YAPIONValue<>(key), type);
+    }
+
+    default <T> boolean containsKey(byte key, Class<T> type) {
+        return containsKey(new YAPIONValue<>(key), type);
+    }
+
+    default <T> boolean containsKey(short key, Class<T> type) {
+        return containsKey(new YAPIONValue<>(key), type);
+    }
+
+    default <T> boolean containsKey(int key, Class<T> type) {
+        return containsKey(new YAPIONValue<>(key), type);
+    }
+
+    default <T> boolean containsKey(long key, Class<T> type) {
+        return containsKey(new YAPIONValue<>(key), type);
+    }
+
+    default <T> boolean containsKey(@NonNull BigInteger key, Class<T> type) {
+        return containsKey(new YAPIONValue<>(key), type);
+    }
+
+    default <T> boolean containsKey(float key, Class<T> type) {
+        return containsKey(new YAPIONValue<>(key), type);
+    }
+
+    default <T> boolean containsKey(double key, Class<T> type) {
+        return containsKey(new YAPIONValue<>(key), type);
+    }
+
+    default <T> boolean containsKey(@NonNull BigDecimal key, Class<T> type) {
+        return containsKey(new YAPIONValue<>(key), type);
     }
 
     default YAPIONAnyType getYAPIONAnyType(@NonNull String key) {

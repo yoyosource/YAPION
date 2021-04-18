@@ -28,35 +28,35 @@ public class ArrayRetrieveTest {
     @Test(expected = YAPIONArrayIndexOutOfBoundsException.class)
     public void testNotHasValue() {
         YAPIONArray yapionArray = new YAPIONArray();
-        assertThat(yapionArray.hasValue(0), is(false));
+        assertThat(yapionArray.containsKey(0), is(false));
     }
 
     @Test
     public void testHasValue() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add("");
-        assertThat(yapionArray.hasValue(0), is(true));
+        assertThat(yapionArray.containsKey(0), is(true));
     }
 
     @Test
     public void testNotHasValueOfSpecificType() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add("");
-        assertThat(yapionArray.hasValue(0, YAPIONType.OBJECT), is(false));
+        assertThat(yapionArray.containsKey(0, YAPIONType.OBJECT), is(false));
     }
 
     @Test
     public void testHasValueOfSpecificType() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONObject());
-        assertThat(yapionArray.hasValue(0, YAPIONType.OBJECT), is(true));
+        assertThat(yapionArray.containsKey(0, YAPIONType.OBJECT), is(true));
     }
 
     @Test
     public void testHasValueOfClassType() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add("");
-        assertThat(yapionArray.hasValue(0, String.class), is(true));
+        assertThat(yapionArray.containsKey(0, String.class), is(true));
     }
 
     @Test

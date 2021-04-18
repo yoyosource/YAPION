@@ -144,7 +144,7 @@ public final class ContextManager {
     }
 
     boolean willBeCascading(YAPIONObject yapionObject) {
-        if (!yapionObject.hasValue(TYPE_IDENTIFIER, String.class)) {
+        if (!yapionObject.containsKey(TYPE_IDENTIFIER, String.class)) {
             return true;
         }
         try {

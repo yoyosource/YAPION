@@ -27,35 +27,35 @@ public class MapRetrieveTest {
     @Test
     public void testNotHasValue() {
         YAPIONMap yapionMap = new YAPIONMap();
-        assertThat(yapionMap.hasValue(new YAPIONValue<>("")), is(false));
+        assertThat(yapionMap.containsKey(new YAPIONValue<>("")), is(false));
     }
 
     @Test
     public void testHasValue() {
         YAPIONMap yapionMap = new YAPIONMap();
         yapionMap.add(new YAPIONValue<>(""), "");
-        assertThat(yapionMap.hasValue(new YAPIONValue<>("")), is(true));
+        assertThat(yapionMap.containsKey(new YAPIONValue<>("")), is(true));
     }
 
     @Test
     public void testNotHasValueOfSpecificType() {
         YAPIONMap yapionMap = new YAPIONMap();
         yapionMap.add(new YAPIONValue<>(""), "");
-        assertThat(yapionMap.hasValue(new YAPIONValue<>(""), YAPIONType.OBJECT), is(false));
+        assertThat(yapionMap.containsKey(new YAPIONValue<>(""), YAPIONType.OBJECT), is(false));
     }
 
     @Test
     public void testHasValueOfSpecificType() {
         YAPIONMap yapionMap = new YAPIONMap();
         yapionMap.add(new YAPIONValue<>(""), new YAPIONObject());
-        assertThat(yapionMap.hasValue(new YAPIONValue<>(""), YAPIONType.OBJECT), is(true));
+        assertThat(yapionMap.containsKey(new YAPIONValue<>(""), YAPIONType.OBJECT), is(true));
     }
 
     @Test
     public void testHasValueOfClassType() {
         YAPIONMap yapionMap = new YAPIONMap();
         yapionMap.add(new YAPIONValue<>(""), "");
-        assertThat(yapionMap.hasValue(new YAPIONValue<>(""), String.class), is(true));
+        assertThat(yapionMap.containsKey(new YAPIONValue<>(""), String.class), is(true));
     }
 
     @Test

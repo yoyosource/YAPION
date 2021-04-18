@@ -50,6 +50,8 @@ public interface ObjectRetrieve<K> {
 
     <T> boolean containsKey(@NonNull K key, Class<T> type);
 
+    boolean containsValue(@NonNull YAPIONAnyType yapionAnyType);
+
     YAPIONAnyType getYAPIONAnyType(@NonNull K key);
 
     default YAPIONObject getObject(@NonNull K key) {

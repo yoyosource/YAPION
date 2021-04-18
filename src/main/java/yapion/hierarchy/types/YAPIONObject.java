@@ -14,7 +14,6 @@
 package yapion.hierarchy.types;
 
 import lombok.NonNull;
-import yapion.annotations.DeprecationInfo;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONRecursionException;
@@ -130,6 +129,11 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
     }
 
+    @Override
+    public boolean containsValue(@NonNull YAPIONAnyType yapionAnyType) {
+        return variables.containsValue(yapionAnyType);
+    }
+
     public YAPIONAnyType getYAPIONAnyType(@NonNull String key) {
         return variables.get(key);
     }
@@ -159,15 +163,15 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return this;
     }
 
-    @DeprecationInfo(since = "", alternative = "Use YAPIONObject#add(String, YAPIONAnyType) instead, never use this")
-    public YAPIONObject addUnsafe(@NonNull String key, @NonNull YAPIONAnyType value) {
+    @Override
+    public YAPIONAnyType addAndGetPrevious(@NonNull String key, @NonNull YAPIONAnyType value) {
+        check(value);
         discardReferenceValue();
         if (variables.containsKey(key)) {
             variables.get(key).removeParent();
         }
-        variables.put(key, value);
         value.setParent(this);
-        return this;
+        return variables.put(key, value);
     }
 
     @Override
@@ -188,6 +192,24 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         }
         add(key, value);
         return this;
+    }
+
+    @Override
+    public YAPIONAnyType addOrPointerAndGetPrevious(@NonNull String key, @NonNull YAPIONAnyType value) {
+        discardReferenceValue();
+        if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
+            if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+                if (result.getYAPIONAny() == null) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                return addAndGetPrevious(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+            }
+        }
+        return addAndGetPrevious(key, value);
     }
 
     public YAPIONObject remove(@NonNull String key) {

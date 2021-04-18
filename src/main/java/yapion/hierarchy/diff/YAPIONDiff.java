@@ -44,7 +44,7 @@ public class YAPIONDiff {
 
     public YAPIONDiff(YAPIONObject first, YAPIONObject second) {
         for (String key : first.allKeys()) {
-            if (second.hasValue(key)) {
+            if (second.containsKey(key)) {
                 diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(key);
@@ -53,7 +53,7 @@ public class YAPIONDiff {
         }
 
         for (String key : second.allKeys()) {
-            if (first.hasValue(key)) {
+            if (first.containsKey(key)) {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(key);
@@ -63,7 +63,7 @@ public class YAPIONDiff {
 
     public YAPIONDiff(YAPIONMap first, YAPIONMap second) {
         for (YAPIONAnyType key : first.allKeys()) {
-            if (second.hasValue(key)) {
+            if (second.containsKey(key)) {
                 diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(key);
@@ -72,7 +72,7 @@ public class YAPIONDiff {
         }
 
         for (YAPIONAnyType key : second.allKeys()) {
-            if (first.hasValue(key)) {
+            if (first.containsKey(key)) {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(key);
@@ -82,7 +82,7 @@ public class YAPIONDiff {
 
     public YAPIONDiff(YAPIONArray first, YAPIONArray second) {
         for (Integer index : first.allKeys()) {
-            if (second.hasValue(index)) {
+            if (second.containsKey(index)) {
                 diff(first.getYAPIONAnyType(index), second.getYAPIONAnyType(index));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(index);
@@ -91,7 +91,7 @@ public class YAPIONDiff {
         }
 
         for (Integer index : second.allKeys()) {
-            if (first.hasValue(index)) {
+            if (first.containsKey(index)) {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(index);
