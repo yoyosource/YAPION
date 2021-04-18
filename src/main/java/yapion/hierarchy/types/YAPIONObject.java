@@ -38,7 +38,7 @@ import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 @YAPIONLoad(context = "*")
 public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
 
-    private final Map<String, YAPIONAnyType> variables = new HashMap<>();
+    private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
 
     @Override
     public YAPIONType getType() {

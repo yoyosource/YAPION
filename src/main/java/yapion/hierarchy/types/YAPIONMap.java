@@ -39,7 +39,7 @@ import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
 @YAPIONLoad(context = "*")
 public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> implements MapAdd<YAPIONMap>, MapRemove<YAPIONMap>, MapRetrieve {
 
-    private final Map<YAPIONAnyType, YAPIONAnyType> variables = new HashMap<>();
+    private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
 
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
