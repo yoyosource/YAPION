@@ -366,7 +366,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     /**
-     * This is an unsafe operation. When you edit this you are on your own!
+     * Modifying this is an unsafe operation. When you edit this you are on your own!
      *
      * @return the internal backed array
      */

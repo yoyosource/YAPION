@@ -319,7 +319,7 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> imple
     }
 
     /**
-     * This is an unsafe operation. When you edit this you are on your own!
+     * Modifying this is an unsafe operation. When you edit this you are on your own!
      *
      * @return the internal backed map
      */

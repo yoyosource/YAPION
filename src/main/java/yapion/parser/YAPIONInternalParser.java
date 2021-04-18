@@ -173,11 +173,13 @@ final class YAPIONInternalParser {
     private void add(@NonNull String key, @NonNull YAPIONAnyType value) {
         log.debug("add      ['{}'='{}']", key, value);
         if (currentObject instanceof YAPIONObject) {
-            ((YAPIONObject) currentObject).addUnsafe(key, value);
+            ((YAPIONObject) currentObject).getBackedMap().put(key, value);
+            value.setParent(currentObject);
         } else if (currentObject instanceof YAPIONMap) {
             ((YAPIONMap) currentObject).add(new YAPIONParserMapValue(value));
         } else if (currentObject instanceof YAPIONArray) {
-            ((YAPIONArray) currentObject).add(value);
+            ((YAPIONArray) currentObject).getBackedArray().add(value);
+            value.setParent(currentObject);
         }
     }
 
