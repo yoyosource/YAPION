@@ -365,6 +365,15 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         }
     }
 
+    /**
+     * This is a unsafe operation. When you edit this you are on your own!
+     *
+     * @return the internal backed array
+     */
+    public List<YAPIONAnyType> getBackedArray() {
+        return array;
+    }
+
     @Override
     public String toString() {
         StringOutput stringOutput = new StringOutput();

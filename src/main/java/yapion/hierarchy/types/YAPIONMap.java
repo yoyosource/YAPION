@@ -318,6 +318,15 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> imple
         return Optional.empty();
     }
 
+    /**
+     * This is a unsafe operation. When you edit this you are on your own!
+     *
+     * @return the internal backed map
+     */
+    public Map<YAPIONAnyType, YAPIONAnyType> getBackedMap() {
+        return variables;
+    }
+
     @Override
     public String toString() {
         StringOutput stringOutput = new StringOutput();

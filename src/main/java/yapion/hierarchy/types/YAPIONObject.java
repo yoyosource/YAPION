@@ -261,6 +261,15 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return Optional.of(new YAPIONSearchResult<>(getYAPIONAnyType(key)));
     }
 
+    /**
+     * This is a unsafe operation. When you edit this you are on your own!
+     *
+     * @return the internal backed map
+     */
+    public Map<String, YAPIONAnyType> getBackedMap() {
+        return variables;
+    }
+
     @Override
     public String toString() {
         StringOutput stringOutput = new StringOutput();
