@@ -25,4 +25,8 @@ public class SystemOutput extends StreamOutput {
         super(System.out, prettified);
     }
 
+    @Override
+    public void close() {
+        throw new UnsupportedOperationException();
+    }
 }
