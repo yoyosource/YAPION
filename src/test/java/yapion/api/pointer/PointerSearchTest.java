@@ -28,7 +28,7 @@ public class PointerSearchTest {
     @Test
     public void getPointerReference() {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.addOrPointer("", yapionObject);
+        yapionObject.putOrPointerAndGetItself("", yapionObject);
         YAPIONPointer yapionPointer = yapionObject.getPointer("");
         assertThat(yapionPointer.get("@reference"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(yapionObject))));
     }

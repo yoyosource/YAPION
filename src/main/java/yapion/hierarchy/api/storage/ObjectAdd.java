@@ -131,4 +131,116 @@ public interface ObjectAdd<I, K> {
         throw new UnsupportedOperationException();
     }
 
+    default I putAndGetItself(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return add(key, value);
+    }
+
+    default I putAndGetItself(@NonNull K key, String value) {
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    default I putAndGetItself(@NonNull K key, char value) {
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    default I putAndGetItself(@NonNull K key, boolean value) {
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    default I putAndGetItself(@NonNull K key, byte value) {
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    default I putAndGetItself(@NonNull K key, short value) {
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    default I putAndGetItself(@NonNull K key, int value) {
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    default I putAndGetItself(@NonNull K key, long value) {
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    default I putAndGetItself(@NonNull K key, BigInteger value) {
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    default I putAndGetItself(@NonNull K key, float value) {
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    default I putAndGetItself(@NonNull K key, double value) {
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    default I putAndGetItself(@NonNull K key, BigDecimal value) {
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default I putOrPointerAndGetItself(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return addOrPointer(key, value);
+    }
+
+    default YAPIONAnyType put(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return addAndGetPrevious(key, value);
+    }
+
+    default YAPIONAnyType put(@NonNull K key, String value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType put(@NonNull K key, char value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType put(@NonNull K key, boolean value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType put(@NonNull K key, byte value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType put(@NonNull K key, short value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType put(@NonNull K key, int value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType put(@NonNull K key, long value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType put(@NonNull K key, BigInteger value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType put(@NonNull K key, float value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType put(@NonNull K key, double value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    default YAPIONAnyType put(@NonNull K key, BigDecimal value) {
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default YAPIONAnyType putOrPointer(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return addOrPointerAndGetPrevious(key, value);
+    }
+
 }

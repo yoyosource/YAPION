@@ -38,28 +38,40 @@ public class CreateInterface {
         typeList.add("double");
         typeList.add("@NonNull BigDecimal");
 
-        evalTemplate("default boolean hasValue($0 key) {\nreturn hasValue(new YAPIONValue<>(key));\n}");
-        evalTemplate("default boolean hasValue($0 key, YAPIONType yapionType) {\nreturn hasValue(new YAPIONValue<>(key), yapionType);\n}");
-        evalTemplate("default <T> boolean hasValue($0 key, Class<T> type) {\nreturn hasValue(new YAPIONValue<>(key), type);\n}");
-        evalTemplate("default YAPIONAnyType getYAPIONAnyType($0 key) {\nreturn getYAPIONAnyType(new YAPIONValue<>(key));\n}");
-        evalTemplate("default YAPIONObject getObject($0 key) {\nreturn getObject(new YAPIONValue<>(key));\n}");
-        evalTemplate("default void getObject($0 key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {\ngetObject(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
-        evalTemplate("default YAPIONArray getArray($0 key) {\nreturn getArray(new YAPIONValue<>(key));\n}");
-        evalTemplate("default void getArray($0 key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {\ngetArray(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
-        evalTemplate("default YAPIONMap getMap($0 key) {\nreturn getMap(new YAPIONValue<>(key));\n}");
-        evalTemplate("default void getMap($0 key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {\ngetMap(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
-        evalTemplate("default YAPIONPointer getPointer($0 key) {\nreturn getPointer(new YAPIONValue<>(key));\n}");
-        evalTemplate("default void getPointer($0 key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {\ngetPointer(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
-        evalTemplate("default YAPIONValue getValue($0 key) {\nreturn getValue(new YAPIONValue<>(key));\n}");
-        evalTemplate("default void getValue($0 key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {\ngetValue(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
-        evalTemplate("default <T> YAPIONValue<T> getValue($0 key, Class<T> type) {\nreturn getValue(new YAPIONValue<>(key), type);\n}");
-        evalTemplate("default <T> YAPIONValue<T> getValueOrDefault($0 key, Class<T> type, T defaultValue) {\nreturn getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);\n}");
-        evalTemplate("default <T> void getValue($0 key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {\ngetValue(new YAPIONValue<>(key), type, valueConsumer, noValue);\n}");
-        evalTemplate("default <T> YAPIONValue<T> getValue($0 key, T type) {\nreturn getValue(new YAPIONValue<>(key), type);\n}");
-        evalTemplate("default <T> YAPIONValue<T> getValueOrDefault($0 key, T defaultValue) {\nreturn getValueOrDefault(new YAPIONValue<>(key), defaultValue);\n}");
-        evalTemplate("default <T> T getPlainValue($0 key) {\nreturn getPlainValue(new YAPIONValue<>(key));\n}");
-        evalTemplate("default <T> T getPlainValueOrDefault($0 key, T defaultValue) {\nreturn getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);\n}");
-        evalTemplate("default <T> void getPlainValue($0 key, Consumer<T> valueConsumer, Runnable noValue) {\ngetPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
+        if (false) {
+            evalTemplate("default boolean hasValue($0 key) {\nreturn hasValue(new YAPIONValue<>(key));\n}");
+            evalTemplate("default boolean hasValue($0 key, YAPIONType yapionType) {\nreturn hasValue(new YAPIONValue<>(key), yapionType);\n}");
+            evalTemplate("default <T> boolean hasValue($0 key, Class<T> type) {\nreturn hasValue(new YAPIONValue<>(key), type);\n}");
+            evalTemplate("default YAPIONAnyType getYAPIONAnyType($0 key) {\nreturn getYAPIONAnyType(new YAPIONValue<>(key));\n}");
+            evalTemplate("default YAPIONObject getObject($0 key) {\nreturn getObject(new YAPIONValue<>(key));\n}");
+            evalTemplate("default void getObject($0 key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {\ngetObject(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
+            evalTemplate("default YAPIONArray getArray($0 key) {\nreturn getArray(new YAPIONValue<>(key));\n}");
+            evalTemplate("default void getArray($0 key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {\ngetArray(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
+            evalTemplate("default YAPIONMap getMap($0 key) {\nreturn getMap(new YAPIONValue<>(key));\n}");
+            evalTemplate("default void getMap($0 key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {\ngetMap(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
+            evalTemplate("default YAPIONPointer getPointer($0 key) {\nreturn getPointer(new YAPIONValue<>(key));\n}");
+            evalTemplate("default void getPointer($0 key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {\ngetPointer(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
+            evalTemplate("default YAPIONValue getValue($0 key) {\nreturn getValue(new YAPIONValue<>(key));\n}");
+            evalTemplate("default void getValue($0 key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {\ngetValue(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
+            evalTemplate("default <T> YAPIONValue<T> getValue($0 key, Class<T> type) {\nreturn getValue(new YAPIONValue<>(key), type);\n}");
+            evalTemplate("default <T> YAPIONValue<T> getValueOrDefault($0 key, Class<T> type, T defaultValue) {\nreturn getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);\n}");
+            evalTemplate("default <T> void getValue($0 key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {\ngetValue(new YAPIONValue<>(key), type, valueConsumer, noValue);\n}");
+            evalTemplate("default <T> YAPIONValue<T> getValue($0 key, T type) {\nreturn getValue(new YAPIONValue<>(key), type);\n}");
+            evalTemplate("default <T> YAPIONValue<T> getValueOrDefault($0 key, T defaultValue) {\nreturn getValueOrDefault(new YAPIONValue<>(key), defaultValue);\n}");
+            evalTemplate("default <T> T getPlainValue($0 key) {\nreturn getPlainValue(new YAPIONValue<>(key));\n}");
+            evalTemplate("default <T> T getPlainValueOrDefault($0 key, T defaultValue) {\nreturn getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);\n}");
+            evalTemplate("default <T> void getPlainValue($0 key, Consumer<T> valueConsumer, Runnable noValue) {\ngetPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);\n}");
+        }
+
+        if (true) {
+            evalTemplate("default I add($0 key, $1 value) {\nreturn add(new YAPIONValue<>(key), value);\n}");
+            evalTemplate("default I addOrPointer($0 key, YAPIONAnyType value) {\nreturn addOrPointer(new YAPIONValue<>(key), value);\n}");
+            evalTemplate("default I putAndGetItself($0 key, $1 value) {\nreturn add(new YAPIONValue<>(key), value);\n}");
+            evalTemplate("default YAPIONAnyType addAndGetPrevious($0 key, $1 value) {\nreturn addAndGetPrevious(new YAPIONValue<>(key), value);\n}");
+            evalTemplate("default YAPIONAnyType addOrPointerAndGetPrevious($0 key, YAPIONAnyType value) {\nreturn addOrPointerAndGetPrevious(new YAPIONValue<>(key), value);\n}");
+            evalTemplate("default YAPIONAnyType put($0 key, $1 value) {\nreturn addAndGetPrevious(new YAPIONValue<>(key), value);\n}");
+        }
+
         System.out.println();
         System.out.println(count);
     }
@@ -108,6 +120,11 @@ public class CreateInterface {
     private static void evalTemplate(String templateString) {
         Template template = new Template(templateString);
         template.add(typeList);
+        List<String> other = new ArrayList<>(typeList);
+        if (template.depth > 0) {
+            other.add("@NonNull YAPIONAnyType");
+            template.add(other);
+        }
         template.replace();
         template.getResults().forEach(s -> {
             System.out.println();
