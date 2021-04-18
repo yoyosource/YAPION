@@ -137,7 +137,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public boolean hasValue(@NonNull Integer key, YAPIONType yapionType) {
+    public boolean containsKey(@NonNull Integer key, YAPIONType yapionType) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return false;
         if (yapionType == YAPIONType.ANY) return true;
@@ -145,7 +145,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public <T> boolean hasValue(@NonNull Integer key, Class<T> type) {
+    public <T> boolean containsKey(@NonNull Integer key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
             return false;
         }

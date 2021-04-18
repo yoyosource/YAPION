@@ -24,13 +24,31 @@ import java.util.function.Consumer;
 
 public interface ObjectRetrieve<K> {
 
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
     default boolean hasValue(@NonNull K key) {
         return hasValue(key, YAPIONType.ANY);
     }
 
-    boolean hasValue(@NonNull K key, YAPIONType yapionType);
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
+    default boolean hasValue(@NonNull K key, YAPIONType yapionType) {
+        return containsKey(key, yapionType);
+    }
 
-    <T> boolean hasValue(@NonNull K key, Class<T> type);
+    @Deprecated
+    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
+    default <T> boolean hasValue(@NonNull K key, Class<T> type) {
+        return containsKey(key, type);
+    }
+
+    default boolean containsKey(@NonNull K key) {
+        return containsKey(key, YAPIONType.ANY);
+    }
+
+    boolean containsKey(@NonNull K key, YAPIONType yapionType);
+
+    <T> boolean containsKey(@NonNull K key, Class<T> type);
 
     YAPIONAnyType getYAPIONAnyType(@NonNull K key);
 

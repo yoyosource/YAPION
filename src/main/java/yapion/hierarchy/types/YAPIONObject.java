@@ -38,7 +38,7 @@ import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 @YAPIONLoad(context = "*")
 public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
 
-    private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
+    private final Map<String, YAPIONAnyType> variables = new HashMap<>();
 
     @Override
     public YAPIONType getType() {
@@ -113,14 +113,14 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return new ArrayList<>(variables.keySet());
     }
 
-    public boolean hasValue(@NonNull String key, YAPIONType yapionType) {
+    public boolean containsKey(@NonNull String key, YAPIONType yapionType) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return false;
         if (yapionType == YAPIONType.ANY) return true;
         return yapionType == yapionAnyType.getType();
     }
 
-    public <T> boolean hasValue(@NonNull String key, Class<T> type) {
+    public <T> boolean containsKey(@NonNull String key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
             return false;
         }

@@ -39,7 +39,7 @@ import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
 @YAPIONLoad(context = "*")
 public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> implements MapAdd<YAPIONMap>, MapRemove<YAPIONMap>, MapRetrieve {
 
-    private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
+    private final Map<YAPIONAnyType, YAPIONAnyType> variables = new HashMap<>();
 
     @YAPIONSaveExclude(context = "*")
     @YAPIONLoadExclude(context = "*")
@@ -141,7 +141,7 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> imple
     }
 
     @Override
-    public boolean hasValue(@NonNull YAPIONAnyType key, YAPIONType yapionType) {
+    public boolean containsKey(@NonNull YAPIONAnyType key, YAPIONType yapionType) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return false;
         if (yapionType == YAPIONType.ANY) return true;
@@ -149,7 +149,7 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> imple
     }
 
     @Override
-    public <T> boolean hasValue(@NonNull YAPIONAnyType key, Class<T> type) {
+    public <T> boolean containsKey(@NonNull YAPIONAnyType key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
             return false;
         }
