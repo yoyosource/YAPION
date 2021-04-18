@@ -185,7 +185,7 @@ public final class YAPIONPacketStream {
      * Set the heartBeat mode desired for this connection. This takes effect when you call {@link #setYAPIONPacketReceiver(YAPIONPacketReceiver)} or {@link #setYAPIONPacketReceiver(YAPIONPacketReceiver, int)}.
      *
      * @param heartBeatMode the specific mode to use
-     * @param heartBeatTimeOut if {@param heartBeatMode} is either {@link HeartBeatType#RECEIVE} or {@link HeartBeatType#SEND_AND_RECEIVE} and no heartbeat packet was received for this amount of milliseconds the LostHeartBeatHandler gets called
+     * @param heartBeatTimeOut if 'heartBeatMode' is either {@link HeartBeatType#RECEIVE} or {@link HeartBeatType#SEND_AND_RECEIVE} and no heartbeat packet was received for this amount of milliseconds the LostHeartBeatHandler gets called
      */
     public void setHeartBeatMode(HeartBeatType heartBeatMode, long heartBeatTimeOut) {
         lastHeartbeat = System.currentTimeMillis();
