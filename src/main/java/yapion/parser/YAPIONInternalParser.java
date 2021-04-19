@@ -49,6 +49,7 @@ final class YAPIONInternalParser {
 
     // Unicode and Escaping variables
     private boolean escaped = false;
+    private boolean lastCharEscaped = false;
     private StringBuilder unicode = null;
 
     // Key and Value variables
@@ -320,8 +321,11 @@ final class YAPIONInternalParser {
                 escaped = true;
                 return;
             }
+            lastCharEscaped = escaped;
             if (escaped) {
                 if (typeStack.peek() == YAPIONType.ARRAY && (c == ',' || c == '-')) {
+                    // Ignored
+                } else if (typeStack.peek() == YAPIONType.ARRAY && current.length() == 0 && c == ' ') {
                     // Ignored
                 } else if (c != '(' && c != ')') {
                     sortValueHandler('\\', current.length());
@@ -380,10 +384,10 @@ final class YAPIONInternalParser {
             reset();
             return;
         }
-        if (current.length() == 0 && everyType(c, lastChar)) {
+        if (!lastCharEscaped && current.length() == 0 && everyType(c, lastChar)) {
             return;
         }
-        if (current.length() == 1 && lastChar == '-' && everyType(c, lastChar)) {
+        if (!lastCharEscaped && current.length() == 1 && lastChar == '-' && everyType(c, lastChar)) {
             return;
         }
         if (current.length() == 0 && isWhiteSpace(c) && !escaped) {
