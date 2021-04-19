@@ -189,6 +189,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         checkIndex(key);
         check(value);
         discardReferenceValue();
+        array.get(key).removeParent();
         array.add(key, value);
         value.setParent(this);
         return this;

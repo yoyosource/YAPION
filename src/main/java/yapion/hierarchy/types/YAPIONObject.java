@@ -170,8 +170,9 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         if (variables.containsKey(key)) {
             variables.get(key).removeParent();
         }
+        YAPIONAnyType yapionAnyType = variables.put(key, value);
         value.setParent(this);
-        return variables.put(key, value);
+        return yapionAnyType;
     }
 
     @Override

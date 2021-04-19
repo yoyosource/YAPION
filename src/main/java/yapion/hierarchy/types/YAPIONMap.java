@@ -195,9 +195,10 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> imple
     public YAPIONAnyType addAndGetPrevious(@NonNull YAPIONAnyType key, @NonNull YAPIONAnyType value) {
         check(value);
         discardReferenceValue();
+        YAPIONAnyType yapionAnyType = variables.put(key, value);
         value.setParent(this);
         key.setParent(this);
-        return variables.put(key, value);
+        return yapionAnyType;
     }
 
     @Override
