@@ -76,7 +76,7 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
     @Override
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
         outputSystem(abstractOutput, t -> {}, (s, t) -> {
-            if (s.startsWith(" ") || s.startsWith(",")) t.consume("\\");
+            if (s.startsWith(" ") || s.startsWith(",") || s.startsWith("\t")) t.consume("\\");
             t.consume(stringToUTFEscapedString(s, KEY));
         }, ObjectOutput::toYAPION);
         return abstractOutput;

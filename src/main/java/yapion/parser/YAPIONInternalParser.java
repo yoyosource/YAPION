@@ -321,7 +321,9 @@ final class YAPIONInternalParser {
                 return;
             }
             if (escaped) {
-                if (c != '(' && c != ')') {
+                if (typeStack.peek() == YAPIONType.ARRAY && (c == ',' || c == '-')) {
+                    // Ignored
+                } else if (c != '(' && c != ')') {
                     sortValueHandler('\\', current.length());
                     current.append('\\');
                 }
@@ -387,8 +389,7 @@ final class YAPIONInternalParser {
         if (current.length() == 0 && isWhiteSpace(c) && !escaped) {
             return;
         }
-        sortValueHandler(c, current.length());
-        current.append(c);
+        parseValue(c);
     }
 
     public void sortValueHandler(char c, int length) {

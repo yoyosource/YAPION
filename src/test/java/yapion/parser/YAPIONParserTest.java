@@ -16,6 +16,7 @@ package yapion.parser;
 import org.junit.Test;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 
 import java.io.InputStream;
@@ -178,6 +179,33 @@ public class YAPIONParserTest {
     @Test
     public void testFileInputStream() {
         YAPIONParser.parse(YAPIONParserTest.class.getResourceAsStream("/test.yapion"));
+    }
+
+    @Test
+    public void testArraySeparatorSupport() {
+        YAPIONObject yapionObject = new YAPIONObject();
+        YAPIONArray yapionArray = new YAPIONArray();
+        yapionObject.add("", yapionArray);
+        yapionArray.add("Hello, World");
+        assertThat(yapionObject, is(YAPIONParser.parse(yapionObject.toString())));
+    }
+
+    @Test
+    public void testArraySupportWithoutSeparator() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{[{}{}]}");
+        assertThat(yapionObject, isYAPION("{[{},{}]}"));
+    }
+
+    @Test
+    public void testArrayStringWithoutSeparator() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{[{}{}HelloWorld,->0000000000000000]}");
+        System.out.println(yapionObject.toString());
+    }
+
+    @Test
+    public void testArrayStringPointerStartInValue() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{[\\->0000000000000000]}");
+        System.out.println(yapionObject.toString());
     }
 
 }
