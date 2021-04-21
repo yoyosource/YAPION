@@ -17,20 +17,6 @@ import yapion.hierarchy.output.AbstractOutput;
 
 public interface ObjectOutput {
 
-    StringBuilder indentString = new StringBuilder().append(" ");
-
-    default String indent(int i) {
-        if (i > 4096) {
-            return indentString.toString();
-        }
-        if (i > indentString.length()) {
-            while (indentString.length() < i) {
-                indentString.append(indentString);
-            }
-        }
-        return indentString.substring(0, i);
-    }
-
     <T extends AbstractOutput> T toYAPION(T abstractOutput);
 
     <T extends AbstractOutput> T toJSON(T abstractOutput);
