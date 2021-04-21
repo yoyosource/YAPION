@@ -21,8 +21,6 @@ import yapion.packet.YAPIONPacket;
 import java.io.IOException;
 import java.net.Socket;
 
-@YAPIONLoadExclude(context = "*")
-@YAPIONSaveExclude(context = "*")
 public final class YAPIONSocket {
 
     private final Socket socket;

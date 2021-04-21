@@ -15,8 +15,6 @@ package yapion.packet;
 
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.DeprecationInfo;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONPacketException;
 
@@ -25,8 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@YAPIONLoadExclude(context = "*")
-@YAPIONSaveExclude(context = "*")
 @Slf4j
 public class YAPIONPacketReceiver {
 

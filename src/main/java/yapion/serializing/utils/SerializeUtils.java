@@ -13,6 +13,7 @@
 
 package yapion.serializing.utils;
 
+import lombok.experimental.UtilityClass;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
@@ -20,11 +21,8 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.*;
 
+@UtilityClass
 public class SerializeUtils {
-
-    private SerializeUtils() {
-        throw new IllegalStateException("Utility Class");
-    }
 
     public static <T extends Map<?, ?>> YAPIONObject serializeMap(SerializeData<T> serializeData, YAPIONObject yapionObject) {
         YAPIONMap yapionMap = new YAPIONMap();

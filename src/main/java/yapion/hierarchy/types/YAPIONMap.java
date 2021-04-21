@@ -15,10 +15,6 @@ package yapion.hierarchy.types;
 
 import lombok.NonNull;
 import yapion.annotations.api.InternalAPI;
-import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSave;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
@@ -36,14 +32,10 @@ import java.util.*;
 
 import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
 
-@YAPIONSave(context = "*")
-@YAPIONLoad(context = "*")
 public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> implements MapAdd<YAPIONMap>, MapRemove<YAPIONMap>, MapRetrieve {
 
     private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
 
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
     private final List<YAPIONParserMapValue> yapionParserMapValues = new ArrayList<>();
 
     @Override

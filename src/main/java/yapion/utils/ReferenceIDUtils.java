@@ -13,9 +13,8 @@
 
 package yapion.utils;
 
+import lombok.experimental.UtilityClass;
 import yapion.annotations.api.DeprecationInfo;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.types.YAPIONValue;
 
@@ -27,13 +26,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
+@UtilityClass
 public class ReferenceIDUtils {
-
-    private ReferenceIDUtils() {
-        throw new IllegalStateException("Utility class");
-    }
 
     private static int cacheSize = 100;
 

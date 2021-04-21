@@ -13,17 +13,11 @@
 
 package yapion.utils;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
+import lombok.experimental.UtilityClass;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
+@UtilityClass
 public class RecursionUtils {
-
-    private RecursionUtils() {
-        throw new IllegalStateException("Utility class");
-    }
 
     public enum RecursionType {
         DIRECT,
@@ -31,8 +25,6 @@ public class RecursionUtils {
         NONE
     }
 
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
     public static class RecursionResult {
         private final RecursionType recursionType;
         private final YAPIONAnyType yapionAnyType;

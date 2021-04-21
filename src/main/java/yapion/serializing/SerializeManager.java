@@ -42,8 +42,6 @@ import static yapion.serializing.YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION
 import static yapion.utils.ReflectionsUtils.implementsInterface;
 import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @Slf4j
 public class SerializeManager {
 

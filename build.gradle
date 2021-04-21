@@ -287,6 +287,9 @@ task buildProject {
             exclude("${uberJarName}")
         }
         file(libs + "/" + uberJarName).renameTo(file(libs + "/" + jarName))
+
+        long size = file(libs + "/" + jarName).size()
+        println("Size: " + (size / 1024.0) + "kB")
     }
 }
 build.finalizedBy(buildProject)

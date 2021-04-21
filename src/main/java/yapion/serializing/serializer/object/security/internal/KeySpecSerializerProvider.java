@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.object.security.internal;
 
+import lombok.experimental.UtilityClass;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.types.YAPIONObject;
 
@@ -26,6 +27,7 @@ import java.security.interfaces.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@UtilityClass
 public class KeySpecSerializerProvider {
 
     private static Map<Class<? extends Key>, KeySpecSerializer<? extends PrivateKey, ? extends PublicKey>> keySpecSerializerMap = new HashMap<>();
@@ -43,10 +45,6 @@ public class KeySpecSerializerProvider {
         keySpecSerializerMap.put(privateKey, keySpecSerializer);
         if (publicKey == null) return;
         keySpecSerializerMap.put(publicKey, keySpecSerializer);
-    }
-
-    private KeySpecSerializerProvider() {
-        throw new IllegalStateException("Utility Class");
     }
 
     private static KeySpecSerializer<? extends PrivateKey, ? extends PublicKey> retrieveKeySpecSerializer(Class<?> current) {

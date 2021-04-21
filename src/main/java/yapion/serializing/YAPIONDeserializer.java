@@ -30,7 +30,6 @@ import yapion.serializing.data.DeserializeData;
 import yapion.serializing.serializer.object.other.EnumSerializer;
 import yapion.utils.ClassUtils;
 import yapion.utils.MethodReturnValue;
-import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Array;
@@ -42,8 +41,6 @@ import java.util.Map;
 import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @Slf4j
 public final class YAPIONDeserializer {
 
@@ -304,7 +301,7 @@ public final class YAPIONDeserializer {
                     deserializeResult.add(object, fieldName, yapionObject.getYAPIONAnyType(fieldName));
                     continue;
                 }
-                if (ModifierUtils.removed(field)) continue;
+                if (ClassUtils.removed(field)) continue;
                 if (!contextManager.is(object, field).load && !loadWithoutAnnotation) continue;
 
                 Class<?> fieldType = field.getType();

@@ -13,6 +13,7 @@
 
 package yapion.serializing.utils;
 
+import lombok.experimental.UtilityClass;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;
@@ -29,11 +30,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+@UtilityClass
 public class SerializeManagerUtils {
-
-    private SerializeManagerUtils() {
-        throw new IllegalStateException("Utility class");
-    }
 
     /**
      * Create a {@link SerializerQueue} from two interfaces:

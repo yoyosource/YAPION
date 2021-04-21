@@ -14,6 +14,7 @@
 package yapion.utils;
 
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.objenesis.ObjenesisBase;
 import org.objenesis.strategy.StdInstantiatorStrategy;
@@ -32,11 +33,8 @@ import java.util.*;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @Slf4j
+@UtilityClass
 public class ReflectionsUtils {
-
-    private ReflectionsUtils() {
-        throw new IllegalStateException("Utility class");
-    }
 
     private static final ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
 

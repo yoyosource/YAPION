@@ -14,8 +14,6 @@
 package yapion.hierarchy.api.groups;
 
 import lombok.NonNull;
-import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.ObjectPath;
@@ -29,8 +27,6 @@ import yapion.utils.ReferenceFunction;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-@YAPIONSave(context = "*")
-@YAPIONLoad(context = "*")
 public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectType, ObjectOutput {
 
     // Reference Value System

@@ -14,8 +14,6 @@
 package yapion.hierarchy.types;
 
 import lombok.NonNull;
-import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONPointerException;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
@@ -28,8 +26,6 @@ import java.util.Optional;
 
 import static yapion.utils.IdentifierUtils.POINTER_IDENTIFIER;
 
-@YAPIONSave(context = "*")
-@YAPIONLoad(context = "*")
 public class YAPIONPointer extends YAPIONValueType {
 
     @Override

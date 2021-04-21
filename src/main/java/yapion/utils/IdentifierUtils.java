@@ -13,6 +13,7 @@
 
 package yapion.utils;
 
+import lombok.experimental.UtilityClass;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.*;
 import yapion.parser.JSONMapper;
@@ -29,11 +30,8 @@ import yapion.serializing.serializer.object.throwable.ThrowableSerializer;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
+@UtilityClass
 public class IdentifierUtils {
-
-    private IdentifierUtils() {
-        throw new IllegalStateException("Utility class");
-    }
 
     /**
      * This variable is used in the {@link YAPIONSerializer}

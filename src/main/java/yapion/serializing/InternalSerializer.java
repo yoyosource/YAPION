@@ -19,8 +19,6 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 public interface InternalSerializer<T> {
 
     default void init() {

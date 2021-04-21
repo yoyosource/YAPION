@@ -29,7 +29,7 @@ public class ModifierTest {
         List<Field> fieldList = ReflectionsUtils.getFields(UtilModifierTest.class);
         boolean[] booleans = new boolean[fieldList.size()];
         for (int i = 0; i < fieldList.size(); i++) {
-            booleans[i] = ModifierUtils.removed(fieldList.get(i));
+            booleans[i] = ClassUtils.removed(fieldList.get(i));
         }
         assertThat(booleans, is(new boolean[]{true, true, false}));
     }

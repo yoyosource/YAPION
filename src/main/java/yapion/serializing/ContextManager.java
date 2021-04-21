@@ -26,8 +26,6 @@ import java.lang.reflect.Field;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 public final class ContextManager {
 
     private final String state;

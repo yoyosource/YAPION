@@ -13,8 +13,6 @@
 
 package yapion.hierarchy.types;
 
-import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
@@ -30,14 +28,15 @@ import yapion.utils.ReferenceFunction;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static yapion.hierarchy.types.value.FractionNumberHandler.*;
 import static yapion.hierarchy.types.value.WholeNumberHandler.*;
 import static yapion.utils.IdentifierUtils.*;
 
-@YAPIONSave(context = "*")
-@YAPIONLoad(context = "*")
 public class YAPIONValue<T> extends YAPIONValueType {
 
     private static final ValueHandlerList VALUE_HANDLER_LIST;
