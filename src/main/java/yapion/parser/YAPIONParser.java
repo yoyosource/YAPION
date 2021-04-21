@@ -16,7 +16,7 @@ package yapion.parser;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import yapion.annotations.DeprecationInfo;
+import yapion.annotations.api.DeprecationInfo;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.output.AbstractOutput;

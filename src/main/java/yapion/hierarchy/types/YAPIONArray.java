@@ -14,6 +14,7 @@
 package yapion.hierarchy.types;
 
 import lombok.NonNull;
+import yapion.annotations.api.InternalAPI;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
@@ -406,6 +407,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
      *
      * @return the internal backed array
      */
+    @InternalAPI
     public List<YAPIONAnyType> getBackedArray() {
         return array;
     }

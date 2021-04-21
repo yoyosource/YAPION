@@ -14,6 +14,7 @@
 package yapion.hierarchy.types;
 
 import lombok.NonNull;
+import yapion.annotations.api.InternalAPI;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSave;
@@ -368,6 +369,7 @@ public class YAPIONMap extends YAPIONMappingType<YAPIONMap, YAPIONAnyType> imple
      *
      * @return the internal backed map
      */
+    @InternalAPI
     public Map<YAPIONAnyType, YAPIONAnyType> getBackedMap() {
         return variables;
     }

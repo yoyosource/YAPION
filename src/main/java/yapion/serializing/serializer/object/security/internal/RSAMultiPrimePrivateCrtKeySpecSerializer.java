@@ -18,7 +18,7 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;

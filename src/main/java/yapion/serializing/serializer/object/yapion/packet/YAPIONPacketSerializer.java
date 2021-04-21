@@ -18,7 +18,7 @@ import yapion.packet.YAPIONPacket;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
 @SerializerImplementation(since = "0.10.0")
 public class YAPIONPacketSerializer implements InternalSerializer<YAPIONPacket> {

@@ -20,7 +20,7 @@ import yapion.hierarchy.types.YAPIONPath;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 

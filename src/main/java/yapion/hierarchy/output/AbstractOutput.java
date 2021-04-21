@@ -14,7 +14,7 @@
 package yapion.hierarchy.output;
 
 import lombok.Getter;
-import yapion.exceptions.YAPIONException;
+import yapion.annotations.api.InternalAPI;
 
 import java.nio.charset.StandardCharsets;
 
@@ -28,14 +28,14 @@ public abstract class AbstractOutput {
         return this;
     }
 
+    @InternalAPI
     public final AbstractOutput consume(String s) {
-        validateMethodCall();
         internalConsume(s);
         return this;
     }
 
+    @InternalAPI
     public final AbstractOutput consumeIndent(int indentLevel) {
-        validateMethodCall();
         String s = indentator.indent(indentLevel);
         if (prettified() && internalConsumePrettified(s)) {
             internalConsume(s);
@@ -43,8 +43,8 @@ public abstract class AbstractOutput {
         return this;
     }
 
+    @InternalAPI
     public final AbstractOutput consumePrettified(String s) {
-        validateMethodCall();
         if (prettified() && internalConsumePrettified(s)) {
             internalConsume(s);
         }
@@ -64,17 +64,6 @@ public abstract class AbstractOutput {
 
     protected final byte[] bytes(String s) {
         return s.getBytes(StandardCharsets.UTF_8);
-    }
-
-    private void validateMethodCall() {
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        if (stackTraceElements.length < 4) {
-            throw new YAPIONException("Invalid calling class");
-        }
-        if (stackTraceElements[3].getClassName().startsWith("yapion.hierarchy.types.YAPION")) {
-            return;
-        }
-        throw new YAPIONException("Invalid calling class");
     }
 
 }

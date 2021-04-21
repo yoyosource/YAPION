@@ -14,7 +14,7 @@
 package yapion.serializing.serializer.object.security.internal;
 
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
 import javax.crypto.interfaces.DHPrivateKey;
 import javax.crypto.interfaces.DHPublicKey;

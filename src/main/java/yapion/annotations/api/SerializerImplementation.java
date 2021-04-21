@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer;
+package yapion.annotations.api;
 
 import org.atteo.classindex.IndexAnnotated;
 

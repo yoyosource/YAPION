@@ -11,17 +11,15 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.output;
+package yapion.annotations.api;
 
-import yapion.annotations.api.DeprecationInfo;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Deprecated
-@DeprecationInfo(since = "0.25.0", alternative = "SystemOutput#(boolean)")
-public class SystemPrettifiedOutput extends SystemOutput {
-
-    @Override
-    protected boolean prettified() {
-        return true;
-    }
-
+@Retention(RetentionPolicy.CLASS)
+@Target({ElementType.TYPE})
+public @interface WrappedImplementation {
+    String since();
 }

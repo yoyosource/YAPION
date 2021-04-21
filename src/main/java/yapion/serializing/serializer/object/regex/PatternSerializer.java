@@ -18,7 +18,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
 import java.util.regex.Pattern;
 

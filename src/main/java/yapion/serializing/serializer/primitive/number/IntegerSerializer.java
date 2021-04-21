@@ -18,7 +18,7 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
 @SerializerImplementation(since = "0.2.0")
 public class IntegerSerializer implements InternalSerializer<Integer> {

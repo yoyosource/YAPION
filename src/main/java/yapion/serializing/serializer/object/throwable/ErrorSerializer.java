@@ -21,7 +21,7 @@ import yapion.serializing.YAPIONSerializerFlagDefault;
 import yapion.serializing.YAPIONSerializerFlags;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 import yapion.utils.ReflectionsUtils;
 
 import static yapion.serializing.YAPIONSerializerFlagDefault.ERROR_EXCEPTION;

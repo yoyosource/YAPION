@@ -15,7 +15,7 @@ package yapion.serializing;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import yapion.annotations.DeprecationInfo;
+import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.annotations.serialize.YAPIONSaveExclude;
@@ -27,7 +27,7 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.api.*;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 import yapion.serializing.utils.SerializeManagerUtils;
 import yapion.utils.ReflectionsUtils;
 

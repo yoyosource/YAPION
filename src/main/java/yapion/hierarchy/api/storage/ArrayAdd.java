@@ -14,7 +14,7 @@
 package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
-import yapion.hierarchy.api.OptionalAPI;
+import yapion.annotations.api.OptionalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 

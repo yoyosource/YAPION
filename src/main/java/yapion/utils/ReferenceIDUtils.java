@@ -13,7 +13,7 @@
 
 package yapion.utils;
 
-import yapion.annotations.DeprecationInfo;
+import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.YAPIONException;

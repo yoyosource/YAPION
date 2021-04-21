@@ -23,7 +23,7 @@ import yapion.serializing.YAPIONSerializerFlagDefault;
 import yapion.serializing.YAPIONSerializerFlags;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
 import java.lang.reflect.Method;
 

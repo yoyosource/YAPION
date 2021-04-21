@@ -15,7 +15,7 @@ package yapion;
 
 import eu.infomas.annotation.AnnotationDetector;
 import org.junit.Test;
-import yapion.annotations.DeprecationInfo;
+import yapion.annotations.api.DeprecationInfo;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

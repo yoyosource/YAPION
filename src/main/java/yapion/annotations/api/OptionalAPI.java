@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.api;
+package yapion.annotations.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

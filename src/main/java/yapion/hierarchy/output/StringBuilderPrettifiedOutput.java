@@ -13,7 +13,7 @@
 
 package yapion.hierarchy.output;
 
-import yapion.annotations.DeprecationInfo;
+import yapion.annotations.api.DeprecationInfo;
 
 @Deprecated
 @DeprecationInfo(since = "0.25.0", alternative = "StringBuilderOutput#(StringBuilder, boolean)")

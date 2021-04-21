@@ -11,15 +11,20 @@
  * limitations under the License.
  */
 
-package yapion.serializing.wrapped;
+package yapion.annotations.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Anything annotated with this Annotation is considered internal
+ * API and should only be used if you know what you do. In most
+ * internal API method checks and security measurements are
+ * omitted. These methods can change each an every version.
+ */
 @Retention(RetentionPolicy.CLASS)
-@Target({ElementType.TYPE})
-public @interface WrappedImplementation {
-    String since();
+@Target({ElementType.METHOD})
+public @interface InternalAPI {
 }

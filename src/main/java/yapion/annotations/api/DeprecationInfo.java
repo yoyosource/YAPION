@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.annotations;
+package yapion.annotations.api;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
