@@ -14,7 +14,7 @@
 package yapion.serializing.serializer.object.yapion.diff;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.diff.DiffDelete;
+import yapion.hierarchy.diff.DiffBase;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPath;
 import yapion.serializing.InternalSerializer;
@@ -25,15 +25,15 @@ import yapion.serializing.serializer.SerializerImplementation;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.25.0")
-public class DiffDeleteSerializer implements InternalSerializer<DiffDelete> {
+public class DiffDeleteSerializer implements InternalSerializer<DiffBase.DiffDelete> {
 
     @Override
     public String type() {
-        return "yapion.hierarchy.diff.DiffDelete";
+        return "yapion.hierarchy.diff.DiffBase.DiffDelete";
     }
 
     @Override
-    public YAPIONAnyType serialize(SerializeData<DiffDelete> serializeData) {
+    public YAPIONAnyType serialize(SerializeData<DiffBase.DiffDelete> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
         yapionObject.add("path", serializeData.serialize(serializeData.object.getPath()));
@@ -42,9 +42,9 @@ public class DiffDeleteSerializer implements InternalSerializer<DiffDelete> {
     }
 
     @Override
-    public DiffDelete deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+    public DiffBase.DiffDelete deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         String[] path = (String[]) deserializeData.deserialize(yapionObject.getArray("path"));
-        return new DiffDelete(new YAPIONPath(path), yapionObject.getYAPIONAnyType("deleted"));
+        return new DiffBase.DiffDelete(new YAPIONPath(path), yapionObject.getYAPIONAnyType("deleted"));
     }
 }

@@ -13,6 +13,70 @@
 
 package yapion.hierarchy.diff;
 
+import lombok.Getter;
+import lombok.ToString;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONPath;
+
+import java.util.Arrays;
+
 public interface DiffBase {
     DiffType type();
+
+    @ToString
+    @Getter
+    class DiffChange implements DiffBase {
+
+        private String[] path;
+        private YAPIONAnyType from;
+        private YAPIONAnyType to;
+
+        public DiffChange(YAPIONPath path, YAPIONAnyType from, YAPIONAnyType to) {
+            this.path = Arrays.copyOf(path.getPath(), path.depth());
+            this.from = from;
+            this.to = to;
+        }
+
+        @Override
+        public DiffType type() {
+            return DiffType.CHANGE;
+        }
+    }
+
+    @ToString
+    @Getter
+    class DiffDelete implements DiffBase {
+
+        private String[] path;
+        private YAPIONAnyType deleted;
+
+        public DiffDelete(YAPIONPath path, YAPIONAnyType deleted) {
+            this.path = Arrays.copyOf(path.getPath(), path.depth());
+            this.deleted = deleted;
+        }
+
+        @Override
+        public DiffType type() {
+            return DiffType.DELETE;
+        }
+
+    }
+
+    @ToString
+    @Getter
+    class DiffInsert implements DiffBase {
+
+        private String[] path;
+        private YAPIONAnyType inserted;
+
+        public DiffInsert(YAPIONPath path, YAPIONAnyType inserted) {
+            this.path = Arrays.copyOf(path.getPath(), path.depth());
+            this.inserted = inserted;
+        }
+
+        @Override
+        public DiffType type() {
+            return DiffType.INSERT;
+        }
+    }
 }

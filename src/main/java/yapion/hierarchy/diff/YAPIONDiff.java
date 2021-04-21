@@ -48,7 +48,7 @@ public class YAPIONDiff {
                 diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(key);
-                diffs.add(new DiffDelete(deleted.getPath(), deleted));
+                diffs.add(new DiffBase.DiffDelete(deleted.getPath(), deleted));
             }
         }
 
@@ -57,7 +57,7 @@ public class YAPIONDiff {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(key);
-            diffs.add(new DiffInsert(inserted.getPath(), inserted));
+            diffs.add(new DiffBase.DiffInsert(inserted.getPath(), inserted));
         }
     }
 
@@ -67,7 +67,7 @@ public class YAPIONDiff {
                 diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(key);
-                diffs.add(new DiffDelete(deleted.getPath(), deleted));
+                diffs.add(new DiffBase.DiffDelete(deleted.getPath(), deleted));
             }
         }
 
@@ -76,7 +76,7 @@ public class YAPIONDiff {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(key);
-            diffs.add(new DiffInsert(inserted.getPath(), inserted));
+            diffs.add(new DiffBase.DiffInsert(inserted.getPath(), inserted));
         }
     }
 
@@ -86,7 +86,7 @@ public class YAPIONDiff {
                 diff(first.getYAPIONAnyType(index), second.getYAPIONAnyType(index));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(index);
-                diffs.add(new DiffDelete(deleted.getPath(), deleted));
+                diffs.add(new DiffBase.DiffDelete(deleted.getPath(), deleted));
             }
         }
 
@@ -95,20 +95,20 @@ public class YAPIONDiff {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(index);
-            diffs.add(new DiffInsert(inserted.getPath(), inserted));
+            diffs.add(new DiffBase.DiffInsert(inserted.getPath(), inserted));
         }
     }
 
     private void diff(YAPIONAnyType first, YAPIONAnyType second) {
         if (first.getType() != second.getType()) {
-            diffs.add(new DiffChange(first.getPath(), first, second));
+            diffs.add(new DiffBase.DiffChange(first.getPath(), first, second));
             return;
         }
         if (first instanceof YAPIONValue || first instanceof YAPIONPointer) {
             if (first.toString().equals(second.toString())) {
                 return;
             }
-            diffs.add(new DiffChange(first.getPath(), first, second));
+            diffs.add(new DiffBase.DiffChange(first.getPath(), first, second));
         } else if (first instanceof YAPIONObject) {
             YAPIONObject firstObject = (YAPIONObject) first;
             YAPIONObject secondObject = (YAPIONObject) second;
