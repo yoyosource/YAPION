@@ -58,7 +58,6 @@ dependencies {
 
 processResources {
     from("build/classes/java/main/META-INF/annotations/") {
-        include 'yapion.serializing.serializer.SerializerImplementation'
         into("yapion")
     }
 
