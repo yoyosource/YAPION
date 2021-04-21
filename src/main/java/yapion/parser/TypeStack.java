@@ -23,18 +23,15 @@ import java.util.LinkedList;
 public class TypeStack {
 
     private final LinkedList<YAPIONType> stack = new LinkedList<>();
-    private final LinkedList<Long> timeStack = new LinkedList<>();
 
     public void push(YAPIONType yapionType) {
         stack.push(yapionType);
-        timeStack.push(System.nanoTime());
     }
 
     public YAPIONType pop(YAPIONType yapionType) {
         if (empty()) {
             throw new YAPIONArrayIndexOutOfBoundsException();
         }
-        timeStack.pop();
         YAPIONType current = stack.pop();
         if (current != yapionType) {
             throw new YAPIONParserException();
@@ -47,13 +44,6 @@ public class TypeStack {
             throw new YAPIONArrayIndexOutOfBoundsException();
         }
         return stack.getFirst();
-    }
-
-    public long peekTime() {
-        if (empty()) {
-            throw new YAPIONArrayIndexOutOfBoundsException();
-        }
-        return System.nanoTime() - timeStack.getFirst();
     }
 
     private boolean empty() {

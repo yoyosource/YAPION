@@ -125,35 +125,6 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         return valuePresent;
     }
 
-    // Parse Time
-    private long parseTime = -1;
-
-    public void setParseTime(long time) {
-        if (parseTime != -1) return;
-        this.parseTime = time;
-    }
-
-    /**
-     * @return parseTime in nanoseconds
-     */
-    public final long getParseTime() {
-        return parseTime;
-    }
-
-    /**
-     * @return parseTime in milliseconds as a double
-     */
-    public final double getParseTimeMillis() {
-        return parseTime / 1000000.0;
-    }
-
-    /**
-     * @return parseTime in milliseconds as a long
-     */
-    public final long getParseTimeMillisAsLong() {
-        return (long) (parseTime / 1000000.0);
-    }
-
     // Traverse System
     public final Optional<YAPIONSearchResult<?>> get(String... s) {
         if (s == null || s.length == 0) {

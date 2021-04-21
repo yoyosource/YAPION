@@ -148,7 +148,6 @@ final class YAPIONInternalParser {
 
     private void pop(YAPIONType yapionType) {
         log.debug("pop      [{}]", yapionType);
-        currentObject.setParseTime(typeStack.peekTime());
         typeStack.pop(yapionType);
     }
 
