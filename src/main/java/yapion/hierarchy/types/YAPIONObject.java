@@ -19,7 +19,6 @@ import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
-import yapion.hierarchy.api.groups.YAPIONMappingType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.utils.RecursionUtils;
@@ -32,7 +31,7 @@ import java.util.function.Consumer;
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.KEY;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 
-public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
+public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> {
 
     private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
 

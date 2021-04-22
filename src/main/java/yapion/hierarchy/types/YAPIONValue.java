@@ -136,37 +136,20 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @Override
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
+        if (value == null) {
+            abstractOutput.consume("null");
+            return abstractOutput;
+        }
         if (value instanceof String) {
             abstractOutput.consume("\"")
                     .consume(value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"))
                     .consume("\"");
             return abstractOutput;
         }
-        if (value instanceof Character) {
-            YAPIONObject yapionObject = new YAPIONObject();
-            yapionObject.add(typeIdentifier.get(type), value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"));
-            yapionObject.toJSONLossy(abstractOutput);
-            return abstractOutput;
-        }
-        if (value instanceof BigInteger || value instanceof BigDecimal) {
-            YAPIONObject yapionObject = new YAPIONObject();
-            yapionObject.add(typeIdentifier.get(type), value.toString());
-            yapionObject.toJSONLossy(abstractOutput);
-            return abstractOutput;
-        }
-        if (value == null) {
-            abstractOutput.consume("null");
-            return abstractOutput;
-        }
-        if (typeIdentifier.containsKey(type)) {
-            YAPIONObject yapionObject = new YAPIONObject();
-            for (int i = 0; i < getDepth(); i++) {
-                YAPIONObject object = new YAPIONObject();
-                yapionObject.add("", object);
-                yapionObject = object;
-            }
-            yapionObject.add(typeIdentifier.get(type), this);
-            yapionObject.toJSONLossy(abstractOutput);
+        if (typeIdentifier.containsKey(type) || value instanceof Character) {
+            abstractOutput.consume("{\"").consume(typeIdentifier.get(type)).consume("\":");
+            toJSONLossy(abstractOutput, true);
+            abstractOutput.consume("}");
             return abstractOutput;
         }
         abstractOutput.consume(value.toString());
@@ -175,6 +158,10 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @Override
     public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
+        return toJSONLossy(abstractOutput, false);
+    }
+
+    private  <T extends AbstractOutput> T toJSONLossy(T abstractOutput, boolean bigAsStrings) {
         if (value instanceof String || value instanceof Character) {
             abstractOutput.consume("\"")
                     .consume(value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"))
@@ -183,6 +170,10 @@ public class YAPIONValue<T> extends YAPIONValueType {
         }
         if (value == null) {
             abstractOutput.consume("null");
+            return abstractOutput;
+        }
+        if (bigAsStrings && (value instanceof BigInteger || value instanceof BigDecimal)) {
+            abstractOutput.consume("\"").consume(value.toString()).consume("\"");
             return abstractOutput;
         }
         abstractOutput.consume(value.toString());

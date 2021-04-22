@@ -20,11 +20,20 @@ import java.lang.annotation.Target;
 
 /**
  * Anything annotated with this Annotation is considered internal
- * API and should only be used if you know what you do. In most
- * internal API method checks and security measurements are
- * omitted. These methods can change each an every version.
+ * API and should only be used if you know what you do.
+ *
+ * <br><br>Type:
+ * If annotating a type (Class) the class itself is internal you
+ * should not implement or extend it. It does not say anything
+ * about the methods defined in this Class.
+ *
+ * <br><br>Methods:
+ * If annotating a method the method is considered internal
+ * API. Checks and security measurements are omitted in these
+ * and the Method signature or implementation can change
+ * each and every version.
  */
 @Retention(RetentionPolicy.CLASS)
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.TYPE})
 public @interface InternalAPI {
 }

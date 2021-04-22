@@ -13,6 +13,9 @@
 
 package yapion.hierarchy.api.groups;
 
+import yapion.annotations.api.InternalAPI;
+
+@InternalAPI
 public abstract class YAPIONValueType extends YAPIONAnyType {
     
 }
