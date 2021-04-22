@@ -124,7 +124,7 @@ public final class YAPIONPacketStream {
                 try {
                     HandleFailedPacket handleFailedPacket = handle();
                     if (handleFailedPacket != null) {
-                        yapionPacketReceiver.handleHandleFailed(handleFailedPacket);
+                        yapionPacketReceiver.handle(handleFailedPacket, YAPIONPacketReceiver.Handler.HANDLE_FAILED);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -155,7 +155,7 @@ public final class YAPIONPacketStream {
                 if (System.currentTimeMillis() - lastHeartbeat > heartBeatTimeOut) {
                     LostHeartBeatPacket lostHeartBeatPacket = new LostHeartBeatPacket(lastHeartbeat, System.currentTimeMillis() - lastHeartbeat, heartBeatTimeOut);
                     if (yapionOutputStream != null) lostHeartBeatPacket.setYAPIONPacketStream(this);
-                    yapionPacketReceiver.handleLostHeartBeat(lostHeartBeatPacket);
+                    yapionPacketReceiver.handle(lostHeartBeatPacket, YAPIONPacketReceiver.Handler.LOST_HEART_BEAT);
                 }
             }
         });
@@ -175,7 +175,7 @@ public final class YAPIONPacketStream {
             }
             DropPacket dropPacket = new DropPacket(bytes);
             if (yapionOutputStream != null) dropPacket.setYAPIONPacketStream(this);
-            yapionPacketReceiver.handleDrop(dropPacket);
+            yapionPacketReceiver.handle(dropPacket, YAPIONPacketReceiver.Handler.DROP);
         } catch (IOException e) {
             // Ignored
         }
@@ -215,7 +215,7 @@ public final class YAPIONPacketStream {
         } catch (Exception e) {
             DeserializationExceptionPacket deserializationExceptionPacket = new DeserializationExceptionPacket(yapionObject);
             deserializationExceptionPacket.setException(e);
-            yapionPacketReceiver.handleDeserializationException(deserializationExceptionPacket);
+            yapionPacketReceiver.handle(deserializationExceptionPacket, YAPIONPacketReceiver.Handler.DESERIALIZE_EXCEPTION);
             return null;
         }
         if (!ReflectionsUtils.isClassSuperclassOf(object.getClass(), YAPIONPacket.class)) return new HandleFailedPacket(yapionObject);
@@ -223,7 +223,7 @@ public final class YAPIONPacketStream {
         if (yapionOutputStream != null) yapionPacket.setYAPIONPacketStream(this);
         if (yapionPacket instanceof HeartBeatPacket && heartBeatMode != null && (heartBeatMode == HeartBeatType.RECEIVE || heartBeatMode == HeartBeatType.SEND_AND_RECEIVE)) {
             lastHeartbeat = System.currentTimeMillis();
-            yapionPacketReceiver.handleHeartBeat(yapionPacket);
+            yapionPacketReceiver.handle(yapionPacket, YAPIONPacketReceiver.Handler.HEART_BEAT);
         }
         yapionPacketReceiver.handle(yapionPacket);
         return null;

@@ -22,18 +22,23 @@ import java.lang.annotation.Target;
  * Anything annotated with this Annotation is considered internal
  * API and should only be used if you know what you do.
  *
- * <br><br>Type:
+ * <br><br>Type:<br>
  * If annotating a type (Class) the class itself is internal you
  * should not implement or extend it. It does not say anything
  * about the methods defined in this Class.
  *
- * <br><br>Methods:
+ * <br><br>Methods:<br>
  * If annotating a method the method is considered internal
  * API. Checks and security measurements are omitted in these
  * and the Method signature or implementation can change
  * each and every version.
+ *
+ * <br><br>Fields:<br>
+ * If annotating a field the field should not be used from anywhere.
+ * It is public because it speeds up something or makes something
+ * easier to use.
  */
 @Retention(RetentionPolicy.CLASS)
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
 public @interface InternalAPI {
 }

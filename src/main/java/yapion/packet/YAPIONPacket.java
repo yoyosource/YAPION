@@ -47,8 +47,8 @@ public abstract class YAPIONPacket {
     /**
      * The exception that was thrown by the {@link YAPIONPacketHandler#handlePacket(YAPIONPacket)}
      * method. You could for example log this {@link Exception} in the {@link YAPIONPacketHandler}
-     * set with {@link YAPIONPacketReceiver#setHandler(YAPIONPacketReceiver.SpecialHandler, YAPIONPacketHandler)},
-     * with {@link YAPIONPacketReceiver.SpecialHandler#EXCEPTION}.
+     * set with {@link YAPIONPacketReceiver#setHandler(YAPIONPacketReceiver.Handler, YAPIONPacketHandler)},
+     * with {@link YAPIONPacketReceiver.Handler#EXCEPTION}.
      *
      * @return the {@link Exception} that was thrown
      */

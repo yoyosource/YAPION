@@ -60,32 +60,32 @@ public class YAPIONPacketTest {
     private YAPIONPacketReceiver receiver(TestType testType, AtomicReference<TestType> worked) {
         YAPIONPacketReceiver yapionPacketReceiver = new YAPIONPacketReceiver();
         if (testType != DropHandler) {
-            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.DROP, yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Handler.DROP, yapionPacket -> {
                 worked.set(DropHandler);
             });
         }
         if (testType != ErrorHandler) {
-            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.ERROR, yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Handler.ERROR, yapionPacket -> {
                 worked.set(ErrorHandler);
             });
         }
         if (testType != ExceptionHandler) {
-            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.EXCEPTION, yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Handler.EXCEPTION, yapionPacket -> {
                 worked.set(ExceptionHandler);
             });
         }
         if (testType != HandleFailedHandler) {
-            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.HANDLE_FAILED, yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Handler.HANDLE_FAILED, yapionPacket -> {
                 worked.set(HandleFailedHandler);
             });
         }
         if (testType != UnknownHandler) {
-            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.UNKNOWN_PACKET, yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Handler.UNKNOWN_PACKET, yapionPacket -> {
                 worked.set(UnknownHandler);
             });
         }
         if (testType != DeserializationExceptionHandler) {
-            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.DESERIALIZE_EXCEPTION, yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Handler.DESERIALIZE_EXCEPTION, yapionPacket -> {
                 worked.set(DeserializationExceptionHandler);
             });
         }
@@ -189,9 +189,9 @@ public class YAPIONPacketTest {
 
         YAPIONPacketStream[] yapionPacketStreams = connection();
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionPacketStreams[1].setYAPIONPacketReceiver(receiver(ValidHandler, result).setHandler(YAPIONPacketReceiver.SpecialHandler.HANDLE_FAILED, yapionPacket -> {
+        yapionPacketStreams[1].setYAPIONPacketReceiver(receiver(ValidHandler, result).setHandler(YAPIONPacketReceiver.Handler.HANDLE_FAILED, yapionPacket -> {
             throw new SecurityException();
-        }).setHandler(YAPIONPacketReceiver.SpecialHandler.ERROR, yapionPacket -> {
+        }).setHandler(YAPIONPacketReceiver.Handler.ERROR, yapionPacket -> {
             throw new SecurityException(yapionPacket.getException().getMessage(), yapionPacket.getException());
         }), 1);
         yapionPacketStreams[0].getYapionOutputStream().write(yapionObject);
@@ -205,7 +205,7 @@ public class YAPIONPacketTest {
 
         YAPIONPacketStream[] yapionPacketStreams = connection();
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionPacketStreams[1].setYAPIONPacketReceiver(receiver(ValidHandler, result).setHandler(YAPIONPacketReceiver.SpecialHandler.HANDLE_FAILED, yapionPacket -> {
+        yapionPacketStreams[1].setYAPIONPacketReceiver(receiver(ValidHandler, result).setHandler(YAPIONPacketReceiver.Handler.HANDLE_FAILED, yapionPacket -> {
             throw new SecurityException();
         }), 1);
         yapionPacketStreams[0].getYapionOutputStream().write(yapionObject);
