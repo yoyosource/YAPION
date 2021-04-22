@@ -222,8 +222,8 @@ public class YAPIONValue<T> extends YAPIONValueType {
     public static boolean validType(Class<?> t) {
         if (t == null) return true;
         String typeName = t.getTypeName();
-        for (int i = 0; i < allowedTypes.length; i++) {
-            if (allowedTypes[i].endsWith(typeName)) {
+        for (String allowedType : allowedTypes) {
+            if (allowedType.equals(typeName)) {
                 return true;
             }
         }
