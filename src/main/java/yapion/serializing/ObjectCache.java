@@ -42,12 +42,12 @@ final class ObjectCache {
             YAPIONPreSerialization[] yapionPreSerializations = method.getDeclaredAnnotationsByType(YAPIONPreSerialization.class);
             YAPIONPostSerialization[] yapionPostSerializations = method.getDeclaredAnnotationsByType(YAPIONPostSerialization.class);
 
-            if (yapionPreSerializations != null) {
+            if (yapionPreSerializations.length != 0) {
                 for (YAPIONPreSerialization yapionPreSerialization : yapionPreSerializations) {
                     cache(preSerializationCache, yapionPreSerialization.context(), method);
                 }
             }
-            if (yapionPostSerializations != null) {
+            if (yapionPostSerializations.length != 0) {
                 for (YAPIONPostSerialization yapionPostSerialization : yapionPostSerializations) {
                     cache(postSerializationCache, yapionPostSerialization.context(), method);
                 }
@@ -56,12 +56,12 @@ final class ObjectCache {
             YAPIONPreDeserialization[] yapionPreDeserializations = method.getDeclaredAnnotationsByType(YAPIONPreDeserialization.class);
             YAPIONPostDeserialization[] yapionPostDeserializations = method.getDeclaredAnnotationsByType(YAPIONPostDeserialization.class);
 
-            if (yapionPreDeserializations != null) {
+            if (yapionPreDeserializations.length != 0) {
                 for (YAPIONPreDeserialization yapionPreDeserialization : yapionPreDeserializations) {
                     cache(preDeserializationCache, yapionPreDeserialization.context(), method);
                 }
             }
-            if (yapionPostDeserializations != null) {
+            if (yapionPostDeserializations.length != 0) {
                 for (YAPIONPostDeserialization yapionPostDeserialization : yapionPostDeserializations) {
                     cache(postDeserializationCache, yapionPostDeserialization.context(), method);
                 }

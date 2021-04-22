@@ -53,7 +53,7 @@ public final class ContextManager {
     }
 
     boolean is(YAPIONLoad[] annotations) {
-        if (annotations == null) return false;
+        if (annotations.length == 0) return false;
         for (YAPIONLoad annotation : annotations) {
             if (is(annotation.context())) {
                 return true;
@@ -63,7 +63,7 @@ public final class ContextManager {
     }
 
     boolean is(YAPIONLoadExclude[] annotations) {
-        if (annotations == null) return false;
+        if (annotations.length == 0) return false;
         for (YAPIONLoadExclude annotation : annotations) {
             if (is(annotation.context())) {
                 return true;
@@ -73,7 +73,7 @@ public final class ContextManager {
     }
 
     boolean is(YAPIONOptimize[] annotations) {
-        if (annotations == null) return false;
+        if (annotations.length == 0) return false;
         for (YAPIONOptimize annotation : annotations) {
             if (is(annotation.context())) {
                 return true;
@@ -83,7 +83,7 @@ public final class ContextManager {
     }
 
     boolean is(YAPIONSave[] annotations) {
-        if (annotations == null) return false;
+        if (annotations.length == 0) return false;
         for (YAPIONSave annotation : annotations) {
             if (is(annotation.context())) {
                 return true;
@@ -93,7 +93,7 @@ public final class ContextManager {
     }
 
     boolean is(YAPIONSaveExclude[] annotations) {
-        if (annotations == null) return false;
+        if (annotations.length == 0) return false;
         for (YAPIONSaveExclude annotation : annotations) {
             if (is(annotation.context())) {
                 return true;
@@ -103,7 +103,7 @@ public final class ContextManager {
     }
 
     boolean is(YAPIONData[] annotations) {
-        if (annotations == null) return false;
+        if (annotations.length == 0) return false;
         for (YAPIONData annotation : annotations) {
             if (is(annotation.context())) {
                 return true;
@@ -113,7 +113,7 @@ public final class ContextManager {
     }
 
     boolean is(YAPIONField[] annotations) {
-        if (annotations == null) return false;
+        if (annotations.length == 0) return false;
         for (YAPIONField annotation : annotations) {
             if (is(annotation.context())) {
                 return true;
@@ -129,7 +129,6 @@ public final class ContextManager {
     @SuppressWarnings("java:S1117")
     boolean willBeCascading(Class<?> clazz) {
         YAPIONData[] yapionDatas = clazz.getDeclaredAnnotationsByType(YAPIONData.class);
-        if (yapionDatas == null) return false;
         if (!is(yapionDatas)) {
             return false;
         }
@@ -158,13 +157,13 @@ public final class ContextManager {
         if (is(clazz.getDeclaredAnnotationsByType(YAPIONSaveExclude.class))) globalSave = false;
         globalSave = is(clazz.getDeclaredAnnotationsByType(YAPIONSave.class));
 
-        if (yapionDatas == null) {
+        if (yapionDatas == null || yapionDatas.length == 0) {
             yapionDatas = clazz.getDeclaredAnnotationsByType(YAPIONData.class);
         }
         if (!isCascading()) {
             yapionDatas = clazz.getDeclaredAnnotationsByType(YAPIONData.class);
         }
-        if (yapionDatas != null) {
+        if (yapionDatas != null && yapionDatas.length != 0) {
             boolean yapionDataBoolean = is(yapionDatas);
             globalLoad = globalLoad || yapionDataBoolean;
             globalSave = globalSave || yapionDataBoolean;
@@ -208,11 +207,11 @@ public final class ContextManager {
         }
 
         boolean localLoad = localDefault; // no field ignore for enum values (if not explicitly defined)
-        if (yapionLoadExclude != null && yapionLoad == null) {
+        if (yapionLoadExclude.length != 0 && yapionLoad.length == 0) {
             localLoad = !is(yapionLoadExclude);
-        } else if (yapionLoadExclude == null && yapionLoad != null) {
+        } else if (yapionLoadExclude.length == 0 && yapionLoad.length != 0) {
             localLoad = is(yapionLoad);
-        } else if (yapionLoadExclude != null) {
+        } else if (yapionLoadExclude.length != 0) {
             if (is(yapionLoadExclude)) localLoad = false;
             localLoad |= is(yapionLoad);
         }
@@ -220,22 +219,22 @@ public final class ContextManager {
         boolean localOptimize = is(yapionOptimize);
 
         boolean localSave = localDefault; // no field ignore for enum values (if not explicitly defined)
-        if (yapionSaveExclude != null && yapionSave == null) {
+        if (yapionSaveExclude.length != 0 && yapionSave.length == 0) {
             localSave = !is(yapionSaveExclude);
-        } else if (yapionSaveExclude == null && yapionSave != null) {
+        } else if (yapionSaveExclude.length == 0 && yapionSave.length != 0) {
             localSave = is(yapionSave);
-        } else if (yapionSaveExclude != null) {
+        } else if (yapionSaveExclude.length != 0) {
             if (is(yapionSaveExclude)) localSave = false;
             localSave |= is(yapionSave);
         }
 
-        if (yapionField != null) {
+        if (yapionField.length != 0) {
             boolean yapionFieldBoolean = is(yapionField);
             localLoad = localLoad || yapionFieldBoolean;
             localSave = localSave || yapionFieldBoolean;
         }
 
-        if (yapionDatas != null) {
+        if (yapionDatas.length != 0) {
             boolean yapionDataBoolean = is(yapionDatas);
             localLoad = localLoad || yapionDataBoolean;
             localSave = localSave || yapionDataBoolean;

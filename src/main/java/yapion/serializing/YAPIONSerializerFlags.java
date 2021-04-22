@@ -26,11 +26,12 @@ import java.util.Set;
 public final class YAPIONSerializerFlags {
 
     private static final Set<YAPIONSerializerFlagDefault> YAPION_SERIALIZER_FLAG_DEFAULTS = new HashSet<>();
-    public static void addFlag(YAPIONSerializerFlagDefault yapionSerializerFlagDefault) {
-        YAPION_SERIALIZER_FLAG_DEFAULTS.add(yapionSerializerFlagDefault);
-    }
     static {
         SerializeManager.init();
+    }
+
+    public static void addFlag(YAPIONSerializerFlagDefault yapionSerializerFlagDefault) {
+        YAPION_SERIALIZER_FLAG_DEFAULTS.add(yapionSerializerFlagDefault);
     }
 
     private Map<YAPIONSerializerFlagKey, Boolean> flags = new HashMap<>();

@@ -13,12 +13,12 @@
 
 package yapion.serializing;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.annotations.api.InternalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
+@InternalAPI
 public interface InternalSerializer<T> {
 
     default void init() {
