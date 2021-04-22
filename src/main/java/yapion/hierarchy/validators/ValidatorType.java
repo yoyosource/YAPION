@@ -13,8 +13,11 @@
 
 package yapion.hierarchy.validators;
 
+import yapion.annotations.api.DeprecationInfo;
 import yapion.hierarchy.types.YAPIONType;
 
+@Deprecated
+@DeprecationInfo(since = "0.25.3")
 public enum ValidatorType {
 
     ANY(YAPIONType.ANY),

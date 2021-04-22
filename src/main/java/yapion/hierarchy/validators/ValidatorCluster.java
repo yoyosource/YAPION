@@ -13,11 +13,14 @@
 
 package yapion.hierarchy.validators;
 
+import yapion.annotations.api.DeprecationInfo;
 import yapion.hierarchy.types.YAPIONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
+@DeprecationInfo(since = "0.25.3")
 public final class ValidatorCluster {
 
     private final List<Validator> validatorList = new ArrayList<>();

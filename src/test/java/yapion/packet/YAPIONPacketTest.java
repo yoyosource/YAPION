@@ -31,7 +31,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static yapion.packet.YAPIONPacketTestObjects.*;
 import static yapion.packet.YAPIONPacketTestObjects.TestType.*;
 
@@ -61,32 +60,32 @@ public class YAPIONPacketTest {
     private YAPIONPacketReceiver receiver(TestType testType, AtomicReference<TestType> worked) {
         YAPIONPacketReceiver yapionPacketReceiver = new YAPIONPacketReceiver();
         if (testType != DropHandler) {
-            yapionPacketReceiver.setDropHandler(yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.DROP, yapionPacket -> {
                 worked.set(DropHandler);
             });
         }
         if (testType != ErrorHandler) {
-            yapionPacketReceiver.setErrorHandler(yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.ERROR, yapionPacket -> {
                 worked.set(ErrorHandler);
             });
         }
         if (testType != ExceptionHandler) {
-            yapionPacketReceiver.setExceptionHandler(yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.EXCEPTION, yapionPacket -> {
                 worked.set(ExceptionHandler);
             });
         }
         if (testType != HandleFailedHandler) {
-            yapionPacketReceiver.setHandleFailedHandler(yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.HANDLE_FAILED, yapionPacket -> {
                 worked.set(HandleFailedHandler);
             });
         }
         if (testType != UnknownHandler) {
-            yapionPacketReceiver.setUnknownHandler(yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.UNKNOWN_PACKET, yapionPacket -> {
                 worked.set(UnknownHandler);
             });
         }
         if (testType != DeserializationExceptionHandler) {
-            yapionPacketReceiver.setDeserializationExceptionHandler(yapionPacket -> {
+            yapionPacketReceiver.setHandler(YAPIONPacketReceiver.SpecialHandler.DESERIALIZE_EXCEPTION, yapionPacket -> {
                 worked.set(DeserializationExceptionHandler);
             });
         }
@@ -190,9 +189,9 @@ public class YAPIONPacketTest {
 
         YAPIONPacketStream[] yapionPacketStreams = connection();
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionPacketStreams[1].setYAPIONPacketReceiver(receiver(ValidHandler, result).setHandleFailedHandler(yapionPacket -> {
+        yapionPacketStreams[1].setYAPIONPacketReceiver(receiver(ValidHandler, result).setHandler(YAPIONPacketReceiver.SpecialHandler.HANDLE_FAILED, yapionPacket -> {
             throw new SecurityException();
-        }).setErrorHandler(yapionPacket -> {
+        }).setHandler(YAPIONPacketReceiver.SpecialHandler.ERROR, yapionPacket -> {
             throw new SecurityException(yapionPacket.getException().getMessage(), yapionPacket.getException());
         }), 1);
         yapionPacketStreams[0].getYapionOutputStream().write(yapionObject);
@@ -206,7 +205,7 @@ public class YAPIONPacketTest {
 
         YAPIONPacketStream[] yapionPacketStreams = connection();
         AtomicReference<TestType> result = new AtomicReference<>(null);
-        yapionPacketStreams[1].setYAPIONPacketReceiver(receiver(ValidHandler, result).setHandleFailedHandler(yapionPacket -> {
+        yapionPacketStreams[1].setYAPIONPacketReceiver(receiver(ValidHandler, result).setHandler(YAPIONPacketReceiver.SpecialHandler.HANDLE_FAILED, yapionPacket -> {
             throw new SecurityException();
         }), 1);
         yapionPacketStreams[0].getYapionOutputStream().write(yapionObject);

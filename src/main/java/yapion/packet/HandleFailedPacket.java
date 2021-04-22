@@ -17,8 +17,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import yapion.hierarchy.types.YAPIONObject;
 
-@RequiredArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public class HandleFailedPacket extends YAPIONPacket {
     private final YAPIONObject yapionObject;
 }
+

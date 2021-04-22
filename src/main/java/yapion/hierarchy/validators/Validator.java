@@ -14,6 +14,7 @@
 package yapion.hierarchy.validators;
 
 import yapion.YAPIONUtils;
+import yapion.annotations.api.DeprecationInfo;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.ObjectSearch;
 import yapion.hierarchy.types.YAPIONObject;
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
+@DeprecationInfo(since = "0.25.3")
 public final class Validator {
 
     private List<ValidatorVariable> variables = new ArrayList<>();
