@@ -19,6 +19,9 @@ import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
+import yapion.hierarchy.api.storage.ObjectAdd;
+import yapion.hierarchy.api.storage.ObjectRemove;
+import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.utils.RecursionUtils;
@@ -31,7 +34,7 @@ import java.util.function.Consumer;
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.KEY;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 
-public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> {
+public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implements ObjectRetrieve<String>, ObjectAdd<YAPIONObject, String>, ObjectRemove<YAPIONObject, String> {
 
     private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
 
@@ -108,14 +111,16 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> {
         return new ArrayList<>(variables.keySet());
     }
 
-    public boolean containsKey(@NonNull String key, YAPIONType yapionType) {
+    @Override
+    public boolean internalContainsKey(@NonNull String key, YAPIONType yapionType) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return false;
         if (yapionType == YAPIONType.ANY) return true;
         return yapionType == yapionAnyType.getType();
     }
 
-    public <T> boolean containsKey(@NonNull String key, Class<T> type) {
+    @Override
+    public <T> boolean internalContainsKey(@NonNull String key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
             return false;
         }
@@ -126,11 +131,11 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> {
     }
 
     @Override
-    public boolean containsValue(@NonNull YAPIONAnyType yapionAnyType) {
+    public boolean internalContainsValue(@NonNull YAPIONAnyType yapionAnyType) {
         return variables.containsValue(yapionAnyType);
     }
 
-    public YAPIONAnyType getYAPIONAnyType(@NonNull String key) {
+    public YAPIONAnyType internalGetYAPIONAnyType(@NonNull String key) {
         return variables.get(key);
     }
 
@@ -148,7 +153,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> {
         }
     }
 
-    public YAPIONObject add(@NonNull String key, @NonNull YAPIONAnyType value) {
+    public YAPIONObject internalAdd(@NonNull String key, @NonNull YAPIONAnyType value) {
         check(value);
         discardReferenceValue();
         if (variables.containsKey(key)) {
@@ -160,7 +165,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> {
     }
 
     @Override
-    public YAPIONAnyType addAndGetPrevious(@NonNull String key, @NonNull YAPIONAnyType value) {
+    public YAPIONAnyType internalAddAndGetPrevious(@NonNull String key, @NonNull YAPIONAnyType value) {
         check(value);
         discardReferenceValue();
         if (variables.containsKey(key)) {
@@ -209,7 +214,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> {
         return addAndGetPrevious(key, value);
     }
 
-    public YAPIONObject remove(@NonNull String key) {
+    public YAPIONObject internalRemove(@NonNull String key) {
         if (variables.containsKey(key)) {
             discardReferenceValue();
             variables.remove(key).removeParent();
@@ -218,7 +223,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> {
     }
 
     @Override
-    public YAPIONAnyType removeAndGet(@NonNull String key) {
+    public YAPIONAnyType internalRemoveAndGet(@NonNull String key) {
         if (variables.containsKey(key)) {
             discardReferenceValue();
             YAPIONAnyType yapionAnyType = variables.remove(key);

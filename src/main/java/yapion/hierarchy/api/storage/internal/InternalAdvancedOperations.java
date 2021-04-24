@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.api.storage;
+package yapion.hierarchy.api.storage.internal;
 
 import lombok.NonNull;
 import yapion.annotations.api.OptionalAPI;
@@ -26,74 +26,74 @@ import java.util.function.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectRetrieve<K>, ObjectRemove<I, K>, Iterable<YAPIONAnyType> {
+public interface InternalAdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRetrieve<K>, InternalRemove<I, K>, Iterable<YAPIONAnyType> {
 
     I itself();
 
     @OptionalAPI
     default I addIfAbsent(@NonNull K key, @NonNull YAPIONAnyType value) {
-        if (containsKey(key)) return itself();
-        return add(key, value);
+        if (internalContainsKey(key, YAPIONType.ANY)) return itself();
+        return internalAdd(key, value);
     }
 
     @OptionalAPI
     default I addIfAbsent(@NonNull K key, @NonNull YAPIONType yapionType, @NonNull YAPIONAnyType value) {
-        if (containsKey(key, yapionType)) return itself();
-        return add(key, value);
+        if (internalContainsKey(key, YAPIONType.ANY)) return itself();
+        return internalAdd(key, value);
     }
 
     @OptionalAPI
     default <T> I addIfAbsent(@NonNull K key, @NonNull Class<T> type, @NonNull YAPIONAnyType value) {
-        if (containsKey(key, type)) return itself();
-        return add(key, value);
+        if (internalContainsKey(key, YAPIONType.ANY)) return itself();
+        return internalAdd(key, value);
     }
 
     @OptionalAPI
     default <T extends YAPIONAnyType> I computeIfAbsent(@NonNull K key, @NonNull Function<K, T> mappingFunction) {
-        if (containsKey(key)) return itself();
-        return add(key, mappingFunction.apply(key));
+        if (internalContainsKey(key, YAPIONType.ANY)) return itself();
+        return internalAdd(key, mappingFunction.apply(key));
     }
 
     @SuppressWarnings("unchecked")
     default <T extends YAPIONAnyType> I computeIfPresent(@NonNull K key, @NonNull BiFunction<K, T, T> remappingFunction) {
-        if (!containsKey(key)) return itself();
-        T newValue = remappingFunction.apply(key, (T) getYAPIONAnyType(key));
-        if (newValue == null) return remove(key);
-        return add(key, newValue);
+        if (!internalContainsKey(key, YAPIONType.ANY)) return itself();
+        T newValue = remappingFunction.apply(key, (T) internalGetYAPIONAnyType(key));
+        if (newValue == null) return internalRemove(key);
+        return internalAdd(key, newValue);
     }
 
     @SuppressWarnings("unchecked")
     @OptionalAPI
     default <T extends YAPIONAnyType> I compute(@NonNull K key, @NonNull BiFunction<K, T, T> remappingFunction) {
-        if (containsKey(key)) {
+        if (internalContainsKey(key, YAPIONType.ANY)) {
             T newValue = remappingFunction.apply(key, null);
             if (newValue == null) return itself();
-            return add(key, newValue);
+            return internalAdd(key, newValue);
         } else {
-            T newValue = remappingFunction.apply(key, (T) getYAPIONAnyType(key));
-            if (newValue == null) return remove(key);
-            return add(key, newValue);
+            T newValue = remappingFunction.apply(key, (T) internalGetYAPIONAnyType(key));
+            if (newValue == null) return internalRemove(key);
+            return internalAdd(key, newValue);
         }
     }
 
     @SuppressWarnings("unchecked")
     default <T extends YAPIONAnyType> I merge(@NonNull K key, @NonNull T value, @NonNull BiFunction<K, T, T> remappingFunction) {
-        if (containsKey(key)) {
-            YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (internalContainsKey(key, YAPIONType.ANY)) {
+            YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(key);
             if (yapionAnyType == null) {
-                return add(key, value);
+                return internalAdd(key, value);
             }
             T newValue = remappingFunction.apply(key, (T) yapionAnyType);
-            if (newValue == null) return remove(key);
-            return add(key, newValue);
+            if (newValue == null) return internalRemove(key);
+            return internalAdd(key, newValue);
         } else {
-            return add(key, value);
+            return internalAdd(key, value);
         }
     }
 
     default YAPIONAnyType replace(K key, YAPIONAnyType value) {
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        add(key, value);
+        YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(key);
+        internalAdd(key, value);
         return yapionAnyType;
     }
 
@@ -103,7 +103,7 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
     default Spliterator<YAPIONAnyType> spliterator() {
         return Spliterators.spliteratorUnknownSize(iterator(), 0);
     }
-    
+
     default Stream<YAPIONAnyType> stream() {
         return StreamSupport.stream(spliterator(), false);
     }
@@ -117,19 +117,19 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
     default void forEach(@NonNull BiConsumer<K, YAPIONAnyType> action) {
         Set<K> allKeys = allKeys();
         for (K key : allKeys) {
-            action.accept(key, getYAPIONAnyType(key));
+            action.accept(key, internalGetYAPIONAnyType(key));
         }
     }
 
     default void replaceAll(@NonNull BiFunction<K, YAPIONAnyType, YAPIONAnyType> function) {
         Set<K> allKeys = allKeys();
         for (K key : allKeys) {
-            YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+            YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(key);
             yapionAnyType = function.apply(key, yapionAnyType);
             if (yapionAnyType == null) {
-                remove(key);
+                internalRemove(key);
             } else {
-                add(key, yapionAnyType);
+                internalAdd(key, yapionAnyType);
             }
         }
     }
@@ -139,7 +139,7 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
         allKeys.removeAll(keys);
         boolean result = false;
         for (K key : allKeys) {
-            if (remove(key) != null) result = true;
+            if (internalRemove(key) != null) result = true;
         }
         return result;
     }
@@ -147,7 +147,7 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
     default boolean removeAll(@NonNull Set<K> keys) {
         boolean result = false;
         for (K key : keys) {
-            if (remove(key) != null) result = true;
+            if (internalRemove(key) != null) result = true;
         }
         return result;
     }
@@ -156,8 +156,8 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
         Set<K> allKeys = allKeys();
         boolean result = false;
         for (K key : allKeys) {
-            if (filter.test(getYAPIONAnyType(key))) continue;
-            if (remove(key) != null) result = true;
+            if (filter.test(internalGetYAPIONAnyType(key))) continue;
+            if (internalRemove(key) != null) result = true;
         }
         return result;
     }
@@ -166,8 +166,8 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
         Set<K> allKeys = allKeys();
         boolean result = false;
         for (K key : allKeys) {
-            if (filter.test(key, getYAPIONAnyType(key))) continue;
-            if (remove(key) != null) result = true;
+            if (filter.test(key, internalGetYAPIONAnyType(key))) continue;
+            if (internalRemove(key) != null) result = true;
         }
         return result;
     }
@@ -176,8 +176,8 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
         Set<K> allKeys = allKeys();
         boolean result = false;
         for (K key : allKeys) {
-            if (!filter.test(getYAPIONAnyType(key))) continue;
-            if (remove(key) != null) result = true;
+            if (!filter.test(internalGetYAPIONAnyType(key))) continue;
+            if (internalRemove(key) != null) result = true;
         }
         return result;
     }
@@ -186,8 +186,8 @@ public interface ObjectAdvancedOperations<I, K> extends ObjectAdd<I, K>, ObjectR
         Set<K> allKeys = allKeys();
         boolean result = false;
         for (K key : allKeys) {
-            if (!filter.test(key, getYAPIONAnyType(key))) continue;
-            if (remove(key) != null) result = true;
+            if (!filter.test(key, internalGetYAPIONAnyType(key))) continue;
+            if (internalRemove(key) != null) result = true;
         }
         return result;
     }

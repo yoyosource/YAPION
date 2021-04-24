@@ -15,6 +15,8 @@ package yapion.hierarchy.types;
 
 import lombok.NonNull;
 import yapion.annotations.api.InternalAPI;
+import yapion.annotations.api.YAPIONEveryType;
+import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
@@ -31,7 +33,7 @@ import java.util.*;
 
 import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
 
-public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implements MapAdd<YAPIONMap>, MapRemove<YAPIONMap>, MapRetrieve {
+public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implements MapAdd<YAPIONMap, YAPIONAnyType>, MapRemove<YAPIONMap, YAPIONAnyType>, MapRetrieve<YAPIONAnyType> {
 
     private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
 
@@ -133,7 +135,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
-    public boolean containsKey(@NonNull YAPIONAnyType key, YAPIONType yapionType) {
+    public boolean internalContainsKey(@NonNull YAPIONAnyType key, YAPIONType yapionType) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return false;
         if (yapionType == YAPIONType.ANY) return true;
@@ -141,7 +143,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
-    public <T> boolean containsKey(@NonNull YAPIONAnyType key, Class<T> type) {
+    public <T> boolean internalContainsKey(@NonNull YAPIONAnyType key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
             return false;
         }
@@ -152,11 +154,11 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
-    public boolean containsValue(@NonNull YAPIONAnyType yapionAnyType) {
+    public boolean internalContainsValue(@NonNull YAPIONAnyType yapionAnyType) {
         return variables.containsValue(yapionAnyType);
     }
 
-    public YAPIONAnyType getYAPIONAnyType(@NonNull YAPIONAnyType key) {
+    public YAPIONAnyType internalGetYAPIONAnyType(@NonNull YAPIONAnyType key) {
         return variables.get(key);
     }
 
@@ -174,7 +176,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         }
     }
 
-    public YAPIONMap add(@NonNull YAPIONAnyType key, @NonNull YAPIONAnyType value) {
+    public YAPIONMap internalAdd(@NonNull YAPIONAnyType key, @NonNull YAPIONAnyType value) {
         check(value);
         discardReferenceValue();
         variables.put(key, value);
@@ -184,7 +186,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
-    public YAPIONAnyType addAndGetPrevious(@NonNull YAPIONAnyType key, @NonNull YAPIONAnyType value) {
+    public YAPIONAnyType internalAddAndGetPrevious(@NonNull YAPIONAnyType key, @NonNull YAPIONAnyType value) {
         check(value);
         discardReferenceValue();
         YAPIONAnyType yapionAnyType = variables.put(key, value);
@@ -194,10 +196,16 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
-    public YAPIONMap addOrPointer(@NonNull YAPIONAnyType key, @NonNull YAPIONAnyType value) {
+    public <@YAPIONEveryType C> YAPIONMap addOrPointer(@NonNull C key, @NonNull YAPIONAnyType value) {
+        if (YAPIONValue.validType(key)) {
+            return add(new YAPIONValue<>(key), value);
+        } else if (!(key instanceof YAPIONAnyType)) {
+            throw new YAPIONClassTypeException();
+        }
+        YAPIONAnyType internalKey = (YAPIONAnyType) key;
         discardReferenceValue();
-        if (key.getType() != YAPIONType.VALUE && key.getType() != YAPIONType.POINTER) {
-            RecursionUtils.RecursionResult resultKey = RecursionUtils.checkRecursion(key, this);
+        if (internalKey.getType() != YAPIONType.VALUE && internalKey.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult resultKey = RecursionUtils.checkRecursion(internalKey, this);
             if (resultKey.getRecursionType() != RecursionUtils.RecursionType.NONE) {
                 if (resultKey.getYAPIONAny() == null) {
                     throw new YAPIONRecursionException("Pointer creation failure.");
@@ -205,7 +213,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
                 if (!(resultKey.getYAPIONAny() instanceof YAPIONObject)) {
                     throw new YAPIONRecursionException("Pointer creation failure.");
                 }
-                key = new YAPIONPointer((YAPIONObject) resultKey.getYAPIONAny());
+                internalKey = new YAPIONPointer((YAPIONObject) resultKey.getYAPIONAny());
             }
         }
         if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
@@ -220,15 +228,21 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
                 value = new YAPIONPointer((YAPIONObject) resultValue.getYAPIONAny());
             }
         }
-        add(key, value);
+        add(internalKey, value);
         return this;
     }
 
     @Override
-    public YAPIONAnyType addOrPointerAndGetPrevious(@NonNull YAPIONAnyType key, @NonNull YAPIONAnyType value) {
+    public <@YAPIONEveryType C> YAPIONAnyType addOrPointerAndGetPrevious(@NonNull C key, @NonNull YAPIONAnyType value) {
+        if (YAPIONValue.validType(key)) {
+            return add(new YAPIONValue<>(key), value);
+        } else if (!(key instanceof YAPIONAnyType)) {
+            throw new YAPIONClassTypeException();
+        }
+        YAPIONAnyType internalKey = (YAPIONAnyType) key;
         discardReferenceValue();
-        if (key.getType() != YAPIONType.VALUE && key.getType() != YAPIONType.POINTER) {
-            RecursionUtils.RecursionResult resultKey = RecursionUtils.checkRecursion(key, this);
+        if (internalKey.getType() != YAPIONType.VALUE && internalKey.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult resultKey = RecursionUtils.checkRecursion(internalKey, this);
             if (resultKey.getRecursionType() != RecursionUtils.RecursionType.NONE) {
                 if (resultKey.getYAPIONAny() == null) {
                     throw new YAPIONRecursionException("Pointer creation failure.");
@@ -236,7 +250,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
                 if (!(resultKey.getYAPIONAny() instanceof YAPIONObject)) {
                     throw new YAPIONRecursionException("Pointer creation failure.");
                 }
-                key = new YAPIONPointer((YAPIONObject) resultKey.getYAPIONAny());
+                internalKey = new YAPIONPointer((YAPIONObject) resultKey.getYAPIONAny());
             }
         }
         if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
@@ -251,10 +265,10 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
                 value = new YAPIONPointer((YAPIONObject) resultValue.getYAPIONAny());
             }
         }
-        return addAndGetPrevious(key, value);
+        return addAndGetPrevious(internalKey, value);
     }
 
-    public YAPIONMap remove(@NonNull YAPIONAnyType key) {
+    public YAPIONMap internalRemove(@NonNull YAPIONAnyType key) {
         if (variables.containsKey(key)) {
             discardReferenceValue();
             variables.remove(key).removeParent();
@@ -263,7 +277,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
-    public YAPIONAnyType removeAndGet(@NonNull YAPIONAnyType key) {
+    public YAPIONAnyType internalRemoveAndGet(@NonNull YAPIONAnyType key) {
         if (variables.containsKey(key)) {
             discardReferenceValue();
             YAPIONAnyType yapionAnyType = variables.remove(key);

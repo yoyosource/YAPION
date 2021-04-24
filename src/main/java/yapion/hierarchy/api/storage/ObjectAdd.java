@@ -15,57 +15,22 @@ package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
 import yapion.annotations.api.OptionalAPI;
+import yapion.annotations.api.YAPIONPrimitive;
+import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.storage.internal.InternalAdd;
 import yapion.hierarchy.types.YAPIONValue;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+public interface ObjectAdd<I, K> extends InternalAdd<I, K> {
 
-public interface ObjectAdd<I, K> {
-
-    I add(@NonNull K key, @NonNull YAPIONAnyType value);
-
-    default I add(@NonNull K key, String value) {
-        return add(key, new YAPIONValue<>(value));
+    default I add(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return internalAdd(key, value);
     }
 
-    default I add(@NonNull K key, char value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, boolean value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, byte value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, short value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, int value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, long value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, BigInteger value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, float value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, double value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, BigDecimal value) {
+    default <@YAPIONPrimitive T> I add(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException();
+        }
         return add(key, new YAPIONValue<>(value));
     }
 
@@ -77,49 +42,14 @@ public interface ObjectAdd<I, K> {
         throw new UnsupportedOperationException();
     }
 
-    YAPIONAnyType addAndGetPrevious(@NonNull K key, @NonNull YAPIONAnyType value);
-
-    default YAPIONAnyType addAndGetPrevious(@NonNull K key, String value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return internalAddAndGetPrevious(key, value);
     }
 
-    default YAPIONAnyType addAndGetPrevious(@NonNull K key, char value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType addAndGetPrevious(@NonNull K key, boolean value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType addAndGetPrevious(@NonNull K key, byte value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType addAndGetPrevious(@NonNull K key, short value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType addAndGetPrevious(@NonNull K key, int value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType addAndGetPrevious(@NonNull K key, long value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType addAndGetPrevious(@NonNull K key, BigInteger value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType addAndGetPrevious(@NonNull K key, float value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType addAndGetPrevious(@NonNull K key, double value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType addAndGetPrevious(@NonNull K key, BigDecimal value) {
+    default <@YAPIONPrimitive T> YAPIONAnyType addAndGetPrevious(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException();
+        }
         return addAndGetPrevious(key, new YAPIONValue<>(value));
     }
 
@@ -135,48 +65,11 @@ public interface ObjectAdd<I, K> {
         return add(key, value);
     }
 
-    default I putAndGetItself(@NonNull K key, String value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I putAndGetItself(@NonNull K key, char value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I putAndGetItself(@NonNull K key, boolean value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I putAndGetItself(@NonNull K key, byte value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I putAndGetItself(@NonNull K key, short value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I putAndGetItself(@NonNull K key, int value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I putAndGetItself(@NonNull K key, long value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I putAndGetItself(@NonNull K key, BigInteger value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I putAndGetItself(@NonNull K key, float value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I putAndGetItself(@NonNull K key, double value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I putAndGetItself(@NonNull K key, BigDecimal value) {
-        return add(key, new YAPIONValue<>(value));
+    default <@YAPIONPrimitive T> I putAndGetItself(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException();
+        }
+        return putAndGetItself(key, new YAPIONValue<>(value));
     }
 
     /**
@@ -191,48 +84,11 @@ public interface ObjectAdd<I, K> {
         return addAndGetPrevious(key, value);
     }
 
-    default YAPIONAnyType put(@NonNull K key, String value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType put(@NonNull K key, char value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType put(@NonNull K key, boolean value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType put(@NonNull K key, byte value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType put(@NonNull K key, short value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType put(@NonNull K key, int value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType put(@NonNull K key, long value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType put(@NonNull K key, BigInteger value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType put(@NonNull K key, float value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType put(@NonNull K key, double value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
-    }
-
-    default YAPIONAnyType put(@NonNull K key, BigDecimal value) {
-        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    default <@YAPIONPrimitive T> YAPIONAnyType put(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException();
+        }
+        return put(key, new YAPIONValue<>(value));
     }
 
     /**

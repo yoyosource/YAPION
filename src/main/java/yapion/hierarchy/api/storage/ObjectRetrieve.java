@@ -17,12 +17,13 @@ import lombok.NonNull;
 import yapion.annotations.api.DeprecationInfo;
 import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.storage.internal.InternalRetrieve;
 import yapion.hierarchy.types.*;
 import yapion.utils.ClassUtils;
 
 import java.util.function.Consumer;
 
-public interface ObjectRetrieve<K> {
+public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
 
     @Deprecated
     @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
@@ -46,13 +47,21 @@ public interface ObjectRetrieve<K> {
         return containsKey(key, YAPIONType.ANY);
     }
 
-    boolean containsKey(@NonNull K key, YAPIONType yapionType);
+    default boolean containsKey(@NonNull K key, YAPIONType yapionType) {
+        return internalContainsKey(key, yapionType);
+    }
 
-    <T> boolean containsKey(@NonNull K key, Class<T> type);
+    default <T> boolean containsKey(@NonNull K key, Class<T> type) {
+        return internalContainsKey(key, type);
+    }
 
-    boolean containsValue(@NonNull YAPIONAnyType yapionAnyType);
+    default boolean containsValue(@NonNull YAPIONAnyType yapionAnyType) {
+        return internalContainsValue(yapionAnyType);
+    }
 
-    YAPIONAnyType getYAPIONAnyType(@NonNull K key);
+    default YAPIONAnyType getYAPIONAnyType(@NonNull K key) {
+        return internalGetYAPIONAnyType(key);
+    }
 
     default YAPIONObject getObject(@NonNull K key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);

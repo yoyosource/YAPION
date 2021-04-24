@@ -15,14 +15,19 @@ package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
 import yapion.annotations.api.DeprecationInfo;
+import yapion.annotations.api.YAPIONEveryType;
+import yapion.exceptions.serializing.YAPIONClassTypeException;
+import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.storage.internal.InternalRetrieve;
 import yapion.hierarchy.types.*;
+import yapion.utils.ClassUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.function.Consumer;
 
-public interface MapRetrieve extends ObjectRetrieve<YAPIONAnyType> {
+public interface MapRetrieve<K> extends InternalRetrieve<K> {
 
     @Deprecated
     @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
@@ -222,972 +227,295 @@ public interface MapRetrieve extends ObjectRetrieve<YAPIONAnyType> {
         return containsKey(new YAPIONValue<>(key), type);
     }
 
-    default boolean containsKey(@NonNull String key) {
-        return containsKey(new YAPIONValue<>(key));
-    }
-
-    default boolean containsKey(char key) {
-        return containsKey(new YAPIONValue<>(key));
-    }
-
-    default boolean containsKey(boolean key) {
-        return containsKey(new YAPIONValue<>(key));
-    }
-
-    default boolean containsKey(byte key) {
-        return containsKey(new YAPIONValue<>(key));
-    }
-
-    default boolean containsKey(short key) {
-        return containsKey(new YAPIONValue<>(key));
-    }
-
-    default boolean containsKey(int key) {
-        return containsKey(new YAPIONValue<>(key));
-    }
-
-    default boolean containsKey(long key) {
-        return containsKey(new YAPIONValue<>(key));
-    }
-
-    default boolean containsKey(@NonNull BigInteger key) {
-        return containsKey(new YAPIONValue<>(key));
-    }
-
-    default boolean containsKey(float key) {
-        return containsKey(new YAPIONValue<>(key));
-    }
-
-    default boolean containsKey(double key) {
-        return containsKey(new YAPIONValue<>(key));
-    }
-
-    default boolean containsKey(@NonNull BigDecimal key) {
-        return containsKey(new YAPIONValue<>(key));
-    }
-
-    default boolean containsKey(@NonNull String key, YAPIONType yapionType) {
-        return containsKey(new YAPIONValue<>(key), yapionType);
-    }
-
-    default boolean containsKey(char key, YAPIONType yapionType) {
-        return containsKey(new YAPIONValue<>(key), yapionType);
-    }
-
-    default boolean containsKey(boolean key, YAPIONType yapionType) {
-        return containsKey(new YAPIONValue<>(key), yapionType);
-    }
-
-    default boolean containsKey(byte key, YAPIONType yapionType) {
-        return containsKey(new YAPIONValue<>(key), yapionType);
-    }
-
-    default boolean containsKey(short key, YAPIONType yapionType) {
-        return containsKey(new YAPIONValue<>(key), yapionType);
-    }
-
-    default boolean containsKey(int key, YAPIONType yapionType) {
-        return containsKey(new YAPIONValue<>(key), yapionType);
-    }
-
-    default boolean containsKey(long key, YAPIONType yapionType) {
-        return containsKey(new YAPIONValue<>(key), yapionType);
-    }
-
-    default boolean containsKey(@NonNull BigInteger key, YAPIONType yapionType) {
-        return containsKey(new YAPIONValue<>(key), yapionType);
-    }
-
-    default boolean containsKey(float key, YAPIONType yapionType) {
-        return containsKey(new YAPIONValue<>(key), yapionType);
-    }
-
-    default boolean containsKey(double key, YAPIONType yapionType) {
-        return containsKey(new YAPIONValue<>(key), yapionType);
-    }
-
-    default boolean containsKey(@NonNull BigDecimal key, YAPIONType yapionType) {
-        return containsKey(new YAPIONValue<>(key), yapionType);
-    }
-
-    default <T> boolean containsKey(@NonNull String key, Class<T> type) {
-        return containsKey(new YAPIONValue<>(key), type);
-    }
-
-    default <T> boolean containsKey(char key, Class<T> type) {
-        return containsKey(new YAPIONValue<>(key), type);
-    }
-
-    default <T> boolean containsKey(boolean key, Class<T> type) {
-        return containsKey(new YAPIONValue<>(key), type);
-    }
-
-    default <T> boolean containsKey(byte key, Class<T> type) {
-        return containsKey(new YAPIONValue<>(key), type);
-    }
-
-    default <T> boolean containsKey(short key, Class<T> type) {
-        return containsKey(new YAPIONValue<>(key), type);
-    }
-
-    default <T> boolean containsKey(int key, Class<T> type) {
-        return containsKey(new YAPIONValue<>(key), type);
-    }
-
-    default <T> boolean containsKey(long key, Class<T> type) {
-        return containsKey(new YAPIONValue<>(key), type);
-    }
-
-    default <T> boolean containsKey(@NonNull BigInteger key, Class<T> type) {
-        return containsKey(new YAPIONValue<>(key), type);
-    }
-
-    default <T> boolean containsKey(float key, Class<T> type) {
-        return containsKey(new YAPIONValue<>(key), type);
-    }
-
-    default <T> boolean containsKey(double key, Class<T> type) {
-        return containsKey(new YAPIONValue<>(key), type);
-    }
-
-    default <T> boolean containsKey(@NonNull BigDecimal key, Class<T> type) {
-        return containsKey(new YAPIONValue<>(key), type);
-    }
-
-    default YAPIONAnyType getYAPIONAnyType(@NonNull String key) {
-        return getYAPIONAnyType(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType getYAPIONAnyType(char key) {
-        return getYAPIONAnyType(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType getYAPIONAnyType(boolean key) {
-        return getYAPIONAnyType(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType getYAPIONAnyType(byte key) {
-        return getYAPIONAnyType(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType getYAPIONAnyType(short key) {
-        return getYAPIONAnyType(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType getYAPIONAnyType(int key) {
-        return getYAPIONAnyType(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType getYAPIONAnyType(long key) {
-        return getYAPIONAnyType(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType getYAPIONAnyType(@NonNull BigInteger key) {
-        return getYAPIONAnyType(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType getYAPIONAnyType(float key) {
-        return getYAPIONAnyType(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType getYAPIONAnyType(double key) {
-        return getYAPIONAnyType(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType getYAPIONAnyType(@NonNull BigDecimal key) {
-        return getYAPIONAnyType(new YAPIONValue<>(key));
-    }
-
-    default YAPIONObject getObject(@NonNull String key) {
-        return getObject(new YAPIONValue<>(key));
-    }
-
-    default YAPIONObject getObject(char key) {
-        return getObject(new YAPIONValue<>(key));
-    }
-
-    default YAPIONObject getObject(boolean key) {
-        return getObject(new YAPIONValue<>(key));
-    }
-
-    default YAPIONObject getObject(byte key) {
-        return getObject(new YAPIONValue<>(key));
-    }
-
-    default YAPIONObject getObject(short key) {
-        return getObject(new YAPIONValue<>(key));
-    }
-
-    default YAPIONObject getObject(int key) {
-        return getObject(new YAPIONValue<>(key));
-    }
-
-    default YAPIONObject getObject(long key) {
-        return getObject(new YAPIONValue<>(key));
-    }
-
-    default YAPIONObject getObject(@NonNull BigInteger key) {
-        return getObject(new YAPIONValue<>(key));
-    }
-
-    default YAPIONObject getObject(float key) {
-        return getObject(new YAPIONValue<>(key));
-    }
-
-    default YAPIONObject getObject(double key) {
-        return getObject(new YAPIONValue<>(key));
-    }
-
-    default YAPIONObject getObject(@NonNull BigDecimal key) {
-        return getObject(new YAPIONValue<>(key));
-    }
-
-    default void getObject(@NonNull String key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        getObject(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getObject(char key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        getObject(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getObject(boolean key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        getObject(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getObject(byte key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        getObject(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getObject(short key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        getObject(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getObject(int key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        getObject(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getObject(long key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        getObject(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getObject(@NonNull BigInteger key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        getObject(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getObject(float key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        getObject(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getObject(double key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        getObject(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getObject(@NonNull BigDecimal key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        getObject(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default YAPIONArray getArray(@NonNull String key) {
-        return getArray(new YAPIONValue<>(key));
-    }
-
-    default YAPIONArray getArray(char key) {
-        return getArray(new YAPIONValue<>(key));
-    }
-
-    default YAPIONArray getArray(boolean key) {
-        return getArray(new YAPIONValue<>(key));
-    }
-
-    default YAPIONArray getArray(byte key) {
-        return getArray(new YAPIONValue<>(key));
-    }
-
-    default YAPIONArray getArray(short key) {
-        return getArray(new YAPIONValue<>(key));
-    }
-
-    default YAPIONArray getArray(int key) {
-        return getArray(new YAPIONValue<>(key));
-    }
-
-    default YAPIONArray getArray(long key) {
-        return getArray(new YAPIONValue<>(key));
-    }
-
-    default YAPIONArray getArray(@NonNull BigInteger key) {
-        return getArray(new YAPIONValue<>(key));
-    }
-
-    default YAPIONArray getArray(float key) {
-        return getArray(new YAPIONValue<>(key));
-    }
-
-    default YAPIONArray getArray(double key) {
-        return getArray(new YAPIONValue<>(key));
-    }
-
-    default YAPIONArray getArray(@NonNull BigDecimal key) {
-        return getArray(new YAPIONValue<>(key));
-    }
-
-    default void getArray(@NonNull String key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        getArray(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getArray(char key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        getArray(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getArray(boolean key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        getArray(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getArray(byte key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        getArray(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getArray(short key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        getArray(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getArray(int key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        getArray(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getArray(long key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        getArray(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getArray(@NonNull BigInteger key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        getArray(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getArray(float key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        getArray(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getArray(double key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        getArray(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getArray(@NonNull BigDecimal key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        getArray(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default YAPIONMap getMap(@NonNull String key) {
-        return getMap(new YAPIONValue<>(key));
-    }
-
-    default YAPIONMap getMap(char key) {
-        return getMap(new YAPIONValue<>(key));
-    }
-
-    default YAPIONMap getMap(boolean key) {
-        return getMap(new YAPIONValue<>(key));
-    }
-
-    default YAPIONMap getMap(byte key) {
-        return getMap(new YAPIONValue<>(key));
-    }
-
-    default YAPIONMap getMap(short key) {
-        return getMap(new YAPIONValue<>(key));
-    }
-
-    default YAPIONMap getMap(int key) {
-        return getMap(new YAPIONValue<>(key));
-    }
-
-    default YAPIONMap getMap(long key) {
-        return getMap(new YAPIONValue<>(key));
-    }
-
-    default YAPIONMap getMap(@NonNull BigInteger key) {
-        return getMap(new YAPIONValue<>(key));
-    }
-
-    default YAPIONMap getMap(float key) {
-        return getMap(new YAPIONValue<>(key));
-    }
-
-    default YAPIONMap getMap(double key) {
-        return getMap(new YAPIONValue<>(key));
-    }
-
-    default YAPIONMap getMap(@NonNull BigDecimal key) {
-        return getMap(new YAPIONValue<>(key));
-    }
-
-    default void getMap(@NonNull String key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        getMap(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getMap(char key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        getMap(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getMap(boolean key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        getMap(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getMap(byte key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        getMap(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getMap(short key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        getMap(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getMap(int key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        getMap(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getMap(long key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        getMap(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getMap(@NonNull BigInteger key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        getMap(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getMap(float key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        getMap(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getMap(double key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        getMap(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getMap(@NonNull BigDecimal key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        getMap(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default YAPIONPointer getPointer(@NonNull String key) {
-        return getPointer(new YAPIONValue<>(key));
-    }
-
-    default YAPIONPointer getPointer(char key) {
-        return getPointer(new YAPIONValue<>(key));
-    }
-
-    default YAPIONPointer getPointer(boolean key) {
-        return getPointer(new YAPIONValue<>(key));
-    }
-
-    default YAPIONPointer getPointer(byte key) {
-        return getPointer(new YAPIONValue<>(key));
-    }
-
-    default YAPIONPointer getPointer(short key) {
-        return getPointer(new YAPIONValue<>(key));
-    }
-
-    default YAPIONPointer getPointer(int key) {
-        return getPointer(new YAPIONValue<>(key));
-    }
-
-    default YAPIONPointer getPointer(long key) {
-        return getPointer(new YAPIONValue<>(key));
-    }
-
-    default YAPIONPointer getPointer(@NonNull BigInteger key) {
-        return getPointer(new YAPIONValue<>(key));
-    }
-
-    default YAPIONPointer getPointer(float key) {
-        return getPointer(new YAPIONValue<>(key));
-    }
-
-    default YAPIONPointer getPointer(double key) {
-        return getPointer(new YAPIONValue<>(key));
-    }
-
-    default YAPIONPointer getPointer(@NonNull BigDecimal key) {
-        return getPointer(new YAPIONValue<>(key));
-    }
-
-    default void getPointer(@NonNull String key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getPointer(char key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getPointer(boolean key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getPointer(byte key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getPointer(short key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getPointer(int key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getPointer(long key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getPointer(@NonNull BigInteger key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getPointer(float key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getPointer(double key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getPointer(@NonNull BigDecimal key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        getPointer(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default YAPIONValue getValue(@NonNull String key) {
-        return getValue(new YAPIONValue<>(key));
-    }
-
-    default YAPIONValue getValue(char key) {
-        return getValue(new YAPIONValue<>(key));
-    }
-
-    default YAPIONValue getValue(boolean key) {
-        return getValue(new YAPIONValue<>(key));
-    }
-
-    default YAPIONValue getValue(byte key) {
-        return getValue(new YAPIONValue<>(key));
-    }
-
-    default YAPIONValue getValue(short key) {
-        return getValue(new YAPIONValue<>(key));
-    }
-
-    default YAPIONValue getValue(int key) {
-        return getValue(new YAPIONValue<>(key));
-    }
-
-    default YAPIONValue getValue(long key) {
-        return getValue(new YAPIONValue<>(key));
-    }
-
-    default YAPIONValue getValue(@NonNull BigInteger key) {
-        return getValue(new YAPIONValue<>(key));
-    }
-
-    default YAPIONValue getValue(float key) {
-        return getValue(new YAPIONValue<>(key));
-    }
-
-    default YAPIONValue getValue(double key) {
-        return getValue(new YAPIONValue<>(key));
-    }
-
-    default YAPIONValue getValue(@NonNull BigDecimal key) {
-        return getValue(new YAPIONValue<>(key));
-    }
-
-    default void getValue(@NonNull String key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getValue(char key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getValue(boolean key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getValue(byte key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getValue(short key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getValue(int key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getValue(long key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getValue(@NonNull BigInteger key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getValue(float key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getValue(double key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default void getValue(@NonNull BigDecimal key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default <T> YAPIONValue<T> getValue(@NonNull String key, Class<T> type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(char key, Class<T> type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(boolean key, Class<T> type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(byte key, Class<T> type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(short key, Class<T> type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(int key, Class<T> type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(long key, Class<T> type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(@NonNull BigInteger key, Class<T> type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(float key, Class<T> type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(double key, Class<T> type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(@NonNull BigDecimal key, Class<T> type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(@NonNull String key, Class<T> type, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(char key, Class<T> type, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(boolean key, Class<T> type, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(byte key, Class<T> type, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(short key, Class<T> type, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(int key, Class<T> type, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(long key, Class<T> type, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(@NonNull BigInteger key, Class<T> type, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(float key, Class<T> type, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(double key, Class<T> type, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(@NonNull BigDecimal key, Class<T> type, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), type, defaultValue);
-    }
-
-    default <T> void getValue(@NonNull String key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
-    }
-
-    default <T> void getValue(char key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
-    }
-
-    default <T> void getValue(boolean key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
-    }
-
-    default <T> void getValue(byte key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
-    }
-
-    default <T> void getValue(short key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
-    }
-
-    default <T> void getValue(int key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
-    }
-
-    default <T> void getValue(long key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
-    }
-
-    default <T> void getValue(@NonNull BigInteger key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
-    }
-
-    default <T> void getValue(float key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
-    }
-
-    default <T> void getValue(double key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
-    }
-
-    default <T> void getValue(@NonNull BigDecimal key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        getValue(new YAPIONValue<>(key), type, valueConsumer, noValue);
-    }
-
-    default <T> YAPIONValue<T> getValue(@NonNull String key, T type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(char key, T type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(boolean key, T type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(byte key, T type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(short key, T type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(int key, T type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(long key, T type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(@NonNull BigInteger key, T type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(float key, T type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(double key, T type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValue(@NonNull BigDecimal key, T type) {
-        return getValue(new YAPIONValue<>(key), type);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(@NonNull String key, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(char key, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(boolean key, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(byte key, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(short key, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(int key, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(long key, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(@NonNull BigInteger key, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(float key, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(double key, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> YAPIONValue<T> getValueOrDefault(@NonNull BigDecimal key, T defaultValue) {
-        return getValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> T getPlainValue(@NonNull String key) {
-        return getPlainValue(new YAPIONValue<>(key));
-    }
-
-    default <T> T getPlainValue(char key) {
-        return getPlainValue(new YAPIONValue<>(key));
-    }
-
-    default <T> T getPlainValue(boolean key) {
-        return getPlainValue(new YAPIONValue<>(key));
-    }
-
-    default <T> T getPlainValue(byte key) {
-        return getPlainValue(new YAPIONValue<>(key));
-    }
-
-    default <T> T getPlainValue(short key) {
-        return getPlainValue(new YAPIONValue<>(key));
-    }
-
-    default <T> T getPlainValue(int key) {
-        return getPlainValue(new YAPIONValue<>(key));
-    }
-
-    default <T> T getPlainValue(long key) {
-        return getPlainValue(new YAPIONValue<>(key));
-    }
-
-    default <T> T getPlainValue(@NonNull BigInteger key) {
-        return getPlainValue(new YAPIONValue<>(key));
-    }
-
-    default <T> T getPlainValue(float key) {
-        return getPlainValue(new YAPIONValue<>(key));
-    }
-
-    default <T> T getPlainValue(double key) {
-        return getPlainValue(new YAPIONValue<>(key));
-    }
-
-    default <T> T getPlainValue(@NonNull BigDecimal key) {
-        return getPlainValue(new YAPIONValue<>(key));
-    }
-
-    default <T> T getPlainValueOrDefault(@NonNull String key, T defaultValue) {
-        return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> T getPlainValueOrDefault(char key, T defaultValue) {
-        return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> T getPlainValueOrDefault(boolean key, T defaultValue) {
-        return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> T getPlainValueOrDefault(byte key, T defaultValue) {
-        return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> T getPlainValueOrDefault(short key, T defaultValue) {
-        return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> T getPlainValueOrDefault(int key, T defaultValue) {
-        return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> T getPlainValueOrDefault(long key, T defaultValue) {
-        return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> T getPlainValueOrDefault(@NonNull BigInteger key, T defaultValue) {
-        return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> T getPlainValueOrDefault(float key, T defaultValue) {
-        return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> T getPlainValueOrDefault(double key, T defaultValue) {
-        return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> T getPlainValueOrDefault(@NonNull BigDecimal key, T defaultValue) {
-        return getPlainValueOrDefault(new YAPIONValue<>(key), defaultValue);
-    }
-
-    default <T> void getPlainValue(@NonNull String key, Consumer<T> valueConsumer, Runnable noValue) {
-        getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default <T> void getPlainValue(char key, Consumer<T> valueConsumer, Runnable noValue) {
-        getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default <T> void getPlainValue(boolean key, Consumer<T> valueConsumer, Runnable noValue) {
-        getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default <T> void getPlainValue(byte key, Consumer<T> valueConsumer, Runnable noValue) {
-        getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default <T> void getPlainValue(short key, Consumer<T> valueConsumer, Runnable noValue) {
-        getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default <T> void getPlainValue(int key, Consumer<T> valueConsumer, Runnable noValue) {
-        getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default <T> void getPlainValue(long key, Consumer<T> valueConsumer, Runnable noValue) {
-        getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default <T> void getPlainValue(@NonNull BigInteger key, Consumer<T> valueConsumer, Runnable noValue) {
-        getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default <T> void getPlainValue(float key, Consumer<T> valueConsumer, Runnable noValue) {
-        getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default <T> void getPlainValue(double key, Consumer<T> valueConsumer, Runnable noValue) {
-        getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
-    }
-
-    default <T> void getPlainValue(@NonNull BigDecimal key, Consumer<T> valueConsumer, Runnable noValue) {
-        getPlainValue(new YAPIONValue<>(key), valueConsumer, noValue);
+    default <@YAPIONEveryType T> boolean containsKey(@NonNull T key) {
+        if (key instanceof YAPIONAnyType) {
+            return internalContainsKey((K) key);
+        }
+        if (!YAPIONValue.validType(key)) {
+            throw new YAPIONClassTypeException();
+        }
+        return internalContainsKey((K) new YAPIONValue<>(key));
+    }
+
+    default <@YAPIONEveryType T> boolean containsKey(@NonNull T key, YAPIONType type) {
+        if (key instanceof YAPIONAnyType) {
+            return internalContainsKey((K) key, type);
+        }
+        if (!YAPIONValue.validType(key)) {
+            throw new YAPIONClassTypeException();
+        }
+        return internalContainsKey((K) new YAPIONValue<>(key), type);
+    }
+
+    default <@YAPIONEveryType T, C> boolean containsKey(@NonNull T key, Class<C> type) {
+        if (key instanceof YAPIONAnyType) {
+            return internalContainsKey((K) key, type);
+        }
+        if (!YAPIONValue.validType(key)) {
+            throw new YAPIONClassTypeException();
+        }
+        return internalContainsKey((K) new YAPIONValue<>(key), type);
+    }
+
+    default <@YAPIONEveryType T> YAPIONAnyType getYAPIONAnyType(@NonNull T key) {
+        if (key instanceof YAPIONAnyType) {
+            return internalGetYAPIONAnyType((K) key);
+        }
+        if (!YAPIONValue.validType(key)) {
+            throw new YAPIONClassTypeException();
+        }
+        return internalGetYAPIONAnyType((K) new YAPIONValue<>(key));
+    }
+
+    default <@YAPIONEveryType T> YAPIONObject getObject(@NonNull T key) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
+        if (yapionAnyType instanceof YAPIONObject) {
+            return (YAPIONObject) yapionAnyType;
+        }
+        return null;
+    }
+
+    default <@YAPIONEveryType T> void getObject(@NonNull T key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (yapionAnyType instanceof YAPIONObject) {
+            valueConsumer.accept((YAPIONObject) yapionAnyType);
+        }
+    }
+
+    default <@YAPIONEveryType T> YAPIONArray getArray(@NonNull T key) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
+        if (yapionAnyType instanceof YAPIONArray) {
+            return (YAPIONArray) yapionAnyType;
+        }
+        return null;
+    }
+
+    default <@YAPIONEveryType T> void getArray(@NonNull T key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (yapionAnyType instanceof YAPIONArray) {
+            valueConsumer.accept((YAPIONArray) yapionAnyType);
+        }
+    }
+
+    default <@YAPIONEveryType T> YAPIONMap getMap(@NonNull T key) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
+        if (yapionAnyType instanceof YAPIONMap) {
+            return (YAPIONMap) yapionAnyType;
+        }
+        return null;
+    }
+
+    default <@YAPIONEveryType T> void getMap(@NonNull T key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (yapionAnyType instanceof YAPIONMap) {
+            valueConsumer.accept((YAPIONMap) yapionAnyType);
+        }
+    }
+
+    default <@YAPIONEveryType T> YAPIONPointer getPointer(@NonNull T key) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
+        if (yapionAnyType instanceof YAPIONPointer) {
+            return (YAPIONPointer) yapionAnyType;
+        }
+        return null;
+    }
+
+    default <@YAPIONEveryType T> void getPointer(@NonNull T key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (yapionAnyType instanceof YAPIONPointer) {
+            valueConsumer.accept((YAPIONPointer) yapionAnyType);
+        }
+    }
+
+    @SuppressWarnings({"java:S3740"})
+    default <@YAPIONEveryType T> YAPIONValue getValue(@NonNull T key) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
+        if (yapionAnyType instanceof YAPIONValue) {
+            return (YAPIONValue) yapionAnyType;
+        }
+        return null;
+    }
+
+    @SuppressWarnings({"java:S3740"})
+    default <@YAPIONEveryType T> void getValue(@NonNull T key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (yapionAnyType instanceof YAPIONValue) {
+            valueConsumer.accept((YAPIONValue) yapionAnyType);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    default <@YAPIONEveryType T, C> YAPIONValue<C> getValue(@NonNull T key, Class<C> type) {
+        if (ClassUtils.isPrimitive(type)) {
+            return (YAPIONValue<C>) getValue(key, ClassUtils.getBoxed(type));
+        }
+        if (!YAPIONValue.validType(type)) {
+            throw new YAPIONRetrieveException();
+        }
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
+        if (!(yapionAnyType instanceof YAPIONValue)) {
+            return null;
+        }
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName())) {
+            return null;
+        }
+        return (YAPIONValue<C>) yapionAnyType;
+    }
+
+    @SuppressWarnings("unchecked")
+    default <@YAPIONEveryType T, C> YAPIONValue<C> getValueOrDefault(@NonNull T key, Class<C> type, C defaultValue) {
+        if (ClassUtils.isPrimitive(type)) {
+            YAPIONValue<?> yapionValue = getValue(key, ClassUtils.getBoxed(type));
+            if (yapionValue == null) {
+                return new YAPIONValue<>(defaultValue);
+            }
+            return (YAPIONValue<C>) yapionValue;
+        }
+        if (!YAPIONValue.validType(type)) {
+            throw new YAPIONRetrieveException();
+        }
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return new YAPIONValue<>(defaultValue);
+        if (!(yapionAnyType instanceof YAPIONValue)) {
+            return new YAPIONValue<>(defaultValue);
+        }
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName())) {
+            return new YAPIONValue<>(defaultValue);
+        }
+        return (YAPIONValue<C>) yapionAnyType;
+    }
+
+    @SuppressWarnings("unchecked")
+    default <@YAPIONEveryType T, C> void getValue(@NonNull T key, Class<C> type, Consumer<YAPIONValue<C>> valueConsumer, Runnable noValue) {
+        if (ClassUtils.isPrimitive(type)) {
+            YAPIONValue<?> yapionValue = getValue(key, ClassUtils.getBoxed(type));
+            if (yapionValue == null) {
+                noValue.run();
+            }
+            valueConsumer.accept((YAPIONValue<C>) yapionValue);
+            return;
+        }
+        if (!YAPIONValue.validType(type)) {
+            throw new YAPIONRetrieveException();
+        }
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (!(yapionAnyType instanceof YAPIONValue)) {
+            return;
+        }
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName())) {
+            return;
+        }
+        valueConsumer.accept((YAPIONValue<C>) yapionAnyType);
+    }
+
+    @SuppressWarnings("unchecked")
+    default <@YAPIONEveryType T, C> YAPIONValue<C> getValue(@NonNull T key, C type) {
+        if (!YAPIONValue.validType(type)) {
+            throw new YAPIONRetrieveException();
+        }
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return null;
+        if (!(yapionAnyType instanceof YAPIONValue)) {
+            return null;
+        }
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getClass().getTypeName())) {
+            return null;
+        }
+        return (YAPIONValue<C>) yapionAnyType;
+    }
+
+    @SuppressWarnings("unchecked")
+    default <@YAPIONEveryType T, C> YAPIONValue<C> getValueOrDefault(@NonNull T key, C defaultValue) {
+        if (!YAPIONValue.validType(defaultValue)) {
+            throw new YAPIONRetrieveException();
+        }
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return new YAPIONValue<>(defaultValue);
+        if (!(yapionAnyType instanceof YAPIONValue)) {
+            return new YAPIONValue<>(defaultValue);
+        }
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(defaultValue.getClass().getTypeName())) {
+            return new YAPIONValue<>(defaultValue);
+        }
+        return (YAPIONValue<C>) yapionAnyType;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Deprecated
+    @DeprecationInfo(since = "0.25.0")
+    default <@YAPIONEveryType T, C> void getValue(@NonNull T key, C type, Consumer<YAPIONValue<C>> valueConsumer, Runnable noValue) {
+        if (!YAPIONValue.validType(type)) {
+            throw new YAPIONRetrieveException();
+        }
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) {
+            noValue.run();
+            return;
+        }
+        if (!(yapionAnyType instanceof YAPIONValue)) {
+            return;
+        }
+        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getClass().getTypeName())) {
+            return;
+        }
+        valueConsumer.accept((YAPIONValue<C>) yapionAnyType);
+    }
+
+    @SuppressWarnings("unchecked")
+    default <@YAPIONEveryType T, C> C getPlainValue(@NonNull T key) {
+        YAPIONValue<C> yapionValue = getValue(key);
+        if (yapionValue == null) throw new YAPIONRetrieveException("Key '" + key.toString() + "' has no YAPIONValue associated with it");
+        return yapionValue.get();
+    }
+
+    @SuppressWarnings("unchecked")
+    default <@YAPIONEveryType T, C> C getPlainValueOrDefault(@NonNull T key, C defaultValue) {
+        YAPIONValue<C> yapionValue = getValue(key);
+        if (yapionValue == null) {
+            return defaultValue;
+        } else {
+            return yapionValue.get();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    default <@YAPIONEveryType T, C> void getPlainValue(@NonNull T key, Consumer<C> valueConsumer, Runnable noValue) {
+        YAPIONValue<C> yapionValue = getValue(key);
+        if (yapionValue == null) {
+            noValue.run();
+            return;
+        }
+        valueConsumer.accept(yapionValue.get());
     }
 
 }

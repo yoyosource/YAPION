@@ -20,6 +20,8 @@ import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ArrayAdd;
+import yapion.hierarchy.api.storage.ObjectRemove;
+import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.utils.RecursionUtils;
@@ -29,7 +31,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements ArrayAdd<YAPIONArray, Integer> {
+public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements ArrayAdd<YAPIONArray, Integer>, ObjectRemove<YAPIONArray, Integer>, ObjectRetrieve<Integer> {
 
     private final List<YAPIONAnyType> array = new ArrayList<>();
 
@@ -134,7 +136,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public boolean containsKey(@NonNull Integer key, YAPIONType yapionType) {
+    public boolean internalContainsKey(@NonNull Integer key, YAPIONType yapionType) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return false;
         if (yapionType == YAPIONType.ANY) return true;
@@ -142,7 +144,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public <T> boolean containsKey(@NonNull Integer key, Class<T> type) {
+    public <T> boolean internalContainsKey(@NonNull Integer key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
             return false;
         }
@@ -153,11 +155,11 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public boolean containsValue(@NonNull YAPIONAnyType yapionAnyType) {
+    public boolean internalContainsValue(@NonNull YAPIONAnyType yapionAnyType) {
         return array.contains(yapionAnyType);
     }
 
-    public YAPIONAnyType getYAPIONAnyType(@NonNull Integer key) {
+    public YAPIONAnyType internalGetYAPIONAnyType(@NonNull Integer key) {
         checkIndex(key);
         return array.get(key);
     }
@@ -182,7 +184,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         }
     }
 
-    public YAPIONArray add(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+    public YAPIONArray internalAdd(@NonNull Integer key, @NonNull YAPIONAnyType value) {
         checkIndex(key);
         check(value);
         discardReferenceValue();
@@ -193,7 +195,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public YAPIONAnyType addAndGetPrevious(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+    public YAPIONAnyType internalAddAndGetPrevious(@NonNull Integer key, @NonNull YAPIONAnyType value) {
         checkIndex(key);
         check(value);
         discardReferenceValue();
@@ -300,7 +302,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public YAPIONArray remove(@NonNull Integer key) {
+    public YAPIONArray internalRemove(@NonNull Integer key) {
         checkIndex(key);
         discardReferenceValue();
         array.get(key).removeParent();
@@ -309,7 +311,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public YAPIONAnyType removeAndGet(@NonNull Integer key) {
+    public YAPIONAnyType internalRemoveAndGet(@NonNull Integer key) {
         checkIndex(key);
         discardReferenceValue();
         YAPIONAnyType yapionAnyType = array.get(key);

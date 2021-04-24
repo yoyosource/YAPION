@@ -11,20 +11,17 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.api.storage;
+package yapion.hierarchy.api.storage.internal;
 
 import lombok.NonNull;
+import yapion.annotations.api.InternalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.storage.internal.InternalRemove;
 
-public interface ObjectRemove<I, K> extends InternalRemove<I, K> {
+@InternalAPI
+public interface InternalRemove<I, K> {
 
-    default I remove(@NonNull K key) {
-        return internalRemove(key);
-    }
+    I internalRemove(@NonNull K key);
 
-    default YAPIONAnyType removeAndGet(@NonNull K key) {
-        return internalRemoveAndGet(key);
-    }
+    YAPIONAnyType internalRemoveAndGet(@NonNull K key);
 
 }

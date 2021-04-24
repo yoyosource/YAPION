@@ -16,9 +16,7 @@ package yapion.hierarchy.api.retrieve;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
-import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONMap;
-import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -58,32 +56,44 @@ public class RetrieveBuilder<K> {
     }
 
     public RetrieveBuilder<K> object(K key) {
-        suppliers.add(kObjectRetrieve -> kObjectRetrieve.getObject(key));
+        suppliers.add(kObjectRetrieve -> {
+            return (YAPIONObject) kObjectRetrieve.internalGetYAPIONAnyType(key);
+        });
         return this;
     }
 
     public RetrieveBuilder<K> map(K key) {
-        suppliers.add(kObjectRetrieve -> kObjectRetrieve.getMap(key));
+        suppliers.add(kObjectRetrieve -> {
+            return (YAPIONMap) kObjectRetrieve.internalGetYAPIONAnyType(key);
+        });
         return this;
     }
 
     public RetrieveBuilder<K> array(K key) {
-        suppliers.add(kObjectRetrieve -> kObjectRetrieve.getArray(key));
+        suppliers.add(kObjectRetrieve -> {
+            return (YAPIONArray) kObjectRetrieve.internalGetYAPIONAnyType(key);
+        });
         return this;
     }
 
     public RetrieveBuilder<K> pointer(K key) {
-        suppliers.add(kObjectRetrieve -> kObjectRetrieve.getPointer(key));
+        suppliers.add(kObjectRetrieve -> {
+            return (YAPIONPointer) kObjectRetrieve.internalGetYAPIONAnyType(key);
+        });
         return this;
     }
 
     public RetrieveBuilder<K> value(K key) {
-        suppliers.add(kObjectRetrieve -> kObjectRetrieve.getValue(key));
+        suppliers.add(kObjectRetrieve -> {
+            return (YAPIONValue) kObjectRetrieve.internalGetYAPIONAnyType(key);
+        });
         return this;
     }
 
     public <T> RetrieveBuilder<K> value(K key, Class<T> clazz) {
-        suppliers.add(kObjectRetrieve -> kObjectRetrieve.getValue(key, clazz));
+        suppliers.add(kObjectRetrieve -> {
+            return (YAPIONValue<T>) kObjectRetrieve.internalGetYAPIONAnyType(key);
+        });
         return this;
     }
 

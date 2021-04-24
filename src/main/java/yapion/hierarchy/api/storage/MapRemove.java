@@ -14,100 +14,32 @@
 package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
+import yapion.annotations.api.YAPIONEveryType;
+import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.storage.internal.InternalRemove;
 import yapion.hierarchy.types.YAPIONValue;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+public interface MapRemove<I, K> extends InternalRemove<I, K> {
 
-public interface MapRemove<I> extends ObjectRemove<I, YAPIONAnyType> {
-
-    default I remove(@NonNull String key) {
-        return remove(new YAPIONValue<>(key));
+    default <@YAPIONEveryType T> I remove(@NonNull T key) {
+        if (key instanceof YAPIONAnyType) {
+            return internalRemove((K) key);
+        }
+        if (!YAPIONValue.validType(key)) {
+            throw new YAPIONClassTypeException();
+        }
+        return internalRemove((K) new YAPIONValue<>(key));
     }
 
-    default I remove(char key) {
-        return remove(new YAPIONValue<>(key));
-    }
-
-    default I remove(boolean key) {
-        return remove(new YAPIONValue<>(key));
-    }
-
-    default I remove(byte key) {
-        return remove(new YAPIONValue<>(key));
-    }
-
-    default I remove(short key) {
-        return remove(new YAPIONValue<>(key));
-    }
-
-    default I remove(int key) {
-        return remove(new YAPIONValue<>(key));
-    }
-
-    default I remove(long key) {
-        return remove(new YAPIONValue<>(key));
-    }
-
-    default I remove(@NonNull BigInteger key) {
-        return remove(new YAPIONValue<>(key));
-    }
-
-    default I remove(float key) {
-        return remove(new YAPIONValue<>(key));
-    }
-
-    default I remove(double key) {
-        return remove(new YAPIONValue<>(key));
-    }
-
-    default I remove(@NonNull BigDecimal key) {
-        return remove(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType removeAndGet(@NonNull String key) {
-        return removeAndGet(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType removeAndGet(char key) {
-        return removeAndGet(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType removeAndGet(boolean key) {
-        return removeAndGet(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType removeAndGet(byte key) {
-        return removeAndGet(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType removeAndGet(short key) {
-        return removeAndGet(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType removeAndGet(int key) {
-        return removeAndGet(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType removeAndGet(long key) {
-        return removeAndGet(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType removeAndGet(@NonNull BigInteger key) {
-        return removeAndGet(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType removeAndGet(float key) {
-        return removeAndGet(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType removeAndGet(double key) {
-        return removeAndGet(new YAPIONValue<>(key));
-    }
-
-    default YAPIONAnyType removeAndGet(@NonNull BigDecimal key) {
-        return removeAndGet(new YAPIONValue<>(key));
+    default <@YAPIONEveryType T> YAPIONAnyType removeAndGet(@NonNull T key) {
+        if (key instanceof YAPIONAnyType) {
+            return internalRemoveAndGet((K) key);
+        }
+        if (!YAPIONValue.validType(key)) {
+            throw new YAPIONClassTypeException();
+        }
+        return internalRemoveAndGet((K) new YAPIONValue<>(key));
     }
 
 }
