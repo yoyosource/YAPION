@@ -228,13 +228,7 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     }
 
     default <@YAPIONEveryType T> boolean containsKey(@NonNull T key) {
-        if (key instanceof YAPIONAnyType) {
-            return internalContainsKey((K) key);
-        }
-        if (!YAPIONValue.validType(key)) {
-            throw new YAPIONClassTypeException();
-        }
-        return internalContainsKey((K) new YAPIONValue<>(key));
+        return containsKey(key, YAPIONType.ANY);
     }
 
     default <@YAPIONEveryType T> boolean containsKey(@NonNull T key, YAPIONType type) {
@@ -277,13 +271,11 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     }
 
     default <@YAPIONEveryType T> void getObject(@NonNull T key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) {
+        YAPIONObject yapionObject = getObject(key);
+        if (yapionObject == null) {
             noValue.run();
-            return;
-        }
-        if (yapionAnyType instanceof YAPIONObject) {
-            valueConsumer.accept((YAPIONObject) yapionAnyType);
+        } else {
+            valueConsumer.accept(yapionObject);
         }
     }
 
@@ -297,13 +289,11 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     }
 
     default <@YAPIONEveryType T> void getArray(@NonNull T key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) {
+        YAPIONArray yapionArray = getArray(key);
+        if (yapionArray == null) {
             noValue.run();
-            return;
-        }
-        if (yapionAnyType instanceof YAPIONArray) {
-            valueConsumer.accept((YAPIONArray) yapionAnyType);
+        } else {
+            valueConsumer.accept(yapionArray);
         }
     }
 
@@ -317,13 +307,11 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     }
 
     default <@YAPIONEveryType T> void getMap(@NonNull T key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) {
+        YAPIONMap yapionMap = getMap(key);
+        if (yapionMap == null) {
             noValue.run();
-            return;
-        }
-        if (yapionAnyType instanceof YAPIONMap) {
-            valueConsumer.accept((YAPIONMap) yapionAnyType);
+        } else {
+            valueConsumer.accept(yapionMap);
         }
     }
 
@@ -337,13 +325,11 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     }
 
     default <@YAPIONEveryType T> void getPointer(@NonNull T key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) {
+        YAPIONPointer yapionPointer = getPointer(key);
+        if (yapionPointer == null) {
             noValue.run();
-            return;
-        }
-        if (yapionAnyType instanceof YAPIONPointer) {
-            valueConsumer.accept((YAPIONPointer) yapionAnyType);
+        } else {
+            valueConsumer.accept(yapionPointer);
         }
     }
 
@@ -359,13 +345,11 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
 
     @SuppressWarnings({"java:S3740"})
     default <@YAPIONEveryType T> void getValue(@NonNull T key, Consumer<YAPIONValue> valueConsumer, Runnable noValue) {
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) {
+        YAPIONValue yapionValue = getValue(key);
+        if (yapionValue == null) {
             noValue.run();
-            return;
-        }
-        if (yapionAnyType instanceof YAPIONValue) {
-            valueConsumer.accept((YAPIONValue) yapionAnyType);
+        } else {
+            valueConsumer.accept(yapionValue);
         }
     }
 
@@ -390,52 +374,22 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
 
     @SuppressWarnings("unchecked")
     default <@YAPIONEveryType T, C> YAPIONValue<C> getValueOrDefault(@NonNull T key, Class<C> type, C defaultValue) {
-        if (ClassUtils.isPrimitive(type)) {
-            YAPIONValue<?> yapionValue = getValue(key, ClassUtils.getBoxed(type));
-            if (yapionValue == null) {
-                return new YAPIONValue<>(defaultValue);
-            }
-            return (YAPIONValue<C>) yapionValue;
-        }
-        if (!YAPIONValue.validType(type)) {
-            throw new YAPIONRetrieveException();
-        }
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) return new YAPIONValue<>(defaultValue);
-        if (!(yapionAnyType instanceof YAPIONValue)) {
+        YAPIONValue<C> yapionValue = getValue(key, type);
+        if (yapionValue == null) {
             return new YAPIONValue<>(defaultValue);
+        } else {
+            return yapionValue;
         }
-        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName())) {
-            return new YAPIONValue<>(defaultValue);
-        }
-        return (YAPIONValue<C>) yapionAnyType;
     }
 
     @SuppressWarnings("unchecked")
     default <@YAPIONEveryType T, C> void getValue(@NonNull T key, Class<C> type, Consumer<YAPIONValue<C>> valueConsumer, Runnable noValue) {
-        if (ClassUtils.isPrimitive(type)) {
-            YAPIONValue<?> yapionValue = getValue(key, ClassUtils.getBoxed(type));
-            if (yapionValue == null) {
-                noValue.run();
-            }
-            valueConsumer.accept((YAPIONValue<C>) yapionValue);
-            return;
-        }
-        if (!YAPIONValue.validType(type)) {
-            throw new YAPIONRetrieveException();
-        }
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) {
+        YAPIONValue<C> yapionValue = getValue(key, type);
+        if (yapionValue == null) {
             noValue.run();
-            return;
+        } else {
+            valueConsumer.accept(yapionValue);
         }
-        if (!(yapionAnyType instanceof YAPIONValue)) {
-            return;
-        }
-        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName())) {
-            return;
-        }
-        valueConsumer.accept((YAPIONValue<C>) yapionAnyType);
     }
 
     @SuppressWarnings("unchecked")
@@ -456,39 +410,24 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
 
     @SuppressWarnings("unchecked")
     default <@YAPIONEveryType T, C> YAPIONValue<C> getValueOrDefault(@NonNull T key, C defaultValue) {
-        if (!YAPIONValue.validType(defaultValue)) {
-            throw new YAPIONRetrieveException();
-        }
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) return new YAPIONValue<>(defaultValue);
-        if (!(yapionAnyType instanceof YAPIONValue)) {
+        YAPIONValue<C> yapionValue = getValue(key, defaultValue);
+        if (yapionValue == null) {
             return new YAPIONValue<>(defaultValue);
+        } else {
+            return yapionValue;
         }
-        if (!((YAPIONValue) yapionAnyType).isValidCastType(defaultValue.getClass().getTypeName())) {
-            return new YAPIONValue<>(defaultValue);
-        }
-        return (YAPIONValue<C>) yapionAnyType;
     }
 
     @SuppressWarnings("unchecked")
     @Deprecated
     @DeprecationInfo(since = "0.25.0")
     default <@YAPIONEveryType T, C> void getValue(@NonNull T key, C type, Consumer<YAPIONValue<C>> valueConsumer, Runnable noValue) {
-        if (!YAPIONValue.validType(type)) {
-            throw new YAPIONRetrieveException();
-        }
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) {
+        YAPIONValue<C> yapionValue = getValue(key, type);
+        if (yapionValue == null) {
             noValue.run();
-            return;
+        } else {
+            valueConsumer.accept(yapionValue);
         }
-        if (!(yapionAnyType instanceof YAPIONValue)) {
-            return;
-        }
-        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getClass().getTypeName())) {
-            return;
-        }
-        valueConsumer.accept((YAPIONValue<C>) yapionAnyType);
     }
 
     @SuppressWarnings("unchecked")
@@ -513,9 +452,9 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
         YAPIONValue<C> yapionValue = getValue(key);
         if (yapionValue == null) {
             noValue.run();
-            return;
+        } else {
+            valueConsumer.accept(yapionValue.get());
         }
-        valueConsumer.accept(yapionValue.get());
     }
 
 }

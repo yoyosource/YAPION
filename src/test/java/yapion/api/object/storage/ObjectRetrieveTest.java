@@ -115,7 +115,7 @@ public class ObjectRetrieveTest {
     @Test
     public void testGetArrayWithConsumer() {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add("", new YAPIONObject());
+        yapionObject.add("", new YAPIONArray());
         yapionObject.getArray("", yapionAnyTypes -> {
             assertThat(yapionAnyTypes, is(new YAPIONArray()));
         }, () -> {

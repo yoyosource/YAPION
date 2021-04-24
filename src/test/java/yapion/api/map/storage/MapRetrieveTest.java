@@ -116,7 +116,7 @@ public class MapRetrieveTest {
     @Test
     public void testGetArrayWithConsumer() {
         YAPIONMap yapionMap = new YAPIONMap();
-        yapionMap.add(new YAPIONValue<>(""), new YAPIONObject());
+        yapionMap.add(new YAPIONValue<>(""), new YAPIONArray());
         yapionMap.getArray(new YAPIONValue<>(""), yapionAnyTypes -> {
             assertThat(yapionAnyTypes, is(new YAPIONArray()));
         }, () -> {
