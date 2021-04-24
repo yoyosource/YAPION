@@ -251,12 +251,11 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> {
 
     @Override
     public long deepSize() {
-        long size = size();
-        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            YAPIONAnyType yapionAnyType = entry.getValue();
-            if (yapionAnyType instanceof YAPIONDataType) size += ((YAPIONDataType) yapionAnyType).deepSize();
-        }
-        return size;
+        return size() + stream().filter(YAPIONDataType.class::isInstance)
+                .map(YAPIONDataType.class::cast)
+                .map(YAPIONDataType::deepSize)
+                .mapToLong(value -> value)
+                .sum();
     }
 
     @Override

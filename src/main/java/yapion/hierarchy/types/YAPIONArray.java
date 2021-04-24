@@ -367,11 +367,11 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
 
     @Override
     public long deepSize() {
-        long size = size();
-        for (YAPIONAnyType yapionAnyType : array) {
-            if (yapionAnyType instanceof YAPIONDataType) size += ((YAPIONDataType) yapionAnyType).deepSize();
-        }
-        return size;
+        return size() + stream().filter(YAPIONDataType.class::isInstance)
+                .map(YAPIONDataType.class::cast)
+                .map(YAPIONDataType::deepSize)
+                .mapToLong(value -> value)
+                .sum();
     }
 
     @Override
