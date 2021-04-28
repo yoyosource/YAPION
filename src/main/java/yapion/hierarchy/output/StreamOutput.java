@@ -37,7 +37,7 @@ public class StreamOutput extends AbstractOutput implements AutoCloseable {
         try {
             outputStream.write(bytes(s));
         } catch (IOException e) {
-            throw new YAPIONIOException("Exception while writing data");
+            throw new YAPIONIOException(e.getMessage(), e);
         }
     }
 
@@ -50,7 +50,7 @@ public class StreamOutput extends AbstractOutput implements AutoCloseable {
         try {
             outputStream.flush();
         } catch (IOException e) {
-            throw new YAPIONIOException("Exception while stream flushing");
+            throw new YAPIONIOException(e.getMessage(), e);
         }
     }
 
@@ -58,7 +58,7 @@ public class StreamOutput extends AbstractOutput implements AutoCloseable {
         try {
             outputStream.close();
         } catch (IOException e) {
-            throw new YAPIONIOException("Exception while stream closing");
+            throw new YAPIONIOException(e.getMessage(), e);
         }
     }
 

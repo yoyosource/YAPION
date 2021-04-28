@@ -39,6 +39,5 @@ import java.lang.annotation.Target;
  * easier to use.
  */
 @Retention(RetentionPolicy.CLASS)
-@Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
 public @interface InternalAPI {
 }

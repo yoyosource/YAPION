@@ -50,7 +50,7 @@ public class SerializeData<T> {
             field.setAccessible(true);
             return field.get(object);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new YAPIONSerializerException();
+            throw new YAPIONSerializerException(e.getMessage(), e);
         }
     }
 

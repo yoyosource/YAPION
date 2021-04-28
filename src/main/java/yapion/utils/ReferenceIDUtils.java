@@ -107,7 +107,7 @@ public class ReferenceIDUtils {
             referenceIDOldMap.put(s, value);
             return value;
         } catch (NoSuchAlgorithmException e) {
-            throw new YAPIONException("MD5 is not supported");
+            throw new YAPIONException("MD5 is not supported", e.getCause());
         }
     }
 

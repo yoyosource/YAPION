@@ -44,7 +44,7 @@ public class YAPIONOutputStream implements AutoCloseable {
      * @throws YAPIONIOException if the outputStream was closed
      */
     public synchronized void write(YAPIONObject yapionObject) {
-        if (closed) throw new YAPIONIOException();
+        if (closed) throw new YAPIONIOException("Reading from a closed Stream");
         yapionObject.toYAPION(new StreamOutput(outputStream)).flush();
     }
 
@@ -56,7 +56,7 @@ public class YAPIONOutputStream implements AutoCloseable {
      * @throws YAPIONIOException if the outputStream was closed
      */
     public void write(YAPIONPacket yapionPacket) {
-        if (closed) throw new YAPIONIOException();
+        if (closed) throw new YAPIONIOException("Reading from a closed Stream");
         write(yapionPacket.toYAPION());
     }
 
@@ -68,7 +68,7 @@ public class YAPIONOutputStream implements AutoCloseable {
      * @throws YAPIONIOException if the outputStream was closed
      */
     public void write(Object object) {
-        if (closed) throw new YAPIONIOException();
+        if (closed) throw new YAPIONIOException("Reading from a closed Stream");
         write(YAPIONSerializer.serialize(object));
     }
 
@@ -81,7 +81,7 @@ public class YAPIONOutputStream implements AutoCloseable {
      * @throws YAPIONIOException if the outputStream was closed
      */
     public void write(Object object, String state) {
-        if (closed) throw new YAPIONIOException();
+        if (closed) throw new YAPIONIOException("Reading from a closed Stream");
         write(YAPIONSerializer.serialize(object, state));
     }
 
