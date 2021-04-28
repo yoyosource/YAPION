@@ -14,6 +14,7 @@
 package yapion.serializing.serializer.object.map;
 
 import yapion.annotations.api.SerializerImplementation;
+import yapion.exceptions.YAPIONException;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONMap;
@@ -28,11 +29,32 @@ import yapion.utils.ReflectionsUtils;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.function.Function;
 
+import static yapion.utils.IdentifierUtils.ENUM_TYPE_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@SerializerImplementation(since = "0.23.0", initialSince = "0.3.0, 0.7.0, 0.12.0", standsFor = {Map.class, HashMap.class, IdentityHashMap.class, LinkedHashMap.class, TreeMap.class, WeakHashMap.class, ConcurrentHashMap.class, ConcurrentSkipListMap.class})
+@SerializerImplementation(since = "0.23.0", initialSince = "0.3.0, 0.7.0, 0.12.0, 0.24.0", standsFor = {Map.class, HashMap.class, IdentityHashMap.class, LinkedHashMap.class, TreeMap.class, WeakHashMap.class, ConcurrentHashMap.class, ConcurrentSkipListMap.class, EnumMap.class})
 public class MapSerializer implements InternalSerializer<Map<?, ?>> {
+
+    @Override
+    public void init() {
+        ReflectionsUtils.addSpecialCreator(EnumMap.class, new Function<YAPIONObject, EnumMap>() {
+            @Override
+            public EnumMap apply(YAPIONObject yapionObject) {
+                return get(yapionObject);
+            }
+
+            private <E extends Enum<E>> EnumMap<?, ?> get(YAPIONObject yapionObject) {
+                try {
+                    Class<E> clazz = (Class<E>) Class.forName(yapionObject.getPlainValue(ENUM_TYPE_IDENTIFIER));
+                    return new EnumMap(clazz);
+                } catch (ClassNotFoundException | ClassCastException e) {
+                    throw new YAPIONException(e.getMessage(), e);
+                }
+            }
+        });
+    }
 
     @Override
     public Class<?> type() {
@@ -53,6 +75,9 @@ public class MapSerializer implements InternalSerializer<Map<?, ?>> {
     public YAPIONAnyType serialize(SerializeData<Map<?, ?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        if (serializeData.object instanceof EnumMap) {
+            yapionObject.add(ENUM_TYPE_IDENTIFIER, (Class<?>) serializeData.getField("keyType"));
+        }
         return SerializeUtils.serializeMap(serializeData, yapionObject);
     }
 

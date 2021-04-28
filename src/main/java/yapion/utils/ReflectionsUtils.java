@@ -18,8 +18,10 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.objenesis.ObjenesisBase;
 import org.objenesis.strategy.StdInstantiatorStrategy;
+import yapion.annotations.api.InternalAPI;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONObjenesis;
+import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.exceptions.utils.YAPIONReflectionInvocationException;
 import yapion.hierarchy.types.YAPIONObject;
@@ -27,6 +29,7 @@ import yapion.serializing.InternalSerializer;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.Function;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -43,6 +46,13 @@ public class ReflectionsUtils {
             return size() > cacheSize;
         }
     };
+
+    private static final Map<Class<?>, Function<YAPIONObject, ?>> SPECIAL_CREATOR = new HashMap<>();
+
+    @InternalAPI
+    public static <T> void addSpecialCreator(Class<T> clazz, Function<YAPIONObject, T> creator) {
+        SPECIAL_CREATOR.put(clazz, creator);
+    }
 
     /**
      * Set the cache size of the internal cache to a specific
@@ -248,6 +258,17 @@ public class ReflectionsUtils {
             throw new YAPIONReflectionException("YAPIONObject does not contain value for key '" + TYPE_IDENTIFIER + "'");
         }
         String type = yapionObject.getPlainValue(TYPE_IDENTIFIER);
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName(type);
+        } catch (ClassNotFoundException e) {
+            throw new YAPIONException(e.getMessage(), e);
+        }
+        for (Map.Entry<Class<?>, Function<YAPIONObject, ?>> entry : SPECIAL_CREATOR.entrySet()) {
+            if (entry.getKey().isAssignableFrom(clazz)) {
+                return entry.getValue().apply(yapionObject);
+            }
+        }
         if (internalSerializer.interfaceType() != null && internalSerializer.defaultImplementation() != null && internalSerializer.interfaceType().getTypeName().equals(type)) {
             type = internalSerializer.defaultImplementation().getTypeName();
         }

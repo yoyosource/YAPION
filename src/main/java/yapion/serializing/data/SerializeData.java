@@ -21,6 +21,7 @@ import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.YAPIONSerializerFlagDefault;
 import yapion.serializing.YAPIONSerializerFlagDefault.YAPIONSerializerFlagKey;
 import yapion.serializing.YAPIONSerializerFlags;
+import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
 
@@ -46,10 +47,10 @@ public class SerializeData<T> {
     @SuppressWarnings({"java:S3011"})
     public final Object getField(String fieldName) {
         try {
-            Field field = object.getClass().getDeclaredField(fieldName);
+            Field field = ReflectionsUtils.getField(object.getClass(), fieldName);
             field.setAccessible(true);
             return field.get(object);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new YAPIONSerializerException(e.getMessage(), e);
         }
     }

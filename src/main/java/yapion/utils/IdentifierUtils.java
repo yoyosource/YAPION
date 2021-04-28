@@ -19,6 +19,8 @@ import yapion.hierarchy.types.*;
 import yapion.parser.JSONMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.serializer.object.collection.SetSerializer;
+import yapion.serializing.serializer.object.map.MapSerializer;
 import yapion.serializing.serializer.object.other.EnumSerializer;
 import yapion.serializing.serializer.object.security.PrivateKeySerializer;
 import yapion.serializing.serializer.object.security.PublicKeySerializer;
@@ -49,6 +51,14 @@ public class IdentifierUtils {
      * key of a so called enum variable.
      */
     public static final String ENUM_IDENTIFIER = "@enum";
+
+    /**
+     * This variable is used anywhere you need an {@link Enum} as type.
+     * Currently this is only used by {@link SetSerializer} and
+     * {@link MapSerializer}. The value of this is the
+     * {@link Class#getTypeName()} of the {@link Enum} in question.
+     */
+    public static final String ENUM_TYPE_IDENTIFIER = "@enum-type";
 
     /**
      * This variable is used in the {@link ThrowableSerializer},
