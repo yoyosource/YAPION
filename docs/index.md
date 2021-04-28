@@ -2,7 +2,7 @@
 
 ## JavaDoc
 
-* [Javadoc 0.25.1](javadoc/v0.25.1/) &nbsp; &nbsp; [Changelog](changelog/0.25.0.md)
+* [Javadoc 0.25.2](javadoc/v0.25.2/) &nbsp; &nbsp; [Changelog](changelog/0.25.0.md)
 * [Javadoc 0.24.0](javadoc/v0.24.0/) &nbsp; &nbsp; [Changelog](changelog/0.24.0.md)
 * [Javadoc 0.23.2](javadoc/v0.23.2/) &nbsp; &nbsp; [Changelog](changelog/0.23.0.md)
 * [Javadoc 0.22.0](javadoc/v0.22.0/) &nbsp; &nbsp; [Changelog](changelog/0.22.0.md)

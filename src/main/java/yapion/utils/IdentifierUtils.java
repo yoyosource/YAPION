@@ -59,8 +59,7 @@ public class IdentifierUtils {
     public static final String ENUM_TYPE_IDENTIFIER = "@enum-type";
 
     /**
-     * This variable is used in the {@link ThrowableSerializer},
-     * {@link ExceptionSerializer}, {@link RuntimeExceptionSerializer} and
+     * This variable is used in the {@link ThrowableSerializer} and
      * {@link ErrorSerializer} for identifying an {@link Throwable},
      * {@link Exception}, {@link RuntimeException} and {@link Error}
      * respectively by its {@link Class#getTypeName()}.
