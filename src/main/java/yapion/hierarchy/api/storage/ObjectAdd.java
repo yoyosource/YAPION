@@ -27,10 +27,11 @@ public interface ObjectAdd<I, K> extends InternalAdd<I, K> {
         return internalAdd(key, value);
     }
 
+    default I add(@NonNull K key, @NonNull Class<?> value) {
+        return internalAdd(key, new YAPIONValue<>(value.getTypeName()));
+    }
+
     default <@YAPIONPrimitive T> I add(@NonNull K key, T value) {
-        if (value instanceof Class) {
-            return add(key, new YAPIONValue<>(((Class) value).getTypeName()));
-        }
         if (!YAPIONValue.validType(value)) {
             throw new YAPIONClassTypeException();
         }
