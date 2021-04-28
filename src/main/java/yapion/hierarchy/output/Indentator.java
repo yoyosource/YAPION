@@ -18,7 +18,7 @@ import yapion.exceptions.YAPIONException;
 public abstract class Indentator {
 
     private static final StringBuilder indentString = new StringBuilder().append(" ");
-    private static final StringBuilder indentTab = new StringBuilder().append(" ");
+    private static final StringBuilder indentTab = new StringBuilder().append("\t");
 
     private static String growAndGetIndent(int indentLevel) {
         if (indentLevel < 0) {
