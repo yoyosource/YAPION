@@ -27,15 +27,23 @@ import yapion.utils.ReflectionsUtils;
 
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.*;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@SerializerImplementation(since = "0.23.0", initialSince = "0.7.0, 0.12.0", standsFor = {Queue.class, PriorityQueue.class, ConcurrentLinkedQueue.class, LinkedBlockingQueue.class, LinkedTransferQueue.class, SynchronousQueue.class})
+@SerializerImplementation(since = "0.23.0", initialSince = "0.7.0, 0.12.0", standsFor = {Queue.class, PriorityQueue.class, ConcurrentLinkedQueue.class, LinkedBlockingQueue.class, LinkedTransferQueue.class, SynchronousQueue.class, ArrayBlockingQueue.class, PriorityBlockingQueue.class})
 public class QueueSerializer implements InternalSerializer<Queue<?>> {
+
+    @Override
+    public void init() {
+        ReflectionsUtils.addSpecialCreator(ArrayBlockingQueue.class, yapionObject -> {
+            return new ArrayBlockingQueue<>(yapionObject.getArray("values").length());
+        });
+
+        ReflectionsUtils.addSpecialCreator(PriorityQueue.class, yapionObject -> {
+            return new PriorityQueue<>(yapionObject.getArray("values").length());
+        });
+    }
 
     @Override
     public Class<?> type() {
