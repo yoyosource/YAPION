@@ -75,8 +75,8 @@ public class SerializeManager {
         }
 
         @Override
-        public String type() {
-            return "";
+        public Class<?> type() {
+            return Void.class;
         }
 
         @Override
@@ -93,7 +93,7 @@ public class SerializeManager {
 
     private static final String INTERNAL_SERIALIZER = InternalSerializer.class.getTypeName();
 
-    private static final Map<String, Serializer> serializerMap = new HashMap<>();
+    private static final Map<Class<?>, Serializer> serializerMap = new IdentityHashMap<>();
     private static final List<InternalSerializer<?>> interfaceTypeSerializer = new ArrayList<>();
     private static final List<InternalSerializer<?>> classTypeSerializer = new ArrayList<>();
 
@@ -158,7 +158,8 @@ public class SerializeManager {
         serializer.init();
         Serializer serializerWrapper = new Serializer(serializer, OVERRIDEABLE);
         serializerMap.put(serializer.type(), serializerWrapper);
-        if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
+
+        if (serializer.primitiveType() != null && serializer.type() != serializer.primitiveType()) {
             serializerMap.put(serializer.primitiveType(), serializerWrapper);
         }
         if (serializer.interfaceType() != null) {
@@ -180,32 +181,24 @@ public class SerializeManager {
     }
 
     /**
-     * Remove a special Serializer with the Class type name.
-     *
-     * @param clazz the Class type name
-     */
-    public static void remove(Class<?> clazz) {
-        if (clazz == null) return;
-        remove(clazz.getTypeName());
-    }
-
-    /**
      * Remove a special Serializer with the type name.
      *
      * @param type the typeName to remove
      */
-    public static void remove(String type) {
+    public static void remove(Class<?> type) {
         if (type == null) return;
         if (serializerMap.containsKey(type) && !serializerMap.get(type).overrideable) return;
         serializerMap.remove(type);
     }
 
     @SuppressWarnings({"java:S1452"})
-    static InternalSerializer<?> getInternalSerializer(String type) {
+    static InternalSerializer<?> getInternalSerializer(Class<?> type) {
+        if (type == null) return null;
+
         InternalSerializer<?> initialSerializer = getInternalSerializerInternal(type);
         if (initialSerializer != null) return initialSerializer;
 
-        AtomicReference<String> currentType = new AtomicReference<>(type);
+        AtomicReference<Class<?>> currentType = new AtomicReference<>(type);
         interfaceTypeSerializer.stream()
                 .filter(internalSerializer -> implementsInterface(currentType.get(), internalSerializer.interfaceType()) >= 0)
                 .min(Comparator.comparingInt(o -> implementsInterface(currentType.get(), o.interfaceType())))
@@ -218,12 +211,12 @@ public class SerializeManager {
 
         InternalSerializer<?> internalSerializer = getInternalSerializerInternal(type);
         if (internalSerializer != null) return internalSerializer;
-        if (contains(type, nSerializerGroups)) return defaultNullSerializer.internalSerializer;
+        if (contains(type.getTypeName(), nSerializerGroups)) return defaultNullSerializer.internalSerializer;
         return null;
     }
 
-    private static InternalSerializer<?> getInternalSerializerInternal(String type) {
-        if (contains(type, oSerializerGroups)) return defaultNullSerializer.internalSerializer;
+    private static InternalSerializer<?> getInternalSerializerInternal(Class<?> type) {
+        if (contains(type.getTypeName(), oSerializerGroups)) return defaultNullSerializer.internalSerializer;
         return serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
     }
 
@@ -275,7 +268,7 @@ public class SerializeManager {
         }
     }
 
-    public static Set<String> listRegisteredSerializer() {
+    public static Set<Class<?>> listRegisteredSerializer() {
         return new HashSet<>(serializerMap.keySet());
     }
 

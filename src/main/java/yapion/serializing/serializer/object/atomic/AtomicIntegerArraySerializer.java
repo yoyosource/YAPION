@@ -13,13 +13,13 @@
 
 package yapion.serializing.serializer.object.atomic;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
@@ -29,8 +29,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class AtomicIntegerArraySerializer implements InternalSerializer<AtomicIntegerArray> {
 
     @Override
-    public String type() {
-        return "java.util.concurrent.atomic.AtomicIntegerArray";
+    public Class<?> type() {
+        return AtomicIntegerArray.class;
     }
 
     @Override

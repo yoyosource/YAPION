@@ -16,8 +16,6 @@ package yapion.serializing;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.deserialize.YAPIONDeserializeType;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.exceptions.utils.YAPIONReflectionException;
@@ -272,7 +270,15 @@ public final class YAPIONDeserializer {
     private YAPIONDeserializer parseObject(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>) yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER)).get();
         type = typeReMapper.remap(type);
-        InternalSerializer<?> serializer = SerializeManager.getInternalSerializer(type);
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName(type);
+        } catch (ClassNotFoundException e) {
+            log.warn("The class '" + type + "' was not found.", e.getCause());
+            return this;
+        }
+
+        InternalSerializer<?> serializer = SerializeManager.getInternalSerializer(clazz);
         Object o = deserialize(serializer, yapionObject);
         if (o != null) {
             pointerMap.put(yapionObject, o);
@@ -284,7 +290,6 @@ public final class YAPIONDeserializer {
         boolean createWithObjenesis = serializer != null && serializer.createWithObjenesis();
 
         try {
-            Class<?> clazz = Class.forName(type);
             if (!contextManager.is(clazz).load && !loadWithoutAnnotation) {
                 throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
             }
@@ -319,7 +324,7 @@ public final class YAPIONDeserializer {
                 if (specialSet(field, yapionAnyType)) {
                     ReflectionsUtils.setValueOfField(field, object, yapionAnyType);
                 } else if (isValid(field, yapionDeserializeType)) {
-                    ReflectionsUtils.setValueOfField(field, object, deserialize(SerializeManager.getInternalSerializer(yapionDeserializeType.type().getTypeName()), yapionAnyType));
+                    ReflectionsUtils.setValueOfField(field, object, deserialize(SerializeManager.getInternalSerializer(yapionDeserializeType.type()), yapionAnyType));
                 } else {
                     ReflectionsUtils.setValueOfField(field, object, parse(yapionAnyType));
                 }
@@ -327,8 +332,6 @@ public final class YAPIONDeserializer {
                 arrayType = "";
             }
             MethodManager.postDeserializationStep(object, object.getClass(), contextManager);
-        } catch (ClassNotFoundException e) {
-            log.warn("The class '" + type + "' was not found.", e.getCause());
         } catch (YAPIONReflectionException e) {
             log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
         }
@@ -347,7 +350,7 @@ public final class YAPIONDeserializer {
         Class<?> clazz = yapionDeserializeType.type();
         while (!clazz.getTypeName().equals("java.lang.Object")) {
             for (Class<?> ifc : clazz.getInterfaces()) {
-                if (ifc.getTypeName().equals(type) && SerializeManager.getInternalSerializer(yapionDeserializeType.type().getTypeName()) != null) {
+                if (ifc.getTypeName().equals(type) && SerializeManager.getInternalSerializer(yapionDeserializeType.type()) != null) {
                     return true;
                 }
             }

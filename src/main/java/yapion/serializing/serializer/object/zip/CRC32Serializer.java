@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.zip;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.util.zip.CRC32;
 
@@ -28,8 +28,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class CRC32Serializer implements InternalSerializer<CRC32> {
 
     @Override
-    public String type() {
-        return "java.util.zip.CRC32";
+    public Class<?> type() {
+        return CRC32.class;
     }
 
     @Override

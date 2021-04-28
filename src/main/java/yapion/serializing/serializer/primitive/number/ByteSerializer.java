@@ -13,24 +13,24 @@
 
 package yapion.serializing.serializer.primitive.number;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 @SerializerImplementation(since = "0.2.0")
 public class ByteSerializer implements InternalSerializer<Byte> {
 
     @Override
-    public String type() {
-        return "java.lang.Byte";
+    public Class<?> type() {
+        return Byte.class;
     }
 
     @Override
-    public String primitiveType() {
-        return "byte";
+    public Class<?> primitiveType() {
+        return byte.class;
     }
 
     @Override

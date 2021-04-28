@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.throwable;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -26,8 +26,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class StackTraceElementSerializer implements InternalSerializer<StackTraceElement> {
 
     @Override
-    public String type() {
-        return "java.lang.StackTraceElement";
+    public Class<?> type() {
+        return StackTraceElement.class;
     }
 
     @Override

@@ -13,19 +13,19 @@
 
 package yapion.serializing.serializer.object.yapion.packet;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.packet.YAPIONPacket;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 @SerializerImplementation(since = "0.10.0")
 public class YAPIONPacketSerializer implements InternalSerializer<YAPIONPacket> {
 
     @Override
-    public String type() {
-        return "yapion.packet.YAPIONPacket";
+    public Class<?> type() {
+        return YAPIONPacket.class;
     }
 
     @Override

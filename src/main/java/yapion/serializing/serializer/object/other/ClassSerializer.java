@@ -13,13 +13,13 @@
 
 package yapion.serializing.serializer.object.other;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -27,8 +27,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class ClassSerializer implements InternalSerializer<Class<?>> {
 
     @Override
-    public String type() {
-        return "java.lang.Class";
+    public Class<?> type() {
+        return Class.class;
     }
 
     @Override

@@ -27,8 +27,8 @@ public abstract class SerializerBase<T, K extends YAPIONAnyType> {
     public InternalSerializer<T> convert() {
         return new InternalSerializer<T>() {
             @Override
-            public String type() {
-                return SerializerBase.this.type().getTypeName();
+            public Class<T> type() {
+                return SerializerBase.this.type();
             }
 
             @Override

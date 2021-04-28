@@ -24,8 +24,8 @@ import yapion.annotations.api.SerializerImplementation;
 public class StringSerializer implements InternalSerializer<String> {
 
     @Override
-    public String type() {
-        return "java.lang.String";
+    public Class<?> type() {
+        return String.class;
     }
 
     @Override

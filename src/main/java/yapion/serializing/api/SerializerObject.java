@@ -91,8 +91,8 @@ public abstract class SerializerObject<T> extends SerializerBase<T, YAPIONObject
     public InternalSerializer<T> convert() {
         return new InternalSerializer<T>() {
             @Override
-            public String type() {
-                return SerializerObject.this.type().getTypeName();
+            public Class<T> type() {
+                return SerializerObject.this.type();
             }
 
             @Override

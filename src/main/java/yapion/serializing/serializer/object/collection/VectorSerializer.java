@@ -13,13 +13,13 @@
 
 package yapion.serializing.serializer.object.collection;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.util.Vector;
 
@@ -29,8 +29,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class VectorSerializer implements InternalSerializer<Vector<?>> {
 
     @Override
-    public String type() {
-        return "java.util.Vector";
+    public Class<?> type() {
+        return Vector.class;
     }
 
     @Override

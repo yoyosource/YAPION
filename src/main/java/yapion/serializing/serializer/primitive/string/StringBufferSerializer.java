@@ -26,8 +26,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class StringBufferSerializer implements InternalSerializer<StringBuffer> {
 
     @Override
-    public String type() {
-        return "java.lang.StringBuffer";
+    public Class<?> type() {
+        return StringBuffer.class;
     }
 
     @Override

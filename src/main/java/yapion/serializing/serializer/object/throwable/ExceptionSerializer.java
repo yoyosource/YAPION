@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.throwable;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 import yapion.utils.ReflectionsUtils;
 
 import static yapion.utils.IdentifierUtils.EXCEPTION_IDENTIFIER;
@@ -28,8 +28,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class ExceptionSerializer implements InternalSerializer<Exception> {
 
     @Override
-    public String type() {
-        return "java.lang.Exception";
+    public Class<?> type() {
+        return Exception.class;
     }
 
     @Override

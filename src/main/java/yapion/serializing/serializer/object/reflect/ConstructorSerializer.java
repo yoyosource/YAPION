@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.object.reflect;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.YAPIONException;
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -23,7 +24,6 @@ import yapion.serializing.YAPIONSerializerFlagDefault;
 import yapion.serializing.YAPIONSerializerFlags;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.lang.reflect.Constructor;
 
@@ -41,8 +41,8 @@ public class ConstructorSerializer implements InternalSerializer<Constructor<?>>
     }
 
     @Override
-    public String type() {
-        return "java.lang.reflect.Constructor";
+    public Class<?> type() {
+        return Constructor.class;
     }
 
     @Override

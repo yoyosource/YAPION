@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.text;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.text.SimpleDateFormat;
 
@@ -28,8 +28,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class SimpleDateFormatSerializer implements InternalSerializer<SimpleDateFormat> {
 
     @Override
-    public String type() {
-        return "java.text.SimpleDateFormat";
+    public Class<?> type() {
+        return SimpleDateFormat.class;
     }
 
     @Override

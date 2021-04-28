@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.time;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.time.Duration;
 
@@ -28,8 +28,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class DurationSerializer implements InternalSerializer<Duration> {
 
     @Override
-    public String type() {
-        return "java.time.Duration";
+    public Class<?> type() {
+        return Duration.class;
     }
 
     @Override

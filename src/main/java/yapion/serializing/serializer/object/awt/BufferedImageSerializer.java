@@ -13,13 +13,13 @@
 
 package yapion.serializing.serializer.object.awt;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
@@ -30,8 +30,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class BufferedImageSerializer implements InternalSerializer<BufferedImage> {
 
     @Override
-    public String type() {
-        return "java.awt.image.BufferedImage";
+    public Class<?> type() {
+        return BufferedImage.class;
     }
 
     @Override

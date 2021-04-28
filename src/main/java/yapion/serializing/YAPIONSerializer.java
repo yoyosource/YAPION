@@ -145,9 +145,9 @@ public final class YAPIONSerializer {
             }
             return yapionArray;
         } else {
-            String type = object.getClass().getTypeName();
-            if (object.getClass().isEnum()) {
-                type = "java.lang.Enum";
+            Class<?> type = object.getClass();
+            if (type.isEnum()) {
+                type = Enum.class;
             }
             InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
             if (serializer != null && !serializer.empty()) {
@@ -168,10 +168,9 @@ public final class YAPIONSerializer {
             throw new YAPIONSerializerException("Simple class name (" + object.getClass().getTypeName() + ") is not allowed to contain '$'");
         }
 
-        String type = object.getClass().getTypeName();
-        Class<?> clazz = object.getClass();
-        if (clazz.isEnum()) {
-            type = "java.lang.Enum";
+        Class<?> type = object.getClass();
+        if (type.isEnum()) {
+            type = Enum.class;
         }
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {

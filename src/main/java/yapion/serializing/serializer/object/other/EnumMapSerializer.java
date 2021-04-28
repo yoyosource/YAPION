@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.object.other;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONMap;
@@ -20,7 +21,6 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.util.EnumMap;
 
@@ -30,8 +30,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class EnumMapSerializer implements InternalSerializer<EnumMap<?, ?>> {
 
     @Override
-    public String type() {
-        return "java.util.EnumMap";
+    public Class<?> type() {
+        return EnumMap.class;
     }
 
     @Override

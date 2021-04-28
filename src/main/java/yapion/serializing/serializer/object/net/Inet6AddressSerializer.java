@@ -13,13 +13,13 @@
 
 package yapion.serializing.serializer.object.net;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
@@ -31,8 +31,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class Inet6AddressSerializer implements InternalSerializer<Inet6Address> {
 
     @Override
-    public String type() {
-        return "java.net.Inet6Address";
+    public Class<?> type() {
+        return Inet6Address.class;
     }
 
     @Override

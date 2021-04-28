@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.object.collection;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -20,14 +21,16 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 import yapion.serializing.utils.DeserializeUtils;
 import yapion.serializing.utils.SerializeUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.SynchronousQueue;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -35,8 +38,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class QueueSerializer implements InternalSerializer<Queue<?>> {
 
     @Override
-    public String type() {
-        return "java.util.Queue";
+    public Class<?> type() {
+        return Queue.class;
     }
 
     @Override

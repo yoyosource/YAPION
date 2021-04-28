@@ -13,18 +13,18 @@
 
 package yapion.serializing.serializer.object.yapion.types;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 @SerializerImplementation(since = "0.25.0")
 public class YAPIONAnyTypeSerializer implements InternalSerializer<YAPIONAnyType> {
 
     @Override
-    public String type() {
-        return "yapion.hierarchy.api.groups.YAPIONAnyType";
+    public Class<?> type() {
+        return YAPIONAnyType.class;
     }
 
     @Override

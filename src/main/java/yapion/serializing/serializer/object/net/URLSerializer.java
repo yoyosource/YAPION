@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.net;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,8 +29,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class URLSerializer implements InternalSerializer<URL> {
 
     @Override
-    public String type() {
-        return "java.net.URL";
+    public Class<?> type() {
+        return URL.class;
     }
 
     @Override

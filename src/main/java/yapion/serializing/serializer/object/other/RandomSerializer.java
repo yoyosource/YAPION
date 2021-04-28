@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.other;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -29,8 +29,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class RandomSerializer implements InternalSerializer<Random> {
 
     @Override
-    public String type() {
-        return "java.util.Random";
+    public Class<?> type() {
+        return Random.class;
     }
 
     @Override

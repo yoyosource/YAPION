@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.object.yapion.diff;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.diff.DiffBase;
@@ -21,7 +22,6 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.util.List;
 
@@ -36,8 +36,8 @@ public class YAPIONDiffSerializer implements InternalSerializer<YAPIONDiff> {
     }
 
     @Override
-    public String type() {
-        return "yapion.hierarchy.diff.YAPIONDiff";
+    public Class<?> type() {
+        return YAPIONDiff.class;
     }
 
     @Override

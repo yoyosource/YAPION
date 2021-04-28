@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.object.security;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -23,7 +24,6 @@ import yapion.serializing.YAPIONSerializerFlagDefault;
 import yapion.serializing.YAPIONSerializerFlags;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 import yapion.serializing.serializer.object.security.internal.KeySpecSerializerProvider;
 
 import java.security.GeneralSecurityException;
@@ -44,8 +44,8 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
     }
 
     @Override
-    public String type() {
-        return "java.security.PrivateKey";
+    public Class<?> type() {
+        return PrivateKey.class;
     }
 
     @Override

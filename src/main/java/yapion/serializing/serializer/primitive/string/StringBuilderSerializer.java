@@ -26,8 +26,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class StringBuilderSerializer implements InternalSerializer<StringBuilder> {
 
     @Override
-    public String type() {
-        return "java.lang.StringBuilder";
+    public Class<?> type() {
+        return StringBuilder.class;
     }
 
     @Override

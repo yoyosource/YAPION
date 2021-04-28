@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.object.collection;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -20,7 +21,6 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 import yapion.serializing.utils.DeserializeUtils;
 import yapion.serializing.utils.SerializeUtils;
 import yapion.utils.ReflectionsUtils;
@@ -38,8 +38,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class SetSerializer implements InternalSerializer<Set<?>> {
 
     @Override
-    public String type() {
-        return "java.util.Set";
+    public Class<?> type() {
+        return Set.class;
     }
 
     @Override

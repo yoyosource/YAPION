@@ -24,13 +24,13 @@ import yapion.annotations.api.SerializerImplementation;
 public class CharacterSerializer implements InternalSerializer<Character> {
 
     @Override
-    public String type() {
-        return "java.lang.Character";
+    public Class<?> type() {
+        return Character.class;
     }
 
     @Override
-    public String primitiveType() {
-        return "char";
+    public Class<?> primitiveType() {
+        return char.class;
     }
 
     @Override

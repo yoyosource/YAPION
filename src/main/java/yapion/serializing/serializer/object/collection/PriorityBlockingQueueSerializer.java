@@ -13,13 +13,13 @@
 
 package yapion.serializing.serializer.object.collection;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 import yapion.serializing.utils.DeserializeUtils;
 import yapion.serializing.utils.SerializeUtils;
 
@@ -31,8 +31,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class PriorityBlockingQueueSerializer implements InternalSerializer<PriorityBlockingQueue<?>> {
 
     @Override
-    public String type() {
-        return "java.util.concurrent.PriorityBlockingQueue";
+    public Class<?> type() {
+        return PriorityBlockingQueue.class;
     }
 
     @Override

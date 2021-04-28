@@ -29,7 +29,7 @@ public interface InternalSerializer<T> {
         // TypeManager.getType()
     }
     
-    String type();
+    Class<?> type();
 
     /*default String type() {
         Type type = getClass().getGenericInterfaces()[0];
@@ -47,7 +47,7 @@ public interface InternalSerializer<T> {
         return null;
     }
 
-    default String primitiveType() {
+    default Class<?> primitiveType() {
         return null;
     }
 

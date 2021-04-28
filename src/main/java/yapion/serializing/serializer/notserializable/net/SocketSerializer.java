@@ -20,14 +20,15 @@ import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.annotations.api.SerializerImplementation;
 
+import java.math.BigDecimal;
 import java.net.Socket;
 
 @SerializerImplementation(since = "0.12.0")
 public class SocketSerializer implements InternalSerializer<Socket> {
 
     @Override
-    public String type() {
-        return "java.net.Socket";
+    public Class<?> type() {
+        return Socket.class;
     }
 
     @Override

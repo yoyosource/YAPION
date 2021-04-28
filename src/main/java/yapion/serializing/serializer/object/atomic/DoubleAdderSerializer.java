@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.atomic;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.util.concurrent.atomic.DoubleAdder;
 
@@ -28,8 +28,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class DoubleAdderSerializer implements InternalSerializer<DoubleAdder> {
 
     @Override
-    public String type() {
-        return "java.util.concurrent.atomic.DoubleAdder";
+    public Class<?> type() {
+        return DoubleAdder.class;
     }
 
     @Override

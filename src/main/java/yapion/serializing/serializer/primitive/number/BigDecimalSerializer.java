@@ -26,8 +26,8 @@ import java.math.BigDecimal;
 public class BigDecimalSerializer implements InternalSerializer<BigDecimal> {
 
     @Override
-    public String type() {
-        return "java.math.BigDecimal";
+    public Class<?> type() {
+        return BigDecimal.class;
     }
 
     @Override

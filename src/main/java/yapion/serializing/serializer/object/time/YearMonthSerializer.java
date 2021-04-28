@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.time;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.time.Month;
 import java.time.YearMonth;
@@ -29,8 +29,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class YearMonthSerializer implements InternalSerializer<YearMonth> {
 
     @Override
-    public String type() {
-        return "java.time.YearMonth";
+    public Class<?> type() {
+        return YearMonth.class;
     }
 
     @Override

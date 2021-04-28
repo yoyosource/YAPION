@@ -20,6 +20,7 @@ import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.annotations.api.SerializerImplementation;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
@@ -28,8 +29,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class OptionalSerializer implements InternalSerializer<Optional<?>> {
 
     @Override
-    public String type() {
-        return "java.util.Optional";
+    public Class<?> type() {
+        return Optional.class;
     }
 
     @Override

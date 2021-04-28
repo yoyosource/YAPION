@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.time;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -29,8 +29,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class LocalDateTimeSerializer implements InternalSerializer<LocalDateTime> {
 
     @Override
-    public String type() {
-        return "java.time.LocalDateTime";
+    public Class<?> type() {
+        return LocalDateTime.class;
     }
 
     @Override

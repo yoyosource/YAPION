@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.awt;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.awt.*;
 
@@ -28,8 +28,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class ColorSerializer implements InternalSerializer<Color> {
 
     @Override
-    public String type() {
-        return "java.awt.Color";
+    public Class<?> type() {
+        return Color.class;
     }
 
     @Override

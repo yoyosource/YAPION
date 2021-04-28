@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.notserializable.net;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import java.net.ServerSocket;
 
@@ -26,8 +26,8 @@ import java.net.ServerSocket;
 public class ServerSocketSerializer implements InternalSerializer<ServerSocket> {
 
     @Override
-    public String type() {
-        return "java.net.ServerSocket";
+    public Class<?> type() {
+        return ServerSocket.class;
     }
 
     @Override
