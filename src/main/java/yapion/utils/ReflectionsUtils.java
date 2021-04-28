@@ -320,14 +320,6 @@ public class ReflectionsUtils {
         }
     }
 
-    public static boolean isClassSuperclassOf(@NonNull String toCheck, @NonNull Class<?> superClass) {
-        try {
-            return isClassSuperclassOf(Class.forName(toCheck), superClass);
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
     public static boolean isClassSuperclassOf(@NonNull Class<?> toCheck, @NonNull Class<?> superClass) {
         if (toCheck == superClass) return true;
         Class<?> superClassToCheck = toCheck.getSuperclass();
@@ -337,15 +329,7 @@ public class ReflectionsUtils {
         return isClassSuperclassOf(superClassToCheck, superClass);
     }
 
-    public static int implementsInterface(String type, Class<?> interfaceClass) {
-        try {
-            return implementsInterface(Class.forName(type), interfaceClass);
-        } catch (ClassNotFoundException e) {
-            return -1;
-        }
-    }
-
-    public static int implementsInterface(Class<?> toCheck, Class<?> interfaceClass) {
+    public static int implementsInterface(@NonNull Class<?> toCheck, @NonNull Class<?> interfaceClass) {
         if (!interfaceClass.isAssignableFrom(toCheck)) return -1;
         Set<Class<?>> classesToCheck = new HashSet<>();
         classesToCheck.add(toCheck);

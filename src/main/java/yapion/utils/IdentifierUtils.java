@@ -25,8 +25,6 @@ import yapion.serializing.serializer.object.other.EnumSerializer;
 import yapion.serializing.serializer.object.security.PrivateKeySerializer;
 import yapion.serializing.serializer.object.security.PublicKeySerializer;
 import yapion.serializing.serializer.object.throwable.ErrorSerializer;
-import yapion.serializing.serializer.object.throwable.ExceptionSerializer;
-import yapion.serializing.serializer.object.throwable.RuntimeExceptionSerializer;
 import yapion.serializing.serializer.object.throwable.ThrowableSerializer;
 
 import java.security.PrivateKey;
