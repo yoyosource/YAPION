@@ -18,10 +18,8 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.objenesis.ObjenesisBase;
 import org.objenesis.strategy.StdInstantiatorStrategy;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONObjenesis;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.exceptions.utils.YAPIONReflectionInvocationException;
 import yapion.hierarchy.types.YAPIONObject;
@@ -175,8 +173,6 @@ public class ReflectionsUtils {
         return MethodReturnValue.of(returnValue);
     }
 
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
     public static class Parameter {
 
         private final Class<?> clazz;

@@ -219,15 +219,11 @@ public class SerializeManagerUtils {
     }
 
     @FunctionalInterface
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
     public interface SerializationGetter<T, R extends YAPIONAnyType> {
         R serialize(SerializeData<T> serializeData);
     }
 
     @FunctionalInterface
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
     public interface DeserializationGetter<T, R extends YAPIONAnyType> {
         T deserialize(DeserializeData<R> deserializeData);
     }
@@ -262,8 +258,6 @@ public class SerializeManagerUtils {
     }
 
     @FunctionalInterface
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
     public interface InstanceGetter<T> {
         T instance();
     }

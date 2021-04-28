@@ -53,8 +53,6 @@ public class SerializeManager {
         // Init from YAPIONSerializerFlagDefault
     }
 
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
     @ToString
     private static final class Serializer {
         private final InternalSerializer<?> internalSerializer;
