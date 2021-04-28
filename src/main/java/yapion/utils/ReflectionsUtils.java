@@ -37,13 +37,12 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @UtilityClass
 public class ReflectionsUtils {
 
-    private static final ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
+    private static final ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), true);
 
-    private static int cacheSize = 100;
     private static final Map<Class<?>, FieldCache> fieldCacheMap = new LinkedHashMap<Class<?>, FieldCache>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<Class<?>, FieldCache> eldest) {
-            return size() > cacheSize;
+            return size() > 256;
         }
     };
 
@@ -52,20 +51,6 @@ public class ReflectionsUtils {
     @InternalAPI
     public static <T> void addSpecialCreator(Class<T> clazz, Function<YAPIONObject, T> creator) {
         SPECIAL_CREATOR.put(clazz, creator);
-    }
-
-    /**
-     * Set the cache size of the internal cache to a specific
-     * number above 100. If you set a number below 100 it will
-     * default to 100.
-     *
-     * @param cacheSize the cache Size
-     */
-    public static void setCacheSize(int cacheSize) {
-        if (cacheSize < 100) {
-            cacheSize = 100;
-        }
-        ReflectionsUtils.cacheSize = cacheSize;
     }
 
     /**
