@@ -164,6 +164,10 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
         return this;
     }
 
+    public YAPIONObject add(@NonNull String key, @NonNull Class<?> value) {
+        return internalAdd(key, new YAPIONValue<>(value.getTypeName()));
+    }
+
     @Override
     public YAPIONAnyType internalAddAndGetPrevious(@NonNull String key, @NonNull YAPIONAnyType value) {
         check(value);
