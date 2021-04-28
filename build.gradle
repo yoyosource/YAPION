@@ -6,7 +6,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.0.0'
 
     id 'maven-publish'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.0'
+    // id 'org.jetbrains.kotlin.jvm' version '1.5.0'
 }
 
 group 'YAPION'
@@ -50,7 +50,7 @@ dependencies {
     implementation 'org.objenesis:objenesis:3.1'
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
     implementation 'eu.infomas:annotation-detector:3.0.5'
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    // compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     testCompile 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest:2.2'
@@ -71,6 +71,20 @@ processResources {
     }
 }
 
+task processMetaINF {
+    description 'Process META-INF'
+    group "build"
+
+    doLast {
+        File file = new File("${buildDir}/classes/java/main/META-INF/annotations/")
+        for (File f : file.listFiles()) {
+            f.delete()
+        }
+        file.delete()
+    }
+}
+jar.finalizedBy(processMetaINF)
+
 shadowJar {
     manifest {
         attributes(
@@ -83,7 +97,7 @@ sourceSets {
     main {
         java {
             srcDirs = ['src/main/java']
-            exclude 'system/**', 'test/**'
+            exclude 'system/**', 'test/**', '**/*.kt'
         }
         resources {
             exclude '**/*.ebnf', '**/*.xhtml', "**/*.gitkeep"
@@ -334,13 +348,17 @@ task createSerializerMD {
         serializer.append("- (2) not advised to use directly, use either PrivateKey or PublicKey instead\n")
     }
 }
+
+/*
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
     }
 }
+
 compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
     }
 }
+*/
