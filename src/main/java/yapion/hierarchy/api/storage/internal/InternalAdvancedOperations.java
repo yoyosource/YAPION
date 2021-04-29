@@ -16,7 +16,7 @@ package yapion.hierarchy.api.storage.internal;
 import lombok.NonNull;
 import yapion.annotations.api.OptionalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONType;
+import yapion.hierarchy.types.*;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -190,6 +190,42 @@ public interface InternalAdvancedOperations<I, K> extends InternalAdd<I, K>, Int
             if (internalRemove(key) != null) result = true;
         }
         return result;
+    }
+
+    default <T extends YAPIONAnyType> YAPIONAnyType getYAPIONAnyTypeOrSetDefault(@NonNull K key, @NonNull T defaultValue) {
+        if (!internalContainsKey(key, defaultValue.getType())) {
+            internalAdd(key, defaultValue);
+            return defaultValue;
+        }
+        return internalGetYAPIONAnyType(key);
+    }
+
+    default YAPIONArray getYAPIONArrayOrSetDefault(@NonNull K key, @NonNull YAPIONArray defaultValue) {
+        return getOrSetDefault(key, defaultValue);
+    }
+
+    default YAPIONMap getYAPIONMapOrSetDefault(@NonNull K key, @NonNull YAPIONMap defaultValue) {
+        return getOrSetDefault(key, defaultValue);
+    }
+
+    default YAPIONObject getYAPIONObjectOrSetDefault(@NonNull K key, @NonNull YAPIONObject defaultValue) {
+        return getOrSetDefault(key, defaultValue);
+    }
+
+    default YAPIONValue<?> getYAPIONValueOrSetDefault(@NonNull K key, @NonNull YAPIONValue<?> defaultValue) {
+        return getOrSetDefault(key, defaultValue);
+    }
+
+    default YAPIONPointer getYAPIONPointerOrSetDefault(@NonNull K key, @NonNull YAPIONPointer defaultValue) {
+        return getOrSetDefault(key, defaultValue);
+    }
+
+    default <T extends YAPIONAnyType> T getOrSetDefault(@NonNull K key, @NonNull T defaultValue) {
+        if (!internalContainsKey(key, defaultValue.getType())) {
+            internalAdd(key, defaultValue);
+            return defaultValue;
+        }
+        return (T) internalGetYAPIONAnyType(key);
     }
 
 }
