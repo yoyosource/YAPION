@@ -21,8 +21,7 @@ import yapion.hierarchy.types.*;
 import java.io.InputStream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static yapion.YAPIONAssertion.isYAPION;
 
 public class YAPIONParserTest {
@@ -223,6 +222,24 @@ public class YAPIONParserTest {
         assertThat(yapionObject.getArray("").getYAPIONAnyType(0), instanceOf(YAPIONValue.class));
         assertThat(yapionObject.getArray("").getValue(0).get(), instanceOf(String.class));
         assertThat(yapionObject.getArray("").getValue(0).get(), is("Hugo Hello World"));
+    }
+
+    @Test
+    public void testNewLine() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{\r   n()}");
+        assertThat(yapionObject.getPlainValue("n"), notNullValue());
+
+        yapionObject = YAPIONParser.parse("{[\r   Hello World]}");
+        assertThat(yapionObject.getArray("").getValue(0).get(), is("Hello World"));
+    }
+
+    @Test
+    public void testEscapedNewLine() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{\\\r   n()}");
+        assertThat(yapionObject.getPlainValue("\r   n"), notNullValue());
+
+        yapionObject = YAPIONParser.parse("{[\\\r   Hello World]}");
+        assertThat(yapionObject.getArray("").getValue(0).get(), is("\\\r   Hello World"));
     }
 
 }

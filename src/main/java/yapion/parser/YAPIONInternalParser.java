@@ -152,7 +152,7 @@ final class YAPIONInternalParser {
     }
 
     private void reset() {
-        log.debug("reset    [{}, {}]", current, key);
+        log.debug("reset    ['{}'='{}']", current.toString().replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t"), key.replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t"));
         current = new StringBuilder();
         key = "";
     }
@@ -171,7 +171,7 @@ final class YAPIONInternalParser {
     }
 
     private void add(@NonNull String key, @NonNull YAPIONAnyType value) {
-        log.debug("add      ['{}'='{}']", key, value);
+        log.debug("add      ['{}'='{}']", key.replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t"), value);
         if (currentObject instanceof YAPIONObject) {
             ((YAPIONObject) currentObject).getBackedMap().put(key, value);
             value.setParent(currentObject);
@@ -249,7 +249,7 @@ final class YAPIONInternalParser {
             escaped = true;
             return;
         }
-        if (current.length() == 0 && c == ' ' && escaped) {
+        if (current.length() == 0 && isWhiteSpace(c) && escaped) {
             current.append(c);
             escaped = false;
             return;
