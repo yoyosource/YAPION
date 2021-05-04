@@ -122,7 +122,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
     void toStrippedYAPION(AbstractOutput abstractOutput) {
         String string = valueHandler.output(value);
         string = string.replace(",", "\\,");
-        if (string.startsWith(" ") || string.startsWith("\t") || string.startsWith("-")) {
+        if (string.startsWith(" ") || string.startsWith("\t") || string.startsWith("\r") || string.startsWith("\n") || string.startsWith("-")) {
             string = "\\" + string;
         }
         abstractOutput.consume(string);

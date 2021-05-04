@@ -404,7 +404,7 @@ final class YAPIONInternalParser {
     }
 
     private boolean isWhiteSpace(char c) {
-        return c == ' ' || c == '\n' || c == '\t' || c == ',';
+        return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == ',';
     }
 
 }
