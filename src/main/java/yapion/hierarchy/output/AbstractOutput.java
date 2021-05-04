@@ -36,11 +36,7 @@ public abstract class AbstractOutput {
 
     @InternalAPI
     public final AbstractOutput consumeIndent(int indentLevel) {
-        String s = indentator.indent(indentLevel);
-        if (prettified() && internalConsumePrettified(s)) {
-            internalConsume(s);
-        }
-        return this;
+        return consumePrettified(indentator.indent(indentLevel));
     }
 
     @InternalAPI
