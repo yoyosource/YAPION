@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":18,"i1":18,"i2":18,"i3":6,"i4":18,"i5":18,"i6":18,"i7":18,"i8":6,"i9":6,"i10":18,"i11":18,"i12":18,"i13":18,"i14":18,"i15":18,"i16":18,"i17":18,"i18":18,"i19":18,"i20":18,"i21":18};
+var data = {"i0":18,"i1":18,"i2":18,"i3":6,"i4":18,"i5":18,"i6":18,"i7":18,"i8":18,"i9":18,"i10":18,"i11":18,"i12":18,"i13":18,"i14":18,"i15":6,"i16":6,"i17":18,"i18":18,"i19":18,"i20":18,"i21":18,"i22":18,"i23":18,"i24":18,"i25":18,"i26":18,"i27":18,"i28":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -188,74 +188,116 @@ extends <a href="InternalAdd.html" title="interface in yapion.hierarchy.api.stor
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i8">
+<td class="colFirst"><code>default &lt;T extends <a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;<br>T</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOrSetDefault(K,T)">getOrSetDefault</a></span>&#8203;(<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+               T&nbsp;defaultValue)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i9">
+<td class="colFirst"><code>default &lt;T extends <a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;<br><a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getYAPIONAnyTypeOrSetDefault(K,T)">getYAPIONAnyTypeOrSetDefault</a></span>&#8203;(<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                            T&nbsp;defaultValue)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i10">
+<td class="colFirst"><code>default <a href="../../../types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getYAPIONArrayOrSetDefault(K,yapion.hierarchy.types.YAPIONArray)">getYAPIONArrayOrSetDefault</a></span>&#8203;(<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                          @NonNull <a href="../../../types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a>&nbsp;defaultValue)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i11">
+<td class="colFirst"><code>default <a href="../../../types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getYAPIONMapOrSetDefault(K,yapion.hierarchy.types.YAPIONMap)">getYAPIONMapOrSetDefault</a></span>&#8203;(<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                        @NonNull <a href="../../../types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a>&nbsp;defaultValue)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i12">
+<td class="colFirst"><code>default <a href="../../../types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getYAPIONObjectOrSetDefault(K,yapion.hierarchy.types.YAPIONObject)">getYAPIONObjectOrSetDefault</a></span>&#8203;(<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                           @NonNull <a href="../../../types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;defaultValue)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i13">
+<td class="colFirst"><code>default <a href="../../../types/YAPIONPointer.html" title="class in yapion.hierarchy.types">YAPIONPointer</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getYAPIONPointerOrSetDefault(K,yapion.hierarchy.types.YAPIONPointer)">getYAPIONPointerOrSetDefault</a></span>&#8203;(<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                            @NonNull <a href="../../../types/YAPIONPointer.html" title="class in yapion.hierarchy.types">YAPIONPointer</a>&nbsp;defaultValue)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i14">
+<td class="colFirst"><code>default <a href="../../../types/YAPIONValue.html" title="class in yapion.hierarchy.types">YAPIONValue</a>&lt;?&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getYAPIONValueOrSetDefault(K,yapion.hierarchy.types.YAPIONValue)">getYAPIONValueOrSetDefault</a></span>&#8203;(<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                          @NonNull <a href="../../../types/YAPIONValue.html" title="class in yapion.hierarchy.types">YAPIONValue</a>&lt;?&gt;&nbsp;defaultValue)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i15">
 <td class="colFirst"><code>java.util.Iterator&lt;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#iterator()">iterator</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr class="altColor" id="i16">
 <td class="colFirst"><code><a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">I</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#itself()">itself</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i10">
+<tr class="rowColor" id="i17">
 <td class="colFirst"><code>default &lt;T extends <a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;<br><a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">I</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(K,T,java.util.function.BiFunction)">merge</a></span>&#8203;(<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
      T&nbsp;value,
      @NonNull java.util.function.BiFunction&lt;<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>,&#8203;T,&#8203;T&gt;&nbsp;remappingFunction)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i11">
+<tr class="altColor" id="i18">
 <td class="colFirst"><code>default java.util.stream.Stream&lt;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parallelStream()">parallelStream</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i12">
+<tr class="rowColor" id="i19">
 <td class="colFirst"><code>default boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeAll(java.util.Set)">removeAll</a></span>&#8203;(@NonNull java.util.Set&lt;<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&gt;&nbsp;keys)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i13">
+<tr class="altColor" id="i20">
 <td class="colFirst"><code>default boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeIf(java.util.function.BiPredicate)">removeIf</a></span>&#8203;(@NonNull java.util.function.BiPredicate&lt;<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>,&#8203;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;&nbsp;filter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i14">
+<tr class="rowColor" id="i21">
 <td class="colFirst"><code>default boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeIf(java.util.function.Predicate)">removeIf</a></span>&#8203;(@NonNull java.util.function.Predicate&lt;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;&nbsp;filter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i15">
+<tr class="altColor" id="i22">
 <td class="colFirst"><code>default <a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#replace(K,yapion.hierarchy.api.groups.YAPIONAnyType)">replace</a></span>&#8203;(<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
        <a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i16">
+<tr class="rowColor" id="i23">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#replaceAll(java.util.function.BiFunction)">replaceAll</a></span>&#8203;(@NonNull java.util.function.BiFunction&lt;<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>,&#8203;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>,&#8203;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;&nbsp;function)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i17">
+<tr class="altColor" id="i24">
 <td class="colFirst"><code>default boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#retainAll(java.util.Set)">retainAll</a></span>&#8203;(@NonNull java.util.Set&lt;<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&gt;&nbsp;keys)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i18">
+<tr class="rowColor" id="i25">
 <td class="colFirst"><code>default boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#retainIf(java.util.function.BiPredicate)">retainIf</a></span>&#8203;(@NonNull java.util.function.BiPredicate&lt;<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>,&#8203;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;&nbsp;filter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i19">
+<tr class="altColor" id="i26">
 <td class="colFirst"><code>default boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#retainIf(java.util.function.Predicate)">retainIf</a></span>&#8203;(@NonNull java.util.function.Predicate&lt;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;&nbsp;filter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i20">
+<tr class="rowColor" id="i27">
 <td class="colFirst"><code>default java.util.Spliterator&lt;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#spliterator()">spliterator</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i21">
+<tr class="altColor" id="i28">
 <td class="colFirst"><code>default java.util.stream.Stream&lt;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stream()">stream</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -559,11 +601,109 @@ extends <a href="InternalAdd.html" title="interface in yapion.hierarchy.api.stor
 <a id="removeIf(java.util.function.BiPredicate)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>removeIf</h4>
 <pre class="methodSignature">default&nbsp;boolean&nbsp;removeIf&#8203;(@NonNull
                          @NonNull java.util.function.BiPredicate&lt;<a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>,&#8203;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;&nbsp;filter)</pre>
+</li>
+</ul>
+<a id="getYAPIONAnyTypeOrSetDefault(java.lang.Object,yapion.hierarchy.api.groups.YAPIONAnyType)">
+<!--   -->
+</a><a id="getYAPIONAnyTypeOrSetDefault(K,T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getYAPIONAnyTypeOrSetDefault</h4>
+<pre class="methodSignature">default&nbsp;&lt;T extends <a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;&nbsp;<a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&nbsp;getYAPIONAnyTypeOrSetDefault&#8203;(@NonNull
+                                                                             <a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                                                                             @NonNull
+                                                                             T&nbsp;defaultValue)</pre>
+</li>
+</ul>
+<a id="getYAPIONArrayOrSetDefault(java.lang.Object,yapion.hierarchy.types.YAPIONArray)">
+<!--   -->
+</a><a id="getYAPIONArrayOrSetDefault(K,yapion.hierarchy.types.YAPIONArray)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getYAPIONArrayOrSetDefault</h4>
+<pre class="methodSignature">default&nbsp;<a href="../../../types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a>&nbsp;getYAPIONArrayOrSetDefault&#8203;(@NonNull
+                                               <a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                                               @NonNull
+                                               @NonNull <a href="../../../types/YAPIONArray.html" title="class in yapion.hierarchy.types">YAPIONArray</a>&nbsp;defaultValue)</pre>
+</li>
+</ul>
+<a id="getYAPIONMapOrSetDefault(java.lang.Object,yapion.hierarchy.types.YAPIONMap)">
+<!--   -->
+</a><a id="getYAPIONMapOrSetDefault(K,yapion.hierarchy.types.YAPIONMap)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getYAPIONMapOrSetDefault</h4>
+<pre class="methodSignature">default&nbsp;<a href="../../../types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a>&nbsp;getYAPIONMapOrSetDefault&#8203;(@NonNull
+                                           <a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                                           @NonNull
+                                           @NonNull <a href="../../../types/YAPIONMap.html" title="class in yapion.hierarchy.types">YAPIONMap</a>&nbsp;defaultValue)</pre>
+</li>
+</ul>
+<a id="getYAPIONObjectOrSetDefault(java.lang.Object,yapion.hierarchy.types.YAPIONObject)">
+<!--   -->
+</a><a id="getYAPIONObjectOrSetDefault(K,yapion.hierarchy.types.YAPIONObject)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getYAPIONObjectOrSetDefault</h4>
+<pre class="methodSignature">default&nbsp;<a href="../../../types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;getYAPIONObjectOrSetDefault&#8203;(@NonNull
+                                                 <a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                                                 @NonNull
+                                                 @NonNull <a href="../../../types/YAPIONObject.html" title="class in yapion.hierarchy.types">YAPIONObject</a>&nbsp;defaultValue)</pre>
+</li>
+</ul>
+<a id="getYAPIONValueOrSetDefault(java.lang.Object,yapion.hierarchy.types.YAPIONValue)">
+<!--   -->
+</a><a id="getYAPIONValueOrSetDefault(K,yapion.hierarchy.types.YAPIONValue)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getYAPIONValueOrSetDefault</h4>
+<pre class="methodSignature">default&nbsp;<a href="../../../types/YAPIONValue.html" title="class in yapion.hierarchy.types">YAPIONValue</a>&lt;?&gt;&nbsp;getYAPIONValueOrSetDefault&#8203;(@NonNull
+                                                  <a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                                                  @NonNull
+                                                  @NonNull <a href="../../../types/YAPIONValue.html" title="class in yapion.hierarchy.types">YAPIONValue</a>&lt;?&gt;&nbsp;defaultValue)</pre>
+</li>
+</ul>
+<a id="getYAPIONPointerOrSetDefault(java.lang.Object,yapion.hierarchy.types.YAPIONPointer)">
+<!--   -->
+</a><a id="getYAPIONPointerOrSetDefault(K,yapion.hierarchy.types.YAPIONPointer)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getYAPIONPointerOrSetDefault</h4>
+<pre class="methodSignature">default&nbsp;<a href="../../../types/YAPIONPointer.html" title="class in yapion.hierarchy.types">YAPIONPointer</a>&nbsp;getYAPIONPointerOrSetDefault&#8203;(@NonNull
+                                                   <a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                                                   @NonNull
+                                                   @NonNull <a href="../../../types/YAPIONPointer.html" title="class in yapion.hierarchy.types">YAPIONPointer</a>&nbsp;defaultValue)</pre>
+</li>
+</ul>
+<a id="getOrSetDefault(java.lang.Object,yapion.hierarchy.api.groups.YAPIONAnyType)">
+<!--   -->
+</a><a id="getOrSetDefault(K,T)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getOrSetDefault</h4>
+<pre class="methodSignature">default&nbsp;&lt;T extends <a href="../../groups/YAPIONAnyType.html" title="class in yapion.hierarchy.api.groups">YAPIONAnyType</a>&gt;&nbsp;T&nbsp;getOrSetDefault&#8203;(@NonNull
+                                                    <a href="InternalAdvancedOperations.html" title="type parameter in InternalAdvancedOperations">K</a>&nbsp;key,
+                                                    @NonNull
+                                                    T&nbsp;defaultValue)</pre>
 </li>
 </ul>
 </li>
