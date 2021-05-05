@@ -71,4 +71,8 @@ public class DeserializeData<T extends YAPIONAnyType> {
         }
     }
 
+    public String getArrayType() {
+        return yapionDeserializer.getArrayType();
+    }
+
 }

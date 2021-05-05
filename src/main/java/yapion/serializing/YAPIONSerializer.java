@@ -16,12 +16,14 @@ package yapion.serializing;
 import lombok.NonNull;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.*;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONPointer;
+import yapion.hierarchy.types.YAPIONType;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.SerializeData;
 import yapion.utils.ClassUtils;
 import yapion.utils.ReflectionsUtils;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -31,7 +33,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public final class YAPIONSerializer {
 
     private final Object object;
-    private YAPIONObject yapionObject;
+    private YAPIONAnyType result;
     private final ContextManager contextManager;
     private YAPIONSerializerFlags yapionSerializerFlags = new YAPIONSerializerFlags();
 
@@ -43,8 +45,8 @@ public final class YAPIONSerializer {
      * @param object to serialize
      * @return YAPIONObject from the object to serialize
      */
-    public static YAPIONObject serialize(@NonNull Object object) {
-        return serialize(object, "");
+    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object) {
+        return (T) serialize(object, "");
     }
 
     /**
@@ -54,8 +56,8 @@ public final class YAPIONSerializer {
      * @param yapionSerializerFlags the flags used for this serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static YAPIONObject serialize(@NonNull Object object, YAPIONSerializerFlags yapionSerializerFlags) {
-        return serialize(object, "", yapionSerializerFlags);
+    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, YAPIONSerializerFlags yapionSerializerFlags) {
+        return (T) serialize(object, "", yapionSerializerFlags);
     }
 
     /**
@@ -65,8 +67,8 @@ public final class YAPIONSerializer {
      * @param context the context for serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static YAPIONObject serialize(@NonNull Object object, String context) {
-        return new YAPIONSerializer(object, context).parse().getYAPIONObject();
+    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, String context) {
+        return (T) new YAPIONSerializer(object, context).parse().getYAPIONObject();
     }
 
     /**
@@ -77,8 +79,8 @@ public final class YAPIONSerializer {
      * @param yapionSerializerFlags the flags used for this serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static YAPIONObject serialize(@NonNull Object object, String context, YAPIONSerializerFlags yapionSerializerFlags) {
-        return new YAPIONSerializer(object, context, yapionSerializerFlags).parse().getYAPIONObject();
+    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, String context, YAPIONSerializerFlags yapionSerializerFlags) {
+        return (T) new YAPIONSerializer(object, context, yapionSerializerFlags).parse().getYAPIONObject();
     }
 
     /**
@@ -138,27 +140,19 @@ public final class YAPIONSerializer {
         if (object == null) {
             return new YAPIONValue<>(null);
         }
-        if (object.getClass().isArray()) {
-            YAPIONArray yapionArray = new YAPIONArray();
-            for (int i = 0; i < Array.getLength(object); i++) {
-                yapionArray.add(parse(Array.get(object, i)));
+        Class<?> type = object.getClass();
+        if (type.isEnum()) {
+            type = Enum.class;
+        }
+        InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
+        if (serializer != null && !serializer.empty()) {
+            YAPIONAnyType yapionAnyType = serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
+            if (yapionAnyType instanceof YAPIONObject) {
+                pointerMap.put(object, new YAPIONPointer((YAPIONObject) yapionAnyType));
             }
-            return yapionArray;
+            return yapionAnyType;
         } else {
-            Class<?> type = object.getClass();
-            if (type.isEnum()) {
-                type = Enum.class;
-            }
-            InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
-            if (serializer != null && !serializer.empty()) {
-                YAPIONAnyType yapionAnyType = serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
-                if (yapionAnyType instanceof YAPIONObject) {
-                    pointerMap.put(object, new YAPIONPointer((YAPIONObject) yapionAnyType));
-                }
-                return yapionAnyType;
-            } else {
-                return new YAPIONSerializer(object, this).parse().getYAPIONObject();
-            }
+            return new YAPIONSerializer(object, this).parse().getYAPIONObject();
         }
     }
 
@@ -174,8 +168,10 @@ public final class YAPIONSerializer {
         }
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
-            this.yapionObject = (YAPIONObject) serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
-            pointerMap.put(object, new YAPIONPointer(yapionObject));
+            this.result = serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
+            if (result instanceof YAPIONObject) {
+                pointerMap.put(object, new YAPIONPointer((YAPIONObject) result));
+            }
             return this;
         }
 
@@ -191,7 +187,7 @@ public final class YAPIONSerializer {
         }
         MethodManager.preSerializationStep(object, object.getClass(), contextManager);
         yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName()));
-        this.yapionObject = yapionObject;
+        this.result = yapionObject;
 
         Class<?> objectClass = object.getClass();
         for (Field field : ReflectionsUtils.getFields(objectClass)) {
@@ -246,22 +242,24 @@ public final class YAPIONSerializer {
     }
 
     /**
-     * Get the internal parsed YAPIONObject.
+     * Get the internal parsed result.
      *
      * @return YAPIONObject from the object to serialize
      */
-    public YAPIONObject getYAPIONObject() {
-        return yapionObject;
+    public <T extends YAPIONAnyType> T getYAPIONObject() {
+        return (T) result;
     }
 
     /**
-     * Get the internal parsed YAPIONObject in reduced mode.
+     * Get the internal parsed result in reduced mode.
      *
      * @return YAPIONObject from the object to serialize
      */
-    public YAPIONObject getReducedYAPIONObject() {
-        removeTypeVariables(yapionObject);
-        return yapionObject;
+    public <T extends YAPIONAnyType> T getReducedYAPIONObject() {
+        if (result instanceof YAPIONObject) {
+            removeTypeVariables((YAPIONObject) result);
+        }
+        return (T) result;
     }
 
     private static void removeTypeVariables(YAPIONObject yapionObject) {

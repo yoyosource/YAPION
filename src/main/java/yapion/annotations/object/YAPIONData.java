@@ -24,7 +24,8 @@ import java.lang.annotation.*;
  * This annotation describes a combined {@link YAPIONLoad} and
  * {@link YAPIONSave} and stands for every Field specified in
  * this Type. This annotation will overwrite any existing
- * {@link YAPIONLoad}, {@link YAPIONSave} and {@link YAPIONField}.
+ * {@link YAPIONLoad}, {@link YAPIONSave} and {@link YAPIONField}
+ * annotation.
  *
  * <br><br>The context describes the state in which the {@link YAPIONSerializer}
  * or {@link YAPIONDeserializer} should be for this annotation

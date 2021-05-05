@@ -13,6 +13,7 @@
 
 package yapion.serializing;
 
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.DeprecationInfo;
@@ -51,6 +52,7 @@ public final class YAPIONDeserializer {
 
     private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
 
+    @Getter
     private String arrayType = "";
 
     /**
@@ -169,100 +171,9 @@ public final class YAPIONDeserializer {
             return new YAPIONDeserializer((YAPIONObject) yapionAnyType, this).parse().getObject();
         }
         if (yapionAnyType instanceof YAPIONArray) {
-            arrayType = checkType((YAPIONArray) yapionAnyType);
-            return parseArray((YAPIONArray) yapionAnyType);
+            return SerializeManager.getArraySerializer().deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this));
         }
         return null;
-    }
-
-    @SuppressWarnings({"java:S128", "java:S1117", "unchecked"})
-    private String checkType(YAPIONArray yapionArray) {
-        if (!arrayType.isEmpty()) return arrayType;
-        String type = null;
-        boolean primitive = true;
-        for (int i = 0; i < yapionArray.length(); i++) {
-            YAPIONAnyType yapionAnyType = yapionArray.getYAPIONAnyType(i);
-            switch (yapionAnyType.getType()) {
-                case OBJECT:
-                    primitive = false;
-                    YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
-                    if (yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER) != null) {
-                        type = ((YAPIONValue<String>) yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER)).get();
-                        break;
-                    }
-                case MAP:
-                    primitive = false;
-                    type = "java.lang.Object";
-                    break;
-                case VALUE:
-                    YAPIONValue<?> yapionValue = (YAPIONValue<?>) yapionAnyType;
-                    if (yapionValue.getValueType().equals("null")) {
-                        primitive = false;
-                        break;
-                    }
-                    if (type != null) {
-                        if (!yapionValue.getValueType().equals(type)) {
-                            type = "java.lang.Object";
-                        }
-                        break;
-                    }
-                    type = yapionValue.getValueType();
-                    break;
-                case ARRAY:
-                    String s = checkType((YAPIONArray) yapionAnyType);
-                    if (type != null) {
-                        if (ClassUtils.getBoxed(s).equals(type)) {
-                            primitive = false;
-                            break;
-                        }
-                        if (!s.equals(type)) {
-                            type = "java.lang.Object";
-                        }
-                        break;
-                    }
-                    type = s;
-                default:
-                    break;
-            }
-        }
-        if (type == null) type = "java.lang.Object";
-        return primitive ? ClassUtils.getPrimitive(type) : type;
-    }
-
-    private Object parseArray(YAPIONArray yapionArray) {
-        if (yapionArray == null) return null;
-        LinkedList<Integer> dimensions = new LinkedList<>();
-        YAPIONArray current = yapionArray;
-        while (current != null) {
-            dimensions.add(current.length());
-            if (current.length() <= 0) {
-                break;
-            }
-            YAPIONAnyType yapionAnyType = current.getYAPIONAnyType(0);
-            current = null;
-            if (yapionAnyType instanceof YAPIONArray) {
-                current = (YAPIONArray) yapionAnyType;
-            }
-        }
-
-        int[] ints = new int[dimensions.size()];
-        for (int i = 0; i < dimensions.size(); i++) {
-            ints[i] = dimensions.removeFirst();
-        }
-
-        arrayType = arrayType.replace("[", "").replace("]", "");
-        Object array = null;
-        try {
-            array = Array.newInstance(ClassUtils.getClass(arrayType), ints);
-        } catch (IllegalArgumentException | NegativeArraySizeException e) {
-            // Ignored
-        }
-        if (array == null) return null;
-
-        for (int i = 0; i < yapionArray.length(); i++) {
-            Array.set(array, i, parse(yapionArray.getYAPIONAnyType(i)));
-        }
-        return array;
     }
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})

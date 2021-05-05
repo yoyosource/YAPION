@@ -26,6 +26,7 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.api.*;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.object.other.ArraySerializer;
 import yapion.serializing.utils.SerializeManagerUtils;
 import yapion.utils.ReflectionsUtils;
 
@@ -87,6 +88,8 @@ public class SerializeManager {
         }
     }, false);
 
+    private static final ArraySerializer ARRAY_SERIALIZER = new ArraySerializer();
+
     private static final String INTERNAL_SERIALIZER = InternalSerializer.class.getTypeName();
 
     private static final Map<Class<?>, Serializer> serializerMap = new IdentityHashMap<>();
@@ -115,14 +118,14 @@ public class SerializeManager {
         }
 
         oSerializerGroups.add("yapion.annotations.");
-        oSerializerGroups.add("yapion.hierarchy.output");
-        oSerializerGroups.add("yapion.hierarchy.types.utils");
-        oSerializerGroups.add("yapion.hierarchy.types.value");
-        oSerializerGroups.add("yapion.hierarchy.validators");
+        oSerializerGroups.add("yapion.hierarchy.output.     ");
+        oSerializerGroups.add("yapion.hierarchy.types.utils.");
+        oSerializerGroups.add("yapion.hierarchy.types.value.");
+        oSerializerGroups.add("yapion.hierarchy.validators.");
         oSerializerGroups.add("yapion.parser.");
-        oSerializerGroups.add("yapion.serializing.api");
-        oSerializerGroups.add("yapion.serializing.data");
-        oSerializerGroups.add("yapion.serializing.serializer");
+        oSerializerGroups.add("yapion.serializing.api.");
+        oSerializerGroups.add("yapion.serializing.data.");
+        oSerializerGroups.add("yapion.serializing.serializer.");
         oSerializerGroups.add("yapion.utils.");
 
         nSerializerGroups.add("java.io.");
@@ -189,6 +192,9 @@ public class SerializeManager {
     @SuppressWarnings({"java:S1452"})
     static InternalSerializer<?> getInternalSerializer(Class<?> type) {
         if (type == null) return null;
+        if (type.isArray()) {
+            return ARRAY_SERIALIZER;
+        }
 
         InternalSerializer<?> initialSerializer = getInternalSerializerInternal(type);
         if (initialSerializer != null) return initialSerializer;
@@ -208,6 +214,10 @@ public class SerializeManager {
         if (internalSerializer != null) return internalSerializer;
         if (contains(type.getTypeName(), nSerializerGroups)) return defaultNullSerializer.internalSerializer;
         return null;
+    }
+
+    static InternalSerializer<?> getArraySerializer() {
+        return ARRAY_SERIALIZER;
     }
 
     private static InternalSerializer<?> getInternalSerializerInternal(Class<?> type) {
