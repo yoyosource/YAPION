@@ -338,17 +338,17 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public YAPIONArray addIfAbsent(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+    public <T extends YAPIONAnyType> T addIfAbsent(@NonNull Integer key, @NonNull T value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public YAPIONArray addIfAbsent(@NonNull Integer key, @NonNull YAPIONType yapionType, @NonNull YAPIONAnyType value) {
+    public <T extends YAPIONAnyType> T addIfAbsent(@NonNull Integer key, @NonNull YAPIONType yapionType, @NonNull T value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public <T> YAPIONArray addIfAbsent(@NonNull Integer key, @NonNull Class<T> type, @NonNull YAPIONAnyType value) {
+    public <T> YAPIONValue<T> addIfAbsent(@NonNull Integer key, @NonNull Class<T> type, @NonNull T value) {
         throw new UnsupportedOperationException();
     }
 
