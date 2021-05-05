@@ -18,7 +18,7 @@ import yapion.annotations.api.OptionalAPI;
 import yapion.annotations.api.YAPIONEveryType;
 import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.storage.internal.InternalAdd;
+import yapion.hierarchy.api.internal.InternalAdd;
 import yapion.hierarchy.types.YAPIONValue;
 
 public interface MapAdd<I, K> extends InternalAdd<I, K> {

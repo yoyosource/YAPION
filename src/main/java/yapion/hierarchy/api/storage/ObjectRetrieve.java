@@ -17,7 +17,7 @@ import lombok.NonNull;
 import yapion.annotations.api.DeprecationInfo;
 import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.storage.internal.InternalRetrieve;
+import yapion.hierarchy.api.internal.InternalRetrieve;
 import yapion.hierarchy.types.*;
 import yapion.utils.ClassUtils;
 

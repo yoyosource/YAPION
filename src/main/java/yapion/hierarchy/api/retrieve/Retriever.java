@@ -16,7 +16,7 @@ package yapion.hierarchy.api.retrieve;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
-import yapion.hierarchy.api.storage.internal.InternalRetrieve;
+import yapion.hierarchy.api.internal.InternalRetrieve;
 
 import java.util.ArrayList;
 import java.util.List;

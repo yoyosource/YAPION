@@ -15,7 +15,7 @@ package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.storage.internal.InternalRemove;
+import yapion.hierarchy.api.internal.InternalRemove;
 
 public interface ObjectRemove<I, K> extends InternalRemove<I, K> {
 

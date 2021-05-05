@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.api.storage.internal;
+package yapion.hierarchy.api.internal;
 
 import lombok.NonNull;
 import yapion.annotations.api.OptionalAPI;
@@ -27,7 +27,7 @@ import java.util.function.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public interface InternalAdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRetrieve<K>, InternalRemove<I, K>, Iterable<YAPIONAnyType> {
+public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRetrieve<K>, InternalRemove<I, K>, Iterable<YAPIONAnyType> {
 
     I itself();
 

@@ -17,7 +17,7 @@ import lombok.NonNull;
 import yapion.annotations.api.YAPIONEveryType;
 import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.storage.internal.InternalRemove;
+import yapion.hierarchy.api.internal.InternalRemove;
 import yapion.hierarchy.types.YAPIONValue;
 
 public interface MapRemove<I, K> extends InternalRemove<I, K> {

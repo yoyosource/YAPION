@@ -18,7 +18,7 @@ import yapion.annotations.api.OptionalAPI;
 import yapion.annotations.api.YAPIONPrimitive;
 import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.storage.internal.InternalAdd;
+import yapion.hierarchy.api.internal.InternalAdd;
 import yapion.hierarchy.types.YAPIONValue;
 
 public interface ObjectAdd<I, K> extends InternalAdd<I, K> {
