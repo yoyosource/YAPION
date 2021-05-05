@@ -287,7 +287,7 @@ public final class YAPIONDeserializer {
      * Set the reducedMode for this deserialization.
      */
     @Deprecated
-    @DeprecationInfo(since = "???")
+    @DeprecationInfo(since = "0.26.0")
     public YAPIONDeserializer reducedMode(boolean reducedMode) {
         return this;
     }
