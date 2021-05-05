@@ -15,6 +15,7 @@ package yapion.hierarchy.api.storage.internal;
 
 import lombok.NonNull;
 import yapion.annotations.api.OptionalAPI;
+import yapion.annotations.api.YAPIONPrimitive;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 
@@ -31,48 +32,64 @@ public interface InternalAdvancedOperations<I, K> extends InternalAdd<I, K>, Int
     I itself();
 
     @OptionalAPI
-    default I addIfAbsent(@NonNull K key, @NonNull YAPIONAnyType value) {
-        if (internalContainsKey(key, YAPIONType.ANY)) return itself();
-        return internalAdd(key, value);
-    }
-
-    @OptionalAPI
-    default I addIfAbsent(@NonNull K key, @NonNull YAPIONType yapionType, @NonNull YAPIONAnyType value) {
-        if (internalContainsKey(key, YAPIONType.ANY)) return itself();
-        return internalAdd(key, value);
-    }
-
-    @OptionalAPI
-    default <T> I addIfAbsent(@NonNull K key, @NonNull Class<T> type, @NonNull YAPIONAnyType value) {
-        if (internalContainsKey(key, YAPIONType.ANY)) return itself();
-        return internalAdd(key, value);
-    }
-
-    @OptionalAPI
-    default <T extends YAPIONAnyType> I computeIfAbsent(@NonNull K key, @NonNull Function<K, T> mappingFunction) {
-        if (internalContainsKey(key, YAPIONType.ANY)) return itself();
-        return internalAdd(key, mappingFunction.apply(key));
-    }
-
-    @SuppressWarnings("unchecked")
-    default <T extends YAPIONAnyType> I computeIfPresent(@NonNull K key, @NonNull BiFunction<K, T, T> remappingFunction) {
-        if (!internalContainsKey(key, YAPIONType.ANY)) return itself();
-        T newValue = remappingFunction.apply(key, (T) internalGetYAPIONAnyType(key));
-        if (newValue == null) return internalRemove(key);
-        return internalAdd(key, newValue);
-    }
-
-    @SuppressWarnings("unchecked")
-    @OptionalAPI
-    default <T extends YAPIONAnyType> I compute(@NonNull K key, @NonNull BiFunction<K, T, T> remappingFunction) {
+    default <T extends YAPIONAnyType> T addIfAbsent(@NonNull K key, @NonNull T value) {
         if (internalContainsKey(key, YAPIONType.ANY)) {
-            T newValue = remappingFunction.apply(key, null);
-            if (newValue == null) return itself();
-            return internalAdd(key, newValue);
+            return (T) internalGetYAPIONAnyType(key);
+        }
+        return getOrSetDefault(key, value);
+    }
+
+    @OptionalAPI
+    default <T extends YAPIONAnyType> T addIfAbsent(@NonNull K key, @NonNull YAPIONType yapionType, @NonNull T value) {
+        if (internalContainsKey(key, yapionType)) {
+            return (T) internalGetYAPIONAnyType(key);
+        }
+        return getOrSetDefault(key, value);
+    }
+
+    @OptionalAPI
+    default <@YAPIONPrimitive T> YAPIONValue<T> addIfAbsent(@NonNull K key, @NonNull Class<T> type, @NonNull T value) {
+        if (internalContainsKey(key, YAPIONType.VALUE)) {
+            return (YAPIONValue<T>) internalGetYAPIONAnyType(key);
+        }
+        return getOrSetDefault(key, new YAPIONValue<>(value));
+    }
+
+    @OptionalAPI
+    default <T extends YAPIONAnyType> T computeIfAbsent(@NonNull K key, @NonNull Function<K, T> mappingFunction) {
+        if (internalContainsKey(key, YAPIONType.ANY)) {
+            return (T) internalGetYAPIONAnyType(key);
+        }
+        T newValue = mappingFunction.apply(key);
+        if (newValue == null) {
+            return (T) internalGetYAPIONAnyType(key);
+        }
+        return getOrSetDefault(key, newValue);
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T extends YAPIONAnyType> T computeIfPresent(@NonNull K key, @NonNull BiFunction<K, T, T> remappingFunction) {
+        if (!internalContainsKey(key, YAPIONType.ANY)) {
+            return null;
+        }
+        T newValue = remappingFunction.apply(key, (T) internalGetYAPIONAnyType(key));
+        if (newValue == null) {
+            internalRemove(key);
+            return null;
+        }
+        return getOrSetDefault(key, newValue);
+    }
+
+    @SuppressWarnings("unchecked")
+    @OptionalAPI
+    default <T extends YAPIONAnyType> T compute(@NonNull K key, @NonNull BiFunction<K, T, T> remappingFunction) {
+        YAPIONAnyType oldValue = internalGetYAPIONAnyType(key);
+        T newValue = remappingFunction.apply(key, oldValue == null ? null : (T) oldValue);
+        if (newValue == null) {
+            internalRemove(key);
+            return null;
         } else {
-            T newValue = remappingFunction.apply(key, (T) internalGetYAPIONAnyType(key));
-            if (newValue == null) return internalRemove(key);
-            return internalAdd(key, newValue);
+            return getOrSetDefault(key, newValue);
         }
     }
 
@@ -114,14 +131,15 @@ public interface InternalAdvancedOperations<I, K> extends InternalAdd<I, K>, Int
 
     Set<K> allKeys();
 
-    default void forEach(@NonNull BiConsumer<K, YAPIONAnyType> action) {
+    default I forEach(@NonNull BiConsumer<K, YAPIONAnyType> action) {
         Set<K> allKeys = allKeys();
         for (K key : allKeys) {
             action.accept(key, internalGetYAPIONAnyType(key));
         }
+        return itself();
     }
 
-    default void replaceAll(@NonNull BiFunction<K, YAPIONAnyType, YAPIONAnyType> function) {
+    default I replaceAll(@NonNull BiFunction<K, YAPIONAnyType, YAPIONAnyType> function) {
         Set<K> allKeys = allKeys();
         for (K key : allKeys) {
             YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(key);
@@ -132,6 +150,7 @@ public interface InternalAdvancedOperations<I, K> extends InternalAdd<I, K>, Int
                 internalAdd(key, yapionAnyType);
             }
         }
+        return itself();
     }
 
     default boolean retainAll(@NonNull Set<K> keys) {

@@ -353,12 +353,12 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public <T extends YAPIONAnyType> YAPIONArray computeIfAbsent(@NonNull Integer key, @NonNull Function<Integer, T> mappingFunction) {
+    public <T extends YAPIONAnyType> T computeIfAbsent(@NonNull Integer key, @NonNull Function<Integer, T> mappingFunction) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public <T extends YAPIONAnyType> YAPIONArray compute(@NonNull Integer key, @NonNull BiFunction<Integer, T, T> remappingFunction) {
+    public <T extends YAPIONAnyType> T compute(@NonNull Integer key, @NonNull BiFunction<Integer, T, T> remappingFunction) {
         throw new UnsupportedOperationException();
     }
 
