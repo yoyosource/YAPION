@@ -324,4 +324,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
         return (int) referenceValue();
     }
 
+    public YAPIONObject copy() {
+        return (YAPIONObject) internalCopy();
+    }
 }

@@ -69,7 +69,7 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         throw new YAPIONException();
     }
 
-    public YAPIONAnyType copy() {
+    public YAPIONAnyType internalCopy() {
         return YAPIONParser.parse("{" + toYAPION(new StringOutput()).getResult() + "}").getYAPIONAnyType("");
     }
 

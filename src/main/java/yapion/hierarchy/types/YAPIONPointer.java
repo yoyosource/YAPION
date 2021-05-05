@@ -128,4 +128,8 @@ public class YAPIONPointer extends YAPIONValueType {
     public int hashCode() {
         return Objects.hash(toString());
     }
+
+    public YAPIONPointer copy() {
+        return (YAPIONPointer) internalCopy();
+    }
 }

@@ -404,4 +404,8 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     public int hashCode() {
         return (int) referenceValue();
     }
+
+    public YAPIONMap copy() {
+        return (YAPIONMap) internalCopy();
+    }
 }

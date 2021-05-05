@@ -433,4 +433,8 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     public int hashCode() {
         return (int) referenceValue();
     }
+
+    public YAPIONArray copy() {
+        return (YAPIONArray) internalCopy();
+    }
 }

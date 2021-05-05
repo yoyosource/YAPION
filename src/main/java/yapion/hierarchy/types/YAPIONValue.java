@@ -253,4 +253,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return Objects.hash(value, type);
     }
 
+    public YAPIONValue<T> copy() {
+        return (YAPIONValue<T>) internalCopy();
+    }
 }

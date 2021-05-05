@@ -15,6 +15,7 @@ package yapion.serializing;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
@@ -50,7 +51,6 @@ public final class YAPIONDeserializer {
 
     private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
 
-    private boolean reducedMode = false;
     private String arrayType = "";
 
     /**
@@ -127,7 +127,7 @@ public final class YAPIONDeserializer {
      */
     public YAPIONDeserializer(@NonNull YAPIONObject yapionObject, String context, @NonNull TypeReMapper typeReMapper) {
         contextManager = new ContextManager(context);
-        this.yapionObject = yapionObject;
+        this.yapionObject = yapionObject.copy();
         this.typeReMapper = typeReMapper;
     }
 
@@ -141,7 +141,6 @@ public final class YAPIONDeserializer {
         this.pointerMap = yapionDeserializer.pointerMap;
         this.typeReMapper = yapionDeserializer.typeReMapper;
         this.deserializeResult = yapionDeserializer.deserializeResult;
-        this.reducedMode = yapionDeserializer.reducedMode;
     }
 
     /**
@@ -313,7 +312,7 @@ public final class YAPIONDeserializer {
                 arrayType = fieldType.getTypeName();
 
                 YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(field.getName());
-                if (reducedMode && yapionAnyType instanceof YAPIONObject && !((YAPIONObject) yapionAnyType).containsKey(TYPE_IDENTIFIER, String.class)) {
+                if (!YAPIONAnyType.class.isAssignableFrom(fieldType) && yapionAnyType instanceof YAPIONObject && !((YAPIONObject) yapionAnyType).containsKey(TYPE_IDENTIFIER, String.class)) {
                     if (fieldType.isEnum()) {
                         ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, "java.lang.Enum");
                     } else {
@@ -364,15 +363,9 @@ public final class YAPIONDeserializer {
             if (serializer instanceof EnumSerializer) {
                 YAPIONObject enumObject = (YAPIONObject) yapionAnyType;
                 String enumType = enumObject.getValue(ENUM_IDENTIFIER, "").get();
-                enumType = typeReMapper.remap(enumType);
+                enumObject.put(ENUM_IDENTIFIER, typeReMapper.remap(enumType));
 
-                YAPIONObject enumCopyObject = new YAPIONObject();
-                enumCopyObject.add(TYPE_IDENTIFIER, Enum.class.getTypeName());
-                enumCopyObject.add(ENUM_IDENTIFIER, enumType);
-                enumCopyObject.add("value", enumObject.getValue("value", "").get());
-                enumCopyObject.add("ordinal", enumObject.getValue("ordinal", 0).get());
-
-                return serializer.deserialize(new DeserializeData<>(enumCopyObject, contextManager.get(), this));
+                return serializer.deserialize(new DeserializeData<>(enumObject, contextManager.get(), this));
             }
             return serializer.deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this));
         }
@@ -382,8 +375,9 @@ public final class YAPIONDeserializer {
     /**
      * Set the reducedMode for this deserialization.
      */
+    @Deprecated
+    @DeprecationInfo(since = "???")
     public YAPIONDeserializer reducedMode(boolean reducedMode) {
-        this.reducedMode = reducedMode;
         return this;
     }
 
