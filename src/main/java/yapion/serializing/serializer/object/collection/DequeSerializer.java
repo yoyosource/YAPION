@@ -21,8 +21,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.utils.DeserializeUtils;
-import yapion.serializing.utils.SerializeUtils;
+import yapion.serializing.utils.SerializingUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.util.ArrayDeque;
@@ -55,7 +54,7 @@ public class DequeSerializer implements InternalSerializer<Deque<?>> {
     public YAPIONAnyType serialize(SerializeData<Deque<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass().getTypeName());
-        return SerializeUtils.serializeDeque(serializeData, yapionObject);
+        return SerializingUtils.serializeCollection(serializeData, yapionObject);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -64,7 +63,7 @@ public class DequeSerializer implements InternalSerializer<Deque<?>> {
         try {
             Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false);
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
-            return DeserializeUtils.deserializeDeque(deserializeData, yapionArray, (Deque<Object>) object);
+            return SerializingUtils.deserializeCollection(deserializeData, yapionArray, (Deque<Object>) object);
         } catch (Exception e) {
             throw new YAPIONDeserializerException(e.getMessage(), e);
         }

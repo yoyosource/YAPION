@@ -22,8 +22,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.utils.DeserializeUtils;
-import yapion.serializing.utils.SerializeUtils;
+import yapion.serializing.utils.SerializingUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.util.*;
@@ -78,7 +77,7 @@ public class SetSerializer implements InternalSerializer<Set<?>> {
         if (serializeData.object instanceof EnumSet) {
             yapionObject.add(ENUM_TYPE_IDENTIFIER, (Class<?>) serializeData.getField("elementType"));
         }
-        return SerializeUtils.serializeSet(serializeData, yapionObject);
+        return SerializingUtils.serializeCollection(serializeData, yapionObject);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -87,7 +86,7 @@ public class SetSerializer implements InternalSerializer<Set<?>> {
         try {
             Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false);
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
-            return DeserializeUtils.deserializeSet(deserializeData, yapionArray, (Set<Object>) object);
+            return SerializingUtils.deserializeCollection(deserializeData, yapionArray, (Set<Object>) object);
         } catch (Exception e) {
             throw new YAPIONDeserializerException(e.getMessage(), e);
         }

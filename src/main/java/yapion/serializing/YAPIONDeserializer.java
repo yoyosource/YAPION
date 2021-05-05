@@ -326,5 +326,4 @@ public final class YAPIONDeserializer {
     public DeserializeResult getDeserializeResult() {
         return deserializeResult;
     }
-
 }

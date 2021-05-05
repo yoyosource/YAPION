@@ -14,17 +14,20 @@
 package yapion.serializing.utils;
 
 import lombok.experimental.UtilityClass;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 
 @UtilityClass
-public class SerializeUtils {
+public class SerializingUtils {
 
-    public static <T extends Map<?, ?>> YAPIONObject serializeMap(SerializeData<T> serializeData, YAPIONObject yapionObject) {
+    public <T extends Map<?, ?>> YAPIONObject serializeMap(SerializeData<T> serializeData, YAPIONObject yapionObject) {
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add("values", yapionMap);
         for (Map.Entry<?, ?> entry : serializeData.object.entrySet()) {
@@ -33,7 +36,7 @@ public class SerializeUtils {
         return yapionObject;
     }
 
-    public static <T extends Set<?>> YAPIONObject serializeSet(SerializeData<T> serializeData, YAPIONObject yapionObject) {
+    public <T extends Collection<?>> YAPIONObject serializeCollection(SerializeData<T> serializeData, YAPIONObject yapionObject) {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add("values", yapionArray);
         for (Object o : serializeData.object) {
@@ -42,31 +45,18 @@ public class SerializeUtils {
         return yapionObject;
     }
 
-    public static <T extends List<?>> YAPIONObject serializeList(SerializeData<T> serializeData, YAPIONObject yapionObject) {
-        YAPIONArray yapionArray = new YAPIONArray();
-        yapionObject.add("values", yapionArray);
-        for (Object o : serializeData.object) {
-            yapionArray.add(serializeData.serialize(o));
+    public static <T extends Map<Object, Object>> T deserializeMap(DeserializeData<?> deserializeData, YAPIONMap yapionMap, T map) {
+        for (YAPIONAnyType key : yapionMap.getKeys()) {
+            map.put(deserializeData.deserialize(key), deserializeData.deserialize(yapionMap.get(key)));
         }
-        return yapionObject;
+        return map;
     }
 
-    public static <T extends Queue<?>> YAPIONObject serializeQueue(SerializeData<T> serializeData, YAPIONObject yapionObject) {
-        YAPIONArray yapionArray = new YAPIONArray();
-        yapionObject.add("values", yapionArray);
-        for (Object o : serializeData.object) {
-            yapionArray.add(serializeData.serialize(o));
+    public static <T extends Collection<Object>> T deserializeCollection(DeserializeData<?> deserializeData, YAPIONArray yapionArray, T collection) {
+        for (int i = 0; i < yapionArray.length(); i++) {
+            collection.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
         }
-        return yapionObject;
-    }
-
-    public static <T extends Deque<?>> YAPIONObject serializeDeque(SerializeData<T> serializeData, YAPIONObject yapionObject) {
-        YAPIONArray yapionArray = new YAPIONArray();
-        yapionObject.add("values", yapionArray);
-        for (Object o : serializeData.object) {
-            yapionArray.add(serializeData.serialize(o));
-        }
-        return yapionObject;
+        return collection;
     }
 
 }

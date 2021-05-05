@@ -268,5 +268,4 @@ public final class YAPIONSerializer {
             removeTypeVariables((YAPIONObject) yapionAnyType);
         });
     }
-
 }

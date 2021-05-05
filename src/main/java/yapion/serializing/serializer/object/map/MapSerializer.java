@@ -22,8 +22,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.utils.DeserializeUtils;
-import yapion.serializing.utils.SerializeUtils;
+import yapion.serializing.utils.SerializingUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.util.*;
@@ -78,7 +77,7 @@ public class MapSerializer implements InternalSerializer<Map<?, ?>> {
         if (serializeData.object instanceof EnumMap) {
             yapionObject.add(ENUM_TYPE_IDENTIFIER, (Class<?>) serializeData.getField("keyType"));
         }
-        return SerializeUtils.serializeMap(serializeData, yapionObject);
+        return SerializingUtils.serializeMap(serializeData, yapionObject);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -87,7 +86,7 @@ public class MapSerializer implements InternalSerializer<Map<?, ?>> {
         try {
             Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false);
             YAPIONMap yapionMap = ((YAPIONObject) deserializeData.object).getMap("values");
-            return DeserializeUtils.deserializeMap(deserializeData, yapionMap, (Map<Object, Object>) object);
+            return SerializingUtils.deserializeMap(deserializeData, yapionMap, (Map<Object, Object>) object);
         } catch (Exception e) {
             throw new YAPIONDeserializerException(e.getMessage(), e);
         }

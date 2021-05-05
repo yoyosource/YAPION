@@ -21,8 +21,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.utils.DeserializeUtils;
-import yapion.serializing.utils.SerializeUtils;
+import yapion.serializing.utils.SerializingUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class ListSerializer implements InternalSerializer<List<?>> {
     public YAPIONAnyType serialize(SerializeData<List<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass().getTypeName());
-        return SerializeUtils.serializeList(serializeData, yapionObject);
+        return SerializingUtils.serializeCollection(serializeData, yapionObject);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -63,7 +62,7 @@ public class ListSerializer implements InternalSerializer<List<?>> {
         try {
             Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false);
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
-            return DeserializeUtils.deserializeList(deserializeData, yapionArray, (List<Object>) object);
+            return SerializingUtils.deserializeCollection(deserializeData, yapionArray, (List<Object>) object);
         } catch (Exception e) {
             throw new YAPIONDeserializerException(e.getMessage(), e);
         }
