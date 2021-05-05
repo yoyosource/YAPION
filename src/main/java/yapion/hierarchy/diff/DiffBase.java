@@ -79,4 +79,22 @@ public interface DiffBase {
             return DiffType.INSERT;
         }
     }
+
+    @ToString
+    @Getter
+    class DiffMove implements DiffBase {
+
+        private String[] fromPath;
+        private String[] toPath;
+
+        public DiffMove(YAPIONPath fromPath, YAPIONPath toPath) {
+            this.fromPath = Arrays.copyOf(fromPath.getPath(), fromPath.depth());
+            this.toPath = Arrays.copyOf(toPath.getPath(), toPath.depth());
+        }
+
+        @Override
+        public DiffType type() {
+            return DiffType.MOVE;
+        }
+    }
 }
