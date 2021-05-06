@@ -21,27 +21,11 @@ import yapion.serializing.data.SerializeData;
 @InternalAPI
 public interface InternalSerializer<T> {
 
-    /*public static void main(String[] args) {
-        new BooleanSerializer().init();
-    }*/
-
     default void init() {
-        // TypeManager.getType()
+
     }
     
     Class<?> type();
-
-    /*default String type() {
-        Type type = getClass().getGenericInterfaces()[0];
-        ParameterizedType parameterizedType = (ParameterizedType) type;
-        parameterizedType = (ParameterizedType) parameterizedType.getActualTypeArguments()[0];
-        return parameterizedType.getRawType().getTypeName();
-
-        BooleanSerializer booleanSerializer = new BooleanSerializer();
-        Type type = booleanSerializer.getClass().getGenericInterfaces()[0];
-        ParameterizedType parameterizedType = (ParameterizedType) type;
-        System.out.println(parameterizedType.getActualTypeArguments()[0].getTypeName());
-    }*/
 
     default Class<?> defaultImplementation() {
         return null;
