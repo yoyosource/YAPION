@@ -36,15 +36,15 @@ public class CRC32Serializer implements InternalSerializer<CRC32> {
     public YAPIONAnyType serialize(SerializeData<CRC32> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add("crc", serializeData.object.getValue());
+        yapionObject.add("crc", serializeData.serializeField("crc"));
         return yapionObject;
     }
 
     @Override
     public CRC32 deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        long crc = ((YAPIONObject) deserializeData.object).getPlainValue("crc");
+        int crc = ((YAPIONObject) deserializeData.object).getPlainValue("crc");
         CRC32 crc32 = new CRC32();
-        deserializeData.setField("crc", crc32, (int) crc);
+        deserializeData.setField("crc", crc32, crc);
         return crc32;
     }
 }

@@ -36,15 +36,15 @@ public class Adler32Serializer implements InternalSerializer<Adler32> {
     public YAPIONAnyType serialize(SerializeData<Adler32> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add("adler", serializeData.object.getValue());
+        yapionObject.add("adler", serializeData.serializeField("adler"));
         return yapionObject;
     }
 
     @Override
     public Adler32 deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        long adler = ((YAPIONObject) deserializeData.object).getPlainValue("adler");
+        int adler = ((YAPIONObject) deserializeData.object).getPlainValue("adler");
         Adler32 adler32 = new Adler32();
-        deserializeData.setField("adler", adler32, (int) adler);
+        deserializeData.setField("adler", adler32, adler);
         return adler32;
     }
 }
