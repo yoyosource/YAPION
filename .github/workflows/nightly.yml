@@ -1,7 +1,7 @@
 # This workflow will build a Java project with Gradle
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Java CI with Gradle Nightly
+name: Nightly Branch/Release
 
 on:
   schedule:
@@ -19,6 +19,10 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+    - name: Checkout 'nightly' merge master to 'nightly'
+      run: |
+        git checkout nightly
+        git merge master
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
