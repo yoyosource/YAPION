@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.is;
 
 public class ArrayRetrieveTest {
 
-    @Test(expected = YAPIONArrayIndexOutOfBoundsException.class)
+    @Test
     public void testNotHasValue() {
         YAPIONArray yapionArray = new YAPIONArray();
         assertThat(yapionArray.containsKey(0), is(false));
