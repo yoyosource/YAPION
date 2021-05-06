@@ -319,7 +319,7 @@ task createSerializerMD {
         serializer.write("# Serializer\n")
         String currentGroup = ""
 
-        File file = new File("${buildDir}/classes/java/main/META-INF/annotations/yapion.serializing.serializer.SerializerImplementation")
+        File file = new File("${buildDir}/resources/main/yapion/yapion.annotations.api.SerializerImplementation")
         file.readLines().forEach(new Consumer<String>() {
             @Override
             void accept(String s) {
