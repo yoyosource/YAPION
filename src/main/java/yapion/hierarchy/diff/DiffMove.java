@@ -16,9 +16,6 @@ package yapion.hierarchy.diff;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import yapion.hierarchy.types.YAPIONPath;
-
-import java.util.Arrays;
 
 @ToString
 @Getter
@@ -27,11 +24,6 @@ public class DiffMove implements DiffBase {
 
     private String[] fromPath;
     private String[] toPath;
-
-    public DiffMove(YAPIONPath fromPath, YAPIONPath toPath) {
-        this.fromPath = Arrays.copyOf(fromPath.getPath(), fromPath.depth());
-        this.toPath = Arrays.copyOf(toPath.getPath(), toPath.depth());
-    }
 
     @Override
     public DiffType type() {
