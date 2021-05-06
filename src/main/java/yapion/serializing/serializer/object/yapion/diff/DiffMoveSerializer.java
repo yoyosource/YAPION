@@ -15,9 +15,8 @@ package yapion.serializing.serializer.object.yapion.diff;
 
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.diff.DiffBase;
+import yapion.hierarchy.diff.DiffMove;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONPath;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
@@ -25,15 +24,15 @@ import yapion.serializing.data.SerializeData;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.26.0")
-public class DiffMoveSerializer implements InternalSerializer<DiffBase.DiffMove> {
+public class DiffMoveSerializer implements InternalSerializer<DiffMove> {
 
     @Override
     public Class<?> type() {
-        return DiffBase.DiffMove.class;
+        return DiffMove.class;
     }
 
     @Override
-    public YAPIONAnyType serialize(SerializeData<DiffBase.DiffMove> serializeData) {
+    public YAPIONAnyType serialize(SerializeData<DiffMove> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add(TYPE_IDENTIFIER, type());
         yapionObject.add("fromPath", serializeData.serialize(serializeData.object.getFromPath()));
@@ -42,10 +41,10 @@ public class DiffMoveSerializer implements InternalSerializer<DiffBase.DiffMove>
     }
 
     @Override
-    public DiffBase.DiffMove deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+    public DiffMove deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         String[] fromPath = (String[]) deserializeData.deserialize(yapionObject.getArray("fromPath"));
         String[] toPath = (String[]) deserializeData.deserialize(yapionObject.getArray("toPath"));
-        return new DiffBase.DiffMove(new YAPIONPath(fromPath), new YAPIONPath(toPath));
+        return new DiffMove(fromPath, toPath);
     }
 }

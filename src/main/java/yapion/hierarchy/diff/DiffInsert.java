@@ -13,6 +13,29 @@
 
 package yapion.hierarchy.diff;
 
-public interface DiffBase {
-    DiffType type();
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONPath;
+
+import java.util.Arrays;
+
+@ToString
+@Getter
+@AllArgsConstructor
+public class DiffInsert implements DiffBase {
+
+    private String[] path;
+    private YAPIONAnyType inserted;
+
+    public DiffInsert(YAPIONPath path, YAPIONAnyType inserted) {
+        this.path = Arrays.copyOf(path.getPath(), path.depth());
+        this.inserted = inserted;
+    }
+
+    @Override
+    public DiffType type() {
+        return DiffType.INSERT;
+    }
 }

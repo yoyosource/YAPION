@@ -56,19 +56,19 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
     public <B extends DiffBase> YAPIONDiffApplier<I, K, T> apply(B diff) {
         switch (diff.type()) {
             case DELETE:
-                DiffBase.DiffDelete diffDelete = (DiffBase.DiffDelete) diff;
+                DiffDelete diffDelete = (DiffDelete) diff;
                 applyDelete(diffDelete.getPath());
                 break;
             case INSERT:
-                DiffBase.DiffInsert diffInsert = (DiffBase.DiffInsert) diff;
+                DiffInsert diffInsert = (DiffInsert) diff;
                 applyInsert(diffInsert.getPath(), diffInsert.getInserted());
                 break;
             case CHANGE:
-                DiffBase.DiffChange diffChange = (DiffBase.DiffChange) diff;
+                DiffChange diffChange = (DiffChange) diff;
                 applyInsert(diffChange.getPath(), diffChange.getTo());
                 break;
             case MOVE:
-                DiffBase.DiffMove diffMove = (DiffBase.DiffMove) diff;
+                DiffMove diffMove = (DiffMove) diff;
                 applyMove(diffMove.getFromPath(), diffMove.getToPath());
                 break;
         }
@@ -78,19 +78,19 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
     public <B extends DiffBase> YAPIONDiffApplier<I, K, T> reverseApply(B diff) {
         switch (diff.type()) {
             case DELETE:
-                DiffBase.DiffDelete diffDelete = (DiffBase.DiffDelete) diff;
+                DiffDelete diffDelete = (DiffDelete) diff;
                 reverseApplyDelete(diffDelete.getPath(), diffDelete.getDeleted());
                 break;
             case INSERT:
-                DiffBase.DiffInsert diffInsert = (DiffBase.DiffInsert) diff;
+                DiffInsert diffInsert = (DiffInsert) diff;
                 reverseApplyInsert(diffInsert.getPath());
                 break;
             case CHANGE:
-                DiffBase.DiffChange diffChange = (DiffBase.DiffChange) diff;
+                DiffChange diffChange = (DiffChange) diff;
                 reverseApplyDelete(diffChange.getPath(), diffChange.getFrom());
                 break;
             case MOVE:
-                DiffBase.DiffMove diffMove = (DiffBase.DiffMove) diff;
+                DiffMove diffMove = (DiffMove) diff;
                 reverseApplyMove(diffMove.getFromPath(), diffMove.getToPath());
                 break;
         }

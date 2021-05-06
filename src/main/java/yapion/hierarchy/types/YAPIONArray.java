@@ -137,10 +137,14 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
 
     @Override
     public boolean internalContainsKey(@NonNull Integer key, YAPIONType yapionType) {
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) return false;
-        if (yapionType == YAPIONType.ANY) return true;
-        return yapionType == yapionAnyType.getType();
+        try {
+            YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+            if (yapionAnyType == null) return false;
+            if (yapionType == YAPIONType.ANY) return true;
+            return yapionType == yapionAnyType.getType();
+        } catch (YAPIONArrayIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
     @Override
@@ -148,10 +152,14 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         if (!YAPIONValue.validType(type)) {
             return false;
         }
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) return false;
-        if (!(yapionAnyType instanceof YAPIONValue)) return false;
-        return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
+        try {
+            YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+            if (yapionAnyType == null) return false;
+            if (!(yapionAnyType instanceof YAPIONValue)) return false;
+            return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
+        } catch (YAPIONArrayIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
     @Override

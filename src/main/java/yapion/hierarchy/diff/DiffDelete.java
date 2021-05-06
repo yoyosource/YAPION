@@ -13,6 +13,30 @@
 
 package yapion.hierarchy.diff;
 
-public interface DiffBase {
-    DiffType type();
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONPath;
+
+import java.util.Arrays;
+
+@ToString
+@Getter
+@AllArgsConstructor
+public class DiffDelete implements DiffBase {
+
+    private String[] path;
+    private YAPIONAnyType deleted;
+
+    public DiffDelete(YAPIONPath path, YAPIONAnyType deleted) {
+        this.path = Arrays.copyOf(path.getPath(), path.depth());
+        this.deleted = deleted;
+    }
+
+    @Override
+    public DiffType type() {
+        return DiffType.DELETE;
+    }
+
 }

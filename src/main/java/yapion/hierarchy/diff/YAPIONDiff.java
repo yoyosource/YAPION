@@ -20,6 +20,8 @@ import yapion.serializing.api.InstanceFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class YAPIONDiff {
 
@@ -48,7 +50,7 @@ public class YAPIONDiff {
                 diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(key);
-                diffs.add(new DiffBase.DiffDelete(deleted.getPath(), deleted));
+                diffs.add(new DiffDelete(deleted.getPath(), deleted));
             }
         }
 
@@ -57,8 +59,9 @@ public class YAPIONDiff {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(key);
-            diffs.add(new DiffBase.DiffInsert(inserted.getPath(), inserted));
+            diffs.add(new DiffInsert(inserted.getPath(), inserted));
         }
+        merge();
     }
 
     public YAPIONDiff(YAPIONMap first, YAPIONMap second) {
@@ -67,7 +70,7 @@ public class YAPIONDiff {
                 diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(key);
-                diffs.add(new DiffBase.DiffDelete(deleted.getPath(), deleted));
+                diffs.add(new DiffDelete(deleted.getPath(), deleted));
             }
         }
 
@@ -76,8 +79,9 @@ public class YAPIONDiff {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(key);
-            diffs.add(new DiffBase.DiffInsert(inserted.getPath(), inserted));
+            diffs.add(new DiffInsert(inserted.getPath(), inserted));
         }
+        merge();
     }
 
     public YAPIONDiff(YAPIONArray first, YAPIONArray second) {
@@ -86,7 +90,7 @@ public class YAPIONDiff {
                 diff(first.getYAPIONAnyType(index), second.getYAPIONAnyType(index));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(index);
-                diffs.add(new DiffBase.DiffDelete(deleted.getPath(), deleted));
+                diffs.add(new DiffDelete(deleted.getPath(), deleted));
             }
         }
 
@@ -95,20 +99,45 @@ public class YAPIONDiff {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(index);
-            diffs.add(new DiffBase.DiffInsert(inserted.getPath(), inserted));
+            diffs.add(new DiffInsert(inserted.getPath(), inserted));
+        }
+        merge();
+    }
+
+    private void merge() {
+        List<DiffInsert> diffInserts = diffs.stream()
+                .filter(d -> d instanceof DiffInsert)
+                .map(d -> (DiffInsert) d)
+                .collect(Collectors.toList());
+
+        for (DiffInsert diffInsert : diffInserts) {
+            Optional<DiffDelete> diffDeleteOptional = diffs.stream()
+                    .filter(d -> d instanceof DiffDelete)
+                    .map(d -> (DiffDelete) d)
+                    .filter(d -> d.getDeleted().equals(diffInsert.getInserted()))
+                    .findFirst();
+            if (!diffDeleteOptional.isPresent()) {
+                continue;
+            }
+            DiffDelete diffDelete = diffDeleteOptional.get();
+
+            diffs = diffs.stream()
+                    .filter(d -> d != diffInsert && d != diffDelete)
+                    .collect(Collectors.toList());
+            diffs.add(new DiffMove(diffDelete.getPath(), diffInsert.getPath()));
         }
     }
 
     private void diff(YAPIONAnyType first, YAPIONAnyType second) {
         if (first.getType() != second.getType()) {
-            diffs.add(new DiffBase.DiffChange(first.getPath(), first, second));
+            diffs.add(new DiffChange(first.getPath(), first, second));
             return;
         }
         if (first instanceof YAPIONValue || first instanceof YAPIONPointer) {
             if (first.toString().equals(second.toString())) {
                 return;
             }
-            diffs.add(new DiffBase.DiffChange(first.getPath(), first, second));
+            diffs.add(new DiffChange(first.getPath(), first, second));
         } else if (first instanceof YAPIONObject) {
             YAPIONObject firstObject = (YAPIONObject) first;
             YAPIONObject secondObject = (YAPIONObject) second;
