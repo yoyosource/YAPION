@@ -97,7 +97,7 @@ sourceSets {
     main {
         java {
             srcDirs = ['src/main/java']
-            exclude 'system/**', 'test/**', '**/*.kt'
+            exclude 'test/**', '**/*.kt'
         }
         resources {
             exclude '**/*.ebnf', '**/*.xhtml', "**/*.gitkeep"
