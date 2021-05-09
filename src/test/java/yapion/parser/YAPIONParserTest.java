@@ -242,4 +242,11 @@ public class YAPIONParserTest {
         assertThat(yapionObject.getArray("").getValue(0).get(), is("\\\r   Hello World"));
     }
 
+    @Test
+    public void testNormalEscape() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{\\r\\n\\t()}");
+        assertThat(yapionObject.getPlainValue("\r\n\t"), notNullValue());
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\r\\n\\t()}"));
+    }
+
 }
