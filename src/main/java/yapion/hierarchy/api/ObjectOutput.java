@@ -19,6 +19,14 @@ public interface ObjectOutput {
 
     <T extends AbstractOutput> T toYAPION(T abstractOutput);
 
+    default <T extends AbstractOutput> T toYAPION(Class<T> clazz) {
+        try {
+            return toYAPION(clazz.newInstance());
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new SecurityException(e.getMessage(), e);
+        }
+    }
+
     <T extends AbstractOutput> T toJSON(T abstractOutput);
 
     <T extends AbstractOutput> T toJSONLossy(T abstractOutput);

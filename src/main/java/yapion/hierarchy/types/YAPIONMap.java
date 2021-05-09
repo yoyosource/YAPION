@@ -30,6 +30,7 @@ import yapion.utils.RecursionUtils;
 import yapion.utils.ReferenceFunction;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
 
@@ -296,6 +297,11 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     @Override
     public Iterator<YAPIONAnyType> iterator() {
         return variables.values().iterator();
+    }
+
+    @Override
+    public Stream<Map.Entry<YAPIONAnyType, YAPIONAnyType>> entryStream() {
+        return variables.entrySet().stream();
     }
 
     @Override

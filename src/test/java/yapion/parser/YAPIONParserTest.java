@@ -16,7 +16,6 @@ package yapion.parser;
 import org.junit.Test;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.output.SystemOutput;
 import yapion.hierarchy.types.*;
 
 import java.io.InputStream;

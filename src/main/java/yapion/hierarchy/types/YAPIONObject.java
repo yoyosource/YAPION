@@ -30,6 +30,7 @@ import yapion.utils.ReferenceFunction;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.KEY;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
@@ -246,6 +247,11 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
     @Override
     public Iterator<YAPIONAnyType> iterator() {
         return variables.values().iterator();
+    }
+
+    @Override
+    public Stream<Map.Entry<String, YAPIONAnyType>> entryStream() {
+        return variables.entrySet().stream();
     }
 
     @Override

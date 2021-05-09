@@ -19,10 +19,7 @@ import yapion.annotations.api.YAPIONPrimitive;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -123,6 +120,35 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
 
     default Stream<YAPIONAnyType> stream() {
         return StreamSupport.stream(spliterator(), false);
+    }
+
+    default <T extends YAPIONAnyType> Stream<T> streamOfType(Class<T> clazz) {
+        return stream().filter(yapionAnyType -> clazz.isAssignableFrom(yapionAnyType.getClass())).map(clazz::cast);
+    }
+
+    default Stream<YAPIONObject> streamObject() {
+        return streamOfType(YAPIONObject.class);
+    }
+
+    default Stream<YAPIONArray> streamArray() {
+        return streamOfType(YAPIONArray.class);
+    }
+
+    default Stream<YAPIONValue> streamValue() {
+        return streamOfType(YAPIONValue.class);
+    }
+
+    default Stream<YAPIONMap> streamMap() {
+        return streamOfType(YAPIONMap.class);
+    }
+
+    default Stream<YAPIONPointer> streamPointer() {
+        return streamOfType(YAPIONPointer.class);
+    }
+
+    @OptionalAPI
+    default Stream<Map.Entry<K, YAPIONAnyType>> entryStream() {
+        throw new UnsupportedOperationException();
     }
 
     default Stream<YAPIONAnyType> parallelStream() {
