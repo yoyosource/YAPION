@@ -16,7 +16,6 @@ package yapion.hierarchy.diff;
 import lombok.Getter;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
-import yapion.serializing.api.InstanceFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,20 +27,8 @@ public class YAPIONDiff {
     @Getter
     private List<DiffBase> diffs = new ArrayList<>();
 
-    private YAPIONDiff() {
+    protected YAPIONDiff() {
 
-    }
-
-    public static class YAPIONDiffFactory extends InstanceFactory<YAPIONDiff> {
-        @Override
-        public Class<YAPIONDiff> type() {
-            return YAPIONDiff.class;
-        }
-
-        @Override
-        public YAPIONDiff instance() {
-            return new YAPIONDiff();
-        }
     }
 
     public YAPIONDiff(YAPIONObject first, YAPIONObject second) {

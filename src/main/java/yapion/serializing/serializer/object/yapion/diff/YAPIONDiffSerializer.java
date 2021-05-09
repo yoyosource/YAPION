@@ -14,7 +14,6 @@
 package yapion.serializing.serializer.object.yapion.diff;
 
 import yapion.annotations.api.SerializerImplementation;
-import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.diff.DiffBase;
 import yapion.hierarchy.diff.YAPIONDiff;
@@ -30,10 +29,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @SerializerImplementation(since = "0.25.0")
 public class YAPIONDiffSerializer implements InternalSerializer<YAPIONDiff> {
 
-    @Override
-    public void init() {
-        new YAPIONDiff.YAPIONDiffFactory().add();
-    }
+    private static class YAPIONDiffOther extends YAPIONDiff {}
 
     @Override
     public Class<?> type() {
@@ -53,13 +49,8 @@ public class YAPIONDiffSerializer implements InternalSerializer<YAPIONDiff> {
     public YAPIONDiff deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         List<DiffBase> diffs = (List<DiffBase>) deserializeData.deserialize(yapionObject.getObject("diff"));
-        try {
-            YAPIONDiff yapionDiff = deserializeData.getInstance(YAPIONDiff.class);
-            yapionDiff.getDiffs().addAll(diffs);
-            return yapionDiff;
-        } catch (ClassNotFoundException e) {
-            // This should never be reached
-            throw new YAPIONException(e.getMessage(), e);
-        }
+        YAPIONDiff yapionDiff = new YAPIONDiffOther();
+        yapionDiff.getDiffs().addAll(diffs);
+        return yapionDiff;
     }
 }
