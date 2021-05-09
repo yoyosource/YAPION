@@ -41,11 +41,31 @@ public final class ValueUtils {
 
     }
 
+    public static boolean startsWith(String s, EscapeCharacters escapeCharacters) {
+        byte[] bytes = s.getBytes(StandardCharsets.UTF_16BE);
+        if (bytes.length <= 1) {
+            return false;
+        }
+        char c = (char) ((bytes[0] << 8) | (bytes[1] & 0xFF));
+        return escapeCharacters.contains(c);
+    }
+
+    public static boolean contains(String s, EscapeCharacters escapeCharacters) {
+        byte[] bytes = s.getBytes(StandardCharsets.UTF_16BE);
+        for (int i = 0; i < bytes.length; i += 2) {
+            char c = (char) ((bytes[i] << 8) | (bytes[i + 1] & 0xFF));
+            if (escapeCharacters.contains(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static String stringToUTFEscapedString(String s, EscapeCharacters escapeCharacters) {
         byte[] bytes = s.getBytes(StandardCharsets.UTF_16BE);
         StringBuilder st = new StringBuilder();
         for (int i = 0; i < bytes.length; i += 2) {
-            st.append(charToUTFEscape((char)((bytes[i] << 8) | (bytes[i + 1] & 0xFF)), escapeCharacters));
+            st.append(charToUTFEscape((char) ((bytes[i] << 8) | (bytes[i + 1] & 0xFF)), escapeCharacters));
         }
         return st.toString();
     }

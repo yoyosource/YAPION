@@ -120,12 +120,16 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     void toStrippedYAPION(AbstractOutput abstractOutput) {
-        String string = valueHandler.output(value);
-        string = string.replace(",", "\\,");
+        String string = valueHandler.output(value).replace(",", "\\,");
         if (string.startsWith(" ") || string.startsWith("-")) {
             string = "\\" + string;
         }
-        abstractOutput.consume(ValueUtils.stringToUTFEscapedString(string, ValueUtils.EscapeCharacters.VALUE));
+        string = ValueUtils.stringToUTFEscapedString(string, ValueUtils.EscapeCharacters.VALUE);
+        if (ValueUtils.startsWith(string, ValueUtils.EscapeCharacters.KEY)) {
+            abstractOutput.consume("(").consume(string).consume(")");
+        } else {
+            abstractOutput.consume(string);
+        }
     }
 
     @Override

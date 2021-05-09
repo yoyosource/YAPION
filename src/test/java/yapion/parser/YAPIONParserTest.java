@@ -16,6 +16,7 @@ package yapion.parser;
 import org.junit.Test;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.output.SystemOutput;
 import yapion.hierarchy.types.*;
 
 import java.io.InputStream;
@@ -214,6 +215,14 @@ public class YAPIONParserTest {
         YAPIONObject yapionObject = YAPIONParser.parse("{[\\->0000000000000000]}");
         assertThat(yapionObject.getArray("").getYAPIONAnyType(0), instanceOf(YAPIONValue.class));
         assertThat(yapionObject.toString(), is("{[\\->0000000000000000]}"));
+    }
+
+    @Test
+    public void testArrayWithStringValue() {
+        YAPIONObject yapionObject = new YAPIONObject().add("", new YAPIONArray().add(new YAPIONValue<>("{Hello World}")));
+        yapionObject = YAPIONParser.parse(yapionObject.toYAPION(new StringOutput()).getResult());
+        assertThat(yapionObject.getArray("").getValue(0), notNullValue());
+        assertThat(yapionObject.getArray("").getValue(0), isYAPION(new YAPIONValue<>("{Hello World}")));
     }
 
     @Test
