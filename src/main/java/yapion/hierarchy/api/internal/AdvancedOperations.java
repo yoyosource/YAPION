@@ -17,6 +17,7 @@ import lombok.NonNull;
 import yapion.annotations.api.OptionalAPI;
 import yapion.annotations.api.YAPIONPrimitive;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.stream.AdvancedStream;
 import yapion.hierarchy.types.*;
 
 import java.util.*;
@@ -118,32 +119,28 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return Spliterators.spliteratorUnknownSize(iterator(), 0);
     }
 
-    default Stream<YAPIONAnyType> stream() {
-        return StreamSupport.stream(spliterator(), false);
+    default AdvancedStream<YAPIONAnyType> stream() {
+        return AdvancedStream.of(StreamSupport.stream(spliterator(), false));
     }
 
-    default <T extends YAPIONAnyType> Stream<T> streamOfType(Class<T> clazz) {
-        return stream().filter(yapionAnyType -> clazz.isAssignableFrom(yapionAnyType.getClass())).map(clazz::cast);
+    default AdvancedStream<YAPIONObject> streamObject() {
+        return stream().ofType(YAPIONObject.class);
     }
 
-    default Stream<YAPIONObject> streamObject() {
-        return streamOfType(YAPIONObject.class);
+    default AdvancedStream<YAPIONArray> streamArray() {
+        return stream().ofType(YAPIONArray.class);
     }
 
-    default Stream<YAPIONArray> streamArray() {
-        return streamOfType(YAPIONArray.class);
+    default AdvancedStream<YAPIONValue> streamValue() {
+        return stream().ofType(YAPIONValue.class);
     }
 
-    default Stream<YAPIONValue> streamValue() {
-        return streamOfType(YAPIONValue.class);
+    default AdvancedStream<YAPIONMap> streamMap() {
+        return stream().ofType(YAPIONMap.class);
     }
 
-    default Stream<YAPIONMap> streamMap() {
-        return streamOfType(YAPIONMap.class);
-    }
-
-    default Stream<YAPIONPointer> streamPointer() {
-        return streamOfType(YAPIONPointer.class);
+    default AdvancedStream<YAPIONPointer> streamPointer() {
+        return stream().ofType(YAPIONPointer.class);
     }
 
     @OptionalAPI
