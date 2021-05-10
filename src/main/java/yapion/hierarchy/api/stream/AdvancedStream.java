@@ -28,36 +28,6 @@ import java.util.stream.StreamSupport;
 
 public class AdvancedStream<T> extends AdvancedBaseStream<T> {
 
-    public static void main(String[] args) {
-        List<Optional<Integer>> optionalList = new ArrayList<>();
-        optionalList.add(Optional.of(0));
-        optionalList.add(Optional.of(0));
-        optionalList.add(Optional.of(2));
-        optionalList.add(Optional.of(3));
-        optionalList.add(Optional.of(4));
-        optionalList.add(Optional.of(2));
-        optionalList.add(Optional.of(0));
-        optionalList.add(Optional.of(2));
-        optionalList.add(Optional.of(3));
-        optionalList.add(Optional.of(4));
-        optionalList.add(Optional.of(3));
-        optionalList.add(Optional.of(0));
-        optionalList.add(Optional.of(2));
-        optionalList.add(Optional.of(3));
-        optionalList.add(Optional.of(4));
-        optionalList.add(Optional.of(4));
-        optionalList.add(Optional.of(0));
-        optionalList.add(Optional.of(2));
-        optionalList.add(Optional.of(3));
-        optionalList.add(Optional.of(4));
-        of(optionalList)
-                .testUnwrap(integer -> integer)
-                .shuffle()
-                .valuePair(integer -> integer * 2)
-                .peek(System.out::println)
-                .eval();
-    }
-
     private Random random = new Random();
 
     public AdvancedStream(Stream<T> stream) {
