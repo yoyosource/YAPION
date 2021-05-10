@@ -20,6 +20,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -48,6 +49,10 @@ public class AdvancedStream<T> extends AdvancedBaseStream<T> {
 
     public <K> AdvancedStream<K> testUnwrap(PredicateFunction<T, K> predicateFunction) {
         return map(predicateFunction).filter(Optional::isPresent).map(Optional::get);
+    }
+
+    public <K> AdvancedStream<K> testUnwrap(Predicate<T> predicate, Function<T, K> mapper) {
+        return filter(predicate).map(mapper);
     }
 
     public AdvancedStream<UnaryPair<T>> pair() {
