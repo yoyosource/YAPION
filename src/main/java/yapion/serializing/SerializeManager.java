@@ -13,6 +13,9 @@
 
 package yapion.serializing;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.DeprecationInfo;
@@ -26,6 +29,7 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.api.*;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.reflection.PureStrategy;
 import yapion.serializing.serializer.object.other.ArraySerializer;
 import yapion.serializing.utils.SerializeManagerUtils;
 import yapion.utils.ReflectionsUtils;
@@ -100,6 +104,10 @@ public class SerializeManager {
     private static final Set<String> oSerializerGroups = new HashSet<>();
 
     private static final Map<Class<?>, InstanceFactory<?>> instanceFactoryMap = new HashMap<>();
+
+    @Getter
+    @Setter
+    private static ReflectionStrategy reflectionStrategy = new PureStrategy();
 
     static {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(SerializeManager.class.getResourceAsStream("/yapion/" + SerializerImplementation.class.getTypeName())))) {
