@@ -84,7 +84,7 @@ public class SetSerializer implements InternalSerializer<Set<?>> {
     @Override
     public Set<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
-            Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false);
+            Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false, deserializeData.typeReMapper);
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return SerializingUtils.deserializeCollection(deserializeData, yapionArray, (Set<Object>) object);
         } catch (Exception e) {

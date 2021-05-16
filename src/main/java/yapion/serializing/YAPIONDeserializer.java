@@ -32,10 +32,8 @@ import yapion.utils.ClassUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReflectionsUtils;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
@@ -171,7 +169,7 @@ public final class YAPIONDeserializer {
             return new YAPIONDeserializer((YAPIONObject) yapionAnyType, this).parse().getObject();
         }
         if (yapionAnyType instanceof YAPIONArray) {
-            return SerializeManager.getArraySerializer().deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this));
+            return SerializeManager.getArraySerializer().deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this, typeReMapper));
         }
         return null;
     }
@@ -276,9 +274,9 @@ public final class YAPIONDeserializer {
                 String enumType = enumObject.getValue(ENUM_IDENTIFIER, "").get();
                 enumObject.put(ENUM_IDENTIFIER, typeReMapper.remap(enumType));
 
-                return serializer.deserialize(new DeserializeData<>(enumObject, contextManager.get(), this));
+                return serializer.deserialize(new DeserializeData<>(enumObject, contextManager.get(), this, typeReMapper));
             }
-            return serializer.deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this));
+            return serializer.deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this, typeReMapper));
         }
         return null;
     }

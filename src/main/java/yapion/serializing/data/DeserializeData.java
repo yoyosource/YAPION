@@ -16,6 +16,7 @@ package yapion.serializing.data;
 import lombok.RequiredArgsConstructor;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.serializing.SerializeManager;
+import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.utils.ReflectionsUtils;
 
@@ -27,9 +28,10 @@ public class DeserializeData<T extends YAPIONAnyType> {
     public final T object;
     public final String context;
     private final YAPIONDeserializer yapionDeserializer;
+    public final TypeReMapper typeReMapper;
 
     public <R extends YAPIONAnyType> DeserializeData<R> clone(R object) {
-        return new DeserializeData<>(object, context, yapionDeserializer);
+        return new DeserializeData<>(object, context, yapionDeserializer, typeReMapper);
     }
 
     public boolean deserialize(String fieldName, Object object, YAPIONAnyType yapionAnyType) {

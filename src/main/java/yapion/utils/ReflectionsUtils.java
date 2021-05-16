@@ -26,6 +26,7 @@ import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.exceptions.utils.YAPIONReflectionInvocationException;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
+import yapion.serializing.TypeReMapper;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -239,10 +240,27 @@ public class ReflectionsUtils {
      * @return an instance of the specified class
      */
     public static Object constructObject(YAPIONObject yapionObject, InternalSerializer<?> internalSerializer, boolean data) {
+        return constructObject(yapionObject, internalSerializer, data, null);
+    }
+
+    /**
+     * Construct an Object instance from a given yapionObject.
+     * By using the {@link ObjenesisBase}, only with {@link YAPIONData}
+     * or {@link YAPIONObjenesis} or a NoArgument constructor.
+     *
+     * @param yapionObject the class to create an instance from
+     * @param internalSerializer the internalSerializer using it
+     * @param data branch to {@link #constructObjectObjenesis(String)}
+     * @return an instance of the specified class
+     */
+    public static Object constructObject(YAPIONObject yapionObject, InternalSerializer<?> internalSerializer, boolean data, TypeReMapper typeReMapper) {
         if (!yapionObject.containsKey(TYPE_IDENTIFIER, String.class)) {
             throw new YAPIONReflectionException("YAPIONObject does not contain value for key '" + TYPE_IDENTIFIER + "'");
         }
         String type = yapionObject.getPlainValue(TYPE_IDENTIFIER);
+        if (typeReMapper != null) {
+            type = typeReMapper.remap(type);
+        }
         Class<?> clazz = null;
         try {
             clazz = Class.forName(type);

@@ -60,7 +60,7 @@ public class ListSerializer implements InternalSerializer<List<?>> {
     @Override
     public List<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         try {
-            Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false);
+            Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false, deserializeData.typeReMapper);
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return SerializingUtils.deserializeCollection(deserializeData, yapionArray, (List<Object>) object);
         } catch (Exception e) {

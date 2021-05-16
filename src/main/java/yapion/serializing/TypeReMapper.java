@@ -13,6 +13,7 @@
 
 package yapion.serializing;
 
+import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.serializing.YAPIONClassTypeException;
 
 import java.util.HashMap;
@@ -22,7 +23,8 @@ public final class TypeReMapper {
 
     private Map<String, String> typeMappings = new HashMap<>();
 
-    String remap(String type) {
+    @InternalAPI
+    public String remap(String type) {
         if (typeMappings.containsKey(type)) {
             return typeMappings.get(type);
         }
