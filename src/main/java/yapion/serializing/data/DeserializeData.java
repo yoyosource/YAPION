@@ -64,13 +64,8 @@ public class DeserializeData<T extends YAPIONAnyType> {
     @SuppressWarnings({"java:S3011"})
     private boolean setField(Field field, Object object, Object objectToSet) {
         if (field == null) return false;
-        try {
-            field.setAccessible(true);
-            field.set(object, objectToSet);
-            return true;
-        } catch (IllegalAccessException e) {
-            return false;
-        }
+        SerializeManager.getReflectionStrategy().set(field, object, objectToSet);
+        return true;
     }
 
     public String getArrayType() {

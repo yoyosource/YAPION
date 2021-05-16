@@ -230,11 +230,11 @@ public final class YAPIONDeserializer {
                 }
                 YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
                 if (specialSet(field, yapionAnyType)) {
-                    ReflectionsUtils.setValueOfField(field, object, yapionAnyType);
+                    SerializeManager.getReflectionStrategy().set(field, object, yapionAnyType);
                 } else if (isValid(field, yapionDeserializeType)) {
-                    ReflectionsUtils.setValueOfField(field, object, deserialize(SerializeManager.getInternalSerializer(yapionDeserializeType.type()), yapionAnyType));
+                    SerializeManager.getReflectionStrategy().set(field, object, deserialize(SerializeManager.getInternalSerializer(yapionDeserializeType.type()), yapionAnyType));
                 } else {
-                    ReflectionsUtils.setValueOfField(field, object, parse(yapionAnyType));
+                    SerializeManager.getReflectionStrategy().set(field, object, parse(yapionAnyType));
                 }
 
                 arrayType = "";

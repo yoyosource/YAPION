@@ -394,27 +394,6 @@ public class ReflectionsUtils {
         return getFieldCache(clazz).fields();
     }
 
-    @SuppressWarnings({"java:S3011"})
-    public static Object getValueOfField(Field field, Object object) {
-        try {
-            field.setAccessible(true);
-            return field.get(object);
-        } catch (IllegalAccessException e) {
-            return null;
-        }
-    }
-
-    @SuppressWarnings({"java:S3011"})
-    public static boolean setValueOfField(Field field, Object object, Object value) {
-        try {
-            field.setAccessible(true);
-            field.set(object, value);
-            return true;
-        } catch (IllegalAccessException e) {
-            return false;
-        }
-    }
-
     public static Field getField(Class<?> clazz, String name) {
         return getFieldCache(clazz).getField(name);
     }

@@ -199,7 +199,7 @@ public final class YAPIONSerializer {
             if (!yapionInfo.save && !saveWithoutAnnotation) continue;
 
             String name = field.getName();
-            Object fieldObject = ReflectionsUtils.getValueOfField(field, object);
+            Object fieldObject = SerializeManager.getReflectionStrategy().get(field, object);
             if (fieldObject == null) {
                 if (!yapionInfo.optimize) {
                     yapionObject.add(name, new YAPIONValue<>(null));
