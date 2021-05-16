@@ -17,7 +17,6 @@ import lombok.NonNull;
 import yapion.annotations.api.OptionalAPI;
 import yapion.annotations.api.YAPIONPrimitive;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.stream.AdvancedStream;
 import yapion.hierarchy.types.*;
 
 import java.util.*;
@@ -119,28 +118,28 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return Spliterators.spliteratorUnknownSize(iterator(), 0);
     }
 
-    default AdvancedStream<YAPIONAnyType> stream() {
-        return AdvancedStream.of(StreamSupport.stream(spliterator(), false));
+    default Stream<YAPIONAnyType> stream() {
+        return StreamSupport.stream(spliterator(), false);
     }
 
-    default AdvancedStream<YAPIONObject> streamObject() {
-        return stream().ofType(YAPIONObject.class);
+    default Stream<YAPIONObject> streamObject() {
+        return stream().filter(yapionAnyType -> YAPIONObject.class.isAssignableFrom(yapionAnyType.getClass())).map(YAPIONObject.class::cast);
     }
 
-    default AdvancedStream<YAPIONArray> streamArray() {
-        return stream().ofType(YAPIONArray.class);
+    default Stream<YAPIONArray> streamArray() {
+        return stream().filter(yapionAnyType -> YAPIONArray.class.isAssignableFrom(yapionAnyType.getClass())).map(YAPIONArray.class::cast);
     }
 
-    default AdvancedStream<YAPIONValue> streamValue() {
-        return stream().ofType(YAPIONValue.class);
+    default Stream<YAPIONValue> streamValue() {
+        return stream().filter(yapionAnyType -> YAPIONValue.class.isAssignableFrom(yapionAnyType.getClass())).map(YAPIONValue.class::cast);
     }
 
-    default AdvancedStream<YAPIONMap> streamMap() {
-        return stream().ofType(YAPIONMap.class);
+    default Stream<YAPIONMap> streamMap() {
+        return stream().filter(yapionAnyType -> YAPIONMap.class.isAssignableFrom(yapionAnyType.getClass())).map(YAPIONMap.class::cast);
     }
 
-    default AdvancedStream<YAPIONPointer> streamPointer() {
-        return stream().ofType(YAPIONPointer.class);
+    default Stream<YAPIONPointer> streamPointer() {
+        return stream().filter(yapionAnyType -> YAPIONPointer.class.isAssignableFrom(yapionAnyType.getClass())).map(YAPIONPointer.class::cast);
     }
 
     @OptionalAPI
