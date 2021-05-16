@@ -88,6 +88,20 @@ public class ClassUtils {
     }
 
     @InternalAPI
+    public static Class<?> getPrimitive(Class<?> clazz) {
+        if (clazz == Void.class) return void.class;
+        if (clazz == Boolean.class) return boolean.class;
+        if (clazz == Byte.class) return byte.class;
+        if (clazz == Short.class) return short.class;
+        if (clazz == Integer.class) return int.class;
+        if (clazz == Long.class) return long.class;
+        if (clazz == Character.class) return char.class;
+        if (clazz == Float.class) return float.class;
+        if (clazz == Double.class) return double.class;
+        return clazz;
+    }
+
+    @InternalAPI
     public static String getBoxed(String className) {
         switch (className) {
             case "boolean":
