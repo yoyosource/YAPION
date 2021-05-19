@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.object.other;
+package yapion.serializing.serializer.special;
 
 import yapion.annotations.api.InternalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;

@@ -141,9 +141,6 @@ public final class YAPIONSerializer {
             return new YAPIONValue<>(null);
         }
         Class<?> type = object.getClass();
-        if (type.isEnum()) {
-            type = Enum.class;
-        }
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
             YAPIONAnyType yapionAnyType = serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
@@ -163,9 +160,6 @@ public final class YAPIONSerializer {
         }
 
         Class<?> type = object.getClass();
-        if (type.isEnum()) {
-            type = Enum.class;
-        }
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
             this.result = serializer.serialize(new SerializeData<>(object, contextManager.get(), this));

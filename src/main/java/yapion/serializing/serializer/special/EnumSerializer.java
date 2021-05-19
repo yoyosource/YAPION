@@ -11,9 +11,9 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.object.other;
+package yapion.serializing.serializer.special;
 
-import yapion.annotations.api.SerializerImplementation;
+import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
@@ -25,7 +25,7 @@ import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SuppressWarnings({"java:S1192"})
-@SerializerImplementation(since = "0.10.0")
+@InternalAPI // This Serializer exists since version 0.10.0
 public class EnumSerializer implements InternalSerializer<Enum<?>> {
 
     @Override

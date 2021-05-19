@@ -27,7 +27,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.DeserializeData;
-import yapion.serializing.serializer.object.other.EnumSerializer;
+import yapion.serializing.serializer.special.EnumSerializer;
 import yapion.utils.ClassUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReflectionsUtils;
@@ -222,11 +222,7 @@ public final class YAPIONDeserializer {
 
                 YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(field.getName());
                 if (!YAPIONAnyType.class.isAssignableFrom(fieldType) && yapionAnyType instanceof YAPIONObject && !((YAPIONObject) yapionAnyType).containsKey(TYPE_IDENTIFIER, String.class)) {
-                    if (fieldType.isEnum()) {
-                        ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, "java.lang.Enum");
-                    } else {
-                        ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, arrayType);
-                    }
+                    ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, arrayType);
                 }
                 YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
                 if (specialSet(field, yapionAnyType)) {

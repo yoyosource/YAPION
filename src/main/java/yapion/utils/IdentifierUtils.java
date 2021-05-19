@@ -21,7 +21,7 @@ import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.serializer.object.collection.SetSerializer;
 import yapion.serializing.serializer.object.map.MapSerializer;
-import yapion.serializing.serializer.object.other.EnumSerializer;
+import yapion.serializing.serializer.special.EnumSerializer;
 import yapion.serializing.serializer.object.security.PrivateKeySerializer;
 import yapion.serializing.serializer.object.security.PublicKeySerializer;
 import yapion.serializing.serializer.object.throwable.ErrorSerializer;

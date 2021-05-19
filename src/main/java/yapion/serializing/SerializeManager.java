@@ -13,7 +13,6 @@
 
 package yapion.serializing;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,7 +29,8 @@ import yapion.serializing.api.*;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.reflection.PureStrategy;
-import yapion.serializing.serializer.object.other.ArraySerializer;
+import yapion.serializing.serializer.special.ArraySerializer;
+import yapion.serializing.serializer.special.EnumSerializer;
 import yapion.serializing.utils.SerializeManagerUtils;
 import yapion.utils.ReflectionsUtils;
 
@@ -93,6 +93,7 @@ public class SerializeManager {
     }, false);
 
     private static final ArraySerializer ARRAY_SERIALIZER = new ArraySerializer();
+    private static final EnumSerializer ENUM_SERIALIZER = new EnumSerializer();
 
     private static final String INTERNAL_SERIALIZER = InternalSerializer.class.getTypeName();
 
@@ -203,6 +204,9 @@ public class SerializeManager {
         if (type.isArray()) {
             return ARRAY_SERIALIZER;
         }
+        if (type.isEnum() || type == Enum.class) {
+            return ENUM_SERIALIZER;
+        }
 
         InternalSerializer<?> initialSerializer = getInternalSerializerInternal(type);
         if (initialSerializer != null) return initialSerializer;
@@ -226,6 +230,10 @@ public class SerializeManager {
 
     static InternalSerializer<?> getArraySerializer() {
         return ARRAY_SERIALIZER;
+    }
+
+    static InternalSerializer<?> getEnumSerializer() {
+        return ENUM_SERIALIZER;
     }
 
     private static InternalSerializer<?> getInternalSerializerInternal(Class<?> type) {
