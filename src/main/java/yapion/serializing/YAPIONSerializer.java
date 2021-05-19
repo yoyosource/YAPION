@@ -176,7 +176,6 @@ public final class YAPIONSerializer {
 
         YAPIONObject yapionObject = new YAPIONObject();
         if (!pointerMap.containsKey(object)) {
-            // Todo: implement old mode maybe?
             pointerMap.put(object, new YAPIONPointer(yapionObject));
         }
         MethodManager.preSerializationStep(object, object.getClass(), contextManager);

@@ -15,7 +15,6 @@ package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
 import yapion.exceptions.serializing.YAPIONDataLossException;
-import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONSerializer;

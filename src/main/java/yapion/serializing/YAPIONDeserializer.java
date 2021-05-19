@@ -187,10 +187,9 @@ public final class YAPIONDeserializer {
         }
 
         InternalSerializer<?> serializer = SerializeManager.getInternalSerializer(clazz);
-        Object o = deserialize(serializer, yapionObject);
-        if (o != null) {
-            pointerMap.put(yapionObject, o);
-            object = o;
+        if (serializer != null && !serializer.empty()) {
+            object = serializer.deserialize(new DeserializeData<>(yapionObject, contextManager.get(), this, typeReMapper));
+            pointerMap.put(yapionObject, object);
             return this;
         }
 
@@ -228,7 +227,11 @@ public final class YAPIONDeserializer {
                 if (specialSet(field, yapionAnyType)) {
                     SerializeManager.getReflectionStrategy().set(field, object, yapionAnyType);
                 } else if (isValid(field, yapionDeserializeType)) {
-                    SerializeManager.getReflectionStrategy().set(field, object, deserialize(SerializeManager.getInternalSerializer(yapionDeserializeType.type()), yapionAnyType));
+                    Object o = null;
+                    if (serializer != null && !serializer.empty()) {
+                        o = SerializeManager.getInternalSerializer(yapionDeserializeType.type()).deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this, typeReMapper));
+                    }
+                    SerializeManager.getReflectionStrategy().set(field, object, o);
                 } else {
                     SerializeManager.getReflectionStrategy().set(field, object, parse(yapionAnyType));
                 }
@@ -261,20 +264,6 @@ public final class YAPIONDeserializer {
             clazz = clazz.getSuperclass();
         }
         return false;
-    }
-
-    private Object deserialize(InternalSerializer<?> serializer, YAPIONAnyType yapionAnyType) {
-        if (serializer != null && !serializer.empty()) {
-            if (serializer instanceof EnumSerializer) {
-                YAPIONObject enumObject = (YAPIONObject) yapionAnyType;
-                String enumType = enumObject.getValue(ENUM_IDENTIFIER, "").get();
-                enumObject.put(ENUM_IDENTIFIER, typeReMapper.remap(enumType));
-
-                return serializer.deserialize(new DeserializeData<>(enumObject, contextManager.get(), this, typeReMapper));
-            }
-            return serializer.deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this, typeReMapper));
-        }
-        return null;
     }
 
     /**

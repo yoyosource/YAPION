@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.special;
 
+import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -21,8 +22,7 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+import static yapion.utils.IdentifierUtils.*;
 
 @SuppressWarnings({"java:S1192"})
 @InternalAPI // This Serializer exists since version 0.10.0
@@ -30,14 +30,13 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
 
     @Override
     public Class<?> type() {
-        return Enum.class;
+        return null;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Enum<?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add(ENUM_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass().getTypeName());
         yapionObject.add("value", serializeData.object.name());
         yapionObject.add("ordinal", serializeData.object.ordinal());
         return yapionObject;
@@ -46,11 +45,11 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
     @Override
     public Enum<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        String type = yapionObject.getValue(ENUM_IDENTIFIER, "").get();
-        String enumType = yapionObject.getValue("value", "").get();
+        String type = deserializeData.typeReMapper.remap(getType(yapionObject));
+        String enumType = yapionObject.getPlainValue("value");
         int ordinal = -1;
         if (yapionObject.getValue("ordinal", 0) != null) {
-            ordinal = yapionObject.getValue("ordinal", 0).get();
+            ordinal = yapionObject.getPlainValue("ordinal");
         }
         try {
             if (!Class.forName(type).isEnum()) {
@@ -70,6 +69,15 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
         } catch (ClassNotFoundException e) {
             throw new YAPIONDeserializerException("Class not found: " + type);
         }
+    }
+
+    @DeprecationInfo(since = "0.26.0")
+    private String getType(YAPIONObject yapionObject) {
+        String type = yapionObject.getPlainValue(TYPE_IDENTIFIER);
+        if (type.equals("java.lang.Enum")) { // Backwards compatibility
+            return yapionObject.getPlainValue(ENUM_IDENTIFIER);
+        }
+        return type;
     }
 
 }
