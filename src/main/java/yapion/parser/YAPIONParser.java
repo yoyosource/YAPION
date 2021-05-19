@@ -60,7 +60,6 @@ public final class YAPIONParser {
      *
      * @param s the string to parse
      * @return YAPIONObject parsed out of the string
-     *
      * @deprecated since 0.23.0
      */
     @Deprecated
@@ -94,7 +93,6 @@ public final class YAPIONParser {
      *
      * @param inputStream the inputStream to parse
      * @return YAPIONObject parsed out of the string
-     *
      * @deprecated since 0.23.0
      */
     @Deprecated
@@ -396,6 +394,7 @@ public final class YAPIONParser {
         return "Error after " + yapionInternalParser.count() + " reads";
     }
 
-    private static class ParserSkipException extends RuntimeException {}
+    private static class ParserSkipException extends RuntimeException {
+    }
 
 }

@@ -141,15 +141,12 @@ public class ClassUtils {
 
     @InternalAPI
     public static boolean isPrimitive(Class<?> clazz) {
-        if (clazz == void.class) return true;
-        if (clazz == boolean.class) return true;
-        if (clazz == byte.class) return true;
-        if (clazz == short.class) return true;
-        if (clazz == int.class) return true;
-        if (clazz == long.class) return true;
-        if (clazz == char.class) return true;
-        if (clazz == float.class) return true;
-        if (clazz == double.class) return true;
+        if (clazz.isPrimitive()) {
+            return true;
+        }
+        if (clazz == void.class) {
+            return true;
+        }
         return false;
     }
 
