@@ -15,6 +15,7 @@ package yapion.utils;
 
 import lombok.experimental.UtilityClass;
 import yapion.annotations.api.InternalAPI;
+import yapion.exceptions.YAPIONException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -59,7 +60,7 @@ public class ClassUtils {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            return Object.class;
+            throw new YAPIONException(e.getMessage(), e);
         }
     }
 

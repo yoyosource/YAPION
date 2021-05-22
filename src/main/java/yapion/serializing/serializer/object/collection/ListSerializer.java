@@ -22,17 +22,32 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.utils.SerializingUtils;
+import yapion.utils.ClassUtils;
 import yapion.utils.ReflectionsUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@SerializerImplementation(since = "0.23.0", initialSince = "0.3.0, 0.12.0", standsFor = {List.class, ArrayList.class, LinkedList.class, CopyOnWriteArrayList.class})
+@SerializerImplementation(since = "0.26.0", initialSince = "0.3.0, 0.12.0, 0.23.0", standsFor = {List.class, ArrayList.class, LinkedList.class, CopyOnWriteArrayList.class})
 public class ListSerializer implements InternalSerializer<List<?>> {
+
+    private Map<Class<?>, Function<List<?>, List<?>>> wrapper = new HashMap<>();
+
+    {
+        init();
+    }
+
+    @Override
+    public void init() {
+        wrapper = new HashMap<>();
+        wrapper.put(Arrays.asList().getClass(), objects -> Arrays.asList(objects.toArray()));
+        wrapper.put(Collections.emptyList().getClass(), objects -> Collections.emptyList());
+        wrapper.put(Collections.singletonList(null).getClass(), objects -> Collections.singletonList(objects.get(0)));
+        wrapper.put(Collections.unmodifiableList(new ArrayList<>()).getClass(), objects -> Collections.unmodifiableList(objects));
+    }
 
     @Override
     public Class<?> type() {
@@ -59,12 +74,22 @@ public class ListSerializer implements InternalSerializer<List<?>> {
     @SuppressWarnings({"unchecked"})
     @Override
     public List<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONDeserializerException yapionDeserializerException;
         try {
             Object object = ReflectionsUtils.constructObject((YAPIONObject) deserializeData.object, this, false, deserializeData.typeReMapper);
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
             return SerializingUtils.deserializeCollection(deserializeData, yapionArray, (List<Object>) object);
         } catch (Exception e) {
+            yapionDeserializerException = new YAPIONDeserializerException(e.getMessage(), e);
+        }
+        try {
+            YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
+            List<?> list = SerializingUtils.deserializeCollection(deserializeData, yapionArray, (List<Object>) defaultImplementation().newInstance());
+            return wrapper.getOrDefault(ClassUtils.getClass(((YAPIONObject) deserializeData.object).getPlainValue(TYPE_IDENTIFIER)), objects -> objects).apply(list);
+        } catch (InstantiationException e) {
             throw new YAPIONDeserializerException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw yapionDeserializerException;
         }
     }
 }
