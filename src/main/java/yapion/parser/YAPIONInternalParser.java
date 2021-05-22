@@ -35,6 +35,7 @@ final class YAPIONInternalParser {
     private char lastChar = '\u0000';
 
     // Result object and current
+    private boolean hadInitial = true;
     private YAPIONObject result = null;
     private YAPIONAnyType currentObject = null;
 
@@ -88,8 +89,7 @@ final class YAPIONInternalParser {
 
     private void step(char c) {
         log.debug("{} -> {}", typeStack, (int) c);
-        if (typeStack.isEmpty()) {
-            initialType(c);
+        if (typeStack.isEmpty() && initialType(c)) {
             return;
         }
 
@@ -112,7 +112,7 @@ final class YAPIONInternalParser {
     }
 
     private void parseFinish() {
-        if (typeStack.isNotEmpty()) {
+        if (typeStack.isNotEmpty() && (hadInitial || typeStack.pop(YAPIONType.OBJECT) != YAPIONType.OBJECT)) {
             throw new YAPIONParserException("Object is not closed correctly");
         }
         if (count == 0) {
@@ -157,17 +157,18 @@ final class YAPIONInternalParser {
         key = "";
     }
 
-    private void initialType(char c) {
+    private boolean initialType(char c) {
         if (c == '{' && typeStack.isEmpty() && result == null) {
-            log.debug("initial  [Create]");
-            typeStack.push(YAPIONType.OBJECT);
-            result = new YAPIONObject();
-            yapionObjectList.add(result);
-            currentObject = result;
-            return;
+            log.debug("initial  [CREATE]");
+        } else {
+            log.debug("initial  [CREATE] -> {}", (int) c);
+            hadInitial = false;
         }
-        log.debug("initial  [EXCEPTION] -> {}", (int) c);
-        throw new YAPIONParserException("Initial char is not '{'");
+        typeStack.push(YAPIONType.OBJECT);
+        result = new YAPIONObject();
+        yapionObjectList.add(result);
+        currentObject = result;
+        return hadInitial;
     }
 
     private void add(@NonNull String key, @NonNull YAPIONAnyType value) {

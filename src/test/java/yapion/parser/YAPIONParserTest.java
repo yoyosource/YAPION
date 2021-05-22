@@ -38,12 +38,12 @@ public class YAPIONParserTest {
 
     @Test(expected = YAPIONParserException.class)
     public void testTypeMismatch() {
-        YAPIONParser.parse("{]");
+        System.out.println(YAPIONParser.parse("{]"));
     }
 
-    @Test(expected = YAPIONParserException.class)
+    @Test
     public void testInitialType() {
-        YAPIONParser.parse("[]");
+        assertThat(YAPIONParser.parse("[]"), isYAPION("{[]}"));
     }
 
     @Test(expected = YAPIONParserException.class)
