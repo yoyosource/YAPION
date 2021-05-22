@@ -22,7 +22,8 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-import static yapion.utils.IdentifierUtils.*;
+import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SuppressWarnings({"java:S1192"})
 @InternalAPI // This Serializer exists since version 0.10.0
@@ -52,10 +53,11 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
             ordinal = yapionObject.getPlainValue("ordinal");
         }
         try {
-            if (!Class.forName(type).isEnum()) {
+            Class<?> clazz = Class.forName(type);
+            if (!clazz.isEnum()) {
                 throw new YAPIONDeserializerException("Class " + type + " is not an enum");
             }
-            Enum<?>[] enums = (Enum<?>[]) Class.forName(type).getEnumConstants();
+            Enum<?>[] enums = (Enum<?>[]) clazz.getEnumConstants();
             if (ordinal >= 0 && ordinal < enums.length && enums[ordinal].name().equals(enumType)) {
                 return enums[ordinal];
             }

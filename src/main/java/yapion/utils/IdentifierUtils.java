@@ -15,17 +15,20 @@ package yapion.utils;
 
 import lombok.experimental.UtilityClass;
 import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.types.*;
+import yapion.hierarchy.types.YAPIONMap;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONPointer;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.JSONMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.serializer.object.collection.SetSerializer;
 import yapion.serializing.serializer.object.map.MapSerializer;
-import yapion.serializing.serializer.special.EnumSerializer;
 import yapion.serializing.serializer.object.security.PrivateKeySerializer;
 import yapion.serializing.serializer.object.security.PublicKeySerializer;
 import yapion.serializing.serializer.object.throwable.ErrorSerializer;
 import yapion.serializing.serializer.object.throwable.ThrowableSerializer;
+import yapion.serializing.serializer.special.EnumSerializer;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
