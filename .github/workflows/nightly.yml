@@ -21,8 +21,7 @@ jobs:
         distribution: 'adopt'
     - name: Checkout 'nightly' merge master to 'nightly'
       run: |
-        git update --all
-        git fetch --all
+        git pull --all
         git checkout nightly
         git merge master
         git push
