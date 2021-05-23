@@ -22,7 +22,7 @@ jobs:
     - name: Checkout 'nightly' merge master to 'nightly'
       run: |
         git fetch --all
-        git checkout remote nightly
+        git checkout nightly
         git merge master
         git push
     - name: Grant execute permission for gradlew
