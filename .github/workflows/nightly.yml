@@ -21,13 +21,10 @@ jobs:
         distribution: 'adopt'
     - name: Checkout 'nightly' merge master to 'nightly'
       run: |
-        git status
-        git branch
         git fetch --all
-        git branch
-#        git checkout remote nightly
-#        git merge master
-#        git push
+        git checkout remote nightly
+        git merge master
+        git push
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
