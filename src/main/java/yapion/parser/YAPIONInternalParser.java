@@ -341,6 +341,7 @@ final class YAPIONInternalParser {
             reset();
             return;
         }
+        // TODO: Fix value end
         if (!escaped && c == ',' && mightyValue == MightyValue.IS) {
             log.debug("ValueHandler to use -> {}", valueHandlerList);
             pop(YAPIONType.VALUE);
