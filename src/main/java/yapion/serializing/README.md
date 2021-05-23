@@ -10,11 +10,10 @@ a special `InternalSerializer` just handling the enum serialization and deserial
 
 Because of this the typical enum structure is:
 ```
-{@type(java.lang.Enum)@enum(...)value(...)ordinal(...)}
+{@type(...)value(...)ordinal(...)}
 ```
 
-The YAPIONObject variable `@†ype` just defines the serializer to use. As for the actual type the enum should have, there is the `@enum` variable.
-This variable is the `Class.getTypeName()` value of the `enum` to serialize. The `value` variable will be set to the `Enum.name()` and the `ordinal` variable
+The YAPIONObject variable `@†ype` is the `Class.getTypeName()` value of the `enum` to serialize. The `value` variable will be set to the `Enum.name()` and the `ordinal` variable
 to `Enum.ordinal()`. For deserialization the ordinal gets checked for quick deserialization. The name of this retrieved enum will be checked against the `value` variable and if
 not equal I will loop through all enum values, retrieved by `Class.getEnumConstants()`.
 
