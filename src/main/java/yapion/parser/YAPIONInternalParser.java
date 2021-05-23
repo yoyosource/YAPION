@@ -36,7 +36,7 @@ final class YAPIONInternalParser {
 
     // Result object and current
     private boolean hadInitial = true;
-    private MightyValue mightyValue = MightyValue.NOT;
+    private MightValue mightValue = MightValue.NOT;
     private YAPIONObject result = null;
     private YAPIONAnyType currentObject = null;
 
@@ -189,11 +189,11 @@ final class YAPIONInternalParser {
         if (escaped) {
             return false;
         }
-        if (mightyValue != MightyValue.NOT) {
+        if (mightValue != MightValue.NOT) {
             if (c == ' ') {
                 return true;
             }
-            mightyValue = MightyValue.NOT;
+            mightValue = MightValue.NOT;
             if (c == '{' || c == '[' || c == '<' || c == '"' || (c >= '0' && c <= '9') || c == 't' || c == 'n' || c == 'f') {
                 current.deleteCharAt(current.length() - 1);
             }
@@ -204,7 +204,7 @@ final class YAPIONInternalParser {
             if (c == '"' || (c >= '0' && c <= '9') || c == 't' || c == 'n' || c == 'f') {
                 log.debug("type     [VALUE]");
                 push(YAPIONType.VALUE);
-                mightyValue = MightyValue.IS;
+                mightValue = MightValue.IS;
                 parseValue(c);
                 return true;
             }
@@ -250,7 +250,7 @@ final class YAPIONInternalParser {
         }
         if (c == ':' && typeStack.peek() == YAPIONType.OBJECT) {
             log.debug("type     [VALUE?]");
-            mightyValue = MightyValue.MIGHT;
+            mightValue = MightValue.MIGHT;
             return false;
         }
         return false;
@@ -341,14 +341,14 @@ final class YAPIONInternalParser {
         if (parseSpecialEscape(c)) {
             return;
         }
-        if (!escaped && c == ')' && mightyValue == MightyValue.NOT) {
+        if (!escaped && c == ')' && mightValue == MightValue.NOT) {
             log.debug("ValueHandler to use -> {}", valueHandlerList);
             pop(YAPIONType.VALUE);
             add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             reset();
             return;
         }
-        if (!escaped && (c == ',' || c == '}' || c == ']' || c == '>') && mightyValue == MightyValue.IS) {
+        if (!escaped && (c == ',' || c == '}' || c == ']' || c == '>') && mightValue == MightValue.IS) {
             log.debug("ValueHandler to use -> {}", valueHandlerList);
             pop(YAPIONType.VALUE);
             while (true) {
@@ -360,7 +360,7 @@ final class YAPIONInternalParser {
             }
             add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             reset();
-            mightyValue = MightyValue.NOT;
+            mightValue = MightValue.NOT;
             switch (c) {
                 case '}':
                     parseEndObject();

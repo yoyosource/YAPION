@@ -13,7 +13,7 @@
 
 package yapion.parser;
 
-public enum MightyValue {
+public enum MightValue {
     NOT,
     MIGHT,
     IS;
