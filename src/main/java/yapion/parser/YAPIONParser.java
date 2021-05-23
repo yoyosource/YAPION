@@ -107,6 +107,8 @@ public final class YAPIONParser {
      * @param s the string to parse
      * @return YAPIONObject parsed out of the string
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(String)")
     public static YAPIONObject parseJSON(String s) {
         return YAPIONParser.parse(s);
     }
@@ -198,6 +200,8 @@ public final class YAPIONParser {
      * @param s the String to map
      * @return YAPIONObject with mapped YAPIONPointer and YAPIONMap
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#mapJSON(YAPIONObject)")
     public static YAPIONObject mapJSON(String s) {
         return JSONMapper.map(parseJSON(s));
     }
