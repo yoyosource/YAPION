@@ -10,7 +10,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +22,8 @@ jobs:
     - name: Checkout 'nightly' merge master to 'nightly'
       run: |
         git status
+        git branch
+        git fetch --all
         git branch
 #        git checkout remote nightly
 #        git merge master
