@@ -93,14 +93,14 @@ public class YAPIONDiff {
 
     private void merge() {
         List<DiffInsert> diffInserts = diffs.stream()
-                .filter(d -> d instanceof DiffInsert)
-                .map(d -> (DiffInsert) d)
+                .filter(DiffInsert.class::isInstance)
+                .map(DiffInsert.class::cast)
                 .collect(Collectors.toList());
 
         for (DiffInsert diffInsert : diffInserts) {
             Optional<DiffDelete> diffDeleteOptional = diffs.stream()
-                    .filter(d -> d instanceof DiffDelete)
-                    .map(d -> (DiffDelete) d)
+                    .filter(DiffDelete.class::isInstance)
+                    .map(DiffDelete.class::cast)
                     .filter(d -> d.getDeleted().equals(diffInsert.getInserted()))
                     .findFirst();
             if (!diffDeleteOptional.isPresent()) {
