@@ -348,10 +348,16 @@ final class YAPIONInternalParser {
             reset();
             return;
         }
-        // TODO: Fix value end
-        if (!escaped && (c == ',' || c == '}' || c == ']' || c == '>' || c == '\n') && mightyValue == MightyValue.IS) {
+        if (!escaped && (c == ',' || c == '}' || c == ']' || c == '>') && mightyValue == MightyValue.IS) {
             log.debug("ValueHandler to use -> {}", valueHandlerList);
             pop(YAPIONType.VALUE);
+            while (true) {
+                char temp = current.charAt(current.length() - 1);
+                if (!(temp == ' ' || temp == '\t' || temp == '\n')) {
+                    break;
+                }
+                current.deleteCharAt(current.length() - 1);
+            }
             add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             reset();
             mightyValue = MightyValue.NOT;

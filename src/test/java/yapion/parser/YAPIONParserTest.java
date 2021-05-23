@@ -27,6 +27,7 @@ import static yapion.YAPIONAssertion.isYAPION;
 public class YAPIONParserTest {
 
     public static void main(String[] args) {
+        System.out.println(YAPIONParser.parse("{test(), \"test2\":{}}"));
         System.out.println(YAPIONParser.parse("{\n" +
                 "  \"id\": 1,\n" +
                 "  \"first_name\": \"Jeanette\",\n" +
