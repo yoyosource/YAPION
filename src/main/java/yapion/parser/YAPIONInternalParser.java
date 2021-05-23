@@ -190,8 +190,11 @@ final class YAPIONInternalParser {
             return false;
         }
         if (mightyValue != MightyValue.NOT) {
+            if (c == ' ') {
+                return true;
+            }
             mightyValue = MightyValue.NOT;
-            if (c == '{' || c == '[' || c == '<' || c == '(') {
+            if (c == '{' || c == '[' || c == '<' || c == '"' || (c >= '0' && c <= '9') || c == 't' || c == 'n' || c == 'f') {
                 current.deleteCharAt(current.length() - 1);
             }
             if (current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"') {
@@ -258,12 +261,7 @@ final class YAPIONInternalParser {
             return;
         }
         if (!escaped && c == '}') {
-            pop(YAPIONType.OBJECT);
-            reset();
-            currentObject = currentObject.getParent();
-            if (typeStack.isEmpty()) {
-                finished = true;
-            }
+            parseEndObject();
             return;
         }
         if (parseSpecialEscape(c)) {
@@ -283,6 +281,15 @@ final class YAPIONInternalParser {
         }
         if (escaped) {
             escaped = false;
+        }
+    }
+
+    private void parseEndObject() {
+        pop(YAPIONType.OBJECT);
+        reset();
+        currentObject = currentObject.getParent();
+        if (typeStack.isEmpty()) {
+            finished = true;
         }
     }
 
@@ -342,12 +349,25 @@ final class YAPIONInternalParser {
             return;
         }
         // TODO: Fix value end
-        if (!escaped && c == ',' && mightyValue == MightyValue.IS) {
+        if (!escaped && (c == ',' || c == '}' || c == ']' || c == '>' || c == '\n') && mightyValue == MightyValue.IS) {
             log.debug("ValueHandler to use -> {}", valueHandlerList);
             pop(YAPIONType.VALUE);
             add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             reset();
             mightyValue = MightyValue.NOT;
+            switch (c) {
+                case '}':
+                    parseEndObject();
+                    break;
+                case ']':
+                    parseEndArray();
+                    break;
+                case '>':
+                    parseEndMap();
+                    break;
+                default:
+                    break;
+            }
             return;
         }
         if (c == '\\' && !escaped) {
@@ -392,11 +412,15 @@ final class YAPIONInternalParser {
             return;
         }
         if (c == '>') {
-            pop(YAPIONType.MAP);
-            ((YAPIONMap) currentObject).finishMapping();
-            currentObject = currentObject.getParent();
-            reset();
+            parseEndMap();
         }
+    }
+
+    private void parseEndMap() {
+        pop(YAPIONType.MAP);
+        ((YAPIONMap) currentObject).finishMapping();
+        currentObject = currentObject.getParent();
+        reset();
     }
 
     private void parseArray(char c, char lastChar) {
@@ -411,9 +435,7 @@ final class YAPIONInternalParser {
                 YAPIONValue.allValueHandlers().toArrayList(valueHandlerList);
                 return;
             }
-            pop(YAPIONType.ARRAY);
-            currentObject = currentObject.getParent();
-            reset();
+            parseEndArray();
             return;
         }
         if (!lastCharEscaped && current.length() == 0 && everyType(c, lastChar)) {
@@ -426,6 +448,12 @@ final class YAPIONInternalParser {
             return;
         }
         parseValue(c);
+    }
+
+    private void parseEndArray() {
+        pop(YAPIONType.ARRAY);
+        currentObject = currentObject.getParent();
+        reset();
     }
 
     public void sortValueHandler(char c, int length) {

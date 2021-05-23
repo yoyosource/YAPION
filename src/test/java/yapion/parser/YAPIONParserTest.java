@@ -27,7 +27,14 @@ import static yapion.YAPIONAssertion.isYAPION;
 public class YAPIONParserTest {
 
     public static void main(String[] args) {
-        System.out.println(YAPIONParser.parse("{\"HelloWorld\":\"Now\",\"Test\":{}}"));
+        System.out.println(YAPIONParser.parse("{\n" +
+                "  \"id\": 1,\n" +
+                "  \"first_name\": \"Jeanette\",\n" +
+                "  \"last_name\": \"Penddreth\",\n" +
+                "  \"email\": \"jpenddreth0@census.gov\",\n" +
+                "  \"gender\": \"Female\",\n" +
+                "  \"ip_address\": \"26.58.193.2\"\n" +
+                "}"));
     }
 
     @Test(expected = NullPointerException.class)
