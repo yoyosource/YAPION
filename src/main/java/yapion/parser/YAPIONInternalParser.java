@@ -36,6 +36,7 @@ final class YAPIONInternalParser {
 
     // Result object and current
     private boolean hadInitial = true;
+    private MightyValue mightyValue = MightyValue.NOT;
     private YAPIONObject result = null;
     private YAPIONAnyType currentObject = null;
 
@@ -188,6 +189,23 @@ final class YAPIONInternalParser {
         if (escaped) {
             return false;
         }
+        if (mightyValue != MightyValue.NOT) {
+            mightyValue = MightyValue.NOT;
+            if (c == '{' || c == '[' || c == '<' || c == '(') {
+                current.deleteCharAt(current.length() - 1);
+            }
+            if (current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"') {
+                current.deleteCharAt(0);
+                current.deleteCharAt(current.length() - 1);
+            }
+            if (c == '"' || (c >= '0' && c <= '9') || c == 't' || c == 'n' || c == 'f') {
+                log.debug("type     [VALUE]");
+                push(YAPIONType.VALUE);
+                mightyValue = MightyValue.IS;
+                parseValue(c);
+                return true;
+            }
+        }
         if (c == '{') {
             log.debug("type     [OBJECT]");
             push(YAPIONType.OBJECT);
@@ -226,6 +244,11 @@ final class YAPIONInternalParser {
             currentObject = yapionMap;
             key = "";
             return true;
+        }
+        if (c == ':' && typeStack.peek() == YAPIONType.OBJECT) {
+            log.debug("type     [VALUE?]");
+            mightyValue = MightyValue.MIGHT;
+            return false;
         }
         return false;
     }
@@ -311,31 +334,39 @@ final class YAPIONInternalParser {
         if (parseSpecialEscape(c)) {
             return;
         }
-        if (!escaped && c == ')') {
+        if (!escaped && c == ')' && mightyValue == MightyValue.NOT) {
             log.debug("ValueHandler to use -> {}", valueHandlerList);
             pop(YAPIONType.VALUE);
             add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             reset();
-        } else {
-            if (c == '\\' && !escaped) {
-                escaped = true;
-                return;
-            }
-            lastCharEscaped = escaped;
-            if (escaped) {
-                if (typeStack.peek() == YAPIONType.ARRAY && (c == ',' || c == '-')) {
-                    // Ignored
-                } else if (typeStack.peek() == YAPIONType.ARRAY && current.length() == 0 && c == ' ') {
-                    // Ignored
-                } else if (c != '(' && c != ')') {
-                    sortValueHandler('\\', current.length());
-                    current.append('\\');
-                }
-                escaped = false;
-            }
-            sortValueHandler(c, current.length());
-            current.append(c);
+            return;
         }
+        if (!escaped && c == ',' && mightyValue == MightyValue.IS) {
+            log.debug("ValueHandler to use -> {}", valueHandlerList);
+            pop(YAPIONType.VALUE);
+            add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
+            reset();
+            mightyValue = MightyValue.NOT;
+            return;
+        }
+        if (c == '\\' && !escaped) {
+            escaped = true;
+            return;
+        }
+        lastCharEscaped = escaped;
+        if (escaped) {
+            if (typeStack.peek() == YAPIONType.ARRAY && (c == ',' || c == '-')) {
+                // Ignored
+            } else if (typeStack.peek() == YAPIONType.ARRAY && current.length() == 0 && c == ' ') {
+                // Ignored
+            } else if (c != '(' && c != ')') {
+                sortValueHandler('\\', current.length());
+                current.append('\\');
+            }
+            escaped = false;
+        }
+        sortValueHandler(c, current.length());
+        current.append(c);
     }
 
     private boolean isHex(char c) {

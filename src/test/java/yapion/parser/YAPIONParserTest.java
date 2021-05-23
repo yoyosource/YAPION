@@ -26,6 +26,10 @@ import static yapion.YAPIONAssertion.isYAPION;
 
 public class YAPIONParserTest {
 
+    public static void main(String[] args) {
+        System.out.println(YAPIONParser.parse("{\"HelloWorld\":\"Now\",\"Test\":{}}"));
+    }
+
     @Test(expected = NullPointerException.class)
     public void testNullSafety() {
         YAPIONParser.parse((InputStream) null);

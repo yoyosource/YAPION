@@ -108,7 +108,7 @@ public final class YAPIONParser {
      * @return YAPIONObject parsed out of the string
      */
     public static YAPIONObject parseJSON(String s) {
-        return JSONParser.parse(s);
+        return YAPIONParser.parse(s);
     }
 
     /**
