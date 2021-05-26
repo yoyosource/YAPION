@@ -208,6 +208,7 @@ public final class YAPIONParser {
 
     private final YAPIONInternalParser yapionInternalParser = new YAPIONInternalParser();
     private final CharReader charReader;
+    private Runnable finishRunnable = () -> {};
 
     /**
      * Creates a YAPIONParser for parsing a string to an YAPIONObject.
@@ -292,7 +293,7 @@ public final class YAPIONParser {
      * @param inputStream to parse from
      */
     public YAPIONParser(@NonNull InputStream inputStream) {
-        this(inputStream, false);
+        this(inputStream, false, false);
     }
 
     /**
@@ -302,6 +303,32 @@ public final class YAPIONParser {
      * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
      */
     public YAPIONParser(@NonNull InputStream inputStream, boolean stopOnStreamEnd) {
+        this(inputStream, stopOnStreamEnd, false);
+    }
+
+    /**
+     * Creates a YAPIONParser for parsing a file content to an YAPIONObject.
+     *
+     * @param file to parse from
+     * @throws IOException by FileInputStream creation
+     */
+    public YAPIONParser(File file) throws IOException {
+        this(new BufferedInputStream(new FileInputStream(file)), true, true);
+
+    }
+
+    /**
+     * Creates a YAPIONParser for parsing a file content to an YAPIONObject.
+     *
+     * @param file to parse from
+     * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
+     * @throws IOException by FileInputStream creation
+     */
+    public YAPIONParser(File file, boolean stopOnStreamEnd) throws IOException {
+        this(new BufferedInputStream(new FileInputStream(file)), stopOnStreamEnd, true);
+    }
+
+    private YAPIONParser(InputStream inputStream, boolean stopOnStreamEnd, boolean closeAfterRead) {
         charReader = new CharReader() {
             int available = -1;
 
@@ -325,27 +352,15 @@ public final class YAPIONParser {
                 return !stopOnStreamEnd || available > 0;
             }
         };
-    }
-
-    /**
-     * Creates a YAPIONParser for parsing a file content to an YAPIONObject.
-     *
-     * @param file to parse from
-     * @throws IOException by FileInputStream creation
-     */
-    public YAPIONParser(File file) throws IOException {
-        this(new BufferedInputStream(new FileInputStream(file)), true);
-    }
-
-    /**
-     * Creates a YAPIONParser for parsing a file content to an YAPIONObject.
-     *
-     * @param file to parse from
-     * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
-     * @throws IOException by FileInputStream creation
-     */
-    public YAPIONParser(File file, boolean stopOnStreamEnd) throws IOException {
-        this(new BufferedInputStream(new FileInputStream(file)), stopOnStreamEnd);
+        if (closeAfterRead) {
+            finishRunnable = () -> {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    log.warn(e.getMessage(), e);
+                }
+            };
+        }
     }
 
     public YAPIONParser setReferenceFunction(@NonNull ReferenceFunction referenceFunction) {
@@ -372,6 +387,7 @@ public final class YAPIONParser {
                     // Ignored
                 }
             }
+            finishRunnable.run();
             log.debug("parse    [finished]");
         } catch (YAPIONParserException e) {
             log.debug("parse    [YAPIONParserException]");
