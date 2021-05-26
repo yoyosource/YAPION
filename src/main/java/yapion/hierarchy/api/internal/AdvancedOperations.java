@@ -245,7 +245,15 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return getOrSetDefault(key, defaultValue);
     }
 
+    default YAPIONArray getArrayOrSetDefault(@NonNull K key, @NonNull YAPIONArray defaultValue) {
+        return getOrSetDefault(key, defaultValue);
+    }
+
     default YAPIONMap getYAPIONMapOrSetDefault(@NonNull K key, @NonNull YAPIONMap defaultValue) {
+        return getOrSetDefault(key, defaultValue);
+    }
+
+    default YAPIONMap getMapOrSetDefault(@NonNull K key, @NonNull YAPIONMap defaultValue) {
         return getOrSetDefault(key, defaultValue);
     }
 
@@ -253,11 +261,23 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return getOrSetDefault(key, defaultValue);
     }
 
+    default YAPIONObject getObjectOrSetDefault(@NonNull K key, @NonNull YAPIONObject defaultValue) {
+        return getOrSetDefault(key, defaultValue);
+    }
+
     default YAPIONValue<?> getYAPIONValueOrSetDefault(@NonNull K key, @NonNull YAPIONValue<?> defaultValue) {
         return getOrSetDefault(key, defaultValue);
     }
 
+    default YAPIONValue<?> getValueOrSetDefault(@NonNull K key, @NonNull YAPIONValue<?> defaultValue) {
+        return getOrSetDefault(key, defaultValue);
+    }
+
     default YAPIONPointer getYAPIONPointerOrSetDefault(@NonNull K key, @NonNull YAPIONPointer defaultValue) {
+        return getOrSetDefault(key, defaultValue);
+    }
+
+    default YAPIONPointer getPointerOrSetDefault(@NonNull K key, @NonNull YAPIONPointer defaultValue) {
         return getOrSetDefault(key, defaultValue);
     }
 
