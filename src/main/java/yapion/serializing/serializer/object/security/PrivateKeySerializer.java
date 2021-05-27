@@ -56,7 +56,7 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
     @Override
     public YAPIONAnyType serialize(SerializeData<PrivateKey> serializeData) {
         serializeData.isSet(PRIVATE_KEY_EXCEPTION, () -> {
-            throw new YAPIONDataLossException();
+            throw new YAPIONDataLossException("PRIVATE_KEY_EXCEPTION does not allow private key to be saved");
         });
         if (serializeData.getYAPIONSerializerFlags().isSet(PRIVATE_KEY_AS_NULL)) {
             return new YAPIONValue<>(null);
