@@ -204,7 +204,7 @@ final class YAPIONInternalParser {
             if (c == '"' || (c >= '0' && c <= '9') || c == 't' || c == 'n' || c == 'f') {
                 log.debug("type     [VALUE]");
                 push(YAPIONType.VALUE);
-                mightValue = MightValue.IS;
+                mightValue = MightValue.TRUE;
                 parseValue(c);
                 return true;
             }
@@ -348,7 +348,7 @@ final class YAPIONInternalParser {
             reset();
             return;
         }
-        if (!escaped && (c == ',' || c == '}' || c == ']' || c == '>') && mightValue == MightValue.IS) {
+        if (!escaped && (c == ',' || c == '}' || c == ']' || c == '>') && mightValue == MightValue.TRUE) {
             log.debug("ValueHandler to use -> {}", valueHandlerList);
             pop(YAPIONType.VALUE);
             while (true) {

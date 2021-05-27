@@ -14,7 +14,7 @@
 package yapion.parser;
 
 public enum MightValue {
-    NOT,
+    FALSE,
     MIGHT,
-    IS;
+    TRUE;
 }
