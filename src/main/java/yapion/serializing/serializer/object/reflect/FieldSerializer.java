@@ -20,15 +20,13 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.YAPIONSerializerFlagDefault;
-import yapion.serializing.YAPIONSerializerFlags;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
 import java.lang.reflect.Field;
 
-import static yapion.serializing.YAPIONSerializerFlagDefault.REFLECTION_AS_NULL;
-import static yapion.serializing.YAPIONSerializerFlagDefault.REFLECTION_EXCEPTION;
+import static yapion.serializing.YAPIONSerializerFlag.REFLECTION_AS_NULL;
+import static yapion.serializing.YAPIONSerializerFlag.REFLECTION_EXCEPTION;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.25.0")
@@ -36,8 +34,8 @@ public class FieldSerializer implements InternalSerializer<Field> {
 
     @Override
     public void init() {
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(REFLECTION_EXCEPTION, true));
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(REFLECTION_AS_NULL, false));
+        REFLECTION_EXCEPTION.setFlagDefault(true);
+        REFLECTION_AS_NULL.setFlagDefault(false);
     }
 
     @Override

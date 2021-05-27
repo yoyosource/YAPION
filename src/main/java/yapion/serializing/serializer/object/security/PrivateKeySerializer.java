@@ -20,8 +20,6 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.YAPIONSerializerFlagDefault;
-import yapion.serializing.YAPIONSerializerFlags;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.object.security.internal.KeySpecSerializerProvider;
@@ -29,8 +27,8 @@ import yapion.serializing.serializer.object.security.internal.KeySpecSerializerP
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 
-import static yapion.serializing.YAPIONSerializerFlagDefault.PRIVATE_KEY_AS_NULL;
-import static yapion.serializing.YAPIONSerializerFlagDefault.PRIVATE_KEY_EXCEPTION;
+import static yapion.serializing.YAPIONSerializerFlag.PRIVATE_KEY_AS_NULL;
+import static yapion.serializing.YAPIONSerializerFlag.PRIVATE_KEY_EXCEPTION;
 import static yapion.utils.IdentifierUtils.KEY_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -39,8 +37,8 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
 
     @Override
     public void init() {
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(PRIVATE_KEY_EXCEPTION, true));
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(PRIVATE_KEY_AS_NULL, false));
+        PRIVATE_KEY_EXCEPTION.setFlagDefault(true);
+        PRIVATE_KEY_AS_NULL.setFlagDefault(false);
     }
 
     @Override

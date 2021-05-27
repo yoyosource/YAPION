@@ -18,8 +18,7 @@ import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONSerializer;
-import yapion.serializing.YAPIONSerializerFlagDefault;
-import yapion.serializing.YAPIONSerializerFlagDefault.YAPIONSerializerFlagKey;
+import yapion.serializing.YAPIONSerializerFlag;
 import yapion.serializing.YAPIONSerializerFlags;
 import yapion.utils.ReflectionsUtils;
 
@@ -54,11 +53,11 @@ public class SerializeData<T> {
         return yapionSerializer.getYAPIONSerializerFlags();
     }
 
-    public void isSet(YAPIONSerializerFlagKey key, Runnable allowed) {
+    public void isSet(YAPIONSerializerFlag key, Runnable allowed) {
         isSet(key, allowed, () -> {});
     }
 
-    public void isSet(YAPIONSerializerFlagKey key, Runnable allowed, Runnable disallowed) {
+    public void isSet(YAPIONSerializerFlag key, Runnable allowed, Runnable disallowed) {
         boolean b = yapionSerializer.getYAPIONSerializerFlags().isSet(key);
         if (b) {
             allowed.run();
@@ -68,7 +67,7 @@ public class SerializeData<T> {
     }
 
     public void signalDataLoss() {
-        isSet(YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION, () -> {
+        isSet(YAPIONSerializerFlag.DATA_LOSS_EXCEPTION, () -> {
             throw new YAPIONDataLossException("Some data would be discarded by serialization");
         });
     }
