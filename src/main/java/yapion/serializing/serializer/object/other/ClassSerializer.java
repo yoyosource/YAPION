@@ -94,6 +94,9 @@ public class ClassSerializer implements InternalSerializer<Class<?>> {
             }
         }
         try {
+            if (!yapionObject.containsKey("className")) {
+                throw yapionException;
+            }
             String className = yapionObject.getPlainValue("className");
             StringBuilder st = new StringBuilder(yapionObject.getValue("byteCode", "").get());
             byte[] bytes = new byte[st.length() / 2];
