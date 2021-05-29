@@ -41,7 +41,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import static yapion.serializing.YAPIONSerializerFlag.DATA_LOSS_EXCEPTION;
+import static yapion.serializing.YAPIONFlag.DATA_LOSS_EXCEPTION;
 import static yapion.utils.ReflectionsUtils.implementsInterface;
 import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
 
@@ -134,7 +134,7 @@ public class SerializeManager {
         oSerializerGroups.add("yapion.parser.");
         oSerializerGroups.add("yapion.serializing.api.");
         oSerializerGroups.add("yapion.serializing.data.");
-        oSerializerGroups.add("yapion.serializing.serializer.");
+        // oSerializerGroups.add("yapion.serializing.serializer.");
         oSerializerGroups.add("yapion.utils.");
 
         nSerializerGroups.add("java.io.");

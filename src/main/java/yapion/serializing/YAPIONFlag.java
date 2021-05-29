@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A data structure to hold the default value of a specific {@link YAPIONSerializerFlag}.
+ * A data structure to hold the default value of a specific {@link YAPIONFlag}.
  */
 @EqualsAndHashCode
-public final class YAPIONSerializerFlag {
+public final class YAPIONFlag {
 
-    static final Map<String, YAPIONSerializerFlag> YAPION_FLAG_KEYS = new HashMap<>();
+    static final Map<String, YAPIONFlag> YAPION_FLAG_KEYS = new HashMap<>();
 
     @Getter
     private final String keyName;
@@ -35,7 +35,7 @@ public final class YAPIONSerializerFlag {
     @Setter
     private boolean flagDefault;
 
-    private YAPIONSerializerFlag(String keyName) {
+    private YAPIONFlag(String keyName) {
         YAPION_FLAG_KEYS.put(keyName, this);
         this.keyName = keyName;
     }
@@ -47,53 +47,55 @@ public final class YAPIONSerializerFlag {
     /**
      * The key to specify if data loss should be handled silently {@code false} or should throw an exception {@code true}.
      */
-    public static final YAPIONSerializerFlag DATA_LOSS_EXCEPTION = new YAPIONSerializerFlag("base.dataLoss.exception");
+    public static final YAPIONFlag DATA_LOSS_EXCEPTION = new YAPIONFlag("base.dataLoss.exception");
 
     /**
      * The key to specify if a {@link PrivateKey} should be serialized {@code false} or should result in an thrown exception {@code true}.
      */
-    public static final YAPIONSerializerFlag PRIVATE_KEY_EXCEPTION = new YAPIONSerializerFlag("base.privateKey.exception");
+    public static final YAPIONFlag PRIVATE_KEY_EXCEPTION = new YAPIONFlag("base.privateKey.exception");
 
     /**
      * The key to specify if a {@link PrivateKey} should be serialized as {@code null} {@code true} or serialized properly {@code false}.
      */
-    public static final YAPIONSerializerFlag PRIVATE_KEY_AS_NULL = new YAPIONSerializerFlag("base.privateKey.as.null");
+    public static final YAPIONFlag PRIVATE_KEY_AS_NULL = new YAPIONFlag("base.privateKey.as.null");
 
     /**
      * The key to specify if a {@link Error} should be handled silently {@code false} or should throw an exception {@code true}.
      */
-    public static final YAPIONSerializerFlag ERROR_EXCEPTION = new YAPIONSerializerFlag("base.error.exception");
+    public static final YAPIONFlag ERROR_EXCEPTION = new YAPIONFlag("base.error.exception");
 
     /**
      * The key to specify if a Reflection should be serialized {@code false} or should result in an thrown exception {@code true}.
      */
-    public static final YAPIONSerializerFlag REFLECTION_EXCEPTION = new YAPIONSerializerFlag("base.reflection.exception");
+    public static final YAPIONFlag REFLECTION_EXCEPTION = new YAPIONFlag("base.reflection.exception");
 
     /**
      * The key to specify if a Reflection should be serialized as {@code null} {@code true} or serialized properly {@code false}.
      */
-    public static final YAPIONSerializerFlag REFLECTION_AS_NULL = new YAPIONSerializerFlag("base.reflection.as.null");
+    public static final YAPIONFlag REFLECTION_AS_NULL = new YAPIONFlag("base.reflection.as.null");
+
+    public static final YAPIONFlag CLASS_INJECTION = new YAPIONFlag("base.reflection.class.injection");
 
     /**
      * Retrieve every flagKey specified in the current Runtime up until now.
      *
-     * @return a String array with every {@link YAPIONSerializerFlag#keyName}
+     * @return a String array with every {@link YAPIONFlag#keyName}
      */
     public static String[] flagKeys() {
         return YAPION_FLAG_KEYS.values().stream().map(yapionSerializerFlagKey -> yapionSerializerFlagKey.keyName).toArray(String[]::new);
     }
 
     /**
-     * Static instance getter method which either creates a new {@link YAPIONSerializerFlag} or returns an already existing Instance.
+     * Static instance getter method which either creates a new {@link YAPIONFlag} or returns an already existing Instance.
      *
      * @param key the key to retrieve
-     * @return the {@link YAPIONSerializerFlag}
+     * @return the {@link YAPIONFlag}
      */
-    public static YAPIONSerializerFlag flagKey(String key) {
+    public static YAPIONFlag flagKey(String key) {
         if (YAPION_FLAG_KEYS.containsKey(key)) {
             return YAPION_FLAG_KEYS.get(key);
         }
-        return new YAPIONSerializerFlag(key);
+        return new YAPIONFlag(key);
     }
 
 }

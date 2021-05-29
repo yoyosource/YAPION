@@ -14,21 +14,25 @@
 package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONSerializer;
-import yapion.serializing.YAPIONSerializerFlag;
-import yapion.serializing.YAPIONSerializerFlags;
+import yapion.serializing.YAPIONFlag;
+import yapion.serializing.YAPIONFlags;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
 
 @RequiredArgsConstructor
+@ToString
 public class SerializeData<T> {
 
     public final T object;
     public final String context;
+
+    @ToString.Exclude
     private final YAPIONSerializer yapionSerializer;
 
     public <R> SerializeData<R> clone(R object) {
@@ -49,16 +53,16 @@ public class SerializeData<T> {
         return SerializeManager.getReflectionStrategy().get(field, object);
     }
 
-    public YAPIONSerializerFlags getYAPIONSerializerFlags() {
-        return yapionSerializer.getYAPIONSerializerFlags();
+    public YAPIONFlags getYAPIONFlags() {
+        return yapionSerializer.getYAPIONFlags();
     }
 
-    public void isSet(YAPIONSerializerFlag key, Runnable allowed) {
+    public void isSet(YAPIONFlag key, Runnable allowed) {
         isSet(key, allowed, () -> {});
     }
 
-    public void isSet(YAPIONSerializerFlag key, Runnable allowed, Runnable disallowed) {
-        boolean b = yapionSerializer.getYAPIONSerializerFlags().isSet(key);
+    public void isSet(YAPIONFlag key, Runnable allowed, Runnable disallowed) {
+        boolean b = yapionSerializer.getYAPIONFlags().isSet(key);
         if (b) {
             allowed.run();
         } else {
@@ -67,7 +71,7 @@ public class SerializeData<T> {
     }
 
     public void signalDataLoss() {
-        isSet(YAPIONSerializerFlag.DATA_LOSS_EXCEPTION, () -> {
+        isSet(YAPIONFlag.DATA_LOSS_EXCEPTION, () -> {
             throw new YAPIONDataLossException("Some data would be discarded by serialization");
         });
     }

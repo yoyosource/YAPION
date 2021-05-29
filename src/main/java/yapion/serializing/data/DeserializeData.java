@@ -14,19 +14,22 @@
 package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.serializing.SerializeManager;
-import yapion.serializing.TypeReMapper;
-import yapion.serializing.YAPIONDeserializer;
+import yapion.serializing.*;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
 
 @RequiredArgsConstructor
+@ToString
 public class DeserializeData<T extends YAPIONAnyType> {
 
     public final T object;
     public final String context;
+
+    @ToString.Exclude
     private final YAPIONDeserializer yapionDeserializer;
     public final TypeReMapper typeReMapper;
 
@@ -70,6 +73,29 @@ public class DeserializeData<T extends YAPIONAnyType> {
 
     public String getArrayType() {
         return yapionDeserializer.getArrayType();
+    }
+
+    public YAPIONFlags getYAPIONFlags() {
+        return yapionDeserializer.getYAPIONFlags();
+    }
+
+    public void isSet(YAPIONFlag key, Runnable allowed) {
+        isSet(key, allowed, () -> {});
+    }
+
+    public void isSet(YAPIONFlag key, Runnable allowed, Runnable disallowed) {
+        boolean b = yapionDeserializer.getYAPIONFlags().isSet(key);
+        if (b) {
+            allowed.run();
+        } else {
+            disallowed.run();
+        }
+    }
+
+    public void signalDataLoss() {
+        isSet(YAPIONFlag.DATA_LOSS_EXCEPTION, () -> {
+            throw new YAPIONDataLossException("Some data would be discarded by serialization");
+        });
     }
 
 }

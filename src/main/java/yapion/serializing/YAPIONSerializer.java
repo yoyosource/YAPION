@@ -35,7 +35,7 @@ public final class YAPIONSerializer {
     private final Object object;
     private YAPIONAnyType result;
     private final ContextManager contextManager;
-    private YAPIONSerializerFlags yapionSerializerFlags = new YAPIONSerializerFlags();
+    private YAPIONFlags yapionFlags = new YAPIONFlags();
 
     private Map<Object, YAPIONPointer> pointerMap = new IdentityHashMap<>();
 
@@ -53,11 +53,11 @@ public final class YAPIONSerializer {
      * Serialize an Object to an YAPION Object.
      *
      * @param object to serialize
-     * @param yapionSerializerFlags the flags used for this serialization
+     * @param yapionFlags the flags used for this serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, YAPIONSerializerFlags yapionSerializerFlags) {
-        return (T) serialize(object, "", yapionSerializerFlags);
+    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, YAPIONFlags yapionFlags) {
+        return (T) serialize(object, "", yapionFlags);
     }
 
     /**
@@ -76,11 +76,11 @@ public final class YAPIONSerializer {
      *
      * @param object to serialize
      * @param context the context for serialization
-     * @param yapionSerializerFlags the flags used for this serialization
+     * @param yapionFlags the flags used for this serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, String context, YAPIONSerializerFlags yapionSerializerFlags) {
-        return (T) new YAPIONSerializer(object, context, yapionSerializerFlags).parse().getYAPIONObject();
+    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, String context, YAPIONFlags yapionFlags) {
+        return (T) new YAPIONSerializer(object, context, yapionFlags).parse().getYAPIONObject();
     }
 
     /**
@@ -109,12 +109,12 @@ public final class YAPIONSerializer {
      *
      * @param object to serialize
      * @param context the context for serialization
-     * @param yapionSerializerFlags the flags used for this serialization
+     * @param yapionFlags the flags used for this serialization
      */
-    public YAPIONSerializer(@NonNull Object object, String context, YAPIONSerializerFlags yapionSerializerFlags) {
+    public YAPIONSerializer(@NonNull Object object, String context, YAPIONFlags yapionFlags) {
         contextManager = new ContextManager(context);
         this.object = object;
-        this.yapionSerializerFlags = yapionSerializerFlags;
+        this.yapionFlags = yapionFlags;
     }
 
     private YAPIONSerializer(@NonNull Object object, YAPIONSerializer yapionSerializer) {
@@ -125,7 +125,7 @@ public final class YAPIONSerializer {
             this.contextManager = yapionSerializer.contextManager;
         }
         this.pointerMap = yapionSerializer.pointerMap;
-        this.yapionSerializerFlags = yapionSerializer.yapionSerializerFlags;
+        this.yapionFlags = yapionSerializer.yapionFlags;
     }
 
     /**
@@ -223,8 +223,8 @@ public final class YAPIONSerializer {
      *
      * @return the serialization flag holder
      */
-    public YAPIONSerializerFlags getYAPIONSerializerFlags() {
-        return yapionSerializerFlags;
+    public YAPIONFlags getYAPIONFlags() {
+        return yapionFlags;
     }
 
     /**

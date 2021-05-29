@@ -24,16 +24,16 @@ import java.security.KeyPairGenerator;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class YAPIONSerializerFlagsTest {
+public class YAPIONFlagsTest {
 
     @Test
     public void testFlagCount() {
-        assertThat(YAPIONSerializerFlag.flagKeys().length, greaterThanOrEqualTo(4));
+        assertThat(YAPIONFlag.flagKeys().length, greaterThanOrEqualTo(4));
     }
 
     @Test
     public void testFlagKeyConstructor() {
-        assertThat(YAPIONSerializerFlag.flagKey("base.dataLoss.exception"), sameInstance(YAPIONSerializerFlag.DATA_LOSS_EXCEPTION));
+        assertThat(YAPIONFlag.flagKey("base.dataLoss.exception"), sameInstance(YAPIONFlag.DATA_LOSS_EXCEPTION));
     }
 
     @Test
@@ -44,16 +44,16 @@ public class YAPIONSerializerFlagsTest {
 
     @Test(expected = YAPIONDataLossException.class)
     public void testErrorSerializationFailOne() {
-        YAPIONSerializerFlags yapionSerializerFlags = new YAPIONSerializerFlags();
-        yapionSerializerFlags.setTrue(YAPIONSerializerFlag.DATA_LOSS_EXCEPTION);
-        YAPIONSerializer.serialize(new Error(), yapionSerializerFlags);
+        YAPIONFlags yapionFlags = new YAPIONFlags();
+        yapionFlags.setTrue(YAPIONFlag.DATA_LOSS_EXCEPTION);
+        YAPIONSerializer.serialize(new Error(), yapionFlags);
     }
 
     @Test(expected = YAPIONDataLossException.class)
     public void testErrorSerializationFailTwo() {
-        YAPIONSerializerFlags yapionSerializerFlags = new YAPIONSerializerFlags();
-        yapionSerializerFlags.setTrue(YAPIONSerializerFlag.ERROR_EXCEPTION);
-        YAPIONSerializer.serialize(new Error(), yapionSerializerFlags);
+        YAPIONFlags yapionFlags = new YAPIONFlags();
+        yapionFlags.setTrue(YAPIONFlag.ERROR_EXCEPTION);
+        YAPIONSerializer.serialize(new Error(), yapionFlags);
     }
 
     @Test(expected = YAPIONDataLossException.class)
@@ -65,18 +65,18 @@ public class YAPIONSerializerFlagsTest {
     @Test(expected = YAPIONDataLossException.class)
     public void testPrivateKeySerializationFailTwo() throws Exception {
         KeyPair pair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
-        YAPIONSerializerFlags yapionSerializerFlags = new YAPIONSerializerFlags();
-        yapionSerializerFlags.setTrue(YAPIONSerializerFlag.DATA_LOSS_EXCEPTION);
-        YAPIONSerializer.serialize(pair, yapionSerializerFlags);
+        YAPIONFlags yapionFlags = new YAPIONFlags();
+        yapionFlags.setTrue(YAPIONFlag.DATA_LOSS_EXCEPTION);
+        YAPIONSerializer.serialize(pair, yapionFlags);
     }
 
     @Test
     public void testPrivateKeySerialization() throws Exception {
         KeyPair pair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
-        YAPIONSerializerFlags yapionSerializerFlags = new YAPIONSerializerFlags();
-        yapionSerializerFlags.setTrue(YAPIONSerializerFlag.DATA_LOSS_EXCEPTION);
-        yapionSerializerFlags.setFalse(YAPIONSerializerFlag.PRIVATE_KEY_EXCEPTION);
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(pair, yapionSerializerFlags);
+        YAPIONFlags yapionFlags = new YAPIONFlags();
+        yapionFlags.setTrue(YAPIONFlag.DATA_LOSS_EXCEPTION);
+        yapionFlags.setFalse(YAPIONFlag.PRIVATE_KEY_EXCEPTION);
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(pair, yapionFlags);
         assertThat(yapionObject, notNullValue());
     }
 

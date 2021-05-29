@@ -22,7 +22,7 @@ import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.utils.ReflectionsUtils;
 
-import static yapion.serializing.YAPIONSerializerFlag.ERROR_EXCEPTION;
+import static yapion.serializing.YAPIONFlag.ERROR_EXCEPTION;
 import static yapion.utils.IdentifierUtils.EXCEPTION_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 

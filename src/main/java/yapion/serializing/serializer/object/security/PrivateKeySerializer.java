@@ -27,8 +27,8 @@ import yapion.serializing.serializer.object.security.internal.KeySpecSerializerP
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 
-import static yapion.serializing.YAPIONSerializerFlag.PRIVATE_KEY_AS_NULL;
-import static yapion.serializing.YAPIONSerializerFlag.PRIVATE_KEY_EXCEPTION;
+import static yapion.serializing.YAPIONFlag.PRIVATE_KEY_AS_NULL;
+import static yapion.serializing.YAPIONFlag.PRIVATE_KEY_EXCEPTION;
 import static yapion.utils.IdentifierUtils.KEY_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -56,7 +56,7 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
         serializeData.isSet(PRIVATE_KEY_EXCEPTION, () -> {
             throw new YAPIONDataLossException("PRIVATE_KEY_EXCEPTION does not allow private key to be saved");
         });
-        if (serializeData.getYAPIONSerializerFlags().isSet(PRIVATE_KEY_AS_NULL)) {
+        if (serializeData.getYAPIONFlags().isSet(PRIVATE_KEY_AS_NULL)) {
             return new YAPIONValue<>(null);
         }
 

@@ -13,12 +13,14 @@
 
 package yapion.serializing;
 
+import lombok.ToString;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.serializing.YAPIONClassTypeException;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@ToString
 public final class TypeReMapper {
 
     private Map<String, String> typeMappings = new HashMap<>();

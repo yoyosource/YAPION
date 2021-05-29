@@ -27,7 +27,6 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.DeserializeData;
-import yapion.serializing.serializer.special.EnumSerializer;
 import yapion.utils.ClassUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReflectionsUtils;
@@ -36,7 +35,6 @@ import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @Slf4j
@@ -47,6 +45,7 @@ public final class YAPIONDeserializer {
     private final ContextManager contextManager;
     private TypeReMapper typeReMapper = new TypeReMapper();
     private DeserializeResult deserializeResult = new DeserializeResult();
+    private YAPIONFlags yapionFlags = new YAPIONFlags();
 
     private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
 
@@ -59,8 +58,18 @@ public final class YAPIONDeserializer {
      * @param yapionObject to deserialize
      * @return Object from the YAPIONObject to deserialize
      */
-    public static Object deserialize(@NonNull YAPIONObject yapionObject) {
-        return deserialize(yapionObject, "");
+    public static <T> T deserialize(@NonNull YAPIONObject yapionObject) {
+        return (T) deserialize(yapionObject, "");
+    }
+
+    /**
+     * Serialize an YAPION Object to an Object.
+     *
+     * @param yapionObject to deserialize
+     * @return Object from the YAPIONObject to deserialize
+     */
+    public static <T> T deserialize(@NonNull YAPIONObject yapionObject, @NonNull YAPIONFlags yapionFlags) {
+        return (T) deserialize(yapionObject, "", yapionFlags);
     }
 
     /**
@@ -70,8 +79,8 @@ public final class YAPIONDeserializer {
      * @param typeReMapper the mapper to remap any '@type' variable to a new class
      * @return Object from the YAPIONObject to deserialize
      */
-    public static Object deserialize(@NonNull YAPIONObject yapionObject, @NonNull TypeReMapper typeReMapper) {
-        return deserialize(yapionObject, "", typeReMapper);
+    public static <T> T deserialize(@NonNull YAPIONObject yapionObject, @NonNull TypeReMapper typeReMapper) {
+        return (T) deserialize(yapionObject, "", typeReMapper);
     }
 
     /**
@@ -81,8 +90,19 @@ public final class YAPIONDeserializer {
      * @param context the context for deserialization
      * @return Object from the YAPIONObject to deserialize
      */
-    public static Object deserialize(@NonNull YAPIONObject yapionObject, String context) {
-        return new YAPIONDeserializer(yapionObject, context).parse().getObject();
+    public static <T> T deserialize(@NonNull YAPIONObject yapionObject, String context) {
+        return (T) new YAPIONDeserializer(yapionObject, context).parse().getObject();
+    }
+
+    /**
+     * Serialize an YAPION Object to an Object.
+     *
+     * @param yapionObject to deserialize
+     * @param context the context for deserialization
+     * @return Object from the YAPIONObject to deserialize
+     */
+    public static <T> T deserialize(@NonNull YAPIONObject yapionObject, String context, @NonNull YAPIONFlags yapionFlags) {
+        return (T) new YAPIONDeserializer(yapionObject, context, new TypeReMapper(), yapionFlags).parse().getObject();
     }
 
     /**
@@ -93,8 +113,20 @@ public final class YAPIONDeserializer {
      * @param typeReMapper the mapper to remap any '@type' variable to a new class
      * @return Object from the YAPIONObject to deserialize
      */
-    public static Object deserialize(@NonNull YAPIONObject yapionObject, String context, @NonNull TypeReMapper typeReMapper) {
-        return new YAPIONDeserializer(yapionObject, context, typeReMapper).parse().getObject();
+    public static <T> T deserialize(@NonNull YAPIONObject yapionObject, String context, @NonNull TypeReMapper typeReMapper) {
+        return (T) new YAPIONDeserializer(yapionObject, context, typeReMapper).parse().getObject();
+    }
+
+    /**
+     * Serialize an YAPION Object to an Object.
+     *
+     * @param yapionObject to deserialize
+     * @param context the context for deserialization
+     * @param typeReMapper the mapper to remap any '@type' variable to a new class
+     * @return Object from the YAPIONObject to deserialize
+     */
+    public static <T> T deserialize(@NonNull YAPIONObject yapionObject, String context, @NonNull TypeReMapper typeReMapper, @NonNull YAPIONFlags yapionFlags) {
+        return (T) new YAPIONDeserializer(yapionObject, context, typeReMapper, yapionFlags).parse().getObject();
     }
 
     /**
@@ -131,6 +163,20 @@ public final class YAPIONDeserializer {
         this.typeReMapper = typeReMapper;
     }
 
+    /**
+     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.
+     *
+     * @param yapionObject to deserialize
+     * @param context the context for deserialization
+     * @param typeReMapper the mapper to remap any '@type' variable to a new class
+     */
+    public YAPIONDeserializer(@NonNull YAPIONObject yapionObject, String context, @NonNull TypeReMapper typeReMapper, @NonNull YAPIONFlags yapionFlags) {
+        contextManager = new ContextManager(context);
+        this.yapionObject = yapionObject.copy();
+        this.typeReMapper = typeReMapper;
+        this.yapionFlags = yapionFlags;
+    }
+
     private YAPIONDeserializer(@NonNull YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
         this.yapionObject = yapionObject;
         if (yapionDeserializer.contextManager.willBeCascading(yapionObject) && !yapionDeserializer.contextManager.isCascading()) {
@@ -141,6 +187,7 @@ public final class YAPIONDeserializer {
         this.pointerMap = yapionDeserializer.pointerMap;
         this.typeReMapper = yapionDeserializer.typeReMapper;
         this.deserializeResult = yapionDeserializer.deserializeResult;
+        this.yapionFlags = yapionDeserializer.yapionFlags;
     }
 
     /**
@@ -273,6 +320,15 @@ public final class YAPIONDeserializer {
     @DeprecationInfo(since = "0.26.0")
     public YAPIONDeserializer reducedMode(boolean reducedMode) {
         return this;
+    }
+
+    /**
+     * Returns the flags this serialization should follow.
+     *
+     * @return the serialization flag holder
+     */
+    public YAPIONFlags getYAPIONFlags() {
+        return yapionFlags;
     }
 
     /**

@@ -25,8 +25,8 @@ import yapion.serializing.data.SerializeData;
 
 import java.lang.reflect.Constructor;
 
-import static yapion.serializing.YAPIONSerializerFlag.REFLECTION_AS_NULL;
-import static yapion.serializing.YAPIONSerializerFlag.REFLECTION_EXCEPTION;
+import static yapion.serializing.YAPIONFlag.REFLECTION_AS_NULL;
+import static yapion.serializing.YAPIONFlag.REFLECTION_EXCEPTION;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.25.0")
@@ -48,7 +48,7 @@ public class ConstructorSerializer implements InternalSerializer<Constructor<?>>
         serializeData.isSet(REFLECTION_EXCEPTION, () -> {
             throw new YAPIONDataLossException();
         });
-        if (serializeData.getYAPIONSerializerFlags().isSet(REFLECTION_AS_NULL)) {
+        if (serializeData.getYAPIONFlags().isSet(REFLECTION_AS_NULL)) {
             return new YAPIONValue<>(null);
         }
 
