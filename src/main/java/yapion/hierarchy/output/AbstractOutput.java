@@ -21,11 +21,15 @@ import java.nio.charset.StandardCharsets;
 public abstract class AbstractOutput {
 
     @Getter
-    private Indentator indentator = Indentator.DEFAULT;
+    protected Indentator indentator = Indentator.DEFAULT;
 
-    public final AbstractOutput setIndentator(Indentator indentator) {
+    public void setIndentator(Indentator indentator) {
         this.indentator = indentator;
-        return this;
+    }
+
+    public static <T extends AbstractOutput> T setIndentator(T abstractOutput, Indentator indentator) {
+        abstractOutput.indentator = indentator;
+        return abstractOutput;
     }
 
     @InternalAPI
