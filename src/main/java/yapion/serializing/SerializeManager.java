@@ -134,7 +134,7 @@ public class SerializeManager {
         oSerializerGroups.add("yapion.parser.");
         oSerializerGroups.add("yapion.serializing.api.");
         oSerializerGroups.add("yapion.serializing.data.");
-        // oSerializerGroups.add("yapion.serializing.serializer.");
+        oSerializerGroups.add("yapion.serializing.serializer.");
         oSerializerGroups.add("yapion.utils.");
 
         nSerializerGroups.add("java.io.");

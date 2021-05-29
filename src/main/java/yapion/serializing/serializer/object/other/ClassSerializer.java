@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.object.other;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.YAPIONException;
@@ -34,9 +35,10 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @SerializerImplementation(since = "0.25.0")
 public class ClassSerializer implements InternalSerializer<Class<?>> {
 
+    @Getter
     private InternalClassLoader internalClassLoader;
 
-    private class InternalClassLoader extends ClassLoader {
+    private static class InternalClassLoader extends ClassLoader {
         @SneakyThrows
         protected Class<?> load(String className, byte[] bytes) {
             return defineClass(className, bytes, 0, bytes.length);
