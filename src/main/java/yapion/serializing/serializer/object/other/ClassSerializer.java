@@ -36,12 +36,20 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class ClassSerializer implements InternalSerializer<Class<?>> {
 
     @Getter
-    private InternalClassLoader internalClassLoader;
+    private static InternalClassLoader internalClassLoader;
+
+    public static void reset() {
+        internalClassLoader = new InternalClassLoader();
+    }
 
     private static class InternalClassLoader extends ClassLoader {
         @SneakyThrows
         protected Class<?> load(String className, byte[] bytes) {
             return defineClass(className, bytes, 0, bytes.length);
+        }
+
+        protected Class<?> forName(String className) {
+            return findLoadedClass(className);
         }
     }
 
@@ -103,6 +111,9 @@ public class ClassSerializer implements InternalSerializer<Class<?>> {
                 throw yapionException;
             }
             String className = yapionObject.getPlainValue("className");
+            if (internalClassLoader.forName(className) != null) {
+                return internalClassLoader.forName(className);
+            }
             StringBuilder st = new StringBuilder(yapionObject.getValue("byteCode", "").get());
             byte[] bytes = new byte[st.length() / 2];
             for (int i = 0; i < bytes.length; i++) {
