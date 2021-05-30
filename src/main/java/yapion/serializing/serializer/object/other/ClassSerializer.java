@@ -21,7 +21,6 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONFlag;
-import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.utils.ReflectionsUtils;
@@ -38,19 +37,10 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 @SerializerImplementation(since = "0.25.0")
 public class ClassSerializer implements InternalSerializer<Class<?>> {
 
-    public static void main(String[] args) {
-        YAPIONSerializer.serialize(long.class);
-    }
-
     private static final Map<Class<?>, String> byteCodes = new IdentityHashMap<>();
 
     public static void reset() {
         byteCodes.clear();
-    }
-
-    @Override
-    public void init() {
-        YAPIONFlag.CLASS_INJECTION.setFlagDefault(false);
     }
 
     @Override
@@ -77,7 +67,7 @@ public class ClassSerializer implements InternalSerializer<Class<?>> {
             return yapionObject;
         }
         try {
-            InputStream inputStream = classLoader.getResourceAsStream("/" + serializeData.object.getTypeName().replace(".", "/") + ".class");
+            InputStream inputStream = ClassSerializer.class.getResourceAsStream("/" + serializeData.object.getTypeName().replace(".", "/") + ".class");
             StringBuilder st = new StringBuilder();
             List<Byte> byteList = new ArrayList<>();
             while (inputStream.available() > 0) {

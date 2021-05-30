@@ -36,12 +36,6 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
 
     @Override
-    public void init() {
-        PRIVATE_KEY_EXCEPTION.setFlagDefault(true);
-        PRIVATE_KEY_AS_NULL.setFlagDefault(false);
-    }
-
-    @Override
     public Class<?> type() {
         return PrivateKey.class;
     }

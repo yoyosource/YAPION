@@ -33,12 +33,6 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class ConstructorSerializer implements InternalSerializer<Constructor<?>>  {
 
     @Override
-    public void init() {
-        REFLECTION_EXCEPTION.setFlagDefault(true);
-        REFLECTION_AS_NULL.setFlagDefault(false);
-    }
-
-    @Override
     public Class<?> type() {
         return Constructor.class;
     }

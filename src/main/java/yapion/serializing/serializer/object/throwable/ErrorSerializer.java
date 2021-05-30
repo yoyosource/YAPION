@@ -30,11 +30,6 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class ErrorSerializer implements InternalSerializer<Error> {
 
     @Override
-    public void init() {
-        ERROR_EXCEPTION.setFlagDefault(false);
-    }
-
-    @Override
     public Class<?> type() {
         return Error.class;
     }

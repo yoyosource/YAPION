@@ -41,7 +41,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import static yapion.serializing.YAPIONFlag.DATA_LOSS_EXCEPTION;
 import static yapion.utils.ReflectionsUtils.implementsInterface;
 import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
 
@@ -70,11 +69,6 @@ public class SerializeManager {
     private static final boolean OVERRIDEABLE;
     private static final Serializer defaultSerializer = new Serializer(null, false);
     private static final Serializer defaultNullSerializer = new Serializer(new InternalSerializer<Object>() {
-        @Override
-        public void init() {
-            DATA_LOSS_EXCEPTION.setFlagDefault(false);
-        }
-
         @Override
         public Class<?> type() {
             return Void.class;
