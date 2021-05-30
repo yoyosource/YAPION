@@ -14,7 +14,6 @@
 package yapion.serializing.serializer.object.other;
 
 import lombok.Getter;
-import lombok.SneakyThrows;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.YAPIONException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
@@ -28,7 +27,9 @@ import yapion.serializing.data.SerializeData;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -38,12 +39,14 @@ public class ClassSerializer implements InternalSerializer<Class<?>> {
     @Getter
     private static InternalClassLoader internalClassLoader;
 
+    private static final Map<Class<?>, String> byteCodes = new IdentityHashMap<>();
+
     public static void reset() {
         internalClassLoader = new InternalClassLoader();
+        byteCodes.clear();
     }
 
     private static class InternalClassLoader extends ClassLoader {
-        @SneakyThrows
         protected Class<?> load(String className, byte[] bytes) {
             return defineClass(className, bytes, 0, bytes.length);
         }
@@ -71,6 +74,10 @@ public class ClassSerializer implements InternalSerializer<Class<?>> {
         yapionObject.add(TYPE_IDENTIFIER, type());
         yapionObject.add("class", serializeData.object.getTypeName());
         serializeData.isSet(YAPIONFlag.CLASS_INJECTION, () -> {
+            if (byteCodes.containsKey(serializeData.object)) {
+                yapionObject.add("byteCode", byteCodes.get(serializeData.object));
+                return;
+            }
             try {
                 InputStream inputStream = ClassSerializer.class.getResourceAsStream("/" + serializeData.object.getTypeName().replace(".", "/") + ".class");
                 StringBuilder st = new StringBuilder();
@@ -110,16 +117,18 @@ public class ClassSerializer implements InternalSerializer<Class<?>> {
             if (!yapionObject.containsKey("byteCode")) {
                 throw yapionException;
             }
-            String className = yapionObject.getPlainValue("className");
+            String className = yapionObject.getPlainValue("class");
             if (internalClassLoader.forName(className) != null) {
                 return internalClassLoader.forName(className);
             }
-            StringBuilder st = new StringBuilder(yapionObject.getValue("byteCode", "").get());
+            String st = yapionObject.getPlainValue("byteCode");
             byte[] bytes = new byte[st.length() / 2];
             for (int i = 0; i < bytes.length; i++) {
                 bytes[i] = (byte) Integer.parseInt("" + st.charAt(i * 2) + st.charAt(i * 2 + 1), 16);
             }
-            return internalClassLoader.load(className, bytes);
+            Class<?> clazz = internalClassLoader.load(className, bytes);
+            byteCodes.put(clazz, st);
+            return clazz;
         } catch (Exception e) {
             throw yapionException;
         }
