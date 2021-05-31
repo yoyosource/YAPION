@@ -24,5 +24,4 @@ class ReferenceValue {
     void update(long referenceValue) {
         this.referenceValue ^= referenceValue & 0x7FFFFFFFFFFFFFFFL;
     }
-
 }
