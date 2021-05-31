@@ -116,7 +116,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @Override
     protected long referenceValueProvider(ReferenceFunction referenceFunction) {
-        return getType().getReferenceValue() ^ valueHandler.referenceValue(referenceFunction);
+        return getType().getReferenceValue() ^ valueHandler.referenceValue(referenceFunction) & 0x7FFFFFFFFFFFFFFFL;
     }
 
     void toStrippedYAPION(AbstractOutput abstractOutput) {
