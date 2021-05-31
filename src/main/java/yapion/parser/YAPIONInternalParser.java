@@ -248,7 +248,7 @@ final class YAPIONInternalParser {
             key = "";
             return true;
         }
-        if (c == ':' && typeStack.peek() == YAPIONType.OBJECT) {
+        if (c == ':' && typeStack.peek() == YAPIONType.OBJECT && current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"') {
             log.debug("type     [VALUE?]");
             mightValue = MightValue.MIGHT;
             return false;
