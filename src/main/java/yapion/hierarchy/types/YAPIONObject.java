@@ -46,15 +46,15 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
 
     @Override
     protected long referenceValueProvider(ReferenceFunction referenceFunction) {
-        long referenceValue = 0;
-        referenceValue += getDepth();
-        referenceValue ^= getType().getReferenceValue() & 0x7FFFFFFFFFFFFFFFL;
+        ReferenceValue referenceValue = new ReferenceValue();
+        referenceValue.increment(getDepth());
+        referenceValue.update(getType().getReferenceValue());
         for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            referenceValue ^= (long) entry.getKey().length() & 0x7FFFFFFFFFFFFFFFL;
-            referenceValue ^= referenceFunction.stringToReferenceValue(entry.getKey()) & 0x7FFFFFFFFFFFFFFFL;
-            referenceValue ^= entry.getValue().referenceValue(referenceFunction) & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue.update(entry.getKey().length());
+            referenceValue.update(referenceFunction.stringToReferenceValue(entry.getKey()));
+            referenceValue.update(entry.getValue().referenceValue(referenceFunction));
         }
-        return referenceValue;
+        return referenceValue.referenceValue;
     }
 
     private <T extends AbstractOutput> void outputSystem(T abstractOutput, Consumer<T> commaConsumer, BiConsumer<String, T> nameConsumer, BiConsumer<YAPIONAnyType, T> valueConsumer) {

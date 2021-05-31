@@ -42,14 +42,14 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
 
     @Override
     protected long referenceValueProvider(ReferenceFunction referenceFunction) {
-        long referenceValue = 0;
-        referenceValue += getDepth();
-        referenceValue ^= getType().getReferenceValue() & 0x7FFFFFFFFFFFFFFFL;
+        ReferenceValue referenceValue = new ReferenceValue();
+        referenceValue.increment(getDepth());
+        referenceValue.update(getType().getReferenceValue());
         for (int i = 0; i < array.size(); i++) {
-            referenceValue += i;
-            referenceValue ^= array.get(i).referenceValue(referenceFunction) & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue.increment(i);
+            referenceValue.update(array.get(i).referenceValue(referenceFunction));
         }
-        return referenceValue;
+        return referenceValue.referenceValue;
     }
 
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {

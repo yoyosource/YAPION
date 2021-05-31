@@ -47,13 +47,13 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
 
     @Override
     protected long referenceValueProvider(ReferenceFunction referenceFunction) {
-        long referenceValue = 0;
-        referenceValue += getDepth();
-        referenceValue ^= getType().getReferenceValue() & 0x7FFFFFFFFFFFFFFFL;
+        ReferenceValue referenceValue = new ReferenceValue();
+        referenceValue.increment(getDepth());
+        referenceValue.update(getType().getReferenceValue());
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> e : variables.entrySet()) {
-            referenceValue ^= (e.getKey().referenceValue(referenceFunction) * e.getValue().referenceValue(referenceFunction)) & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue.update((e.getKey().referenceValue(referenceFunction) * e.getValue().referenceValue(referenceFunction)));
         }
-        return referenceValue;
+        return referenceValue.referenceValue;
     }
 
     @Override
