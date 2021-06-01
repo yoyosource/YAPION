@@ -347,31 +347,31 @@ public class YAPIONTestObjects {
 
         System.out.println(yapionObject1);
         System.out.println(yapionObject1.toJSONLossy(new StringOutput()).getResult());
-        System.out.println(YAPIONParser.parseJSON(yapionObject1.toJSONLossy(new StringOutput()).getResult()));
+        System.out.println(YAPIONParser.parse(yapionObject1.toJSONLossy(new StringOutput()).getResult()));
         System.out.println(encodeBase64(yapionObject1.toString()));
         System.out.println(encodeBase64(yapionObject1.toJSONLossy(new StringOutput()).getResult()));
         System.out.println();
         System.out.println(yapionObject2);
         System.out.println(yapionObject2.toJSONLossy(new StringOutput()).getResult());
-        System.out.println(YAPIONParser.parseJSON(yapionObject2.toJSONLossy(new StringOutput()).getResult()));
+        System.out.println(YAPIONParser.parse(yapionObject2.toJSONLossy(new StringOutput()).getResult()));
         System.out.println(encodeBase64(yapionObject2.toString()));
         System.out.println(encodeBase64(yapionObject2.toJSONLossy(new StringOutput()).getResult()));
         System.out.println();
         System.out.println(yapionObject3);
         System.out.println(yapionObject3.toJSONLossy(new StringOutput()).getResult());
-        System.out.println(YAPIONParser.parseJSON(yapionObject3.toJSONLossy(new StringOutput()).getResult()));
+        System.out.println(YAPIONParser.parse(yapionObject3.toJSONLossy(new StringOutput()).getResult()));
         System.out.println(encodeBase64(yapionObject3.toString()));
         System.out.println(encodeBase64(yapionObject3.toJSONLossy(new StringOutput()).getResult()));
         System.out.println();
         System.out.println(yapionObject4);
         System.out.println(yapionObject4.toJSONLossy(new StringOutput()).getResult());
-        System.out.println(YAPIONParser.parseJSON(yapionObject4.toJSONLossy(new StringOutput()).getResult()));
+        System.out.println(YAPIONParser.parse(yapionObject4.toJSONLossy(new StringOutput()).getResult()));
         System.out.println(encodeBase64(yapionObject4.toString()));
         System.out.println(encodeBase64(yapionObject4.toJSONLossy(new StringOutput()).getResult()));
         System.out.println();
         System.out.println(yapionObject5);
         System.out.println(yapionObject5.toJSONLossy(new StringOutput()).getResult());
-        System.out.println(YAPIONParser.parseJSON(yapionObject5.toJSONLossy(new StringOutput()).getResult()));
+        System.out.println(YAPIONParser.parse(yapionObject5.toJSONLossy(new StringOutput()).getResult()));
         System.out.println(encodeBase64(yapionObject5.toString()));
         System.out.println(encodeBase64(yapionObject5.toJSONLossy(new StringOutput()).getResult()));
 

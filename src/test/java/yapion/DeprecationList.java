@@ -105,9 +105,6 @@ public class DeprecationList {
         if (version[1] < minor.get() - 2) {
             return true;
         }
-        if (version[2] < patch.get() - 20) {
-            return true;
-        }
         return false;
     }
 

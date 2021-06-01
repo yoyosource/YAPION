@@ -102,7 +102,7 @@ public class YAPIONDeserializerTest {
     @Test
     public void testReducedTypes() {
         YAPIONObject yapionObject = new YAPIONSerializer(new TestReduced()).parse().getReducedYAPIONObject();
-        Object object = new YAPIONDeserializer(yapionObject).reducedMode(true).parse().getObject();
+        Object object = new YAPIONDeserializer(yapionObject).parse().getObject();
         TestReduced toEqual = new TestReduced();
         assertThat(object, is(toEqual));
         TestReduced primitive = (TestReduced) object;
