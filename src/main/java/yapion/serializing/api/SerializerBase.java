@@ -19,8 +19,6 @@ import yapion.serializing.SerializeManager;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-import java.util.function.Supplier;
-
 public abstract class SerializerBase<T, K extends YAPIONAnyType> {
 
     private InternalSerializer<T> generated = null;
