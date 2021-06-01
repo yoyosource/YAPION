@@ -14,6 +14,7 @@
 package yapion.serializing.serializer.object.security.internal;
 
 import lombok.experimental.UtilityClass;
+import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.types.YAPIONObject;
 
@@ -66,7 +67,7 @@ public class KeySpecSerializerProvider {
 
     public static PrivateKey deserializePrivateKey(Class<?> clazz, YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         KeySpecSerializer keySpecSerializer = retrieveKeySpecSerializer(clazz);
-        if (keySpecSerializer == null) throw new YAPIONSerializerException("Unknown PrivateKey type");
+        if (keySpecSerializer == null) throw new YAPIONDeserializerException("Unknown PrivateKey type");
         return keySpecSerializer.deserializePrivateKey(yapionObject, algorithm);
     }
 
@@ -78,7 +79,7 @@ public class KeySpecSerializerProvider {
 
     public static PublicKey deserializePublicKey(Class<?> clazz, YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         KeySpecSerializer keySpecSerializer = retrieveKeySpecSerializer(clazz);
-        if (keySpecSerializer == null) throw new YAPIONSerializerException("Unknown PublicKey type");
+        if (keySpecSerializer == null) throw new YAPIONDeserializerException("Unknown PublicKey type");
         return keySpecSerializer.deserializePublicKey(yapionObject, algorithm);
     }
 

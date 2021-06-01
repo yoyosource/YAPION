@@ -13,8 +13,8 @@
 
 package yapion.serializing.utils;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
@@ -46,10 +46,7 @@ public class SerializeManagerUtils {
      * @return the Serializer that wraps the Interfaces
      */
     @SuppressWarnings({"java:S100"})
-    public static <T> SerializerObject<T> SerializerObject(Class<T> clazz, SerializationGetter<T, YAPIONObject> serializationGetter, DeserializationGetter<T, YAPIONObject> deserializationGetter) {
-        if (clazz == null) throw new YAPIONException();
-        if (serializationGetter == null) throw new YAPIONException();
-        if (deserializationGetter == null) throw new YAPIONException();
+    public static <T> SerializerObject<T> SerializerObject(@NonNull Class<T> clazz, @NonNull SerializationGetter<T, YAPIONObject> serializationGetter, @NonNull DeserializationGetter<T, YAPIONObject> deserializationGetter) {
         return new SerializerObject<T>() {
             @Override
             public Class<T> type() {
@@ -83,10 +80,7 @@ public class SerializeManagerUtils {
      * @return the Serializer that wraps the Interfaces
      */
     @SuppressWarnings({"java:S100"})
-    public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(Class<T> clazz, SerializationGetter<T, YAPIONMap> serializationGetter, DeserializationGetter<T, YAPIONMap> deserializationGetter) {
-        if (clazz == null) throw new YAPIONException();
-        if (serializationGetter == null) throw new YAPIONException();
-        if (deserializationGetter == null) throw new YAPIONException();
+    public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(@NonNull Class<T> clazz, @NonNull SerializationGetter<T, YAPIONMap> serializationGetter, @NonNull DeserializationGetter<T, YAPIONMap> deserializationGetter) {
         return new SerializerMap<T>() {
             @Override
             public Class<T> type() {
@@ -120,10 +114,7 @@ public class SerializeManagerUtils {
      * @return the Serializer that wraps the Interfaces
      */
     @SuppressWarnings({"java:S100"})
-    public static <T extends List<?>> SerializerList<T> SerializerList(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        if (clazz == null) throw new YAPIONException();
-        if (serializationGetter == null) throw new YAPIONException();
-        if (deserializationGetter == null) throw new YAPIONException();
+    public static <T extends List<?>> SerializerList<T> SerializerList(@NonNull Class<T> clazz, @NonNull SerializationGetter<T, YAPIONArray> serializationGetter, @NonNull DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return new SerializerList<T>() {
             @Override
             public Class<T> type() {
@@ -157,10 +148,7 @@ public class SerializeManagerUtils {
      * @return the Serializer that wraps the Interfaces
      */
     @SuppressWarnings({"java:S100"})
-    public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        if (clazz == null) throw new YAPIONException();
-        if (serializationGetter == null) throw new YAPIONException();
-        if (deserializationGetter == null) throw new YAPIONException();
+    public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(@NonNull Class<T> clazz, @NonNull SerializationGetter<T, YAPIONArray> serializationGetter, @NonNull DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return new SerializerQueue<T>() {
             @Override
             public Class<T> type() {
@@ -194,10 +182,7 @@ public class SerializeManagerUtils {
      * @return the Serializer that wraps the Interfaces
      */
     @SuppressWarnings({"java:S100"})
-    public static <T extends Set<?>> SerializerSet<T> SerializerSet(Class<T> clazz, SerializationGetter<T, YAPIONArray> serializationGetter, DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        if (clazz == null) throw new YAPIONException();
-        if (serializationGetter == null) throw new YAPIONException();
-        if (deserializationGetter == null) throw new YAPIONException();
+    public static <T extends Set<?>> SerializerSet<T> SerializerSet(@NonNull Class<T> clazz, @NonNull SerializationGetter<T, YAPIONArray> serializationGetter, @NonNull DeserializationGetter<T, YAPIONArray> deserializationGetter) {
         return new SerializerSet<T>() {
             @Override
             public Class<T> type() {
@@ -239,9 +224,7 @@ public class SerializeManagerUtils {
      * @param <T> the Instance type
      * @return the InstanceFactory that wraps the Interface
      */
-    public static <T> InstanceFactory<T> InstanceFactory(Class<T> clazz, InstanceGetter<T> instanceGetter) {
-        if (clazz == null) throw new YAPIONException();
-        if (instanceGetter == null) throw new YAPIONException();
+    public static <T> InstanceFactory<T> InstanceFactory(@NonNull Class<T> clazz, @NonNull InstanceGetter<T> instanceGetter) {
         return new InstanceFactory<T>() {
             @Override
             public Class<T> type() {

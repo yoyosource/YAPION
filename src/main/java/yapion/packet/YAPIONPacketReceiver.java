@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.api.InternalAPI;
-import yapion.exceptions.utils.YAPIONPacketException;
 import yapion.utils.IdentifierUtils;
 
 import java.io.IOException;
@@ -117,10 +116,7 @@ public class YAPIONPacketReceiver {
      */
     @Deprecated
     @DeprecationInfo(since = "0.25.0")
-    public YAPIONPacketReceiver add(Class<? extends YAPIONPacket>[] packetTypes, YAPIONPacketHandler yapionPacketHandler) {
-        if (packetTypes == null) {
-            throw new YAPIONPacketException();
-        }
+    public YAPIONPacketReceiver add(@NonNull Class<? extends YAPIONPacket>[] packetTypes, YAPIONPacketHandler yapionPacketHandler) {
         for (Class<? extends YAPIONPacket> s : packetTypes) {
             if (s == null) continue;
             add(s, yapionPacketHandler);

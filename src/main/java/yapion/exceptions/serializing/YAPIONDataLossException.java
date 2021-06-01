@@ -17,10 +17,6 @@ import yapion.exceptions.YAPIONException;
 
 public class YAPIONDataLossException extends YAPIONException {
 
-    public YAPIONDataLossException() {
-        super();
-    }
-
     public YAPIONDataLossException(String message) {
         super(message);
     }

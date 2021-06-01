@@ -29,7 +29,7 @@ public interface ObjectAdd<I, K> extends InternalAdd<I, K> {
 
     default <@YAPIONPrimitive T> I add(@NonNull K key, T value) {
         if (!YAPIONValue.validType(value)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
         }
         return add(key, new YAPIONValue<>(value));
     }
@@ -48,7 +48,7 @@ public interface ObjectAdd<I, K> extends InternalAdd<I, K> {
 
     default <@YAPIONPrimitive T> YAPIONAnyType addAndGetPrevious(@NonNull K key, T value) {
         if (!YAPIONValue.validType(value)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
         }
         return addAndGetPrevious(key, new YAPIONValue<>(value));
     }
@@ -67,7 +67,7 @@ public interface ObjectAdd<I, K> extends InternalAdd<I, K> {
 
     default <@YAPIONPrimitive T> I putAndGetItself(@NonNull K key, T value) {
         if (!YAPIONValue.validType(value)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
         }
         return putAndGetItself(key, new YAPIONValue<>(value));
     }
@@ -86,7 +86,7 @@ public interface ObjectAdd<I, K> extends InternalAdd<I, K> {
 
     default <@YAPIONPrimitive T> YAPIONAnyType put(@NonNull K key, T value) {
         if (!YAPIONValue.validType(value)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
         }
         return put(key, new YAPIONValue<>(value));
     }

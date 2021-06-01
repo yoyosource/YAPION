@@ -27,7 +27,7 @@ public interface MapRemove<I, K> extends InternalRemove<I, K> {
             return internalRemove((K) key);
         }
         if (!YAPIONValue.validType(key)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + key.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
         }
         return internalRemove((K) new YAPIONValue<>(key));
     }
@@ -37,7 +37,7 @@ public interface MapRemove<I, K> extends InternalRemove<I, K> {
             return internalRemoveAndGet((K) key);
         }
         if (!YAPIONValue.validType(key)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + key.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
         }
         return internalRemoveAndGet((K) new YAPIONValue<>(key));
     }

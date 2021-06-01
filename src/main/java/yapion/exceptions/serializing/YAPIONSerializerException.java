@@ -17,10 +17,6 @@ import yapion.exceptions.YAPIONException;
 
 public class YAPIONSerializerException extends YAPIONException {
 
-    public YAPIONSerializerException() {
-        super();
-    }
-
     public YAPIONSerializerException(String message) {
         super(message);
     }

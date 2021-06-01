@@ -40,7 +40,7 @@ public class FieldSerializer implements InternalSerializer<Field> {
     @Override
     public YAPIONAnyType serialize(SerializeData<Field> serializeData) {
         serializeData.isSet(REFLECTION_EXCEPTION, () -> {
-            throw new YAPIONDataLossException();
+            throw new YAPIONDataLossException("The REFLECTION_EXCEPTION flag is set to not serialize reflection stuff");
         });
         if (serializeData.getYAPIONFlags().isSet(REFLECTION_AS_NULL)) {
             return new YAPIONValue<>(null);

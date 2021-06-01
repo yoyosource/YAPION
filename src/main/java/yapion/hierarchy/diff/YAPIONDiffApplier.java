@@ -22,6 +22,8 @@ import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 
+import java.util.Arrays;
+
 public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
 
     public static YAPIONDiffApplier<YAPIONObject, String, YAPIONObject> diffApplierObject(YAPIONObject yapionObject) {
@@ -210,7 +212,7 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
             if (current instanceof YAPIONDataType) {
                 current = ((YAPIONDataType) current).internalGetYAPIONAnyType(s);
             } else {
-                throw new YAPIONException();
+                throw new YAPIONException("Resolution of the path '" + Arrays.toString(path) + "' failed as current value is not of type YAPIONDataType");
             }
         }
         return current;

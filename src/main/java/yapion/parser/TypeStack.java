@@ -14,7 +14,6 @@
 package yapion.parser;
 
 import yapion.exceptions.parser.YAPIONParserException;
-import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.hierarchy.types.YAPIONType;
 
 import java.util.Iterator;
@@ -30,18 +29,18 @@ public class TypeStack {
 
     public YAPIONType pop(YAPIONType yapionType) {
         if (empty()) {
-            throw new YAPIONArrayIndexOutOfBoundsException();
+            throw new YAPIONParserException("TypeStack is empty");
         }
         YAPIONType current = stack.pop();
         if (current != yapionType) {
-            throw new YAPIONParserException();
+            throw new YAPIONParserException("Current known type (" + current + ") is not expected specified type (" + yapionType + ")");
         }
         return current;
     }
 
     public YAPIONType peek() {
         if (empty()) {
-            throw new YAPIONArrayIndexOutOfBoundsException();
+            throw new YAPIONParserException("TypeStack is empty");
         }
         return stack.getFirst();
     }

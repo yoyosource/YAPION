@@ -26,7 +26,7 @@ public interface ArrayAdd<I, K> extends ObjectAdd<I, K> {
 
     default <@YAPIONPrimitive T> I add(T value) {
         if (!YAPIONValue.validType(value)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
         }
         return add(new YAPIONValue<>(value));
     }
@@ -43,7 +43,7 @@ public interface ArrayAdd<I, K> extends ObjectAdd<I, K> {
 
     default <@YAPIONPrimitive T> I set(@NonNull K key, T value) {
         if (!YAPIONValue.validType(value)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
         }
         return set(key, new YAPIONValue<>(value));
     }

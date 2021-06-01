@@ -236,7 +236,7 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
             return internalContainsKey((K) key, type);
         }
         if (!YAPIONValue.validType(key)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + key.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
         }
         return internalContainsKey((K) new YAPIONValue<>(key), type);
     }
@@ -246,7 +246,7 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
             return internalContainsKey((K) key, type);
         }
         if (!YAPIONValue.validType(key)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + key.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
         }
         return internalContainsKey((K) new YAPIONValue<>(key), type);
     }
@@ -256,7 +256,7 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
             return internalGetYAPIONAnyType((K) key);
         }
         if (!YAPIONValue.validType(key)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + key.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
         }
         return internalGetYAPIONAnyType((K) new YAPIONValue<>(key));
     }
@@ -359,7 +359,7 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
             return (YAPIONValue<C>) getValue(key, ClassUtils.getBoxed(type));
         }
         if (!YAPIONValue.validType(type)) {
-            throw new YAPIONRetrieveException();
+            throw new YAPIONRetrieveException("The type '" + type.getTypeName() + "' is not supported as a YAPIONValue value");
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
@@ -395,7 +395,7 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     @SuppressWarnings("unchecked")
     default <@YAPIONEveryType T, C> YAPIONValue<C> getValue(@NonNull T key, C type) {
         if (!YAPIONValue.validType(type)) {
-            throw new YAPIONRetrieveException();
+            throw new YAPIONRetrieveException("The type '" + type.getClass().getTypeName() + "' is not supported as a YAPIONValue value");
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;

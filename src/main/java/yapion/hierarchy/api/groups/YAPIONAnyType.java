@@ -66,7 +66,7 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     }
 
     protected long referenceValueProvider(ReferenceFunction referenceFunction) {
-        throw new YAPIONException();
+        throw new YAPIONException("No Reference Value could be calculated");
     }
 
     public YAPIONAnyType internalCopy() {

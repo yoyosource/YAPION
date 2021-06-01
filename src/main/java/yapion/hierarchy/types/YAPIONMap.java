@@ -201,7 +201,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         if (YAPIONValue.validType(key)) {
             return add(new YAPIONValue<>(key), value);
         } else if (!(key instanceof YAPIONAnyType)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
         }
         YAPIONAnyType internalKey = (YAPIONAnyType) key;
         discardReferenceValue();
@@ -238,7 +238,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         if (YAPIONValue.validType(key)) {
             return add(new YAPIONValue<>(key), value);
         } else if (!(key instanceof YAPIONAnyType)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
         }
         YAPIONAnyType internalKey = (YAPIONAnyType) key;
         discardReferenceValue();

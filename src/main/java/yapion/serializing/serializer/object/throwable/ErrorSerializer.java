@@ -43,7 +43,7 @@ public class ErrorSerializer implements InternalSerializer<Error> {
     public YAPIONAnyType serialize(SerializeData<Error> serializeData) {
         serializeData.signalDataLoss();
         serializeData.isSet(ERROR_EXCEPTION, () -> {
-            throw new YAPIONDataLossException();
+            throw new YAPIONDataLossException("The ERROR_EXCEPTION flag is set to not serialize Errors");
         });
 
         YAPIONObject yapionObject = new YAPIONObject();

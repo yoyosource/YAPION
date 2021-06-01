@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.deserialize.YAPIONDeserializeType;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
-import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -353,7 +352,7 @@ public final class YAPIONDeserializer {
      * @return Object from the YAPIONObject to deserialize
      */
     public Object getObjectOrException() {
-        if (object == null) throw new YAPIONSerializerException();
+        if (object == null) throw new YAPIONDeserializerException("Deserialization yielded a null object");
         return object;
     }
 

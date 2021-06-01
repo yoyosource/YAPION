@@ -14,6 +14,7 @@
 package yapion.serializing.serializer.object.security;
 
 import yapion.annotations.api.SerializerImplementation;
+import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
@@ -66,7 +67,7 @@ public class PublicKeySerializer implements InternalSerializer<PublicKey> {
         try {
             return KeySpecSerializerProvider.deserializePublicKey(Class.forName(key), publicKey, algorithm);
         } catch (GeneralSecurityException | ClassNotFoundException e) {
-            throw new YAPIONSerializerException(e.getMessage(), e);
+            throw new YAPIONDeserializerException(e.getMessage(), e);
         }
     }
 

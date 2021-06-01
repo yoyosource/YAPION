@@ -161,7 +161,7 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
             return (YAPIONValue<T>) getValue(key, ClassUtils.getBoxed(type));
         }
         if (!YAPIONValue.validType(type)) {
-            throw new YAPIONRetrieveException();
+            throw new YAPIONRetrieveException("The type '" + type.getTypeName() + "' is not supported as a YAPIONValue value");
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
@@ -197,7 +197,7 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
     @SuppressWarnings("unchecked")
     default <T> YAPIONValue<T> getValue(@NonNull K key, T type) {
         if (!YAPIONValue.validType(type)) {
-            throw new YAPIONRetrieveException();
+            throw new YAPIONRetrieveException("The type '" + type.getClass().getTypeName() + "' is not supported as a YAPIONValue value");
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;

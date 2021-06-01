@@ -27,12 +27,12 @@ public interface MapAdd<I, K> extends InternalAdd<I, K> {
         if (YAPIONValue.validType(key)) {
             return add(new YAPIONValue<>(key), value);
         } else if (!(key instanceof YAPIONAnyType)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
         }
         if (YAPIONValue.validType(value)) {
             return add(key, new YAPIONValue<>(value));
         } else if (!(value instanceof YAPIONAnyType)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
         }
         return internalAdd((K) key, (YAPIONAnyType) value);
     }
@@ -49,12 +49,12 @@ public interface MapAdd<I, K> extends InternalAdd<I, K> {
         if (YAPIONValue.validType(key)) {
             return addAndGetPrevious(new YAPIONValue<>(key), value);
         } else if (!(key instanceof YAPIONAnyType)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
         }
         if (YAPIONValue.validType(value)) {
             return addAndGetPrevious(key, new YAPIONValue<>(value));
         } else if (!(value instanceof YAPIONAnyType)) {
-            throw new YAPIONClassTypeException();
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
         }
         return internalAddAndGetPrevious((K) key, (YAPIONAnyType) value);
     }

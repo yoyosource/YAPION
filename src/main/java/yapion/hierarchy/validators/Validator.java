@@ -53,8 +53,8 @@ public final class Validator {
      */
     public Validator add(ValidatorVariable variable) {
         if (variable == null) return this;
-        if (variable.getPath() == null) throw new YAPIONException();
-        if (variable.type == null) throw new YAPIONException();
+        if (variable.getPath() == null) throw new YAPIONException("");
+        if (variable.type == null) throw new YAPIONException("");
         variable.path = validationHook.path(variable.path);
         variables.add(variable);
         return this;

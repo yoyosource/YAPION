@@ -26,7 +26,7 @@ import java.math.BigInteger;
 /**
  * This annotation describes that any YAPIONPrimitive is allowed as parameter.
  * A YAPIONPrimitive is anything you can store in a {@link YAPIONValue}. This
- * also includes any thing that is {@link YAPIONAnyType}.
+ * annotation also includes any thing that is a {@link YAPIONAnyType}.
  *
  * <br><br>YAPIONEveryType:
  * <br>- {@link String}
