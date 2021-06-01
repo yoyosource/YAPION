@@ -242,52 +242,51 @@ public final class YAPIONDeserializer {
         boolean loadWithoutAnnotation = serializer != null && serializer.loadWithoutAnnotation();
         boolean createWithObjenesis = serializer != null && serializer.createWithObjenesis();
 
+        if (!contextManager.is(clazz).load && !loadWithoutAnnotation) {
+            throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
+        }
         try {
-            if (!contextManager.is(clazz).load && !loadWithoutAnnotation) {
-                throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
-            }
-
             object = SerializeManager.getObjectInstance(clazz, type, contextManager.is(clazz).data || createWithObjenesis);
-            MethodManager.preDeserializationStep(object, object.getClass(), contextManager);
-            pointerMap.put(yapionObject, object);
-
-            for (String fieldName : yapionObject.getKeys()) {
-                if (fieldName.equals(TYPE_IDENTIFIER)) continue;
-
-                Field field = ReflectionsUtils.getField(clazz, fieldName);
-                if (field == null) {
-                    deserializeResult.add(object, fieldName, yapionObject.getYAPIONAnyType(fieldName));
-                    continue;
-                }
-                if (ClassUtils.removed(field)) continue;
-                if (!contextManager.is(object, field).load && !loadWithoutAnnotation) continue;
-
-                Class<?> fieldType = field.getType();
-                arrayType = fieldType.getTypeName();
-
-                YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(field.getName());
-                if (!YAPIONAnyType.class.isAssignableFrom(fieldType) && yapionAnyType instanceof YAPIONObject && !((YAPIONObject) yapionAnyType).containsKey(TYPE_IDENTIFIER, String.class)) {
-                    ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, arrayType);
-                }
-                YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
-                if (specialSet(field, yapionAnyType)) {
-                    SerializeManager.getReflectionStrategy().set(field, object, yapionAnyType);
-                } else if (isValid(field, yapionDeserializeType)) {
-                    Object o = null;
-                    if (serializer != null && !serializer.empty()) {
-                        o = SerializeManager.getInternalSerializer(yapionDeserializeType.type()).deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this, typeReMapper));
-                    }
-                    SerializeManager.getReflectionStrategy().set(field, object, o);
-                } else {
-                    SerializeManager.getReflectionStrategy().set(field, object, parse(yapionAnyType));
-                }
-
-                arrayType = "";
-            }
-            MethodManager.postDeserializationStep(object, object.getClass(), contextManager);
         } catch (YAPIONReflectionException e) {
             log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
         }
+        MethodManager.preDeserializationStep(object, object.getClass(), contextManager);
+        pointerMap.put(yapionObject, object);
+
+        for (String fieldName : yapionObject.getKeys()) {
+            if (fieldName.equals(TYPE_IDENTIFIER)) continue;
+
+            Field field = ReflectionsUtils.getField(clazz, fieldName);
+            if (field == null) {
+                deserializeResult.add(object, fieldName, yapionObject.getYAPIONAnyType(fieldName));
+                continue;
+            }
+            if (ClassUtils.removed(field)) continue;
+            if (!contextManager.is(object, field).load && !loadWithoutAnnotation) continue;
+
+            Class<?> fieldType = field.getType();
+            arrayType = fieldType.getTypeName();
+
+            YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(field.getName());
+            if (!YAPIONAnyType.class.isAssignableFrom(fieldType) && yapionAnyType instanceof YAPIONObject && !((YAPIONObject) yapionAnyType).containsKey(TYPE_IDENTIFIER, String.class)) {
+                ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, arrayType);
+            }
+            YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
+            if (specialSet(field, yapionAnyType)) {
+                SerializeManager.getReflectionStrategy().set(field, object, yapionAnyType);
+            } else if (isValid(field, yapionDeserializeType)) {
+                Object o = null;
+                if (serializer != null && !serializer.empty()) {
+                    o = SerializeManager.getInternalSerializer(yapionDeserializeType.type()).deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this, typeReMapper));
+                }
+                SerializeManager.getReflectionStrategy().set(field, object, o);
+            } else {
+                SerializeManager.getReflectionStrategy().set(field, object, parse(yapionAnyType));
+            }
+
+            arrayType = "";
+        }
+        MethodManager.postDeserializationStep(object, object.getClass(), contextManager);
         return this;
     }
 
