@@ -75,10 +75,10 @@ public class YAPIONPointer extends YAPIONValueType {
     }
 
     public YAPIONPointer(String pointerID) {
-        if (!pointerID.matches("[0-9A-F]{16}")) {
+        if (!pointerID.matches("[0-9A-Fa-f]{16}")) {
             throw new YAPIONPointerException("Invalid pointer id " + pointerID + " needs to be a HEX number");
         }
-        this.pointerID = Long.parseLong(pointerID, 16);
+        this.pointerID = Long.parseLong(pointerID.toUpperCase(), 16);
     }
 
     public void setYAPIONObject(YAPIONObject yapionObject) {

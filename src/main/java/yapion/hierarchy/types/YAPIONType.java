@@ -13,30 +13,48 @@
 
 package yapion.hierarchy.types;
 
+import lombok.Getter;
+import yapion.exceptions.parser.YAPIONParserException;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.parser.YAPIONParserMapValue;
+
+@Getter
 public enum YAPIONType {
 
-    ANY(0x21b7bcb508370b96L, "ANY"),
+    ANY(0x21b7bcb508370b96L, "ANY", (yapionAnyType, s, yapionAnyType2) -> {
+        throw new YAPIONParserException("ANY is no YAPIONType to call add on");
+    }),
 
-    OBJECT(0xff2986f7947f3bf9L, "OBJ"),
-    ARRAY(0xf4f767c97724e81eL, "ARR"),
-    MAP(0x29548df23a131510L, "MAP"),
-    POINTER(0x4e958af3539fb57cL, "PNR"),
-    VALUE(0xf86bfba6285c9be2L, "VAL");
+    OBJECT(0xff2986f7947f3bf9L, "OBJ", (yapionAnyType, s, yapionAnyType2) -> {
+        ((YAPIONObject) yapionAnyType).getBackedMap().put(s, yapionAnyType2);
+        yapionAnyType2.setParent(yapionAnyType);
+    }),
+    ARRAY(0xf4f767c97724e81eL, "ARR", (yapionAnyType, s, yapionAnyType2) -> {
+        ((YAPIONArray) yapionAnyType).getBackedArray().add(yapionAnyType2);
+        yapionAnyType2.setParent(yapionAnyType);
+    }),
+    MAP(0x29548df23a131510L, "MAP", (yapionAnyType, s, yapionAnyType2) -> {
+        ((YAPIONMap) yapionAnyType).add(new YAPIONParserMapValue(yapionAnyType2));
+    }),
+    POINTER(0x4e958af3539fb57cL, "PNR", (yapionAnyType, s, yapionAnyType2) -> {
+        throw new YAPIONParserException("POINTER is no YAPIONType to call add on");
+    }),
+    VALUE(0xf86bfba6285c9be2L, "VAL", (yapionAnyType, s, yapionAnyType2) -> {
+        throw new YAPIONParserException("VALUE is no YAPIONType to call add on");
+    });
 
     private final long referenceValue;
     private final String name;
+    private final TriConsumer<YAPIONAnyType, String, YAPIONAnyType> addConsumer;
 
-    YAPIONType(long referenceValue, String name) {
+    YAPIONType(long referenceValue, String name, TriConsumer<YAPIONAnyType, String, YAPIONAnyType> addConsumer) {
         this.referenceValue = referenceValue;
         this.name = name;
+        this.addConsumer = addConsumer;
     }
 
-    public long getReferenceValue() {
-        return referenceValue;
-    }
-
-    public String getName() {
-        return name;
+    public interface TriConsumer<T, R, K> {
+        void accept(T t, R r, K k);
     }
 
 }

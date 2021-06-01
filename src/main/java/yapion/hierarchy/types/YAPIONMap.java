@@ -340,6 +340,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     // Internal method for Parser
+    @InternalAPI
     public void add(@NonNull YAPIONParserMapValue variable) {
         check(variable.value);
         discardReferenceValue();

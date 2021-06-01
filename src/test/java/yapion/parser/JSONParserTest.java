@@ -46,4 +46,9 @@ public class JSONParserTest {
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{test{@mapping[]}}"));
     }
 
+    @Test
+    public void testJSONStartEnd() {
+        assertThat(YAPIONParser.parse("\"hello\": \"\"").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
+    }
+
 }

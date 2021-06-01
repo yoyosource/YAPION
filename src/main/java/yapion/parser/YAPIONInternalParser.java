@@ -113,6 +113,9 @@ final class YAPIONInternalParser {
     }
 
     private void parseFinish() {
+        if (mightValue == MightValue.TRUE) {
+            parseValueJSONEnd('\u0000');
+        }
         if (typeStack.isNotEmpty() && (hadInitial || typeStack.pop(YAPIONType.OBJECT) != YAPIONType.OBJECT)) {
             throw new YAPIONParserException("Object is not closed correctly");
         }
@@ -135,6 +138,7 @@ final class YAPIONInternalParser {
             }
             log.debug("pFinish  [done]");
         }
+        log.debug("finish   [done]");
     }
 
     private void push(YAPIONType yapionType) {
@@ -174,15 +178,7 @@ final class YAPIONInternalParser {
 
     private void add(@NonNull String key, @NonNull YAPIONAnyType value) {
         log.debug("add      ['{}'='{}']", key.replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t"), value);
-        if (currentObject instanceof YAPIONObject) {
-            ((YAPIONObject) currentObject).getBackedMap().put(key, value);
-            value.setParent(currentObject);
-        } else if (currentObject instanceof YAPIONMap) {
-            ((YAPIONMap) currentObject).add(new YAPIONParserMapValue(value));
-        } else if (currentObject instanceof YAPIONArray) {
-            ((YAPIONArray) currentObject).getBackedArray().add(value);
-            value.setParent(currentObject);
-        }
+        currentObject.getType().getAddConsumer().accept(currentObject, key, value);
     }
 
     private boolean everyType(char c, char lastChar) {
@@ -194,19 +190,19 @@ final class YAPIONInternalParser {
                 return true;
             }
             mightValue = MightValue.FALSE;
+
             if (c == '{' || c == '[' || c == '<' || c == '"' || (c >= '0' && c <= '9') || c == 't' || c == 'n' || c == 'f') {
-                current.deleteCharAt(current.length() - 1);
-            }
-            if (current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"') {
+                current.delete(current.length() - 2, current.length());
                 current.deleteCharAt(0);
-                current.deleteCharAt(current.length() - 1);
-            }
-            if (c == '"' || (c >= '0' && c <= '9') || c == 't' || c == 'n' || c == 'f') {
-                log.debug("type     [VALUE]");
-                push(YAPIONType.VALUE);
-                mightValue = MightValue.TRUE;
-                parseValue(c);
-                return true;
+                if (c != '{' && c != '[' && c != '<') {
+                    log.debug("type     [JSON]");
+                    push(YAPIONType.VALUE);
+                    mightValue = MightValue.TRUE;
+                    parseValue(c);
+                    return true;
+                }
+            } else {
+                throw new YAPIONParserException("Invalid JSON");
             }
         }
         if (c == '{') {
@@ -249,7 +245,7 @@ final class YAPIONInternalParser {
             return true;
         }
         if (c == ':' && typeStack.peek() == YAPIONType.OBJECT && current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"') {
-            log.debug("type     [VALUE?]");
+            log.debug("type     [JSON ?]");
             mightValue = MightValue.MIGHT;
             return false;
         }
@@ -260,18 +256,20 @@ final class YAPIONInternalParser {
         if (everyType(c, lastChar)) {
             return;
         }
-        if (!escaped && c == '}') {
-            parseEndObject();
-            return;
+        if (!escaped) {
+            if (c == '}') {
+                parseEndObject();
+                return;
+            }
+            if (c == '\\') {
+                escaped = true;
+                return;
+            }
         }
         if (parseSpecialEscape(c)) {
             return;
         }
-        if (c == '\\' && !escaped) {
-            escaped = true;
-            return;
-        }
-        if (current.length() == 0 && isWhiteSpace(c) && escaped) {
+        if (escaped && current.length() == 0 && isWhiteSpace(c)) {
             current.append(c);
             escaped = false;
             return;
@@ -279,18 +277,14 @@ final class YAPIONInternalParser {
         if (current.length() != 0 || !isWhiteSpace(c)) {
             current.append(c);
         }
-        if (escaped) {
-            escaped = false;
-        }
+        escaped = false;
     }
 
     private void parseEndObject() {
         pop(YAPIONType.OBJECT);
         reset();
         currentObject = currentObject.getParent();
-        if (typeStack.isEmpty()) {
-            finished = true;
-        }
+        finished = typeStack.isEmpty();
     }
 
     private boolean parseSpecialEscape(char c) {
@@ -341,39 +335,15 @@ final class YAPIONInternalParser {
         if (parseSpecialEscape(c)) {
             return;
         }
-        if (!escaped && c == ')' && mightValue == MightValue.FALSE) {
+        if (mightValue == MightValue.FALSE && !escaped && c == ')') {
             log.debug("ValueHandler to use -> {}", valueHandlerList);
             pop(YAPIONType.VALUE);
             add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             reset();
             return;
         }
-        if (!escaped && (c == ',' || c == '}' || c == ']' || c == '>') && mightValue == MightValue.TRUE) {
-            log.debug("ValueHandler to use -> {}", valueHandlerList);
-            pop(YAPIONType.VALUE);
-            while (true) {
-                char temp = current.charAt(current.length() - 1);
-                if (!(temp == ' ' || temp == '\t' || temp == '\n')) {
-                    break;
-                }
-                current.deleteCharAt(current.length() - 1);
-            }
-            add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
-            reset();
-            mightValue = MightValue.FALSE;
-            switch (c) {
-                case '}':
-                    parseEndObject();
-                    break;
-                case ']':
-                    parseEndArray();
-                    break;
-                case '>':
-                    parseEndMap();
-                    break;
-                default:
-                    break;
-            }
+        if (mightValue == MightValue.TRUE && !escaped && (c == ',' || c == '}' || c == ']' || c == '>')) {
+            parseValueJSONEnd(c);
             return;
         }
         if (c == '\\' && !escaped) {
@@ -396,14 +366,36 @@ final class YAPIONInternalParser {
         current.append(c);
     }
 
-    private boolean isHex(char c) {
-        return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
+    private void parseValueJSONEnd(char c) {
+        log.debug("ValueHandler to use -> {}", valueHandlerList);
+        pop(YAPIONType.VALUE);
+        while (true) {
+            char temp = current.charAt(current.length() - 1);
+            if (!(temp == ' ' || temp == '\t' || temp == '\n')) {
+                break;
+            }
+            current.deleteCharAt(current.length() - 1);
+        }
+        add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
+        reset();
+        mightValue = MightValue.FALSE;
+        switch (c) {
+            case '}':
+                parseEndObject();
+                break;
+            case ']':
+                parseEndArray();
+                break;
+            case '>':
+                parseEndMap();
+                break;
+            default:
+                break;
+        }
     }
 
     private void parsePointer(char c) {
-        if (isHex(c)) {
-            current.append(c);
-        }
+        current.append(c);
         if (current.length() == 16) {
             pop(YAPIONType.POINTER);
             YAPIONPointer yapionPointer = new YAPIONPointer(stringBuilderToUTF8String(current));
@@ -414,10 +406,7 @@ final class YAPIONInternalParser {
     }
 
     private void parseMap(char c, char lastChar) {
-        if (everyType(c, lastChar)) {
-            return;
-        }
-        if (c == '>') {
+        if (!everyType(c, lastChar) && c == '>') {
             parseEndMap();
         }
     }

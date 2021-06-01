@@ -200,6 +200,11 @@ public class YAPIONParserTest {
     }
 
     @Test
+    public void testYAPIONStartEnd() {
+        assertThat(YAPIONParser.parse("hello()").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
+    }
+
+    @Test
     public void testArraySeparatorSupport() {
         YAPIONObject yapionObject = new YAPIONObject();
         YAPIONArray yapionArray = new YAPIONArray();
@@ -268,6 +273,16 @@ public class YAPIONParserTest {
         YAPIONObject yapionObject = YAPIONParser.parse("{\\r\\n\\t()}");
         assertThat(yapionObject.getPlainValue("\r\n\t"), notNullValue());
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\r\\n\\t()}"));
+    }
+
+    @Test
+    public void testComaKey() {
+        assertThat(YAPIONParser.parse("{\\,hello()}").toYAPION(new StringOutput()).getResult(), is("{\\,hello()}"));
+    }
+
+    @Test
+    public void testComaSeparator() {
+        assertThat(YAPIONParser.parse("{,hello()}").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
     }
 
 }
