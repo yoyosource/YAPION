@@ -13,6 +13,7 @@
 
 package yapion.serializing.api;
 
+import yapion.annotations.api.DeprecationInfo;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 import yapion.serializing.InternalSerializer;
@@ -35,12 +36,29 @@ public abstract class SerializerObject<T> extends SerializerBase<T, YAPIONObject
 
     /**
      * Returns {@code true} if {@link #type()} should be treated as
+     * special Class. {@link YAPIONSerializer} and {@link YAPIONDeserializer}
+     * will treat this return type as secondary choice if a more specific
+     * serializer is missing. If {@link #type()} returns a class where
+     * {@link Class#isInterface()} returns true it will be treated as an interface
+     * Serializer otherwise as a Class serializer, which will also serializer
+     * anything with {@link #type()}'s super class.
+     *
+     * @return {@code true} if {@link #type()} should be treated as an interface, {@code false} otherwise
+     */
+    public boolean isSpecial() {
+        return isInterface();
+    }
+
+    /**
+     * Returns {@code true} if {@link #type()} should be treated as
      * an interface. {@link YAPIONSerializer} and {@link YAPIONDeserializer}
      * will treat this return type as secondary choice if a more specific
      * serializer is missing.
      *
      * @return {@code true} if {@link #type()} should be treated as an interface, {@code false} otherwise
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#isSpecial()")
     public boolean isInterface() {
         return false;
     }
@@ -96,8 +114,24 @@ public abstract class SerializerObject<T> extends SerializerBase<T, YAPIONObject
 
             @Override
             public Class<?> interfaceType() {
-                if (SerializerObject.this.isInterface()) return SerializerObject.this.type();
-                return null;
+                if (!SerializerObject.this.isSpecial()) {
+                    return null;
+                }
+                if (!SerializerObject.this.type().isInterface()) {
+                    return null;
+                }
+                return SerializerObject.this.type();
+            }
+
+            @Override
+            public Class<?> classType() {
+                if (!SerializerObject.this.isSpecial()) {
+                    return null;
+                }
+                if (SerializerObject.this.type().isInterface()) {
+                    return null;
+                }
+                return SerializerObject.this.type();
             }
 
             @Override

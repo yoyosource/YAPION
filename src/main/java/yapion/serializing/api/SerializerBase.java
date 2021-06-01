@@ -13,6 +13,7 @@
 
 package yapion.serializing.api;
 
+import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
@@ -41,8 +42,17 @@ public abstract class SerializerBase<T, K extends YAPIONAnyType> {
     }
 
     public final InternalSerializer<T> convert() {
+        if (type().isPrimitive()) {
+            throw new YAPIONException("Conversion to InternalSerializer failed as primitives cannot be overridden by new Serializer");
+        }
+        if (type().isEnum()) {
+            throw new YAPIONException("Conversion to InternalSerializer failed as Enum cannot be overridden by new Serializer");
+        }
         if (generated == null) {
             generated = convertInternal();
+        }
+        if (generated == null) {
+            throw new YAPIONException("Conversion to InternalSerializer failed");
         }
         return generated;
     }

@@ -27,10 +27,12 @@ public interface InternalSerializer<T> {
     
     Class<?> type();
 
+    @InternalAPI
     default Class<?> defaultImplementation() {
         return null;
     }
 
+    @InternalAPI
     default Class<?> primitiveType() {
         return null;
     }
@@ -43,18 +45,22 @@ public interface InternalSerializer<T> {
         return null;
     }
 
+    @InternalAPI
     default boolean empty() {
         return false;
     }
 
+    @InternalAPI
     default boolean saveWithoutAnnotation() {
         return false;
     }
 
+    @InternalAPI
     default boolean loadWithoutAnnotation() {
         return false;
     }
 
+    @InternalAPI
     default boolean createWithObjenesis() {
         return false;
     }
