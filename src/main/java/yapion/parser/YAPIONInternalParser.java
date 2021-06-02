@@ -116,11 +116,14 @@ final class YAPIONInternalParser {
         if (mightValue == MightValue.TRUE) {
             parseValueJSONEnd('\u0000');
         }
-        if (typeStack.isNotEmpty() && (hadInitial || typeStack.pop(YAPIONType.OBJECT) != YAPIONType.OBJECT)) {
-            throw new YAPIONParserException("Object is not closed correctly");
-        }
         if (count == 0) {
             throw new YAPIONParserException("No parse steps were done");
+        }
+        if (typeStack.isEmpty() && !hadInitial && typeStack.pop(YAPIONType.OBJECT) == YAPIONType.OBJECT) {
+            throw new YAPIONParserException("Object is closed too often");
+        }
+        if (typeStack.isNotEmpty() && hadInitial) {
+            throw new YAPIONParserException("Object is not closed correctly");
         }
 
         if (!yapionPointerList.isEmpty()) {

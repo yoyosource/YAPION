@@ -26,7 +26,7 @@ import static yapion.YAPIONAssertion.isYAPION;
 
 public class YAPIONParserTest {
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         System.out.println(YAPIONParser.parse("{test(), \"test2\":{}}"));
         System.out.println(YAPIONParser.parse("{\"contributor\":[{\"name\":\"yoyosource\",\"owner\":true},{\"name\":\"chaoscaot444\",\"owner\":\"false\"}]}"));
         System.out.println(YAPIONParser.parse("{\n" +
@@ -37,7 +37,7 @@ public class YAPIONParserTest {
                 "  \"gender\": \"Female\",\n" +
                 "  \"ip_address\": \"26.58.193.2\"\n" +
                 "}"));
-    }
+    }*/
 
     @Test(expected = NullPointerException.class)
     public void testNullSafety() {
@@ -205,6 +205,16 @@ public class YAPIONParserTest {
     }
 
     @Test
+    public void testYAPIONStartEndObject() {
+        assertThat(YAPIONParser.parse("hello{}").toYAPION(new StringOutput()).getResult(), is("{hello{}}"));
+    }
+
+    @Test(expected = YAPIONParserException.class)
+    public void testYAPIONStartEndObjectError() {
+        YAPIONParser.parse("hello{}}");
+    }
+
+    @Test
     public void testArraySeparatorSupport() {
         YAPIONObject yapionObject = new YAPIONObject();
         YAPIONArray yapionArray = new YAPIONArray();
@@ -281,8 +291,18 @@ public class YAPIONParserTest {
     }
 
     @Test
+    public void testComaKeyAndSpace() {
+        assertThat(YAPIONParser.parse("{\\, hello()}").toYAPION(new StringOutput()).getResult(), is("{\\, hello()}"));
+    }
+
+    @Test
     public void testComaSeparator() {
         assertThat(YAPIONParser.parse("{,hello()}").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
+    }
+
+    @Test
+    public void testComaSeparatorAndSpace() {
+        assertThat(YAPIONParser.parse("{, hello()}").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
     }
 
 }
