@@ -102,7 +102,7 @@ final class YAPIONInternalParser {
                 parseArray(c, lastChar);
                 break;
             case VALUE:
-                parseValue(c);
+                parseValue(c, lastChar);
                 break;
             case MAP:
                 parseMap(c, lastChar);
@@ -201,7 +201,7 @@ final class YAPIONInternalParser {
                     log.debug("type     [JSON]");
                     push(YAPIONType.VALUE);
                     mightValue = MightValue.TRUE;
-                    parseValue(c);
+                    parseValue(c, lastChar);
                     return true;
                 }
             } else {
@@ -334,7 +334,7 @@ final class YAPIONInternalParser {
         return false;
     }
 
-    private void parseValue(char c) {
+    private void parseValue(char c, char lastChar) {
         if (parseSpecialEscape(c)) {
             return;
         }
@@ -346,8 +346,26 @@ final class YAPIONInternalParser {
             return;
         }
         if (mightValue == MightValue.TRUE && !escaped && (c == ',' || c == '}' || c == ']' || c == '>')) {
-            parseValueJSONEnd(c);
-            return;
+            if (current.length() > 0 && current.charAt(0) == '"' && lastChar == '"') {
+                parseValueJSONEnd(c);
+                return;
+            }
+            if (current.toString().equals("false")) {
+                parseValueJSONEnd(c);
+                return;
+            }
+            if (current.toString().equals("true")) {
+                parseValueJSONEnd(c);
+                return;
+            }
+            if (current.toString().equals("null")) {
+                parseValueJSONEnd(c);
+                return;
+            }
+            if (current.toString().matches("\\d+(\\.\\d+)?")) {
+                parseValueJSONEnd(c);
+                return;
+            }
         }
         if (c == '\\' && !escaped) {
             escaped = true;
@@ -445,7 +463,7 @@ final class YAPIONInternalParser {
         if (current.length() == 0 && isWhiteSpace(c) && !escaped) {
             return;
         }
-        parseValue(c);
+        parseValue(c, lastChar);
     }
 
     private void parseEndArray() {
