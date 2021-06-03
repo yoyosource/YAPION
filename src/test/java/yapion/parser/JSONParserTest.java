@@ -51,4 +51,12 @@ public class JSONParserTest {
         assertThat(YAPIONParser.parse("\"hello\": \"\"").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
     }
 
+    @Test
+    public void testJSONValueWithComa() {
+        YAPIONParser.parse("{\n" +
+                "\t\"text\": \"ipse amor, admisso sequitur vestigia passu.\",\n" +
+                "\t\"author\": \"Ovid\"\n" +
+                "}");
+    }
+
 }

@@ -346,24 +346,7 @@ final class YAPIONInternalParser {
             return;
         }
         if (mightValue == MightValue.TRUE && !escaped && (c == ',' || c == '}' || c == ']' || c == '>')) {
-            if (current.length() > 0 && current.charAt(0) == '"' && lastChar == '"') {
-                parseValueJSONEnd(c);
-                return;
-            }
-            if (current.toString().equals("false")) {
-                parseValueJSONEnd(c);
-                return;
-            }
-            if (current.toString().equals("true")) {
-                parseValueJSONEnd(c);
-                return;
-            }
-            if (current.toString().equals("null")) {
-                parseValueJSONEnd(c);
-                return;
-            }
-            if (current.toString().matches("\\d+(\\.\\d+)?")) {
-                parseValueJSONEnd(c);
+            if (tryParseValueJSONEnd(c, lastChar)) {
                 return;
             }
         }
@@ -387,8 +370,45 @@ final class YAPIONInternalParser {
         current.append(c);
     }
 
+    private boolean tryParseValueJSONEnd(char c, char lastChar) {
+        log.debug("TryParse '{}' '{}'", c, lastChar);
+        StringBuilder now = new StringBuilder(current);
+        while (true) {
+            char temp = now.charAt(now.length() - 1);
+            if (!(temp == ' ' || temp == '\t' || temp == '\n')) {
+                break;
+            }
+            now.deleteCharAt(now.length() - 1);
+        }
+        log.debug("shortened StringBuilder '{}'", now);
+
+        if (now.length() > 0 && now.charAt(0) == '"' && now.charAt(now.length() - 1) == '"') {
+            parseValueJSONEnd(c);
+            return true;
+        }
+        String st = now.toString();
+        if (st.equals("false")) {
+            parseValueJSONEnd(c);
+            return true;
+        }
+        if (st.equals("true")) {
+            parseValueJSONEnd(c);
+            return true;
+        }
+        if (st.equals("null")) {
+            parseValueJSONEnd(c);
+            return true;
+        }
+        if (st.matches("\\d+(\\.\\d+)?")) {
+            parseValueJSONEnd(c);
+            return true;
+        }
+        return false;
+    }
+
     private void parseValueJSONEnd(char c) {
         log.debug("ValueHandler to use -> {}", valueHandlerList);
+        log.debug("END char -> {}", c);
         pop(YAPIONType.VALUE);
         while (true) {
             char temp = current.charAt(current.length() - 1);
