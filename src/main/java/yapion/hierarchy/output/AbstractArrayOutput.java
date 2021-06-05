@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayOutput<T> extends AbstractOutput {
+public abstract class AbstractArrayOutput<T> extends AbstractOutput implements InstantiableOutput {
 
     protected List<T> internalList = new ArrayList<>();
 

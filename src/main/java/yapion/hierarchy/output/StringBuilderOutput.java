@@ -41,7 +41,7 @@ public class StringBuilderOutput extends AbstractOutput {
     }
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return prettified;
     }
 

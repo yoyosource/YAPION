@@ -30,7 +30,7 @@ public class StreamBufferPrettifiedOutput extends StreamBufferOutput {
     }
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return true;
     }
 

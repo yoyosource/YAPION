@@ -27,7 +27,7 @@ public class FilePrettifiedOutput extends FileOutput {
     }
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return true;
     }
 

@@ -20,7 +20,7 @@ import yapion.annotations.api.DeprecationInfo;
 public class StringPrettifiedOutput extends StringOutput {
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return true;
     }
 

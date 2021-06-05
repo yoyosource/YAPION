@@ -13,32 +13,5 @@
 
 package yapion.hierarchy.output;
 
-import lombok.Getter;
-
-public class LengthOutput extends AbstractOutput implements InstantiableOutput {
-
-    @Getter
-    private long length = 0;
-
-    @Getter
-    private long prettifiedLength = 0;
-
-    @Override
-    protected boolean internalConsumePrettified(String s) {
-        prettifiedLength += s.length();
-        return false;
-    }
-
-    @Override
-    protected void internalConsume(String s) {
-        int stringLength = s.length();
-        length += stringLength;
-        prettifiedLength += stringLength;
-    }
-
-    @Override
-    public boolean prettified() {
-        return true;
-    }
-
+public interface InstantiableOutput {
 }

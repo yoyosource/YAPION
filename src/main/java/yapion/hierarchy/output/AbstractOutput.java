@@ -58,7 +58,7 @@ public abstract class AbstractOutput {
 
     protected abstract void internalConsume(String s);
 
-    protected boolean prettified() {
+    public boolean prettified() {
         return false;
     }
 

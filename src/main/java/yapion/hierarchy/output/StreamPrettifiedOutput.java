@@ -26,7 +26,7 @@ public class StreamPrettifiedOutput extends StreamOutput {
     }
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return true;
     }
 

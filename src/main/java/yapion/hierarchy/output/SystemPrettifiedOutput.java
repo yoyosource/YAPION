@@ -20,7 +20,7 @@ import yapion.annotations.api.DeprecationInfo;
 public class SystemPrettifiedOutput extends SystemOutput {
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return true;
     }
 

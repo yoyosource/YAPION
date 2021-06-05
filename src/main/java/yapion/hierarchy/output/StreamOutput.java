@@ -42,7 +42,7 @@ public class StreamOutput extends AbstractOutput implements AutoCloseable {
     }
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return prettified;
     }
 

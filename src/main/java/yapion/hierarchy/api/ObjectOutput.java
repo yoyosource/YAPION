@@ -13,22 +13,31 @@
 
 package yapion.hierarchy.api;
 
+import lombok.SneakyThrows;
 import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.output.InstantiableOutput;
 
 public interface ObjectOutput {
 
     <T extends AbstractOutput> T toYAPION(T abstractOutput);
 
-    default <T extends AbstractOutput> T toYAPION(Class<T> clazz) {
-        try {
-            return toYAPION(clazz.newInstance());
-        } catch (IllegalAccessException | InstantiationException e) {
-            throw new SecurityException(e.getMessage(), e);
-        }
+    @SneakyThrows
+    default <T extends AbstractOutput & InstantiableOutput> T toYAPION(Class<T> clazz) {
+        return toYAPION(clazz.newInstance());
     }
 
     <T extends AbstractOutput> T toJSON(T abstractOutput);
 
+    @SneakyThrows
+    default <T extends AbstractOutput & InstantiableOutput> T toJSON(Class<T> clazz) {
+        return toJSON(clazz.newInstance());
+    }
+
     <T extends AbstractOutput> T toJSONLossy(T abstractOutput);
+
+    @SneakyThrows
+    default <T extends AbstractOutput & InstantiableOutput> T toJSONLossy(Class<T> clazz) {
+        return toJSONLossy(clazz.newInstance());
+    }
 
 }

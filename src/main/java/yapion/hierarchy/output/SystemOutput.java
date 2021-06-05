@@ -13,7 +13,7 @@
 
 package yapion.hierarchy.output;
 
-public class SystemOutput extends StreamOutput {
+public class SystemOutput extends StreamOutput implements InstantiableOutput {
 
     @SuppressWarnings({"java:S106"})
     public SystemOutput() {

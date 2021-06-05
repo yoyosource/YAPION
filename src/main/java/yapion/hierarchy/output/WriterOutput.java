@@ -42,7 +42,7 @@ public class WriterOutput extends AbstractOutput {
     }
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return prettified;
     }
 

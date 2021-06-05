@@ -31,7 +31,7 @@ public class FileBufferPrettifiedOutput extends FileBufferOutput {
     }
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return true;
     }
 
