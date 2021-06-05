@@ -231,9 +231,6 @@ public final class YAPIONSerializer {
      * Parses the Object to the YAPIONObject.
      */
     public YAPIONSerializer parse() {
-        if (object.getClass().isArray()) {
-            throw new YAPIONSerializerException("Native arrays cannot be serialized as root object");
-        }
         return parseObject(object);
     }
 
