@@ -17,6 +17,7 @@ import lombok.NonNull;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.ObjectOutput;
+import yapion.hierarchy.api.groups.SerializingType;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ObjectAdd;
@@ -35,7 +36,7 @@ import java.util.stream.Stream;
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.KEY;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 
-public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implements ObjectRetrieve<String>, ObjectAdd<YAPIONObject, String>, ObjectRemove<YAPIONObject, String> {
+public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implements ObjectRetrieve<String>, ObjectAdd<YAPIONObject, String>, ObjectRemove<YAPIONObject, String>, SerializingType {
 
     private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
 

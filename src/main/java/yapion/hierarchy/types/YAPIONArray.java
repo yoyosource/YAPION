@@ -17,6 +17,7 @@ import lombok.NonNull;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.exceptions.value.YAPIONRecursionException;
+import yapion.hierarchy.api.groups.SerializingType;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ArrayAdd;
@@ -31,7 +32,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements ArrayAdd<YAPIONArray, Integer>, ObjectRemove<YAPIONArray, Integer>, ObjectRetrieve<Integer> {
+public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements ArrayAdd<YAPIONArray, Integer>, ObjectRemove<YAPIONArray, Integer>, ObjectRetrieve<Integer>, SerializingType {
 
     private final List<YAPIONAnyType> array = new ArrayList<>();
 
