@@ -26,6 +26,7 @@ import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.exceptions.utils.YAPIONReflectionInvocationException;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
+import yapion.serializing.SerializeManager;
 import yapion.serializing.TypeReMapper;
 
 import java.lang.reflect.*;
@@ -270,6 +271,13 @@ public class ReflectionsUtils {
         for (Map.Entry<Class<?>, Function<YAPIONObject, ?>> entry : SPECIAL_CREATOR.entrySet()) {
             if (entry.getKey().isAssignableFrom(clazz)) {
                 return entry.getValue().apply(yapionObject);
+            }
+        }
+        if (SerializeManager.hasFactory(clazz)) {
+            try {
+                return SerializeManager.getObjectInstance(clazz);
+            } catch (ClassNotFoundException e) {
+                throw new YAPIONException(e.getMessage(), e);
             }
         }
         if (internalSerializer.interfaceType() != null && internalSerializer.defaultImplementation() != null && internalSerializer.interfaceType().getTypeName().equals(type)) {
