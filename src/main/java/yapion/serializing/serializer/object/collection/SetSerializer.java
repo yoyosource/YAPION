@@ -113,6 +113,8 @@ public class SetSerializer implements InternalSerializer<Set<?>> {
             return wrapper.getOrDefault(ClassUtils.getClass(((YAPIONObject) deserializeData.object).getPlainValue(TYPE_IDENTIFIER)), objects -> objects).apply(list);
         } catch (InstantiationException e) {
             throw new YAPIONDeserializerException(e.getMessage(), e);
+        } catch (YAPIONException e) {
+            throw e;
         } catch (Exception e) {
             throw yapionDeserializerException;
         }

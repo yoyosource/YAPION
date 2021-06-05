@@ -14,6 +14,7 @@
 package yapion.serializing.serializer.object.collection;
 
 import yapion.annotations.api.SerializerImplementation;
+import yapion.exceptions.YAPIONException;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -88,6 +89,8 @@ public class ListSerializer implements InternalSerializer<List<?>> {
             return wrapper.getOrDefault(ClassUtils.getClass(((YAPIONObject) deserializeData.object).getPlainValue(TYPE_IDENTIFIER)), objects -> objects).apply(list);
         } catch (InstantiationException e) {
             throw new YAPIONDeserializerException(e.getMessage(), e);
+        } catch (YAPIONException e) {
+            throw e;
         } catch (Exception e) {
             throw yapionDeserializerException;
         }
