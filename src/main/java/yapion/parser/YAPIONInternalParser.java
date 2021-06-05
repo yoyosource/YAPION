@@ -387,6 +387,8 @@ final class YAPIONInternalParser {
             return true;
         }
         String st = now.toString();
+        valueHandlerList.clear();
+        YAPIONValue.allValueHandlers().toArrayList(valueHandlerList);
         if (st.equals("false")) {
             parseValueJSONEnd(c);
             return true;
