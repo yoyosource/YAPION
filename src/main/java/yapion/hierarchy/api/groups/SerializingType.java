@@ -13,5 +13,12 @@
 
 package yapion.hierarchy.api.groups;
 
-public interface SerializingType {
+import yapion.serializing.YAPIONDeserializer;
+
+public interface SerializingType<T extends YAPIONDataType<?, ?> & SerializingType<T>> {
+
+    default <K> K deserialize() {
+        return YAPIONDeserializer.deserialize((T) this);
+    }
+
 }
