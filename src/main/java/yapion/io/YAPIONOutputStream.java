@@ -57,7 +57,7 @@ public class YAPIONOutputStream implements AutoCloseable {
      */
     public void write(YAPIONPacket yapionPacket) {
         if (closed) throw new YAPIONIOException("Reading from a closed Stream");
-        write(yapionPacket.toYAPION());
+        write(yapionPacket.convertToYAPION());
     }
 
     /**
