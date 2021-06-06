@@ -2,12 +2,12 @@
 
 ## JavaDoc
 
-* [Javadoc 0.25.3](javadoc/v0.25.3/) &nbsp; &nbsp; [Changelog](changelog/0.25.0.md)
-* [Javadoc 0.24.0](javadoc/v0.24.0/) &nbsp; &nbsp; [Changelog](changelog/0.24.0.md)
-* [Javadoc 0.23.2](javadoc/v0.23.2/) &nbsp; &nbsp; [Changelog](changelog/0.23.0.md)
-* [Javadoc 0.22.0](javadoc/v0.22.0/) &nbsp; &nbsp; [Changelog](changelog/0.22.0.md)
-* [Javadoc 0.21.1](javadoc/v0.21.1/) &nbsp; &nbsp; [Changelog](changelog/0.21.0.md)
-* [Javadoc 0.20.2](javadoc/v0.20.2/) &nbsp; &nbsp; [Changelog](changelog/0.20.0.md)
+* 0.25.4 &nbsp; &nbsp; [JavaDoc](javadoc/v0.25.3/index.html) &nbsp; &nbsp; [Changelog](changelog/0.25.0.md)
+* 0.24.0 &nbsp; &nbsp; [JavaDoc](javadoc/v0.24.0/index.html) &nbsp; &nbsp; [Changelog](changelog/0.24.0.md)
+* 0.23.2 &nbsp; &nbsp; [JavaDoc](javadoc/v0.23.2/index.html) &nbsp; &nbsp; [Changelog](changelog/0.23.0.md)
+* 0.22.0 &nbsp; &nbsp; [JavaDoc](javadoc/v0.22.0/index.html) &nbsp; &nbsp; [Changelog](changelog/0.22.0.md)
+* 0.21.1 &nbsp; &nbsp; [JavaDoc](javadoc/v0.21.1/index.html) &nbsp; &nbsp; [Changelog](changelog/0.21.0.md)
+* 0.20.2 &nbsp; &nbsp; [JavaDoc](javadoc/v0.20.2/index.html) &nbsp; &nbsp; [Changelog](changelog/0.20.0.md)
 
 ## Dataflow [WIP]
 
