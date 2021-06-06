@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.time.LocalDate;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.18.0")
 public class LocalDateSerializer implements InternalSerializer<LocalDate> {
 
@@ -34,8 +32,7 @@ public class LocalDateSerializer implements InternalSerializer<LocalDate> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<LocalDate> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("year", serializeData.object.getYear());
         yapionObject.add("dayOfYear", serializeData.object.getDayOfYear());
         return yapionObject;

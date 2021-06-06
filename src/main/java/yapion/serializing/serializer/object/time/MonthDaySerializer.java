@@ -23,8 +23,6 @@ import yapion.serializing.data.SerializeData;
 import java.time.Month;
 import java.time.MonthDay;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.18.0")
 public class MonthDaySerializer implements InternalSerializer<MonthDay> {
 
@@ -35,8 +33,7 @@ public class MonthDaySerializer implements InternalSerializer<MonthDay> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<MonthDay> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("month", serializeData.serialize(serializeData.object.getMonth()));
         yapionObject.add("dayOfMonth", serializeData.object.getDayOfMonth());
         return yapionObject;

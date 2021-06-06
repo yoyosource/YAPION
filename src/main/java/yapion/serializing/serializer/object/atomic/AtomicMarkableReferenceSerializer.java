@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.concurrent.atomic.AtomicMarkableReference;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.24.0")
 public class AtomicMarkableReferenceSerializer implements InternalSerializer<AtomicMarkableReference<?>> {
 
@@ -34,8 +32,7 @@ public class AtomicMarkableReferenceSerializer implements InternalSerializer<Ato
 
     @Override
     public YAPIONAnyType serialize(SerializeData<AtomicMarkableReference<?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("reference", serializeData.serialize(serializeData.object.getReference()));
         yapionObject.add("mark", serializeData.object.isMarked());
         return yapionObject;

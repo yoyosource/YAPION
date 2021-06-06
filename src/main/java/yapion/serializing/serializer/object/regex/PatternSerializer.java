@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.regex.Pattern;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.24.0")
 public class PatternSerializer implements InternalSerializer<Pattern> {
 
@@ -34,8 +32,7 @@ public class PatternSerializer implements InternalSerializer<Pattern> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Pattern> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("pattern", serializeData.object.pattern());
         yapionObject.add("flags", serializeData.object.flags());
         return yapionObject;

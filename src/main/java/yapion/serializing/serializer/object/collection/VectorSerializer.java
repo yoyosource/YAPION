@@ -23,8 +23,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.Vector;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.7.0")
 public class VectorSerializer implements InternalSerializer<Vector<?>> {
 
@@ -35,8 +33,7 @@ public class VectorSerializer implements InternalSerializer<Vector<?>> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Vector<?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add("values", yapionArray);
         for (int i = 0; i < serializeData.object.size(); i++) {

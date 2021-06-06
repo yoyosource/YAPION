@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.time.Year;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.18.0")
 public class YearSerializer implements InternalSerializer<Year> {
 
@@ -34,8 +32,7 @@ public class YearSerializer implements InternalSerializer<Year> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Year> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("year", serializeData.object.getValue());
         return yapionObject;
     }

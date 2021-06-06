@@ -88,8 +88,7 @@ public class SetSerializer implements InternalSerializer<Set<?>> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Set<?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         if (serializeData.object instanceof EnumSet) {
             yapionObject.add(ENUM_TYPE_IDENTIFIER, (Class<?>) serializeData.getField("elementType"));
         }

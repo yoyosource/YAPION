@@ -27,7 +27,6 @@ import java.lang.reflect.Method;
 
 import static yapion.serializing.YAPIONFlag.REFLECTION_AS_NULL;
 import static yapion.serializing.YAPIONFlag.REFLECTION_EXCEPTION;
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.25.0")
 public class MethodSerializer implements InternalSerializer<Method> {
@@ -46,8 +45,7 @@ public class MethodSerializer implements InternalSerializer<Method> {
             return new YAPIONValue<>(null);
         }
 
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("class", serializeData.serialize(serializeData.object.getDeclaringClass()));
         yapionObject.add("methodName", serializeData.object.getName());
         yapionObject.add("parameterTypes", serializeData.serialize(serializeData.object.getParameterTypes()));
@@ -57,9 +55,9 @@ public class MethodSerializer implements InternalSerializer<Method> {
     @Override
     public Method deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        Class<?> clazz = (Class<?>) deserializeData.deserialize(yapionObject.getObject("class"));
+        Class<?> clazz = deserializeData.deserialize(yapionObject.getObject("class"));
         try {
-            Class<?>[] parameterTypes = (Class<?>[]) deserializeData.deserialize(yapionObject.getArray("parameterTypes"));
+            Class<?>[] parameterTypes = deserializeData.deserialize(yapionObject.getArray("parameterTypes"));
             return clazz.getDeclaredMethod(yapionObject.getPlainValue("methodName"), parameterTypes);
         } catch (NoSuchMethodException e) {
             throw new YAPIONException(e.getMessage(), e);

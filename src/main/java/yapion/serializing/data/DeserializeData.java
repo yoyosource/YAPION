@@ -42,8 +42,9 @@ public class DeserializeData<T extends YAPIONAnyType> {
         return setField(field, object, deserialize(yapionAnyType));
     }
 
-    public Object deserialize(YAPIONAnyType yapionAnyType) {
-        return yapionDeserializer.parse(yapionAnyType);
+    @SuppressWarnings("unchecked")
+    public <T> T deserialize(YAPIONAnyType yapionAnyType) {
+        return (T) yapionDeserializer.parse(yapionAnyType);
     }
 
     public boolean hasFactory(Class<?> clazz) {

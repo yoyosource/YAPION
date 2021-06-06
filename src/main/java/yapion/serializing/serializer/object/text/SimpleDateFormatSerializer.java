@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.text.SimpleDateFormat;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.20.0")
 public class SimpleDateFormatSerializer implements InternalSerializer<SimpleDateFormat> {
 
@@ -34,8 +32,7 @@ public class SimpleDateFormatSerializer implements InternalSerializer<SimpleDate
 
     @Override
     public YAPIONAnyType serialize(SerializeData<SimpleDateFormat> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("pattern", serializeData.object.toPattern());
         return yapionObject;
     }

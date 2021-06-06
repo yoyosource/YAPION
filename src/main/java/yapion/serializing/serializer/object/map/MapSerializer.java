@@ -91,8 +91,7 @@ public class MapSerializer implements InternalSerializer<Map<?, ?>> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Map<?, ?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         if (serializeData.object instanceof EnumMap) {
             yapionObject.add(ENUM_TYPE_IDENTIFIER, (Class<?>) serializeData.getField("keyType"));
         }

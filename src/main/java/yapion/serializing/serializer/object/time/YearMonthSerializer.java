@@ -23,8 +23,6 @@ import yapion.serializing.data.SerializeData;
 import java.time.Month;
 import java.time.YearMonth;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.18.0")
 public class YearMonthSerializer implements InternalSerializer<YearMonth> {
 
@@ -35,8 +33,7 @@ public class YearMonthSerializer implements InternalSerializer<YearMonth> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<YearMonth> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("year", serializeData.object.getYear());
         yapionObject.add("month", serializeData.serialize(serializeData.object.getMonth()));
         return yapionObject;
@@ -46,7 +43,7 @@ public class YearMonthSerializer implements InternalSerializer<YearMonth> {
     public YearMonth deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         int year = yapionObject.getValue("year", 0).get();
-        Month month = (Month) deserializeData.deserialize(yapionObject.getObject("month"));
+        Month month = deserializeData.deserialize(yapionObject.getObject("month"));
         return YearMonth.of(year, month);
     }
 }

@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.OptionalLong;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.18.0")
 public class OptionalLongSerializer implements InternalSerializer<OptionalLong> {
 
@@ -34,8 +32,7 @@ public class OptionalLongSerializer implements InternalSerializer<OptionalLong> 
 
     @Override
     public YAPIONAnyType serialize(SerializeData<OptionalLong> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("present", serializeData.object.isPresent());
         serializeData.object.ifPresent(o -> yapionObject.add("value", o));
         return yapionObject;

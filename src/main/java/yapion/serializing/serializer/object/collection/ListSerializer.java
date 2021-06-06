@@ -67,8 +67,7 @@ public class ListSerializer implements InternalSerializer<List<?>> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<List<?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         return SerializingUtils.serializeCollection(serializeData, yapionObject);
     }
 

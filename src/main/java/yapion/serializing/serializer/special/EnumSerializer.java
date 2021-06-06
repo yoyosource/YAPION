@@ -36,8 +36,7 @@ public class EnumSerializer implements InternalSerializer<Enum<?>> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Enum<?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         yapionObject.add("value", serializeData.object.name());
         yapionObject.add("ordinal", serializeData.object.ordinal());
         return yapionObject;

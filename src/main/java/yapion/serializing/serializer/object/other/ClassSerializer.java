@@ -32,8 +32,6 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.25.0")
 public class ClassSerializer implements InternalSerializer<Class<?>> {
 
@@ -50,8 +48,7 @@ public class ClassSerializer implements InternalSerializer<Class<?>> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Class<?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("class", serializeData.object);
 
         if (!serializeData.getYAPIONFlags().isSet(YAPIONFlag.CLASS_INJECTION)) {

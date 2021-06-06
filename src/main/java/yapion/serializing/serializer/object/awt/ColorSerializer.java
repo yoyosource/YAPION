@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.awt.*;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.19.0")
 public class ColorSerializer implements InternalSerializer<Color> {
 
@@ -34,8 +32,7 @@ public class ColorSerializer implements InternalSerializer<Color> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Color> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("red", serializeData.object.getRed());
         yapionObject.add("green", serializeData.object.getGreen());
         yapionObject.add("blue", serializeData.object.getBlue());

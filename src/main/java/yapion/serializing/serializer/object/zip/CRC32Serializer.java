@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.zip.CRC32;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.24.0")
 public class CRC32Serializer implements InternalSerializer<CRC32> {
 
@@ -34,8 +32,7 @@ public class CRC32Serializer implements InternalSerializer<CRC32> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<CRC32> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("crc", serializeData.serializeField("crc"));
         return yapionObject;
     }

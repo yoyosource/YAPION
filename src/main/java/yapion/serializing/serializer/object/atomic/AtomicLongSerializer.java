@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.20.0")
 public class AtomicLongSerializer implements InternalSerializer<AtomicLong> {
 
@@ -34,8 +32,7 @@ public class AtomicLongSerializer implements InternalSerializer<AtomicLong> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<AtomicLong> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("value", serializeData.object.get());
         return yapionObject;
     }

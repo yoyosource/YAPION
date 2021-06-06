@@ -29,7 +29,6 @@ import java.lang.reflect.Parameter;
 
 import static yapion.serializing.YAPIONFlag.REFLECTION_AS_NULL;
 import static yapion.serializing.YAPIONFlag.REFLECTION_EXCEPTION;
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.26.0")
 public class ParameterSerializer implements InternalSerializer<Parameter> {
@@ -48,8 +47,7 @@ public class ParameterSerializer implements InternalSerializer<Parameter> {
             return new YAPIONValue<>(null);
         }
 
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("executable", serializeData.serialize(serializeData.object.getDeclaringExecutable()));
         yapionObject.add("name", serializeData.object.getName());
         yapionObject.add("type", serializeData.object.getType());
@@ -60,7 +58,7 @@ public class ParameterSerializer implements InternalSerializer<Parameter> {
     @Override
     public Parameter deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        Executable executable = YAPIONDeserializer.deserialize(yapionObject.getObject("executable"));
+        Executable executable = deserializeData.deserialize(yapionObject.getObject("executable"));
         int index = yapionObject.getPlainValue("index");
         if (index < 0 || index >= executable.getParameterCount()) {
             throw new YAPIONDeserializerException("Parameter could not be restored as index is invalid");

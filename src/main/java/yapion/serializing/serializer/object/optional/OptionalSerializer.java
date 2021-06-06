@@ -13,17 +13,14 @@
 
 package yapion.serializing.serializer.object.optional;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
-import java.math.BigDecimal;
 import java.util.Optional;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.7.0")
 public class OptionalSerializer implements InternalSerializer<Optional<?>> {
@@ -35,8 +32,7 @@ public class OptionalSerializer implements InternalSerializer<Optional<?>> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Optional<?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("present", serializeData.object.isPresent());
         serializeData.object.ifPresent(o -> yapionObject.add("value", serializeData.serialize(o)));
         return yapionObject;

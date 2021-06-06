@@ -25,8 +25,6 @@ import java.net.Inet6Address;
 import java.net.UnknownHostException;
 import java.util.Base64;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.20.0")
 public class Inet6AddressSerializer implements InternalSerializer<Inet6Address> {
 
@@ -37,8 +35,7 @@ public class Inet6AddressSerializer implements InternalSerializer<Inet6Address> 
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Inet6Address> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("address", Base64.getEncoder().encodeToString(serializeData.object.getAddress()));
         yapionObject.add("hostAddress", serializeData.object.getHostAddress());
         yapionObject.add("scopeId", serializeData.object.getScopeId());

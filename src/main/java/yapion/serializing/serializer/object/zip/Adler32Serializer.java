@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.zip.Adler32;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.24.0")
 public class Adler32Serializer implements InternalSerializer<Adler32> {
 
@@ -34,8 +32,7 @@ public class Adler32Serializer implements InternalSerializer<Adler32> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Adler32> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("adler", serializeData.serializeField("adler"));
         return yapionObject;
     }

@@ -23,8 +23,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.concurrent.atomic.AtomicLongArray;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.20.0")
 public class AtomicLongArraySerializer implements InternalSerializer<AtomicLongArray> {
 
@@ -35,8 +33,7 @@ public class AtomicLongArraySerializer implements InternalSerializer<AtomicLongA
 
     @Override
     public YAPIONAnyType serialize(SerializeData<AtomicLongArray> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("length", serializeData.object.length());
 
         long[] longs = new long[serializeData.object.length()];
@@ -54,7 +51,7 @@ public class AtomicLongArraySerializer implements InternalSerializer<AtomicLongA
         YAPIONArray yapionArray = yapionObject.getArray("values");
         long[] longs = new long[length];
         for (int i = 0; i < length; i++) {
-            longs[i] = (Long) deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
+            longs[i] = deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
         }
         return new AtomicLongArray(longs);
     }

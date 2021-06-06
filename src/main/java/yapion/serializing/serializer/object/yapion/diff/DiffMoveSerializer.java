@@ -21,8 +21,6 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.26.0")
 public class DiffMoveSerializer implements InternalSerializer<DiffMove> {
 
@@ -33,8 +31,7 @@ public class DiffMoveSerializer implements InternalSerializer<DiffMove> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<DiffMove> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("fromPath", serializeData.serialize(serializeData.object.getFromPath()));
         yapionObject.add("toPath", serializeData.serialize(serializeData.object.getToPath()));
         return yapionObject;
@@ -43,8 +40,8 @@ public class DiffMoveSerializer implements InternalSerializer<DiffMove> {
     @Override
     public DiffMove deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        String[] fromPath = (String[]) deserializeData.deserialize(yapionObject.getArray("fromPath"));
-        String[] toPath = (String[]) deserializeData.deserialize(yapionObject.getArray("toPath"));
+        String[] fromPath = deserializeData.deserialize(yapionObject.getArray("fromPath"));
+        String[] toPath = deserializeData.deserialize(yapionObject.getArray("toPath"));
         return new DiffMove(fromPath, toPath);
     }
 }

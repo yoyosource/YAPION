@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.20.0")
 public class AtomicBooleanSerializer implements InternalSerializer<AtomicBoolean> {
 
@@ -34,8 +32,7 @@ public class AtomicBooleanSerializer implements InternalSerializer<AtomicBoolean
 
     @Override
     public YAPIONAnyType serialize(SerializeData<AtomicBoolean> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("value", serializeData.object.get());
         return yapionObject;
     }

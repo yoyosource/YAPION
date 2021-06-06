@@ -23,8 +23,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.Stack;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.17.0")
 public class StackSerializer implements InternalSerializer<Stack<?>> {
 
@@ -35,8 +33,7 @@ public class StackSerializer implements InternalSerializer<Stack<?>> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Stack<?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add("values", yapionArray);
         for (int i = 0; i < serializeData.object.size(); i++) {

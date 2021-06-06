@@ -28,8 +28,6 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.*;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.23.0", initialSince = "0.7.0, 0.12.0", standsFor = {Queue.class, PriorityQueue.class, ConcurrentLinkedQueue.class, LinkedBlockingQueue.class, LinkedTransferQueue.class, SynchronousQueue.class, ArrayBlockingQueue.class, PriorityBlockingQueue.class})
 public class QueueSerializer implements InternalSerializer<Queue<?>> {
 
@@ -61,8 +59,7 @@ public class QueueSerializer implements InternalSerializer<Queue<?>> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Queue<?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         return SerializingUtils.serializeCollection(serializeData, yapionObject);
     }
 

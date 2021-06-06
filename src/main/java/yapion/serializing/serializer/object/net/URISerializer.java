@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.net.URI;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.12.0")
 public class URISerializer implements InternalSerializer<URI> {
 
@@ -34,8 +32,7 @@ public class URISerializer implements InternalSerializer<URI> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<URI> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         try {
             yapionObject.add("uri", (String) URI.class.getDeclaredField("string").get(serializeData.object));
         } catch (Exception e) {

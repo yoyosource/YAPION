@@ -24,8 +24,6 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.20.0")
 public class KeyPairSerializer implements InternalSerializer<KeyPair> {
 
@@ -36,8 +34,7 @@ public class KeyPairSerializer implements InternalSerializer<KeyPair> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<KeyPair> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("privateKey", serializeData.serialize(serializeData.object.getPrivate()));
         yapionObject.add("publicKey", serializeData.serialize(serializeData.object.getPublic()));
         return yapionObject;
@@ -46,8 +43,8 @@ public class KeyPairSerializer implements InternalSerializer<KeyPair> {
     @Override
     public KeyPair deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        PrivateKey privateKey = (PrivateKey) deserializeData.deserialize(yapionObject.getObject("privateKey"));
-        PublicKey publicKey = (PublicKey) deserializeData.deserialize(yapionObject.getObject("publicKey"));
+        PrivateKey privateKey = deserializeData.deserialize(yapionObject.getObject("privateKey"));
+        PublicKey publicKey = deserializeData.deserialize(yapionObject.getObject("publicKey"));
         return new KeyPair(publicKey, privateKey);
     }
 

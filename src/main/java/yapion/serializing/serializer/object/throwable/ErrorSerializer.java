@@ -46,9 +46,7 @@ public class ErrorSerializer implements InternalSerializer<Error> {
             throw new YAPIONDataLossException("The ERROR_EXCEPTION flag is set to not serialize Errors");
         });
 
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add(EXCEPTION_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         yapionObject.add("message", serializeData.object.getMessage());
         yapionObject.add("cause", serializeData.serialize(serializeData.object.getCause()));
         yapionObject.add("stacktrace", serializeData.serialize(serializeData.object.getStackTrace()));
@@ -58,7 +56,12 @@ public class ErrorSerializer implements InternalSerializer<Error> {
     @Override
     public Error deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        Error error = (Error) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, "").get(), false);
+        Error error;
+        if (yapionObject.containsKey(EXCEPTION_IDENTIFIER, String.class)) {
+            error = (Error) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, "").get(), false);
+        } else {
+            error = (Error) ReflectionsUtils.constructObject(yapionObject.getValue(TYPE_IDENTIFIER, "").get(), false);;
+        }
         deserializeData.deserialize("detailMessage", error, yapionObject.getValue("message"));
         deserializeData.deserialize("cause", error, yapionObject.getObject("cause"));
         deserializeData.deserialize("stackTrace", error, yapionObject.getArray("stacktrace"));

@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.Date;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.20.0")
 public class DateSerializer implements InternalSerializer<Date> {
 
@@ -34,8 +32,7 @@ public class DateSerializer implements InternalSerializer<Date> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Date> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("date", serializeData.object.getTime());
         return yapionObject;
     }

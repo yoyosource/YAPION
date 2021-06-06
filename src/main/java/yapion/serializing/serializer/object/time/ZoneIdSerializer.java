@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.time.ZoneId;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.24.0")
 public class ZoneIdSerializer implements InternalSerializer<ZoneId> {
 
@@ -34,8 +32,7 @@ public class ZoneIdSerializer implements InternalSerializer<ZoneId> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<ZoneId> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("id", serializeData.object.getId());
         return yapionObject;
     }

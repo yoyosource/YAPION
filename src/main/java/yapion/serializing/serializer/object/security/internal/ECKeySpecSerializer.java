@@ -17,6 +17,8 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 import yapion.annotations.api.SerializerImplementation;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
@@ -32,9 +34,9 @@ import java.security.spec.ECPublicKeySpec;
 public class ECKeySpecSerializer implements KeySpecSerializer<ECPrivateKey, ECPublicKey> {
 
     @Override
-    public YAPIONObject serializePrivateKey(ECPrivateKey ecPrivateKey) throws GeneralSecurityException {
-        KeyFactory keyFactory = KeyFactory.getInstance(ecPrivateKey.getAlgorithm());
-        ECPrivateKeySpec ecPrivateKeySpec = keyFactory.getKeySpec(ecPrivateKey, ECPrivateKeySpec.class);
+    public YAPIONObject serializePrivateKey(SerializeData<ECPrivateKey> serializeData) throws GeneralSecurityException {
+        KeyFactory keyFactory = KeyFactory.getInstance(serializeData.object.getAlgorithm());
+        ECPrivateKeySpec ecPrivateKeySpec = keyFactory.getKeySpec(serializeData.object, ECPrivateKeySpec.class);
 
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("s", ecPrivateKeySpec.getS());
@@ -43,18 +45,18 @@ public class ECKeySpecSerializer implements KeySpecSerializer<ECPrivateKey, ECPu
     }
 
     @Override
-    public ECPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
-        BigInteger s = yapionObject.getValue("s", BigInteger.class).get();
-        ECParameterSpec params = (ECParameterSpec) YAPIONDeserializer.deserialize(yapionObject.getObject("params"));
+    public ECPrivateKey deserializePrivateKey(DeserializeData<YAPIONObject> deserializeData, String algorithm) throws GeneralSecurityException {
+        BigInteger s = deserializeData.object.getValue("s", BigInteger.class).get();
+        ECParameterSpec params = deserializeData.deserialize(deserializeData.object.getObject("params"));
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return (ECPrivateKey) keyFactory.generatePrivate(new ECPrivateKeySpec(s, params));
     }
 
     @Override
-    public YAPIONObject serializePublicKey(ECPublicKey ecPublicKey) throws GeneralSecurityException {
-        KeyFactory keyFactory = KeyFactory.getInstance(ecPublicKey.getAlgorithm());
-        ECPublicKeySpec ecPublicKeySpec = keyFactory.getKeySpec(ecPublicKey, ECPublicKeySpec.class);
+    public YAPIONObject serializePublicKey(SerializeData<ECPublicKey> serializeData) throws GeneralSecurityException {
+        KeyFactory keyFactory = KeyFactory.getInstance(serializeData.object.getAlgorithm());
+        ECPublicKeySpec ecPublicKeySpec = keyFactory.getKeySpec(serializeData.object, ECPublicKeySpec.class);
 
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("w", YAPIONSerializer.serialize(ecPublicKeySpec.getW()));
@@ -63,9 +65,9 @@ public class ECKeySpecSerializer implements KeySpecSerializer<ECPrivateKey, ECPu
     }
 
     @Override
-    public ECPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
-        ECPoint w = (ECPoint) YAPIONDeserializer.deserialize(yapionObject.getObject("w"));
-        ECParameterSpec params = (ECParameterSpec) YAPIONDeserializer.deserialize(yapionObject.getObject("params"));
+    public ECPublicKey deserializePublicKey(DeserializeData<YAPIONObject> deserializeData, String algorithm) throws GeneralSecurityException {
+        ECPoint w = deserializeData.deserialize(deserializeData.object.getObject("w"));
+        ECParameterSpec params = deserializeData.deserialize(deserializeData.object.getObject("params"));
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return (ECPublicKey) keyFactory.generatePublic(new ECPublicKeySpec(w, params));

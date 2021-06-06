@@ -21,8 +21,6 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.25.0")
 public class DiffChangeSerializer implements InternalSerializer<DiffChange> {
 
@@ -33,8 +31,7 @@ public class DiffChangeSerializer implements InternalSerializer<DiffChange> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<DiffChange> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("path", serializeData.serialize(serializeData.object.getPath()));
         yapionObject.add("from", serializeData.object.getFrom());
         yapionObject.add("to", serializeData.object.getTo());
@@ -44,7 +41,7 @@ public class DiffChangeSerializer implements InternalSerializer<DiffChange> {
     @Override
     public DiffChange deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        String[] path = (String[]) deserializeData.deserialize(yapionObject.getArray("path"));
+        String[] path = deserializeData.deserialize(yapionObject.getArray("path"));
         return new DiffChange(path, yapionObject.getYAPIONAnyType("from"), yapionObject.getYAPIONAnyType("to"));
     }
 }

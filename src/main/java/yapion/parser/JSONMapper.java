@@ -16,7 +16,6 @@ package yapion.parser;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.types.*;
-import yapion.utils.ReflectionsUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -63,7 +62,7 @@ public class JSONMapper {
             long id = yapionPointer.getPointerID();
             YAPIONObject yapionObject = yapionObjectMap.get(id);
             if (yapionObject == null) continue;
-            ReflectionsUtils.invokeMethod("setYAPIONObject", yapionPointer, yapionObject);
+            yapionPointer.setYAPIONObject(yapionObject);
         }
     }
 

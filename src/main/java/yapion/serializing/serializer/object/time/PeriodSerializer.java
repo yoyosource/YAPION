@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.time.Period;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.18.0")
 public class PeriodSerializer implements InternalSerializer<Period> {
 
@@ -34,8 +32,7 @@ public class PeriodSerializer implements InternalSerializer<Period> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Period> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("years", serializeData.object.getYears());
         yapionObject.add("months", serializeData.object.getMonths());
         yapionObject.add("days", serializeData.object.getDays());

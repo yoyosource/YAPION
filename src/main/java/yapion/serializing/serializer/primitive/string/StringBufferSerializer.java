@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.primitive.string;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -32,8 +32,7 @@ public class StringBufferSerializer implements InternalSerializer<StringBuffer> 
 
     @Override
     public YAPIONAnyType serialize(SerializeData<StringBuffer> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("string", serializeData.object.toString());
         return yapionObject;
     }
@@ -41,7 +40,7 @@ public class StringBufferSerializer implements InternalSerializer<StringBuffer> 
     @Override
     public StringBuffer deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        return new StringBuffer().append(yapionObject.getValue("string", "").get());
+        return new StringBuffer(yapionObject.getPlainValue("string"));
     }
 
 }

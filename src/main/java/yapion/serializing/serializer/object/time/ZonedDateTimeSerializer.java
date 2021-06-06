@@ -24,8 +24,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.24.0")
 public class ZonedDateTimeSerializer implements InternalSerializer<ZonedDateTime> {
 
@@ -36,8 +34,7 @@ public class ZonedDateTimeSerializer implements InternalSerializer<ZonedDateTime
 
     @Override
     public YAPIONAnyType serialize(SerializeData<ZonedDateTime> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("localDateTime", serializeData.serialize(serializeData.object.toLocalDateTime()));
         yapionObject.add("zoneId", serializeData.serialize(serializeData.object.getZone()));
         return yapionObject;
@@ -46,8 +43,8 @@ public class ZonedDateTimeSerializer implements InternalSerializer<ZonedDateTime
     @Override
     public ZonedDateTime deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        LocalDateTime localDateTime = (LocalDateTime) deserializeData.deserialize(yapionObject.getObject("localDateTime"));
-        ZoneId zoneId = (ZoneId) deserializeData.deserialize(yapionObject.getObject("zoneId"));
+        LocalDateTime localDateTime = deserializeData.deserialize(yapionObject.getObject("localDateTime"));
+        ZoneId zoneId = deserializeData.deserialize(yapionObject.getObject("zoneId"));
         return ZonedDateTime.of(localDateTime, zoneId);
     }
 

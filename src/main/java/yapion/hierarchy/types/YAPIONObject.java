@@ -25,6 +25,7 @@ import yapion.hierarchy.api.storage.ObjectRemove;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
+import yapion.utils.IdentifierUtils;
 import yapion.utils.RecursionUtils;
 import yapion.utils.ReferenceFunction;
 
@@ -35,10 +36,24 @@ import java.util.stream.Stream;
 
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.KEY;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implements ObjectRetrieve<String>, ObjectAdd<YAPIONObject, String>, ObjectRemove<YAPIONObject, String>, SerializingType {
 
     private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
+
+    public YAPIONObject() {
+
+    }
+
+    /**
+     * Convenient Constructor to create an YAPIONObject with a {@link IdentifierUtils#TYPE_IDENTIFIER}.
+     *
+     * @param type the type this YAPIONObject holds as initial state
+     */
+    public YAPIONObject(Class<?> type) {
+        add(TYPE_IDENTIFIER, type);
+    }
 
     @Override
     public YAPIONType getType() {

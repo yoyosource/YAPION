@@ -30,8 +30,6 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.23.0", initialSince = "0.7.0, 0.12.0", standsFor = {Deque.class, ArrayDeque.class, BlockingDeque.class, LinkedBlockingDeque.class, ConcurrentLinkedDeque.class})
 public class DequeSerializer implements InternalSerializer<Deque<?>> {
 
@@ -52,8 +50,7 @@ public class DequeSerializer implements InternalSerializer<Deque<?>> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Deque<?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         return SerializingUtils.serializeCollection(serializeData, yapionObject);
     }
 

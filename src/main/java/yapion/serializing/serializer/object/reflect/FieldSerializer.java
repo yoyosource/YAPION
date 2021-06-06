@@ -27,7 +27,6 @@ import java.lang.reflect.Field;
 
 import static yapion.serializing.YAPIONFlag.REFLECTION_AS_NULL;
 import static yapion.serializing.YAPIONFlag.REFLECTION_EXCEPTION;
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.25.0")
 public class FieldSerializer implements InternalSerializer<Field> {
@@ -46,8 +45,7 @@ public class FieldSerializer implements InternalSerializer<Field> {
             return new YAPIONValue<>(null);
         }
 
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("class", serializeData.serialize(serializeData.object.getDeclaringClass()));
         yapionObject.add("fieldName", serializeData.object.getName());
         return yapionObject;
@@ -56,7 +54,7 @@ public class FieldSerializer implements InternalSerializer<Field> {
     @Override
     public Field deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        Class<?> clazz = (Class<?>) deserializeData.deserialize(yapionObject.getObject("class"));
+        Class<?> clazz = deserializeData.deserialize(yapionObject.getObject("class"));
         try {
             return clazz.getDeclaredField(yapionObject.getPlainValue("fieldName"));
         } catch (NoSuchFieldException e) {

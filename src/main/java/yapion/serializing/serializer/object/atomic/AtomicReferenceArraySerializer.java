@@ -23,8 +23,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.20.0")
 public class AtomicReferenceArraySerializer implements InternalSerializer<AtomicReferenceArray<?>> {
 
@@ -35,8 +33,7 @@ public class AtomicReferenceArraySerializer implements InternalSerializer<Atomic
 
     @Override
     public YAPIONAnyType serialize(SerializeData<AtomicReferenceArray<?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("length", serializeData.object.length());
 
         Object[] objects = new Object[serializeData.object.length()];

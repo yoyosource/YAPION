@@ -13,8 +13,10 @@
 
 package yapion.serializing.serializer.object.security.internal;
 
-import yapion.hierarchy.types.YAPIONObject;
 import yapion.annotations.api.SerializerImplementation;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
@@ -28,9 +30,9 @@ import java.security.spec.RSAPublicKeySpec;
 public class RSAKeySpecSerializer implements KeySpecSerializer<RSAPrivateKey, RSAPublicKey> {
 
     @Override
-    public YAPIONObject serializePrivateKey(RSAPrivateKey rsaPrivateKey) throws GeneralSecurityException {
-        KeyFactory keyFactory = KeyFactory.getInstance(rsaPrivateKey.getAlgorithm());
-        RSAPrivateKeySpec rsaPrivateKeySpec = keyFactory.getKeySpec(rsaPrivateKey, RSAPrivateKeySpec.class);
+    public YAPIONObject serializePrivateKey(SerializeData<RSAPrivateKey> serializeData) throws GeneralSecurityException {
+        KeyFactory keyFactory = KeyFactory.getInstance(serializeData.object.getAlgorithm());
+        RSAPrivateKeySpec rsaPrivateKeySpec = keyFactory.getKeySpec(serializeData.object, RSAPrivateKeySpec.class);
 
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("modulus", rsaPrivateKeySpec.getModulus());
@@ -39,18 +41,18 @@ public class RSAKeySpecSerializer implements KeySpecSerializer<RSAPrivateKey, RS
     }
 
     @Override
-    public RSAPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
-        BigInteger modulus = yapionObject.getValue("modulus", BigInteger.class).get();
-        BigInteger privateExponent = yapionObject.getValue("privateExponent", BigInteger.class).get();
+    public RSAPrivateKey deserializePrivateKey(DeserializeData<YAPIONObject> deserializeData, String algorithm) throws GeneralSecurityException {
+        BigInteger modulus = deserializeData.object.getValue("modulus", BigInteger.class).get();
+        BigInteger privateExponent = deserializeData.object.getValue("privateExponent", BigInteger.class).get();
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return (RSAPrivateKey) keyFactory.generatePrivate(new RSAPrivateKeySpec(modulus, privateExponent));
     }
 
     @Override
-    public YAPIONObject serializePublicKey(RSAPublicKey rsaPublicKey) throws GeneralSecurityException {
-        KeyFactory keyFactory = KeyFactory.getInstance(rsaPublicKey.getAlgorithm());
-        RSAPublicKeySpec rsaPublicKeySpec = keyFactory.getKeySpec(rsaPublicKey, RSAPublicKeySpec.class);
+    public YAPIONObject serializePublicKey(SerializeData<RSAPublicKey> serializeData) throws GeneralSecurityException {
+        KeyFactory keyFactory = KeyFactory.getInstance(serializeData.object.getAlgorithm());
+        RSAPublicKeySpec rsaPublicKeySpec = keyFactory.getKeySpec(serializeData.object, RSAPublicKeySpec.class);
 
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("modulus", rsaPublicKeySpec.getModulus());
@@ -59,9 +61,9 @@ public class RSAKeySpecSerializer implements KeySpecSerializer<RSAPrivateKey, RS
     }
 
     @Override
-    public RSAPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
-        BigInteger modulus = yapionObject.getValue("modulus", BigInteger.class).get();
-        BigInteger publicExponent = yapionObject.getValue("publicExponent", BigInteger.class).get();
+    public RSAPublicKey deserializePublicKey(DeserializeData<YAPIONObject> deserializeData, String algorithm) throws GeneralSecurityException {
+        BigInteger modulus = deserializeData.object.getValue("modulus", BigInteger.class).get();
+        BigInteger publicExponent = deserializeData.object.getValue("publicExponent", BigInteger.class).get();
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return (RSAPublicKey) keyFactory.generatePublic(new RSAPublicKeySpec(modulus, publicExponent));

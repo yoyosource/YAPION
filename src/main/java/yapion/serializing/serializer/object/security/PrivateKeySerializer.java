@@ -55,13 +55,11 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
             return new YAPIONValue<>(null);
         }
 
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add(KEY_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         yapionObject.add("algorithm", serializeData.object.getAlgorithm());
 
         try {
-            yapionObject.add("privateKey", KeySpecSerializerProvider.serializePrivateKey(serializeData.object));
+            yapionObject.add("privateKey", KeySpecSerializerProvider.serializePrivateKey(serializeData, serializeData.object));
         } catch (GeneralSecurityException e) {
             throw new YAPIONSerializerException(e.getMessage(), e);
         }
@@ -71,12 +69,17 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
     @Override
     public PrivateKey deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        String key = yapionObject.getValue(KEY_IDENTIFIER, String.class).get();
+        String key;
+        if (yapionObject.containsKey(KEY_IDENTIFIER, String.class)) {
+            key = yapionObject.getPlainValue(KEY_IDENTIFIER);
+        } else {
+            key = yapionObject.getPlainValue(TYPE_IDENTIFIER);
+        }
         String algorithm = yapionObject.getValue("algorithm", String.class).get();
         YAPIONObject privateKey = yapionObject.getObject("privateKey");
 
         try {
-            return KeySpecSerializerProvider.deserializePrivateKey(Class.forName(key), privateKey, algorithm);
+            return KeySpecSerializerProvider.deserializePrivateKey(deserializeData, Class.forName(key), privateKey, algorithm);
         } catch (GeneralSecurityException | ClassNotFoundException e) {
             throw new YAPIONDeserializerException(e.getMessage(), e);
         }

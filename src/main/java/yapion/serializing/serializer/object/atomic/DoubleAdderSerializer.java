@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.util.concurrent.atomic.DoubleAdder;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.24.0")
 public class DoubleAdderSerializer implements InternalSerializer<DoubleAdder> {
 
@@ -34,8 +32,7 @@ public class DoubleAdderSerializer implements InternalSerializer<DoubleAdder> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<DoubleAdder> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("value", serializeData.object.doubleValue());
         return yapionObject;
     }

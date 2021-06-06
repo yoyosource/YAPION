@@ -15,6 +15,8 @@ package yapion.serializing.serializer.object.security.internal;
 
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.annotations.api.SerializerImplementation;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
@@ -28,9 +30,9 @@ import java.security.spec.DSAPublicKeySpec;
 public class DSAKeySpecSerializer implements KeySpecSerializer<DSAPrivateKey, DSAPublicKey> {
 
     @Override
-    public YAPIONObject serializePrivateKey(DSAPrivateKey dsaPrivateKey) throws GeneralSecurityException {
-        KeyFactory keyFactory = KeyFactory.getInstance(dsaPrivateKey.getAlgorithm());
-        DSAPrivateKeySpec dsaPrivateKeySpec = keyFactory.getKeySpec(dsaPrivateKey, DSAPrivateKeySpec.class);
+    public YAPIONObject serializePrivateKey(SerializeData<DSAPrivateKey> serializeData) throws GeneralSecurityException {
+        KeyFactory keyFactory = KeyFactory.getInstance(serializeData.object.getAlgorithm());
+        DSAPrivateKeySpec dsaPrivateKeySpec = keyFactory.getKeySpec(serializeData.object, DSAPrivateKeySpec.class);
 
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("x", dsaPrivateKeySpec.getX());
@@ -41,20 +43,20 @@ public class DSAKeySpecSerializer implements KeySpecSerializer<DSAPrivateKey, DS
     }
 
     @Override
-    public DSAPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
-        BigInteger x = yapionObject.getValue("x", BigInteger.class).get();
-        BigInteger p = yapionObject.getValue("p", BigInteger.class).get();
-        BigInteger q = yapionObject.getValue("q", BigInteger.class).get();
-        BigInteger g = yapionObject.getValue("g", BigInteger.class).get();
+    public DSAPrivateKey deserializePrivateKey(DeserializeData<YAPIONObject> deserializeData, String algorithm) throws GeneralSecurityException {
+        BigInteger x = deserializeData.object.getValue("x", BigInteger.class).get();
+        BigInteger p = deserializeData.object.getValue("p", BigInteger.class).get();
+        BigInteger q = deserializeData.object.getValue("q", BigInteger.class).get();
+        BigInteger g = deserializeData.object.getValue("g", BigInteger.class).get();
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return (DSAPrivateKey) keyFactory.generatePrivate(new DSAPrivateKeySpec(x, p, q, g));
     }
 
     @Override
-    public YAPIONObject serializePublicKey(DSAPublicKey dsaPublicKey) throws GeneralSecurityException {
-        KeyFactory keyFactory = KeyFactory.getInstance(dsaPublicKey.getAlgorithm());
-        DSAPublicKeySpec dsaPublicKeySpec = keyFactory.getKeySpec(dsaPublicKey, DSAPublicKeySpec.class);
+    public YAPIONObject serializePublicKey(SerializeData<DSAPublicKey> serializeData) throws GeneralSecurityException {
+        KeyFactory keyFactory = KeyFactory.getInstance(serializeData.object.getAlgorithm());
+        DSAPublicKeySpec dsaPublicKeySpec = keyFactory.getKeySpec(serializeData.object, DSAPublicKeySpec.class);
 
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("y", dsaPublicKeySpec.getY());
@@ -65,11 +67,11 @@ public class DSAKeySpecSerializer implements KeySpecSerializer<DSAPrivateKey, DS
     }
 
     @Override
-    public DSAPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
-        BigInteger y = yapionObject.getValue("y", BigInteger.class).get();
-        BigInteger p = yapionObject.getValue("p", BigInteger.class).get();
-        BigInteger q = yapionObject.getValue("q", BigInteger.class).get();
-        BigInteger g = yapionObject.getValue("g", BigInteger.class).get();
+    public DSAPublicKey deserializePublicKey(DeserializeData<YAPIONObject> deserializeData, String algorithm) throws GeneralSecurityException {
+        BigInteger y = deserializeData.object.getValue("y", BigInteger.class).get();
+        BigInteger p = deserializeData.object.getValue("p", BigInteger.class).get();
+        BigInteger q = deserializeData.object.getValue("q", BigInteger.class).get();
+        BigInteger g = deserializeData.object.getValue("g", BigInteger.class).get();
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return (DSAPublicKey) keyFactory.generatePublic(new DSAPublicKeySpec(y, p, q, g));

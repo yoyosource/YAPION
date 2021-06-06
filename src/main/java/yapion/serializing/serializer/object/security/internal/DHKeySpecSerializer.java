@@ -13,8 +13,10 @@
 
 package yapion.serializing.serializer.object.security.internal;
 
-import yapion.hierarchy.types.YAPIONObject;
 import yapion.annotations.api.SerializerImplementation;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 
 import javax.crypto.interfaces.DHPrivateKey;
 import javax.crypto.interfaces.DHPublicKey;
@@ -28,9 +30,9 @@ import java.security.KeyFactory;
 public class DHKeySpecSerializer implements KeySpecSerializer<DHPrivateKey, DHPublicKey> {
 
     @Override
-    public YAPIONObject serializePrivateKey(DHPrivateKey dhPrivateKey) throws GeneralSecurityException {
-        KeyFactory keyFactory = KeyFactory.getInstance(dhPrivateKey.getAlgorithm());
-        DHPrivateKeySpec dhPrivateKeySpec = keyFactory.getKeySpec(dhPrivateKey, DHPrivateKeySpec.class);
+    public YAPIONObject serializePrivateKey(SerializeData<DHPrivateKey> serializeData) throws GeneralSecurityException {
+        KeyFactory keyFactory = KeyFactory.getInstance(serializeData.object.getAlgorithm());
+        DHPrivateKeySpec dhPrivateKeySpec = keyFactory.getKeySpec(serializeData.object, DHPrivateKeySpec.class);
 
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("x", dhPrivateKeySpec.getX());
@@ -40,19 +42,19 @@ public class DHKeySpecSerializer implements KeySpecSerializer<DHPrivateKey, DHPu
     }
 
     @Override
-    public DHPrivateKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
-        BigInteger x = yapionObject.getValue("x", BigInteger.class).get();
-        BigInteger p = yapionObject.getValue("p", BigInteger.class).get();
-        BigInteger g = yapionObject.getValue("g", BigInteger.class).get();
+    public DHPrivateKey deserializePrivateKey(DeserializeData<YAPIONObject> deserializeData, String algorithm) throws GeneralSecurityException {
+        BigInteger x = deserializeData.object.getValue("x", BigInteger.class).get();
+        BigInteger p = deserializeData.object.getValue("p", BigInteger.class).get();
+        BigInteger g = deserializeData.object.getValue("g", BigInteger.class).get();
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return (DHPrivateKey) keyFactory.generatePrivate(new DHPrivateKeySpec(x, p, g));
     }
 
     @Override
-    public YAPIONObject serializePublicKey(DHPublicKey dhPublicKey) throws GeneralSecurityException {
-        KeyFactory keyFactory = KeyFactory.getInstance(dhPublicKey.getAlgorithm());
-        DHPublicKeySpec dhPublicKeySpec = keyFactory.getKeySpec(dhPublicKey, DHPublicKeySpec.class);
+    public YAPIONObject serializePublicKey(SerializeData<DHPublicKey> serializeData) throws GeneralSecurityException {
+        KeyFactory keyFactory = KeyFactory.getInstance(serializeData.object.getAlgorithm());
+        DHPublicKeySpec dhPublicKeySpec = keyFactory.getKeySpec(serializeData.object, DHPublicKeySpec.class);
 
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("y", dhPublicKeySpec.getY());
@@ -62,10 +64,10 @@ public class DHKeySpecSerializer implements KeySpecSerializer<DHPrivateKey, DHPu
     }
 
     @Override
-    public DHPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
-        BigInteger y = yapionObject.getValue("y", BigInteger.class).get();
-        BigInteger p = yapionObject.getValue("p", BigInteger.class).get();
-        BigInteger g = yapionObject.getValue("g", BigInteger.class).get();
+    public DHPublicKey deserializePublicKey(DeserializeData<YAPIONObject> deserializeData, String algorithm) throws GeneralSecurityException {
+        BigInteger y = deserializeData.object.getValue("y", BigInteger.class).get();
+        BigInteger p = deserializeData.object.getValue("p", BigInteger.class).get();
+        BigInteger g = deserializeData.object.getValue("g", BigInteger.class).get();
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return (DHPublicKey) keyFactory.generatePublic(new DHPublicKeySpec(y, p, g));

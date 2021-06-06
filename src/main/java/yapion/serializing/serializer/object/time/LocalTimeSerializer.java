@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.time.LocalTime;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.18.0")
 public class LocalTimeSerializer implements InternalSerializer<LocalTime> {
 
@@ -34,8 +32,7 @@ public class LocalTimeSerializer implements InternalSerializer<LocalTime> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<LocalTime> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("hour", serializeData.object.getHour());
         yapionObject.add("minute", serializeData.object.getMinute());
         yapionObject.add("second", serializeData.object.getSecond());

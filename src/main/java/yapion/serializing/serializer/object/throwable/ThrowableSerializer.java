@@ -39,8 +39,7 @@ public class ThrowableSerializer implements InternalSerializer<Throwable> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Throwable> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, serializeData.object.getClass());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         yapionObject.add("message", serializeData.object.getMessage());
         yapionObject.add("cause", serializeData.serialize(serializeData.object.getCause()));
         yapionObject.add("stacktrace", serializeData.serialize(serializeData.object.getStackTrace()));

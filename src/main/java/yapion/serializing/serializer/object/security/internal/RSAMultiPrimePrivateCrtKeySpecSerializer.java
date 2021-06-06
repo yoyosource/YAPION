@@ -13,12 +13,13 @@
 
 package yapion.serializing.serializer.object.security.internal;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
-import yapion.annotations.api.SerializerImplementation;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
@@ -32,9 +33,9 @@ import java.security.spec.RSAOtherPrimeInfo;
 public class RSAMultiPrimePrivateCrtKeySpecSerializer implements KeySpecSerializer<RSAMultiPrimePrivateCrtKey, RSAPublicKey> {
 
     @Override
-    public YAPIONObject serializePrivateKey(RSAMultiPrimePrivateCrtKey rsaMultiPrimePrivateCrtKey) throws GeneralSecurityException {
-        KeyFactory keyFactory = KeyFactory.getInstance(rsaMultiPrimePrivateCrtKey.getAlgorithm());
-        RSAMultiPrimePrivateCrtKeySpec rsaMultiPrimePrivateCrtKeySpec = keyFactory.getKeySpec(rsaMultiPrimePrivateCrtKey, RSAMultiPrimePrivateCrtKeySpec.class);
+    public YAPIONObject serializePrivateKey(SerializeData<RSAMultiPrimePrivateCrtKey> serializeData) throws GeneralSecurityException {
+        KeyFactory keyFactory = KeyFactory.getInstance(serializeData.object.getAlgorithm());
+        RSAMultiPrimePrivateCrtKeySpec rsaMultiPrimePrivateCrtKeySpec = keyFactory.getKeySpec(serializeData.object, RSAMultiPrimePrivateCrtKeySpec.class);
 
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("modulus", rsaMultiPrimePrivateCrtKeySpec.getModulus());
@@ -54,21 +55,21 @@ public class RSAMultiPrimePrivateCrtKeySpecSerializer implements KeySpecSerializ
     }
 
     @Override
-    public RSAMultiPrimePrivateCrtKey deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
-        BigInteger modulus = yapionObject.getValue("modulus", BigInteger.class).get();
-        BigInteger publicExponent = yapionObject.getValue("publicExponent", BigInteger.class).get();
-        BigInteger privateExponent = yapionObject.getValue("privateExponent", BigInteger.class).get();
-        BigInteger primeP = yapionObject.getValue("primeP", BigInteger.class).get();
-        BigInteger primeQ = yapionObject.getValue("primeQ", BigInteger.class).get();
-        BigInteger primeExponentP = yapionObject.getValue("primeExponentP", BigInteger.class).get();
-        BigInteger primeExponentQ = yapionObject.getValue("primeExponentQ", BigInteger.class).get();
-        BigInteger crtCoefficient = yapionObject.getValue("crtCoefficient", BigInteger.class).get();
+    public RSAMultiPrimePrivateCrtKey deserializePrivateKey(DeserializeData<YAPIONObject> deserializeData, String algorithm) throws GeneralSecurityException {
+        BigInteger modulus = deserializeData.object.getValue("modulus", BigInteger.class).get();
+        BigInteger publicExponent = deserializeData.object.getValue("publicExponent", BigInteger.class).get();
+        BigInteger privateExponent = deserializeData.object.getValue("privateExponent", BigInteger.class).get();
+        BigInteger primeP = deserializeData.object.getValue("primeP", BigInteger.class).get();
+        BigInteger primeQ = deserializeData.object.getValue("primeQ", BigInteger.class).get();
+        BigInteger primeExponentP = deserializeData.object.getValue("primeExponentP", BigInteger.class).get();
+        BigInteger primeExponentQ = deserializeData.object.getValue("primeExponentQ", BigInteger.class).get();
+        BigInteger crtCoefficient = deserializeData.object.getValue("crtCoefficient", BigInteger.class).get();
 
-        YAPIONArray yapionArray = yapionObject.getArray("rsaOtherPrimeInfo");
+        YAPIONArray yapionArray = deserializeData.object.getArray("rsaOtherPrimeInfo");
         RSAOtherPrimeInfo[] rsaOtherPrimeInfos = new RSAOtherPrimeInfo[yapionArray.length()];
         int index = 0;
         for (YAPIONAnyType yapionAnyType : yapionArray.getAllValues()) {
-            rsaOtherPrimeInfos[index++] = (RSAOtherPrimeInfo) YAPIONDeserializer.deserialize((YAPIONObject) yapionAnyType);
+            rsaOtherPrimeInfos[index++] = deserializeData.deserialize(yapionAnyType);
         }
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
@@ -76,12 +77,12 @@ public class RSAMultiPrimePrivateCrtKeySpecSerializer implements KeySpecSerializ
     }
 
     @Override
-    public YAPIONObject serializePublicKey(RSAPublicKey rsaPublicKey) throws GeneralSecurityException {
+    public YAPIONObject serializePublicKey(SerializeData<RSAPublicKey> serializeData) throws GeneralSecurityException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public RSAPublicKey deserializePublicKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
+    public RSAPublicKey deserializePublicKey(DeserializeData<YAPIONObject> deserializeData, String algorithm) throws GeneralSecurityException {
         throw new UnsupportedOperationException();
     }
 

@@ -23,8 +23,6 @@ import yapion.serializing.data.SerializeData;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.12.0")
 public class URLSerializer implements InternalSerializer<URL> {
 
@@ -35,8 +33,7 @@ public class URLSerializer implements InternalSerializer<URL> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<URL> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         try {
             yapionObject.add("protocol", serializeData.object.getProtocol());
             yapionObject.add("host", serializeData.object.getHost());

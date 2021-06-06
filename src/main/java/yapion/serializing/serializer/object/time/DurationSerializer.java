@@ -22,8 +22,6 @@ import yapion.serializing.data.SerializeData;
 
 import java.time.Duration;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.18.0")
 public class DurationSerializer implements InternalSerializer<Duration> {
 
@@ -34,8 +32,7 @@ public class DurationSerializer implements InternalSerializer<Duration> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Duration> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("seconds", serializeData.object.getSeconds());
         yapionObject.add("nano", serializeData.object.getNano());
         return yapionObject;
