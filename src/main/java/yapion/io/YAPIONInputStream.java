@@ -81,7 +81,7 @@ public class YAPIONInputStream implements AutoCloseable {
      *
      * @throws YAPIONIOException if the inputStream was closed
      */
-    public Object readObject() {
+    public <T> T readObject() {
         if (closed) throw new YAPIONIOException("Reading from a closed Stream");
         return YAPIONDeserializer.deserialize(read());
     }
@@ -95,7 +95,7 @@ public class YAPIONInputStream implements AutoCloseable {
      *
      * @throws YAPIONIOException if the inputStream was closed
      */
-    public Object readObject(TypeReMapper typeReMapper) {
+    public <T> T readObject(TypeReMapper typeReMapper) {
         if (closed) throw new YAPIONIOException("Reading from a closed Stream");
         return YAPIONDeserializer.deserialize(read(), typeReMapper);
     }
