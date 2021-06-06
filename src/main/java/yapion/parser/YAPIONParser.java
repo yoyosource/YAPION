@@ -17,13 +17,11 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.DeprecationInfo;
+import yapion.exceptions.YAPIONException;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.types.YAPIONMap;
-import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONPointer;
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.types.*;
 import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 
@@ -408,6 +406,45 @@ public final class YAPIONParser {
             log.debug("parse    [YAPIONParserException]");
             throw new YAPIONParserException(((e.getMessage() != null ? e.getMessage() : "") + " (" + generateErrorMessage() + ")"), e);
         }
+    }
+
+    /**
+     * Returns the YAPIONObject parsed by {@code parse()} and unwraps it when it only contains one variable with an empty key.
+     *
+     * @return the YAPIONObject
+     */
+    public YAPIONObject resultObject() {
+        YAPIONObject yapionObject = result();
+        if (yapionObject.size() == 1 && yapionObject.containsKey("")) {
+            return yapionObject.getObject("");
+        }
+        throw new YAPIONException("The parsed YAPIONObject is more than an YAPIONArray");
+    }
+
+    /**
+     * Returns the YAPIONObject parsed by {@code parse()} and unwraps it to an YAPIONArray when it only contains one variable with an empty key.
+     *
+     * @return the YAPIONArray
+     */
+    public YAPIONArray resultArray() {
+        YAPIONObject yapionObject = result();
+        if (yapionObject.size() == 1 && yapionObject.containsKey("")) {
+            return yapionObject.getArray("");
+        }
+        throw new YAPIONException("The parsed YAPIONObject is more than an YAPIONArray");
+    }
+
+    /**
+     * Returns the YAPIONObject parsed by {@code parse()} and unwraps it to an YAPIONMap when it only contains one variable with an empty key.
+     *
+     * @return the YAPIONMap
+     */
+    public YAPIONMap resultMap() {
+        YAPIONObject yapionObject = result();
+        if (yapionObject.size() == 1 && yapionObject.containsKey("")) {
+            return yapionObject.getMap("");
+        }
+        throw new YAPIONException("The parsed YAPIONObject is more than an YAPIONMap");
     }
 
     private String generateErrorMessage() {
