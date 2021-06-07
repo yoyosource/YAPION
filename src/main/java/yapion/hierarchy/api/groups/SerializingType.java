@@ -13,12 +13,38 @@
 
 package yapion.hierarchy.api.groups;
 
+import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
+import yapion.serializing.YAPIONFlags;
 
 public interface SerializingType<T extends YAPIONDataType<?, ?> & SerializingType<T>> {
 
     default <K> K deserialize() {
         return YAPIONDeserializer.deserialize((T) this);
+    }
+
+    default <K> K deserialize(String context) {
+        return YAPIONDeserializer.deserialize((T) this, context);
+    }
+
+    default <K> K deserialize(TypeReMapper typeReMapper) {
+        return YAPIONDeserializer.deserialize((T) this, typeReMapper);
+    }
+
+    default <K> K deserialize(YAPIONFlags yapionFlags) {
+        return YAPIONDeserializer.deserialize((T) this, yapionFlags);
+    }
+
+    default <K> K deserialize(String context, TypeReMapper typeReMapper) {
+        return YAPIONDeserializer.deserialize((T) this, context, typeReMapper);
+    }
+
+    default <K> K deserialize(String context, YAPIONFlags yapionFlags) {
+        return YAPIONDeserializer.deserialize((T) this, context, yapionFlags);
+    }
+
+    default <K> K deserialize(String context, TypeReMapper typeReMapper, YAPIONFlags yapionFlags) {
+        return YAPIONDeserializer.deserialize((T) this, context, typeReMapper, yapionFlags);
     }
 
 }

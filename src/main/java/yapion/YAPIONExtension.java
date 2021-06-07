@@ -67,6 +67,7 @@ public class YAPIONExtension {
     }
 
     /// Serializing
+    // Deserializing is defined on SerializingType
 
     public static <T extends YAPIONAnyType> T serialize(Object object) {
         return YAPIONSerializer.serialize(object);
@@ -74,10 +75,6 @@ public class YAPIONExtension {
 
     public static <T extends YAPIONAnyType> T serializeReduced(Object object) {
         return new YAPIONSerializer(object).parse().getReducedYAPIONObject();
-    }
-
-    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(K serializingType) {
-        return YAPIONDeserializer.deserialize(serializingType);
     }
 
 }
