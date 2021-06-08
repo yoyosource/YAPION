@@ -174,6 +174,10 @@ public final class YAPIONSerializer {
             throw new YAPIONSerializerException("No suitable serializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
         }
 
+        if (serializer == null && GeneratedSerializerLoader.loadSerializerIfNeeded(type)) {
+            return parseObject(object);
+        }
+
         YAPIONObject yapionObject = new YAPIONObject();
         if (!pointerMap.containsKey(object)) {
             pointerMap.put(object, new YAPIONPointer(yapionObject));

@@ -13,11 +13,22 @@
 
 package yapion.annotations.registration;
 
+import yapion.serializing.GeneratedSerializerLoader;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * To load a generated Serializer for the annotated class you need to allow it in {@link GeneratedSerializerLoader} by
+ * either allowing only the annotated class {@link GeneratedSerializerLoader#addClass(Class)} or the package and every
+ * sub package {@link GeneratedSerializerLoader#addPackage(Package)}. This is a security measurement so that code
+ * injections will only be done if directly stated in {@link GeneratedSerializerLoader}. If you specify a class
+ * to allow loading of its generated Serializer you cannot undo this when it happened. It happens when you serialize or
+ * deserialize any class annotated with this annotation and allowance by {@link GeneratedSerializerLoader}. You can
+ * always allow more generated serializer to be loaded later on, by just adding them to {@link GeneratedSerializerLoader}.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface YAPIONSerializing {

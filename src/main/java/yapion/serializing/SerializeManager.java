@@ -18,6 +18,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.DeprecationInfo;
+import yapion.annotations.api.InternalAPI;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -141,7 +142,8 @@ public class SerializeManager {
         OVERRIDEABLE = true;
     }
 
-    private static void add(Class<?> clazz) {
+    @InternalAPI
+    static void add(Class<?> clazz) {
         if (OVERRIDEABLE) return;
         String className = clazz.getTypeName();
         if (!className.startsWith("yapion.serializing.serializer")) return;

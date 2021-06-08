@@ -241,6 +241,10 @@ public final class YAPIONDeserializer {
             return this;
         }
 
+        if (serializer == null && GeneratedSerializerLoader.loadSerializerIfNeeded(clazz)) {
+            return parseObject(yapionObject);
+        }
+
         boolean loadWithoutAnnotation = serializer != null && serializer.loadWithoutAnnotation();
         boolean createWithObjenesis = serializer != null && serializer.createWithObjenesis();
 
