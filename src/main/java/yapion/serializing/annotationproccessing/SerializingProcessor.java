@@ -92,6 +92,7 @@ public class SerializingProcessor extends AbstractProcessor {
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(YAPIONSerializing.class);
         for (Element element : elements) {
             if (element.getKind() != ElementKind.CLASS) {
+                error(element, "Element needs to be class");
                 continue;
             }
 
@@ -201,7 +202,7 @@ public class SerializingProcessor extends AbstractProcessor {
             pw.flush();
             w.close();
         }
-        return false;
+        return true;
     }
 
     private void error(Element e, String msg, Object... args) {
