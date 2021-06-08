@@ -16,11 +16,13 @@ package yapion.serializing.data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import yapion.exceptions.serializing.YAPIONDataLossException;
+import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.SerializeManager;
-import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.YAPIONFlag;
 import yapion.serializing.YAPIONFlags;
+import yapion.serializing.YAPIONSerializer;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
@@ -45,6 +47,14 @@ public class SerializeData<T> {
 
     public final YAPIONAnyType serialize(Object o) {
         return yapionSerializer.parse(o);
+    }
+
+    public final void serialize(YAPIONObject yapionObject, Field field) {
+        try {
+            yapionObject.add(field.getName(), field.get(object));
+        } catch (IllegalAccessException e) {
+            throw new YAPIONReflectionException(e.getMessage(), e);
+        }
     }
 
     @SuppressWarnings({"java:S3011"})

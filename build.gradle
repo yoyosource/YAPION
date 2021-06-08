@@ -63,11 +63,31 @@ processResources {
         into("yapion")
     }
 
+    from("build/classes/java/main/yapion/yapion.annotations.api.ProcessorImplementation") {
+        into("build/classes/java/main/yapion/META-INF/services/javax.annotation.processing.Processor")
+    }
+
     from(rootDir) {
         include(['LICENSE'])
         into("")
 
         includeEmptyDirs = false
+    }
+
+    from(rootDir) {
+        include(['**/*.defaultClass'])
+
+        includeEmptyDirs = false
+    }
+
+    doLast {
+        File from = new File("${buildDir}/classes/java/main/META-INF/annotations//yapion.annotations.api.ProcessorImplementation")
+        File to = new File("${buildDir}/classes/java/main/META-INF/services/javax.annotation.processing.Processor")
+        to.parentFile.mkdirs()
+        to.createNewFile()
+        for (String s : from.readLines()) {
+            to.write(s + "\n");
+        }
     }
 }
 

@@ -14,9 +14,11 @@
 package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.ToString;
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.*;
 import yapion.utils.ReflectionsUtils;
 
@@ -35,6 +37,14 @@ public class DeserializeData<T extends YAPIONAnyType> {
 
     public <R extends YAPIONAnyType> DeserializeData<R> clone(R object) {
         return new DeserializeData<>(object, context, yapionDeserializer, typeReMapper);
+    }
+
+    public boolean deserialize(String fieldName, Object object) {
+        return deserialize(fieldName, object, ((YAPIONObject) this.object).internalGetYAPIONAnyType(fieldName));
+    }
+
+    public boolean deserialize(Object object, Field field) {
+        return setField(field, object, deserialize(((YAPIONObject) object).getYAPIONAnyType(field.getName())));
     }
 
     public boolean deserialize(String fieldName, Object object, YAPIONAnyType yapionAnyType) {
@@ -58,6 +68,14 @@ public class DeserializeData<T extends YAPIONAnyType> {
     @SuppressWarnings("unchecked")
     public <T> T getInstance(Class<T> clazz) throws ClassNotFoundException {
         return (T) SerializeManager.getObjectInstance(clazz);
+    }
+
+    @SneakyThrows
+    public <T> T getInstanceByFactoryOrObjenesis(Class<T> clazz) {
+        if (hasFactory(clazz)) {
+            return getInstance(clazz);
+        }
+        return (T) ReflectionsUtils.constructObjectObjenesis(clazz);
     }
 
     public boolean setField(String fieldName, Object object, Object objectToSet) {
