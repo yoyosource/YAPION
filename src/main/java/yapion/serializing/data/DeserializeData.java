@@ -52,6 +52,10 @@ public class DeserializeData<T extends YAPIONAnyType> {
         return setField(field, object, deserialize(yapionAnyType));
     }
 
+    public <T> T deserialize(String name) {
+        return (T) yapionDeserializer.parse(((YAPIONObject) object).getYAPIONAnyType(name));
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T deserialize(YAPIONAnyType yapionAnyType) {
         return (T) yapionDeserializer.parse(yapionAnyType);

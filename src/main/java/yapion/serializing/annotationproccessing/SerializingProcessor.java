@@ -24,6 +24,7 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,25 +45,20 @@ public class SerializingProcessor extends AbstractProcessor {
             "",
             "import java.lang.reflect.Field;",
             "",
-            "public class %NAME%Serializer implements InternalSerializer<%NAME%> {",
+            "import static yapion.utils.ReflectionsUtils.getField;",
             "",
+            "public class %NAME%Serializer implements InternalSerializer<%NAME%> {",
             "    private %NAME%Serializer() {}",
             "",
             "%FIELDS%",
-            "",
-            "    @Override",
-            "    @SneakyThrows",
-            "    public void init() {",
             "%FIELDS_INIT%",
-            "    }",
-            "",
             "    @Override",
             "    public Class<%NAME%> type() {",
             "        return %NAME%.class;",
             "    }",
             "",
             "    @Override",
-            "    public YAPIONAnyType serialize(SerializeData<Rule> serializeData) {",
+            "    public YAPIONAnyType serialize(SerializeData<%NAME%> serializeData) {",
             "        YAPIONObject yapionObject = new YAPIONObject(type());",
             "%SERIALIZATION%",
             "        return yapionObject;",
@@ -100,41 +96,107 @@ public class SerializingProcessor extends AbstractProcessor {
             }
 
             TypeElement clazz = (TypeElement) element;
+            if (clazz.getEnclosingElement().getKind() == ElementKind.CLASS) {
+                error(element, "Element cannot be inner class");
+            }
             // JavaFileObject f = processingEnv.getFiler().createSourceFile(clazz.getQualifiedName().toString().substring(0, clazz.getQualifiedName().toString().lastIndexOf('.')) + "." + clazz.getSimpleName() + "$" + clazz.getSimpleName() + "Serializer");
             JavaFileObject f = processingEnv.getFiler().createSourceFile(clazz.getQualifiedName() + "Serializer");
             processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Creating " + f.toUri());
 
-            List<VariableElement> elementList = element.getEnclosedElements()
-                    .stream()
-                    .filter(VariableElement.class::isInstance)
-                    .map(VariableElement.class::cast)
-                    .filter(e -> !(e.getModifiers().contains(Modifier.STATIC) || element.getModifiers().contains(Modifier.TRANSIENT)))
+            List<VariableElement> elementList = new ArrayList<>();
+            Element current = element;
+            while (current != null && current.getKind() == ElementKind.CLASS) {
+                elementList.addAll(current.getEnclosedElements()
+                        .stream()
+                        .filter(VariableElement.class::isInstance)
+                        .map(VariableElement.class::cast)
+                        .filter(e -> !(e.getModifiers().contains(Modifier.STATIC) || element.getModifiers().contains(Modifier.TRANSIENT)))
+                        .collect(Collectors.toList()));
+                Element finalCurrent = current;
+                current = roundEnv.getRootElements().stream().filter(e -> e.toString().equals(((TypeElement) finalCurrent).getSuperclass().toString())).findFirst().orElse(null);
+            }
+
+            List<VariableElement> serializeFieldList = elementList.stream()
+                    .filter(e -> {
+                        if (e.getModifiers().contains(Modifier.PRIVATE)) return true;
+                        String s = clazz.getQualifiedName().toString();
+                        if (!e.getEnclosingElement().toString().startsWith(s.substring(0, s.length() - clazz.getSimpleName().toString().length()))) {
+                            if (e.getModifiers().contains(Modifier.PUBLIC)) return false;
+                            if (e.getModifiers().contains(Modifier.PROTECTED)) return false;
+                            return true;
+                        }
+                        return false;
+                    })
+                    .collect(Collectors.toList());
+
+            List<VariableElement> deserializeFieldList = elementList.stream()
+                    .filter(e -> {
+                        if (e.getModifiers().contains(Modifier.PRIVATE)) return true;
+                        if (e.getModifiers().contains(Modifier.FINAL)) return true;
+                        String s = clazz.getQualifiedName().toString();
+                        if (!e.getEnclosingElement().toString().startsWith(s.substring(0, s.length() - clazz.getSimpleName().toString().length()))) {
+                            if (e.getModifiers().contains(Modifier.PUBLIC)) return false;
+                            if (e.getModifiers().contains(Modifier.PROTECTED)) return false;
+                            return true;
+                        }
+                        return false;
+                    })
                     .collect(Collectors.toList());
 
             Writer w = f.openWriter();
             PrintWriter pw = new PrintWriter(w);
             for (String s : defaultSerializer) {
                 if (s.equals("%FIELDS%")) {
-                    for (VariableElement e : elementList) {
-                        pw.println("    Field " + e.getSimpleName() + ";");
+                    if (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty()) {
+                        continue;
                     }
+                    for (VariableElement e : serializeFieldList) {
+                        pw.println("    private Field " + e.getSimpleName() + ";");
+                    }
+                    for (VariableElement e : deserializeFieldList) {
+                        if (!serializeFieldList.contains(e)) {
+                            pw.println("    private Field " + e.getSimpleName() + ";");
+                        }
+                    }
+                    pw.println("");
                     continue;
                 }
                 if (s.equals("%FIELDS_INIT%")) {
-                    for (VariableElement e : elementList) {
-                        pw.println("        " + e.getSimpleName() + " = " + clazz.getSimpleName() + ".class.getDeclaredField(\"" + e.getSimpleName() + "\");");
+                    if (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty()) {
+                        continue;
                     }
+                    pw.println("    @Override");
+                    pw.println("    @SneakyThrows");
+                    pw.println("    public void init() {");
+                    for (VariableElement e : serializeFieldList) {
+                        pw.println("        " + e.getSimpleName() + " = getField(" + clazz.getSimpleName() + ".class, \"" + e.getSimpleName() + "\");");
+                    }
+                    for (VariableElement e : deserializeFieldList) {
+                        if (!serializeFieldList.contains(e)) {
+                            pw.println("        " + e.getSimpleName() + " = getField(" + clazz.getSimpleName() + ".class, \"" + e.getSimpleName() + "\");");
+                        }
+                    }
+                    pw.println("    }");
+                    pw.println("");
                     continue;
                 }
                 if (s.equals("%SERIALIZATION%")) {
                     for (VariableElement e : elementList) {
-                        pw.println("        serializeData.serialize(yapionObject, " + e.getSimpleName() + ");");
+                        if (serializeFieldList.contains(e)) {
+                            pw.println("        serializeData.serialize(yapionObject, " + e.getSimpleName() + ");");
+                        } else {
+                            pw.println("        yapionObject.add(\"" + e.getSimpleName() + "\", serializeData.serialize(serializeData.object." + e.getSimpleName() + "));");
+                        }
                     }
                     continue;
                 }
                 if (s.equals("%DESERIALIZATION%")) {
                     for (VariableElement e : elementList) {
-                        pw.println("        deserializeData.deserialize(object, " + e.getSimpleName() + ");");
+                        if (deserializeFieldList.contains(e)) {
+                            pw.println("        deserializeData.deserialize(object, " + e.getSimpleName() + ");");
+                        } else {
+                            pw.println("        object." + e.getSimpleName() + " = deserializeData.deserialize(\"" + e.getSimpleName() + "\");");
+                        }
                     }
                     continue;
                 }
