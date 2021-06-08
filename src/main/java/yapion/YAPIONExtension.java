@@ -13,13 +13,15 @@
 
 package yapion;
 
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-import yapion.hierarchy.api.groups.SerializingType;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.groups.YAPIONDataType;
+import yapion.hierarchy.output.FileGZIPOutput;
+import yapion.hierarchy.output.FileOutput;
+import yapion.hierarchy.output.LengthOutput;
+import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
-import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 
 import java.io.File;
@@ -64,6 +66,43 @@ public class YAPIONExtension {
 
     public static YAPIONObject parse(File file, boolean stopOnEnd) throws IOException {
         return new YAPIONParser(file, stopOnEnd).parse().result();
+    }
+
+    /// Output
+
+    public static String toYAPION(YAPIONAnyType yapionAnyType) {
+        return yapionAnyType.toYAPION(new StringOutput()).getResult();
+    }
+
+    public static String toYAPION(YAPIONAnyType yapionAnyType, boolean prettified) {
+        return yapionAnyType.toYAPION(new StringOutput(prettified)).getResult();
+    }
+
+    @SneakyThrows
+    public static void toFile(YAPIONAnyType yapionAnyType, File file) {
+        yapionAnyType.toYAPION(new FileOutput(file)).close();
+    }
+
+    @SneakyThrows
+    public static void toFile(YAPIONAnyType yapionAnyType, File file, boolean prettified) {
+        yapionAnyType.toYAPION(new FileOutput(file, prettified)).close();
+    }
+
+    @SneakyThrows
+    public static void toGZIPFile(YAPIONAnyType yapionAnyType, File file) {
+        yapionAnyType.toYAPION(new FileGZIPOutput(file)).close();
+    }
+
+    public static long toLength(YAPIONAnyType yapionAnyType) {
+        return yapionAnyType.toYAPION(new LengthOutput()).getLength();
+    }
+
+    public static long toLength(YAPIONAnyType yapionAnyType, boolean prettified) {
+        if (prettified) {
+            return yapionAnyType.toYAPION(new LengthOutput()).getPrettifiedLength();
+        } else {
+            return yapionAnyType.toYAPION(new LengthOutput()).getLength();
+        }
     }
 
     /// Serializing
