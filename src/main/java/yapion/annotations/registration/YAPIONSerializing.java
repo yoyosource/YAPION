@@ -28,6 +28,9 @@ import java.lang.annotation.Target;
  * to allow loading of its generated Serializer you cannot undo this when it happened. It happens when you serialize or
  * deserialize any class annotated with this annotation and allowance by {@link GeneratedSerializerLoader}. You can
  * always allow more generated serializer to be loaded later on, by just adding them to {@link GeneratedSerializerLoader}.
+ *
+ * Currently this annotation ignores any other annotation and just creates a Serializer for every field that is not static
+ * or transient in the class or any super class. Other modes could be implement in the future.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
