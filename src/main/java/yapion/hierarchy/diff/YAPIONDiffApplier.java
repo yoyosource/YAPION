@@ -73,6 +73,8 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
                 DiffMove diffMove = (DiffMove) diff;
                 applyMove(diffMove.getFromPath(), diffMove.getToPath());
                 break;
+            default:
+                throw new UnsupportedOperationException();
         }
         return this;
     }
@@ -95,6 +97,8 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
                 DiffMove diffMove = (DiffMove) diff;
                 reverseApplyMove(diffMove.getFromPath(), diffMove.getToPath());
                 break;
+            default:
+                throw new UnsupportedOperationException();
         }
         return this;
     }

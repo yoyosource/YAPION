@@ -121,9 +121,7 @@ public class SerializingProcessor extends AbstractProcessor {
                         if (e.getModifiers().contains(Modifier.PRIVATE)) return true;
                         String s = clazz.getQualifiedName().toString();
                         if (!e.getEnclosingElement().toString().startsWith(s.substring(0, s.length() - clazz.getSimpleName().toString().length()))) {
-                            if (e.getModifiers().contains(Modifier.PUBLIC)) return false;
-                            if (e.getModifiers().contains(Modifier.PROTECTED)) return false;
-                            return true;
+                            return !e.getModifiers().contains(Modifier.PUBLIC);
                         }
                         return false;
                     })
@@ -135,9 +133,7 @@ public class SerializingProcessor extends AbstractProcessor {
                         if (e.getModifiers().contains(Modifier.FINAL)) return true;
                         String s = clazz.getQualifiedName().toString();
                         if (!e.getEnclosingElement().toString().startsWith(s.substring(0, s.length() - clazz.getSimpleName().toString().length()))) {
-                            if (e.getModifiers().contains(Modifier.PUBLIC)) return false;
-                            if (e.getModifiers().contains(Modifier.PROTECTED)) return false;
-                            return true;
+                            return !e.getModifiers().contains(Modifier.PUBLIC);
                         }
                         return false;
                     })

@@ -51,9 +51,9 @@ public class ThrowableSerializer implements InternalSerializer<Throwable> {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         Throwable throwable;
         if (yapionObject.containsKey(EXCEPTION_IDENTIFIER, String.class)) {
-            throwable = (Throwable) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, "").get(), false);
+            throwable = (Throwable) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, String.class).get(), false);
         } else {
-            throwable = (Throwable) ReflectionsUtils.constructObject(yapionObject.getValue(TYPE_IDENTIFIER, "").get(), false);;
+            throwable = (Throwable) ReflectionsUtils.constructObject(yapionObject.getValue(TYPE_IDENTIFIER, String.class).get(), false);;
         }
         deserializeData.deserialize("detailMessage", throwable, yapionObject.getValue("message"));
         deserializeData.deserialize("cause", throwable, yapionObject.getObject("cause"));
