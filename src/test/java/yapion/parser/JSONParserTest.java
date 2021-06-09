@@ -60,6 +60,11 @@ public class JSONParserTest {
     }
 
     @Test
+    public void testJSONParseWithEscapes() {
+        assertThat(YAPIONParser.parse("{\"test\":\"\\\"Fer pater\\\", inquit, \\\"opem! tellus\\\", ait, \\\"hisce vel istam,\"}").toYAPION(new StringOutput()).getResult(), is("{test(\"Fer pater\", inquit, \"opem! tellus\", ait, \"hisce vel istam,)}"));
+    }
+
+    @Test
     public void testNullValue() {
         assertThat(YAPIONParser.parse("{\n" +
                 "\t\"text\": true\n" +

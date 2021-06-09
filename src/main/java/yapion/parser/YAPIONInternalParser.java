@@ -346,7 +346,7 @@ final class YAPIONInternalParser {
             return;
         }
         if (mightValue == MightValue.TRUE && !escaped && (c == ',' || c == '}' || c == ']' || c == '>')) {
-            if (tryParseValueJSONEnd(c, lastChar)) {
+            if (!(lastCharEscaped && lastChar == '"') && tryParseValueJSONEnd(c, lastChar)) {
                 return;
             }
         }
@@ -356,7 +356,9 @@ final class YAPIONInternalParser {
         }
         lastCharEscaped = escaped;
         if (escaped) {
-            if (typeStack.peek() == YAPIONType.ARRAY && (c == ',' || c == '-')) {
+            if (mightValue == MightValue.TRUE && c == '"') {
+                // Ignored
+            } else if (typeStack.peek() == YAPIONType.ARRAY && (c == ',' || c == '-')) {
                 // Ignored
             } else if (typeStack.peek() == YAPIONType.ARRAY && current.length() == 0 && c == ' ') {
                 // Ignored
