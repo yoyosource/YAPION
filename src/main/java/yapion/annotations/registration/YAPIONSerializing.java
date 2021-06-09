@@ -13,6 +13,10 @@
 
 package yapion.annotations.registration;
 
+import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.object.YAPIONData;
+import yapion.annotations.serialize.YAPIONOptimize;
+import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.serializing.GeneratedSerializerLoader;
 
 import java.lang.annotation.ElementType;
@@ -29,8 +33,12 @@ import java.lang.annotation.Target;
  * deserialize any class annotated with this annotation and allowance by {@link GeneratedSerializerLoader}. You can
  * always allow more generated serializer to be loaded later on, by just adding them to {@link GeneratedSerializerLoader}.
  *
- * Currently this annotation ignores any other annotation and just creates a Serializer for every field that is not static
- * or transient in the class or any super class. Other modes could be implement in the future.
+ * <br><br>Generator Rules
+ * <br>- Act like a {@link YAPIONData} with no context
+ * <br>- Allow removing specific fields with {@link YAPIONSaveExclude} and {@link YAPIONLoadExclude}
+ * <br>- For evey field the {@link YAPIONOptimize} annotation will be considered
+ * <br>- Any field marked static or transient will be ignored
+ * <br>- Any field of super classes in the same compilation context will be considered
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})

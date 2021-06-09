@@ -13,6 +13,7 @@
 
 package yapion.serializing;
 
+import yapion.annotations.api.InternalAPI;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONData;
@@ -41,7 +42,8 @@ public final class ContextManager {
         return state;
     }
 
-    private boolean is(String[] strings) {
+    @InternalAPI
+    public boolean is(String... strings) {
         if (emptyState) return true;
         if (strings.length == 0) return true;
         for (String s : strings) {

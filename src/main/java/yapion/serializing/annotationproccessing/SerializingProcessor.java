@@ -15,7 +15,11 @@ package yapion.serializing.annotationproccessing;
 
 import lombok.SneakyThrows;
 import yapion.annotations.api.ProcessorImplementation;
+import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.registration.YAPIONSerializing;
+import yapion.annotations.serialize.YAPIONOptimize;
+import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.hierarchy.output.Indentator;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -25,53 +29,16 @@ import javax.tools.JavaFileObject;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static yapion.serializing.annotationproccessing.Code.defaultSerializer;
+
 @ProcessorImplementation
 @SupportedAnnotationTypes("yapion.annotations.registration.YAPIONSerializing")
 public class SerializingProcessor extends AbstractProcessor {
-
-    private String[] defaultSerializer = new String[]{
-            "package %PACKAGE%;",
-            "",
-            "import lombok.SneakyThrows;",
-            "import yapion.hierarchy.api.groups.YAPIONAnyType;",
-            "import yapion.hierarchy.types.YAPIONObject;",
-            "import yapion.serializing.InternalSerializer;",
-            "import yapion.serializing.data.DeserializeData;",
-            "import yapion.serializing.data.SerializeData;",
-            "",
-            "import java.lang.reflect.Field;",
-            "",
-            "import static yapion.utils.ReflectionsUtils.getField;",
-            "",
-            "public class %NAME%Serializer implements InternalSerializer<%NAME%> {",
-            "    private %NAME%Serializer() {}",
-            "",
-            "%FIELDS%",
-            "%FIELDS_INIT%",
-            "    @Override",
-            "    public Class<%NAME%> type() {",
-            "        return %NAME%.class;",
-            "    }",
-            "",
-            "    @Override",
-            "    public YAPIONAnyType serialize(SerializeData<%NAME%> serializeData) {",
-            "        YAPIONObject yapionObject = new YAPIONObject(type());",
-            "%SERIALIZATION%",
-            "        return yapionObject;",
-            "    }",
-            "",
-            "    @Override",
-            "    public %NAME% deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {",
-            "        %NAME% object = deserializeData.getInstanceByFactoryOrObjenesis(type());",
-            "%DESERIALIZATION%",
-            "        return object;",
-            "    }",
-            "}"
-    };
 
     private Messager messager;
 
@@ -163,37 +130,36 @@ public class SerializingProcessor extends AbstractProcessor {
                         continue;
                     }
                     pw.println("    @Override");
-                    pw.println("    @SneakyThrows");
                     pw.println("    public void init() {");
                     for (VariableElement e : serializeFieldList) {
-                        pw.println("        " + e.getSimpleName() + " = getField(" + clazz.getSimpleName() + ".class, \"" + e.getSimpleName() + "\");");
+                        pw.println("        " + e.getSimpleName() + " = loadField(\"" + e.getSimpleName() + "\");");
                     }
                     for (VariableElement e : deserializeFieldList) {
                         if (!serializeFieldList.contains(e)) {
-                            pw.println("        " + e.getSimpleName() + " = getField(" + clazz.getSimpleName() + ".class, \"" + e.getSimpleName() + "\");");
+                            pw.println("        " + e.getSimpleName() + " = loadField(\"" + e.getSimpleName() + "\");");
                         }
                     }
+                    pw.println("    }");
+                    pw.println("");
+                    pw.println("    private Field loadField(String fieldName) {");
+                    pw.println("        try {");
+                    pw.println("            return getField(" + clazz.getSimpleName() + ".class, \"fieldName\");");
+                    pw.println("        } catch (Exception e) {");
+                    pw.println("            throw new YAPIONReflectionException(e.getMessage(), e);");
+                    pw.println("        }");
                     pw.println("    }");
                     pw.println("");
                     continue;
                 }
                 if (s.equals("%SERIALIZATION%")) {
                     for (VariableElement e : elementList) {
-                        if (serializeFieldList.contains(e)) {
-                            pw.println("        serializeData.serialize(yapionObject, " + e.getSimpleName() + ");");
-                        } else {
-                            pw.println("        yapionObject.add(\"" + e.getSimpleName() + "\", serializeData.serialize(serializeData.object." + e.getSimpleName() + "));");
-                        }
+                        generateFieldSerializer(pw, e, serializeFieldList.contains(e));
                     }
                     continue;
                 }
                 if (s.equals("%DESERIALIZATION%")) {
                     for (VariableElement e : elementList) {
-                        if (deserializeFieldList.contains(e)) {
-                            pw.println("        deserializeData.deserialize(object, " + e.getSimpleName() + ");");
-                        } else {
-                            pw.println("        object." + e.getSimpleName() + " = deserializeData.deserialize(\"" + e.getSimpleName() + "\");");
-                        }
+                        generateFieldDeserializer(pw, e, deserializeFieldList.contains(e));
                     }
                     continue;
                 }
@@ -203,6 +169,89 @@ public class SerializingProcessor extends AbstractProcessor {
             w.close();
         }
         return true;
+    }
+
+    private void generateFieldSerializer(PrintWriter printWriter, VariableElement e, boolean reflective) {
+        YAPIONOptimize[] yapionOptimize = e.getAnnotationsByType(YAPIONOptimize.class);
+        String yapionOptimizeContext = Arrays.stream(yapionOptimize).flatMap(o -> Arrays.stream(o.context())).distinct().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "));
+
+        YAPIONSaveExclude[] yapionSaveExclude = e.getAnnotationsByType(YAPIONSaveExclude.class);
+        String yapionSaveExcludeContext = Arrays.stream(yapionSaveExclude).flatMap(o -> Arrays.stream(o.context())).distinct().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "));
+        if (yapionSaveExcludeContext.isEmpty() && yapionSaveExclude.length != 0) {
+            return;
+        }
+
+        List<String> conditions = new ArrayList<>();
+        boolean b = false;
+        int indent = 0;
+        if (yapionOptimize.length != 0) {
+            if (!yapionOptimizeContext.isEmpty()) {
+                conditions.add("contextManager.is(" + yapionOptimizeContext + ")");
+            }
+            conditions.add(e.getSimpleName() + "Object != null");
+            b = true;
+        }
+        if (yapionSaveExclude.length != 0) {
+            conditions.add("!contextManager.is(" + yapionSaveExcludeContext + ")");
+        }
+        if (b) {
+            if (reflective) {
+                newLine(printWriter, indent, "Object " + e.getSimpleName() + "Object = serializeData.getField(" + e.getSimpleName() + ");");
+            } else {
+                newLine(printWriter, indent, "Object " + e.getSimpleName() + "Object = serializeData.object." + e.getSimpleName() + ";");
+            }
+        }
+        if (!conditions.isEmpty()) {
+            newLine(printWriter, indent, "if (" + String.join(" && ", conditions) + ") {");
+            indent++;
+        }
+        if (b) {
+            newLine(printWriter, indent, "yapionObject.add(\"" + e.getSimpleName() + "\", serializeData.serialize(" + e.getSimpleName() + "Object));");
+        } else {
+            if (reflective) {
+                newLine(printWriter, indent, "serializeData.serialize(yapionObject, " + e.getSimpleName() + ");");
+            } else {
+                newLine(printWriter, indent, "yapionObject.add(\"" + e.getSimpleName() + "\", serializeData.serialize(serializeData.object." + e.getSimpleName() + "));");
+            }
+        }
+        if (!conditions.isEmpty()) {
+            indent--;
+            newLine(printWriter, indent, "}");
+        }
+    }
+
+    private void generateFieldDeserializer(PrintWriter printWriter, VariableElement e, boolean reflective) {
+        YAPIONLoadExclude[] yapionLoadExclude = e.getAnnotationsByType(YAPIONLoadExclude.class);
+        String yapionSaveExcludeContext = Arrays.stream(yapionLoadExclude).flatMap(o -> Arrays.stream(o.context())).distinct().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "));
+        if (yapionSaveExcludeContext.isEmpty() && yapionLoadExclude.length != 0) {
+            return;
+        }
+        List<String> conditions = new ArrayList<>();
+        int indent = 0;
+        if (yapionLoadExclude.length != 0) {
+            conditions.add("!contextManager.is(" + yapionSaveExcludeContext + ")");
+        }
+        if (!conditions.isEmpty()) {
+            newLine(printWriter, indent, "if (" + String.join(" && ", conditions) + ") {");
+            indent++;
+        }
+        if (reflective) {
+            newLine(printWriter, indent, "deserializeData.deserialize(object, " + e.getSimpleName() + ");");
+        } else {
+            newLine(printWriter, indent, "object." + e.getSimpleName() + " = deserializeData.deserialize(\"" + e.getSimpleName() + "\");");
+        }
+        if (!conditions.isEmpty()) {
+            indent--;
+            newLine(printWriter, indent, "}");
+        }
+    }
+
+    private void newLine(PrintWriter printWriter, int indent, String toAdd) {
+        printWriter.println(indent(indent) + toAdd);
+    }
+
+    private String indent(int indent) {
+        return Indentator.QUAD_SPACE.indent(indent + 2);
     }
 
     private void error(Element e, String msg, Object... args) {

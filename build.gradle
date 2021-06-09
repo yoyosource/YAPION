@@ -74,14 +74,8 @@ processResources {
         includeEmptyDirs = false
     }
 
-    from(rootDir) {
-        include(['**/*.defaultClass'])
-
-        includeEmptyDirs = false
-    }
-
     doLast {
-        File from = new File("${buildDir}/classes/java/main/META-INF/annotations//yapion.annotations.api.ProcessorImplementation")
+        File from = new File("${buildDir}/classes/java/main/META-INF/annotations/yapion.annotations.api.ProcessorImplementation")
         File to = new File("${buildDir}/classes/java/main/META-INF/services/javax.annotation.processing.Processor")
         to.parentFile.mkdirs()
         to.createNewFile()

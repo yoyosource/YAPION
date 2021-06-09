@@ -60,6 +60,10 @@ public class SerializeData<T> {
     @SuppressWarnings({"java:S3011"})
     public final Object getField(String fieldName) {
         Field field = ReflectionsUtils.getField(object.getClass(), fieldName);
+        return getField(field);
+    }
+
+    public final Object getField(Field field) {
         return SerializeManager.getReflectionStrategy().get(field, object);
     }
 

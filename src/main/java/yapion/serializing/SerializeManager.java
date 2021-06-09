@@ -146,7 +146,6 @@ public class SerializeManager {
     static void add(Class<?> clazz) {
         if (OVERRIDEABLE) return;
         String className = clazz.getTypeName();
-        if (!className.startsWith("yapion.serializing.serializer")) return;
         if (clazz.getInterfaces().length != 1) return;
         String typeName = clazz.getInterfaces()[0].getTypeName();
         Object o = ReflectionsUtils.constructObjectObjenesis(className);
