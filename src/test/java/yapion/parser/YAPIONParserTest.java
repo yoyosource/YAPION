@@ -305,4 +305,9 @@ public class YAPIONParserTest {
         assertThat(YAPIONParser.parse("{, hello()}").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
     }
 
+    @Test
+    public void testMapPointer() {
+        YAPIONParser.parse("{<->0000000000000000>}");
+    }
+
 }

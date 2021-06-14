@@ -234,7 +234,9 @@ final class YAPIONInternalParser {
         }
         if (lastChar == '-' && c == '>') {
             log.debug("type     [POINTER]");
-            current.deleteCharAt(current.length() - 1);
+            if (current.length() > 0) {
+                current.deleteCharAt(current.length() - 1);
+            }
             push(YAPIONType.POINTER);
             return true;
         }
