@@ -146,7 +146,9 @@ public class SerializingProcessor extends AbstractProcessor {
                     }
                     pw.println("    private Field loadField(String fieldName) {");
                     pw.println("        try {");
-                    pw.println("            return getField(" + clazz.getSimpleName() + ".class, fieldName);");
+                    pw.println("            Field f = getField(" + clazz.getSimpleName() + ".class, fieldName);");
+                    pw.println("            handledFields.add(f);");
+                    pw.println("            return f;");
                     pw.println("        } catch (Exception e) {");
                     pw.println("            throw new YAPIONReflectionException(e.getMessage(), e);");
                     pw.println("        }");
