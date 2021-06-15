@@ -26,15 +26,16 @@ public class FractionNumberHandler {
 
         @Override
         public boolean allowed(char c, int length) {
-            switch (length) {
-                case 0:
-                    if (c == '-') return true;
-                case 1:
-                    if (c == '.') return true;
-                default:
-                    if (length > 20) return false;
-                    return (c >= '0' && c <= '9') || c == '.' || c == 'F';
+            if (length > 20) {
+                return false;
             }
+            if (length == 0 && c == 'F') {
+                return false;
+            }
+            if (length == 1 && c == '.') {
+                return true;
+            }
+            return (c >= '0' && c <= '9') || c == '.' || c == 'F' || c == '+' || c == '-' || c == 'E';
         }
 
         @Override
@@ -63,15 +64,16 @@ public class FractionNumberHandler {
 
         @Override
         public boolean allowed(char c, int length) {
-            switch (length) {
-                case 0:
-                    if (c == '-') return true;
-                case 1:
-                    if (c == '.') return true;
-                default:
-                    if (length > 40) return false;
-                    return (c >= '0' && c <= '9') || c == '.' || c == 'D';
+            if (length > 40) {
+                return false;
             }
+            if (length == 0 && c == 'D') {
+                return false;
+            }
+            if (length == 1 && c == '.') {
+                return true;
+            }
+            return (c >= '0' && c <= '9') || c == '.' || c == 'D' || c == '+' || c == '-' || c == 'E';
         }
 
         @Override
@@ -100,14 +102,16 @@ public class FractionNumberHandler {
 
         @Override
         public boolean allowed(char c, int length) {
-            switch (length) {
-                case 0:
-                    if (c == '-') return true;
-                case 1:
-                    if (c == '.') return true;
-                default:
-                    return (c >= '0' && c <= '9') || c == '.' || c == 'B' || c == 'D';
+            if (length == 0 && c == 'B') {
+                return false;
             }
+            if (length == 1 && c == 'D') {
+                return false;
+            }
+            if (length == 1 && c == '.') {
+                return true;
+            }
+            return (c >= '0' && c <= '9') || c == '.' || c == 'B' || c == 'D' || c == '+' || c == '-' || c == 'E';
         }
 
         @Override

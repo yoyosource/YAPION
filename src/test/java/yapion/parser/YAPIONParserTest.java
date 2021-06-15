@@ -310,4 +310,9 @@ public class YAPIONParserTest {
         YAPIONParser.parse("{<->0000000000000000>}");
     }
 
+    @Test
+    public void testENotation() {
+        assertThat(YAPIONParser.parse("{(5E+5)}").toYAPION(new StringOutput()).getResult(), is("{(500000.0)}"));
+    }
+
 }
