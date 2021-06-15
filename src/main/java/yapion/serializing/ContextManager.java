@@ -54,7 +54,8 @@ public final class ContextManager {
         return false;
     }
 
-    boolean is(YAPIONLoad[] annotations) {
+    @InternalAPI
+    public boolean is(YAPIONLoad[] annotations) {
         if (annotations.length == 0) return false;
         for (YAPIONLoad annotation : annotations) {
             if (is(annotation.context())) {
@@ -64,7 +65,8 @@ public final class ContextManager {
         return false;
     }
 
-    boolean is(YAPIONLoadExclude[] annotations) {
+    @InternalAPI
+    public boolean is(YAPIONLoadExclude[] annotations) {
         if (annotations.length == 0) return false;
         for (YAPIONLoadExclude annotation : annotations) {
             if (is(annotation.context())) {
@@ -74,7 +76,8 @@ public final class ContextManager {
         return false;
     }
 
-    boolean is(YAPIONOptimize[] annotations) {
+    @InternalAPI
+    public boolean is(YAPIONOptimize[] annotations) {
         if (annotations.length == 0) return false;
         for (YAPIONOptimize annotation : annotations) {
             if (is(annotation.context())) {
@@ -84,7 +87,8 @@ public final class ContextManager {
         return false;
     }
 
-    boolean is(YAPIONSave[] annotations) {
+    @InternalAPI
+    public boolean is(YAPIONSave[] annotations) {
         if (annotations.length == 0) return false;
         for (YAPIONSave annotation : annotations) {
             if (is(annotation.context())) {
@@ -94,7 +98,8 @@ public final class ContextManager {
         return false;
     }
 
-    boolean is(YAPIONSaveExclude[] annotations) {
+    @InternalAPI
+    public boolean is(YAPIONSaveExclude[] annotations) {
         if (annotations.length == 0) return false;
         for (YAPIONSaveExclude annotation : annotations) {
             if (is(annotation.context())) {
@@ -104,7 +109,8 @@ public final class ContextManager {
         return false;
     }
 
-    boolean is(YAPIONData[] annotations) {
+    @InternalAPI
+    public boolean is(YAPIONData[] annotations) {
         if (annotations.length == 0) return false;
         for (YAPIONData annotation : annotations) {
             if (is(annotation.context())) {
@@ -114,7 +120,8 @@ public final class ContextManager {
         return false;
     }
 
-    boolean is(YAPIONField[] annotations) {
+    @InternalAPI
+    public boolean is(YAPIONField[] annotations) {
         if (annotations.length == 0) return false;
         for (YAPIONField annotation : annotations) {
             if (is(annotation.context())) {

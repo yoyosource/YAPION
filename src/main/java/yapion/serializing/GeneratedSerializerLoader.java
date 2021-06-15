@@ -14,6 +14,7 @@
 package yapion.serializing;
 
 import lombok.experimental.UtilityClass;
+import yapion.annotations.api.InternalAPI;
 import yapion.annotations.registration.YAPIONSerializing;
 
 import java.util.HashSet;
@@ -61,6 +62,7 @@ public class GeneratedSerializerLoader {
         return allowedPackages.stream().anyMatch(packageName::startsWith);
     }
 
+    @InternalAPI
     public static boolean loadSerializerIfNeeded(Class<?> clazz) {
         if (clazz.getAnnotation(YAPIONSerializing.class) == null) {
             return false;

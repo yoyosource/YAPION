@@ -13,6 +13,8 @@
 
 package yapion.serializing;
 
+import yapion.annotations.api.InternalAPI;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -38,19 +40,23 @@ public final class MethodManager {
         methodMap.clear();
     }
 
-    static void preSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+    @InternalAPI
+    public static void preSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
         step(object, clazz, contextManager, ObjectCache::preSerialization, false);
     }
 
-    static void postSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+    @InternalAPI
+    public static void postSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
         step(object, clazz, contextManager, ObjectCache::postSerialization, true);
     }
 
-    static void preDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+    @InternalAPI
+    public static void preDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
         step(object, clazz, contextManager, ObjectCache::preDeserialization, false);
     }
 
-    static void postDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+    @InternalAPI
+    public static void postDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
         step(object, clazz, contextManager, ObjectCache::postDeserialization, true);
     }
 
