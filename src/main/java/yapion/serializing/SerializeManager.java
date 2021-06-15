@@ -155,7 +155,8 @@ public class SerializeManager {
         }
     }
 
-    private static void add(InternalSerializer<?> serializer) {
+    @InternalAPI
+    public static void add(InternalSerializer<?> serializer) {
         if (!checkOverrideable(serializer)) return;
         serializer.init();
         Serializer serializerWrapper = new Serializer(serializer, OVERRIDEABLE);
