@@ -138,6 +138,11 @@ public class SerializingProcessor extends AbstractProcessor {
                             pw.println("        " + e.getSimpleName() + " = loadField(\"" + e.getSimpleName() + "\");");
                         }
                     }
+                    for (VariableElement e : elementList) {
+                        if (!serializeFieldList.contains(e) && !deserializeFieldList.contains(e)) {
+                            pw.println("        loadField(\"" + e.getSimpleName() + "\");");
+                        }
+                    }
                     continue;
                 }
                 if (s.equals("%FIELDS_LOAD%")) {
