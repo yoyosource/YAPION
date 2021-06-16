@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.diff;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 
 @ToString
 @Getter
+@AllArgsConstructor
 public class DiffInsert implements DiffBase {
 
     private String[] path;

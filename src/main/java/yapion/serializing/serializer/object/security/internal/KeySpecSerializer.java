@@ -14,6 +14,8 @@
 package yapion.serializing.serializer.object.security.internal;
 
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
 
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
@@ -21,10 +23,10 @@ import java.security.PublicKey;
 
 public interface KeySpecSerializer<PR extends PrivateKey, PU extends PublicKey> {
 
-    YAPIONObject serializePrivateKey(PR pr) throws GeneralSecurityException;
-    PR deserializePrivateKey(YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException;
+    YAPIONObject serializePrivateKey(SerializeData<PR> serializeData) throws GeneralSecurityException;
+    PR deserializePrivateKey(DeserializeData<YAPIONObject> serializeData, String algorithm) throws GeneralSecurityException;
 
-    YAPIONObject serializePublicKey(PU pu)throws GeneralSecurityException;
-    PU deserializePublicKey(YAPIONObject yapionObject, String algorithm)throws GeneralSecurityException;
+    YAPIONObject serializePublicKey(SerializeData<PU> serializeData)throws GeneralSecurityException;
+    PU deserializePublicKey(DeserializeData<YAPIONObject> serializeData, String algorithm)throws GeneralSecurityException;
 
 }

@@ -17,64 +17,49 @@ import yapion.exceptions.YAPIONException;
 
 public abstract class Indentator {
 
-    private static final StringBuilder indentString = new StringBuilder().append(" ");
-    private static final StringBuilder indentTab = new StringBuilder().append(" ");
+    private static final StringBuilder indentSpace = new StringBuilder().append(" ");
+    private static final StringBuilder indentTab = new StringBuilder().append("\t");
 
-    private static String growAndGetIndent(int indentLevel) {
+    private static String growAndGetIndent(StringBuilder source, int indentLevel) {
         if (indentLevel < 0) {
             return "";
         }
         if (indentLevel > 4096) {
-            return indentString.substring(0, 4096);
+            return source.substring(0, 4096);
         }
-        if (indentLevel > indentString.length()) {
-            while (indentString.length() < indentLevel) {
-                indentString.append(indentString);
+        if (indentLevel > source.length()) {
+            while (source.length() < indentLevel) {
+                source.append(source);
             }
         }
-        return indentString.substring(0, indentLevel);
-    }
-
-    private static String growAndGetIndentTab(int indentLevel) {
-        if (indentLevel < 0) {
-            return "";
-        }
-        if (indentLevel > 4096) {
-            return indentTab.substring(0, 4096);
-        }
-        if (indentLevel > indentTab.length()) {
-            while (indentTab.length() < indentLevel) {
-                indentTab.append(indentTab);
-            }
-        }
-        return indentTab.substring(0, indentLevel);
+        return source.substring(0, indentLevel);
     }
 
     public static final Indentator SINGLE_SPACE = new Indentator() {
         @Override
         public String indent(int indentLevel) {
-            return Indentator.growAndGetIndent(indentLevel);
+            return Indentator.growAndGetIndent(indentSpace, indentLevel);
         }
     };
 
     public static final Indentator DEFAULT = new Indentator() {
         @Override
         public String indent(int indentLevel) {
-            return Indentator.growAndGetIndent(indentLevel * 2);
+            return Indentator.growAndGetIndent(indentSpace, indentLevel * 2);
         }
     };
 
     public static final Indentator QUAD_SPACE = new Indentator() {
         @Override
         public String indent(int indentLevel) {
-            return Indentator.growAndGetIndent(indentLevel * 4);
+            return Indentator.growAndGetIndent(indentSpace, indentLevel * 4);
         }
     };
 
     public static final Indentator SINGLE_TAB = new Indentator() {
         @Override
         public String indent(int indentLevel) {
-            return Indentator.growAndGetIndentTab(indentLevel);
+            return Indentator.growAndGetIndent(indentTab, indentLevel);
         }
     };
 
@@ -83,7 +68,7 @@ public abstract class Indentator {
         return new Indentator() {
             @Override
             public String indent(int indentLevel) {
-                return Indentator.growAndGetIndent(indentLevel * indentMultiplier);
+                return Indentator.growAndGetIndent(indentSpace, indentLevel * indentMultiplier);
             }
         };
     }
@@ -97,7 +82,7 @@ public abstract class Indentator {
         return new Indentator() {
             @Override
             public String indent(int indentLevel) {
-                return Indentator.growAndGetIndentTab(indentLevel * indentMultiplier);
+                return Indentator.growAndGetIndent(indentTab, indentLevel * indentMultiplier);
             }
         };
     }

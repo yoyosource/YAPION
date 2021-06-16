@@ -14,14 +14,10 @@
 package yapion.packet;
 
 import lombok.NonNull;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 
 import java.io.IOException;
 import java.util.function.Consumer;
 
-@YAPIONLoadExclude(context = "*")
-@YAPIONSaveExclude(context = "*")
 @FunctionalInterface
 public interface YAPIONPacketHandler {
 

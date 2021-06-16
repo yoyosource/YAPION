@@ -13,30 +13,27 @@
 
 package yapion.serializing.serializer.object.atomic;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.20.0")
 public class AtomicIntegerArraySerializer implements InternalSerializer<AtomicIntegerArray> {
 
     @Override
-    public String type() {
-        return "java.util.concurrent.atomic.AtomicIntegerArray";
+    public Class<?> type() {
+        return AtomicIntegerArray.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<AtomicIntegerArray> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("length", serializeData.object.length());
 
         int[] ints = new int[serializeData.object.length()];
@@ -54,7 +51,7 @@ public class AtomicIntegerArraySerializer implements InternalSerializer<AtomicIn
         YAPIONArray yapionArray = yapionObject.getArray("values");
         int[] ints = new int[length];
         for (int i = 0; i < length; i++) {
-            ints[i] = (Integer) deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
+            ints[i] = deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
         }
         return new AtomicIntegerArray(ints);
     }

@@ -13,27 +13,28 @@
 
 package yapion.utils;
 
+import lombok.experimental.UtilityClass;
 import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.types.*;
+import yapion.hierarchy.types.YAPIONMap;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONPointer;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.JSONMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
-import yapion.serializing.serializer.object.other.EnumSerializer;
+import yapion.serializing.serializer.object.collection.SetSerializer;
+import yapion.serializing.serializer.object.map.MapSerializer;
 import yapion.serializing.serializer.object.security.PrivateKeySerializer;
 import yapion.serializing.serializer.object.security.PublicKeySerializer;
 import yapion.serializing.serializer.object.throwable.ErrorSerializer;
-import yapion.serializing.serializer.object.throwable.ExceptionSerializer;
-import yapion.serializing.serializer.object.throwable.RuntimeExceptionSerializer;
 import yapion.serializing.serializer.object.throwable.ThrowableSerializer;
+import yapion.serializing.serializer.special.EnumSerializer;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
+@UtilityClass
 public class IdentifierUtils {
-
-    private IdentifierUtils() {
-        throw new IllegalStateException("Utility class");
-    }
 
     /**
      * This variable is used in the {@link YAPIONSerializer}
@@ -53,8 +54,15 @@ public class IdentifierUtils {
     public static final String ENUM_IDENTIFIER = "@enum";
 
     /**
-     * This variable is used in the {@link ThrowableSerializer},
-     * {@link ExceptionSerializer}, {@link RuntimeExceptionSerializer} and
+     * This variable is used anywhere you need an {@link Enum} as type.
+     * Currently this is only used by {@link SetSerializer} and
+     * {@link MapSerializer}. The value of this is the
+     * {@link Class#getTypeName()} of the {@link Enum} in question.
+     */
+    public static final String ENUM_TYPE_IDENTIFIER = "@enum-type";
+
+    /**
+     * This variable is used in the {@link ThrowableSerializer} and
      * {@link ErrorSerializer} for identifying an {@link Throwable},
      * {@link Exception}, {@link RuntimeException} and {@link Error}
      * respectively by its {@link Class#getTypeName()}.

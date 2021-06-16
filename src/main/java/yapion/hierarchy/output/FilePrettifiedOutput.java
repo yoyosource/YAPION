@@ -13,7 +13,7 @@
 
 package yapion.hierarchy.output;
 
-import yapion.annotations.DeprecationInfo;
+import yapion.annotations.api.DeprecationInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class FilePrettifiedOutput extends FileOutput {
     }
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return true;
     }
 

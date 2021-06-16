@@ -13,16 +13,20 @@
 
 package yapion.serializing;
 
+import lombok.ToString;
+import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.serializing.YAPIONClassTypeException;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@ToString
 public final class TypeReMapper {
 
     private Map<String, String> typeMappings = new HashMap<>();
 
-    String remap(String type) {
+    @InternalAPI
+    public String remap(String type) {
         if (typeMappings.containsKey(type)) {
             return typeMappings.get(type);
         }
@@ -44,13 +48,13 @@ public final class TypeReMapper {
 
     private void checkClassTypeValidity(String type) {
         if (type.endsWith(".")) {
-            throw new YAPIONClassTypeException("No valid class");
+            throw new YAPIONClassTypeException("The specified class '" + type + "' is no class");
         }
         if (type.substring(0, type.lastIndexOf('.')).contains("$")) {
-            throw new YAPIONClassTypeException("No valid class");
+            throw new YAPIONClassTypeException("The specified class '" + type + "' is no class");
         }
         if (type.equals("java.lang.Enum")) {
-            throw new YAPIONClassTypeException("No enum remapping");
+            throw new YAPIONClassTypeException("'java.lang.Enum' cannot be remapped");
         }
     }
 
@@ -106,10 +110,10 @@ public final class TypeReMapper {
 
     private void checkPackageTypeValidity(String type) {
         if (!type.endsWith(".")) {
-            throw new YAPIONClassTypeException("No valid package");
+            throw new YAPIONClassTypeException("The specified package '" + type + "' is no package");
         }
         if (type.contains("$")) {
-            throw new YAPIONClassTypeException("No valid package");
+            throw new YAPIONClassTypeException("The specified package '" + type + "' is no package");
         }
     }
 

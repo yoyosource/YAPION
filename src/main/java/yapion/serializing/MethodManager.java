@@ -13,6 +13,8 @@
 
 package yapion.serializing;
 
+import yapion.annotations.api.InternalAPI;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -24,28 +26,12 @@ public final class MethodManager {
         throw new IllegalStateException("Utility class");
     }
 
-    private static int cacheSize = 100;
-
     private static final Map<String, ObjectCache> methodMap = new LinkedHashMap<String, ObjectCache>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, ObjectCache> eldest) {
-            return size() > cacheSize;
+            return size() > 1024;
         }
     };
-
-    /**
-     * Set the cache size of the internal cache to a specific
-     * number above 100. If you set a number below 100 it will
-     * default to 100.
-     *
-     * @param cacheSize the cache Size
-     */
-    public static void setCacheSize(int cacheSize) {
-        if (cacheSize < 100) {
-            cacheSize = 100;
-        }
-        MethodManager.cacheSize = cacheSize;
-    }
 
     /**
      * Discard the cache used by {@link YAPIONSerializer} and {@link YAPIONDeserializer}.
@@ -54,19 +40,23 @@ public final class MethodManager {
         methodMap.clear();
     }
 
-    static void preSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+    @InternalAPI
+    public static void preSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
         step(object, clazz, contextManager, ObjectCache::preSerialization, false);
     }
 
-    static void postSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+    @InternalAPI
+    public static void postSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
         step(object, clazz, contextManager, ObjectCache::postSerialization, true);
     }
 
-    static void preDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+    @InternalAPI
+    public static void preDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
         step(object, clazz, contextManager, ObjectCache::preDeserialization, false);
     }
 
-    static void postDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
+    @InternalAPI
+    public static void postDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
         step(object, clazz, contextManager, ObjectCache::postDeserialization, true);
     }
 

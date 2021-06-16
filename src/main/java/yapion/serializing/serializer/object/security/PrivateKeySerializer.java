@@ -13,24 +13,23 @@
 
 package yapion.serializing.serializer.object.security;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.serializing.YAPIONDataLossException;
+import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.YAPIONSerializerFlagDefault;
-import yapion.serializing.YAPIONSerializerFlags;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 import yapion.serializing.serializer.object.security.internal.KeySpecSerializerProvider;
 
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 
-import static yapion.serializing.YAPIONSerializerFlagDefault.PRIVATE_KEY_AS_NULL;
-import static yapion.serializing.YAPIONSerializerFlagDefault.PRIVATE_KEY_EXCEPTION;
+import static yapion.serializing.YAPIONFlag.PRIVATE_KEY_AS_NULL;
+import static yapion.serializing.YAPIONFlag.PRIVATE_KEY_EXCEPTION;
 import static yapion.utils.IdentifierUtils.KEY_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -38,14 +37,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
 
     @Override
-    public void init() {
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(PRIVATE_KEY_EXCEPTION, true));
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(PRIVATE_KEY_AS_NULL, false));
-    }
-
-    @Override
-    public String type() {
-        return "java.security.PrivateKey";
+    public Class<?> type() {
+        return PrivateKey.class;
     }
 
     @Override
@@ -56,19 +49,17 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
     @Override
     public YAPIONAnyType serialize(SerializeData<PrivateKey> serializeData) {
         serializeData.isSet(PRIVATE_KEY_EXCEPTION, () -> {
-            throw new YAPIONDataLossException();
+            throw new YAPIONDataLossException("PRIVATE_KEY_EXCEPTION does not allow private key to be saved");
         });
-        if (serializeData.getYAPIONSerializerFlags().isSet(PRIVATE_KEY_AS_NULL)) {
+        if (serializeData.getYAPIONFlags().isSet(PRIVATE_KEY_AS_NULL)) {
             return new YAPIONValue<>(null);
         }
 
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add(KEY_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         yapionObject.add("algorithm", serializeData.object.getAlgorithm());
 
         try {
-            yapionObject.add("privateKey", KeySpecSerializerProvider.serializePrivateKey(serializeData.object));
+            yapionObject.add("privateKey", KeySpecSerializerProvider.serializePrivateKey(serializeData, serializeData.object));
         } catch (GeneralSecurityException e) {
             throw new YAPIONSerializerException(e.getMessage(), e);
         }
@@ -78,14 +69,19 @@ public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
     @Override
     public PrivateKey deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        String key = yapionObject.getValue(KEY_IDENTIFIER, String.class).get();
+        String key;
+        if (yapionObject.containsKey(KEY_IDENTIFIER, String.class)) {
+            key = yapionObject.getPlainValue(KEY_IDENTIFIER);
+        } else {
+            key = yapionObject.getPlainValue(TYPE_IDENTIFIER);
+        }
         String algorithm = yapionObject.getValue("algorithm", String.class).get();
         YAPIONObject privateKey = yapionObject.getObject("privateKey");
 
         try {
-            return KeySpecSerializerProvider.deserializePrivateKey(Class.forName(key), privateKey, algorithm);
+            return KeySpecSerializerProvider.deserializePrivateKey(deserializeData, Class.forName(key), privateKey, algorithm);
         } catch (GeneralSecurityException | ClassNotFoundException e) {
-            throw new YAPIONSerializerException(e.getMessage(), e);
+            throw new YAPIONDeserializerException(e.getMessage(), e);
         }
     }
 

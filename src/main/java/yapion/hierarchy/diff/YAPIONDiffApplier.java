@@ -22,6 +22,8 @@ import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 
+import java.util.Arrays;
+
 public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
 
     public static YAPIONDiffApplier<YAPIONObject, String, YAPIONObject> diffApplierObject(YAPIONObject yapionObject) {
@@ -67,6 +69,12 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
                 DiffChange diffChange = (DiffChange) diff;
                 applyInsert(diffChange.getPath(), diffChange.getTo());
                 break;
+            case MOVE:
+                DiffMove diffMove = (DiffMove) diff;
+                applyMove(diffMove.getFromPath(), diffMove.getToPath());
+                break;
+            default:
+                throw new UnsupportedOperationException();
         }
         return this;
     }
@@ -85,6 +93,12 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
                 DiffChange diffChange = (DiffChange) diff;
                 reverseApplyDelete(diffChange.getPath(), diffChange.getFrom());
                 break;
+            case MOVE:
+                DiffMove diffMove = (DiffMove) diff;
+                reverseApplyMove(diffMove.getFromPath(), diffMove.getToPath());
+                break;
+            default:
+                throw new UnsupportedOperationException();
         }
         return this;
     }
@@ -121,6 +135,25 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
         }
     }
 
+    private void applyMove(String[] fromPath, String[] toPath) {
+        if (fromPath.length == 0 || toPath.length == 0) {
+            return;
+        }
+        YAPIONAnyType fromYapionAnyType = resolvePath(fromPath);
+        if (fromYapionAnyType instanceof YAPIONObject) {
+            YAPIONAnyType yapionAnyType = ((YAPIONObject) fromYapionAnyType).removeAndGet(fromPath[fromPath.length - 1]);
+            applyInsert(toPath, yapionAnyType);
+        }
+        if (fromYapionAnyType instanceof YAPIONMap) {
+            YAPIONAnyType yapionAnyType = ((YAPIONMap) fromYapionAnyType).removeAndGet(YAPIONParser.parse(fromPath[fromPath.length - 1]));
+            applyInsert(toPath, yapionAnyType);
+        }
+        if (fromYapionAnyType instanceof YAPIONArray) {
+            YAPIONAnyType yapionAnyType = ((YAPIONArray) fromYapionAnyType).removeAndGet(Integer.parseInt(fromPath[fromPath.length - 1]));
+            applyInsert(toPath, yapionAnyType);
+        }
+    }
+
     private void reverseApplyDelete(String[] path, YAPIONAnyType deleted) {
         if (path.length == 0) {
             return;
@@ -153,6 +186,25 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
         }
     }
 
+    private void reverseApplyMove(String[] fromPath, String[] toPath) {
+        if (fromPath.length == 0 || toPath.length == 0) {
+            return;
+        }
+        YAPIONAnyType toYapionAnyType = resolvePath(toPath);
+        if (toYapionAnyType instanceof YAPIONObject) {
+            YAPIONAnyType yapionAnyType = ((YAPIONObject) toYapionAnyType).removeAndGet(toPath[toPath.length - 1]);
+            applyInsert(fromPath, yapionAnyType);
+        }
+        if (toYapionAnyType instanceof YAPIONMap) {
+            YAPIONAnyType yapionAnyType = ((YAPIONMap) toYapionAnyType).removeAndGet(YAPIONParser.parse(toPath[toPath.length - 1]));
+            applyInsert(fromPath, yapionAnyType);
+        }
+        if (toYapionAnyType instanceof YAPIONArray) {
+            YAPIONAnyType yapionAnyType = ((YAPIONArray) toYapionAnyType).removeAndGet(Integer.parseInt(toPath[toPath.length - 1]));
+            applyInsert(fromPath, yapionAnyType);
+        }
+    }
+
     @SuppressWarnings({"unchecked", "java:S125"})
     private YAPIONAnyType resolvePath(String[] path) {
         if (path.length <= 1) {
@@ -162,9 +214,9 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
         for (int i = 0; i < path.length - 1; i++) {
             String s = path[i];
             if (current instanceof YAPIONDataType) {
-                current = ((YAPIONDataType) current).getYAPIONAnyType(s);
+                current = ((YAPIONDataType) current).internalGetYAPIONAnyType(s);
             } else {
-                throw new YAPIONException();
+                throw new YAPIONException("Resolution of the path '" + Arrays.toString(path) + "' failed as current value is not of type YAPIONDataType");
             }
         }
         return current;

@@ -18,19 +18,19 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
 @SerializerImplementation(since = "0.2.0")
 public class CharacterSerializer implements InternalSerializer<Character> {
 
     @Override
-    public String type() {
-        return "java.lang.Character";
+    public Class<?> type() {
+        return Character.class;
     }
 
     @Override
-    public String primitiveType() {
-        return "char";
+    public Class<?> primitiveType() {
+        return char.class;
     }
 
     @Override

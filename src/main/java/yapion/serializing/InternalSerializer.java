@@ -13,27 +13,27 @@
 
 package yapion.serializing;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.annotations.api.InternalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
+@InternalAPI
 public interface InternalSerializer<T> {
 
     default void init() {
 
     }
+    
+    Class<?> type();
 
-    String type();
-
+    @InternalAPI
     default Class<?> defaultImplementation() {
         return null;
     }
 
-    default String primitiveType() {
+    @InternalAPI
+    default Class<?> primitiveType() {
         return null;
     }
 
@@ -45,18 +45,22 @@ public interface InternalSerializer<T> {
         return null;
     }
 
+    @InternalAPI
     default boolean empty() {
         return false;
     }
 
+    @InternalAPI
     default boolean saveWithoutAnnotation() {
         return false;
     }
 
+    @InternalAPI
     default boolean loadWithoutAnnotation() {
         return false;
     }
 
+    @InternalAPI
     default boolean createWithObjenesis() {
         return false;
     }

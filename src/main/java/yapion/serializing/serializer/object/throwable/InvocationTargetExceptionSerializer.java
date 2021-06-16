@@ -13,29 +13,26 @@
 
 package yapion.serializing.serializer.object.throwable;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.lang.reflect.InvocationTargetException;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.23.1")
 public class InvocationTargetExceptionSerializer implements InternalSerializer<InvocationTargetException> {
 
     @Override
-    public String type() {
-        return "java.lang.reflect.InvocationTargetException";
+    public Class<?> type() {
+        return InvocationTargetException.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<InvocationTargetException> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("target", serializeData.serialize(serializeData.object.getCause()));
         yapionObject.add("message", serializeData.object.getMessage());
         yapionObject.add("cause", serializeData.serialize(serializeData.object.getCause()));

@@ -14,58 +14,23 @@
 package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
-import yapion.hierarchy.api.OptionalAPI;
+import yapion.annotations.api.OptionalAPI;
+import yapion.annotations.api.YAPIONPrimitive;
+import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.internal.InternalAdd;
 import yapion.hierarchy.types.YAPIONValue;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+public interface ObjectAdd<I, K> extends InternalAdd<I, K> {
 
-public interface ObjectAdd<I, K> {
-
-    I add(@NonNull K key, @NonNull YAPIONAnyType value);
-
-    default I add(@NonNull K key, String value) {
-        return add(key, new YAPIONValue<>(value));
+    default I add(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return internalAdd(key, value);
     }
 
-    default I add(@NonNull K key, char value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, boolean value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, byte value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, short value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, int value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, long value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, BigInteger value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, float value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, double value) {
-        return add(key, new YAPIONValue<>(value));
-    }
-
-    default I add(@NonNull K key, BigDecimal value) {
+    default <@YAPIONPrimitive T> I add(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
+        }
         return add(key, new YAPIONValue<>(value));
     }
 
@@ -75,6 +40,63 @@ public interface ObjectAdd<I, K> {
     @OptionalAPI
     default I addOrPointer(@NonNull K key, @NonNull YAPIONAnyType value) {
         throw new UnsupportedOperationException();
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return internalAddAndGetPrevious(key, value);
+    }
+
+    default <@YAPIONPrimitive T> YAPIONAnyType addAndGetPrevious(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
+        }
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default YAPIONAnyType addOrPointerAndGetPrevious(@NonNull K key, @NonNull YAPIONAnyType value) {
+        throw new UnsupportedOperationException();
+    }
+
+    default I putAndGetItself(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return add(key, value);
+    }
+
+    default <@YAPIONPrimitive T> I putAndGetItself(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
+        }
+        return putAndGetItself(key, new YAPIONValue<>(value));
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default I putOrPointerAndGetItself(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return addOrPointer(key, value);
+    }
+
+    default YAPIONAnyType put(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return addAndGetPrevious(key, value);
+    }
+
+    default <@YAPIONPrimitive T> YAPIONAnyType put(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
+        }
+        return put(key, new YAPIONValue<>(value));
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default YAPIONAnyType putOrPointer(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return addOrPointerAndGetPrevious(key, value);
     }
 
 }

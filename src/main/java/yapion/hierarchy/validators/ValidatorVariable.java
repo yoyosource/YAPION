@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.validators;
 
+import yapion.annotations.api.DeprecationInfo;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated
+@DeprecationInfo(since = "0.25.3")
 public class ValidatorVariable {
 
     List<String> path;

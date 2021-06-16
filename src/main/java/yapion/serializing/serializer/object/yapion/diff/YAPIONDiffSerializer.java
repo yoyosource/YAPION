@@ -13,7 +13,7 @@
 
 package yapion.serializing.serializer.object.yapion.diff;
 
-import yapion.exceptions.YAPIONException;
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.diff.DiffBase;
 import yapion.hierarchy.diff.YAPIONDiff;
@@ -21,45 +21,32 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.List;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.25.0")
 public class YAPIONDiffSerializer implements InternalSerializer<YAPIONDiff> {
 
-    @Override
-    public void init() {
-        new YAPIONDiff.YAPIONDiffFactory().add();
-    }
+    private static class YAPIONDiffOther extends YAPIONDiff {}
 
     @Override
-    public String type() {
-        return "yapion.hierarchy.diff.YAPIONDiff";
+    public Class<?> type() {
+        return YAPIONDiff.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<YAPIONDiff> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("diff", serializeData.serialize(serializeData.object.getDiffs()));
         return yapionObject;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public YAPIONDiff deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        List<DiffBase> diffs = (List<DiffBase>) deserializeData.deserialize(yapionObject.getObject("diff"));
-        try {
-            YAPIONDiff yapionDiff = deserializeData.getInstance(YAPIONDiff.class);
-            yapionDiff.getDiffs().addAll(diffs);
-            return yapionDiff;
-        } catch (ClassNotFoundException e) {
-            // This should never be reached
-            throw new YAPIONException(e.getMessage(), e);
-        }
+        List<DiffBase> diffs = deserializeData.deserialize(yapionObject.getObject("diff"));
+        YAPIONDiff yapionDiff = new YAPIONDiffOther();
+        yapionDiff.getDiffs().addAll(diffs);
+        return yapionDiff;
     }
 }

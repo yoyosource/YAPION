@@ -19,8 +19,6 @@ import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 
-import java.awt.*;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -53,7 +51,7 @@ public class ReferenceValueCacheTest {
     public void testObjectReferenceValueDiscardOnAddOrPointer() {
         YAPIONObject yapionObject = new YAPIONObject();
         assertThat(yapionObject.referenceValue(), is(9163003314768395257L));
-        yapionObject.addOrPointer("TEST", new YAPIONValue<>(0));
+        yapionObject.putOrPointerAndGetItself("TEST", new YAPIONValue<>(0));
         assertThat(yapionObject.referenceValue(), not(9163003314768395257L));
     }
 
@@ -87,7 +85,7 @@ public class ReferenceValueCacheTest {
     public void testMapReferenceValueDiscardOnAddOrPointer() {
         YAPIONMap yapionMap = new YAPIONMap();
         assertThat(yapionMap.referenceValue(), is(2978161325094671632L));
-        yapionMap.addOrPointer(new YAPIONValue<>("TEST"), new YAPIONValue<>(0));
+        yapionMap.putOrPointerAndGetItself(new YAPIONValue<>("TEST"), new YAPIONValue<>(0));
         assertThat(yapionMap.referenceValue(), not(2978161325094671632L));
     }
 
@@ -157,7 +155,7 @@ public class ReferenceValueCacheTest {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONObject());
         assertThat(yapionArray.referenceValue(), is(855368639465640934L));
-        yapionArray.addOrPointer(0, new YAPIONValue<>(0));
+        yapionArray.putOrPointerAndGetItself(0, new YAPIONValue<>(0));
         assertThat(yapionArray.referenceValue(), not(855368639465640934L));
     }
 

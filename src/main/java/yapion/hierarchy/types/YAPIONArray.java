@@ -14,13 +14,15 @@
 package yapion.hierarchy.types;
 
 import lombok.NonNull;
-import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.serialize.YAPIONSave;
+import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.exceptions.value.YAPIONRecursionException;
+import yapion.hierarchy.api.groups.SerializingType;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ArrayAdd;
+import yapion.hierarchy.api.storage.ObjectRemove;
+import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.utils.RecursionUtils;
@@ -30,9 +32,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-@YAPIONSave(context = "*")
-@YAPIONLoad(context = "*")
-public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements ArrayAdd<YAPIONArray, Integer> {
+public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements ArrayAdd<YAPIONArray, Integer>, ObjectRemove<YAPIONArray, Integer>, ObjectRetrieve<Integer>, SerializingType {
 
     private final List<YAPIONAnyType> array = new ArrayList<>();
 
@@ -43,14 +43,14 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
 
     @Override
     protected long referenceValueProvider(ReferenceFunction referenceFunction) {
-        long referenceValue = 0;
-        referenceValue += getDepth();
-        referenceValue ^= getType().getReferenceValue();
+        ReferenceValue referenceValue = new ReferenceValue();
+        referenceValue.increment(getDepth());
+        referenceValue.update(getType().getReferenceValue());
         for (int i = 0; i < array.size(); i++) {
-            referenceValue += i;
-            referenceValue ^= array.get(i).referenceValue(referenceFunction) & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue.increment(i);
+            referenceValue.update(array.get(i).referenceValue(referenceFunction));
         }
-        return referenceValue;
+        return referenceValue.referenceValue;
     }
 
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
@@ -137,25 +137,38 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public boolean hasValue(@NonNull Integer key, YAPIONType yapionType) {
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) return false;
-        if (yapionType == YAPIONType.ANY) return true;
-        return yapionType == yapionAnyType.getType();
+    public boolean internalContainsKey(@NonNull Integer key, YAPIONType yapionType) {
+        try {
+            YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+            if (yapionAnyType == null) return false;
+            if (yapionType == YAPIONType.ANY) return true;
+            return yapionType == yapionAnyType.getType();
+        } catch (YAPIONArrayIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
     @Override
-    public <T> boolean hasValue(@NonNull Integer key, Class<T> type) {
+    public <T> boolean internalContainsKey(@NonNull Integer key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
             return false;
         }
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
-        if (yapionAnyType == null) return false;
-        if (!(yapionAnyType instanceof YAPIONValue)) return false;
-        return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
+        try {
+            YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+            if (yapionAnyType == null) return false;
+            if (!(yapionAnyType instanceof YAPIONValue)) return false;
+            return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
+        } catch (YAPIONArrayIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
-    public YAPIONAnyType getYAPIONAnyType(@NonNull Integer key) {
+    @Override
+    public boolean internalContainsValue(@NonNull YAPIONAnyType yapionAnyType) {
+        return array.contains(yapionAnyType);
+    }
+
+    public YAPIONAnyType internalGetYAPIONAnyType(@NonNull Integer key) {
         checkIndex(key);
         return array.get(key);
     }
@@ -180,13 +193,26 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         }
     }
 
-    public YAPIONArray add(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+    public YAPIONArray internalAdd(@NonNull Integer key, @NonNull YAPIONAnyType value) {
         checkIndex(key);
         check(value);
         discardReferenceValue();
+        array.get(key).removeParent();
         array.add(key, value);
         value.setParent(this);
         return this;
+    }
+
+    @Override
+    public YAPIONAnyType internalAddAndGetPrevious(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+        checkIndex(key);
+        check(value);
+        discardReferenceValue();
+        YAPIONAnyType previous = array.get(key);
+        previous.removeParent();
+        array.add(key, value);
+        value.setParent(this);
+        return previous;
     }
 
     public YAPIONArray set(@NonNull Integer key, @NonNull YAPIONAnyType value) {
@@ -224,6 +250,24 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         }
         add(key, value);
         return this;
+    }
+
+    @Override
+    public YAPIONAnyType addOrPointerAndGetPrevious(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+        discardReferenceValue();
+        if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
+            if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+                if (result.getYAPIONAny() == null) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                return addAndGetPrevious(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+            }
+        }
+        return addAndGetPrevious(key, value);
     }
 
     @Override
@@ -267,7 +311,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public YAPIONArray remove(@NonNull Integer key) {
+    public YAPIONArray internalRemove(@NonNull Integer key) {
         checkIndex(key);
         discardReferenceValue();
         array.get(key).removeParent();
@@ -276,7 +320,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public YAPIONAnyType removeAndGet(@NonNull Integer key) {
+    public YAPIONAnyType internalRemoveAndGet(@NonNull Integer key) {
         checkIndex(key);
         discardReferenceValue();
         YAPIONAnyType yapionAnyType = array.get(key);
@@ -303,27 +347,27 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public YAPIONArray addIfAbsent(@NonNull Integer key, @NonNull YAPIONAnyType value) {
+    public <T extends YAPIONAnyType> T addIfAbsent(@NonNull Integer key, @NonNull T value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public YAPIONArray addIfAbsent(@NonNull Integer key, @NonNull YAPIONType yapionType, @NonNull YAPIONAnyType value) {
+    public <T extends YAPIONAnyType> T addIfAbsent(@NonNull Integer key, @NonNull YAPIONType yapionType, @NonNull T value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public <T> YAPIONArray addIfAbsent(@NonNull Integer key, @NonNull Class<T> type, @NonNull YAPIONAnyType value) {
+    public <T> YAPIONValue<T> addIfAbsent(@NonNull Integer key, @NonNull Class<T> type, @NonNull T value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public <T extends YAPIONAnyType> YAPIONArray computeIfAbsent(@NonNull Integer key, @NonNull Function<Integer, T> mappingFunction) {
+    public <T extends YAPIONAnyType> T computeIfAbsent(@NonNull Integer key, @NonNull Function<Integer, T> mappingFunction) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public <T extends YAPIONAnyType> YAPIONArray compute(@NonNull Integer key, @NonNull BiFunction<Integer, T, T> remappingFunction) {
+    public <T extends YAPIONAnyType> T compute(@NonNull Integer key, @NonNull BiFunction<Integer, T, T> remappingFunction) {
         throw new UnsupportedOperationException();
     }
 
@@ -334,11 +378,11 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
 
     @Override
     public long deepSize() {
-        long size = size();
-        for (YAPIONAnyType yapionAnyType : array) {
-            if (yapionAnyType instanceof YAPIONDataType) size += ((YAPIONDataType) yapionAnyType).deepSize();
-        }
-        return size;
+        return size() + stream().filter(YAPIONDataType.class::isInstance)
+                .map(YAPIONDataType.class::cast)
+                .map(YAPIONDataType::deepSize)
+                .mapToLong(value -> value)
+                .sum();
     }
 
     @Override
@@ -365,6 +409,16 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         }
     }
 
+    /**
+     * Modifying this is an unsafe operation. When you edit this you are on your own!
+     *
+     * @return the internal backed array
+     */
+    @InternalAPI
+    public List<YAPIONAnyType> getBackedArray() {
+        return array;
+    }
+
     @Override
     public String toString() {
         StringOutput stringOutput = new StringOutput();
@@ -387,5 +441,9 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     @Override
     public int hashCode() {
         return (int) referenceValue();
+    }
+
+    public YAPIONArray copy() {
+        return (YAPIONArray) internalCopy();
     }
 }

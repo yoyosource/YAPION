@@ -13,38 +13,35 @@
 
 package yapion.serializing.serializer.object.zip;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.zip.CRC32;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.24.0")
 public class CRC32Serializer implements InternalSerializer<CRC32> {
 
     @Override
-    public String type() {
-        return "java.util.zip.CRC32";
+    public Class<?> type() {
+        return CRC32.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<CRC32> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add("crc", serializeData.object.getValue());
+        YAPIONObject yapionObject = new YAPIONObject(type());
+        yapionObject.add("crc", serializeData.serializeField("crc"));
         return yapionObject;
     }
 
     @Override
     public CRC32 deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        long crc = ((YAPIONObject) deserializeData.object).getPlainValue("crc");
+        int crc = ((YAPIONObject) deserializeData.object).getPlainValue("crc");
         CRC32 crc32 = new CRC32();
-        deserializeData.setField("crc", crc32, (int) crc);
+        deserializeData.setField("crc", crc32, crc);
         return crc32;
     }
 }

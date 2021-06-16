@@ -13,12 +13,29 @@
 
 package yapion.utils;
 
+import lombok.experimental.UtilityClass;
+import yapion.annotations.api.InternalAPI;
+import yapion.exceptions.YAPIONException;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
+@UtilityClass
 public class ClassUtils {
 
-    private ClassUtils() {
-        throw new IllegalStateException("Utility Class");
+    /**
+     * Checks if a given field should be serialized or not.
+     * Returns {@code true} if it should not be serialized.
+     *
+     * @param field Field to check
+     * @return {@code true} if field should not be serialized; {@code false} otherwise.
+     */
+    @InternalAPI
+    public static boolean removed(Field field) {
+        return Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers());
     }
 
+    @InternalAPI
     public static Class<?> getClass(String className) {
         switch (className) {
             case "boolean":
@@ -43,10 +60,11 @@ public class ClassUtils {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            return Object.class;
+            throw new YAPIONException(e.getMessage(), e);
         }
     }
 
+    @InternalAPI
     public static String getPrimitive(String className) {
         switch (className) {
             case "java.lang.Boolean":
@@ -70,6 +88,21 @@ public class ClassUtils {
         }
     }
 
+    @InternalAPI
+    public static Class<?> getPrimitive(Class<?> clazz) {
+        if (clazz == Void.class) return void.class;
+        if (clazz == Boolean.class) return boolean.class;
+        if (clazz == Byte.class) return byte.class;
+        if (clazz == Short.class) return short.class;
+        if (clazz == Integer.class) return int.class;
+        if (clazz == Long.class) return long.class;
+        if (clazz == Character.class) return char.class;
+        if (clazz == Float.class) return float.class;
+        if (clazz == Double.class) return double.class;
+        return clazz;
+    }
+
+    @InternalAPI
     public static String getBoxed(String className) {
         switch (className) {
             case "boolean":
@@ -93,6 +126,7 @@ public class ClassUtils {
         }
     }
 
+    @InternalAPI
     public static Class<?> getBoxed(Class<?> clazz) {
         if (clazz == void.class) return Void.class;
         if (clazz == boolean.class) return Boolean.class;
@@ -106,16 +140,14 @@ public class ClassUtils {
         return clazz;
     }
 
+    @InternalAPI
     public static boolean isPrimitive(Class<?> clazz) {
-        if (clazz == void.class) return true;
-        if (clazz == boolean.class) return true;
-        if (clazz == byte.class) return true;
-        if (clazz == short.class) return true;
-        if (clazz == int.class) return true;
-        if (clazz == long.class) return true;
-        if (clazz == char.class) return true;
-        if (clazz == float.class) return true;
-        if (clazz == double.class) return true;
+        if (clazz.isPrimitive()) {
+            return true;
+        }
+        if (clazz == void.class) {
+            return true;
+        }
         return false;
     }
 

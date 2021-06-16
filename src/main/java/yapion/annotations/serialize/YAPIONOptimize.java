@@ -13,7 +13,6 @@
 
 package yapion.annotations.serialize;
 
-import yapion.annotations.object.YAPIONField;
 import yapion.serializing.YAPIONSerializer;
 
 import java.lang.annotation.*;

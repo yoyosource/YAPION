@@ -13,31 +13,28 @@
 
 package yapion.serializing.serializer.object.map;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.Hashtable;
 import java.util.Map;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.7.0")
 public class HashTableSerializer implements InternalSerializer<Hashtable<?, ?>> {
 
     @Override
-    public String type() {
-        return "java.util.Hashtable";
+    public Class<?> type() {
+        return Hashtable.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Hashtable<?, ?>> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add("values", yapionMap);
         for (Map.Entry<?, ?> entry : serializeData.object.entrySet()) {

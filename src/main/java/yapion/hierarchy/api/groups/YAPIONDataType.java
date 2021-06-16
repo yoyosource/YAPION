@@ -13,14 +13,16 @@
 
 package yapion.hierarchy.api.groups;
 
-import yapion.hierarchy.api.storage.ObjectAdd;
-import yapion.hierarchy.api.storage.ObjectAdvancedOperations;
-import yapion.hierarchy.api.storage.ObjectRemove;
-import yapion.hierarchy.api.storage.ObjectRetrieve;
+import yapion.annotations.api.InternalAPI;
+import yapion.hierarchy.api.internal.InternalAdd;
+import yapion.hierarchy.api.internal.AdvancedOperations;
+import yapion.hierarchy.api.internal.InternalRemove;
+import yapion.hierarchy.api.internal.InternalRetrieve;
 
 import java.util.List;
 
-public abstract class YAPIONDataType<I, K> extends YAPIONAnyType implements ObjectRetrieve<K>, ObjectAdd<I, K>, ObjectRemove<I, K>, ObjectAdvancedOperations<I, K> {
+@InternalAPI
+public abstract class YAPIONDataType<I, K> extends YAPIONAnyType implements InternalAdd<I, K>, AdvancedOperations<I, K>, InternalRemove<I, K>, InternalRetrieve<K> {
 
     public abstract int size();
 

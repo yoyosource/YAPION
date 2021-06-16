@@ -13,22 +13,60 @@
 
 package yapion.serializing.api;
 
+import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.serializing.InternalSerializer;
+import yapion.serializing.SerializeManager;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 
 public abstract class SerializerBase<T, K extends YAPIONAnyType> {
 
+    private InternalSerializer<T> generated = null;
+
+    public void init() {
+    }
+
     public abstract Class<T> type();
+
     public abstract K serialize(SerializeData<T> serializeData);
+
     public abstract T deserialize(DeserializeData<K> deserializeData);
 
-    public InternalSerializer<T> convert() {
+    /**
+     * Add this SerializerBase to the SerializeManager by calling
+     * {@link SerializeManager#add(SerializerBase)}.
+     */
+    public final void add() {
+        SerializeManager.add(this);
+    }
+
+    public final InternalSerializer<T> convert() {
+        if (type().isPrimitive()) {
+            throw new YAPIONException("Conversion to InternalSerializer failed as primitives cannot be overridden by new Serializer");
+        }
+        if (type().isEnum()) {
+            throw new YAPIONException("Conversion to InternalSerializer failed as Enum cannot be overridden by new Serializer");
+        }
+        if (generated == null) {
+            generated = convertInternal();
+        }
+        if (generated == null) {
+            throw new YAPIONException("Conversion to InternalSerializer failed");
+        }
+        return generated;
+    }
+
+    protected InternalSerializer<T> convertInternal() {
         return new InternalSerializer<T>() {
             @Override
-            public String type() {
-                return SerializerBase.this.type().getTypeName();
+            public void init() {
+                SerializerBase.this.init();
+            }
+
+            @Override
+            public Class<T> type() {
+                return SerializerBase.this.type();
             }
 
             @Override
@@ -43,5 +81,4 @@ public abstract class SerializerBase<T, K extends YAPIONAnyType> {
             }
         };
     }
-
 }

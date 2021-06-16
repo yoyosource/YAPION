@@ -14,31 +14,46 @@
 package yapion.hierarchy.types;
 
 import lombok.NonNull;
-import yapion.annotations.DeprecationInfo;
-import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.serialize.YAPIONSave;
+import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.ObjectOutput;
+import yapion.hierarchy.api.groups.SerializingType;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
-import yapion.hierarchy.api.groups.YAPIONMappingType;
+import yapion.hierarchy.api.storage.ObjectAdd;
+import yapion.hierarchy.api.storage.ObjectRemove;
+import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
+import yapion.utils.IdentifierUtils;
 import yapion.utils.RecursionUtils;
 import yapion.utils.ReferenceFunction;
 
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.KEY;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSave(context = "*")
-@YAPIONLoad(context = "*")
-public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
+public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implements ObjectRetrieve<String>, ObjectAdd<YAPIONObject, String>, ObjectRemove<YAPIONObject, String>, SerializingType {
 
     private final Map<String, YAPIONAnyType> variables = new LinkedHashMap<>();
+
+    public YAPIONObject() {
+
+    }
+
+    /**
+     * Convenient Constructor to create an YAPIONObject with a {@link IdentifierUtils#TYPE_IDENTIFIER}.
+     *
+     * @param type the type this YAPIONObject holds as initial state
+     */
+    public YAPIONObject(Class<?> type) {
+        add(TYPE_IDENTIFIER, type);
+    }
 
     @Override
     public YAPIONType getType() {
@@ -47,15 +62,15 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
 
     @Override
     protected long referenceValueProvider(ReferenceFunction referenceFunction) {
-        long referenceValue = 0;
-        referenceValue += getDepth();
-        referenceValue ^= getType().getReferenceValue();
+        ReferenceValue referenceValue = new ReferenceValue();
+        referenceValue.increment(getDepth());
+        referenceValue.update(getType().getReferenceValue());
         for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            referenceValue ^= (long) entry.getKey().length() & 0x7FFFFFFFFFFFFFFFL;
-            referenceValue ^= referenceFunction.stringToReferenceValue(entry.getKey()) & 0x7FFFFFFFFFFFFFFFL;
-            referenceValue ^= entry.getValue().referenceValue(referenceFunction) & 0x7FFFFFFFFFFFFFFFL;
+            referenceValue.update(entry.getKey().length());
+            referenceValue.update(referenceFunction.stringToReferenceValue(entry.getKey()));
+            referenceValue.update(entry.getValue().referenceValue(referenceFunction));
         }
-        return referenceValue;
+        return referenceValue.referenceValue;
     }
 
     private <T extends AbstractOutput> void outputSystem(T abstractOutput, Consumer<T> commaConsumer, BiConsumer<String, T> nameConsumer, BiConsumer<YAPIONAnyType, T> valueConsumer) {
@@ -77,7 +92,7 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
     @Override
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
         outputSystem(abstractOutput, t -> {}, (s, t) -> {
-            if (s.startsWith(" ")) t.consume("\\");
+            if (s.startsWith(" ") || s.startsWith(",")) t.consume("\\");
             t.consume(stringToUTFEscapedString(s, KEY));
         }, ObjectOutput::toYAPION);
         return abstractOutput;
@@ -113,14 +128,16 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return new ArrayList<>(variables.keySet());
     }
 
-    public boolean hasValue(@NonNull String key, YAPIONType yapionType) {
+    @Override
+    public boolean internalContainsKey(@NonNull String key, YAPIONType yapionType) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return false;
         if (yapionType == YAPIONType.ANY) return true;
         return yapionType == yapionAnyType.getType();
     }
 
-    public <T> boolean hasValue(@NonNull String key, Class<T> type) {
+    @Override
+    public <T> boolean internalContainsKey(@NonNull String key, Class<T> type) {
         if (!YAPIONValue.validType(type)) {
             return false;
         }
@@ -130,7 +147,12 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
     }
 
-    public YAPIONAnyType getYAPIONAnyType(@NonNull String key) {
+    @Override
+    public boolean internalContainsValue(@NonNull YAPIONAnyType yapionAnyType) {
+        return variables.containsValue(yapionAnyType);
+    }
+
+    public YAPIONAnyType internalGetYAPIONAnyType(@NonNull String key) {
         return variables.get(key);
     }
 
@@ -148,7 +170,7 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         }
     }
 
-    public YAPIONObject add(@NonNull String key, @NonNull YAPIONAnyType value) {
+    public YAPIONObject internalAdd(@NonNull String key, @NonNull YAPIONAnyType value) {
         check(value);
         discardReferenceValue();
         if (variables.containsKey(key)) {
@@ -159,15 +181,20 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return this;
     }
 
-    @DeprecationInfo(since = "", alternative = "Use YAPIONObject#add(String, YAPIONAnyType) instead, never use this")
-    public YAPIONObject addUnsafe(@NonNull String key, @NonNull YAPIONAnyType value) {
+    public YAPIONObject add(@NonNull String key, @NonNull Class<?> value) {
+        return internalAdd(key, new YAPIONValue<>(value.getTypeName()));
+    }
+
+    @Override
+    public YAPIONAnyType internalAddAndGetPrevious(@NonNull String key, @NonNull YAPIONAnyType value) {
+        check(value);
         discardReferenceValue();
         if (variables.containsKey(key)) {
             variables.get(key).removeParent();
         }
-        variables.put(key, value);
+        YAPIONAnyType yapionAnyType = variables.put(key, value);
         value.setParent(this);
-        return this;
+        return yapionAnyType;
     }
 
     @Override
@@ -190,7 +217,25 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return this;
     }
 
-    public YAPIONObject remove(@NonNull String key) {
+    @Override
+    public YAPIONAnyType addOrPointerAndGetPrevious(@NonNull String key, @NonNull YAPIONAnyType value) {
+        discardReferenceValue();
+        if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
+            RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
+            if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
+                if (result.getYAPIONAny() == null) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
+                    throw new YAPIONRecursionException("Pointer creation failure.");
+                }
+                return addAndGetPrevious(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
+            }
+        }
+        return addAndGetPrevious(key, value);
+    }
+
+    public YAPIONObject internalRemove(@NonNull String key) {
         if (variables.containsKey(key)) {
             discardReferenceValue();
             variables.remove(key).removeParent();
@@ -199,7 +244,7 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
     }
 
     @Override
-    public YAPIONAnyType removeAndGet(@NonNull String key) {
+    public YAPIONAnyType internalRemoveAndGet(@NonNull String key) {
         if (variables.containsKey(key)) {
             discardReferenceValue();
             YAPIONAnyType yapionAnyType = variables.remove(key);
@@ -221,6 +266,11 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
     }
 
     @Override
+    public Stream<Map.Entry<String, YAPIONAnyType>> entryStream() {
+        return variables.entrySet().stream();
+    }
+
+    @Override
     public Set<String> allKeys() {
         return new HashSet<>(variables.keySet());
     }
@@ -232,12 +282,11 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
 
     @Override
     public long deepSize() {
-        long size = size();
-        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            YAPIONAnyType yapionAnyType = entry.getValue();
-            if (yapionAnyType instanceof YAPIONDataType) size += ((YAPIONDataType) yapionAnyType).deepSize();
-        }
-        return size;
+        return size() + stream().filter(YAPIONDataType.class::isInstance)
+                .map(YAPIONDataType.class::cast)
+                .map(YAPIONDataType::deepSize)
+                .mapToLong(value -> value)
+                .sum();
     }
 
     @Override
@@ -259,6 +308,16 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
     public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(@NonNull String key) {
         if (getYAPIONAnyType(key) == null) return Optional.empty();
         return Optional.of(new YAPIONSearchResult<>(getYAPIONAnyType(key)));
+    }
+
+    /**
+     * Modifying this is an unsafe operation. When you edit this you are on your own!
+     *
+     * @return the internal backed map
+     */
+    @InternalAPI
+    public Map<String, YAPIONAnyType> getBackedMap() {
+        return variables;
     }
 
     @Override
@@ -287,4 +346,7 @@ public class YAPIONObject extends YAPIONMappingType<YAPIONObject, String> {
         return (int) referenceValue();
     }
 
+    public YAPIONObject copy() {
+        return (YAPIONObject) internalCopy();
+    }
 }

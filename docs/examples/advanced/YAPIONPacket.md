@@ -1,6 +1,6 @@
 # Packet System
 
-YAPION in itself has an extensive packet system to use between programms. To create a custom packet you need to extend YAPIONPacket. Every field of this class will be saved and loaded back by the serialization call. You can implement the reading and writing of those packets into an Input/OutputStream by yourself, or just use my YAPIONInputStream and YAPIONOutputStream in conjunction with a YAPIONSocket. With the YAPIONInputStream you can use the YAPIONPacketReceiver with a YAPIONPacketHandler. A YAPIONPacketHandler is used to handle any incoming packets from the YAPIONInputStream, and the YAPIONPacketReceiver is used to bundle YAPIONPacketHandler together. It will handle any incoming packets and call the specified YAPIONPacketHandler.
+YAPION in itself has an extensive packet system to use between programms. To create a custom packet you need to extend YAPIONPacket. Every field of this class will be saved and loaded back by the serialization call. You can implement the reading and writing of those packets into an Input/OutputStream by yourself, or just use the YAPIONInputStream and YAPIONOutputStream in conjunction with a YAPIONSocket. With the YAPIONInputStream you can use the YAPIONPacketReceiver with YAPIONPacketHandlers. A YAPIONPacketHandler is used to handle any incoming packets from the YAPIONInputStream, and the YAPIONPacketReceiver is used to bundle YAPIONPacketHandlers together. It will handle any incoming packets and call the specified YAPIONPacketHandler.
 
 ```java
 import yapion.packet.YAPIONPacketReceiver;
@@ -17,7 +17,7 @@ public class ExampleReceiver {
 }
 ```
 
-With using the YAPIONPacketReceiver some special receivers should be kept in mind. They handle dropping of data, failure of deserialization or any thrown exception in an user defined handler.
+While using the YAPIONPacketReceiver some special receivers should be kept in mind. They handle dropping of data, failure of deserialization or any thrown exception in an user defined handler.
 
 ```java
 import yapion.packet.YAPIONPacketReceiver;

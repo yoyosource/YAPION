@@ -13,29 +13,26 @@
 
 package yapion.serializing.serializer.object.time;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.time.ZoneOffset;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.24.0")
 public class ZoneOffsetSerializer implements InternalSerializer<ZoneOffset> {
 
     @Override
-    public String type() {
-        return "java.time.ZoneOffset";
+    public Class<?> type() {
+        return ZoneOffset.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<ZoneOffset> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("totalSeconds", serializeData.object.getTotalSeconds());
         yapionObject.add("id", serializeData.object.getId());
         return yapionObject;

@@ -13,7 +13,7 @@
 
 package yapion.hierarchy.output;
 
-import yapion.annotations.DeprecationInfo;
+import yapion.annotations.api.DeprecationInfo;
 
 import java.io.OutputStream;
 
@@ -30,7 +30,7 @@ public class StreamBufferPrettifiedOutput extends StreamBufferOutput {
     }
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return true;
     }
 

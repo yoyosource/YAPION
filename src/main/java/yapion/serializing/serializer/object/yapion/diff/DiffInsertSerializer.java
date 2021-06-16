@@ -13,29 +13,25 @@
 
 package yapion.serializing.serializer.object.yapion.diff;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.diff.DiffInsert;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONPath;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.25.0")
 public class DiffInsertSerializer implements InternalSerializer<DiffInsert> {
 
     @Override
-    public String type() {
-        return "yapion.hierarchy.diff.DiffInsert";
+    public Class<?> type() {
+        return DiffInsert.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<DiffInsert> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("path", serializeData.serialize(serializeData.object.getPath()));
         yapionObject.add("inserted", serializeData.object.getInserted());
         return yapionObject;
@@ -44,7 +40,7 @@ public class DiffInsertSerializer implements InternalSerializer<DiffInsert> {
     @Override
     public DiffInsert deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        String[] path = (String[]) deserializeData.deserialize(yapionObject.getArray("path"));
-        return new DiffInsert(new YAPIONPath(path), yapionObject.getYAPIONAnyType("inserted"));
+        String[] path = deserializeData.deserialize(yapionObject.getArray("path"));
+        return new DiffInsert(path, yapionObject.getYAPIONAnyType("inserted"));
     }
 }

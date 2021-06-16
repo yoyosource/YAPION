@@ -16,15 +16,28 @@ package yapion.parser;
 import org.junit.Test;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.*;
 
 import java.io.InputStream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static yapion.YAPIONAssertion.isYAPION;
 
 public class YAPIONParserTest {
+
+    /*public static void main(String[] args) {
+        System.out.println(YAPIONParser.parse("{test(), \"test2\":{}}"));
+        System.out.println(YAPIONParser.parse("{\"contributor\":[{\"name\":\"yoyosource\",\"owner\":true},{\"name\":\"chaoscaot444\",\"owner\":\"false\"}]}"));
+        System.out.println(YAPIONParser.parse("{\n" +
+                "  \"id\": 1,\n" +
+                "  \"first_name\": \"Jeanette\",\n" +
+                "  \"last_name\": \"Penddreth\",\n" +
+                "  \"email\": \"jpenddreth0@census.gov\",\n" +
+                "  \"gender\": \"Female\",\n" +
+                "  \"ip_address\": \"26.58.193.2\"\n" +
+                "}"));
+    }*/
 
     @Test(expected = NullPointerException.class)
     public void testNullSafety() {
@@ -38,12 +51,12 @@ public class YAPIONParserTest {
 
     @Test(expected = YAPIONParserException.class)
     public void testTypeMismatch() {
-        YAPIONParser.parse("{]");
+        System.out.println(YAPIONParser.parse("{]"));
     }
 
-    @Test(expected = YAPIONParserException.class)
+    @Test
     public void testInitialType() {
-        YAPIONParser.parse("[]");
+        assertThat(YAPIONParser.parse("[]"), isYAPION("{[]}"));
     }
 
     @Test(expected = YAPIONParserException.class)
@@ -165,19 +178,141 @@ public class YAPIONParserTest {
     @Test
     public void testArrayStringWithPointer() {
         YAPIONObject yapionObject = YAPIONParser.parse("{[a->b,b->c]}");
+        assertThat(yapionObject.getArray("").getYAPIONAnyType(0), instanceOf(YAPIONValue.class));
+        assertThat(yapionObject.getArray("").getYAPIONAnyType(1), instanceOf(YAPIONValue.class));
         assertThat(yapionObject, isYAPION("{[a->b,b->c]}"));
     }
 
     @Test
     public void testArrayWithAnyType() {
         YAPIONObject yapionObject = YAPIONParser.parse("{[{},[],(),->0000000000000000,<>]}");
-        assertThat(yapionObject.getArray("").getObject(0), is(new YAPIONObject()));
+        assertThat(yapionObject.getArray("").getYAPIONAnyType(0), instanceOf(YAPIONObject.class));
+        assertThat(yapionObject.getArray("").getYAPIONAnyType(1), instanceOf(YAPIONArray.class));
+        assertThat(yapionObject.getArray("").getYAPIONAnyType(2), instanceOf(YAPIONValue.class));
+        assertThat(yapionObject.getArray("").getYAPIONAnyType(3), instanceOf(YAPIONPointer.class));
+        assertThat(yapionObject.getArray("").getYAPIONAnyType(4), instanceOf(YAPIONMap.class));
         assertThat(yapionObject, isYAPION("{[{},[],(),->0000000000000000,<>]}"));
     }
 
     @Test
     public void testFileInputStream() {
         YAPIONParser.parse(YAPIONParserTest.class.getResourceAsStream("/test.yapion"));
+    }
+
+    @Test
+    public void testYAPIONStartEnd() {
+        assertThat(YAPIONParser.parse("hello()").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
+    }
+
+    @Test
+    public void testYAPIONStartEndObject() {
+        assertThat(YAPIONParser.parse("hello{}").toYAPION(new StringOutput()).getResult(), is("{hello{}}"));
+    }
+
+    @Test(expected = YAPIONParserException.class)
+    public void testYAPIONStartEndObjectError() {
+        YAPIONParser.parse("hello{}}");
+    }
+
+    @Test
+    public void testArraySeparatorSupport() {
+        YAPIONObject yapionObject = new YAPIONObject();
+        YAPIONArray yapionArray = new YAPIONArray();
+        yapionObject.add("", yapionArray);
+        yapionArray.add("Hello, World");
+        assertThat(yapionObject, is(YAPIONParser.parse(yapionObject.toString())));
+    }
+
+    @Test
+    public void testArraySupportWithoutSeparator() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{[{}{}]}");
+        assertThat(yapionObject, isYAPION("{[{},{}]}"));
+    }
+
+    @Test
+    public void testArrayStringWithoutSeparator() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{[{}{}HelloWorld,->0000000000000000]}");
+        assertThat(yapionObject.getArray("").getYAPIONAnyType(2), instanceOf(YAPIONValue.class));
+        assertThat(yapionObject.getArray("").getYAPIONAnyType(3), instanceOf(YAPIONPointer.class));
+        assertThat(yapionObject.toString(), is("{[{},{},HelloWorld,->0000000000000000]}"));
+    }
+
+    @Test
+    public void testArrayStringPointerStartInValue() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{[\\->0000000000000000]}");
+        assertThat(yapionObject.getArray("").getYAPIONAnyType(0), instanceOf(YAPIONValue.class));
+        assertThat(yapionObject.toString(), is("{[\\->0000000000000000]}"));
+    }
+
+    @Test
+    public void testArrayWithStringValue() {
+        YAPIONObject yapionObject = new YAPIONObject().add("", new YAPIONArray().add(new YAPIONValue<>("{Hello World}")));
+        yapionObject = YAPIONParser.parse(yapionObject.toYAPION(new StringOutput()).getResult());
+        assertThat(yapionObject.getArray("").getValue(0), notNullValue());
+        assertThat(yapionObject.getArray("").getValue(0), isYAPION(new YAPIONValue<>("{Hello World}")));
+    }
+
+    @Test
+    public void testArrayStringWhitespaceInValue() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{[ Hugo Hello World]}");
+        assertThat(yapionObject.getArray("").getYAPIONAnyType(0), instanceOf(YAPIONValue.class));
+        assertThat(yapionObject.getArray("").getValue(0).get(), instanceOf(String.class));
+        assertThat(yapionObject.getArray("").getValue(0).get(), is("Hugo Hello World"));
+    }
+
+    @Test
+    public void testNewLine() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{\r   n()}");
+        assertThat(yapionObject.getPlainValue("n"), notNullValue());
+
+        yapionObject = YAPIONParser.parse("{[\r   Hello World]}");
+        assertThat(yapionObject.getArray("").getValue(0).get(), is("Hello World"));
+    }
+
+    @Test
+    public void testEscapedNewLine() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{\\\r   n()}");
+        assertThat(yapionObject.getPlainValue("\r   n"), notNullValue());
+
+        yapionObject = YAPIONParser.parse("{[\\\r   Hello World]}");
+        assertThat(yapionObject.getArray("").getValue(0).get(), is("\\\r   Hello World"));
+    }
+
+    @Test
+    public void testNormalEscape() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{\\r\\n\\t()}");
+        assertThat(yapionObject.getPlainValue("\r\n\t"), notNullValue());
+        assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{\\r\\n\\t()}"));
+    }
+
+    @Test
+    public void testComaKey() {
+        assertThat(YAPIONParser.parse("{\\,hello()}").toYAPION(new StringOutput()).getResult(), is("{\\,hello()}"));
+    }
+
+    @Test
+    public void testComaKeyAndSpace() {
+        assertThat(YAPIONParser.parse("{\\, hello()}").toYAPION(new StringOutput()).getResult(), is("{\\, hello()}"));
+    }
+
+    @Test
+    public void testComaSeparator() {
+        assertThat(YAPIONParser.parse("{,hello()}").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
+    }
+
+    @Test
+    public void testComaSeparatorAndSpace() {
+        assertThat(YAPIONParser.parse("{, hello()}").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
+    }
+
+    @Test
+    public void testMapPointer() {
+        YAPIONParser.parse("{<->0000000000000000>}");
+    }
+
+    @Test
+    public void testENotation() {
+        assertThat(YAPIONParser.parse("{(5E+5)}").toYAPION(new StringOutput()).getResult(), is("{(500000.0)}"));
     }
 
 }

@@ -13,12 +13,14 @@
 
 package yapion.serializing;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import yapion.annotations.DeprecationInfo;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.api.DeprecationInfo;
+import yapion.annotations.api.InternalAPI;
+import yapion.annotations.api.SerializerImplementation;
 import yapion.annotations.object.YAPIONObjenesis;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
@@ -27,7 +29,9 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.api.*;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.serializing.reflection.PureStrategy;
+import yapion.serializing.serializer.special.ArraySerializer;
+import yapion.serializing.serializer.special.EnumSerializer;
 import yapion.serializing.utils.SerializeManagerUtils;
 import yapion.utils.ReflectionsUtils;
 
@@ -38,12 +42,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import static yapion.serializing.YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION;
 import static yapion.utils.ReflectionsUtils.implementsInterface;
 import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @Slf4j
 public class SerializeManager {
 
@@ -55,8 +56,6 @@ public class SerializeManager {
         // Init from YAPIONSerializerFlagDefault
     }
 
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
     @ToString
     private static final class Serializer {
         private final InternalSerializer<?> internalSerializer;
@@ -72,13 +71,8 @@ public class SerializeManager {
     private static final Serializer defaultSerializer = new Serializer(null, false);
     private static final Serializer defaultNullSerializer = new Serializer(new InternalSerializer<Object>() {
         @Override
-        public void init() {
-            YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(DATA_LOSS_EXCEPTION, false));
-        }
-
-        @Override
-        public String type() {
-            return "";
+        public Class<?> type() {
+            return Void.class;
         }
 
         @Override
@@ -93,9 +87,12 @@ public class SerializeManager {
         }
     }, false);
 
+    private static final ArraySerializer ARRAY_SERIALIZER = new ArraySerializer();
+    private static final EnumSerializer ENUM_SERIALIZER = new EnumSerializer();
+
     private static final String INTERNAL_SERIALIZER = InternalSerializer.class.getTypeName();
 
-    private static final Map<String, Serializer> serializerMap = new HashMap<>();
+    private static final Map<Class<?>, Serializer> serializerMap = new IdentityHashMap<>();
     private static final List<InternalSerializer<?>> interfaceTypeSerializer = new ArrayList<>();
     private static final List<InternalSerializer<?>> classTypeSerializer = new ArrayList<>();
 
@@ -103,6 +100,10 @@ public class SerializeManager {
     private static final Set<String> oSerializerGroups = new HashSet<>();
 
     private static final Map<Class<?>, InstanceFactory<?>> instanceFactoryMap = new HashMap<>();
+
+    @Getter
+    @Setter
+    private static ReflectionStrategy reflectionStrategy = new PureStrategy();
 
     static {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(SerializeManager.class.getResourceAsStream("/yapion/" + SerializerImplementation.class.getTypeName())))) {
@@ -121,15 +122,14 @@ public class SerializeManager {
         }
 
         oSerializerGroups.add("yapion.annotations.");
-        oSerializerGroups.add("yapion.exceptions.");
-        oSerializerGroups.add("yapion.hierarchy.output");
-        oSerializerGroups.add("yapion.hierarchy.types.utils");
-        oSerializerGroups.add("yapion.hierarchy.types.value");
-        oSerializerGroups.add("yapion.hierarchy.validators");
+        oSerializerGroups.add("yapion.hierarchy.output.     ");
+        oSerializerGroups.add("yapion.hierarchy.types.utils.");
+        oSerializerGroups.add("yapion.hierarchy.types.value.");
+        oSerializerGroups.add("yapion.hierarchy.validators.");
         oSerializerGroups.add("yapion.parser.");
-        oSerializerGroups.add("yapion.serializing.api");
-        oSerializerGroups.add("yapion.serializing.data");
-        oSerializerGroups.add("yapion.serializing.serializer");
+        oSerializerGroups.add("yapion.serializing.api.");
+        oSerializerGroups.add("yapion.serializing.data.");
+        oSerializerGroups.add("yapion.serializing.serializer.");
         oSerializerGroups.add("yapion.utils.");
 
         nSerializerGroups.add("java.io.");
@@ -142,10 +142,10 @@ public class SerializeManager {
         OVERRIDEABLE = true;
     }
 
-    private static void add(Class<?> clazz) {
+    @InternalAPI
+    static void add(Class<?> clazz) {
         if (OVERRIDEABLE) return;
         String className = clazz.getTypeName();
-        if (!className.startsWith("yapion.serializing.serializer")) return;
         if (clazz.getInterfaces().length != 1) return;
         String typeName = clazz.getInterfaces()[0].getTypeName();
         Object o = ReflectionsUtils.constructObjectObjenesis(className);
@@ -155,12 +155,14 @@ public class SerializeManager {
         }
     }
 
-    private static void add(InternalSerializer<?> serializer) {
+    @InternalAPI
+    public static void add(InternalSerializer<?> serializer) {
         if (!checkOverrideable(serializer)) return;
         serializer.init();
         Serializer serializerWrapper = new Serializer(serializer, OVERRIDEABLE);
         serializerMap.put(serializer.type(), serializerWrapper);
-        if (serializer.primitiveType() != null && !serializer.primitiveType().isEmpty()) {
+
+        if (serializer.primitiveType() != null && serializer.type() != serializer.primitiveType()) {
             serializerMap.put(serializer.primitiveType(), serializerWrapper);
         }
         if (serializer.interfaceType() != null) {
@@ -182,32 +184,30 @@ public class SerializeManager {
     }
 
     /**
-     * Remove a special Serializer with the Class type name.
-     *
-     * @param clazz the Class type name
-     */
-    public static void remove(Class<?> clazz) {
-        if (clazz == null) return;
-        remove(clazz.getTypeName());
-    }
-
-    /**
      * Remove a special Serializer with the type name.
      *
      * @param type the typeName to remove
      */
-    public static void remove(String type) {
+    public static void remove(Class<?> type) {
         if (type == null) return;
         if (serializerMap.containsKey(type) && !serializerMap.get(type).overrideable) return;
         serializerMap.remove(type);
     }
 
     @SuppressWarnings({"java:S1452"})
-    static InternalSerializer<?> getInternalSerializer(String type) {
+    static InternalSerializer<?> getInternalSerializer(Class<?> type) {
+        if (type == null) return null;
+        if (type.isArray()) {
+            return ARRAY_SERIALIZER;
+        }
+        if (type.isEnum() || type == Enum.class) {
+            return ENUM_SERIALIZER;
+        }
+
         InternalSerializer<?> initialSerializer = getInternalSerializerInternal(type);
         if (initialSerializer != null) return initialSerializer;
 
-        AtomicReference<String> currentType = new AtomicReference<>(type);
+        AtomicReference<Class<?>> currentType = new AtomicReference<>(type);
         interfaceTypeSerializer.stream()
                 .filter(internalSerializer -> implementsInterface(currentType.get(), internalSerializer.interfaceType()) >= 0)
                 .min(Comparator.comparingInt(o -> implementsInterface(currentType.get(), o.interfaceType())))
@@ -220,12 +220,20 @@ public class SerializeManager {
 
         InternalSerializer<?> internalSerializer = getInternalSerializerInternal(type);
         if (internalSerializer != null) return internalSerializer;
-        if (contains(type, nSerializerGroups)) return defaultNullSerializer.internalSerializer;
+        if (contains(type.getTypeName(), nSerializerGroups)) return defaultNullSerializer.internalSerializer;
         return null;
     }
 
-    private static InternalSerializer<?> getInternalSerializerInternal(String type) {
-        if (contains(type, oSerializerGroups)) return defaultNullSerializer.internalSerializer;
+    static InternalSerializer<?> getArraySerializer() {
+        return ARRAY_SERIALIZER;
+    }
+
+    static InternalSerializer<?> getEnumSerializer() {
+        return ENUM_SERIALIZER;
+    }
+
+    private static InternalSerializer<?> getInternalSerializerInternal(Class<?> type) {
+        if (contains(type.getTypeName(), oSerializerGroups)) return defaultNullSerializer.internalSerializer;
         return serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
     }
 
@@ -277,7 +285,7 @@ public class SerializeManager {
         }
     }
 
-    public static Set<String> listRegisteredSerializer() {
+    public static Set<Class<?>> listRegisteredSerializer() {
         return new HashSet<>(serializerMap.keySet());
     }
 

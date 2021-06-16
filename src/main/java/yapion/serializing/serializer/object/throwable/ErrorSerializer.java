@@ -13,18 +13,16 @@
 
 package yapion.serializing.serializer.object.throwable;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.YAPIONSerializerFlagDefault;
-import yapion.serializing.YAPIONSerializerFlags;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 import yapion.utils.ReflectionsUtils;
 
-import static yapion.serializing.YAPIONSerializerFlagDefault.ERROR_EXCEPTION;
+import static yapion.serializing.YAPIONFlag.ERROR_EXCEPTION;
 import static yapion.utils.IdentifierUtils.EXCEPTION_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -32,13 +30,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class ErrorSerializer implements InternalSerializer<Error> {
 
     @Override
-    public void init() {
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(ERROR_EXCEPTION, false));
-    }
-
-    @Override
-    public String type() {
-        return "java.lang.Error";
+    public Class<?> type() {
+        return Error.class;
     }
 
     @Override
@@ -50,12 +43,10 @@ public class ErrorSerializer implements InternalSerializer<Error> {
     public YAPIONAnyType serialize(SerializeData<Error> serializeData) {
         serializeData.signalDataLoss();
         serializeData.isSet(ERROR_EXCEPTION, () -> {
-            throw new YAPIONDataLossException();
+            throw new YAPIONDataLossException("The ERROR_EXCEPTION flag is set to not serialize Errors");
         });
 
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add(EXCEPTION_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         yapionObject.add("message", serializeData.object.getMessage());
         yapionObject.add("cause", serializeData.serialize(serializeData.object.getCause()));
         yapionObject.add("stacktrace", serializeData.serialize(serializeData.object.getStackTrace()));
@@ -65,7 +56,12 @@ public class ErrorSerializer implements InternalSerializer<Error> {
     @Override
     public Error deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        Error error = (Error) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, "").get(), false);
+        Error error;
+        if (yapionObject.containsKey(EXCEPTION_IDENTIFIER, String.class)) {
+            error = (Error) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, String.class).get(), false);
+        } else {
+            error = (Error) ReflectionsUtils.constructObject(yapionObject.getValue(TYPE_IDENTIFIER, String.class).get(), false);;
+        }
         deserializeData.deserialize("detailMessage", error, yapionObject.getValue("message"));
         deserializeData.deserialize("cause", error, yapionObject.getObject("cause"));
         deserializeData.deserialize("stackTrace", error, yapionObject.getArray("stacktrace"));

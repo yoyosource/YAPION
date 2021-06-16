@@ -242,7 +242,7 @@ public class YAPIONUtils {
                 if (!objectOptional.isPresent()) return;
                 output.add(path, "@pointer:" + String.join(",", ((YAPIONObject) objectOptional.get()).getPath().getPath()));
             } else {
-                output.add(path, s.copy());
+                output.add(path, s.internalCopy());
             }
         });
         return output;

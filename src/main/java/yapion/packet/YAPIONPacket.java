@@ -13,6 +13,7 @@
 
 package yapion.packet;
 
+import yapion.annotations.api.DeprecationInfo;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.io.YAPIONOutputStream;
 import yapion.io.YAPIONSocket;
@@ -31,7 +32,18 @@ public abstract class YAPIONPacket {
      *
      * @return a {@link YAPIONObject}
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#convertToYAPION")
     public final YAPIONObject toYAPION() {
+        return YAPIONSerializer.serialize(this);
+    }
+
+    /**
+     * Serialize this {@link YAPIONPacket} to a {@link YAPIONObject}.
+     *
+     * @return a {@link YAPIONObject}
+     */
+    public final YAPIONObject convertToYAPION() {
         return YAPIONSerializer.serialize(this);
     }
 
@@ -47,7 +59,8 @@ public abstract class YAPIONPacket {
     /**
      * The exception that was thrown by the {@link YAPIONPacketHandler#handlePacket(YAPIONPacket)}
      * method. You could for example log this {@link Exception} in the {@link YAPIONPacketHandler}
-     * set with {@link YAPIONPacketReceiver#setErrorHandler(YAPIONPacketHandler)}.
+     * set with {@link YAPIONPacketReceiver#setHandler(YAPIONPacketReceiver.Handler, YAPIONPacketHandler)},
+     * with {@link YAPIONPacketReceiver.Handler#EXCEPTION}.
      *
      * @return the {@link Exception} that was thrown
      */

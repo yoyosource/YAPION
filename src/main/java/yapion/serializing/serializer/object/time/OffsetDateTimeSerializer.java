@@ -13,31 +13,28 @@
 
 package yapion.serializing.serializer.object.time;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
-
 @SerializerImplementation(since = "0.24.0")
 public class OffsetDateTimeSerializer implements InternalSerializer<OffsetDateTime> {
 
     @Override
-    public String type() {
-        return "java.time.OffsetDateTime";
+    public Class<?> type() {
+        return OffsetDateTime.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<OffsetDateTime> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("localDateTime", serializeData.serialize(serializeData.object.toLocalDateTime()));
         yapionObject.add("offset", serializeData.serialize(serializeData.object.getOffset()));
         return yapionObject;
@@ -46,8 +43,8 @@ public class OffsetDateTimeSerializer implements InternalSerializer<OffsetDateTi
     @Override
     public OffsetDateTime deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        LocalDateTime localDateTime = (LocalDateTime) deserializeData.deserialize(yapionObject.getObject("localDateTime"));
-        ZoneOffset zoneOffset = (ZoneOffset) deserializeData.deserialize(yapionObject.getObject("offset"));
+        LocalDateTime localDateTime = deserializeData.deserialize(yapionObject.getObject("localDateTime"));
+        ZoneOffset zoneOffset = deserializeData.deserialize(yapionObject.getObject("offset"));
         return OffsetDateTime.of(localDateTime, zoneOffset);
     }
 }

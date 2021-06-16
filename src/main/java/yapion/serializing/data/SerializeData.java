@@ -14,21 +14,27 @@
 package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import yapion.exceptions.serializing.YAPIONDataLossException;
-import yapion.exceptions.serializing.YAPIONSerializerException;
+import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.SerializeManager;
+import yapion.serializing.YAPIONFlag;
+import yapion.serializing.YAPIONFlags;
 import yapion.serializing.YAPIONSerializer;
-import yapion.serializing.YAPIONSerializerFlagDefault;
-import yapion.serializing.YAPIONSerializerFlagDefault.YAPIONSerializerFlagKey;
-import yapion.serializing.YAPIONSerializerFlags;
+import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
 
 @RequiredArgsConstructor
+@ToString
 public class SerializeData<T> {
 
     public final T object;
     public final String context;
+
+    @ToString.Exclude
     private final YAPIONSerializer yapionSerializer;
 
     public <R> SerializeData<R> clone(R object) {
@@ -43,27 +49,34 @@ public class SerializeData<T> {
         return yapionSerializer.parse(o);
     }
 
-    @SuppressWarnings({"java:S3011"})
-    public final Object getField(String fieldName) {
+    public final void serialize(YAPIONObject yapionObject, Field field) {
         try {
-            Field field = object.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field.get(object);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new YAPIONSerializerException();
+            yapionObject.add(field.getName(), field.get(object));
+        } catch (IllegalAccessException e) {
+            throw new YAPIONReflectionException(e.getMessage(), e);
         }
     }
 
-    public YAPIONSerializerFlags getYAPIONSerializerFlags() {
-        return yapionSerializer.getYAPIONSerializerFlags();
+    @SuppressWarnings({"java:S3011"})
+    public final Object getField(String fieldName) {
+        Field field = ReflectionsUtils.getField(object.getClass(), fieldName);
+        return getField(field);
     }
 
-    public void isSet(YAPIONSerializerFlagKey key, Runnable allowed) {
+    public final Object getField(Field field) {
+        return SerializeManager.getReflectionStrategy().get(field, object);
+    }
+
+    public YAPIONFlags getYAPIONFlags() {
+        return yapionSerializer.getYAPIONFlags();
+    }
+
+    public void isSet(YAPIONFlag key, Runnable allowed) {
         isSet(key, allowed, () -> {});
     }
 
-    public void isSet(YAPIONSerializerFlagKey key, Runnable allowed, Runnable disallowed) {
-        boolean b = yapionSerializer.getYAPIONSerializerFlags().isSet(key);
+    public void isSet(YAPIONFlag key, Runnable allowed, Runnable disallowed) {
+        boolean b = yapionSerializer.getYAPIONFlags().isSet(key);
         if (b) {
             allowed.run();
         } else {
@@ -72,7 +85,7 @@ public class SerializeData<T> {
     }
 
     public void signalDataLoss() {
-        isSet(YAPIONSerializerFlagDefault.DATA_LOSS_EXCEPTION, () -> {
+        isSet(YAPIONFlag.DATA_LOSS_EXCEPTION, () -> {
             throw new YAPIONDataLossException("Some data would be discarded by serialization");
         });
     }

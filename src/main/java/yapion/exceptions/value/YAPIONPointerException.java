@@ -17,10 +17,6 @@ import yapion.exceptions.YAPIONException;
 
 public class YAPIONPointerException extends YAPIONException {
 
-    public YAPIONPointerException() {
-        super();
-    }
-
     public YAPIONPointerException(String message) {
         super(message);
     }

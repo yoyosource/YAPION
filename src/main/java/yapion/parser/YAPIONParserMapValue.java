@@ -15,9 +15,11 @@ package yapion.parser;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import yapion.annotations.api.InternalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+@InternalAPI
 public class YAPIONParserMapValue {
     public final YAPIONAnyType value;
 }

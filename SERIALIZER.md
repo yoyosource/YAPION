@@ -26,10 +26,8 @@
 - BufferedImageSerializer
 - ColorSerializer
 ## object.collection
-- ArrayBlockingQueueSerializer
 - DequeSerializer
 - ListSerializer
-- PriorityBlockingQueueSerializer
 - QueueSerializer
 - SetSerializer
 - StackSerializer
@@ -50,9 +48,7 @@
 - OptionalSerializer
 ## object.other
 - ClassSerializer
-- EnumMapSerializer
 - EnumSerializer
-- EnumSetSerializer
 - FileSerializer
 - MathContextSerializer
 - RandomSerializer
@@ -86,9 +82,7 @@
 - SimpleDateFormatSerializer
 ## object.throwable
 - ErrorSerializer
-- ExceptionSerializer
 - InvocationTargetExceptionSerializer
-- RuntimeExceptionSerializer
 - StackTraceElementSerializer
 - ThrowableSerializer
 ## object.time
@@ -111,6 +105,7 @@
 - DiffChangeSerializer
 - DiffDeleteSerializer
 - DiffInsertSerializer
+- DiffMoveSerializer
 - YAPIONDiffSerializer
 ## object.yapion.packet
 - YAPIONPacketSerializer

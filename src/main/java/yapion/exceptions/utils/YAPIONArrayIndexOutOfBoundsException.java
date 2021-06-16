@@ -17,10 +17,6 @@ import yapion.exceptions.YAPIONException;
 
 public class YAPIONArrayIndexOutOfBoundsException extends YAPIONException {
 
-    public YAPIONArrayIndexOutOfBoundsException() {
-        super();
-    }
-
     public YAPIONArrayIndexOutOfBoundsException(String message) {
         super(message);
     }

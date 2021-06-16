@@ -18,16 +18,17 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @SerializerImplementation(since = "0.2.0")
 public class BigIntegerSerializer implements InternalSerializer<BigInteger> {
 
     @Override
-    public String type() {
-        return "java.math.BigInteger";
+    public Class<?> type() {
+        return BigInteger.class;
     }
 
     @Override

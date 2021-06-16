@@ -26,35 +26,35 @@ public class ObjectRetrieveTest {
     @Test
     public void testNotHasValue() {
         YAPIONObject yapionObject = new YAPIONObject();
-        assertThat(yapionObject.hasValue(""), is(false));
+        assertThat(yapionObject.containsKey(""), is(false));
     }
 
     @Test
     public void testHasValue() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("", "");
-        assertThat(yapionObject.hasValue(""), is(true));
+        assertThat(yapionObject.containsKey(""), is(true));
     }
 
     @Test
     public void testNotHasValueOfSpecificType() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("", "");
-        assertThat(yapionObject.hasValue("", YAPIONType.OBJECT), is(false));
+        assertThat(yapionObject.containsKey("", YAPIONType.OBJECT), is(false));
     }
 
     @Test
     public void testHasValueOfSpecificType() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("", new YAPIONObject());
-        assertThat(yapionObject.hasValue("", YAPIONType.OBJECT), is(true));
+        assertThat(yapionObject.containsKey("", YAPIONType.OBJECT), is(true));
     }
 
     @Test
     public void testHasValueOfClassType() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("", "");
-        assertThat(yapionObject.hasValue("", String.class), is(true));
+        assertThat(yapionObject.containsKey("", String.class), is(true));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class ObjectRetrieveTest {
     @Test
     public void testGetArrayWithConsumer() {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add("", new YAPIONObject());
+        yapionObject.add("", new YAPIONArray());
         yapionObject.getArray("", yapionAnyTypes -> {
             assertThat(yapionAnyTypes, is(new YAPIONArray()));
         }, () -> {

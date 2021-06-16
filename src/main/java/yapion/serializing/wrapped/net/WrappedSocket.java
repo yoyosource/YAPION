@@ -17,7 +17,7 @@ import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONPostDeserialization;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.exceptions.YAPIONException;
-import yapion.serializing.wrapped.WrappedImplementation;
+import yapion.annotations.api.WrappedImplementation;
 
 import java.io.IOException;
 import java.io.InputStream;

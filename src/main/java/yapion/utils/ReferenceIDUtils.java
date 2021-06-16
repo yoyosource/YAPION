@@ -13,9 +13,8 @@
 
 package yapion.utils;
 
-import yapion.annotations.DeprecationInfo;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
+import lombok.experimental.UtilityClass;
+import yapion.annotations.api.DeprecationInfo;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.types.YAPIONValue;
 
@@ -27,21 +26,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
+@UtilityClass
 public class ReferenceIDUtils {
-
-    private ReferenceIDUtils() {
-        throw new IllegalStateException("Utility class");
-    }
-
-    private static int cacheSize = 100;
 
     private static final Map<String, Long> referenceIDMapCache = new HashMap<>();
     private static final Map<String, Long> referenceIDMap = new LinkedHashMap<String, Long>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Long> eldest) {
-            return size() > cacheSize;
+            return size() > 256;
         }
     };
 
@@ -49,7 +41,7 @@ public class ReferenceIDUtils {
     private static final Map<String, Long> referenceIDOldMap = new LinkedHashMap<String, Long>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Long> eldest) {
-            return size() > cacheSize;
+            return size() > 256;
         }
     };
 
@@ -59,14 +51,14 @@ public class ReferenceIDUtils {
 
     /**
      * Calculates the reference ID of a given String, primarily used for variable names.
-     * This method caches the last 100 inputs for faster reference ID calculation.
+     * This method caches the last 256 inputs for faster reference ID calculation.
      * Use {@link #discardCache()} to discard this Cache.
      */
     public static final ReferenceFunction REFERENCE_FUNCTION = new ReferenceFunction(ReferenceIDUtils::reference);
 
     /**
      * Calculates the reference ID of a given String, primarily used for variable names.
-     * This method caches the last 100 inputs for faster reference ID calculation.
+     * This method caches the last 256 inputs for faster reference ID calculation.
      * Use {@link #discardCache()} to discard this Cache.
      *
      * @deprecated since 0.23.0
@@ -113,22 +105,8 @@ public class ReferenceIDUtils {
             referenceIDOldMap.put(s, value);
             return value;
         } catch (NoSuchAlgorithmException e) {
-            throw new YAPIONException("MD5 is not supported");
+            throw new YAPIONException("MD5 is not supported", e.getCause());
         }
-    }
-
-    /**
-     * Set the cache size of the internal cache to a specific
-     * number above 100. If you set a number below 100 it will
-     * default to 100.
-     *
-     * @param cacheSize the cache Size
-     */
-    public static void setCacheSize(int cacheSize) {
-        if (cacheSize < 100) {
-            cacheSize = 100;
-        }
-        ReferenceIDUtils.cacheSize = cacheSize;
     }
 
     /**

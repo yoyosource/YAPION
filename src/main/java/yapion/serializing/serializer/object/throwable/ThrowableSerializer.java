@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.throwable;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 import yapion.utils.ReflectionsUtils;
 
 import static yapion.utils.IdentifierUtils.EXCEPTION_IDENTIFIER;
@@ -28,8 +28,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class ThrowableSerializer implements InternalSerializer<Throwable> {
 
     @Override
-    public String type() {
-        return "java.lang.Throwable";
+    public Class<?> type() {
+        return Throwable.class;
     }
 
     @Override
@@ -39,9 +39,7 @@ public class ThrowableSerializer implements InternalSerializer<Throwable> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Throwable> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add(EXCEPTION_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         yapionObject.add("message", serializeData.object.getMessage());
         yapionObject.add("cause", serializeData.serialize(serializeData.object.getCause()));
         yapionObject.add("stacktrace", serializeData.serialize(serializeData.object.getStackTrace()));
@@ -51,7 +49,12 @@ public class ThrowableSerializer implements InternalSerializer<Throwable> {
     @Override
     public Throwable deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        Throwable throwable = (Throwable) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, "").get(), false);
+        Throwable throwable;
+        if (yapionObject.containsKey(EXCEPTION_IDENTIFIER, String.class)) {
+            throwable = (Throwable) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, String.class).get(), false);
+        } else {
+            throwable = (Throwable) ReflectionsUtils.constructObject(yapionObject.getValue(TYPE_IDENTIFIER, String.class).get(), false);;
+        }
         deserializeData.deserialize("detailMessage", throwable, yapionObject.getValue("message"));
         deserializeData.deserialize("cause", throwable, yapionObject.getObject("cause"));
         deserializeData.deserialize("stackTrace", throwable, yapionObject.getArray("stacktrace"));

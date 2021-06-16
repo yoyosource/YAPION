@@ -13,13 +13,14 @@
 
 package yapion.serializing.serializer.object.security;
 
+import yapion.annotations.api.SerializerImplementation;
+import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 import yapion.serializing.serializer.object.security.internal.KeySpecSerializerProvider;
 
 import java.security.GeneralSecurityException;
@@ -32,8 +33,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class PublicKeySerializer implements InternalSerializer<PublicKey> {
 
     @Override
-    public String type() {
-        return "java.security.PublicKey";
+    public Class<?> type() {
+        return PublicKey.class;
     }
 
     @Override
@@ -43,13 +44,11 @@ public class PublicKeySerializer implements InternalSerializer<PublicKey> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<PublicKey> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add(KEY_IDENTIFIER, serializeData.object.getClass().getTypeName());
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         yapionObject.add("algorithm", serializeData.object.getAlgorithm());
 
         try {
-            yapionObject.add("publicKey", KeySpecSerializerProvider.serializePublicKey(serializeData.object));
+            yapionObject.add("publicKey", KeySpecSerializerProvider.serializePublicKey(serializeData, serializeData.object));
         } catch (GeneralSecurityException e) {
             throw new YAPIONSerializerException(e.getMessage(), e);
         }
@@ -59,14 +58,19 @@ public class PublicKeySerializer implements InternalSerializer<PublicKey> {
     @Override
     public PublicKey deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        String key = yapionObject.getValue(KEY_IDENTIFIER, String.class).get();
+        String key;
+        if (yapionObject.containsKey(KEY_IDENTIFIER, String.class)) {
+            key = yapionObject.getPlainValue(KEY_IDENTIFIER);
+        } else {
+            key = yapionObject.getPlainValue(TYPE_IDENTIFIER);
+        }
         String algorithm = yapionObject.getValue("algorithm", String.class).get();
         YAPIONObject publicKey = yapionObject.getObject("publicKey");
 
         try {
-            return KeySpecSerializerProvider.deserializePublicKey(Class.forName(key), publicKey, algorithm);
+            return KeySpecSerializerProvider.deserializePublicKey(deserializeData, Class.forName(key), publicKey, algorithm);
         } catch (GeneralSecurityException | ClassNotFoundException e) {
-            throw new YAPIONSerializerException(e.getMessage(), e);
+            throw new YAPIONDeserializerException(e.getMessage(), e);
         }
     }
 

@@ -13,132 +13,174 @@
 
 package yapion.serializing;
 
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.deserialize.YAPIONDeserializeType;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
-import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.exceptions.utils.YAPIONReflectionException;
+import yapion.hierarchy.api.groups.SerializingType;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.DeserializeData;
-import yapion.serializing.serializer.object.other.EnumSerializer;
 import yapion.utils.ClassUtils;
 import yapion.utils.MethodReturnValue;
-import yapion.utils.ModifierUtils;
 import yapion.utils.ReflectionsUtils;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
-import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-@YAPIONSaveExclude(context = "*")
-@YAPIONLoadExclude(context = "*")
 @Slf4j
 public final class YAPIONDeserializer {
 
     private Object object;
-    private final YAPIONObject yapionObject;
+    private final SerializingType serializingType;
     private final ContextManager contextManager;
     private TypeReMapper typeReMapper = new TypeReMapper();
     private DeserializeResult deserializeResult = new DeserializeResult();
+    private YAPIONFlags yapionFlags = new YAPIONFlags();
 
     private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
 
-    private boolean reducedMode = false;
+    @Getter
     private String arrayType = "";
 
     /**
      * Serialize an YAPION Object to an Object.
      *
-     * @param yapionObject to deserialize
+     * @param serializingType to deserialize
      * @return Object from the YAPIONObject to deserialize
      */
-    public static Object deserialize(@NonNull YAPIONObject yapionObject) {
-        return deserialize(yapionObject, "");
+    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType) {
+        return (T) deserialize(serializingType, "");
     }
 
     /**
      * Serialize an YAPION Object to an Object.
      *
-     * @param yapionObject to deserialize
+     * @param serializingType to deserialize
+     * @return Object from the YAPIONObject to deserialize
+     */
+    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, @NonNull YAPIONFlags yapionFlags) {
+        return (T) deserialize(serializingType, "", yapionFlags);
+    }
+
+    /**
+     * Serialize an YAPION Object to an Object.
+     *
+     * @param serializingType to deserialize
      * @param typeReMapper the mapper to remap any '@type' variable to a new class
      * @return Object from the YAPIONObject to deserialize
      */
-    public static Object deserialize(@NonNull YAPIONObject yapionObject, @NonNull TypeReMapper typeReMapper) {
-        return deserialize(yapionObject, "", typeReMapper);
+    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, @NonNull TypeReMapper typeReMapper) {
+        return (T) deserialize(serializingType, "", typeReMapper);
     }
 
     /**
      * Serialize an YAPION Object to an Object.
      *
-     * @param yapionObject to deserialize
+     * @param serializingType to deserialize
      * @param context the context for deserialization
      * @return Object from the YAPIONObject to deserialize
      */
-    public static Object deserialize(@NonNull YAPIONObject yapionObject, String context) {
-        return new YAPIONDeserializer(yapionObject, context).parse().getObject();
+    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, String context) {
+        return (T) new YAPIONDeserializer(serializingType, context).parse().getObject();
     }
 
     /**
      * Serialize an YAPION Object to an Object.
      *
-     * @param yapionObject to deserialize
+     * @param serializingType to deserialize
+     * @param context the context for deserialization
+     * @return Object from the YAPIONObject to deserialize
+     */
+    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, String context, @NonNull YAPIONFlags yapionFlags) {
+        return (T) new YAPIONDeserializer(serializingType, context, new TypeReMapper(), yapionFlags).parse().getObject();
+    }
+
+    /**
+     * Serialize an YAPION Object to an Object.
+     *
+     * @param serializingType to deserialize
      * @param context the context for deserialization
      * @param typeReMapper the mapper to remap any '@type' variable to a new class
      * @return Object from the YAPIONObject to deserialize
      */
-    public static Object deserialize(@NonNull YAPIONObject yapionObject, String context, @NonNull TypeReMapper typeReMapper) {
-        return new YAPIONDeserializer(yapionObject, context, typeReMapper).parse().getObject();
+    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, String context, @NonNull TypeReMapper typeReMapper) {
+        return (T) new YAPIONDeserializer(serializingType, context, typeReMapper).parse().getObject();
+    }
+
+    /**
+     * Serialize an YAPION Object to an Object.
+     *
+     * @param serializingType to deserialize
+     * @param context the context for deserialization
+     * @param typeReMapper the mapper to remap any '@type' variable to a new class
+     * @return Object from the YAPIONObject to deserialize
+     */
+    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, String context, @NonNull TypeReMapper typeReMapper, @NonNull YAPIONFlags yapionFlags) {
+        return (T) new YAPIONDeserializer(serializingType, context, typeReMapper, yapionFlags).parse().getObject();
     }
 
     /**
      * Creates a YAPIONDeserializer for deserializing a YAPIONObject.
      *
-     * @param yapionObject to deserialize
+     * @param serializingType to deserialize
      */
-    public YAPIONDeserializer(@NonNull YAPIONObject yapionObject) {
+    public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType) {
         contextManager = new ContextManager("");
-        this.yapionObject = yapionObject;
+        this.serializingType = serializingType;
     }
 
     /**
      * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.
      *
-     * @param yapionObject to deserialize
+     * @param serializingType to deserialize
      * @param context the context for deserialization
      */
-    public YAPIONDeserializer(@NonNull YAPIONObject yapionObject, String context) {
+    public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, String context) {
         contextManager = new ContextManager(context);
-        this.yapionObject = yapionObject;
+        this.serializingType = serializingType;
     }
 
     /**
      * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.
      *
-     * @param yapionObject to deserialize
+     * @param serializingType to deserialize
      * @param context the context for deserialization
      * @param typeReMapper the mapper to remap any '@type' variable to a new class
      */
-    public YAPIONDeserializer(@NonNull YAPIONObject yapionObject, String context, @NonNull TypeReMapper typeReMapper) {
+    public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, String context, @NonNull TypeReMapper typeReMapper) {
         contextManager = new ContextManager(context);
-        this.yapionObject = yapionObject;
+        this.serializingType = (K) serializingType.internalCopy();
         this.typeReMapper = typeReMapper;
     }
 
-    private YAPIONDeserializer(@NonNull YAPIONObject yapionObject, YAPIONDeserializer yapionDeserializer) {
-        this.yapionObject = yapionObject;
-        if (yapionDeserializer.contextManager.willBeCascading(yapionObject) && !yapionDeserializer.contextManager.isCascading()) {
+    /**
+     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.
+     *
+     * @param serializingType to deserialize
+     * @param context the context for deserialization
+     * @param typeReMapper the mapper to remap any '@type' variable to a new class
+     */
+    public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, String context, @NonNull TypeReMapper typeReMapper, @NonNull YAPIONFlags yapionFlags) {
+        contextManager = new ContextManager(context);
+        this.serializingType = (K) serializingType.internalCopy();
+        this.typeReMapper = typeReMapper;
+        this.yapionFlags = yapionFlags;
+    }
+
+    private YAPIONDeserializer(@NonNull YAPIONObject serializingType, YAPIONDeserializer yapionDeserializer) {
+        this.serializingType = serializingType;
+        if (yapionDeserializer.contextManager.willBeCascading(serializingType) && !yapionDeserializer.contextManager.isCascading()) {
             this.contextManager = new ContextManager(yapionDeserializer.contextManager.get());
         } else {
             this.contextManager = yapionDeserializer.contextManager;
@@ -146,7 +188,7 @@ public final class YAPIONDeserializer {
         this.pointerMap = yapionDeserializer.pointerMap;
         this.typeReMapper = yapionDeserializer.typeReMapper;
         this.deserializeResult = yapionDeserializer.deserializeResult;
-        this.reducedMode = yapionDeserializer.reducedMode;
+        this.yapionFlags = yapionDeserializer.yapionFlags;
     }
 
     /**
@@ -175,166 +217,82 @@ public final class YAPIONDeserializer {
             return new YAPIONDeserializer((YAPIONObject) yapionAnyType, this).parse().getObject();
         }
         if (yapionAnyType instanceof YAPIONArray) {
-            arrayType = checkType((YAPIONArray) yapionAnyType);
-            return parseArray((YAPIONArray) yapionAnyType);
+            return SerializeManager.getArraySerializer().deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this, typeReMapper));
         }
         return null;
-    }
-
-    @SuppressWarnings({"java:S128", "java:S1117", "unchecked"})
-    private String checkType(YAPIONArray yapionArray) {
-        if (!arrayType.isEmpty()) return arrayType;
-        String type = null;
-        boolean primitive = true;
-        for (int i = 0; i < yapionArray.length(); i++) {
-            YAPIONAnyType yapionAnyType = yapionArray.getYAPIONAnyType(i);
-            switch (yapionAnyType.getType()) {
-                case OBJECT:
-                    primitive = false;
-                    YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
-                    if (yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER) != null) {
-                        type = ((YAPIONValue<String>) yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER)).get();
-                        break;
-                    }
-                case MAP:
-                    primitive = false;
-                    type = "java.lang.Object";
-                    break;
-                case VALUE:
-                    YAPIONValue<?> yapionValue = (YAPIONValue<?>) yapionAnyType;
-                    if (yapionValue.getValueType().equals("null")) {
-                        primitive = false;
-                        break;
-                    }
-                    if (type != null) {
-                        if (!yapionValue.getValueType().equals(type)) {
-                            type = "java.lang.Object";
-                        }
-                        break;
-                    }
-                    type = yapionValue.getValueType();
-                    break;
-                case ARRAY:
-                    String s = checkType((YAPIONArray) yapionAnyType);
-                    if (type != null) {
-                        if (ClassUtils.getBoxed(s).equals(type)) {
-                            primitive = false;
-                            break;
-                        }
-                        if (!s.equals(type)) {
-                            type = "java.lang.Object";
-                        }
-                        break;
-                    }
-                    type = s;
-                default:
-                    break;
-            }
-        }
-        if (type == null) type = "java.lang.Object";
-        return primitive ? ClassUtils.getPrimitive(type) : type;
-    }
-
-    private Object parseArray(YAPIONArray yapionArray) {
-        if (yapionArray == null) return null;
-        LinkedList<Integer> dimensions = new LinkedList<>();
-        YAPIONArray current = yapionArray;
-        while (current != null) {
-            dimensions.add(current.length());
-            if (current.length() <= 0) {
-                break;
-            }
-            YAPIONAnyType yapionAnyType = current.getYAPIONAnyType(0);
-            current = null;
-            if (yapionAnyType instanceof YAPIONArray) {
-                current = (YAPIONArray) yapionAnyType;
-            }
-        }
-
-        int[] ints = new int[dimensions.size()];
-        for (int i = 0; i < dimensions.size(); i++) {
-            ints[i] = dimensions.removeFirst();
-        }
-
-        arrayType = arrayType.replace("[", "").replace("]", "");
-        Object array = null;
-        try {
-            array = Array.newInstance(ClassUtils.getClass(arrayType), ints);
-        } catch (IllegalArgumentException | NegativeArraySizeException e) {
-            // Ignored
-        }
-        if (array == null) return null;
-
-        for (int i = 0; i < yapionArray.length(); i++) {
-            Array.set(array, i, parse(yapionArray.getYAPIONAnyType(i)));
-        }
-        return array;
     }
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parseObject(YAPIONObject yapionObject) {
         String type = ((YAPIONValue<String>) yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER)).get();
         type = typeReMapper.remap(type);
-        InternalSerializer<?> serializer = SerializeManager.getInternalSerializer(type);
-        Object o = deserialize(serializer, yapionObject);
-        if (o != null) {
-            pointerMap.put(yapionObject, o);
-            object = o;
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName(type);
+        } catch (ClassNotFoundException e) {
+            log.warn("The class '" + type + "' was not found.", e.getCause());
             return this;
+        }
+
+        InternalSerializer<?> serializer = SerializeManager.getInternalSerializer(clazz);
+        if (serializer != null && !serializer.empty()) {
+            object = serializer.deserialize(new DeserializeData<>(yapionObject, contextManager.get(), this, typeReMapper));
+            pointerMap.put(yapionObject, object);
+            return this;
+        }
+
+        if (serializer == null && GeneratedSerializerLoader.loadSerializerIfNeeded(clazz)) {
+            return parseObject(yapionObject);
         }
 
         boolean loadWithoutAnnotation = serializer != null && serializer.loadWithoutAnnotation();
         boolean createWithObjenesis = serializer != null && serializer.createWithObjenesis();
 
+        if (!contextManager.is(clazz).load && !loadWithoutAnnotation) {
+            throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
+        }
         try {
-            Class<?> clazz = Class.forName(type);
-            if (!contextManager.is(clazz).load && !loadWithoutAnnotation) {
-                throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
-            }
-
             object = SerializeManager.getObjectInstance(clazz, type, contextManager.is(clazz).data || createWithObjenesis);
-            MethodManager.preDeserializationStep(object, object.getClass(), contextManager);
-            pointerMap.put(yapionObject, object);
-
-            for (String fieldName : yapionObject.getKeys()) {
-                if (fieldName.equals(TYPE_IDENTIFIER)) continue;
-
-                Field field = ReflectionsUtils.getField(clazz, fieldName);
-                if (field == null) {
-                    deserializeResult.add(object, fieldName, yapionObject.getYAPIONAnyType(fieldName));
-                    continue;
-                }
-                if (ModifierUtils.removed(field)) continue;
-                if (!contextManager.is(object, field).load && !loadWithoutAnnotation) continue;
-
-                Class<?> fieldType = field.getType();
-                arrayType = fieldType.getTypeName();
-
-                YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(field.getName());
-                if (reducedMode && yapionAnyType instanceof YAPIONObject && !((YAPIONObject) yapionAnyType).hasValue(TYPE_IDENTIFIER, String.class)) {
-                    if (fieldType.isEnum()) {
-                        ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, "java.lang.Enum");
-                    } else {
-                        ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, arrayType);
-                    }
-                }
-                YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
-                if (specialSet(field, yapionAnyType)) {
-                    ReflectionsUtils.setValueOfField(field, object, yapionAnyType);
-                } else if (isValid(field, yapionDeserializeType)) {
-                    ReflectionsUtils.setValueOfField(field, object, deserialize(SerializeManager.getInternalSerializer(yapionDeserializeType.type().getTypeName()), yapionAnyType));
-                } else {
-                    ReflectionsUtils.setValueOfField(field, object, parse(yapionAnyType));
-                }
-
-                arrayType = "";
-            }
-            MethodManager.postDeserializationStep(object, object.getClass(), contextManager);
-        } catch (ClassNotFoundException e) {
-            log.warn("The class '" + type + "' was not found.", e.getCause());
         } catch (YAPIONReflectionException e) {
             log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
         }
+        MethodManager.preDeserializationStep(object, object.getClass(), contextManager);
+        pointerMap.put(yapionObject, object);
+
+        for (String fieldName : yapionObject.getKeys()) {
+            if (fieldName.equals(TYPE_IDENTIFIER)) continue;
+
+            Field field = ReflectionsUtils.getField(clazz, fieldName);
+            if (field == null) {
+                deserializeResult.add(object, fieldName, yapionObject.getYAPIONAnyType(fieldName));
+                continue;
+            }
+            if (ClassUtils.removed(field)) continue;
+            if (!contextManager.is(object, field).load && !loadWithoutAnnotation) continue;
+
+            Class<?> fieldType = field.getType();
+            arrayType = fieldType.getTypeName();
+
+            YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(field.getName());
+            if (!YAPIONAnyType.class.isAssignableFrom(fieldType) && yapionAnyType instanceof YAPIONObject && !((YAPIONObject) yapionAnyType).containsKey(TYPE_IDENTIFIER, String.class)) {
+                ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, arrayType);
+            }
+            YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
+            if (specialSet(field, yapionAnyType)) {
+                SerializeManager.getReflectionStrategy().set(field, object, yapionAnyType);
+            } else if (isValid(field, yapionDeserializeType)) {
+                Object o = null;
+                if (serializer != null && !serializer.empty()) {
+                    o = SerializeManager.getInternalSerializer(yapionDeserializeType.type()).deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this, typeReMapper));
+                }
+                SerializeManager.getReflectionStrategy().set(field, object, o);
+            } else {
+                SerializeManager.getReflectionStrategy().set(field, object, parse(yapionAnyType));
+            }
+
+            arrayType = "";
+        }
+        MethodManager.postDeserializationStep(object, object.getClass(), contextManager);
         return this;
     }
 
@@ -350,7 +308,7 @@ public final class YAPIONDeserializer {
         Class<?> clazz = yapionDeserializeType.type();
         while (!clazz.getTypeName().equals("java.lang.Object")) {
             for (Class<?> ifc : clazz.getInterfaces()) {
-                if (ifc.getTypeName().equals(type) && SerializeManager.getInternalSerializer(yapionDeserializeType.type().getTypeName()) != null) {
+                if (ifc.getTypeName().equals(type) && SerializeManager.getInternalSerializer(yapionDeserializeType.type()) != null) {
                     return true;
                 }
             }
@@ -359,39 +317,34 @@ public final class YAPIONDeserializer {
         return false;
     }
 
-    private Object deserialize(InternalSerializer<?> serializer, YAPIONAnyType yapionAnyType) {
-        if (serializer != null && !serializer.empty()) {
-            if (serializer instanceof EnumSerializer) {
-                YAPIONObject enumObject = (YAPIONObject) yapionAnyType;
-                String enumType = enumObject.getValue(ENUM_IDENTIFIER, "").get();
-                enumType = typeReMapper.remap(enumType);
-
-                YAPIONObject enumCopyObject = new YAPIONObject();
-                enumCopyObject.add(TYPE_IDENTIFIER, Enum.class.getTypeName());
-                enumCopyObject.add(ENUM_IDENTIFIER, enumType);
-                enumCopyObject.add("value", enumObject.getValue("value", "").get());
-                enumCopyObject.add("ordinal", enumObject.getValue("ordinal", 0).get());
-
-                return serializer.deserialize(new DeserializeData<>(enumCopyObject, contextManager.get(), this));
-            }
-            return serializer.deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this));
-        }
-        return null;
-    }
-
     /**
      * Set the reducedMode for this deserialization.
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0")
     public YAPIONDeserializer reducedMode(boolean reducedMode) {
-        this.reducedMode = reducedMode;
         return this;
+    }
+
+    /**
+     * Returns the flags this serialization should follow.
+     *
+     * @return the serialization flag holder
+     */
+    public YAPIONFlags getYAPIONFlags() {
+        return yapionFlags;
     }
 
     /**
      * Parses the YAPIONObject to the Object.
      */
     public YAPIONDeserializer parse() {
-        return parseObject(yapionObject);
+        if (serializingType instanceof YAPIONObject) {
+            return parseObject((YAPIONObject) serializingType);
+        } else {
+            object = parse((YAPIONArray) serializingType);
+            return this;
+        }
     }
 
     /**
@@ -409,7 +362,7 @@ public final class YAPIONDeserializer {
      * @return Object from the YAPIONObject to deserialize
      */
     public Object getObjectOrException() {
-        if (object == null) throw new YAPIONSerializerException();
+        if (object == null) throw new YAPIONDeserializerException("Deserialization yielded a null object");
         return object;
     }
 
@@ -421,5 +374,4 @@ public final class YAPIONDeserializer {
     public DeserializeResult getDeserializeResult() {
         return deserializeResult;
     }
-
 }

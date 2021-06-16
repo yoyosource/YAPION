@@ -14,8 +14,7 @@
 package yapion.hierarchy.api.groups;
 
 import lombok.NonNull;
-import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.serialize.YAPIONSave;
+import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.ObjectPath;
@@ -29,8 +28,7 @@ import yapion.utils.ReferenceFunction;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-@YAPIONSave(context = "*")
-@YAPIONLoad(context = "*")
+@InternalAPI
 public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectType, ObjectOutput {
 
     // Reference Value System
@@ -68,10 +66,10 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     }
 
     protected long referenceValueProvider(ReferenceFunction referenceFunction) {
-        throw new YAPIONException();
+        throw new YAPIONException("No Reference Value could be calculated");
     }
 
-    public YAPIONAnyType copy() {
+    public YAPIONAnyType internalCopy() {
         return YAPIONParser.parse("{" + toYAPION(new StringOutput()).getResult() + "}").getYAPIONAnyType("");
     }
 
@@ -123,35 +121,6 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
 
     protected final boolean isValuePresent() {
         return valuePresent;
-    }
-
-    // Parse Time
-    private long parseTime = -1;
-
-    public void setParseTime(long time) {
-        if (parseTime != -1) return;
-        this.parseTime = time;
-    }
-
-    /**
-     * @return parseTime in nanoseconds
-     */
-    public final long getParseTime() {
-        return parseTime;
-    }
-
-    /**
-     * @return parseTime in milliseconds as a double
-     */
-    public final double getParseTimeMillis() {
-        return parseTime / 1000000.0;
-    }
-
-    /**
-     * @return parseTime in milliseconds as a long
-     */
-    public final long getParseTimeMillisAsLong() {
-        return (long) (parseTime / 1000000.0);
     }
 
     // Traverse System

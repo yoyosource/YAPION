@@ -13,28 +13,31 @@
 
 package yapion.hierarchy.api;
 
+import lombok.SneakyThrows;
 import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.output.InstantiableOutput;
 
 public interface ObjectOutput {
 
-    StringBuilder indentString = new StringBuilder().append(" ");
-
-    default String indent(int i) {
-        if (i > 4096) {
-            return indentString.toString();
-        }
-        if (i > indentString.length()) {
-            while (indentString.length() < i) {
-                indentString.append(indentString);
-            }
-        }
-        return indentString.substring(0, i);
-    }
-
     <T extends AbstractOutput> T toYAPION(T abstractOutput);
+
+    @SneakyThrows
+    default <T extends AbstractOutput & InstantiableOutput> T toYAPION(Class<T> clazz) {
+        return toYAPION(clazz.newInstance());
+    }
 
     <T extends AbstractOutput> T toJSON(T abstractOutput);
 
+    @SneakyThrows
+    default <T extends AbstractOutput & InstantiableOutput> T toJSON(Class<T> clazz) {
+        return toJSON(clazz.newInstance());
+    }
+
     <T extends AbstractOutput> T toJSONLossy(T abstractOutput);
+
+    @SneakyThrows
+    default <T extends AbstractOutput & InstantiableOutput> T toJSONLossy(Class<T> clazz) {
+        return toJSONLossy(clazz.newInstance());
+    }
 
 }

@@ -13,54 +13,81 @@
 
 package yapion.packet;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import yapion.annotations.DeprecationInfo;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.exceptions.YAPIONException;
-import yapion.exceptions.utils.YAPIONPacketException;
+import yapion.annotations.api.DeprecationInfo;
+import yapion.annotations.api.InternalAPI;
+import yapion.utils.IdentifierUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
-@YAPIONLoadExclude(context = "*")
-@YAPIONSaveExclude(context = "*")
 @Slf4j
 public class YAPIONPacketReceiver {
 
     private final Map<String, YAPIONPacketHandler> handlerMap = new HashMap<>();
 
-    private static final String ERROR_HANDLER = "@error";
-    private static final String EXCEPTION_HANDLER = "@exception";
-    private static final String UNKNOWN_PACKET_HANDLER = "@unknown";
-    private static final String DROP_HANDLER = "@drop";
-    private static final String DESERIALIZE_EXCEPTION_HANDLER = "@deserialize";
-    private static final String HANDLE_FAILED_HANDLER = "@handle";
-    private static final String HEART_BEAT_HANDLER = "@heartbeat";
-    private static final String LOST_HEART_BEAT_HANDLER = "@lost_heartbeat";
+    @RequiredArgsConstructor
+    public enum Handler {
+
+        /**
+         * Used when any {@link Handler} except {@link #HEART_BEAT} or {@link #LOST_HEART_BEAT} threw an exception.
+         */
+        ERROR("@error", null),
+
+        /**
+         * Used when any user handlers threw an exception.
+         */
+        EXCEPTION("@exception", ERROR),
+
+        /**
+         * Used when a packet has an unknown {@link IdentifierUtils#TYPE_IDENTIFIER}.
+         */
+        UNKNOWN_PACKET("@unknown", ERROR),
+
+        /**
+         * Used when some data was dropped.
+         */
+        DROP("@drop", ERROR),
+
+        /**
+         * Used when deserialization to an YAPIONPacket failed with an exception.
+         */
+        DESERIALIZE_EXCEPTION("@deserialize", ERROR),
+
+        /**
+         * Used when anything while checking the incoming data failed.
+         */
+        HANDLE_FAILED("@handle", ERROR),
+
+        /**
+         * Used when an heartbeat packet arrived.
+         */
+        HEART_BEAT("@heartbeat", EXCEPTION),
+
+        /**
+         * Used when the heartbeat packet was not received in the given amount of time.
+         */
+        LOST_HEART_BEAT("@lost_heartbeat", EXCEPTION),
+
+        @InternalAPI
+        USER("", EXCEPTION);
+
+        private static final Handler[] HANDLERS = values();
+
+        private final String identifier;
+        private final Handler onException;
+    }
 
     /**
      * Creates an YAPIONPacketReceiver
      */
     public YAPIONPacketReceiver() {
-        handlerMap.put(ERROR_HANDLER, yapionPacket -> {
-        });
-        handlerMap.put(EXCEPTION_HANDLER, yapionPacket -> {
-        });
-        handlerMap.put(UNKNOWN_PACKET_HANDLER, yapionPacket -> {
-        });
-        handlerMap.put(DROP_HANDLER, yapionPacket -> {
-        });
-        handlerMap.put(DESERIALIZE_EXCEPTION_HANDLER, yapionPacket -> {
-        });
-        handlerMap.put(HANDLE_FAILED_HANDLER, yapionPacket -> {
-        });
-        handlerMap.put(HEART_BEAT_HANDLER, yapionPacket -> {
-        });
-        handlerMap.put(LOST_HEART_BEAT_HANDLER, yapionPacket -> {
-        });
+        for (Handler handler : Handler.HANDLERS) {
+            handlerMap.put(handler.identifier, yapionPacket -> {});
+        }
     }
 
     /**
@@ -71,10 +98,7 @@ public class YAPIONPacketReceiver {
      * @param packetType the packet to handle
      * @param yapionPacketHandler the handler which handles the specified packet
      */
-    public YAPIONPacketReceiver add(Class<? extends YAPIONPacket> packetType, YAPIONPacketHandler yapionPacketHandler) {
-        if (yapionPacketHandler == null || packetType == null) {
-            throw new YAPIONPacketException();
-        }
+    public YAPIONPacketReceiver add(@NonNull Class<? extends YAPIONPacket> packetType, @NonNull YAPIONPacketHandler yapionPacketHandler) {
         handlerMap.put(packetType.getTypeName(), yapionPacketHandler);
         return this;
     }
@@ -92,10 +116,7 @@ public class YAPIONPacketReceiver {
      */
     @Deprecated
     @DeprecationInfo(since = "0.25.0")
-    public YAPIONPacketReceiver add(Class<? extends YAPIONPacket>[] packetTypes, YAPIONPacketHandler yapionPacketHandler) {
-        if (packetTypes == null) {
-            throw new YAPIONPacketException();
-        }
+    public YAPIONPacketReceiver add(@NonNull Class<? extends YAPIONPacket>[] packetTypes, YAPIONPacketHandler yapionPacketHandler) {
         for (Class<? extends YAPIONPacket> s : packetTypes) {
             if (s == null) continue;
             add(s, yapionPacketHandler);
@@ -106,7 +127,7 @@ public class YAPIONPacketReceiver {
     /**
      * A wrapper function to {@link #add(Class, YAPIONPacketHandler)}
      */
-    public YAPIONPacketReceiver add(YAPIONPacketHandler yapionPacketHandler, Class<? extends YAPIONPacket> packetType) {
+    public YAPIONPacketReceiver add(@NonNull YAPIONPacketHandler yapionPacketHandler, @NonNull Class<? extends YAPIONPacket> packetType) {
         return add(packetType, yapionPacketHandler);
     }
 
@@ -122,106 +143,15 @@ public class YAPIONPacketReceiver {
     }
 
     /**
-     * Set the Exception {@link YAPIONPacketHandler} to do something when an exception gets thrown.
+     * Set the SpecialHandler {@link YAPIONPacketHandler} to do something.
      *
      * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
      */
-    public YAPIONPacketReceiver setExceptionHandler(YAPIONPacketHandler yapionPacketHandler) {
-        if (yapionPacketHandler == null) {
-            throw new YAPIONException();
+    public YAPIONPacketReceiver setHandler(@NonNull Handler handler, @NonNull YAPIONPacketHandler yapionPacketHandler) {
+        if (handler == Handler.USER) {
+            throw new SecurityException();
         }
-        handlerMap.put(EXCEPTION_HANDLER, yapionPacketHandler);
-        return this;
-    }
-
-    /**
-     * Set the Unknown {@link YAPIONPacketHandler} to do something when an unknown packet was handled occurred.
-     *
-     * @param yapionPacketHandler
-     */
-    public YAPIONPacketReceiver setUnknownHandler(YAPIONPacketHandler yapionPacketHandler) {
-        if (yapionPacketHandler == null) {
-            throw new YAPIONException();
-        }
-        handlerMap.put(UNKNOWN_PACKET_HANDLER, yapionPacketHandler);
-        return this;
-    }
-
-    /**
-     * Set the Drop {@link YAPIONPacketHandler} to do something when a data drop occurred.
-     *
-     * @param yapionPacketHandler
-     */
-    public YAPIONPacketReceiver setDropHandler(YAPIONPacketHandler yapionPacketHandler) {
-        if (yapionPacketHandler == null) {
-            throw new YAPIONException();
-        }
-        handlerMap.put(DROP_HANDLER, yapionPacketHandler);
-        return this;
-    }
-
-    /**
-     * Set the Deserialization Exception {@link YAPIONPacketHandler} to do something when a deserialization exception occurred.
-     *
-     * @param yapionPacketHandler
-     */
-    public YAPIONPacketReceiver setDeserializationExceptionHandler(YAPIONPacketHandler yapionPacketHandler) {
-        if (yapionPacketHandler == null) {
-            throw new YAPIONException();
-        }
-        handlerMap.put(DESERIALIZE_EXCEPTION_HANDLER, yapionPacketHandler);
-        return this;
-    }
-
-    /**
-     * Set the HandleFailed {@link YAPIONPacketHandler} to do something when the internal {@link YAPIONPacketStream}.handle() failed.
-     *
-     * @param yapionPacketHandler
-     */
-    public YAPIONPacketReceiver setHandleFailedHandler(YAPIONPacketHandler yapionPacketHandler) {
-        if (yapionPacketHandler == null) {
-            throw new YAPIONException();
-        }
-        handlerMap.put(HANDLE_FAILED_HANDLER, yapionPacketHandler);
-        return this;
-    }
-
-    /**
-     * Set the Error {@link YAPIONPacketHandler} to do something when an error occurred.
-     *
-     * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
-     */
-    public YAPIONPacketReceiver setErrorHandler(YAPIONPacketHandler yapionPacketHandler) {
-        if (yapionPacketHandler == null) {
-            throw new YAPIONException();
-        }
-        handlerMap.put(ERROR_HANDLER, yapionPacketHandler);
-        return this;
-    }
-
-    /**
-     * Set the Heartbeat {@link YAPIONPacketHandler} to do something when a heartbeat occurred.
-     *
-     * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
-     */
-    public YAPIONPacketReceiver setHeartBeatHandler(YAPIONPacketHandler yapionPacketHandler) {
-        if (yapionPacketHandler == null) {
-            throw new YAPIONException();
-        }
-        handlerMap.put(HEART_BEAT_HANDLER, yapionPacketHandler);
-        return this;
-    }
-
-    /**
-     * Set the Lost Heartbeat {@link YAPIONPacketHandler} to do something when the heartbeat did not occur.
-     *
-     * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
-     */
-    public YAPIONPacketReceiver setLostHeartBeatHandler(YAPIONPacketHandler yapionPacketHandler) {
-        if (yapionPacketHandler == null) {
-            throw new YAPIONException();
-        }
-        handlerMap.put(LOST_HEART_BEAT_HANDLER, yapionPacketHandler);
+        handlerMap.put(handler.identifier, yapionPacketHandler);
         return this;
     }
 
@@ -234,21 +164,21 @@ public class YAPIONPacketReceiver {
      *
      * @param yapionPacket to handle
      */
-    public void handle(YAPIONPacket yapionPacket) {
+    public void handle(@NonNull YAPIONPacket yapionPacket) {
         String type = yapionPacket.getType();
         if (!handlerMap.containsKey(type)) {
-            handleUnknown(yapionPacket);
+            handle(yapionPacket, Handler.UNKNOWN_PACKET);
             return;
         }
-        handlePacket(yapionPacket, type, handlerMap.get(type), this::handleException);
+        handlePacket(yapionPacket, handlerMap.get(type), Handler.USER);
     }
 
-    private void handlePacket(YAPIONPacket yapionPacket, String type, YAPIONPacketHandler handler, Consumer<YAPIONPacket> yapionPacketConsumer) {
+    private void handlePacket(YAPIONPacket yapionPacket, YAPIONPacketHandler handler, Handler onExceptionHandler) {
         Runnable runnable = () -> {
             try {
                 handler.handlePacket(yapionPacket);
             } catch (Exception e) {
-                log.warn(String.format("The packet handler with type '%s' threw an exception.", type), e.getCause());
+                log.warn(String.format("Current packet handler executing type '%s' threw an exception. Current handler is %s.", yapionPacket.getType(), onExceptionHandler.name()), e.getCause());
                 yapionPacket.setException(e);
                 if (handler.closeOnException() && yapionPacket.getYAPIONPacketStream() != null) {
                     try {
@@ -258,12 +188,18 @@ public class YAPIONPacketReceiver {
                     }
                     return;
                 }
-                if (!handler.ignoreException()) yapionPacketConsumer.accept(yapionPacket);
+                if (handler.ignoreException()) {
+                    return;
+                }
+                if (onExceptionHandler.onException == null) {
+                    throw new SecurityException(yapionPacket.getException().getMessage(), yapionPacket.getException());
+                }
+                handlePacket(yapionPacket, handlerMap.get(onExceptionHandler.onException.identifier), onExceptionHandler.onException);
             }
         };
         if (handler.runThread()) {
             Thread thread = new Thread(runnable);
-            thread.setName("Packet handler Thread (" + type + ")");
+            thread.setName("Packet handler Thread (" + yapionPacket.getType() + ")");
             thread.setDaemon(handler.daemonThread());
             thread.start();
         } else {
@@ -271,38 +207,8 @@ public class YAPIONPacketReceiver {
         }
     }
 
-    void handleHeartBeat(YAPIONPacket yapionPacket) {
-        handlePacket(yapionPacket, HEART_BEAT_HANDLER, handlerMap.get(HEART_BEAT_HANDLER), this::handleException);
-    }
-
-    void handleLostHeartBeat(YAPIONPacket yapionPacket) {
-        handlePacket(yapionPacket, LOST_HEART_BEAT_HANDLER, handlerMap.get(LOST_HEART_BEAT_HANDLER), this::handleException);
-    }
-
-    void handleDrop(YAPIONPacket yapionPacket) {
-        handlePacket(yapionPacket, DROP_HANDLER, handlerMap.get(DROP_HANDLER), this::handleError);
-    }
-
-    void handleDeserializationException(YAPIONPacket yapionPacket) {
-        handlePacket(yapionPacket, DESERIALIZE_EXCEPTION_HANDLER, handlerMap.get(DESERIALIZE_EXCEPTION_HANDLER), this::handleError);
-    }
-
-    void handleHandleFailed(YAPIONPacket yapionPacket) {
-        handlePacket(yapionPacket, HANDLE_FAILED_HANDLER, handlerMap.get(HANDLE_FAILED_HANDLER), this::handleError);
-    }
-
-    private void handleUnknown(YAPIONPacket yapionPacket) {
-        handlePacket(yapionPacket, UNKNOWN_PACKET_HANDLER, handlerMap.get(UNKNOWN_PACKET_HANDLER), this::handleError);
-    }
-
-    private void handleException(YAPIONPacket yapionPacket) {
-        handlePacket(yapionPacket, EXCEPTION_HANDLER, handlerMap.get(EXCEPTION_HANDLER), this::handleError);
-    }
-
-    private void handleError(YAPIONPacket yapionPacket) {
-        handlePacket(yapionPacket, ERROR_HANDLER, handlerMap.get(ERROR_HANDLER), packet -> {
-            throw new SecurityException(packet.getException().getMessage(), packet.getException());
-        });
+    void handle(YAPIONPacket yapionPacket, Handler handler) {
+        handlePacket(yapionPacket, handlerMap.get(handler.identifier), handler);
     }
 
 }

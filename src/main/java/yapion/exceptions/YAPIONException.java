@@ -15,10 +15,6 @@ package yapion.exceptions;
 
 public class YAPIONException extends RuntimeException {
 
-    public YAPIONException() {
-        super();
-    }
-
     public YAPIONException(String message) {
         super(message);
     }

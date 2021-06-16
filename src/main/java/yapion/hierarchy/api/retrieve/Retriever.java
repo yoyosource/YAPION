@@ -16,6 +16,7 @@ package yapion.hierarchy.api.retrieve;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
+import yapion.hierarchy.api.internal.InternalRetrieve;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.function.Consumer;
 public class Retriever<K> {
 
     private Query<YAPIONDataType<?, K>, ?>[] suppliers;
-    private ObjectRetrieve<K> objectRetrieve;
+    private InternalRetrieve<K> objectRetrieve;
 
     Retriever(Query<YAPIONDataType<?, K>, ?>[] suppliers, ObjectRetrieve<K> objectRetrieve) {
         this.suppliers = suppliers;

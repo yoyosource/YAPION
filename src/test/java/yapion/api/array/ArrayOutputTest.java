@@ -15,7 +15,6 @@ package yapion.api.array;
 
 import org.junit.Test;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.output.StringPrettifiedOutput;
 import yapion.hierarchy.types.YAPIONArray;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,32 +39,32 @@ public class ArrayOutputTest {
 
     @Test
     public void testPrettifiedYAPION() {
-        assertThat(new YAPIONArray().toYAPION(new StringPrettifiedOutput()).getResult(), is("[]"));
+        assertThat(new YAPIONArray().toYAPION(new StringOutput(true)).getResult(), is("[]"));
     }
 
     @Test
     public void testPrettifiedJSON() {
-        assertThat(new YAPIONArray().toJSON(new StringPrettifiedOutput()).getResult(), is("[]"));
+        assertThat(new YAPIONArray().toJSON(new StringOutput(true)).getResult(), is("[]"));
     }
 
     @Test
     public void testPrettifiedLossyJSON() {
-        assertThat(new YAPIONArray().toJSONLossy(new StringPrettifiedOutput()).getResult(), is("[]"));
+        assertThat(new YAPIONArray().toJSONLossy(new StringOutput(true)).getResult(), is("[]"));
     }
 
     @Test
     public void testPrettifiedYAPIONDepth() {
-        assertThat(new YAPIONArray().add(new YAPIONArray()).toYAPION(new StringPrettifiedOutput()).getResult(), is("[\n  []\n]"));
+        assertThat(new YAPIONArray().add(new YAPIONArray()).toYAPION(new StringOutput(true)).getResult(), is("[\n  []\n]"));
     }
 
     @Test
     public void testPrettifiedJSONDepth() {
-        assertThat(new YAPIONArray().add(new YAPIONArray()).toJSON(new StringPrettifiedOutput()).getResult(), is("[\n  []\n]"));
+        assertThat(new YAPIONArray().add(new YAPIONArray()).toJSON(new StringOutput(true)).getResult(), is("[\n  []\n]"));
     }
 
     @Test
     public void testPrettifiedLossyJSONDepth() {
-        assertThat(new YAPIONArray().add(new YAPIONArray()).toJSONLossy(new StringPrettifiedOutput()).getResult(), is("[\n  []\n]"));
+        assertThat(new YAPIONArray().add(new YAPIONArray()).toJSONLossy(new StringOutput(true)).getResult(), is("[\n  []\n]"));
     }
 
 }

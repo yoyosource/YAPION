@@ -16,6 +16,7 @@ package yapion.serializing;
 import org.junit.Test;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONTestObjects.Cascading;
 import yapion.serializing.YAPIONTestObjects.NonCascading;
 import yapion.serializing.YAPIONTestObjects.NonSaved;

@@ -14,22 +14,37 @@
 package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.ToString;
+import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.serializing.SerializeManager;
-import yapion.serializing.YAPIONDeserializer;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.*;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
 
 @RequiredArgsConstructor
+@ToString
 public class DeserializeData<T extends YAPIONAnyType> {
 
     public final T object;
     public final String context;
+
+    @ToString.Exclude
     private final YAPIONDeserializer yapionDeserializer;
+    public final TypeReMapper typeReMapper;
 
     public <R extends YAPIONAnyType> DeserializeData<R> clone(R object) {
-        return new DeserializeData<>(object, context, yapionDeserializer);
+        return new DeserializeData<>(object, context, yapionDeserializer, typeReMapper);
+    }
+
+    public boolean deserialize(String fieldName, Object object) {
+        return deserialize(fieldName, object, ((YAPIONObject) this.object).internalGetYAPIONAnyType(fieldName));
+    }
+
+    public boolean deserialize(Object object, Field field) {
+        return setField(field, object, deserialize(((YAPIONObject) object).getYAPIONAnyType(field.getName())));
     }
 
     public boolean deserialize(String fieldName, Object object, YAPIONAnyType yapionAnyType) {
@@ -37,8 +52,13 @@ public class DeserializeData<T extends YAPIONAnyType> {
         return setField(field, object, deserialize(yapionAnyType));
     }
 
-    public Object deserialize(YAPIONAnyType yapionAnyType) {
-        return yapionDeserializer.parse(yapionAnyType);
+    public <T> T deserialize(String name) {
+        return (T) yapionDeserializer.parse(((YAPIONObject) object).getYAPIONAnyType(name));
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T deserialize(YAPIONAnyType yapionAnyType) {
+        return (T) yapionDeserializer.parse(yapionAnyType);
     }
 
     public boolean hasFactory(Class<?> clazz) {
@@ -54,6 +74,14 @@ public class DeserializeData<T extends YAPIONAnyType> {
         return (T) SerializeManager.getObjectInstance(clazz);
     }
 
+    @SneakyThrows
+    public <T> T getInstanceByFactoryOrObjenesis(Class<T> clazz) {
+        if (hasFactory(clazz)) {
+            return getInstance(clazz);
+        }
+        return (T) ReflectionsUtils.constructObjectObjenesis(clazz);
+    }
+
     public boolean setField(String fieldName, Object object, Object objectToSet) {
         Field field = ReflectionsUtils.getField(object.getClass(), fieldName);
         return setField(field, object, objectToSet);
@@ -62,13 +90,35 @@ public class DeserializeData<T extends YAPIONAnyType> {
     @SuppressWarnings({"java:S3011"})
     private boolean setField(Field field, Object object, Object objectToSet) {
         if (field == null) return false;
-        try {
-            field.setAccessible(true);
-            field.set(object, objectToSet);
-            return true;
-        } catch (IllegalAccessException e) {
-            return false;
+        SerializeManager.getReflectionStrategy().set(field, object, objectToSet);
+        return true;
+    }
+
+    public String getArrayType() {
+        return yapionDeserializer.getArrayType();
+    }
+
+    public YAPIONFlags getYAPIONFlags() {
+        return yapionDeserializer.getYAPIONFlags();
+    }
+
+    public void isSet(YAPIONFlag key, Runnable allowed) {
+        isSet(key, allowed, () -> {});
+    }
+
+    public void isSet(YAPIONFlag key, Runnable allowed, Runnable disallowed) {
+        boolean b = yapionDeserializer.getYAPIONFlags().isSet(key);
+        if (b) {
+            allowed.run();
+        } else {
+            disallowed.run();
         }
+    }
+
+    public void signalDataLoss() {
+        isSet(YAPIONFlag.DATA_LOSS_EXCEPTION, () -> {
+            throw new YAPIONDataLossException("Some data would be discarded by serialization");
+        });
     }
 
 }

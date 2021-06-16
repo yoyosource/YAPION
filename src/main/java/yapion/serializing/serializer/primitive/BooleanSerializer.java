@@ -18,19 +18,19 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
 @SerializerImplementation(since = "0.11.0")
 public class BooleanSerializer implements InternalSerializer<Boolean> {
 
     @Override
-    public String type() {
-        return "java.lang.Boolean";
+    public Class<?> type() {
+        return Boolean.class;
     }
 
     @Override
-    public String primitiveType() {
-        return "boolean";
+    public Class<?> primitiveType() {
+        return boolean.class;
     }
 
     @Override

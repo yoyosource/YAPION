@@ -13,12 +13,12 @@
 
 package yapion.serializing.serializer.object.security.internal.ec;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.math.BigInteger;
 import java.security.spec.ECFieldF2m;
@@ -29,8 +29,8 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class ECFieldF2mSerializer implements InternalSerializer<ECFieldF2m> {
 
     @Override
-    public String type() {
-        return "java.security.spec.ECFieldF2m";
+    public Class<?> type() {
+        return ECFieldF2m.class;
     }
 
     @Override

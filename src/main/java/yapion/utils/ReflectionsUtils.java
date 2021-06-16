@@ -14,52 +14,45 @@
 package yapion.utils;
 
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.objenesis.ObjenesisBase;
 import org.objenesis.strategy.StdInstantiatorStrategy;
-import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.api.InternalAPI;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONObjenesis;
-import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.exceptions.utils.YAPIONReflectionInvocationException;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
+import yapion.serializing.SerializeManager;
+import yapion.serializing.TypeReMapper;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.Function;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @Slf4j
+@UtilityClass
 public class ReflectionsUtils {
 
-    private ReflectionsUtils() {
-        throw new IllegalStateException("Utility class");
-    }
+    private static final ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), true);
 
-    private static final ObjenesisBase objenesisBase = new ObjenesisBase(new StdInstantiatorStrategy(), false);
-
-    private static int cacheSize = 100;
     private static final Map<Class<?>, FieldCache> fieldCacheMap = new LinkedHashMap<Class<?>, FieldCache>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<Class<?>, FieldCache> eldest) {
-            return size() > cacheSize;
+            return size() > 256;
         }
     };
 
-    /**
-     * Set the cache size of the internal cache to a specific
-     * number above 100. If you set a number below 100 it will
-     * default to 100.
-     *
-     * @param cacheSize the cache Size
-     */
-    public static void setCacheSize(int cacheSize) {
-        if (cacheSize < 100) {
-            cacheSize = 100;
-        }
-        ReflectionsUtils.cacheSize = cacheSize;
+    private static final Map<Class<?>, Function<YAPIONObject, ?>> SPECIAL_CREATOR = new HashMap<>();
+
+    @InternalAPI
+    public static <T> void addSpecialCreator(Class<T> clazz, Function<YAPIONObject, T> creator) {
+        SPECIAL_CREATOR.put(clazz, creator);
     }
 
     /**
@@ -177,8 +170,6 @@ public class ReflectionsUtils {
         return MethodReturnValue.of(returnValue);
     }
 
-    @YAPIONSaveExclude(context = "*")
-    @YAPIONLoadExclude(context = "*")
     public static class Parameter {
 
         private final Class<?> clazz;
@@ -250,10 +241,45 @@ public class ReflectionsUtils {
      * @return an instance of the specified class
      */
     public static Object constructObject(YAPIONObject yapionObject, InternalSerializer<?> internalSerializer, boolean data) {
-        if (!yapionObject.hasValue(TYPE_IDENTIFIER, String.class)) {
+        return constructObject(yapionObject, internalSerializer, data, null);
+    }
+
+    /**
+     * Construct an Object instance from a given yapionObject.
+     * By using the {@link ObjenesisBase}, only with {@link YAPIONData}
+     * or {@link YAPIONObjenesis} or a NoArgument constructor.
+     *
+     * @param yapionObject the class to create an instance from
+     * @param internalSerializer the internalSerializer using it
+     * @param data branch to {@link #constructObjectObjenesis(String)}
+     * @return an instance of the specified class
+     */
+    public static Object constructObject(YAPIONObject yapionObject, InternalSerializer<?> internalSerializer, boolean data, TypeReMapper typeReMapper) {
+        if (!yapionObject.containsKey(TYPE_IDENTIFIER, String.class)) {
             throw new YAPIONReflectionException("YAPIONObject does not contain value for key '" + TYPE_IDENTIFIER + "'");
         }
         String type = yapionObject.getPlainValue(TYPE_IDENTIFIER);
+        if (typeReMapper != null) {
+            type = typeReMapper.remap(type);
+        }
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName(type);
+        } catch (ClassNotFoundException e) {
+            throw new YAPIONException(e.getMessage(), e);
+        }
+        for (Map.Entry<Class<?>, Function<YAPIONObject, ?>> entry : SPECIAL_CREATOR.entrySet()) {
+            if (entry.getKey().isAssignableFrom(clazz)) {
+                return entry.getValue().apply(yapionObject);
+            }
+        }
+        if (SerializeManager.hasFactory(clazz)) {
+            try {
+                return SerializeManager.getObjectInstance(clazz);
+            } catch (ClassNotFoundException e) {
+                throw new YAPIONException(e.getMessage(), e);
+            }
+        }
         if (internalSerializer.interfaceType() != null && internalSerializer.defaultImplementation() != null && internalSerializer.interfaceType().getTypeName().equals(type)) {
             type = internalSerializer.defaultImplementation().getTypeName();
         }
@@ -305,14 +331,6 @@ public class ReflectionsUtils {
         }
     }
 
-    public static boolean isClassSuperclassOf(@NonNull String toCheck, @NonNull Class<?> superClass) {
-        try {
-            return isClassSuperclassOf(Class.forName(toCheck), superClass);
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
     public static boolean isClassSuperclassOf(@NonNull Class<?> toCheck, @NonNull Class<?> superClass) {
         if (toCheck == superClass) return true;
         Class<?> superClassToCheck = toCheck.getSuperclass();
@@ -322,15 +340,7 @@ public class ReflectionsUtils {
         return isClassSuperclassOf(superClassToCheck, superClass);
     }
 
-    public static int implementsInterface(String type, Class<?> interfaceClass) {
-        try {
-            return implementsInterface(Class.forName(type), interfaceClass);
-        } catch (ClassNotFoundException e) {
-            return -1;
-        }
-    }
-
-    public static int implementsInterface(Class<?> toCheck, Class<?> interfaceClass) {
+    public static int implementsInterface(@NonNull Class<?> toCheck, @NonNull Class<?> interfaceClass) {
         if (!interfaceClass.isAssignableFrom(toCheck)) return -1;
         Set<Class<?>> classesToCheck = new HashSet<>();
         classesToCheck.add(toCheck);
@@ -390,27 +400,6 @@ public class ReflectionsUtils {
 
     public static List<Field> getFields(Class<?> clazz) {
         return getFieldCache(clazz).fields();
-    }
-
-    @SuppressWarnings({"java:S3011"})
-    public static Object getValueOfField(Field field, Object object) {
-        try {
-            field.setAccessible(true);
-            return field.get(object);
-        } catch (IllegalAccessException e) {
-            return null;
-        }
-    }
-
-    @SuppressWarnings({"java:S3011"})
-    public static boolean setValueOfField(Field field, Object object, Object value) {
-        try {
-            field.setAccessible(true);
-            field.set(object, value);
-            return true;
-        } catch (IllegalAccessException e) {
-            return false;
-        }
     }
 
     public static Field getField(Class<?> clazz, String name) {

@@ -13,11 +13,9 @@
 
 package yapion.exceptions.utils;
 
-import yapion.exceptions.YAPIONException;
-
 import java.lang.reflect.InvocationTargetException;
 
-public class YAPIONReflectionInvocationException extends YAPIONException {
+public class YAPIONReflectionInvocationException extends YAPIONReflectionException {
 
     private final Throwable target;
 

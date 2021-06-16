@@ -13,8 +13,11 @@
 
 package yapion.hierarchy.validators;
 
+import yapion.annotations.api.DeprecationInfo;
 import yapion.hierarchy.types.YAPIONValue;
 
+@Deprecated
+@DeprecationInfo(since = "0.25.3")
 @FunctionalInterface
 public interface Validation {
 
@@ -28,3 +31,4 @@ public interface Validation {
     boolean validate(Object o);
 
 }
+

@@ -18,7 +18,7 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
 import java.math.BigDecimal;
 
@@ -26,8 +26,8 @@ import java.math.BigDecimal;
 public class BigDecimalSerializer implements InternalSerializer<BigDecimal> {
 
     @Override
-    public String type() {
-        return "java.math.BigDecimal";
+    public Class<?> type() {
+        return BigDecimal.class;
     }
 
     @Override

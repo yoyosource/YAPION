@@ -13,11 +13,14 @@
 
 package yapion.hierarchy.validators;
 
+import yapion.annotations.api.DeprecationInfo;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.packet.YAPIONPacket;
 
 import java.util.List;
 
+@Deprecated
+@DeprecationInfo(since = "0.25.3")
 @FunctionalInterface
 public interface ValidationHook {
 

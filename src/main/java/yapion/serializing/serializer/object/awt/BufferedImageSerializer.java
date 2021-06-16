@@ -13,31 +13,28 @@
 
 package yapion.serializing.serializer.object.awt;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.20.0")
 public class BufferedImageSerializer implements InternalSerializer<BufferedImage> {
 
     @Override
-    public String type() {
-        return "java.awt.image.BufferedImage";
+    public Class<?> type() {
+        return BufferedImage.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<BufferedImage> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("height", serializeData.serialize(serializeData.object.getHeight()));
         yapionObject.add("width", serializeData.serialize(serializeData.object.getWidth()));
         yapionObject.add("type", serializeData.object.getType());

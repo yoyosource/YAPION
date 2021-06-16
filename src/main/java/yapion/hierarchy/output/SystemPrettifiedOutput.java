@@ -13,14 +13,14 @@
 
 package yapion.hierarchy.output;
 
-import yapion.annotations.DeprecationInfo;
+import yapion.annotations.api.DeprecationInfo;
 
 @Deprecated
 @DeprecationInfo(since = "0.25.0", alternative = "SystemOutput#(boolean)")
 public class SystemPrettifiedOutput extends SystemOutput {
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return true;
     }
 

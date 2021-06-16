@@ -24,26 +24,51 @@ public class JSONParserTest {
 
     @Test
     public void testParseObject() {
-        YAPIONObject yapionObject = YAPIONParser.parseJSON("{}");
+        YAPIONObject yapionObject = YAPIONParser.parse("{}");
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{}"));
     }
 
     @Test
     public void testParseObjectValue() {
-        YAPIONObject yapionObject = YAPIONParser.parseJSON("{\"test\":{}}");
+        YAPIONObject yapionObject = YAPIONParser.parse("{\"test\":{}}");
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{test{}}"));
     }
 
     @Test
     public void testParseArray() {
-        YAPIONObject yapionObject = YAPIONParser.parseJSON("{\"test\":[]}");
+        YAPIONObject yapionObject = YAPIONParser.parse("{\"test\":[]}");
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{test[]}"));
     }
 
     @Test
     public void testParseMap() {
-        YAPIONObject yapionObject = YAPIONParser.parseJSON("{\"test\":{\"@mapping\":[]}}");
+        YAPIONObject yapionObject = YAPIONParser.parse("{\"test\":{\"@mapping\":[]}}");
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{test{@mapping[]}}"));
+    }
+
+    @Test
+    public void testJSONStartEnd() {
+        assertThat(YAPIONParser.parse("\"hello\": \"\"").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
+    }
+
+    @Test
+    public void testJSONValueWithComa() {
+        assertThat(YAPIONParser.parse("{\n" +
+                "\t\"text\": \"ipse amor, admisso sequitur vestigia passu.\",\n" +
+                "\t\"author\": \"Ovid\"\n" +
+                "}").toYAPION(new StringOutput()).getResult(), is("{text(ipse amor, admisso sequitur vestigia passu.)author(Ovid)}"));
+    }
+
+    @Test
+    public void testJSONParseWithEscapes() {
+        assertThat(YAPIONParser.parse("{\"test\":\"\\\"Fer pater\\\", inquit, \\\"opem! tellus\\\", ait, \\\"hisce vel istam,\"}").toYAPION(new StringOutput()).getResult(), is("{test(\"Fer pater\", inquit, \"opem! tellus\", ait, \"hisce vel istam,)}"));
+    }
+
+    @Test
+    public void testNullValue() {
+        assertThat(YAPIONParser.parse("{\n" +
+                "\t\"text\": true\n" +
+                "}").toYAPION(new StringOutput()).getResult(), is("{text(true)}"));
     }
 
 }

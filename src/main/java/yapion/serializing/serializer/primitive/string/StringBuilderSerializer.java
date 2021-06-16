@@ -18,7 +18,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
+import yapion.annotations.api.SerializerImplementation;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -26,14 +26,13 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 public class StringBuilderSerializer implements InternalSerializer<StringBuilder> {
 
     @Override
-    public String type() {
-        return "java.lang.StringBuilder";
+    public Class<?> type() {
+        return StringBuilder.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<StringBuilder> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("string", serializeData.object.toString());
         return yapionObject;
     }
@@ -41,7 +40,7 @@ public class StringBuilderSerializer implements InternalSerializer<StringBuilder
     @Override
     public StringBuilder deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        return new StringBuilder().append(yapionObject.getValue("string", "").get());
+        return new StringBuilder(yapionObject.getPlainValue("string"));
     }
 
 }

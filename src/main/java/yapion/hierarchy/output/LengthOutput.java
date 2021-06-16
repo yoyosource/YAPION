@@ -15,7 +15,7 @@ package yapion.hierarchy.output;
 
 import lombok.Getter;
 
-public class LengthOutput extends AbstractOutput {
+public class LengthOutput extends AbstractOutput implements InstantiableOutput {
 
     @Getter
     private long length = 0;
@@ -37,7 +37,7 @@ public class LengthOutput extends AbstractOutput {
     }
 
     @Override
-    protected boolean prettified() {
+    public boolean prettified() {
         return true;
     }
 

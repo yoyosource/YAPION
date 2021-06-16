@@ -15,7 +15,6 @@ package yapion.serializing.api;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
-import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.data.DeserializeData;
@@ -75,13 +74,5 @@ public abstract class SerializerMap<T extends Map<?, ?>> extends SerializerBase<
      * @return the deserialized version of the inputted {@link YAPIONMap}
      */
     public abstract T deserialize(DeserializeData<YAPIONMap> deserializeData);
-
-    /**
-     * Add this ListSerializer to the SerializeManager by calling
-     * {@link SerializeManager#add(SerializerBase)}.
-     */
-    public final void add() {
-        SerializeManager.add(this);
-    }
 
 }

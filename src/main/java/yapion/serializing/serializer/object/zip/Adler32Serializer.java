@@ -13,38 +13,35 @@
 
 package yapion.serializing.serializer.object.zip;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.util.zip.Adler32;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.24.0")
 public class Adler32Serializer implements InternalSerializer<Adler32> {
 
     @Override
-    public String type() {
-        return "java.util.zip.Adler32";
+    public Class<?> type() {
+        return Adler32.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Adler32> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
-        yapionObject.add("adler", serializeData.object.getValue());
+        YAPIONObject yapionObject = new YAPIONObject(type());
+        yapionObject.add("adler", serializeData.serializeField("adler"));
         return yapionObject;
     }
 
     @Override
     public Adler32 deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        long adler = ((YAPIONObject) deserializeData.object).getPlainValue("adler");
+        int adler = ((YAPIONObject) deserializeData.object).getPlainValue("adler");
         Adler32 adler32 = new Adler32();
-        deserializeData.setField("adler", adler32, (int) adler);
+        deserializeData.setField("adler", adler32, adler);
         return adler32;
     }
 }

@@ -14,8 +14,6 @@
 package yapion.hierarchy.types;
 
 import lombok.NonNull;
-import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.serialize.YAPIONSave;
 import yapion.exceptions.value.YAPIONPointerException;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
@@ -28,8 +26,6 @@ import java.util.Optional;
 
 import static yapion.utils.IdentifierUtils.POINTER_IDENTIFIER;
 
-@YAPIONSave(context = "*")
-@YAPIONLoad(context = "*")
 public class YAPIONPointer extends YAPIONValueType {
 
     @Override
@@ -79,10 +75,10 @@ public class YAPIONPointer extends YAPIONValueType {
     }
 
     public YAPIONPointer(String pointerID) {
-        if (!pointerID.matches("[0-9A-F]{16}")) {
+        if (!pointerID.matches("[0-9A-Fa-f]{16}")) {
             throw new YAPIONPointerException("Invalid pointer id " + pointerID + " needs to be a HEX number");
         }
-        this.pointerID = Long.parseLong(pointerID, 16);
+        this.pointerID = Long.parseLong(pointerID.toUpperCase(), 16);
     }
 
     public void setYAPIONObject(YAPIONObject yapionObject) {
@@ -131,5 +127,9 @@ public class YAPIONPointer extends YAPIONValueType {
     @Override
     public int hashCode() {
         return Objects.hash(toString());
+    }
+
+    public YAPIONPointer copy() {
+        return (YAPIONPointer) internalCopy();
     }
 }

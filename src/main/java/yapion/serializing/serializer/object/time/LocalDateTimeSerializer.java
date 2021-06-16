@@ -13,30 +13,27 @@
 
 package yapion.serializing.serializer.object.time;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.18.0")
 public class LocalDateTimeSerializer implements InternalSerializer<LocalDateTime> {
 
     @Override
-    public String type() {
-        return "java.time.LocalDateTime";
+    public Class<?> type() {
+        return LocalDateTime.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<LocalDateTime> serializeData) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("year", serializeData.object.getYear());
         yapionObject.add("month", serializeData.serialize(serializeData.object.getMonth()));
         yapionObject.add("dayOfMonth", serializeData.object.getDayOfMonth());

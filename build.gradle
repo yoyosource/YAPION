@@ -8,6 +8,7 @@ plugins {
     // id "org.springframework.boot.auto-configuration"
 
     id 'maven-publish'
+    // id 'org.jetbrains.kotlin.jvm' version '1.5.0'
 }
 
 group 'YAPION'
@@ -31,7 +32,7 @@ targetCompatibility = 1.8
 
 compileJava.options.encoding = 'UTF-8'
 
-mainClassName = 'system.YAPIONMain'
+mainClassName = ''
 
 repositories {
     jcenter()
@@ -51,6 +52,7 @@ dependencies {
     implementation 'org.objenesis:objenesis:3.1'
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
     implementation 'eu.infomas:annotation-detector:3.0.5'
+    // compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     testCompile 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest:2.2'
@@ -63,8 +65,11 @@ dependencies {
 
 processResources {
     from("build/classes/java/main/META-INF/annotations/") {
-        include 'yapion.serializing.serializer.SerializerImplementation'
         into("yapion")
+    }
+
+    from("build/classes/java/main/yapion/yapion.annotations.api.ProcessorImplementation") {
+        into("build/classes/java/main/yapion/META-INF/services/javax.annotation.processing.Processor")
     }
 
     from(rootDir) {
@@ -73,7 +78,31 @@ processResources {
 
         includeEmptyDirs = false
     }
+
+    doLast {
+        File from = new File("${buildDir}/classes/java/main/META-INF/annotations/yapion.annotations.api.ProcessorImplementation")
+        File to = new File("${buildDir}/classes/java/main/META-INF/services/javax.annotation.processing.Processor")
+        to.parentFile.mkdirs()
+        to.createNewFile()
+        for (String s : from.readLines()) {
+            to.write(s + "\n");
+        }
+    }
 }
+
+task processMetaINF {
+    description 'Process META-INF'
+    group "build"
+
+    doLast {
+        File file = new File("${buildDir}/classes/java/main/META-INF/annotations/")
+        for (File f : file.listFiles()) {
+            f.delete()
+        }
+        file.delete()
+    }
+}
+jar.finalizedBy(processMetaINF)
 
 shadowJar {
     manifest {
@@ -87,7 +116,7 @@ sourceSets {
     main {
         java {
             srcDirs = ['src/main/java']
-            exclude 'system/**', 'test/**'
+            exclude 'test/**', '**/*.kt'
         }
         resources {
             exclude '**/*.ebnf', '**/*.xhtml', "**/*.gitkeep"
@@ -293,6 +322,9 @@ task buildProject {
             exclude("${uberJarName}")
         }
         file(libs + "/" + uberJarName).renameTo(file(libs + "/" + jarName))
+
+        long size = file(libs + "/" + jarName).size()
+        println("Size: " + (size / 1024.0) + "kB")
     }
 }
 build.finalizedBy(buildProject)
@@ -306,7 +338,7 @@ task createSerializerMD {
         serializer.write("# Serializer\n")
         String currentGroup = ""
 
-        File file = new File("${buildDir}/classes/java/main/META-INF/annotations/yapion.serializing.serializer.SerializerImplementation")
+        File file = new File("${buildDir}/resources/main/yapion/yapion.annotations.api.SerializerImplementation")
         file.readLines().forEach(new Consumer<String>() {
             @Override
             void accept(String s) {
@@ -335,3 +367,17 @@ task createSerializerMD {
         serializer.append("- (2) not advised to use directly, use either PrivateKey or PublicKey instead\n")
     }
 }
+
+/*
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+*/

@@ -13,19 +13,19 @@
 
 package yapion.serializing.serializer.notserializable.os;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 @SerializerImplementation(since = "0.12.0")
 public class ProcessSerializer implements InternalSerializer<Process> {
 
     @Override
-    public String type() {
-        return "java.lang.Process";
+    public Class<?> type() {
+        return Process.class;
     }
 
     @Override

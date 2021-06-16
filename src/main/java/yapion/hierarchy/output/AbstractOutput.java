@@ -14,37 +14,37 @@
 package yapion.hierarchy.output;
 
 import lombok.Getter;
-import yapion.exceptions.YAPIONException;
+import yapion.annotations.api.InternalAPI;
 
 import java.nio.charset.StandardCharsets;
 
 public abstract class AbstractOutput {
 
     @Getter
-    private Indentator indentator = Indentator.DEFAULT;
+    protected Indentator indentator = Indentator.DEFAULT;
 
-    public final AbstractOutput setIndentator(Indentator indentator) {
+    public void setIndentator(Indentator indentator) {
         this.indentator = indentator;
-        return this;
     }
 
+    public static <T extends AbstractOutput> T setIndentator(T abstractOutput, Indentator indentator) {
+        abstractOutput.indentator = indentator;
+        return abstractOutput;
+    }
+
+    @InternalAPI
     public final AbstractOutput consume(String s) {
-        validateMethodCall();
         internalConsume(s);
         return this;
     }
 
+    @InternalAPI
     public final AbstractOutput consumeIndent(int indentLevel) {
-        validateMethodCall();
-        String s = indentator.indent(indentLevel);
-        if (prettified() && internalConsumePrettified(s)) {
-            internalConsume(s);
-        }
-        return this;
+        return consumePrettified(indentator.indent(indentLevel));
     }
 
+    @InternalAPI
     public final AbstractOutput consumePrettified(String s) {
-        validateMethodCall();
         if (prettified() && internalConsumePrettified(s)) {
             internalConsume(s);
         }
@@ -58,23 +58,12 @@ public abstract class AbstractOutput {
 
     protected abstract void internalConsume(String s);
 
-    protected boolean prettified() {
+    public boolean prettified() {
         return false;
     }
 
     protected final byte[] bytes(String s) {
         return s.getBytes(StandardCharsets.UTF_8);
-    }
-
-    private void validateMethodCall() {
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        if (stackTraceElements.length < 4) {
-            throw new YAPIONException("Invalid calling class");
-        }
-        if (stackTraceElements[3].getClassName().startsWith("yapion.hierarchy.types.YAPION")) {
-            return;
-        }
-        throw new YAPIONException("Invalid calling class");
     }
 
 }

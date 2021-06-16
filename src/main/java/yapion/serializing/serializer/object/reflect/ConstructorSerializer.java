@@ -13,49 +13,39 @@
 
 package yapion.serializing.serializer.object.reflect;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.YAPIONException;
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.InternalSerializer;
-import yapion.serializing.YAPIONSerializerFlagDefault;
-import yapion.serializing.YAPIONSerializerFlags;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.serializing.serializer.SerializerImplementation;
 
 import java.lang.reflect.Constructor;
 
-import static yapion.serializing.YAPIONSerializerFlagDefault.REFLECTION_AS_NULL;
-import static yapion.serializing.YAPIONSerializerFlagDefault.REFLECTION_EXCEPTION;
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+import static yapion.serializing.YAPIONFlag.REFLECTION_AS_NULL;
+import static yapion.serializing.YAPIONFlag.REFLECTION_EXCEPTION;
 
 @SerializerImplementation(since = "0.25.0")
 public class ConstructorSerializer implements InternalSerializer<Constructor<?>>  {
 
     @Override
-    public void init() {
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(REFLECTION_EXCEPTION, true));
-        YAPIONSerializerFlags.addFlag(new YAPIONSerializerFlagDefault(REFLECTION_AS_NULL, false));
-    }
-
-    @Override
-    public String type() {
-        return "java.lang.reflect.Constructor";
+    public Class<?> type() {
+        return Constructor.class;
     }
 
     @Override
     public YAPIONAnyType serialize(SerializeData<Constructor<?>> serializeData) {
         serializeData.isSet(REFLECTION_EXCEPTION, () -> {
-            throw new YAPIONDataLossException();
+            throw new YAPIONDataLossException("The REFLECTION_EXCEPTION flag is set to not serialize reflection stuff");
         });
-        if (serializeData.getYAPIONSerializerFlags().isSet(REFLECTION_AS_NULL)) {
+        if (serializeData.getYAPIONFlags().isSet(REFLECTION_AS_NULL)) {
             return new YAPIONValue<>(null);
         }
 
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add(TYPE_IDENTIFIER, type());
+        YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("class", serializeData.serialize(serializeData.object.getDeclaringClass()));
         yapionObject.add("parameterTypes", serializeData.serialize(serializeData.object.getParameterTypes()));
         return yapionObject;
@@ -64,9 +54,9 @@ public class ConstructorSerializer implements InternalSerializer<Constructor<?>>
     @Override
     public Constructor<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        Class<?> clazz = (Class<?>) deserializeData.deserialize(yapionObject.getObject("class"));
+        Class<?> clazz = deserializeData.deserialize(yapionObject.getObject("class"));
         try {
-            Class<?>[] parameterTypes = (Class<?>[]) deserializeData.deserialize(yapionObject.getArray("parameterTypes"));
+            Class<?>[] parameterTypes = deserializeData.deserialize(yapionObject.getArray("parameterTypes"));
             return clazz.getDeclaredConstructor(parameterTypes);
         } catch (NoSuchMethodException e) {
             throw new YAPIONException(e.getMessage(), e);

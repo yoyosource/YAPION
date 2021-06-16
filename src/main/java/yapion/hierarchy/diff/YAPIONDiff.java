@@ -16,35 +16,24 @@ package yapion.hierarchy.diff;
 import lombok.Getter;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
-import yapion.serializing.api.InstanceFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class YAPIONDiff {
 
     @Getter
     private List<DiffBase> diffs = new ArrayList<>();
 
-    private YAPIONDiff() {
+    protected YAPIONDiff() {
 
-    }
-
-    public static class YAPIONDiffFactory extends InstanceFactory<YAPIONDiff> {
-        @Override
-        public Class<YAPIONDiff> type() {
-            return YAPIONDiff.class;
-        }
-
-        @Override
-        public YAPIONDiff instance() {
-            return new YAPIONDiff();
-        }
     }
 
     public YAPIONDiff(YAPIONObject first, YAPIONObject second) {
         for (String key : first.allKeys()) {
-            if (second.hasValue(key)) {
+            if (second.containsKey(key)) {
                 diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(key);
@@ -53,17 +42,18 @@ public class YAPIONDiff {
         }
 
         for (String key : second.allKeys()) {
-            if (first.hasValue(key)) {
+            if (first.containsKey(key)) {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(key);
             diffs.add(new DiffInsert(inserted.getPath(), inserted));
         }
+        merge();
     }
 
     public YAPIONDiff(YAPIONMap first, YAPIONMap second) {
         for (YAPIONAnyType key : first.allKeys()) {
-            if (second.hasValue(key)) {
+            if (second.containsKey(key)) {
                 diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(key);
@@ -72,17 +62,18 @@ public class YAPIONDiff {
         }
 
         for (YAPIONAnyType key : second.allKeys()) {
-            if (first.hasValue(key)) {
+            if (first.containsKey(key)) {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(key);
             diffs.add(new DiffInsert(inserted.getPath(), inserted));
         }
+        merge();
     }
 
     public YAPIONDiff(YAPIONArray first, YAPIONArray second) {
         for (Integer index : first.allKeys()) {
-            if (second.hasValue(index)) {
+            if (second.containsKey(index)) {
                 diff(first.getYAPIONAnyType(index), second.getYAPIONAnyType(index));
             } else {
                 YAPIONAnyType deleted = first.getYAPIONAnyType(index);
@@ -91,11 +82,36 @@ public class YAPIONDiff {
         }
 
         for (Integer index : second.allKeys()) {
-            if (first.hasValue(index)) {
+            if (first.containsKey(index)) {
                 continue;
             }
             YAPIONAnyType inserted = second.getYAPIONAnyType(index);
             diffs.add(new DiffInsert(inserted.getPath(), inserted));
+        }
+        merge();
+    }
+
+    private void merge() {
+        List<DiffInsert> diffInserts = diffs.stream()
+                .filter(DiffInsert.class::isInstance)
+                .map(DiffInsert.class::cast)
+                .collect(Collectors.toList());
+
+        for (DiffInsert diffInsert : diffInserts) {
+            Optional<DiffDelete> diffDeleteOptional = diffs.stream()
+                    .filter(DiffDelete.class::isInstance)
+                    .map(DiffDelete.class::cast)
+                    .filter(d -> d.getDeleted().equals(diffInsert.getInserted()))
+                    .findFirst();
+            if (!diffDeleteOptional.isPresent()) {
+                continue;
+            }
+            DiffDelete diffDelete = diffDeleteOptional.get();
+
+            diffs = diffs.stream()
+                    .filter(d -> d != diffInsert && d != diffDelete)
+                    .collect(Collectors.toList());
+            diffs.add(new DiffMove(diffDelete.getPath(), diffInsert.getPath()));
         }
     }
 

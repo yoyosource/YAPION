@@ -13,16 +13,12 @@
 
 package yapion.io;
 
-import yapion.annotations.deserialize.YAPIONLoadExclude;
-import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.packet.YAPIONPacket;
 
 import java.io.IOException;
 import java.net.Socket;
 
-@YAPIONLoadExclude(context = "*")
-@YAPIONSaveExclude(context = "*")
 public final class YAPIONSocket {
 
     private final Socket socket;
@@ -57,12 +53,13 @@ public final class YAPIONSocket {
         return yapionInputStream.available();
     }
 
-    public YAPIONObject read() throws IOException {
+    public YAPIONObject read() {
         return yapionInputStream.read();
     }
 
-    public Object readObject() throws IOException {
-        return yapionInputStream.readObject();
+    @SuppressWarnings("unchecked")
+    public <T> T readObject() {
+        return (T) yapionInputStream.readObject();
     }
 
     public void write(YAPIONObject yapionObject) {

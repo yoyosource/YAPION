@@ -16,5 +16,6 @@ package yapion.hierarchy.diff;
 public enum DiffType {
     DELETE,
     INSERT,
-    CHANGE
+    CHANGE,
+    MOVE
 }
