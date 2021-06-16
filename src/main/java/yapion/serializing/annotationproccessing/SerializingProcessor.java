@@ -140,7 +140,7 @@ public class SerializingProcessor extends AbstractProcessor {
                     continue;
                 }
                 if (s.equals("%FIELDS_INIT%")) {
-                    if (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty()) {
+                    if ((elementList.isEmpty() && !unknownSuper) || (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty())) {
                         continue;
                     }
                     pw.println("    private void initFields() {");
@@ -155,9 +155,11 @@ public class SerializingProcessor extends AbstractProcessor {
                             pw.println("        " + e.getSimpleName() + " = loadField(\"" + e.getSimpleName() + "\");");
                         }
                     }
-                    for (VariableElement e : elementList) {
-                        if (!serializeFieldList.contains(e) && !deserializeFieldList.contains(e)) {
-                            pw.println("        loadField(\"" + e.getSimpleName() + "\");");
+                    if (unknownSuper) {
+                        for (VariableElement e : elementList) {
+                            if (!serializeFieldList.contains(e) && !deserializeFieldList.contains(e)) {
+                                pw.println("        loadField(\"" + e.getSimpleName() + "\");");
+                            }
                         }
                     }
                     pw.println("    }");
@@ -165,14 +167,14 @@ public class SerializingProcessor extends AbstractProcessor {
                     continue;
                 }
                 if (s.equals("%FIELDS_INIT_CALL%")) {
-                    if (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty()) {
+                    if ((elementList.isEmpty() && !unknownSuper) || (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty())) {
                         continue;
                     }
                     pw.println("        initFields();");
                     continue;
                 }
                 if (s.equals("%FIELDS_LOAD%")) {
-                    if (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty()) {
+                    if ((elementList.isEmpty() && !unknownSuper) || (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty())) {
                         continue;
                     }
                     pw.println("    private Field loadField(String fieldName) {");
