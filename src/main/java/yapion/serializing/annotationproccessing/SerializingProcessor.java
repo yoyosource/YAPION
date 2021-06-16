@@ -24,6 +24,8 @@ import yapion.hierarchy.output.Indentator;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.PrintWriter;
@@ -74,6 +76,7 @@ public class SerializingProcessor extends AbstractProcessor {
 
             List<VariableElement> elementList = new ArrayList<>();
             Element current = element;
+            boolean unknownSuper = false;
             while (current != null && current.getKind() == ElementKind.CLASS) {
                 elementList.addAll(current.getEnclosedElements()
                         .stream()
@@ -82,7 +85,17 @@ public class SerializingProcessor extends AbstractProcessor {
                         .filter(e -> !(e.getModifiers().contains(Modifier.STATIC) || element.getModifiers().contains(Modifier.TRANSIENT)))
                         .collect(Collectors.toList()));
                 Element finalCurrent = current;
-                current = roundEnv.getRootElements().stream().filter(e -> e.toString().equals(((TypeElement) finalCurrent).getSuperclass().toString())).findFirst().orElse(null);
+                TypeMirror typeMirror = ((TypeElement) finalCurrent).getSuperclass();
+                if (typeMirror.toString().equals("java.lang.Object")) {
+                    break;
+                }
+                if (typeMirror.getKind() == TypeKind.NONE) {
+                    break;
+                }
+                current = roundEnv.getRootElements().stream().filter(e -> e.toString().equals(typeMirror.toString())).findFirst().orElse(null);
+                if (current == null) {
+                    unknownSuper = true;
+                }
             }
 
             List<VariableElement> serializeFieldList = elementList.stream()
@@ -161,15 +174,62 @@ public class SerializingProcessor extends AbstractProcessor {
                     pw.println("");
                     continue;
                 }
+                if (s.equals("%REFLECTION%")) {
+                    if (unknownSuper) {
+                        pw.println("        sFields = new HashSet<>();");
+                        pw.println("        dFields = new HashSet<>();");
+                        pw.println("        getFields(type()).forEach(f -> {");
+                        pw.println("            if (Modifier.isStatic(f.getModifiers())) return;");
+                        pw.println("            if (handledFields.contains(f)) return;");
+                        pw.println("            if (Modifier.isPrivate(f.getModifiers())) {");
+                        pw.println("                sFields.add(f);");
+                        pw.println("                dFields.add(f);");
+                        pw.println("                return;");
+                        pw.println("            }");
+                        pw.println("            if (Modifier.isFinal(f.getModifiers())) {");
+                        pw.println("                dFields.add(f);");
+                        pw.println("                return;");
+                        pw.println("            }");
+                        pw.println("            if (f.getDeclaringClass() != type()) {");
+                        pw.println("                sFields.add(f);");
+                        pw.println("                dFields.add(f);");
+                        pw.println("            }");
+                        pw.println("        });");
+                    }
+                    continue;
+                }
                 if (s.equals("%SERIALIZATION%")) {
                     for (VariableElement e : elementList) {
                         generateFieldSerializer(pw, e, serializeFieldList.contains(e));
                     }
                     continue;
                 }
+                if (s.equals("%SERIALIZATION_FIELDS%")) {
+                    if (unknownSuper) {
+                        pw.println("        for (Field f : sFields) {");
+                        pw.println("            if (contextManager.is(f.getAnnotationsByType(YAPIONSaveExclude.class))) continue;");
+                        pw.println("            if (contextManager.is(f.getAnnotationsByType(YAPIONOptimize.class))) {");
+                        pw.println("                Object fObject = serializeData.getField(f);");
+                        pw.println("                if (fObject != null) yapionObject.add(f.getName(), serializeData.serialize(fObject));");
+                        pw.println("            } else {");
+                        pw.println("                serializeData.serialize(yapionObject, f);");
+                        pw.println("            }");
+                        pw.println("        }");
+                    }
+                    continue;
+                }
                 if (s.equals("%DESERIALIZATION%")) {
                     for (VariableElement e : elementList) {
                         generateFieldDeserializer(pw, e, deserializeFieldList.contains(e));
+                    }
+                    continue;
+                }
+                if (s.equals("%DESERIALIZATION_FIELDS%")) {
+                    if (unknownSuper) {
+                        pw.println("        for (Field f : dFields) {");
+                        pw.println("            if (contextManager.is(f.getAnnotationsByType(YAPIONLoadExclude.class))) continue;");
+                        pw.println("            deserializeData.deserialize(object, f);");
+                        pw.println("        }");
                     }
                     continue;
                 }
