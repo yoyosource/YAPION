@@ -143,6 +143,10 @@ public class SerializingProcessor extends AbstractProcessor {
                     if (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty()) {
                         continue;
                     }
+                    pw.println("    private void initFields() {");
+                    if (unknownSuper) {
+                        pw.println("        handledFields = new HashSet<>();");
+                    }
                     for (VariableElement e : serializeFieldList) {
                         pw.println("        " + e.getSimpleName() + " = loadField(\"" + e.getSimpleName() + "\");");
                     }
@@ -156,6 +160,15 @@ public class SerializingProcessor extends AbstractProcessor {
                             pw.println("        loadField(\"" + e.getSimpleName() + "\");");
                         }
                     }
+                    pw.println("    }");
+                    pw.println();
+                    continue;
+                }
+                if (s.equals("%FIELDS_INIT_CALL%")) {
+                    if (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty()) {
+                        continue;
+                    }
+                    pw.println("        initFields();");
                     continue;
                 }
                 if (s.equals("%FIELDS_LOAD%")) {
@@ -164,14 +177,27 @@ public class SerializingProcessor extends AbstractProcessor {
                     }
                     pw.println("    private Field loadField(String fieldName) {");
                     pw.println("        try {");
-                    pw.println("            Field f = getField(" + clazz.getSimpleName() + ".class, fieldName);");
-                    pw.println("            handledFields.add(f);");
-                    pw.println("            return f;");
+                    if (unknownSuper) {
+                        pw.println("            Field f = getField(" + clazz.getSimpleName() + ".class, fieldName);");
+                        pw.println("            handledFields.add(f);");
+                        pw.println("            return f;");
+                    } else {
+                        pw.println("            return getField(" + clazz.getSimpleName() + ".class, fieldName);");
+                    }
                     pw.println("        } catch (Exception e) {");
                     pw.println("            throw new YAPIONReflectionException(e.getMessage(), e);");
                     pw.println("        }");
                     pw.println("    }");
                     pw.println("");
+                    continue;
+                }
+                if (s.equals("%REFLECTION_FIELDS%")) {
+                    if (unknownSuper) {
+                        pw.println("    private Set<Field> handledFields = null;");
+                        pw.println("    private Set<Field> sFields = null;");
+                        pw.println("    private Set<Field> dFields = null;");
+                        pw.println("");
+                    }
                     continue;
                 }
                 if (s.equals("%REFLECTION%")) {
