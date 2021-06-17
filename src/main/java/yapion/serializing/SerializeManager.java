@@ -35,6 +35,7 @@ import yapion.serializing.data.SerializeData;
 import yapion.serializing.reflection.PureStrategy;
 import yapion.serializing.utils.SerializeManagerUtils;
 import yapion.utils.ReflectionsUtils;
+import yapion.utils.YAPIONClassLoader;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -112,28 +113,6 @@ public class SerializeManager {
         private final byte[] bytes;
     }
 
-    private static class WrappedClassLoader extends ClassLoader {
-        private Map<String, Class<?>> current = new HashMap<>();
-
-        public WrappedClassLoader(ClassLoader parent) {
-            super(parent);
-        }
-
-        @Override
-        protected Class<?> findClass(String name) throws ClassNotFoundException {
-            if (current.containsKey(name)) {
-                return current.get(name);
-            }
-            return Class.forName(name);
-        }
-
-        protected Class<?> defineClass(String name, byte[] bytes) {
-            Class<?> clazz = defineClass(name, bytes, 0, bytes.length);
-            current.put(name, clazz);
-            return clazz;
-        }
-    }
-
     static {
         InputStream inputStream = SerializeManager.class.getResourceAsStream("serializer.tar.gz");
         if (inputStream == null) {
@@ -174,7 +153,7 @@ public class SerializeManager {
                 });
                 wrappedClasses.addAll(current);
             }
-            WrappedClassLoader classLoader = new WrappedClassLoader(Thread.currentThread().getContextClassLoader());
+            YAPIONClassLoader classLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
             for (WrappedClass wrappedClass : wrappedClasses) {
                 log.debug("Loading: " + wrappedClass.name);
                 add(classLoader.defineClass(wrappedClass.name, wrappedClass.bytes));

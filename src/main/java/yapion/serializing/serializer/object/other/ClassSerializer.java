@@ -95,7 +95,7 @@ public class ClassSerializer implements InternalSerializer<Class<?>> {
         if (!deserializeData.getYAPIONFlags().isSet(YAPIONFlag.CLASS_INJECTION)) {
             throw yapionException;
         }
-        if (!yapionObject.containsKey("className")) {
+        if (!yapionObject.containsKey("class")) {
             throw yapionException;
         }
         if (!yapionObject.containsKey("byteCode")) {

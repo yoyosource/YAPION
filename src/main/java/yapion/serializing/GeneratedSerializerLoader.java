@@ -56,6 +56,7 @@ public class GeneratedSerializerLoader {
         allowedPackages.add(clazz.getPackage().getName() + ".");
     }
 
+    @InternalAPI
     public boolean allowed(Class<?> clazz) {
         if (allowedClasses.contains(clazz)) return true;
         String packageName = clazz.getPackage().getName() + ".";
