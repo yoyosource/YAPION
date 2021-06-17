@@ -23,6 +23,7 @@ import org.kamranzafar.jtar.TarInputStream;
 import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.api.InternalAPI;
 import yapion.annotations.object.YAPIONObjenesis;
+import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
@@ -36,6 +37,7 @@ import yapion.serializing.utils.SerializeManagerUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -133,15 +135,18 @@ public class SerializeManager {
     }
 
     static {
-        try (TarInputStream tarInputStream = new TarInputStream(new GZIPInputStream(new BufferedInputStream(SerializeManager.class.getResourceAsStream("serializer.tar.gz"))))) {
+        InputStream inputStream = SerializeManager.class.getResourceAsStream("serializer.tar.gz");
+        if (inputStream == null) {
+            log.error("No Serializer was loaded. Please inspect.");
+            throw new YAPIONException("No Serializer was loaded. Please inspect.");
+        }
+        try (TarInputStream tarInputStream = new TarInputStream(new GZIPInputStream(new BufferedInputStream(inputStream)))) {
             Map<Integer, List<WrappedClass>> depthMap = new HashMap<>();
             int deepest = 0;
 
             TarEntry entry;
             while((entry = tarInputStream.getNextEntry()) != null) {
-                if (entry.isDirectory()) {
-                    continue;
-                }
+                if (entry.isDirectory()) continue;
                 List<Byte> bytes = new ArrayList<>();
                 while (tarInputStream.available() > 0 && bytes.size() < entry.getSize()) {
                     bytes.add((byte) tarInputStream.read());
@@ -161,16 +166,11 @@ public class SerializeManager {
             for (int i = deepest; i >= 0; i--) {
                 List<WrappedClass> current = depthMap.getOrDefault(i, new ArrayList<>());
                 current.sort((o1, o2) -> {
-                    if (o1.name.endsWith(".KeySpecSerializer")) {
-                        if (o2.name.endsWith(".KeySpecSerializer")) {
-                            return 0;
-                        }
-                        return -1;
-                    }
-                    if (o2.name.endsWith(".KeySpecSerializer")) {
-                        return 1;
-                    }
-                    return 0;
+                    boolean b1 = o1.name.endsWith(".KeySpecSerializer");
+                    boolean b2 = o2.name.endsWith(".KeySpecSerializer");
+                    if (b1 && b2) return 0;
+                    int other = (b2 ? 1 : 0);
+                    return b1 ? -1 : other;
                 });
                 wrappedClasses.addAll(current);
             }
