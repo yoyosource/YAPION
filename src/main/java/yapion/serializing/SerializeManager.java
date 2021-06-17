@@ -126,6 +126,8 @@ public class SerializeManager {
             TarEntry entry;
             while((entry = tarInputStream.getNextEntry()) != null) {
                 if (entry.isDirectory()) continue;
+                if (!entry.getName().endsWith(".class")) continue;
+
                 List<Byte> bytes = new ArrayList<>();
                 while (tarInputStream.available() > 0 && bytes.size() < entry.getSize()) {
                     bytes.add((byte) tarInputStream.read());
