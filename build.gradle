@@ -62,7 +62,7 @@ dependencies {
 
 processResources {
     from("build/classes/java/main/META-INF/annotations/yapion.annotations.api.ProcessorImplementation") {
-        into("${buildDir}/classes/java/main/yapion/META-INF/services/javax.annotation.processing.Processor")
+        into("build/classes/java/main/yapion/META-INF/services/javax.annotation.processing.Processor")
     }
 
     from(rootDir) {

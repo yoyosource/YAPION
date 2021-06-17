@@ -36,7 +36,6 @@ import yapion.serializing.utils.SerializeManagerUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -111,6 +110,28 @@ public class SerializeManager {
         private final byte[] bytes;
     }
 
+    private static class WrappedClassLoader extends ClassLoader {
+        private Map<String, Class<?>> current = new HashMap<>();
+
+        public WrappedClassLoader(ClassLoader parent) {
+            super(parent);
+        }
+
+        @Override
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
+            if (current.containsKey(name)) {
+                return current.get(name);
+            }
+            return Class.forName(name);
+        }
+
+        protected Class<?> defineClass(String name, byte[] bytes) {
+            Class<?> clazz = defineClass(name, bytes, 0, bytes.length);
+            current.put(name, clazz);
+            return clazz;
+        }
+    }
+
     static {
         try (TarInputStream tarInputStream = new TarInputStream(new GZIPInputStream(new BufferedInputStream(SerializeManager.class.getResourceAsStream("serializer.tar.gz"))))) {
             Map<Integer, List<WrappedClass>> depthMap = new HashMap<>();
@@ -153,11 +174,10 @@ public class SerializeManager {
                 });
                 wrappedClasses.addAll(current);
             }
+            WrappedClassLoader classLoader = new WrappedClassLoader(Thread.currentThread().getContextClassLoader());
             for (WrappedClass wrappedClass : wrappedClasses) {
-                ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
                 log.debug("Loading: " + wrappedClass.name);
-                Class<?> clazz = (Class<?>) ReflectionsUtils.invokeMethod("defineClass", classLoader, new ReflectionsUtils.Parameter(String.class, wrappedClass.name), new ReflectionsUtils.Parameter(byte[].class, wrappedClass.bytes), new ReflectionsUtils.Parameter(int.class, 0), new ReflectionsUtils.Parameter(int.class, wrappedClass.bytes.length)).get();
-                add(clazz);
+                add(classLoader.defineClass(wrappedClass.name, wrappedClass.bytes));
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -190,11 +210,10 @@ public class SerializeManager {
     @InternalAPI
     static void add(Class<?> clazz) {
         if (OVERRIDEABLE) return;
-        String className = clazz.getTypeName();
         if (clazz.getInterfaces().length != 1) return;
         String typeName = clazz.getInterfaces()[0].getTypeName();
         if (!typeName.equals(INTERNAL_SERIALIZER)) return;
-        Object o = ReflectionsUtils.constructObjectObjenesis(className);
+        Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
         if (o == null) return;
         add((InternalSerializer<?>) o);
 
