@@ -13,6 +13,7 @@
 
 package yapion;
 
+import lombok.experimental.UtilityClass;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.output.StringOutput;
@@ -38,11 +39,8 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+@UtilityClass
 public class YAPIONUtils {
-
-    private YAPIONUtils() {
-        throw new IllegalStateException("Utility class");
-    }
 
     /**
      * This is the default file ending associated by a file with the format
