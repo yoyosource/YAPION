@@ -154,20 +154,13 @@ public class SerializeManager {
                 wrappedClasses.addAll(current);
             }
             for (WrappedClass wrappedClass : wrappedClasses) {
-                try {
-                    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                    log.debug("Loading: " + wrappedClass.name);
-                    Class<?> clazz = (Class<?>) ReflectionsUtils.invokeMethod("defineClass", classLoader, new ReflectionsUtils.Parameter(String.class, wrappedClass.name), new ReflectionsUtils.Parameter(byte[].class, wrappedClass.bytes), new ReflectionsUtils.Parameter(int.class, 0), new ReflectionsUtils.Parameter(int.class, wrappedClass.bytes.length)).get();
-                    add(clazz);
-                } catch (Exception e) {
-                    log.warn(e.getMessage(), e);
-                }
+                ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                log.debug("Loading: " + wrappedClass.name);
+                Class<?> clazz = (Class<?>) ReflectionsUtils.invokeMethod("defineClass", classLoader, new ReflectionsUtils.Parameter(String.class, wrappedClass.name), new ReflectionsUtils.Parameter(byte[].class, wrappedClass.bytes), new ReflectionsUtils.Parameter(int.class, 0), new ReflectionsUtils.Parameter(int.class, wrappedClass.bytes.length)).get();
+                add(clazz);
             }
-            for (int i = deepest; i >= 0; i--) {
-
-            }
-        } catch (IOException e) {
-            log.warn(e.getMessage(), e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         if (serializerMap.isEmpty()) {
             log.error("No Serializer was loaded. Please inspect.");
