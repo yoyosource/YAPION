@@ -48,8 +48,9 @@ dependencies {
     testAnnotationProcessor 'org.atteo.classindex:classindex:3.4'
 
     implementation 'org.objenesis:objenesis:3.1'
-    implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
     implementation 'eu.infomas:annotation-detector:3.0.5'
+    implementation 'org.kamranzafar:jtar:2.3'
+    implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
     // compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     testCompile 'junit:junit:4.12'
@@ -59,11 +60,7 @@ dependencies {
 }
 
 processResources {
-    from("build/classes/java/main/META-INF/annotations/") {
-        into("yapion")
-    }
-
-    from("build/classes/java/main/yapion/yapion.annotations.api.ProcessorImplementation") {
+    from("build/classes/java/main/META-INF/annotations/yapion.annotations.api.ProcessorImplementation") {
         into("build/classes/java/main/yapion/META-INF/services/javax.annotation.processing.Processor")
     }
 
@@ -84,6 +81,24 @@ processResources {
         }
     }
 }
+
+task compressSerializer {
+    description 'Compress serializer'
+    group "build"
+
+    doLast {
+        if (!file("${buildDir}/classes/java/main/yapion/serializing/serializer/").exists()) {
+            return
+        }
+        shell("rm ${buildDir}/classes/java/main/yapion/serializing/serializer.tar")
+        shell("rm ${buildDir}/classes/java/main/yapion/serializing/serializer.tar.gz")
+        shell("cd ./build/classes/java/main/yapion/serializing/serializer; tar -c * > ../serializer.tar")
+        shell("gzip -9k ${buildDir}/classes/java/main/yapion/serializing/serializer.tar")
+        shell("rm ${buildDir}/classes/java/main/yapion/serializing/serializer.tar")
+        shell("rm -r ${buildDir}/classes/java/main/yapion/serializing/serializer")
+    }
+}
+classes.finalizedBy(compressSerializer)
 
 task processMetaINF {
     description 'Process META-INF'

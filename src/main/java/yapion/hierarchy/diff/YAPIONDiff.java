@@ -14,6 +14,7 @@
 package yapion.hierarchy.diff;
 
 import lombok.Getter;
+import yapion.annotations.api.InternalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.*;
 
@@ -27,7 +28,8 @@ public class YAPIONDiff {
     @Getter
     private List<DiffBase> diffs = new ArrayList<>();
 
-    protected YAPIONDiff() {
+    @InternalAPI
+    public YAPIONDiff() {
 
     }
 

@@ -13,13 +13,15 @@
 
 package yapion.serializing;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.kamranzafar.jtar.TarEntry;
+import org.kamranzafar.jtar.TarInputStream;
 import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.api.InternalAPI;
-import yapion.annotations.api.SerializerImplementation;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
@@ -30,17 +32,15 @@ import yapion.serializing.api.*;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.reflection.PureStrategy;
-import yapion.serializing.serializer.special.ArraySerializer;
-import yapion.serializing.serializer.special.EnumSerializer;
 import yapion.serializing.utils.SerializeManagerUtils;
 import yapion.utils.ReflectionsUtils;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPInputStream;
 
 import static yapion.utils.ReflectionsUtils.implementsInterface;
 import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
@@ -87,8 +87,8 @@ public class SerializeManager {
         }
     }, false);
 
-    private static final ArraySerializer ARRAY_SERIALIZER = new ArraySerializer();
-    private static final EnumSerializer ENUM_SERIALIZER = new EnumSerializer();
+    private static InternalSerializer<Object> ARRAY_SERIALIZER = null;
+    private static InternalSerializer<Enum<?>> ENUM_SERIALIZER = null;
 
     private static final String INTERNAL_SERIALIZER = InternalSerializer.class.getTypeName();
 
@@ -105,15 +105,67 @@ public class SerializeManager {
     @Setter
     private static ReflectionStrategy reflectionStrategy = new PureStrategy();
 
+    @AllArgsConstructor
+    private static class WrappedClass {
+        private final String name;
+        private final byte[] bytes;
+    }
+
     static {
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(SerializeManager.class.getResourceAsStream("/yapion/" + SerializerImplementation.class.getTypeName())))) {
-            bufferedReader.lines().forEach(s -> {
+        try (TarInputStream tarInputStream = new TarInputStream(new GZIPInputStream(new BufferedInputStream(SerializeManager.class.getResourceAsStream("serializer.tar.gz"))))) {
+            Map<Integer, List<WrappedClass>> depthMap = new HashMap<>();
+            int deepest = 0;
+
+            TarEntry entry;
+            while((entry = tarInputStream.getNextEntry()) != null) {
+                if (entry.isDirectory()) {
+                    continue;
+                }
+                List<Byte> bytes = new ArrayList<>();
+                while (tarInputStream.available() > 0 && bytes.size() < entry.getSize()) {
+                    bytes.add((byte) tarInputStream.read());
+                }
+                byte[] byteArray = new byte[bytes.size()];
+                for (int i = 0; i < byteArray.length; i++) {
+                    byteArray[i] = bytes.get(i);
+                }
+
+                String className = "yapion.serializing.serializer." + entry.getName().substring(0, entry.getName().indexOf('.')).replace("/", ".");
+                int depth = entry.getName().length() - entry.getName().replaceAll("[/$]", "").length();
+                deepest = Math.max(deepest, depth);
+                depthMap.computeIfAbsent(depth, d -> new ArrayList<>()).add(new WrappedClass(className, byteArray));
+            }
+
+            List<WrappedClass> wrappedClasses = new ArrayList<>();
+            for (int i = deepest; i >= 0; i--) {
+                List<WrappedClass> current = depthMap.getOrDefault(i, new ArrayList<>());
+                current.sort((o1, o2) -> {
+                    if (o1.name.endsWith(".KeySpecSerializer")) {
+                        if (o2.name.endsWith(".KeySpecSerializer")) {
+                            return 0;
+                        }
+                        return -1;
+                    }
+                    if (o2.name.endsWith(".KeySpecSerializer")) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                wrappedClasses.addAll(current);
+            }
+            for (WrappedClass wrappedClass : wrappedClasses) {
                 try {
-                    add(Class.forName(s));
-                } catch (ClassNotFoundException e) {
+                    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                    log.debug("Loading: " + wrappedClass.name);
+                    Class<?> clazz = (Class<?>) ReflectionsUtils.invokeMethod("defineClass", classLoader, new ReflectionsUtils.Parameter(String.class, wrappedClass.name), new ReflectionsUtils.Parameter(byte[].class, wrappedClass.bytes), new ReflectionsUtils.Parameter(int.class, 0), new ReflectionsUtils.Parameter(int.class, wrappedClass.bytes.length)).get();
+                    add(clazz);
+                } catch (Exception e) {
                     log.warn(e.getMessage(), e);
                 }
-            });
+            }
+            for (int i = deepest; i >= 0; i--) {
+
+            }
         } catch (IOException e) {
             log.warn(e.getMessage(), e);
         }
@@ -148,10 +200,16 @@ public class SerializeManager {
         String className = clazz.getTypeName();
         if (clazz.getInterfaces().length != 1) return;
         String typeName = clazz.getInterfaces()[0].getTypeName();
+        if (!typeName.equals(INTERNAL_SERIALIZER)) return;
         Object o = ReflectionsUtils.constructObjectObjenesis(className);
         if (o == null) return;
-        if (typeName.equals(INTERNAL_SERIALIZER)) {
-            add((InternalSerializer<?>) o);
+        add((InternalSerializer<?>) o);
+
+        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.ArraySerializer")) {
+            ARRAY_SERIALIZER = (InternalSerializer<Object>) o;
+        }
+        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.EnumSerializer")) {
+            ENUM_SERIALIZER = (InternalSerializer<Enum<?>>) o;
         }
     }
 
@@ -198,6 +256,7 @@ public class SerializeManager {
     static InternalSerializer<?> getInternalSerializer(Class<?> type) {
         if (type == null) return null;
         if (type.isArray()) {
+            System.out.println(ARRAY_SERIALIZER);
             return ARRAY_SERIALIZER;
         }
         if (type.isEnum() || type == Enum.class) {
