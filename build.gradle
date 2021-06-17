@@ -1,3 +1,4 @@
+import org.apache.tools.ant.taskdefs.condition.Os
 import java.util.function.Consumer
 
 plugins {
@@ -306,7 +307,12 @@ task projectJavaDoc {
  * @return the trimmed result from stdout, stderr and the exit value
  */
 def shell(String command) {
-    def proc = ['bash', '-c', command].execute()
+    def proc
+    if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
+        proc = ['bash', '-c', command].execute()
+    } else {
+        proc = ["cmd", "/c", command].execute()
+    }
     def out = new StringBuilder()
     def err = new StringBuilder()
     proc.waitForProcessOutput(out, err)
