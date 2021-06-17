@@ -27,6 +27,8 @@ import java.util.List;
 @SerializerImplementation(since = "0.25.0")
 public class YAPIONDiffSerializer implements InternalSerializer<YAPIONDiff> {
 
+    private YAPIONObject empty = new YAPIONObject();
+
     @Override
     public Class<?> type() {
         return YAPIONDiff.class;
@@ -43,7 +45,7 @@ public class YAPIONDiffSerializer implements InternalSerializer<YAPIONDiff> {
     public YAPIONDiff deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         List<DiffBase> diffs = deserializeData.deserialize(yapionObject.getObject("diff"));
-        YAPIONDiff yapionDiff = new YAPIONDiff();
+        YAPIONDiff yapionDiff = new YAPIONDiff(empty, empty);
         yapionDiff.getDiffs().addAll(diffs);
         return yapionDiff;
     }

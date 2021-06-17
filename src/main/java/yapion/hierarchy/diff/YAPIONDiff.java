@@ -14,8 +14,8 @@
 package yapion.hierarchy.diff;
 
 import lombok.Getter;
-import yapion.annotations.api.InternalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.types.*;
 
 import java.util.ArrayList;
@@ -28,12 +28,10 @@ public class YAPIONDiff {
     @Getter
     private List<DiffBase> diffs = new ArrayList<>();
 
-    @InternalAPI
-    public YAPIONDiff() {
-
-    }
-
     public YAPIONDiff(YAPIONObject first, YAPIONObject second) {
+        if (check(first, second)) {
+            return;
+        }
         for (String key : first.allKeys()) {
             if (second.containsKey(key)) {
                 diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
@@ -54,6 +52,9 @@ public class YAPIONDiff {
     }
 
     public YAPIONDiff(YAPIONMap first, YAPIONMap second) {
+        if (check(first, second)) {
+            return;
+        }
         for (YAPIONAnyType key : first.allKeys()) {
             if (second.containsKey(key)) {
                 diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
@@ -74,6 +75,9 @@ public class YAPIONDiff {
     }
 
     public YAPIONDiff(YAPIONArray first, YAPIONArray second) {
+        if (check(first, second)) {
+            return;
+        }
         for (Integer index : first.allKeys()) {
             if (second.containsKey(index)) {
                 diff(first.getYAPIONAnyType(index), second.getYAPIONAnyType(index));
@@ -91,6 +95,19 @@ public class YAPIONDiff {
             diffs.add(new DiffInsert(inserted.getPath(), inserted));
         }
         merge();
+    }
+
+    private <T extends YAPIONDataType<?, ?>> boolean check(T first, T second) {
+        if (first == second) {
+            return true;
+        }
+        if (first.isEmpty() && second.isEmpty()) {
+            return true;
+        }
+        if (first.equals(second)) {
+            return true;
+        }
+        return false;
     }
 
     private void merge() {
