@@ -13,9 +13,6 @@
 
 package yapion.serializing.serializer.special;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import yapion.annotations.object.YAPIONData;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
@@ -91,16 +88,6 @@ public class RecordSerializer implements InternalSerializer<Object> {
         } catch (Throwable t) {
             throw new YAPIONException("Could not determine type (" + type + ")");
         }
-    }
-
-    @AllArgsConstructor
-    @Getter
-    @YAPIONData
-    private static final class RecordValue {
-        private final String name;
-        private final int index;
-        private final Class<?> type;
-        private final Object value;
     }
 
     private static RecordValue[] recordComponents(Class<?> type, Object recordObject) {

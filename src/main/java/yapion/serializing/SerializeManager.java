@@ -144,26 +144,18 @@ public class SerializeManager {
 
                 String className = "yapion.serializing.serializer." + entry.getName().substring(0, entry.getName().indexOf('.')).replace("/", ".");
                 int depth = entry.getName().length() - entry.getName().replaceAll("[/$]", "").length();
+                if (className.endsWith(".KeySpecSerializer")) depth += 1;
+                if (!className.endsWith("Serializer")) depth += 1;
                 deepest = Math.max(deepest, depth);
                 depthMap.computeIfAbsent(depth, d -> new ArrayList<>()).add(new WrappedClass(className, byteArray));
             }
 
-            List<WrappedClass> wrappedClasses = new ArrayList<>();
-            for (int i = deepest; i >= 0; i--) {
-                List<WrappedClass> current = depthMap.getOrDefault(i, new ArrayList<>());
-                current.sort((o1, o2) -> {
-                    boolean b1 = o1.name.endsWith(".KeySpecSerializer");
-                    boolean b2 = o2.name.endsWith(".KeySpecSerializer");
-                    if (b1 && b2) return 0;
-                    int other = (b2 ? 1 : 0);
-                    return b1 ? -1 : other;
-                });
-                wrappedClasses.addAll(current);
-            }
             YAPIONClassLoader classLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
-            for (WrappedClass wrappedClass : wrappedClasses) {
-                log.debug("Loading: " + wrappedClass.name);
-                add(classLoader.defineClass(wrappedClass.name, wrappedClass.bytes));
+            for (int i = deepest; i >= 0; i--) {
+                depthMap.getOrDefault(i, new ArrayList<>()).forEach(wrappedClass -> {
+                    log.debug("Loading: " + wrappedClass.name);
+                    add(classLoader.defineClass(wrappedClass.name, wrappedClass.bytes));
+                });
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -173,7 +165,7 @@ public class SerializeManager {
         }
 
         oSerializerGroups.add("yapion.annotations.");
-        oSerializerGroups.add("yapion.hierarchy.output.     ");
+        oSerializerGroups.add("yapion.hierarchy.output.");
         oSerializerGroups.add("yapion.hierarchy.types.utils.");
         oSerializerGroups.add("yapion.hierarchy.types.value.");
         oSerializerGroups.add("yapion.hierarchy.validators.");
