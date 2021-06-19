@@ -348,6 +348,7 @@ task buildProject {
     }
 }
 build.finalizedBy(buildProject)
+assemble.finalizedBy(buildProject)
 
 task createSerializerMD {
     description 'Update the Serializer.md'

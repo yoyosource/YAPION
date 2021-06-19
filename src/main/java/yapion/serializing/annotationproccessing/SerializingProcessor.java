@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static yapion.serializing.annotationproccessing.Code.defaultSerializer;
@@ -66,6 +67,8 @@ public class SerializingProcessor extends AbstractProcessor {
             }
 
             YAPIONSerializing yapionSerializing = element.getAnnotation(YAPIONSerializing.class);
+            AtomicBoolean serializerContextManager = new AtomicBoolean(yapionSerializing.serializationStep());
+            AtomicBoolean deserializerContextManager = new AtomicBoolean(yapionSerializing.deserializationStep());
 
             TypeElement clazz = (TypeElement) element;
             if (clazz.getEnclosingElement().getKind() == ElementKind.CLASS) {
@@ -229,13 +232,14 @@ public class SerializingProcessor extends AbstractProcessor {
                 }
                 if (s.equals("%PRE_SERIALIZATION%")) {
                     if (yapionSerializing.serializationStep()) {
+                        pw.println("        ContextManager contextManager = new ContextManager(serializeData.context);");
                         pw.println("        MethodManager.preSerializationStep(serializeData.object, type(), contextManager);");
                     }
                     continue;
                 }
                 if (s.equals("%SERIALIZATION%")) {
                     for (VariableElement e : elementList) {
-                        generateFieldSerializer(pw, e, serializeFieldList.contains(e));
+                        generateFieldSerializer(pw, e, serializeFieldList.contains(e), serializerContextManager);
                     }
                     continue;
                 }
@@ -261,13 +265,14 @@ public class SerializingProcessor extends AbstractProcessor {
                 }
                 if (s.equals("%PRE_DESERIALIZATION%")) {
                     if (yapionSerializing.deserializationStep()) {
+                        pw.println("        ContextManager contextManager = new ContextManager(deserializeData.context);");
                         pw.println("        MethodManager.preDeserializationStep(object, type(), contextManager);");
                     }
                     continue;
                 }
                 if (s.equals("%DESERIALIZATION%")) {
                     for (VariableElement e : elementList) {
-                        generateFieldDeserializer(pw, e, deserializeFieldList.contains(e));
+                        generateFieldDeserializer(pw, e, deserializeFieldList.contains(e), deserializerContextManager);
                     }
                     continue;
                 }
@@ -294,7 +299,7 @@ public class SerializingProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void generateFieldSerializer(PrintWriter printWriter, VariableElement e, boolean reflective) {
+    private void generateFieldSerializer(PrintWriter printWriter, VariableElement e, boolean reflective, AtomicBoolean contextManager) {
         YAPIONOptimize[] yapionOptimize = e.getAnnotationsByType(YAPIONOptimize.class);
         String yapionOptimizeContext = Arrays.stream(yapionOptimize).flatMap(o -> Arrays.stream(o.context())).distinct().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "));
 
@@ -307,15 +312,22 @@ public class SerializingProcessor extends AbstractProcessor {
         List<String> conditions = new ArrayList<>();
         boolean b = false;
         int indent = 0;
+        boolean contextManagerNeeded = false;
         if (yapionOptimize.length != 0) {
             if (!yapionOptimizeContext.isEmpty()) {
                 conditions.add("contextManager.is(" + yapionOptimizeContext + ")");
+                contextManagerNeeded = true;
             }
             conditions.add(e.getSimpleName() + "Object != null");
             b = true;
         }
         if (yapionSaveExclude.length != 0) {
             conditions.add("!contextManager.is(" + yapionSaveExcludeContext + ")");
+            contextManagerNeeded = true;
+        }
+        if (contextManagerNeeded && !contextManager.get()) {
+            newLine(printWriter, indent, "ContextManager contextManager = new ContextManager(serializeData.context);");
+            contextManager.set(true);
         }
         if (b) {
             if (reflective) {
@@ -343,7 +355,7 @@ public class SerializingProcessor extends AbstractProcessor {
         }
     }
 
-    private void generateFieldDeserializer(PrintWriter printWriter, VariableElement e, boolean reflective) {
+    private void generateFieldDeserializer(PrintWriter printWriter, VariableElement e, boolean reflective, AtomicBoolean contextManager) {
         YAPIONLoadExclude[] yapionLoadExclude = e.getAnnotationsByType(YAPIONLoadExclude.class);
         String yapionSaveExcludeContext = Arrays.stream(yapionLoadExclude).flatMap(o -> Arrays.stream(o.context())).distinct().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "));
         if (yapionSaveExcludeContext.isEmpty() && yapionLoadExclude.length != 0) {
@@ -351,8 +363,14 @@ public class SerializingProcessor extends AbstractProcessor {
         }
         List<String> conditions = new ArrayList<>();
         int indent = 0;
+        boolean contextManagerNeeded = false;
         if (yapionLoadExclude.length != 0) {
             conditions.add("!contextManager.is(" + yapionSaveExcludeContext + ")");
+            contextManagerNeeded = true;
+        }
+        if (contextManagerNeeded && !contextManager.get()) {
+            newLine(printWriter, indent, "ContextManager contextManager = new ContextManager(serializeData.context);");
+            contextManager.set(true);
         }
         if (!conditions.isEmpty()) {
             newLine(printWriter, indent, "if (" + String.join(" && ", conditions) + ") {");
