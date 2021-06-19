@@ -13,6 +13,131 @@
 
 package yapion.serializing.serializer.special;
 
-public class RecordSerializer {
-    // TODO: This will be implemented later on
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import yapion.annotations.object.YAPIONData;
+import yapion.exceptions.YAPIONException;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.InternalSerializer;
+import yapion.serializing.SerializeManager;
+import yapion.serializing.data.DeserializeData;
+import yapion.serializing.data.SerializeData;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
+import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+
+/**
+ * This Serializer is inspired by 'https://github.com/EsotericSoftware/kryo/blob/master/src/com/esotericsoftware/kryo/serializers/RecordSerializer.java'
+ */
+public class RecordSerializer implements InternalSerializer<Object> {
+
+    private static Method isRecord;
+    private static Method getRecordComponents;
+    private static Method getName;
+    private static Method getType;
+
+    @Override
+    public void init() {
+        try {
+            isRecord = Class.class.getDeclaredMethod("isRecord");
+            Class<?> c = Class.forName("java.lang.reflect.RecordComponent");
+            getRecordComponents = Class.class.getMethod("getRecordComponents");
+            getName = c.getMethod("getName");
+            getType = c.getMethod("getType");
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            isRecord = null;
+            getRecordComponents = null;
+            getName = null;
+            getType = null;
+        }
+
+        SerializeManager.isRecord = this::isRecord;
+    }
+
+    @Override
+    public Class<?> type() {
+        return null;
+    }
+
+    @Override
+    public YAPIONAnyType serialize(SerializeData<Object> serializeData) {
+        YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
+        yapionObject.add("recordValues", serializeData.serialize(recordComponents(serializeData.object.getClass(), serializeData.object)));
+        return yapionObject;
+    }
+
+    @Override
+    public Object deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
+        String type = deserializeData.typeReMapper.remap(yapionObject.getPlainValue(TYPE_IDENTIFIER));
+        RecordValue[] recordValues = deserializeData.deserialize(yapionObject.getArray("recordValues"));
+        try {
+            return invokeCanonicalConstructor(Class.forName(type), recordValues);
+        } catch (ClassNotFoundException e) {
+            throw new YAPIONException(e.getMessage(), e);
+        }
+    }
+
+    private boolean isRecord(Class<?> type) {
+        if (isRecord == null) {
+            return false;
+        }
+        try {
+            return (boolean) isRecord.invoke(type);
+        } catch (Throwable t) {
+            throw new YAPIONException("Could not determine type (" + type + ")");
+        }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @YAPIONData
+    private static final class RecordValue {
+        private final String name;
+        private final int index;
+        private final Class<?> type;
+        private final Object value;
+    }
+
+    private static RecordValue[] recordComponents(Class<?> type, Object recordObject) {
+        try {
+            Object[] rawComponents = (Object[]) getRecordComponents.invoke(type);
+            RecordValue[] recordValues = new RecordValue[rawComponents.length];
+            for (int i = 0; i < rawComponents.length; i++) {
+                final Object comp = rawComponents[i];
+                String name = (String) getName.invoke(comp);
+                recordValues[i] = new RecordValue(name, i, (Class<?>) getType.invoke(comp), componentValue(recordObject, name));
+            }
+            return recordValues;
+        } catch (Throwable t) {
+            throw new YAPIONException("Could not retrieve record components (" + type.getName() + ")", t);
+        }
+    }
+
+    private static Object componentValue(Object recordObject, String name) {
+        try {
+            return recordObject.getClass().getDeclaredMethod(name).invoke(recordObject);
+        } catch (Throwable t) {
+            throw new YAPIONException("Could not retrieve record components (" + recordObject.getClass().getName() + ")", t);
+        }
+    }
+
+    private static <T> T invokeCanonicalConstructor(Class<T> recordType, RecordValue[] recordValues) {
+        try {
+            Class<?>[] paramTypes = Arrays.stream(recordValues)
+                    .map(RecordValue::getType)
+                    .toArray(Class<?>[]::new);
+            Constructor<T> canonicalConstructor = recordType.getConstructor(paramTypes);
+            Object[] args = Arrays.stream(recordValues)
+                    .map(RecordValue::getValue)
+                    .toArray(Object[]::new);
+            return canonicalConstructor.newInstance(args);
+        } catch (Throwable t) {
+            throw new YAPIONException("Could not construct type (" + recordType.getName() + ")", t);
+        }
+    }
 }

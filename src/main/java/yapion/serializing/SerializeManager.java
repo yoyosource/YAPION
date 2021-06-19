@@ -41,6 +41,7 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
@@ -91,6 +92,10 @@ public class SerializeManager {
 
     private static InternalSerializer<Object> ARRAY_SERIALIZER = null;
     private static InternalSerializer<Enum<?>> ENUM_SERIALIZER = null;
+    private static InternalSerializer<Object> RECORD_SERIALIZER = null;
+
+    @InternalAPI
+    public static Predicate<Class<?>> isRecord = c -> false;
 
     private static final String INTERNAL_SERIALIZER = InternalSerializer.class.getTypeName();
 
@@ -204,6 +209,9 @@ public class SerializeManager {
         if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.EnumSerializer")) {
             ENUM_SERIALIZER = (InternalSerializer<Enum<?>>) o;
         }
+        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.RecordSerializer")) {
+            RECORD_SERIALIZER = (InternalSerializer<Object>) o;
+        }
     }
 
     @InternalAPI
@@ -249,11 +257,13 @@ public class SerializeManager {
     static InternalSerializer<?> getInternalSerializer(Class<?> type) {
         if (type == null) return null;
         if (type.isArray()) {
-            System.out.println(ARRAY_SERIALIZER);
             return ARRAY_SERIALIZER;
         }
         if (type.isEnum() || type == Enum.class) {
             return ENUM_SERIALIZER;
+        }
+        if (isRecord.test(type)) {
+            return RECORD_SERIALIZER;
         }
 
         InternalSerializer<?> initialSerializer = getInternalSerializerInternal(type);
@@ -282,6 +292,10 @@ public class SerializeManager {
 
     static InternalSerializer<?> getEnumSerializer() {
         return ENUM_SERIALIZER;
+    }
+
+    static InternalSerializer<?> getRecordSerializer() {
+        return RECORD_SERIALIZER;
     }
 
     private static InternalSerializer<?> getInternalSerializerInternal(Class<?> type) {
