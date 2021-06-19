@@ -34,7 +34,7 @@ compileJava.options.encoding = 'UTF-8'
 mainClassName = ''
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -57,7 +57,6 @@ dependencies {
     implementation 'eu.infomas:annotation-detector:3.0.5'
     implementation 'org.kamranzafar:jtar:2.3'
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
-    // compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     testCompile 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest:2.2'
@@ -96,9 +95,10 @@ task compressSerializer {
         if (!file("${buildDir}/classes/java/main/yapion/serializing/serializer/").exists()) {
             return
         }
+
         shell("rm ${buildDir}/classes/java/main/yapion/serializing/serializer.tar")
         shell("rm ${buildDir}/classes/java/main/yapion/serializing/serializer.tar.gz")
-        shell("cd ./build/classes/java/main/yapion/serializing/serializer; tar -c * > ../serializer.tar")
+        shell("cd ${buildDir}/classes/java/main/yapion/serializing/serializer; tar -c * > ../serializer.tar")
         shell("gzip -9k ${buildDir}/classes/java/main/yapion/serializing/serializer.tar")
         shell("rm ${buildDir}/classes/java/main/yapion/serializing/serializer.tar")
         shell("rm -r ${buildDir}/classes/java/main/yapion/serializing/serializer")
@@ -321,7 +321,6 @@ def shell(String command) {
     def out = new StringBuilder()
     def err = new StringBuilder()
     proc.waitForProcessOutput(out, err)
-
     return [out.toString().trim(), err.toString().trim(), proc.exitValue()]
 }
 

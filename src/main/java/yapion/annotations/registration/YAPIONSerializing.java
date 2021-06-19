@@ -43,4 +43,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface YAPIONSerializing {
+    boolean serializationStep() default true;
+    boolean deserializationStep() default true;
 }

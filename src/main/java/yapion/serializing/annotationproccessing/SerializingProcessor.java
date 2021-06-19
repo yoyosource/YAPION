@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static yapion.serializing.annotationproccessing.Code.defaultSerializer;
@@ -65,6 +64,8 @@ public class SerializingProcessor extends AbstractProcessor {
                 error(element, "Element needs to be class");
                 continue;
             }
+
+            YAPIONSerializing yapionSerializing = element.getAnnotation(YAPIONSerializing.class);
 
             TypeElement clazz = (TypeElement) element;
             if (clazz.getEnclosingElement().getKind() == ElementKind.CLASS) {
@@ -226,6 +227,12 @@ public class SerializingProcessor extends AbstractProcessor {
                     }
                     continue;
                 }
+                if (s.equals("%PRE_SERIALIZATION%")) {
+                    if (yapionSerializing.serializationStep()) {
+                        pw.println("        MethodManager.preSerializationStep(serializeData.object, type(), contextManager);");
+                    }
+                    continue;
+                }
                 if (s.equals("%SERIALIZATION%")) {
                     for (VariableElement e : elementList) {
                         generateFieldSerializer(pw, e, serializeFieldList.contains(e));
@@ -246,6 +253,18 @@ public class SerializingProcessor extends AbstractProcessor {
                     }
                     continue;
                 }
+                if (s.equals("%POST_SERIALIZATION%")) {
+                    if (yapionSerializing.serializationStep()) {
+                        pw.println("        MethodManager.postSerializationStep(serializeData.object, type(), contextManager);");
+                    }
+                    continue;
+                }
+                if (s.equals("%PRE_DESERIALIZATION%")) {
+                    if (yapionSerializing.deserializationStep()) {
+                        pw.println("        MethodManager.preDeserializationStep(object, type(), contextManager);");
+                    }
+                    continue;
+                }
                 if (s.equals("%DESERIALIZATION%")) {
                     for (VariableElement e : elementList) {
                         generateFieldDeserializer(pw, e, deserializeFieldList.contains(e));
@@ -258,6 +277,12 @@ public class SerializingProcessor extends AbstractProcessor {
                         pw.println("            if (contextManager.is(f.getAnnotationsByType(YAPIONLoadExclude.class))) continue;");
                         pw.println("            deserializeData.deserialize(object, f);");
                         pw.println("        }");
+                    }
+                    continue;
+                }
+                if (s.equals("%POST_DESERIALIZATION%")) {
+                    if (yapionSerializing.deserializationStep()) {
+                        pw.println("        MethodManager.postDeserializationStep(object, type(), contextManager);");
                     }
                     continue;
                 }

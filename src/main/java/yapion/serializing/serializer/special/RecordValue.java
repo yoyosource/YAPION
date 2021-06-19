@@ -7,7 +7,7 @@ import yapion.annotations.registration.YAPIONSerializing;
 
 @AllArgsConstructor
 @Getter
-@YAPIONSerializing
+@YAPIONSerializing(serializationStep = false, deserializationStep = false)
 @YAPIONData
 public class RecordValue {
     protected String name;
