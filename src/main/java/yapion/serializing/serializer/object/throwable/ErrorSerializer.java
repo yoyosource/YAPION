@@ -17,9 +17,9 @@ import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 import yapion.utils.ReflectionsUtils;
 
 import static yapion.serializing.YAPIONFlag.ERROR_EXCEPTION;
@@ -27,7 +27,7 @@ import static yapion.utils.IdentifierUtils.EXCEPTION_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.20.0")
-public class ErrorSerializer implements InternalSerializer<Error> {
+public class ErrorSerializer implements FinalInternalSerializer<Error> {
 
     @Override
     public Class<?> type() {

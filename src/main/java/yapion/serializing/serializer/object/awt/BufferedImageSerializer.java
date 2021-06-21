@@ -17,15 +17,15 @@ import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
 @SerializerImplementation(since = "0.20.0")
-public class BufferedImageSerializer implements InternalSerializer<BufferedImage> {
+public class BufferedImageSerializer implements FinalInternalSerializer<BufferedImage> {
 
     @Override
     public Class<?> type() {

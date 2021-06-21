@@ -16,14 +16,14 @@ package yapion.serializing.serializer.object.atomic;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.util.concurrent.atomic.DoubleAdder;
 
 @SerializerImplementation(since = "0.24.0")
-public class DoubleAdderSerializer implements InternalSerializer<DoubleAdder> {
+public class DoubleAdderSerializer implements FinalInternalSerializer<DoubleAdder> {
 
     @Override
     public Class<?> type() {

@@ -16,16 +16,16 @@ package yapion.serializing.serializer.object.security;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
 @SerializerImplementation(since = "0.20.0")
-public class KeyPairSerializer implements InternalSerializer<KeyPair> {
+public class KeyPairSerializer implements FinalInternalSerializer<KeyPair> {
 
     @Override
     public Class<?> type() {

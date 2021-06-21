@@ -16,12 +16,12 @@ package yapion.serializing.serializer.notserializable.thread;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 @SerializerImplementation(since = "0.10.0")
-public class RunnableSerializer implements InternalSerializer<Runnable> {
+public class RunnableSerializer implements FinalInternalSerializer<Runnable> {
 
     @Override
     public Class<?> type() {

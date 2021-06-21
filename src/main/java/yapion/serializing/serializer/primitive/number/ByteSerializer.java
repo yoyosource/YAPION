@@ -16,12 +16,12 @@ package yapion.serializing.serializer.primitive.number;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 @SerializerImplementation(since = "0.2.0")
-public class ByteSerializer implements InternalSerializer<Byte> {
+public class ByteSerializer implements FinalInternalSerializer<Byte> {
 
     @Override
     public Class<?> type() {

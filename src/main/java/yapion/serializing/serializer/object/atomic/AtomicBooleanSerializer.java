@@ -16,14 +16,14 @@ package yapion.serializing.serializer.object.atomic;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @SerializerImplementation(since = "0.20.0")
-public class AtomicBooleanSerializer implements InternalSerializer<AtomicBoolean> {
+public class AtomicBooleanSerializer implements FinalInternalSerializer<AtomicBoolean> {
 
     @Override
     public Class<?> type() {

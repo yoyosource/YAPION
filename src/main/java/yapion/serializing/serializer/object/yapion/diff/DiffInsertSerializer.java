@@ -17,12 +17,12 @@ import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.diff.DiffInsert;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 @SerializerImplementation(since = "0.25.0")
-public class DiffInsertSerializer implements InternalSerializer<DiffInsert> {
+public class DiffInsertSerializer implements FinalInternalSerializer<DiffInsert> {
 
     @Override
     public Class<?> type() {

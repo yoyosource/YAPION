@@ -16,10 +16,10 @@ package yapion.serializing.serializer.special;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -30,7 +30,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 /**
  * This Serializer is inspired by 'https://github.com/EsotericSoftware/kryo/blob/master/src/com/esotericsoftware/kryo/serializers/RecordSerializer.java'
  */
-public class RecordSerializer implements InternalSerializer<Object> {
+public class RecordSerializer implements FinalInternalSerializer<Object> {
 
     private static Method isRecord;
     private static Method getRecordComponents;

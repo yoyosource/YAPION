@@ -16,15 +16,15 @@ package yapion.serializing.serializer.object.net;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 @SerializerImplementation(since = "0.12.0")
-public class URLSerializer implements InternalSerializer<URL> {
+public class URLSerializer implements FinalInternalSerializer<URL> {
 
     @Override
     public Class<?> type() {

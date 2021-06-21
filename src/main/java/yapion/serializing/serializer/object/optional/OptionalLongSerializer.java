@@ -16,14 +16,14 @@ package yapion.serializing.serializer.object.optional;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.util.OptionalLong;
 
 @SerializerImplementation(since = "0.18.0")
-public class OptionalLongSerializer implements InternalSerializer<OptionalLong> {
+public class OptionalLongSerializer implements FinalInternalSerializer<OptionalLong> {
 
     @Override
     public Class<?> type() {

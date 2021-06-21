@@ -16,14 +16,14 @@ package yapion.serializing.serializer.object.awt;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.awt.*;
 
 @SerializerImplementation(since = "0.19.0")
-public class ColorSerializer implements InternalSerializer<Color> {
+public class ColorSerializer implements FinalInternalSerializer<Color> {
 
     @Override
     public Class<?> type() {

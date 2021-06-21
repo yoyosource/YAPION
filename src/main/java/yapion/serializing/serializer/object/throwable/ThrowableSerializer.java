@@ -16,16 +16,16 @@ package yapion.serializing.serializer.object.throwable;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 import yapion.utils.ReflectionsUtils;
 
 import static yapion.utils.IdentifierUtils.EXCEPTION_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.20.0")
-public class ThrowableSerializer implements InternalSerializer<Throwable> {
+public class ThrowableSerializer implements FinalInternalSerializer<Throwable> {
 
     @Override
     public Class<?> type() {

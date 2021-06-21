@@ -17,14 +17,14 @@ import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.util.concurrent.atomic.AtomicLongArray;
 
 @SerializerImplementation(since = "0.20.0")
-public class AtomicLongArraySerializer implements InternalSerializer<AtomicLongArray> {
+public class AtomicLongArraySerializer implements FinalInternalSerializer<AtomicLongArray> {
 
     @Override
     public Class<?> type() {

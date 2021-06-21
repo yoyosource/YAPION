@@ -19,9 +19,9 @@ import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 import yapion.serializing.utils.SerializingUtils;
 import yapion.utils.ClassUtils;
 import yapion.utils.ReflectionsUtils;
@@ -33,7 +33,7 @@ import java.util.function.Function;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.26.0", initialSince = "0.3.0, 0.12.0, 0.23.0", standsFor = {List.class, ArrayList.class, LinkedList.class, CopyOnWriteArrayList.class})
-public class ListSerializer implements InternalSerializer<List<?>> {
+public class ListSerializer implements FinalInternalSerializer<List<?>> {
 
     private Map<Class<?>, Function<List<?>, List<?>>> wrapper = new HashMap<>();
 

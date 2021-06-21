@@ -17,9 +17,9 @@ import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -27,7 +27,7 @@ import java.net.UnknownHostException;
 import java.util.Base64;
 
 @SerializerImplementation(since = "0.20.0")
-public class Inet4AddressSerializer implements InternalSerializer<Inet4Address> {
+public class Inet4AddressSerializer implements FinalInternalSerializer<Inet4Address> {
 
     @Override
     public Class<?> type() {

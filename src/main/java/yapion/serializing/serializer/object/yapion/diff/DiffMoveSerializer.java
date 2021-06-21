@@ -17,12 +17,12 @@ import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.diff.DiffMove;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 @SerializerImplementation(since = "0.26.0")
-public class DiffMoveSerializer implements InternalSerializer<DiffMove> {
+public class DiffMoveSerializer implements FinalInternalSerializer<DiffMove> {
 
     @Override
     public Class<?> type() {

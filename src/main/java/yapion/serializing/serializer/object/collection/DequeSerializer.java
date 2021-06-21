@@ -18,9 +18,9 @@ import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 import yapion.serializing.utils.SerializingUtils;
 import yapion.utils.ReflectionsUtils;
 
@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
 @SerializerImplementation(since = "0.23.0", initialSince = "0.7.0, 0.12.0", standsFor = {Deque.class, ArrayDeque.class, BlockingDeque.class, LinkedBlockingDeque.class, ConcurrentLinkedDeque.class})
-public class DequeSerializer implements InternalSerializer<Deque<?>> {
+public class DequeSerializer implements FinalInternalSerializer<Deque<?>> {
 
     @Override
     public Class<?> type() {

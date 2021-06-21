@@ -16,14 +16,14 @@ package yapion.serializing.serializer.object.text;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.text.SimpleDateFormat;
 
 @SerializerImplementation(since = "0.20.0")
-public class SimpleDateFormatSerializer implements InternalSerializer<SimpleDateFormat> {
+public class SimpleDateFormatSerializer implements FinalInternalSerializer<SimpleDateFormat> {
 
     @Override
     public Class<?> type() {

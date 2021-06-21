@@ -16,14 +16,14 @@ package yapion.serializing.serializer.object.other;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.io.File;
 
 @SerializerImplementation(since = "0.2.0")
-public class FileSerializer implements InternalSerializer<File> {
+public class FileSerializer implements FinalInternalSerializer<File> {
 
     @Override
     public Class<?> type() {

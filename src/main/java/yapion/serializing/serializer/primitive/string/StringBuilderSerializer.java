@@ -13,17 +13,15 @@
 
 package yapion.serializing.serializer.primitive.string;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 @SerializerImplementation(since = "0.2.0")
-public class StringBuilderSerializer implements InternalSerializer<StringBuilder> {
+public class StringBuilderSerializer implements FinalInternalSerializer<StringBuilder> {
 
     @Override
     public Class<?> type() {

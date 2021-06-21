@@ -16,14 +16,14 @@ package yapion.serializing.serializer.object.regex;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.util.regex.Pattern;
 
 @SerializerImplementation(since = "0.24.0")
-public class PatternSerializer implements InternalSerializer<Pattern> {
+public class PatternSerializer implements FinalInternalSerializer<Pattern> {
 
     @Override
     public Class<?> type() {

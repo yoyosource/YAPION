@@ -13,18 +13,17 @@
 
 package yapion.serializing.serializer.notserializable.net;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
-import java.math.BigDecimal;
 import java.net.Socket;
 
 @SerializerImplementation(since = "0.12.0")
-public class SocketSerializer implements InternalSerializer<Socket> {
+public class SocketSerializer implements FinalInternalSerializer<Socket> {
 
     @Override
     public Class<?> type() {

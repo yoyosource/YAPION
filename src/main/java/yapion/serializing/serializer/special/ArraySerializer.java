@@ -17,9 +17,9 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 import yapion.utils.ClassUtils;
 
 import java.lang.reflect.Array;
@@ -28,7 +28,7 @@ import java.util.List;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
-public class ArraySerializer implements InternalSerializer<Object> {
+public class ArraySerializer implements FinalInternalSerializer<Object> {
 
     @Override
     public Class<?> type() {
@@ -65,11 +65,11 @@ public class ArraySerializer implements InternalSerializer<Object> {
         YAPIONArray current = yapionArray;
         do {
             sizes.add(yapionArray.length());
-            if (!current.stream().allMatch(yapionAnyType -> yapionAnyType instanceof YAPIONArray)) {
+            if (!current.stream().allMatch(YAPIONArray.class::isInstance)) {
                 current = null;
                 continue;
             }
-            current = yapionArray.stream().filter(yapionAnyType -> yapionAnyType instanceof YAPIONArray).map(YAPIONArray.class::cast).findFirst().orElse(null);
+            current = yapionArray.stream().filter(YAPIONArray.class::isInstance).map(YAPIONArray.class::cast).findFirst().orElse(null);
         } while (current != null);
 
         int[] ints = new int[sizes.size()];

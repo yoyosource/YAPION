@@ -16,7 +16,7 @@ package yapion.serializing;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.kamranzafar.jtar.TarEntry;
 import org.kamranzafar.jtar.TarInputStream;
@@ -49,73 +49,62 @@ import static yapion.utils.ReflectionsUtils.implementsInterface;
 import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
 
 @Slf4j
+@UtilityClass
 public class SerializeManager {
 
-    private SerializeManager() {
-        throw new IllegalStateException("Utility class");
-    }
-
-    static void init() {
+    void init() {
         // Init from YAPIONSerializerFlagDefault
     }
 
-    @ToString
-    private static final class Serializer {
-        private final InternalSerializer<?> internalSerializer;
-        private final boolean overrideable;
-
-        public Serializer(InternalSerializer<?> internalSerializer, boolean overrideable) {
-            this.internalSerializer = internalSerializer;
-            this.overrideable = overrideable;
-        }
-    }
-
-    private static final boolean OVERRIDEABLE;
-    private static final Serializer defaultSerializer = new Serializer(null, false);
-    private static final Serializer defaultNullSerializer = new Serializer(new InternalSerializer<Object>() {
+    private final InternalSerializer<Object> defaultSerializer = null;
+    private final InternalSerializer<Void> defaultNullSerializer = new InternalSerializer<Void>() {
         @Override
         public Class<?> type() {
             return Void.class;
         }
 
         @Override
-        public YAPIONAnyType serialize(SerializeData<Object> serializeData) {
+        public YAPIONAnyType serialize(SerializeData<Void> serializeData) {
             serializeData.signalDataLoss();
             return new YAPIONValue<>(null);
         }
 
         @Override
-        public Object deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        public Void deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
             return null;
         }
-    }, false);
+    };
 
-    private static InternalSerializer<Object> ARRAY_SERIALIZER = null;
-    private static InternalSerializer<Enum<?>> ENUM_SERIALIZER = null;
-    private static InternalSerializer<Object> RECORD_SERIALIZER = null;
+    private InternalSerializer<Object> ARRAY_SERIALIZER = null;
+    private InternalSerializer<Enum<?>> ENUM_SERIALIZER = null;
+    private InternalSerializer<Object> RECORD_SERIALIZER = null;
 
     @InternalAPI
-    public static Predicate<Class<?>> isRecord = c -> false;
+    public Predicate<Class<?>> isRecord = c -> false;
 
-    private static final String INTERNAL_SERIALIZER = InternalSerializer.class.getTypeName();
+    private final Map<Class<?>, InternalSerializer<?>> serializerMap = new IdentityHashMap<>();
+    private final List<InternalSerializer<?>> interfaceTypeSerializer = new ArrayList<>();
+    private final List<InternalSerializer<?>> classTypeSerializer = new ArrayList<>();
 
-    private static final Map<Class<?>, Serializer> serializerMap = new IdentityHashMap<>();
-    private static final List<InternalSerializer<?>> interfaceTypeSerializer = new ArrayList<>();
-    private static final List<InternalSerializer<?>> classTypeSerializer = new ArrayList<>();
+    private final Set<String> serializerGroups = new HashSet<>();
 
-    private static final Set<String> nSerializerGroups = new HashSet<>();
-    private static final Set<String> oSerializerGroups = new HashSet<>();
-
-    private static final Map<Class<?>, InstanceFactory<?>> instanceFactoryMap = new HashMap<>();
+    private final Map<Class<?>, InstanceFactory<?>> instanceFactoryMap = new HashMap<>();
 
     @Getter
     @Setter
-    private static ReflectionStrategy reflectionStrategy = new PureStrategy();
+    private ReflectionStrategy reflectionStrategy = new PureStrategy();
+
+    private Class<?> FinalInternalSerializerClass = null;
 
     @AllArgsConstructor
     private static class WrappedClass {
         private final String name;
         private final byte[] bytes;
+
+        @Override
+        public String toString() {
+            return "SerializeManager.WrappedClass(" + name + ")";
+        }
     }
 
     static {
@@ -124,14 +113,14 @@ public class SerializeManager {
             log.error("No Serializer was loaded. Please inspect.");
             throw new YAPIONException("No Serializer was loaded. Please inspect.");
         }
-        try (TarInputStream tarInputStream = new TarInputStream(new GZIPInputStream(new BufferedInputStream(inputStream)))) {
-            Map<Integer, List<WrappedClass>> depthMap = new HashMap<>();
+        try (TarInputStream tarInputStream = new TarInputStream(new GZIPInputStream(new BufferedInputStream(inputStream), 8192))) {
+            Map<Integer, List<WrappedClass>> depthMap = new TreeMap<>(Comparator.comparingInt(value -> value));
             int deepest = 0;
 
             TarEntry entry;
-            while((entry = tarInputStream.getNextEntry()) != null) {
-                if (entry.isDirectory()) continue;
-                if (!entry.getName().endsWith(".class")) continue;
+            while ((entry = tarInputStream.getNextEntry()) != null) {
+                log.debug("Entry: {} {} {}", entry.getName(), entry.getSize(), entry.isDirectory());
+                if (entry.isDirectory() || !entry.getName().endsWith(".class")) continue;
 
                 List<Byte> bytes = new ArrayList<>();
                 while (tarInputStream.available() > 0 && bytes.size() < entry.getSize()) {
@@ -143,65 +132,55 @@ public class SerializeManager {
                 }
 
                 String className = "yapion.serializing.serializer." + entry.getName().substring(0, entry.getName().indexOf('.')).replace("/", ".");
-                int depth = entry.getName().length() - entry.getName().replaceAll("[/$]", "").length();
-                if (className.endsWith(".KeySpecSerializer")) depth += 1;
-                if (!className.endsWith("Serializer")) depth += 1;
+                int depth = className.length() - className.replace(".", "").length();
+                if (className.endsWith(".KeySpecSerializer")) depth -= 1;
+                if (!className.endsWith("Serializer")) depth -= 1;
+                depth -= className.length() - className.replace("$", "").length();
+                log.debug("Entry Info: {} {} {} {} {}", entry.getName(), entry.getSize(), byteArray.length, depth, deepest);
+
                 deepest = Math.max(deepest, depth);
                 depthMap.computeIfAbsent(depth, d -> new ArrayList<>()).add(new WrappedClass(className, byteArray));
             }
+            log.debug("ToLoad: {}", depthMap);
 
             YAPIONClassLoader classLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
-            for (int i = deepest; i >= 0; i--) {
-                depthMap.getOrDefault(i, new ArrayList<>()).forEach(wrappedClass -> {
-                    log.debug("Loading: " + wrappedClass.name);
+            depthMap.forEach((i, wrappedClasses) -> {
+                log.debug("Depth: {}", i);
+                wrappedClasses.forEach(wrappedClass -> {
+                    log.debug("Loading: {}", wrappedClass.name);
                     add(classLoader.defineClass(wrappedClass.name, wrappedClass.bytes));
                 });
-            }
+            });
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage(), e);
         }
         if (serializerMap.isEmpty()) {
             log.error("No Serializer was loaded. Please inspect.");
         }
 
-        oSerializerGroups.add("yapion.annotations.");
-        oSerializerGroups.add("yapion.hierarchy.output.");
-        oSerializerGroups.add("yapion.hierarchy.types.utils.");
-        oSerializerGroups.add("yapion.hierarchy.types.value.");
-        oSerializerGroups.add("yapion.hierarchy.validators.");
-        oSerializerGroups.add("yapion.parser.");
-        oSerializerGroups.add("yapion.serializing.api.");
-        oSerializerGroups.add("yapion.serializing.data.");
-        oSerializerGroups.add("yapion.serializing.serializer.");
-        oSerializerGroups.add("yapion.utils.");
-
-        nSerializerGroups.add("java.io.");
-        nSerializerGroups.add("java.net.");
-        nSerializerGroups.add("java.nio.");
-        nSerializerGroups.add("java.security.");
-        nSerializerGroups.add("java.text.");
-        nSerializerGroups.add("java.time.");
-        nSerializerGroups.add("java.util.");
-        OVERRIDEABLE = true;
+        serializerGroups.add("java.");
     }
 
     @InternalAPI
     static void add(Class<?> clazz) {
-        if (OVERRIDEABLE) return;
+        if (clazz.getTypeName().equals("yapion.serializing.serializer.FinalInternalSerializer") && FinalInternalSerializerClass == null) {
+            FinalInternalSerializerClass = clazz;
+        }
+        if (clazz.isInterface()) return;
         if (clazz.getInterfaces().length != 1) return;
-        String typeName = clazz.getInterfaces()[0].getTypeName();
-        if (!typeName.equals(INTERNAL_SERIALIZER)) return;
         Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
         if (o == null) return;
+        if (!(o instanceof InternalSerializer)) return;
         add((InternalSerializer<?>) o);
 
-        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.ArraySerializer")) {
+        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.ArraySerializer") && ARRAY_SERIALIZER == null) {
             ARRAY_SERIALIZER = (InternalSerializer<Object>) o;
         }
-        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.EnumSerializer")) {
+        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.EnumSerializer") && ENUM_SERIALIZER == null) {
             ENUM_SERIALIZER = (InternalSerializer<Enum<?>>) o;
         }
-        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.RecordSerializer")) {
+        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.RecordSerializer") && RECORD_SERIALIZER == null) {
             RECORD_SERIALIZER = (InternalSerializer<Object>) o;
         }
     }
@@ -210,11 +189,10 @@ public class SerializeManager {
     public static void add(InternalSerializer<?> serializer) {
         if (!checkOverrideable(serializer)) return;
         serializer.init();
-        Serializer serializerWrapper = new Serializer(serializer, OVERRIDEABLE);
-        serializerMap.put(serializer.type(), serializerWrapper);
+        serializerMap.put(serializer.type(), serializer);
 
         if (serializer.primitiveType() != null && serializer.type() != serializer.primitiveType()) {
-            serializerMap.put(serializer.primitiveType(), serializerWrapper);
+            serializerMap.put(serializer.primitiveType(), serializer);
         }
         if (serializer.interfaceType() != null) {
             interfaceTypeSerializer.add(serializer);
@@ -225,7 +203,11 @@ public class SerializeManager {
     }
 
     private static boolean checkOverrideable(InternalSerializer<?> serializer) {
-        return !serializerMap.containsKey(serializer.type()) || serializerMap.get(serializer.type()).overrideable;
+        if (!serializerMap.containsKey(serializer.type())) {
+            return true;
+        }
+        if (FinalInternalSerializerClass == null) return true;
+        return !FinalInternalSerializerClass.isInstance(serializerMap.get(serializer.type()));
     }
 
     public static <T> void add(SerializerBase<T, ?> serializer) {
@@ -241,7 +223,7 @@ public class SerializeManager {
      */
     public static void remove(Class<?> type) {
         if (type == null) return;
-        if (serializerMap.containsKey(type) && !serializerMap.get(type).overrideable) return;
+        if (serializerMap.containsKey(type) && FinalInternalSerializerClass.isInstance(serializerMap.get(type))) return;
         serializerMap.remove(type);
     }
 
@@ -258,7 +240,7 @@ public class SerializeManager {
             return RECORD_SERIALIZER;
         }
 
-        InternalSerializer<?> initialSerializer = getInternalSerializerInternal(type);
+        InternalSerializer<?> initialSerializer = serializerMap.getOrDefault(type, defaultSerializer);
         if (initialSerializer != null) return initialSerializer;
 
         AtomicReference<Class<?>> currentType = new AtomicReference<>(type);
@@ -272,9 +254,10 @@ public class SerializeManager {
                 .ifPresent(serializer -> currentType.set(serializer.type()));
         type = currentType.get();
 
-        InternalSerializer<?> internalSerializer = getInternalSerializerInternal(type);
+        InternalSerializer<?> internalSerializer = serializerMap.getOrDefault(type, defaultSerializer);
         if (internalSerializer != null) return internalSerializer;
-        if (contains(type.getTypeName(), nSerializerGroups)) return defaultNullSerializer.internalSerializer;
+        String typeName = type.getTypeName();
+        if (serializerGroups.stream().anyMatch(typeName::startsWith)) return defaultNullSerializer;
         return null;
     }
 
@@ -290,20 +273,11 @@ public class SerializeManager {
         return RECORD_SERIALIZER;
     }
 
-    private static InternalSerializer<?> getInternalSerializerInternal(Class<?> type) {
-        if (contains(type.getTypeName(), oSerializerGroups)) return defaultNullSerializer.internalSerializer;
-        return serializerMap.getOrDefault(type, defaultSerializer).internalSerializer;
-    }
-
-    private static boolean contains(String s, Set<String> strings) {
-        return strings.stream().anyMatch(s::startsWith);
-    }
-
     /**
-     * Add an {@link InstanceFactory} or {@link InstanceFactory}
-     * to the SerializerManager which will be used to create instances
-     * of a given {@link Class}. This can speed up the deserialization
-     * process because there are fewer reflection accesses.
+     * Add an {@link InstanceFactory} to the SerializerManager
+     * which will be used to create instances of a given {@link Class}.
+     * This can speed up the deserialization process because there are
+     * fewer reflection accesses.
      *
      * @param instanceFactory the factory
      */
@@ -313,15 +287,15 @@ public class SerializeManager {
         }
     }
 
+    /**
+     * Check if an {@link InstanceFactory} is present for a given
+     * {@link Class}.
+     *
+     * @param clazz the {@link Class} to check for
+     * @return {@code true} if an {@link InstanceFactory} for the given type is present, {@code false} otherwise
+     */
     public static boolean hasFactory(Class<?> clazz) {
         return instanceFactoryMap.containsKey(clazz);
-    }
-
-    public static Object getGenericObjectInstance(Class<?> clazz) throws ClassNotFoundException {
-        if (!hasFactory(clazz)) {
-            throw new ClassNotFoundException("Factory for " + clazz.getTypeName() + " not found or defined.");
-        }
-        return instanceFactoryMap.get(clazz).instance();
     }
 
     @SuppressWarnings("unchecked")
@@ -332,14 +306,14 @@ public class SerializeManager {
         return (T) instanceFactoryMap.get(clazz).instance();
     }
 
-    static Object getObjectInstance(Class<?> clazz, String type, boolean objenesis) {
+    static <T> T getObjectInstance(Class<T> clazz, String type, boolean objenesis) {
         if (instanceFactoryMap.containsKey(clazz)) {
-            return instanceFactoryMap.get(clazz).instance();
+            return (T) instanceFactoryMap.get(clazz).instance();
         }
         if (clazz.getDeclaredAnnotation(YAPIONObjenesis.class) != null) {
-            return ReflectionsUtils.constructObjectObjenesis(type);
+            return (T) ReflectionsUtils.constructObjectObjenesis(type);
         } else {
-            return ReflectionsUtils.constructObject(type, objenesis);
+            return (T) ReflectionsUtils.constructObject(type, objenesis);
         }
     }
 

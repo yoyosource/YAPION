@@ -16,14 +16,14 @@ package yapion.serializing.serializer.object.time;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.time.Instant;
 
 @SerializerImplementation(since = "0.18.0")
-public class InstantSerializer implements InternalSerializer<Instant> {
+public class InstantSerializer implements FinalInternalSerializer<Instant> {
 
     @Override
     public Class<?> type() {

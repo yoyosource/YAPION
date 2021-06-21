@@ -20,9 +20,9 @@ import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 import yapion.serializing.serializer.object.security.internal.KeySpecSerializerProvider;
 
 import java.security.GeneralSecurityException;
@@ -34,7 +34,7 @@ import static yapion.utils.IdentifierUtils.KEY_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.20.0")
-public class PrivateKeySerializer implements InternalSerializer<PrivateKey> {
+public class PrivateKeySerializer implements FinalInternalSerializer<PrivateKey> {
 
     @Override
     public Class<?> type() {

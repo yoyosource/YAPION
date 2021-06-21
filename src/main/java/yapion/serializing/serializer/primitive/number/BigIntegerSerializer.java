@@ -13,18 +13,17 @@
 
 package yapion.serializing.serializer.primitive.number;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-import yapion.annotations.api.SerializerImplementation;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @SerializerImplementation(since = "0.2.0")
-public class BigIntegerSerializer implements InternalSerializer<BigInteger> {
+public class BigIntegerSerializer implements FinalInternalSerializer<BigInteger> {
 
     @Override
     public Class<?> type() {

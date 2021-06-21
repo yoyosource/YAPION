@@ -17,15 +17,15 @@ import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.util.Hashtable;
 import java.util.Map;
 
 @SerializerImplementation(since = "0.7.0")
-public class HashTableSerializer implements InternalSerializer<Hashtable<?, ?>> {
+public class HashTableSerializer implements FinalInternalSerializer<Hashtable<?, ?>> {
 
     @Override
     public Class<?> type() {

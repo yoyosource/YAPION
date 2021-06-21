@@ -16,9 +16,9 @@ package yapion.serializing.serializer.object.security.internal.ec;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.math.BigInteger;
 import java.security.spec.ECFieldF2m;
@@ -26,7 +26,7 @@ import java.security.spec.ECFieldF2m;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.23.0")
-public class ECFieldF2mSerializer implements InternalSerializer<ECFieldF2m> {
+public class ECFieldF2mSerializer implements FinalInternalSerializer<ECFieldF2m> {
 
     @Override
     public Class<?> type() {

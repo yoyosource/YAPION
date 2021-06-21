@@ -17,14 +17,14 @@ import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 @SerializerImplementation(since = "0.20.0")
-public class AtomicReferenceArraySerializer implements InternalSerializer<AtomicReferenceArray<?>> {
+public class AtomicReferenceArraySerializer implements FinalInternalSerializer<AtomicReferenceArray<?>> {
 
     @Override
     public Class<?> type() {

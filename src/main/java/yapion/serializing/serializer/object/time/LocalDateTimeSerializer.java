@@ -16,15 +16,15 @@ package yapion.serializing.serializer.object.time;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 
 @SerializerImplementation(since = "0.18.0")
-public class LocalDateTimeSerializer implements InternalSerializer<LocalDateTime> {
+public class LocalDateTimeSerializer implements FinalInternalSerializer<LocalDateTime> {
 
     @Override
     public Class<?> type() {

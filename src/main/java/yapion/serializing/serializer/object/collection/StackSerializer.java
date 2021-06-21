@@ -17,14 +17,14 @@ import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.util.Stack;
 
 @SerializerImplementation(since = "0.17.0")
-public class StackSerializer implements InternalSerializer<Stack<?>> {
+public class StackSerializer implements FinalInternalSerializer<Stack<?>> {
 
     @Override
     public Class<?> type() {

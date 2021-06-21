@@ -19,10 +19,10 @@ import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.YAPIONFlag;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 @SerializerImplementation(since = "0.25.0")
-public class ClassSerializer implements InternalSerializer<Class<?>> {
+public class ClassSerializer implements FinalInternalSerializer<Class<?>> {
 
     private static final Map<Class<?>, String> byteCodes = new IdentityHashMap<>();
 

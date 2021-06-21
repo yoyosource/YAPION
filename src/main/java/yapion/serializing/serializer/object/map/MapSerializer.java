@@ -19,9 +19,9 @@ import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 import yapion.serializing.utils.SerializingUtils;
 import yapion.utils.ClassUtils;
 import yapion.utils.ReflectionsUtils;
@@ -35,7 +35,7 @@ import static yapion.utils.IdentifierUtils.ENUM_TYPE_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SerializerImplementation(since = "0.26.0", initialSince = "0.3.0, 0.7.0, 0.12.0, 0.23.0, 0.24.0", standsFor = {Map.class, HashMap.class, IdentityHashMap.class, LinkedHashMap.class, TreeMap.class, WeakHashMap.class, ConcurrentHashMap.class, ConcurrentSkipListMap.class, EnumMap.class})
-public class MapSerializer implements InternalSerializer<Map<?, ?>> {
+public class MapSerializer implements FinalInternalSerializer<Map<?, ?>> {
 
     private Map<Class<?>, Function<Map<?, ?>, Map<?, ?>>> wrapper = new HashMap<>();
 

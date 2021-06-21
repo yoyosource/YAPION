@@ -19,9 +19,9 @@ import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.lang.reflect.Constructor;
 
@@ -29,7 +29,7 @@ import static yapion.serializing.YAPIONFlag.REFLECTION_AS_NULL;
 import static yapion.serializing.YAPIONFlag.REFLECTION_EXCEPTION;
 
 @SerializerImplementation(since = "0.25.0")
-public class ConstructorSerializer implements InternalSerializer<Constructor<?>>  {
+public class ConstructorSerializer implements FinalInternalSerializer<Constructor<?>> {
 
     @Override
     public Class<?> type() {

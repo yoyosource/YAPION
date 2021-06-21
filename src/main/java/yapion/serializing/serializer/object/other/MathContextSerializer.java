@@ -16,15 +16,15 @@ package yapion.serializing.serializer.object.other;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.math.MathContext;
 import java.math.RoundingMode;
 
 @SerializerImplementation(since = "0.13.1")
-public class MathContextSerializer implements InternalSerializer<MathContext> {
+public class MathContextSerializer implements FinalInternalSerializer<MathContext> {
 
     @Override
     public Class<?> type() {

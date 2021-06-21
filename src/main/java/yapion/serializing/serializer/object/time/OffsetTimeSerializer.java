@@ -16,16 +16,16 @@ package yapion.serializing.serializer.object.time;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.time.LocalTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
 
 @SerializerImplementation(since = "0.24.0")
-public class OffsetTimeSerializer implements InternalSerializer<OffsetTime> {
+public class OffsetTimeSerializer implements FinalInternalSerializer<OffsetTime> {
 
     @Override
     public Class<?> type() {

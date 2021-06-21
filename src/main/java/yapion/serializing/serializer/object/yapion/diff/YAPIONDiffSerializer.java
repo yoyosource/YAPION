@@ -18,14 +18,14 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.diff.DiffBase;
 import yapion.hierarchy.diff.YAPIONDiff;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.util.List;
 
 @SerializerImplementation(since = "0.25.0")
-public class YAPIONDiffSerializer implements InternalSerializer<YAPIONDiff> {
+public class YAPIONDiffSerializer implements FinalInternalSerializer<YAPIONDiff> {
 
     private YAPIONObject empty = new YAPIONObject();
 

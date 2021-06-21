@@ -19,10 +19,9 @@ import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.InternalSerializer;
-import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Parameter;
@@ -31,7 +30,7 @@ import static yapion.serializing.YAPIONFlag.REFLECTION_AS_NULL;
 import static yapion.serializing.YAPIONFlag.REFLECTION_EXCEPTION;
 
 @SerializerImplementation(since = "0.26.0")
-public class ParameterSerializer implements InternalSerializer<Parameter> {
+public class ParameterSerializer implements FinalInternalSerializer<Parameter> {
 
     @Override
     public Class<?> type() {

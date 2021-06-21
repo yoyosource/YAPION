@@ -16,14 +16,14 @@ package yapion.serializing.serializer.object.throwable;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.lang.reflect.InvocationTargetException;
 
 @SerializerImplementation(since = "0.23.1")
-public class InvocationTargetExceptionSerializer implements InternalSerializer<InvocationTargetException> {
+public class InvocationTargetExceptionSerializer implements FinalInternalSerializer<InvocationTargetException> {
 
     @Override
     public Class<?> type() {

@@ -16,12 +16,12 @@ package yapion.serializing.serializer.notserializable.os;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 @SerializerImplementation(since = "0.12.0")
-public class ProcessBuilderSerializer implements InternalSerializer<ProcessBuilder> {
+public class ProcessBuilderSerializer implements FinalInternalSerializer<ProcessBuilder> {
 
     @Override
     public Class<?> type() {

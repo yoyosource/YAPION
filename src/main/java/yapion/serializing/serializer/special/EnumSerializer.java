@@ -17,15 +17,15 @@ import yapion.annotations.api.DeprecationInfo;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SuppressWarnings({"java:S1192"})
-public class EnumSerializer implements InternalSerializer<Enum<?>> { // This Serializer exists since version 0.10.0
+public class EnumSerializer implements FinalInternalSerializer<Enum<?>> { // This Serializer exists since version 0.10.0
 
     @Override
     public Class<?> type() {

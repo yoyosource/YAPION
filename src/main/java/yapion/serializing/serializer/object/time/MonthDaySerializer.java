@@ -16,15 +16,15 @@ package yapion.serializing.serializer.object.time;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 import java.time.Month;
 import java.time.MonthDay;
 
 @SerializerImplementation(since = "0.18.0")
-public class MonthDaySerializer implements InternalSerializer<MonthDay> {
+public class MonthDaySerializer implements FinalInternalSerializer<MonthDay> {
 
     @Override
     public Class<?> type() {

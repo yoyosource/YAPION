@@ -16,14 +16,12 @@ package yapion.serializing.serializer.primitive.string;
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
+import yapion.serializing.serializer.FinalInternalSerializer;
 
 @SerializerImplementation(since = "0.2.0")
-public class StringBufferSerializer implements InternalSerializer<StringBuffer> {
+public class StringBufferSerializer implements FinalInternalSerializer<StringBuffer> {
 
     @Override
     public Class<?> type() {

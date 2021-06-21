@@ -18,9 +18,9 @@ import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.serializing.InternalSerializer;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.serializer.FinalInternalSerializer;
 import yapion.serializing.utils.SerializingUtils;
 import yapion.utils.ReflectionsUtils;
 
@@ -29,7 +29,7 @@ import java.util.Queue;
 import java.util.concurrent.*;
 
 @SerializerImplementation(since = "0.23.0", initialSince = "0.7.0, 0.12.0", standsFor = {Queue.class, PriorityQueue.class, ConcurrentLinkedQueue.class, LinkedBlockingQueue.class, LinkedTransferQueue.class, SynchronousQueue.class, ArrayBlockingQueue.class, PriorityBlockingQueue.class})
-public class QueueSerializer implements InternalSerializer<Queue<?>> {
+public class QueueSerializer implements FinalInternalSerializer<Queue<?>> {
 
     @Override
     public void init() {
