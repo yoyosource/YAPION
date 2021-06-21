@@ -57,9 +57,8 @@ public final class YAPIONSocket {
         return yapionInputStream.read();
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T readObject() {
-        return (T) yapionInputStream.readObject();
+        return yapionInputStream.readObject();
     }
 
     public void write(YAPIONObject yapionObject) {
