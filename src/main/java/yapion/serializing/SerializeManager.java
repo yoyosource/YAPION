@@ -20,20 +20,16 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.kamranzafar.jtar.TarEntry;
 import org.kamranzafar.jtar.TarInputStream;
-import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.api.InternalAPI;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONMap;
-import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.api.*;
+import yapion.serializing.api.InstanceFactory;
+import yapion.serializing.api.SerializerBase;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.reflection.PureStrategy;
-import yapion.serializing.utils.SerializeManagerUtils;
 import yapion.utils.ReflectionsUtils;
 import yapion.utils.YAPIONClassLoader;
 
@@ -328,65 +324,4 @@ public class SerializeManager {
     public static Set<Class<?>> listRegisteredClassSerializer() {
         return interfaceTypeSerializer.stream().map(InternalSerializer::classType).collect(Collectors.toSet());
     }
-
-    /**
-     * @deprecated since 0.24.0, {@link SerializeManagerUtils#SerializerObject(Class, SerializeManagerUtils.SerializationGetter, SerializeManagerUtils.DeserializationGetter)}
-     */
-    @SuppressWarnings({"java:S100"})
-    @Deprecated
-    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#SerializerObject")
-    public static <T> SerializerObject<T> SerializerObject(Class<T> clazz, SerializeManagerUtils.SerializationGetter<T, YAPIONObject> serializationGetter, SerializeManagerUtils.DeserializationGetter<T, YAPIONObject> deserializationGetter) {
-        return SerializeManagerUtils.SerializerObject(clazz, serializationGetter, deserializationGetter);
-    }
-
-    /**
-     * @deprecated since 0.24.0, {@link SerializeManagerUtils#SerializerMap(Class, SerializeManagerUtils.SerializationGetter, SerializeManagerUtils.DeserializationGetter)}
-     */
-    @SuppressWarnings({"java:S100"})
-    @Deprecated
-    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#SerializerMap")
-    public static <T extends Map<?, ?>> SerializerMap<T> SerializerMap(Class<T> clazz, SerializeManagerUtils.SerializationGetter<T, YAPIONMap> serializationGetter, SerializeManagerUtils.DeserializationGetter<T, YAPIONMap> deserializationGetter) {
-        return SerializeManagerUtils.SerializerMap(clazz, serializationGetter, deserializationGetter);
-    }
-
-    /**
-     * @deprecated since 0.24.0, {@link SerializeManagerUtils#SerializerList(Class, SerializeManagerUtils.SerializationGetter, SerializeManagerUtils.DeserializationGetter)}
-     */
-    @SuppressWarnings({"java:S100"})
-    @Deprecated
-    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#SerializerList")
-    public static <T extends List<?>> SerializerList<T> SerializerList(Class<T> clazz, SerializeManagerUtils.SerializationGetter<T, YAPIONArray> serializationGetter, SerializeManagerUtils.DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        return SerializeManagerUtils.SerializerList(clazz, serializationGetter, deserializationGetter);
-    }
-
-    /**
-     * @deprecated since 0.24.0, {@link SerializeManagerUtils#SerializerQueue(Class, SerializeManagerUtils.SerializationGetter, SerializeManagerUtils.DeserializationGetter)}
-     */
-    @SuppressWarnings({"java:S100"})
-    @Deprecated
-    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#SerializerQueue")
-    public static <T extends Queue<?>> SerializerQueue<T> SerializerQueue(Class<T> clazz, SerializeManagerUtils.SerializationGetter<T, YAPIONArray> serializationGetter, SerializeManagerUtils.DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        return SerializeManagerUtils.SerializerQueue(clazz, serializationGetter, deserializationGetter);
-    }
-
-    /**
-     * @deprecated since 0.24.0, {@link SerializeManagerUtils#SerializerSet(Class, SerializeManagerUtils.SerializationGetter, SerializeManagerUtils.DeserializationGetter)}
-     */
-    @SuppressWarnings({"java:S100"})
-    @Deprecated
-    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#SerializerSet")
-    public static <T extends Set<?>> SerializerSet<T> SerializerSet(Class<T> clazz, SerializeManagerUtils.SerializationGetter<T, YAPIONArray> serializationGetter, SerializeManagerUtils.DeserializationGetter<T, YAPIONArray> deserializationGetter) {
-        return SerializeManagerUtils.SerializerSet(clazz, serializationGetter, deserializationGetter);
-    }
-
-    /**
-     * @deprecated since 0.24.0, {@link SerializeManagerUtils#InstanceFactory(Class, SerializeManagerUtils.InstanceGetter)}
-     */
-    @SuppressWarnings({"java:S100"})
-    @Deprecated
-    @DeprecationInfo(since = "0.24.0", alternative = "SerializeManagerUtils#InstanceFactory")
-    public static <T> InstanceFactory<T> InstanceFactory(Class<T> clazz, SerializeManagerUtils.InstanceGetter<T> instanceGetter) {
-        return SerializeManagerUtils.InstanceFactory(clazz, instanceGetter);
-    }
-
 }
