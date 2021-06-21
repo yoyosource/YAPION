@@ -48,6 +48,8 @@ import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
 @UtilityClass
 public class SerializeManager {
 
+    private final boolean SYS_LOGGER = false;
+
     void init() {
         // Init from YAPIONSerializerFlagDefault
     }
@@ -116,6 +118,7 @@ public class SerializeManager {
             TarEntry entry;
             while ((entry = tarInputStream.getNextEntry()) != null) {
                 log.debug("Entry: {} {} {}", entry.getName(), entry.getSize(), entry.isDirectory());
+                if (SYS_LOGGER) System.out.println("Entry: " + entry.getName() + " " + entry.getSize() + " " + entry.isDirectory());
                 if (entry.isDirectory() || !entry.getName().endsWith(".class")) continue;
 
                 List<Byte> bytes = new ArrayList<>();
@@ -133,17 +136,21 @@ public class SerializeManager {
                 if (!className.endsWith("Serializer")) depth -= 1;
                 depth -= className.length() - className.replace("$", "").length();
                 log.debug("Entry Info: {} {} {} {} {}", entry.getName(), entry.getSize(), byteArray.length, depth, deepest);
+                if (SYS_LOGGER) System.out.println("Entry Info: "  + entry.getName() + " " + entry.getSize() + " " + byteArray.length + " " + depth + " " + deepest);
 
                 deepest = Math.max(deepest, depth);
                 depthMap.computeIfAbsent(depth, d -> new ArrayList<>()).add(new WrappedClass(className, byteArray));
             }
             log.debug("ToLoad: {}", depthMap);
+            if (SYS_LOGGER) System.out.println("ToLoad: " + depthMap);
 
             YAPIONClassLoader classLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
             depthMap.forEach((i, wrappedClasses) -> {
                 log.debug("Depth: {}", i);
+                if (SYS_LOGGER) System.out.println("Depth: " + i);
                 wrappedClasses.forEach(wrappedClass -> {
                     log.debug("Loading: {}", wrappedClass.name);
+                    if (SYS_LOGGER) System.out.println("Loading: " + wrappedClass.name);
                     add(classLoader.defineClass(wrappedClass.name, wrappedClass.bytes));
                 });
             });

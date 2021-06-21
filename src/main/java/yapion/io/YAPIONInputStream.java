@@ -71,7 +71,7 @@ public class YAPIONInputStream implements AutoCloseable {
      */
     public synchronized YAPIONObject read() {
         if (closed) throw new YAPIONIOException("Reading from a closed Stream");
-        return YAPIONParser.parse(inputStream);
+        return YAPIONParser.parse(inputStream, false);
     }
 
     /**

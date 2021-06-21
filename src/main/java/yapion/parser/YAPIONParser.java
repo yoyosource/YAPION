@@ -54,6 +54,18 @@ public final class YAPIONParser {
     }
 
     /**
+     * Parses the File content to an YAPIONObject.
+     *
+     * @param file the file content to parse
+     * @param stopOnStreamEnd stop on Stream end or not
+     * @return The YAPIONObject parsed out of the file content
+     * @throws IOException by FileInputStream creation
+     */
+    public static YAPIONObject parse(File file, boolean stopOnStreamEnd) throws IOException {
+        return new YAPIONParser(file, stopOnStreamEnd).parse().result();
+    }
+
+    /**
      * Parses the String to an YAPIONObject.
      *
      * @param s the string to parse
@@ -79,6 +91,22 @@ public final class YAPIONParser {
      */
     public static YAPIONObject parse(InputStream inputStream) {
         return new YAPIONParser(inputStream).parse().result();
+    }
+
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will not cancel even when
+     * the end of Stream is reached. It will only cancel after it has a
+     * complete and valid YAPIONObject or 1 second without any new
+     * Input passed.
+     *
+     * @param inputStream the inputStream to parse
+     * @param stopOnStreamEnd stop on Stream end or not
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parse(InputStream inputStream, boolean stopOnStreamEnd) {
+        return new YAPIONParser(inputStream, stopOnStreamEnd).parse().result();
     }
 
     /**
@@ -291,7 +319,7 @@ public final class YAPIONParser {
      * @param inputStream to parse from
      */
     public YAPIONParser(@NonNull InputStream inputStream) {
-        this(inputStream, false, false);
+        this(inputStream, true, false);
     }
 
     /**
