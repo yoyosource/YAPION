@@ -20,9 +20,9 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
+import yapion.serializing.utils.SerializingUtils;
 
 import java.util.Hashtable;
-import java.util.Map;
 
 @SerializerImplementation(since = "0.7.0")
 public class HashTableSerializer implements FinalInternalSerializer<Hashtable<?, ?>> {
@@ -35,12 +35,7 @@ public class HashTableSerializer implements FinalInternalSerializer<Hashtable<?,
     @Override
     public YAPIONAnyType serialize(SerializeData<Hashtable<?, ?>> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject(type());
-        YAPIONMap yapionMap = new YAPIONMap();
-        yapionObject.add("values", yapionMap);
-        for (Map.Entry<?, ?> entry : serializeData.object.entrySet()) {
-            yapionMap.add(serializeData.serialize(entry.getKey()), serializeData.serialize(entry.getValue()));
-        }
-        return yapionObject;
+        return SerializingUtils.serializeMap(serializeData, yapionObject);
     }
 
     @Override
@@ -48,9 +43,6 @@ public class HashTableSerializer implements FinalInternalSerializer<Hashtable<?,
     public Hashtable<?, ?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONMap yapionMap = ((YAPIONObject) deserializeData.object).getMap("values");
         Hashtable<Object, Object> table = new Hashtable<>();
-        for (YAPIONAnyType key : yapionMap.getKeys()) {
-            table.put(deserializeData.deserialize(key), deserializeData.deserialize(yapionMap.get(key)));
-        }
-        return table;
+        return SerializingUtils.deserializeMap(deserializeData, yapionMap, table);
     }
 }
