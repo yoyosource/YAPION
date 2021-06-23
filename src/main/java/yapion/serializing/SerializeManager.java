@@ -141,8 +141,6 @@ public class SerializeManager {
                 deepest = Math.max(deepest, depth);
                 depthMap.computeIfAbsent(depth, d -> new ArrayList<>()).add(new WrappedClass(className, byteArray));
             }
-            log.debug("ToLoad: {}", depthMap);
-            if (SYS_LOGGER) System.out.println("ToLoad: " + depthMap);
 
             YAPIONClassLoader classLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
             depthMap.forEach((i, wrappedClasses) -> {
