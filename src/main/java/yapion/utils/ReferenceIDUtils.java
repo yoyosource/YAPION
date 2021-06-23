@@ -14,14 +14,10 @@
 package yapion.utils;
 
 import lombok.experimental.UtilityClass;
-import yapion.annotations.api.DeprecationInfo;
-import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.types.YAPIONValue;
 
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -31,14 +27,6 @@ public class ReferenceIDUtils {
 
     private static final Map<String, Long> referenceIDMapCache = new HashMap<>();
     private static final Map<String, Long> referenceIDMap = new LinkedHashMap<String, Long>() {
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<String, Long> eldest) {
-            return size() > 256;
-        }
-    };
-
-    private static final Map<String, Long> referenceIDOldMapCache = new HashMap<>();
-    private static final Map<String, Long> referenceIDOldMap = new LinkedHashMap<String, Long>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Long> eldest) {
             return size() > 256;
@@ -55,16 +43,6 @@ public class ReferenceIDUtils {
      * Use {@link #discardCache()} to discard this Cache.
      */
     public static final ReferenceFunction REFERENCE_FUNCTION = new ReferenceFunction(ReferenceIDUtils::reference);
-
-    /**
-     * Calculates the reference ID of a given String, primarily used for variable names.
-     * This method caches the last 256 inputs for faster reference ID calculation.
-     * Use {@link #discardCache()} to discard this Cache.
-     *
-     * @deprecated since 0.23.0
-     */
-    @Deprecated
-    public static final ReferenceFunction REFERENCE_FUNCTION_OLD = new ReferenceFunction(ReferenceIDUtils::referenceOld);
 
     private static long reference(String s) {
         if (referenceIDMap.containsKey(s)) {
@@ -89,28 +67,8 @@ public class ReferenceIDUtils {
         return l;
     }
 
-    @Deprecated
-    @DeprecationInfo(since = "0.23.0")
-    private static long referenceOld(String s) {
-        if (referenceIDOldMap.containsKey(s)) {
-            return referenceIDOldMap.get(s);
-        }
-        if (referenceIDOldMapCache.containsKey(s)) {
-            return referenceIDOldMapCache.get(s);
-        }
-        try {
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-            byte[] bytes = digest.digest(s.getBytes(StandardCharsets.UTF_8));
-            long value = (long) bytes[0] << 56 | (long) bytes[1] << 48 | (long) bytes[2] << 40 | (long) bytes[3] << 32 | (long) bytes[4] << 24 | (long) bytes[5] << 16 | (long) bytes[6] << 8 | (long) bytes[7];
-            referenceIDOldMap.put(s, value);
-            return value;
-        } catch (NoSuchAlgorithmException e) {
-            throw new YAPIONException("MD5 is not supported", e.getCause());
-        }
-    }
-
     /**
-     * Discard the cache used by {@link #referenceOld(String)}
+     * Discard the cache used by {@link #reference(String)}
      */
     public static void discardCache() {
         referenceIDMap.clear();
@@ -133,7 +91,6 @@ public class ReferenceIDUtils {
             field.setAccessible(true);
             for (String s : ((String[]) field.get(null))) {
                 referenceIDMapCache.put(s, reference(s));
-                referenceIDOldMapCache.put(s, referenceOld(s));
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             // Ignored
@@ -144,7 +101,6 @@ public class ReferenceIDUtils {
             try {
                 String s = (String) field.get(null);
                 referenceIDMapCache.put(s, reference(s));
-                referenceIDOldMapCache.put(s, referenceOld(s));
             } catch (IllegalAccessException e) {
                 // Ignored
             }

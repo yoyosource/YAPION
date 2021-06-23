@@ -13,12 +13,19 @@
 
 package yapion.utils;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import yapion.annotations.api.InternalAPI;
 
 import java.util.function.ToLongFunction;
 
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+/**
+ * You could use your own {@code ReferenceFunction} but it is not recommended as you need
+ * to use the ReferenceFunction everywhere {@link yapion.hierarchy.types.YAPIONPointer}'s
+ * are encountered. So you need to use your own implementation while parsing in
+ * {@link yapion.parser.YAPIONParser} as well as {@link yapion.serializing.YAPIONSerializer}.
+ */
+@RequiredArgsConstructor
+@InternalAPI
 public class ReferenceFunction {
 
     private final ToLongFunction<String> reference;

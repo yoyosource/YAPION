@@ -66,19 +66,6 @@ public final class YAPIONParser {
     }
 
     /**
-     * Parses the String to an YAPIONObject.
-     *
-     * @param s the string to parse
-     * @return YAPIONObject parsed out of the string
-     * @deprecated since 0.23.0
-     */
-    @Deprecated
-    @DeprecationInfo(since = "0.23.0")
-    public static YAPIONObject parseOld(String s) {
-        return new YAPIONParser(s).setReferenceFunction(ReferenceIDUtils.REFERENCE_FUNCTION_OLD).parse().result();
-    }
-
-    /**
      * Parses the InputStream to an YAPIONObject.
      * This method only parses the next YAPIONObject and tries to read
      * until the YAPIONObject is finished. It will not cancel even when
@@ -107,24 +94,6 @@ public final class YAPIONParser {
      */
     public static YAPIONObject parse(InputStream inputStream, boolean stopOnStreamEnd) {
         return new YAPIONParser(inputStream, stopOnStreamEnd).parse().result();
-    }
-
-    /**
-     * Parses the InputStream to an YAPIONObject.
-     * This method only parses the next YAPIONObject and tries to read
-     * until the YAPIONObject is finished. It will not cancel even when
-     * the end of Stream is reached. It will only cancel after it has a
-     * complete and valid YAPIONObject or 1 second without any new
-     * Input passed.
-     *
-     * @param inputStream the inputStream to parse
-     * @return YAPIONObject parsed out of the string
-     * @deprecated since 0.23.0
-     */
-    @Deprecated
-    @DeprecationInfo(since = "0.23.0")
-    public static YAPIONObject parseOld(InputStream inputStream) {
-        return new YAPIONParser(inputStream).setReferenceFunction(ReferenceIDUtils.REFERENCE_FUNCTION_OLD).parse().result();
     }
 
     /**
