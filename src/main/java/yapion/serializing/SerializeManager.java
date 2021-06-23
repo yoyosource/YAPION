@@ -210,7 +210,7 @@ public class SerializeManager {
         return !FinalInternalSerializerClass.isInstance(serializerMap.get(serializer.type()));
     }
 
-    public static <T> void add(SerializerBase<T, ?> serializer) {
+    public static <T, K extends YAPIONAnyType> void add(SerializerBase<T, K> serializer) {
         if (serializer == null) return;
         if (serializer.type() == null) return;
         add(serializer.convert());
