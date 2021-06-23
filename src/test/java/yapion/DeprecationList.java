@@ -47,11 +47,13 @@ public class DeprecationList {
         });
         System.out.println("Current Version: " + major.get() + "." + minor.get() + "." + patch.get());
 
-        Set<String> known = new HashSet<>();
         AnnotationDetector annotationDetector = new AnnotationDetector(new AnnotationDetector.MethodReporter() {
             @Override
             public void reportMethodAnnotation(Class<? extends Annotation> annotation, String className, String methodName) {
-                if (known.contains(className + "@" + methodName)) return;
+                Set<String> classes = new HashSet<>();
+                if (!classes.add(className)) {
+                    return;
+                }
                 try {
                     Class<?> clazz = Class.forName(className);
                     for (Method method : clazz.getDeclaredMethods()) {
@@ -72,7 +74,6 @@ public class DeprecationList {
                         }
                         System.out.println();
                     }
-                    known.add(className + "@" + methodName);
                 } catch (ClassNotFoundException e) {
 
                 }

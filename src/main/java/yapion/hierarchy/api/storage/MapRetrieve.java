@@ -372,7 +372,6 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
         return (YAPIONValue<C>) yapionAnyType;
     }
 
-    @SuppressWarnings("unchecked")
     default <@YAPIONEveryType T, C> YAPIONValue<C> getValueOrDefault(@NonNull T key, Class<C> type, C defaultValue) {
         YAPIONValue<C> yapionValue = getValue(key, type);
         if (yapionValue == null) {
@@ -382,7 +381,6 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     default <@YAPIONEveryType T, C> void getValue(@NonNull T key, Class<C> type, Consumer<YAPIONValue<C>> valueConsumer, Runnable noValue) {
         YAPIONValue<C> yapionValue = getValue(key, type);
         if (yapionValue == null) {
@@ -408,7 +406,6 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
         return (YAPIONValue<C>) yapionAnyType;
     }
 
-    @SuppressWarnings("unchecked")
     default <@YAPIONEveryType T, C> YAPIONValue<C> getValueOrDefault(@NonNull T key, C defaultValue) {
         YAPIONValue<C> yapionValue = getValue(key, defaultValue);
         if (yapionValue == null) {
@@ -418,7 +415,6 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Deprecated
     @DeprecationInfo(since = "0.25.0")
     default <@YAPIONEveryType T, C> void getValue(@NonNull T key, C type, Consumer<YAPIONValue<C>> valueConsumer, Runnable noValue) {

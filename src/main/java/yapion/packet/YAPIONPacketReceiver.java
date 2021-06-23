@@ -104,42 +104,10 @@ public class YAPIONPacketReceiver {
     }
 
     /**
-     * Add an YAPIONPacketHandler for the specified packetTypes to handle.
-     * If either the yapionPacketHandler or the packetTypes itself is
-     * {@code null} this method throws an YAPIONPacketException. If any
-     * value in the packetTypes array is {@code null} it will just be
-     * skipped over.
-     *
-     * @param packetTypes the packets to handle
-     * @param yapionPacketHandler the handler which handles the specified packets
-     * @deprecated since 0.25.0
-     */
-    @Deprecated
-    @DeprecationInfo(since = "0.25.0")
-    public YAPIONPacketReceiver add(@NonNull Class<? extends YAPIONPacket>[] packetTypes, YAPIONPacketHandler yapionPacketHandler) {
-        for (Class<? extends YAPIONPacket> s : packetTypes) {
-            if (s == null) continue;
-            add(s, yapionPacketHandler);
-        }
-        return this;
-    }
-
-    /**
      * A wrapper function to {@link #add(Class, YAPIONPacketHandler)}
      */
     public YAPIONPacketReceiver add(@NonNull YAPIONPacketHandler yapionPacketHandler, @NonNull Class<? extends YAPIONPacket> packetType) {
         return add(packetType, yapionPacketHandler);
-    }
-
-    /**
-     * A wrapper function to {@link #add(Class[], YAPIONPacketHandler)}
-     *
-     * @deprecated since 0.25.0
-     */
-    @Deprecated
-    @DeprecationInfo(since = "0.25.0")
-    public YAPIONPacketReceiver add(YAPIONPacketHandler yapionPacketHandler, Class<? extends YAPIONPacket>... packetTypes) {
-        return add(packetTypes, yapionPacketHandler);
     }
 
     /**

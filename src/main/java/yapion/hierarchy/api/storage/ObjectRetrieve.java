@@ -174,7 +174,6 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
         return (YAPIONValue<T>) yapionAnyType;
     }
 
-    @SuppressWarnings("unchecked")
     default <T> YAPIONValue<T> getValueOrDefault(@NonNull K key, Class<T> type, T defaultValue) {
         YAPIONValue<T> yapionValue = getValue(key, type);
         if (yapionValue == null) {
@@ -184,7 +183,6 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     default <T> void getValue(@NonNull K key, Class<T> type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
         YAPIONValue<T> yapionValue = getValue(key, type);
         if (yapionValue == null) {
@@ -210,25 +208,12 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
         return (YAPIONValue<T>) yapionAnyType;
     }
 
-    @SuppressWarnings("unchecked")
     default <T> YAPIONValue<T> getValueOrDefault(@NonNull K key, T defaultValue) {
         YAPIONValue<T> yapionValue = getValue(key, defaultValue);
         if (yapionValue == null) {
             return new YAPIONValue<>(defaultValue);
         } else {
             return yapionValue;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    @DeprecationInfo(since = "0.25.0")
-    default <T> void getValue(@NonNull K key, T type, Consumer<YAPIONValue<T>> valueConsumer, Runnable noValue) {
-        YAPIONValue<T> yapionValue = getValue(key, type);
-        if (yapionValue == null) {
-            noValue.run();
-        } else {
-            valueConsumer.accept(yapionValue);
         }
     }
 
