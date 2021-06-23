@@ -102,8 +102,7 @@ public class DeserializeData<T extends YAPIONAnyType> {
     }
 
     public void isSet(YAPIONFlag key, Runnable allowed, Runnable disallowed) {
-        boolean b = yapionDeserializer.getYAPIONFlags().isSet(key);
-        if (b) {
+        if (yapionDeserializer.getYAPIONFlags().isSet(key)) {
             allowed.run();
         } else {
             disallowed.run();

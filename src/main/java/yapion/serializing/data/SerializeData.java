@@ -76,8 +76,7 @@ public class SerializeData<T> {
     }
 
     public void isSet(YAPIONFlag key, Runnable allowed, Runnable disallowed) {
-        boolean b = yapionSerializer.getYAPIONFlags().isSet(key);
-        if (b) {
+        if (yapionSerializer.getYAPIONFlags().isSet(key)) {
             allowed.run();
         } else {
             disallowed.run();
