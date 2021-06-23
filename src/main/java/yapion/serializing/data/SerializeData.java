@@ -41,6 +41,10 @@ public class SerializeData<T> {
         return new SerializeData<>(object, context, yapionSerializer);
     }
 
+    public final YAPIONAnyType serializeField(Field field) {
+        return serialize(getField(field));
+    }
+
     public final YAPIONAnyType serializeField(String fieldName) {
         return serialize(getField(fieldName));
     }
@@ -50,11 +54,7 @@ public class SerializeData<T> {
     }
 
     public final void serialize(YAPIONObject yapionObject, Field field) {
-        try {
-            yapionObject.add(field.getName(), field.get(object));
-        } catch (IllegalAccessException e) {
-            throw new YAPIONReflectionException(e.getMessage(), e);
-        }
+        yapionObject.add(field.getName(), serializeField(field));
     }
 
     @SuppressWarnings({"java:S3011"})

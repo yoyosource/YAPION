@@ -65,9 +65,8 @@ public class DeserializeData<T extends YAPIONAnyType> {
         return SerializeManager.hasFactory(clazz);
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T getInstance(Class<T> clazz) throws ClassNotFoundException {
-        return (T) SerializeManager.getObjectInstance(clazz);
+        return SerializeManager.getObjectInstance(clazz);
     }
 
     @SneakyThrows
