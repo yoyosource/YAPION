@@ -21,12 +21,6 @@ import static org.hamcrest.Matchers.is;
 public class ReferenceIDTest {
 
     @Test
-    public void testReferenceOld() {
-        long referenceID = ReferenceIDUtils.REFERENCE_FUNCTION_OLD.stringToReferenceValue("");
-        assertThat(referenceID, is(-19964L));
-    }
-
-    @Test
     public void testReference() {
         long referenceID = ReferenceIDUtils.REFERENCE_FUNCTION.stringToReferenceValue("");
         assertThat(referenceID, is(9029615197434853002L));
