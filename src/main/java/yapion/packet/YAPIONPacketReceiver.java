@@ -16,18 +16,22 @@ package yapion.packet;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.api.InternalAPI;
 import yapion.utils.IdentifierUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @Slf4j
 public class YAPIONPacketReceiver {
 
     private final Map<String, YAPIONPacketHandler> handlerMap = new HashMap<>();
+    private final Map<String, Set<Predicate<YAPIONPacket>>> filterMap = new HashMap<>();
+    private final Set<Predicate<YAPIONPacket>> packetFilters = new HashSet<>();
 
     @RequiredArgsConstructor
     public enum Handler {
@@ -46,6 +50,11 @@ public class YAPIONPacketReceiver {
          * Used when a packet has an unknown {@link IdentifierUtils#TYPE_IDENTIFIER}.
          */
         UNKNOWN_PACKET("@unknown", ERROR),
+
+        /**
+         * Used when a packet has been filtered by a {@link Predicate<YAPIONPacket>}
+         */
+        FILTERED("@filtered", ERROR),
 
         /**
          * Used when some data was dropped.
@@ -100,6 +109,7 @@ public class YAPIONPacketReceiver {
      */
     public YAPIONPacketReceiver add(@NonNull Class<? extends YAPIONPacket> packetType, @NonNull YAPIONPacketHandler yapionPacketHandler) {
         handlerMap.put(packetType.getTypeName(), yapionPacketHandler);
+        filterMap.put(packetType.getTypeName(), new HashSet<>());
         return this;
     }
 
@@ -123,6 +133,22 @@ public class YAPIONPacketReceiver {
         return this;
     }
 
+    public YAPIONPacketReceiver addPacketFilter(@NonNull Predicate<YAPIONPacket> yapionPacketFilter) {
+        packetFilters.add(yapionPacketFilter);
+        return this;
+    }
+
+    public YAPIONPacketReceiver addPacketFilter(@NonNull Class<? extends YAPIONPacket> packetType, @NonNull Predicate<YAPIONPacket> yapionPacketFilter) {
+        if (!filterMap.containsKey(packetType.getTypeName())) {
+            throw new SecurityException("Packet Type needs to have a YAPIONPacketHandler before declaring filters");
+        }
+        filterMap.get(packetType.getTypeName()).add(yapionPacketFilter);
+        return this;
+    }
+    public YAPIONPacketReceiver addPacketFilter(@NonNull Predicate<YAPIONPacket> yapionPacketFilter, @NonNull Class<? extends YAPIONPacket> packetType) {
+        return addPacketFilter(packetType, yapionPacketFilter);
+    }
+
     /**
      * Handles an YAPIONPacket by calling the specified yapionPacketHandler
      * for the type of the packet. If the packet type is not found the
@@ -138,15 +164,23 @@ public class YAPIONPacketReceiver {
             handle(yapionPacket, Handler.UNKNOWN_PACKET);
             return;
         }
+        if (packetFilters.stream().anyMatch(yapionPacketFilter -> yapionPacketFilter.test(yapionPacket))) {
+            handle(yapionPacket, Handler.FILTERED);
+            return;
+        }
+        if (filterMap.get(type).stream().anyMatch(yapionPacketFilter -> yapionPacketFilter.test(yapionPacket))) {
+            handle(yapionPacket, Handler.FILTERED);
+            return;
+        }
         handlePacket(yapionPacket, handlerMap.get(type), Handler.USER);
     }
 
-    private void handlePacket(YAPIONPacket yapionPacket, YAPIONPacketHandler handler, Handler onExceptionHandler) {
+    private void handlePacket(YAPIONPacket yapionPacket, YAPIONPacketHandler handler, Handler currentHandler) {
         Runnable runnable = () -> {
             try {
                 handler.handlePacket(yapionPacket);
             } catch (Exception e) {
-                log.warn(String.format("Current packet handler executing type '%s' threw an exception. Current handler is %s.", yapionPacket.getType(), onExceptionHandler.name()), e.getCause());
+                log.warn(String.format("Current packet handler executing type '%s' threw an exception. Current handler is %s.", yapionPacket.getType(), currentHandler.name()), e.getCause());
                 yapionPacket.setException(e);
                 if (handler.closeOnException() && yapionPacket.getYAPIONPacketStream() != null) {
                     try {
@@ -159,10 +193,10 @@ public class YAPIONPacketReceiver {
                 if (handler.ignoreException()) {
                     return;
                 }
-                if (onExceptionHandler.onException == null) {
+                if (currentHandler.onException == null) {
                     throw new SecurityException(yapionPacket.getException().getMessage(), yapionPacket.getException());
                 }
-                handlePacket(yapionPacket, handlerMap.get(onExceptionHandler.onException.identifier), onExceptionHandler.onException);
+                handlePacket(yapionPacket, handlerMap.get(currentHandler.onException.identifier), currentHandler.onException);
             }
         };
         if (handler.runThread()) {
