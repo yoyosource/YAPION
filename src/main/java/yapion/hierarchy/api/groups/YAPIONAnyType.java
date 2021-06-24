@@ -14,17 +14,22 @@
 package yapion.hierarchy.api.groups;
 
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.ObjectPath;
 import yapion.hierarchy.api.ObjectSearch;
 import yapion.hierarchy.api.ObjectType;
+import yapion.hierarchy.output.FileGZIPOutput;
+import yapion.hierarchy.output.FileOutput;
+import yapion.hierarchy.output.LengthOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONPath;
 import yapion.parser.YAPIONParser;
 import yapion.utils.ReferenceFunction;
 
+import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -140,6 +145,44 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     @Override
     public Optional<YAPIONSearchResult<?>> get(String key) {
         return Optional.empty();
+    }
+
+    /// Copied from {@link yapion.YAPIONExtension}
+
+    public String toYAPION() {
+        return toYAPION(new StringOutput()).getResult();
+    }
+
+    public String toYAPION(boolean prettified) {
+        return toYAPION(new StringOutput(prettified)).getResult();
+    }
+
+    @SneakyThrows
+    public void toFile(File file) {
+        toYAPION(new FileOutput(file)).close();
+    }
+
+    @SneakyThrows
+    public void toFile(File file, boolean prettified) {
+        toYAPION(new FileOutput(file, prettified)).close();
+    }
+
+    @SneakyThrows
+    public void toGZIPFile(File file) {
+        toYAPION(new FileGZIPOutput(file)).close();
+    }
+
+    public long toLength() {
+        return toYAPION(new LengthOutput()).getLength();
+    }
+
+    public long toLength(boolean prettified) {
+        LengthOutput lengthOutput = toYAPION(new LengthOutput());
+        if (prettified) {
+            return lengthOutput.getPrettifiedLength();
+        } else {
+            return lengthOutput.getLength();
+        }
     }
 
 }

@@ -68,42 +68,7 @@ public class YAPIONExtension {
         return new YAPIONParser(file, stopOnEnd).parse().result();
     }
 
-    /// Output
-
-    public static String toYAPION(YAPIONAnyType yapionAnyType) {
-        return yapionAnyType.toYAPION(new StringOutput()).getResult();
-    }
-
-    public static String toYAPION(YAPIONAnyType yapionAnyType, boolean prettified) {
-        return yapionAnyType.toYAPION(new StringOutput(prettified)).getResult();
-    }
-
-    @SneakyThrows
-    public static void toFile(YAPIONAnyType yapionAnyType, File file) {
-        yapionAnyType.toYAPION(new FileOutput(file)).close();
-    }
-
-    @SneakyThrows
-    public static void toFile(YAPIONAnyType yapionAnyType, File file, boolean prettified) {
-        yapionAnyType.toYAPION(new FileOutput(file, prettified)).close();
-    }
-
-    @SneakyThrows
-    public static void toGZIPFile(YAPIONAnyType yapionAnyType, File file) {
-        yapionAnyType.toYAPION(new FileGZIPOutput(file)).close();
-    }
-
-    public static long toLength(YAPIONAnyType yapionAnyType) {
-        return yapionAnyType.toYAPION(new LengthOutput()).getLength();
-    }
-
-    public static long toLength(YAPIONAnyType yapionAnyType, boolean prettified) {
-        if (prettified) {
-            return yapionAnyType.toYAPION(new LengthOutput()).getPrettifiedLength();
-        } else {
-            return yapionAnyType.toYAPION(new LengthOutput()).getLength();
-        }
-    }
+    /// Output - is defined on YAPIONAnyType
 
     /// Serializing
     // Deserializing is defined on SerializingType
