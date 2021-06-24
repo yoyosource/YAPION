@@ -68,7 +68,7 @@ public class YAPIONExtension {
         return new YAPIONParser(file, stopOnEnd).parse().result();
     }
 
-    /// Output - is defined on YAPIONAnyType
+    /// Output - is defined on ObjectOutput
 
     /// Serializing
     // Deserializing is defined on SerializingType

@@ -147,42 +147,4 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         return Optional.empty();
     }
 
-    /// Copied from {@link yapion.YAPIONExtension}
-
-    public String toYAPION() {
-        return toYAPION(new StringOutput()).getResult();
-    }
-
-    public String toYAPION(boolean prettified) {
-        return toYAPION(new StringOutput(prettified)).getResult();
-    }
-
-    @SneakyThrows
-    public void toFile(File file) {
-        toYAPION(new FileOutput(file)).close();
-    }
-
-    @SneakyThrows
-    public void toFile(File file, boolean prettified) {
-        toYAPION(new FileOutput(file, prettified)).close();
-    }
-
-    @SneakyThrows
-    public void toGZIPFile(File file) {
-        toYAPION(new FileGZIPOutput(file)).close();
-    }
-
-    public long toLength() {
-        return toYAPION(new LengthOutput()).getLength();
-    }
-
-    public long toLength(boolean prettified) {
-        LengthOutput lengthOutput = toYAPION(new LengthOutput());
-        if (prettified) {
-            return lengthOutput.getPrettifiedLength();
-        } else {
-            return lengthOutput.getLength();
-        }
-    }
-
 }

@@ -14,8 +14,9 @@
 package yapion.hierarchy.api;
 
 import lombok.SneakyThrows;
-import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.output.InstantiableOutput;
+import yapion.hierarchy.output.*;
+
+import java.io.File;
 
 public interface ObjectOutput {
 
@@ -38,6 +39,44 @@ public interface ObjectOutput {
     @SneakyThrows
     default <T extends AbstractOutput & InstantiableOutput> T toJSONLossy(Class<T> clazz) {
         return toJSONLossy(clazz.newInstance());
+    }
+
+    /// Copied from {@link yapion.YAPIONExtension}
+
+    default String toYAPION() {
+        return toYAPION(new StringOutput()).getResult();
+    }
+
+    default String toYAPION(boolean prettified) {
+        return toYAPION(new StringOutput(prettified)).getResult();
+    }
+
+    @SneakyThrows
+    default void toFile(File file) {
+        toYAPION(new FileOutput(file)).close();
+    }
+
+    @SneakyThrows
+    default void toFile(File file, boolean prettified) {
+        toYAPION(new FileOutput(file, prettified)).close();
+    }
+
+    @SneakyThrows
+    default void toGZIPFile(File file) {
+        toYAPION(new FileGZIPOutput(file)).close();
+    }
+
+    default long toLength() {
+        return toYAPION(new LengthOutput()).getLength();
+    }
+
+    default long toLength(boolean prettified) {
+        LengthOutput lengthOutput = toYAPION(new LengthOutput());
+        if (prettified) {
+            return lengthOutput.getPrettifiedLength();
+        } else {
+            return lengthOutput.getLength();
+        }
     }
 
 }
