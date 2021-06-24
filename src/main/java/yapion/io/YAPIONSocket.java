@@ -17,9 +17,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.packet.YAPIONPacket;
 import yapion.serializing.TypeReMapper;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -36,13 +34,14 @@ public final class YAPIONSocket {
 
     public YAPIONSocket(Socket socket, boolean gzipped) throws IOException {
         this.socket = socket;
+        InputStream inputStream = new BufferedInputStream(socket.getInputStream());
+        OutputStream outputStream = new BufferedOutputStream(socket.getOutputStream());
         if (gzipped) {
-            yapionInputStream = new YAPIONInputStream(new GZIPInputStream(new BufferedInputStream(socket.getInputStream())));
-            yapionOutputStream = new YAPIONOutputStream(new GZIPOutputStream(new BufferedOutputStream(socket.getOutputStream())));
-        } else {
-            yapionInputStream = new YAPIONInputStream(new BufferedInputStream(socket.getInputStream()));
-            yapionOutputStream = new YAPIONOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            inputStream = new GZIPInputStream(inputStream);
+            outputStream = new GZIPOutputStream(outputStream);
         }
+        yapionInputStream = new YAPIONInputStream(inputStream);
+        yapionOutputStream = new YAPIONOutputStream(outputStream);
     }
 
     public Socket getSocket() {
