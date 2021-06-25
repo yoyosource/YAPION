@@ -35,6 +35,10 @@ public class YAPIONClassLoader extends ClassLoader {
         return Class.forName(name);
     }
 
+    public Class<?> forName(String name) throws ClassNotFoundException {
+        return findClass(name);
+    }
+
     public Class<?> defineClass(String name, byte[] bytes) {
         Class<?> clazz = defineClass(name, bytes, 0, bytes.length);
         current.put(name, clazz);
