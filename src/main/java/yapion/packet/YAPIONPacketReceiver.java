@@ -175,6 +175,10 @@ public class YAPIONPacketReceiver {
         handlePacket(yapionPacket, handlerMap.get(type), Handler.USER);
     }
 
+    void handle(YAPIONPacket yapionPacket, Handler handler) {
+        handlePacket(yapionPacket, handlerMap.get(handler.identifier), handler);
+    }
+
     private void handlePacket(YAPIONPacket yapionPacket, YAPIONPacketHandler handler, Handler currentHandler) {
         Runnable runnable = () -> {
             try {
@@ -208,9 +212,4 @@ public class YAPIONPacketReceiver {
             runnable.run();
         }
     }
-
-    void handle(YAPIONPacket yapionPacket, Handler handler) {
-        handlePacket(yapionPacket, handlerMap.get(handler.identifier), handler);
-    }
-
 }
