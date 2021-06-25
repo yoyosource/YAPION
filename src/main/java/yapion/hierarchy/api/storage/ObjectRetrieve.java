@@ -25,24 +25,6 @@ import java.util.function.Consumer;
 
 public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
 
-    @Deprecated
-    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
-    default boolean hasValue(@NonNull K key) {
-        return hasValue(key, YAPIONType.ANY);
-    }
-
-    @Deprecated
-    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
-    default boolean hasValue(@NonNull K key, YAPIONType yapionType) {
-        return containsKey(key, yapionType);
-    }
-
-    @Deprecated
-    @DeprecationInfo(since = "0.25.1", alternative = "containsKey")
-    default <T> boolean hasValue(@NonNull K key, Class<T> type) {
-        return containsKey(key, type);
-    }
-
     default boolean containsKey(@NonNull K key) {
         return containsKey(key, YAPIONType.ANY);
     }
