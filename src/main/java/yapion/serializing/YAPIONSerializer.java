@@ -16,10 +16,8 @@ package yapion.serializing;
 import lombok.NonNull;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONPointer;
-import yapion.hierarchy.types.YAPIONType;
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.api.groups.YAPIONDataType;
+import yapion.hierarchy.types.*;
 import yapion.serializing.data.SerializeData;
 import yapion.utils.ClassUtils;
 import yapion.utils.ReflectionsUtils;
@@ -144,8 +142,8 @@ public final class YAPIONSerializer {
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
             YAPIONAnyType yapionAnyType = serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
-            if (yapionAnyType instanceof YAPIONObject) {
-                pointerMap.put(object, new YAPIONPointer((YAPIONObject) yapionAnyType));
+            if (yapionAnyType instanceof YAPIONObject || yapionAnyType instanceof YAPIONArray || yapionAnyType instanceof YAPIONMap) {
+                pointerMap.put(object, new YAPIONPointer((YAPIONDataType<?, ?>) yapionAnyType));
             }
             return yapionAnyType;
         } else {
@@ -163,8 +161,8 @@ public final class YAPIONSerializer {
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
             this.result = serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
-            if (result instanceof YAPIONObject) {
-                pointerMap.put(object, new YAPIONPointer((YAPIONObject) result));
+            if (result instanceof YAPIONObject || result instanceof YAPIONArray || result instanceof YAPIONMap) {
+                pointerMap.put(object, new YAPIONPointer((YAPIONDataType<?, ?>) result));
             }
             return this;
         }

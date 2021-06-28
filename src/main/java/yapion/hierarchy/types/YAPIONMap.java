@@ -211,9 +211,6 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
                 if (resultKey.getYAPIONAny() == null) {
                     throw new YAPIONRecursionException("Pointer creation failure.");
                 }
-                if (!(resultKey.getYAPIONAny() instanceof YAPIONObject)) {
-                    throw new YAPIONRecursionException("Pointer creation failure.");
-                }
                 internalKey = new YAPIONPointer((YAPIONObject) resultKey.getYAPIONAny());
             }
         }
@@ -221,9 +218,6 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
             RecursionUtils.RecursionResult resultValue = RecursionUtils.checkRecursion(value, this);
             if (resultValue.getRecursionType() != RecursionUtils.RecursionType.NONE) {
                 if (resultValue.getYAPIONAny() == null) {
-                    throw new YAPIONRecursionException("Pointer creation failure.");
-                }
-                if (!(resultValue.getYAPIONAny() instanceof YAPIONObject)) {
                     throw new YAPIONRecursionException("Pointer creation failure.");
                 }
                 value = new YAPIONPointer((YAPIONObject) resultValue.getYAPIONAny());

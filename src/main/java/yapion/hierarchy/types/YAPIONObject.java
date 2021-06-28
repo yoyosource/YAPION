@@ -206,9 +206,6 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
                 if (result.getYAPIONAny() == null) {
                     throw new YAPIONRecursionException("Pointer creation failure.");
                 }
-                if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
-                    throw new YAPIONRecursionException("Pointer creation failure.");
-                }
                 add(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));
                 return this;
             }
@@ -224,9 +221,6 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
             RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
             if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
                 if (result.getYAPIONAny() == null) {
-                    throw new YAPIONRecursionException("Pointer creation failure.");
-                }
-                if (!(result.getYAPIONAny() instanceof YAPIONObject)) {
                     throw new YAPIONRecursionException("Pointer creation failure.");
                 }
                 return addAndGetPrevious(key, new YAPIONPointer((YAPIONObject) result.getYAPIONAny()));

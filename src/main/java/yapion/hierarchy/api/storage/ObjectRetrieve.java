@@ -54,6 +54,15 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
         return null;
     }
 
+    default YAPIONObject getObjectOrDefault(@NonNull K key, YAPIONObject defaultValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return defaultValue;
+        if (yapionAnyType instanceof YAPIONObject) {
+            return (YAPIONObject) yapionAnyType;
+        }
+        return defaultValue;
+    }
+
     default void getObject(@NonNull K key, Consumer<YAPIONObject> valueConsumer, Runnable noValue) {
         YAPIONObject yapionObject = getObject(key);
         if (yapionObject == null) {
@@ -70,6 +79,15 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
             return (YAPIONArray) yapionAnyType;
         }
         return null;
+    }
+
+    default YAPIONArray getArrayOrDefault(@NonNull K key, YAPIONArray defaultValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return defaultValue;
+        if (yapionAnyType instanceof YAPIONArray) {
+            return (YAPIONArray) yapionAnyType;
+        }
+        return defaultValue;
     }
 
     default void getArray(@NonNull K key, Consumer<YAPIONArray> valueConsumer, Runnable noValue) {
@@ -90,6 +108,15 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
         return null;
     }
 
+    default YAPIONMap getMapOrDefault(@NonNull K key, YAPIONMap defaultValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return defaultValue;
+        if (yapionAnyType instanceof YAPIONMap) {
+            return (YAPIONMap) yapionAnyType;
+        }
+        return defaultValue;
+    }
+
     default void getMap(@NonNull K key, Consumer<YAPIONMap> valueConsumer, Runnable noValue) {
         YAPIONMap yapionMap = getMap(key);
         if (yapionMap == null) {
@@ -106,6 +133,15 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
             return (YAPIONPointer) yapionAnyType;
         }
         return null;
+    }
+
+    default YAPIONPointer getPointerOrDefault(@NonNull K key, YAPIONPointer defaultValue) {
+        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        if (yapionAnyType == null) return defaultValue;
+        if (yapionAnyType instanceof YAPIONPointer) {
+            return (YAPIONPointer) yapionAnyType;
+        }
+        return defaultValue;
     }
 
     default void getPointer(@NonNull K key, Consumer<YAPIONPointer> valueConsumer, Runnable noValue) {

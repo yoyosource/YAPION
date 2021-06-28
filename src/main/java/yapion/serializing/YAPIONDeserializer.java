@@ -29,7 +29,6 @@ import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.DeserializeData;
 import yapion.utils.ClassUtils;
-import yapion.utils.MethodReturnValue;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
@@ -48,7 +47,7 @@ public final class YAPIONDeserializer {
     private DeserializeResult deserializeResult = new DeserializeResult();
     private YAPIONFlags yapionFlags = new YAPIONFlags();
 
-    private Map<YAPIONObject, Object> pointerMap = new IdentityHashMap<>();
+    private Map<YAPIONDataType<?, ?>, Object> pointerMap = new IdentityHashMap<>();
 
     @Getter
     private String arrayType = "";
@@ -198,17 +197,7 @@ public final class YAPIONDeserializer {
     @SuppressWarnings({"java:S3740"})
     public Object parse(YAPIONAnyType yapionAnyType) {
         if (yapionAnyType instanceof YAPIONPointer) {
-            MethodReturnValue<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", yapionAnyType);
-            if (!objectOptional.isPresent()) {
-                return null;
-            }
-            Object object = objectOptional.get();
-            for (Map.Entry<YAPIONObject, Object> entry : pointerMap.entrySet()) {
-                if (entry.getKey() == object) {
-                    return entry.getValue();
-                }
-            }
-            return null;
+            return pointerMap.getOrDefault(((YAPIONPointer) yapionAnyType).get(), null);
         }
         if (yapionAnyType instanceof YAPIONValue) {
             return ((YAPIONValue) yapionAnyType).get();
@@ -217,7 +206,9 @@ public final class YAPIONDeserializer {
             return new YAPIONDeserializer((YAPIONObject) yapionAnyType, this).parse().getObject();
         }
         if (yapionAnyType instanceof YAPIONArray) {
-            return SerializeManager.getArraySerializer().deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this, typeReMapper));
+            Object o = SerializeManager.getArraySerializer().deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this, typeReMapper));
+            pointerMap.put((YAPIONDataType<?, ?>) yapionAnyType, o);
+            return o;
         }
         return null;
     }

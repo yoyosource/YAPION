@@ -62,7 +62,7 @@ public class JSONMapper {
             long id = yapionPointer.getPointerID();
             YAPIONObject yapionObject = yapionObjectMap.get(id);
             if (yapionObject == null) continue;
-            yapionPointer.setYAPIONObject(yapionObject);
+            yapionPointer.set(yapionObject);
         }
     }
 

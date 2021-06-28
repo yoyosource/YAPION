@@ -75,10 +75,11 @@ processResources {
     doLast {
         File from = new File("${buildDir}/classes/java/main/META-INF/annotations/yapion.annotations.api.ProcessorImplementation")
         File to = new File("${buildDir}/classes/java/main/META-INF/services/javax.annotation.processing.Processor")
+        to.delete()
         to.parentFile.mkdirs()
         to.createNewFile()
         for (String s : from.readLines()) {
-            to.write(s + "\n");
+            to.append(s + "\n");
         }
     }
 }

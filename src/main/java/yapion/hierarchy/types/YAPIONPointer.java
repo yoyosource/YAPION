@@ -15,6 +15,7 @@ package yapion.hierarchy.types;
 
 import lombok.NonNull;
 import yapion.exceptions.value.YAPIONPointerException;
+import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
@@ -62,16 +63,16 @@ public class YAPIONPointer extends YAPIONValueType {
 
     private long pointerID;
     private ReferenceFunction referenceFunction;
-    private YAPIONObject yapionObject = null;
+    private YAPIONDataType<?, ?> object = null;
 
-    public YAPIONPointer(YAPIONObject yapionObject) {
+    public <T extends YAPIONDataType<?, ?>> YAPIONPointer(T object) {
         referenceFunction = ReferenceIDUtils.REFERENCE_FUNCTION;
-        this.yapionObject = yapionObject;
+        this.object = object;
     }
 
-    public YAPIONPointer(YAPIONObject yapionObject, ReferenceFunction referenceFunction) {
+    public <T extends YAPIONDataType<?, ?>> YAPIONPointer(T object, ReferenceFunction referenceFunction) {
         this.referenceFunction = referenceFunction;
-        this.yapionObject = yapionObject;
+        this.object = object;
     }
 
     public YAPIONPointer(String pointerID) {
@@ -81,19 +82,19 @@ public class YAPIONPointer extends YAPIONValueType {
         this.pointerID = Long.parseLong(pointerID.toUpperCase(), 16);
     }
 
-    public void setYAPIONObject(YAPIONObject yapionObject) {
-        if (this.yapionObject != null || yapionObject == null) return;
-        this.yapionObject = yapionObject;
+    public <T extends YAPIONDataType<?, ?>> void set(T object) {
+        if (this.object != null || object == null) return;
+        this.object = object;
     }
 
-    public YAPIONObject getYAPIONObject() {
-        return yapionObject;
+    public <T extends YAPIONDataType<?, ?>> T get() {
+        return (T) object;
     }
 
     public long getPointerID() {
-        if (yapionObject != null) {
+        if (object != null) {
             if (referenceFunction == null) referenceFunction = ReferenceIDUtils.REFERENCE_FUNCTION;
-            pointerID = yapionObject.referenceValue(referenceFunction);
+            pointerID = object.referenceValue(referenceFunction);
         }
         return pointerID & 0x7FFFFFFFFFFFFFFFL;
     }
@@ -104,8 +105,8 @@ public class YAPIONPointer extends YAPIONValueType {
 
     @Override
     public Optional<YAPIONSearchResult<?>> get(String key) {
-        if (yapionObject == null) return Optional.empty();
-        if (key.equals("@reference")) return Optional.of(new YAPIONSearchResult<>(yapionObject));
+        if (object == null) return Optional.empty();
+        if (key.equals("@reference")) return Optional.of(new YAPIONSearchResult<>(object));
         return Optional.empty();
     }
 

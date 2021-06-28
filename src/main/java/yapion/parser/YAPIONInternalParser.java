@@ -17,6 +17,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.types.*;
 import yapion.hierarchy.types.value.ValueHandler;
 import yapion.utils.ReferenceFunction;
@@ -59,7 +60,7 @@ final class YAPIONInternalParser {
     private String key = "";
 
     // All Objects and Pointers
-    private final List<YAPIONObject> yapionObjectList = new ArrayList<>();
+    private final List<YAPIONDataType<?, ?>> yapionDataTypes = new ArrayList<>();
     private final List<YAPIONPointer> yapionPointerList = new LinkedList<>();
 
     // YAPIONValue type specifications
@@ -128,16 +129,16 @@ final class YAPIONInternalParser {
 
         if (!yapionPointerList.isEmpty()) {
             log.debug("pFinish  [init]");
-            Map<Long, YAPIONObject> yapionObjectMap = new HashMap<>();
-            for (YAPIONObject yapionObject : yapionObjectList) {
-                yapionObjectMap.put(yapionObject.referenceValue(referenceFunction), yapionObject);
+            Map<Long, YAPIONDataType<?, ?>> yapionDataTypeHashMap = new HashMap<>();
+            for (YAPIONDataType<?, ?> yapionDataType : yapionDataTypes) {
+                yapionDataTypeHashMap.put(yapionDataType.referenceValue(referenceFunction), yapionDataType);
             }
             log.debug("pFinish  [setPointer]");
             for (YAPIONPointer yapionPointer : yapionPointerList) {
                 long id = yapionPointer.getPointerID();
-                YAPIONObject yapionObject = yapionObjectMap.get(id);
-                if (yapionObject == null) continue;
-                yapionPointer.setYAPIONObject(yapionObject);
+                YAPIONDataType<?, ?> yapionDataType = yapionDataTypeHashMap.get(id);
+                if (yapionDataType == null) continue;
+                yapionPointer.set(yapionDataType);
             }
             log.debug("pFinish  [done]");
         }
@@ -174,7 +175,7 @@ final class YAPIONInternalParser {
         }
         typeStack.push(YAPIONType.OBJECT);
         result = new YAPIONObject();
-        yapionObjectList.add(result);
+        yapionDataTypes.add(result);
         currentObject = result;
         return hadInitial;
     }
@@ -212,7 +213,7 @@ final class YAPIONInternalParser {
             log.debug("type     [OBJECT]");
             push(YAPIONType.OBJECT);
             YAPIONObject yapionObject = new YAPIONObject();
-            yapionObjectList.add(yapionObject);
+            yapionDataTypes.add(yapionObject);
             add(key, yapionObject);
             currentObject = yapionObject;
             key = "";
@@ -222,6 +223,7 @@ final class YAPIONInternalParser {
             log.debug("type     [ARRAY]");
             push(YAPIONType.ARRAY);
             YAPIONArray yapionArray = new YAPIONArray();
+            yapionDataTypes.add(yapionArray);
             add(key, yapionArray);
             currentObject = yapionArray;
             key = "";
@@ -244,6 +246,7 @@ final class YAPIONInternalParser {
             log.debug("type     [MAP]");
             push(YAPIONType.MAP);
             YAPIONMap yapionMap = new YAPIONMap();
+            yapionDataTypes.add(yapionMap);
             add(key, yapionMap);
             currentObject = yapionMap;
             key = "";
