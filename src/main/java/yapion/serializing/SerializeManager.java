@@ -212,7 +212,9 @@ public class SerializeManager {
 
     public static <T, K extends YAPIONAnyType> void add(SerializerBase<T, K> serializer) {
         if (serializer == null) return;
-        if (serializer.type() == null) return;
+        if (serializer.type() == null) {
+            throw new YAPIONException("Serializer needs to have a defined type. '" + serializer + "' does not have one.");
+        }
         add(serializer.convert());
     }
 

@@ -23,7 +23,6 @@ import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.*;
 import yapion.utils.ReferenceFunction;
-import yapion.utils.ReferenceIDUtils;
 
 import java.io.*;
 import java.math.BigDecimal;
