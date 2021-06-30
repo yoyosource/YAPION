@@ -328,6 +328,6 @@ public class SerializeManager {
     }
 
     public static Set<Class<?>> listRegisteredClassSerializer() {
-        return interfaceTypeSerializer.stream().map(InternalSerializer::classType).collect(Collectors.toSet());
+        return classTypeSerializer.stream().map(InternalSerializer::classType).collect(Collectors.toSet());
     }
 }
