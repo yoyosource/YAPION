@@ -77,7 +77,7 @@ public class InputStreamCharReader implements CharReader {
                 if (j >>> 6 == 0b10) {
                     i &= 0b00011111;
                     j &= 0b00111111;
-                    available--;
+                    available -= 2;
                     return (char) (i << 6 | j);
                 }
             } else if (i >>> 4 == 0b1110) {
@@ -94,7 +94,7 @@ public class InputStreamCharReader implements CharReader {
                         i &= 0b00001111;
                         j &= 0b00111111;
                         k &= 0b00111111;
-                        available -= 2;
+                        available -= 3;
                         return (char) (i << 12 | j << 6 | k);
                     }
                 }
@@ -118,7 +118,7 @@ public class InputStreamCharReader implements CharReader {
                             j &= 0b00111111;
                             k &= 0b00111111;
                             l &= 0b00111111;
-                            available -= 3;
+                            available -= 4;
                             return (char) (i << 18 | j << 12 | k << 6 | l);
                         }
                     }
