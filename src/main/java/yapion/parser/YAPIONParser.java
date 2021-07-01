@@ -14,7 +14,6 @@
 package yapion.parser;
 
 import lombok.NonNull;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.DeprecationInfo;
 import yapion.exceptions.YAPIONException;
@@ -58,12 +57,37 @@ public final class YAPIONParser {
      * Parses the File content to an YAPIONObject.
      *
      * @param file the file content to parse
+     * @param charset to use
+     * @return The YAPIONObject parsed out of the file content
+     * @throws IOException by FileInputStream creation
+     */
+    public static YAPIONObject parse(File file, Charset charset) throws IOException {
+        return new YAPIONParser(file, charset).parse().result();
+    }
+
+    /**
+     * Parses the File content to an YAPIONObject.
+     *
+     * @param file the file content to parse
      * @param stopOnStreamEnd stop on Stream end or not
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
     public static YAPIONObject parse(File file, boolean stopOnStreamEnd) throws IOException {
         return new YAPIONParser(file, stopOnStreamEnd).parse().result();
+    }
+
+    /**
+     * Parses the File content to an YAPIONObject.
+     *
+     * @param file the file content to parse
+     * @param stopOnStreamEnd stop on Stream end or not
+     * @param charset to use
+     * @return The YAPIONObject parsed out of the file content
+     * @throws IOException by FileInputStream creation
+     */
+    public static YAPIONObject parse(File file, boolean stopOnStreamEnd, Charset charset) throws IOException {
+        return new YAPIONParser(file, stopOnStreamEnd, charset).parse().result();
     }
 
     /**
@@ -90,11 +114,44 @@ public final class YAPIONParser {
      * Input passed.
      *
      * @param inputStream the inputStream to parse
+     * @param charset to use
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parse(InputStream inputStream, Charset charset) {
+        return new YAPIONParser(inputStream, charset).parse().result();
+    }
+
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will not cancel even when
+     * the end of Stream is reached. It will only cancel after it has a
+     * complete and valid YAPIONObject or 1 second without any new
+     * Input passed.
+     *
+     * @param inputStream the inputStream to parse
      * @param stopOnStreamEnd stop on Stream end or not
      * @return YAPIONObject parsed out of the string
      */
     public static YAPIONObject parse(InputStream inputStream, boolean stopOnStreamEnd) {
         return new YAPIONParser(inputStream, stopOnStreamEnd).parse().result();
+    }
+
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will not cancel even when
+     * the end of Stream is reached. It will only cancel after it has a
+     * complete and valid YAPIONObject or 1 second without any new
+     * Input passed.
+     *
+     * @param inputStream the inputStream to parse
+     * @param stopOnStreamEnd stop on Stream end or not
+     * @param charset to use
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parse(InputStream inputStream, boolean stopOnStreamEnd, Charset charset) {
+        return new YAPIONParser(inputStream, stopOnStreamEnd, charset).parse().result();
     }
 
     /**
@@ -245,20 +302,17 @@ public final class YAPIONParser {
      * @param bytes to parse from
      */
     public YAPIONParser(@NonNull byte[] bytes) {
-        charReader = new CharReader() {
-            private int index = 0;
-            private int available = bytes.length;
+        this(bytes, StandardCharsets.US_ASCII);
+    }
 
-            @Override
-            public char next() {
-                return (char) bytes[index++];
-            }
-
-            @Override
-            public boolean hasNext() {
-                return index < available;
-            }
-        };
+    /**
+     * Creates a YAPIONParser for parsing a byte array to an YAPIONObject.
+     *
+     * @param bytes to parse from
+     * @param charset to use
+     */
+    public YAPIONParser(@NonNull byte[] bytes, Charset charset) {
+        charReader = new InputStreamCharReader(new ByteArrayInputStream(bytes), true, charset);
     }
 
     /**
@@ -296,6 +350,7 @@ public final class YAPIONParser {
      * Creates a YAPIONParser for parsing an InputStream to an YAPIONObject.
      *
      * @param inputStream to parse from
+     * @param charset to use
      */
     public YAPIONParser(@NonNull InputStream inputStream, Charset charset) {
         this(inputStream, true, false, charset);
@@ -316,6 +371,7 @@ public final class YAPIONParser {
      *
      * @param inputStream to parse from
      * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
+     * @param charset to use
      */
     public YAPIONParser(@NonNull InputStream inputStream, boolean stopOnStreamEnd, Charset charset) {
         this(inputStream, stopOnStreamEnd, false, charset);
@@ -335,6 +391,7 @@ public final class YAPIONParser {
      * Creates a YAPIONParser for parsing a file content to an YAPIONObject.
      *
      * @param file to parse from
+     * @param charset to use
      * @throws IOException by FileInputStream creation
      */
     public YAPIONParser(File file, Charset charset) throws IOException {
@@ -357,6 +414,7 @@ public final class YAPIONParser {
      *
      * @param file to parse from
      * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
+     * @param charset to use
      * @throws IOException by FileInputStream creation
      */
     public YAPIONParser(File file, boolean stopOnStreamEnd, Charset charset) throws IOException {
@@ -364,41 +422,7 @@ public final class YAPIONParser {
     }
 
     private YAPIONParser(InputStream inputStream, boolean stopOnStreamEnd, boolean closeAfterRead, Charset charset) {
-        if (charset != StandardCharsets.US_ASCII && charset != StandardCharsets.UTF_8 && charset != StandardCharsets.UTF_16) {
-            throw new YAPIONException("Invalid charset: " + charset.displayName());
-        }
         charReader = new InputStreamCharReader(inputStream, stopOnStreamEnd, charset);
-        /*charReader = new CharReader() {
-            int available = -1;
-
-            @Override
-            @SneakyThrows
-            public char next() {
-                int i = 0;
-                if (charset == StandardCharsets.UTF_16) {
-                    i = inputStream.read() << 8 | inputStream.read();
-                } else {
-                    i = inputStream.read();
-                }
-                if (i == -1 && !stopOnStreamEnd) {
-                    throw new ParserSkipException();
-                }
-                if (charset == StandardCharsets.UTF_16) {
-                    available--;
-                }
-                available--;
-                return (char) i;
-            }
-
-            @Override
-            @SneakyThrows
-            public boolean hasNext() {
-                if (available <= 0) {
-                    available = inputStream.available();
-                }
-                return !stopOnStreamEnd || available > 0;
-            }
-        };*/
         if (closeAfterRead) {
             finishRunnable = () -> {
                 try {

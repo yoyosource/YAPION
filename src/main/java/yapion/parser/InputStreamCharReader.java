@@ -36,15 +36,16 @@ public class InputStreamCharReader implements CharReader {
     private CharSupplier reader;
 
     public InputStreamCharReader(InputStream inputStream, boolean stopOnStreamEnd, Charset charset) {
+        if (charset != StandardCharsets.US_ASCII && charset != StandardCharsets.UTF_8) {
+            throw new YAPIONException("Unsupported charset: " + charset.displayName());
+        }
+
         this.inputStream = inputStream;
         this.stopOnStreamEnd = stopOnStreamEnd;
         if (charset == StandardCharsets.US_ASCII) {
             reader = US_ASCII();
-        } else if (charset == StandardCharsets.UTF_8) {
+        } else {
             reader = UTF_8();
-        }
-        else {
-            throw new YAPIONException("Unsupported charset: " + charset.displayName());
         }
     }
 

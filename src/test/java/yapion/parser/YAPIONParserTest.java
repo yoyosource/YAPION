@@ -19,6 +19,7 @@ import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.*;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -313,6 +314,13 @@ public class YAPIONParserTest {
     @Test
     public void testENotation() {
         assertThat(YAPIONParser.parse("{(5E+5)}").toYAPION(new StringOutput()).getResult(), is("{(500000.0)}"));
+    }
+
+    @Test
+    public void testParsingOfUTF8File() {
+        YAPIONObject yapionObject = new YAPIONParser(YAPIONParserTest.class.getResourceAsStream("/test2.yapion"), StandardCharsets.UTF_8).parse().result();
+        yapionObject = YAPIONParser.parse(yapionObject.toYAPION());
+        assertThat(yapionObject.toYAPION(), is("{rosenduftgenießer(null)}"));
     }
 
 }
