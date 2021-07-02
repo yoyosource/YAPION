@@ -29,6 +29,8 @@ import yapion.serializing.InternalSerializer;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.TypeReMapper;
 
+import java.io.Externalizable;
+import java.io.Serializable;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Function;
@@ -342,6 +344,7 @@ public class ReflectionsUtils {
 
     public static int implementsInterface(@NonNull Class<?> toCheck, @NonNull Class<?> interfaceClass) {
         if (!interfaceClass.isAssignableFrom(toCheck)) return -1;
+        if (interfaceClass == Serializable.class || interfaceClass == Externalizable.class) return Integer.MAX_VALUE;
         Set<Class<?>> classesToCheck = new HashSet<>();
         classesToCheck.add(toCheck);
         int depth = 0;

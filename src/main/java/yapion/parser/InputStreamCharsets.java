@@ -11,20 +11,17 @@
  * limitations under the License.
  */
 
-package yapion;
+package yapion.parser;
 
-import yapion.hierarchy.types.YAPIONObject;
-import yapion.parser.YAPIONParser;
-import yapion.parser.YAPIONParserTest;
+public enum InputStreamCharsets {
 
-import java.nio.charset.StandardCharsets;
+    US_ASCII,
 
-public class Test {
+    /**
+     * Also known as ISO_8859_1
+     */
+    LATIN_1,
 
-    public static void main(String[] args) {
-        YAPIONObject yapionObject = new YAPIONParser(YAPIONParserTest.class.getResourceAsStream("/test2.yapion"), StandardCharsets.UTF_8).parse().result();
-        yapionObject = YAPIONParser.parse(yapionObject.toYAPION());
-        System.out.println(yapionObject);
-    }
+    UTF_8;
 
 }

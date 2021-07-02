@@ -14,13 +14,10 @@
 package yapion.parser;
 
 import lombok.SneakyThrows;
-import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONIOException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 public class InputStreamCharReader implements CharReader {
 
@@ -35,16 +32,16 @@ public class InputStreamCharReader implements CharReader {
 
     private CharSupplier reader;
 
-    public InputStreamCharReader(InputStream inputStream, boolean stopOnStreamEnd, Charset charset) {
-        if (charset != StandardCharsets.US_ASCII && charset != StandardCharsets.UTF_8) {
-            throw new YAPIONException("Unsupported charset: " + charset.displayName());
-        }
+    public InputStreamCharReader(InputStream inputStream, boolean stopOnStreamEnd, InputStreamCharsets charset) {
 
         this.inputStream = inputStream;
         this.stopOnStreamEnd = stopOnStreamEnd;
-        if (charset == StandardCharsets.US_ASCII) {
+        if (charset == InputStreamCharsets.US_ASCII) {
             reader = US_ASCII();
-        } else {
+        } else if (charset == InputStreamCharsets.LATIN_1) {
+            reader = US_ASCII();
+        }
+        else {
             reader = UTF_8();
         }
     }

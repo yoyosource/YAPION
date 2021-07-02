@@ -61,7 +61,7 @@ public final class YAPIONParser {
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
-    public static YAPIONObject parse(File file, Charset charset) throws IOException {
+    public static YAPIONObject parse(File file, InputStreamCharsets charset) throws IOException {
         return new YAPIONParser(file, charset).parse().result();
     }
 
@@ -86,7 +86,7 @@ public final class YAPIONParser {
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
-    public static YAPIONObject parse(File file, boolean stopOnStreamEnd, Charset charset) throws IOException {
+    public static YAPIONObject parse(File file, boolean stopOnStreamEnd, InputStreamCharsets charset) throws IOException {
         return new YAPIONParser(file, stopOnStreamEnd, charset).parse().result();
     }
 
@@ -117,7 +117,7 @@ public final class YAPIONParser {
      * @param charset to use
      * @return YAPIONObject parsed out of the string
      */
-    public static YAPIONObject parse(InputStream inputStream, Charset charset) {
+    public static YAPIONObject parse(InputStream inputStream, InputStreamCharsets charset) {
         return new YAPIONParser(inputStream, charset).parse().result();
     }
 
@@ -150,7 +150,7 @@ public final class YAPIONParser {
      * @param charset to use
      * @return YAPIONObject parsed out of the string
      */
-    public static YAPIONObject parse(InputStream inputStream, boolean stopOnStreamEnd, Charset charset) {
+    public static YAPIONObject parse(InputStream inputStream, boolean stopOnStreamEnd, InputStreamCharsets charset) {
         return new YAPIONParser(inputStream, stopOnStreamEnd, charset).parse().result();
     }
 
@@ -302,7 +302,7 @@ public final class YAPIONParser {
      * @param bytes to parse from
      */
     public YAPIONParser(@NonNull byte[] bytes) {
-        this(bytes, StandardCharsets.US_ASCII);
+        this(bytes, InputStreamCharsets.US_ASCII);
     }
 
     /**
@@ -311,7 +311,7 @@ public final class YAPIONParser {
      * @param bytes to parse from
      * @param charset to use
      */
-    public YAPIONParser(@NonNull byte[] bytes, Charset charset) {
+    public YAPIONParser(@NonNull byte[] bytes, InputStreamCharsets charset) {
         charReader = new InputStreamCharReader(new ByteArrayInputStream(bytes), true, charset);
     }
 
@@ -343,7 +343,7 @@ public final class YAPIONParser {
      * @param inputStream to parse from
      */
     public YAPIONParser(@NonNull InputStream inputStream) {
-        this(inputStream, true, false, StandardCharsets.US_ASCII);
+        this(inputStream, true, false, InputStreamCharsets.US_ASCII);
     }
 
     /**
@@ -352,7 +352,7 @@ public final class YAPIONParser {
      * @param inputStream to parse from
      * @param charset to use
      */
-    public YAPIONParser(@NonNull InputStream inputStream, Charset charset) {
+    public YAPIONParser(@NonNull InputStream inputStream, InputStreamCharsets charset) {
         this(inputStream, true, false, charset);
     }
 
@@ -363,7 +363,7 @@ public final class YAPIONParser {
      * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
      */
     public YAPIONParser(@NonNull InputStream inputStream, boolean stopOnStreamEnd) {
-        this(inputStream, stopOnStreamEnd, false, StandardCharsets.US_ASCII);
+        this(inputStream, stopOnStreamEnd, false, InputStreamCharsets.US_ASCII);
     }
 
     /**
@@ -373,7 +373,7 @@ public final class YAPIONParser {
      * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
      * @param charset to use
      */
-    public YAPIONParser(@NonNull InputStream inputStream, boolean stopOnStreamEnd, Charset charset) {
+    public YAPIONParser(@NonNull InputStream inputStream, boolean stopOnStreamEnd, InputStreamCharsets charset) {
         this(inputStream, stopOnStreamEnd, false, charset);
     }
 
@@ -384,7 +384,7 @@ public final class YAPIONParser {
      * @throws IOException by FileInputStream creation
      */
     public YAPIONParser(File file) throws IOException {
-        this(new BufferedInputStream(new FileInputStream(file)), true, true, StandardCharsets.US_ASCII);
+        this(new BufferedInputStream(new FileInputStream(file)), true, true, InputStreamCharsets.US_ASCII);
     }
 
     /**
@@ -394,7 +394,7 @@ public final class YAPIONParser {
      * @param charset to use
      * @throws IOException by FileInputStream creation
      */
-    public YAPIONParser(File file, Charset charset) throws IOException {
+    public YAPIONParser(File file, InputStreamCharsets charset) throws IOException {
         this(new BufferedInputStream(new FileInputStream(file)), true, true, charset);
     }
 
@@ -406,7 +406,7 @@ public final class YAPIONParser {
      * @throws IOException by FileInputStream creation
      */
     public YAPIONParser(File file, boolean stopOnStreamEnd) throws IOException {
-        this(new BufferedInputStream(new FileInputStream(file)), stopOnStreamEnd, true, StandardCharsets.US_ASCII);
+        this(new BufferedInputStream(new FileInputStream(file)), stopOnStreamEnd, true, InputStreamCharsets.US_ASCII);
     }
 
     /**
@@ -417,11 +417,11 @@ public final class YAPIONParser {
      * @param charset to use
      * @throws IOException by FileInputStream creation
      */
-    public YAPIONParser(File file, boolean stopOnStreamEnd, Charset charset) throws IOException {
+    public YAPIONParser(File file, boolean stopOnStreamEnd, InputStreamCharsets charset) throws IOException {
         this(new BufferedInputStream(new FileInputStream(file)), stopOnStreamEnd, true, charset);
     }
 
-    private YAPIONParser(InputStream inputStream, boolean stopOnStreamEnd, boolean closeAfterRead, Charset charset) {
+    private YAPIONParser(InputStream inputStream, boolean stopOnStreamEnd, boolean closeAfterRead, InputStreamCharsets charset) {
         charReader = new InputStreamCharReader(inputStream, stopOnStreamEnd, charset);
         if (closeAfterRead) {
             finishRunnable = () -> {

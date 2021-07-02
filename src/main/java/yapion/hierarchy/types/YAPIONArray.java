@@ -269,7 +269,6 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         discardReferenceValue();
         if (value.getType() != YAPIONType.VALUE && value.getType() != YAPIONType.POINTER) {
             RecursionUtils.RecursionResult result = RecursionUtils.checkRecursion(value, this);
-            System.out.println("HERE " + result.getRecursionType());
             if (result.getRecursionType() != RecursionUtils.RecursionType.NONE) {
                 if (result.getYAPIONAny() == null) {
                     throw new YAPIONRecursionException("Pointer creation failure.");
