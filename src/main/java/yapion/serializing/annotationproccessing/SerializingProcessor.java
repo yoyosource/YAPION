@@ -20,6 +20,8 @@ import yapion.annotations.registration.YAPIONSerializing;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.annotations.serialize.YAPIONSaveExclude;
 import yapion.hierarchy.output.Indentator;
+import yapion.serializing.InternalSerializer;
+import yapion.serializing.annotationproccessing.generator.*;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -36,8 +38,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-
-import static yapion.serializing.annotationproccessing.Code.defaultSerializer;
 
 @ProcessorImplementation
 @SupportedAnnotationTypes("yapion.annotations.registration.YAPIONSerializing")
@@ -74,9 +74,6 @@ public class SerializingProcessor extends AbstractProcessor {
             if (clazz.getEnclosingElement().getKind() == ElementKind.CLASS) {
                 error(element, "Element cannot be inner class");
             }
-            // JavaFileObject f = processingEnv.getFiler().createSourceFile(clazz.getQualifiedName().toString().substring(0, clazz.getQualifiedName().toString().lastIndexOf('.')) + "." + clazz.getSimpleName() + "$" + clazz.getSimpleName() + "Serializer");
-            JavaFileObject f = processingEnv.getFiler().createSourceFile(clazz.getQualifiedName() + "Serializer");
-            processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Creating " + f.toUri());
 
             List<VariableElement> elementList = new ArrayList<>();
             Element current = element;
@@ -125,181 +122,181 @@ public class SerializingProcessor extends AbstractProcessor {
                     })
                     .collect(Collectors.toList());
 
-            Writer w = f.openWriter();
-            PrintWriter pw = new PrintWriter(w);
-            for (String s : defaultSerializer) {
-                if (s.equals("%FIELDS%")) {
-                    if (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty()) {
-                        continue;
-                    }
-                    for (VariableElement e : serializeFieldList) {
-                        pw.println("    private Field " + e.getSimpleName() + ";");
-                    }
-                    for (VariableElement e : deserializeFieldList) {
-                        if (!serializeFieldList.contains(e)) {
-                            pw.println("    private Field " + e.getSimpleName() + ";");
-                        }
-                    }
-                    pw.println("");
-                    continue;
-                }
-                if (s.equals("%FIELDS_INIT%")) {
-                    if ((elementList.isEmpty() && !unknownSuper) || (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty())) {
-                        continue;
-                    }
-                    pw.println("    private void initFields() {");
-                    if (unknownSuper) {
-                        pw.println("        handledFields = new HashSet<>();");
-                    }
-                    for (VariableElement e : serializeFieldList) {
-                        pw.println("        " + e.getSimpleName() + " = loadField(\"" + e.getSimpleName() + "\");");
-                    }
-                    for (VariableElement e : deserializeFieldList) {
-                        if (!serializeFieldList.contains(e)) {
-                            pw.println("        " + e.getSimpleName() + " = loadField(\"" + e.getSimpleName() + "\");");
-                        }
-                    }
-                    if (unknownSuper) {
-                        for (VariableElement e : elementList) {
-                            if (!serializeFieldList.contains(e) && !deserializeFieldList.contains(e)) {
-                                pw.println("        loadField(\"" + e.getSimpleName() + "\");");
-                            }
-                        }
-                    }
-                    pw.println("    }");
-                    pw.println();
-                    continue;
-                }
-                if (s.equals("%FIELDS_INIT_CALL%")) {
-                    if ((elementList.isEmpty() && !unknownSuper) || (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty())) {
-                        continue;
-                    }
-                    pw.println("        initFields();");
-                    continue;
-                }
-                if (s.equals("%FIELDS_LOAD%")) {
-                    if ((elementList.isEmpty() && !unknownSuper) || (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty())) {
-                        continue;
-                    }
-                    pw.println("    private Field loadField(String fieldName) {");
-                    pw.println("        try {");
-                    if (unknownSuper) {
-                        pw.println("            Field f = getField(" + clazz.getSimpleName() + ".class, fieldName);");
-                        pw.println("            handledFields.add(f);");
-                        pw.println("            return f;");
-                    } else {
-                        pw.println("            return getField(" + clazz.getSimpleName() + ".class, fieldName);");
-                    }
-                    pw.println("        } catch (Exception e) {");
-                    pw.println("            throw new YAPIONReflectionException(e.getMessage(), e);");
-                    pw.println("        }");
-                    pw.println("    }");
-                    pw.println("");
-                    continue;
-                }
-                if (s.equals("%REFLECTION_FIELDS%")) {
-                    if (unknownSuper) {
-                        pw.println("    private Set<Field> handledFields = null;");
-                        pw.println("    private Set<Field> sFields = null;");
-                        pw.println("    private Set<Field> dFields = null;");
-                        pw.println("");
-                    }
-                    continue;
-                }
-                if (s.equals("%REFLECTION%")) {
-                    if (unknownSuper) {
-                        pw.println("        sFields = new HashSet<>();");
-                        pw.println("        dFields = new HashSet<>();");
-                        pw.println("        getFields(type()).forEach(f -> {");
-                        pw.println("            if (Modifier.isStatic(f.getModifiers())) return;");
-                        pw.println("            if (handledFields.contains(f)) return;");
-                        pw.println("            if (Modifier.isPrivate(f.getModifiers())) {");
-                        pw.println("                sFields.add(f);");
-                        pw.println("                dFields.add(f);");
-                        pw.println("                return;");
-                        pw.println("            }");
-                        pw.println("            if (Modifier.isFinal(f.getModifiers())) {");
-                        pw.println("                dFields.add(f);");
-                        pw.println("                return;");
-                        pw.println("            }");
-                        pw.println("            if (f.getDeclaringClass() != type()) {");
-                        pw.println("                sFields.add(f);");
-                        pw.println("                dFields.add(f);");
-                        pw.println("            }");
-                        pw.println("        });");
-                    }
-                    continue;
-                }
-                if (s.equals("%PRE_SERIALIZATION%")) {
-                    if (yapionSerializing.serializationStep()) {
-                        pw.println("        ContextManager contextManager = new ContextManager(serializeData.context);");
-                        pw.println("        MethodManager.preSerializationStep(serializeData.object, type(), contextManager);");
-                    }
-                    continue;
-                }
-                if (s.equals("%SERIALIZATION%")) {
-                    for (VariableElement e : elementList) {
-                        generateFieldSerializer(pw, e, serializeFieldList.contains(e), serializerContextManager);
-                    }
-                    continue;
-                }
-                if (s.equals("%SERIALIZATION_FIELDS%")) {
-                    if (unknownSuper) {
-                        pw.println("        for (Field f : sFields) {");
-                        pw.println("            if (contextManager.is(f.getAnnotationsByType(YAPIONSaveExclude.class))) continue;");
-                        pw.println("            if (contextManager.is(f.getAnnotationsByType(YAPIONOptimize.class))) {");
-                        pw.println("                Object fObject = serializeData.getField(f);");
-                        pw.println("                if (fObject != null) yapionObject.add(f.getName(), serializeData.serialize(fObject));");
-                        pw.println("            } else {");
-                        pw.println("                serializeData.serialize(yapionObject, f);");
-                        pw.println("            }");
-                        pw.println("        }");
-                    }
-                    continue;
-                }
-                if (s.equals("%POST_SERIALIZATION%")) {
-                    if (yapionSerializing.serializationStep()) {
-                        pw.println("        MethodManager.postSerializationStep(serializeData.object, type(), contextManager);");
-                    }
-                    continue;
-                }
-                if (s.equals("%PRE_DESERIALIZATION%")) {
-                    if (yapionSerializing.deserializationStep()) {
-                        pw.println("        ContextManager contextManager = new ContextManager(deserializeData.context);");
-                        pw.println("        MethodManager.preDeserializationStep(object, type(), contextManager);");
-                    }
-                    continue;
-                }
-                if (s.equals("%DESERIALIZATION%")) {
-                    for (VariableElement e : elementList) {
-                        generateFieldDeserializer(pw, e, deserializeFieldList.contains(e), deserializerContextManager);
-                    }
-                    continue;
-                }
-                if (s.equals("%DESERIALIZATION_FIELDS%")) {
-                    if (unknownSuper) {
-                        pw.println("        for (Field f : dFields) {");
-                        pw.println("            if (contextManager.is(f.getAnnotationsByType(YAPIONLoadExclude.class))) continue;");
-                        pw.println("            deserializeData.deserialize(object, f);");
-                        pw.println("        }");
-                    }
-                    continue;
-                }
-                if (s.equals("%POST_DESERIALIZATION%")) {
-                    if (yapionSerializing.deserializationStep()) {
-                        pw.println("        MethodManager.postDeserializationStep(object, type(), contextManager);");
-                    }
-                    continue;
-                }
-                pw.println(s.replace("%PACKAGE%", clazz.getQualifiedName().toString().substring(0, clazz.getQualifiedName().toString().lastIndexOf('.'))).replace("%NAME%", clazz.getSimpleName()).replace("%CLASS%", clazz.getQualifiedName()));
+            ClassGenerator classGenerator = new ClassGenerator(clazz.getQualifiedName().toString().substring(0, clazz.getQualifiedName().toString().lastIndexOf('.')), clazz.getSimpleName().toString() + "Serializer");
+            classGenerator.addInterface(InternalSerializer.class.getTypeName() + "<" + clazz.getSimpleName() + ">");
+            classGenerator.add(new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE), null, clazz.getSimpleName().toString() + "Serializer"));
+            classGenerator.addImport("yapion.hierarchy.api.groups.YAPIONAnyType");
+            classGenerator.addImport("yapion.hierarchy.types.YAPIONObject");
+            classGenerator.addImport("yapion.serializing.InternalSerializer");
+            classGenerator.addImport("yapion.serializing.data.DeserializeData");
+            classGenerator.addImport("yapion.serializing.data.SerializeData");
+
+            FunctionGenerator typeFunction = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "type", "Class<" + clazz.getSimpleName().toString() + ">");
+            typeFunction.add("return " + clazz.getSimpleName().toString() + ".class;");
+            typeFunction.addAnnotation(Override.class);
+            classGenerator.add(typeFunction);
+
+            FunctionGenerator initFunction = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "init", "void");
+            initFunction.addAnnotation(Override.class);
+            classGenerator.add(initFunction);
+
+            FunctionGenerator serializeFunction = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "serialize", "YAPIONAnyType", new ParameterGenerator("SerializeData<" + clazz.getSimpleName().toString() + ">", "serializeData"));
+            serializeFunction.addAnnotation(Override.class);
+            classGenerator.add(serializeFunction);
+
+            FunctionGenerator deserializeFunction = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "deserialize", clazz.getSimpleName().toString(), new ParameterGenerator("DeserializeData<? extends YAPIONAnyType>", "deserializeData"));
+            deserializeFunction.addAnnotation(Override.class);
+            classGenerator.add(deserializeFunction);
+
+            if (!serializeFieldList.isEmpty() || !deserializeFieldList.isEmpty()) {
+                classGenerator.addImport("java.lang.reflect.Field");
             }
-            pw.flush();
-            w.close();
+            for (VariableElement e : serializeFieldList) {
+                classGenerator.add(new FieldGenerator("Field", e.getSimpleName().toString(), null));
+            }
+            for (VariableElement e : deserializeFieldList) {
+                if (!serializeFieldList.contains(e)) {
+                    classGenerator.add(new FieldGenerator("Field", e.getSimpleName().toString(), null));
+                }
+            }
+
+            if (!((elementList.isEmpty() && !unknownSuper) || (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty()))) {
+                initFunction.add("initFields();");
+            }
+            if (!((elementList.isEmpty() && !unknownSuper) || (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty()))) {
+                FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE), "initFields", "void");
+                if (unknownSuper) {
+                    functionGenerator.add("handledFields = new HashSet<>();");
+                    for (VariableElement e : elementList) {
+                        if (!serializeFieldList.contains(e) && !deserializeFieldList.contains(e)) {
+                            functionGenerator.add("loadField(\"" + e.getSimpleName() + "\");");
+                        }
+                    }
+                }
+                for (VariableElement e : serializeFieldList) {
+                    functionGenerator.add(e.getSimpleName() + " = loadField(\"" + e.getSimpleName() + "\");");
+                }
+                for (VariableElement e : deserializeFieldList) {
+                    if (!serializeFieldList.contains(e)) {
+                        functionGenerator.add(e.getSimpleName() + " = loadField(\"" + e.getSimpleName() + "\");");
+                    }
+                }
+                classGenerator.add(functionGenerator);
+            }
+
+            if (unknownSuper) {
+                classGenerator.addImport("java.lang.reflect.Field");
+                classGenerator.addImport("java.util.HashSet");
+                classGenerator.add(new FieldGenerator("Set<Field>", "handledFields", "null"));
+                classGenerator.add(new FieldGenerator("Set<Field>", "sFields", "null"));
+                classGenerator.add(new FieldGenerator("Set<Field>", "dFields", "null"));
+            }
+
+            if (!((elementList.isEmpty() && !unknownSuper) || (serializeFieldList.isEmpty() && deserializeFieldList.isEmpty()))) {
+                FunctionGenerator loadFields = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE), "loadField", "Field", new ParameterGenerator("String", "fieldName"));
+                classGenerator.addImport("java.lang.reflect.Field");
+                classGenerator.addImport("yapion.exceptions.utils.YAPIONReflectionException");
+                classGenerator.addImport("static yapion.utils.ReflectionsUtils.getField");
+                loadFields.add("try {");
+                if (unknownSuper) {
+                    loadFields.add("    Field f = getField(" + clazz.getSimpleName() + ".class, fieldName);");
+                    loadFields.add("    handledFields.add(f);");
+                    loadFields.add("    return f;");
+                } else {
+                    loadFields.add("    return getField(" + clazz.getSimpleName() + ".class, fieldName);");
+                }
+                loadFields.add("} catch (Exception e) {");
+                loadFields.add("    throw new YAPIONReflectionException(e.getMessage(), e);");
+                loadFields.add("}");
+                classGenerator.add(loadFields);
+            }
+
+            if (unknownSuper) {
+                classGenerator.addImport("static yapion.utils.ReflectionsUtils.getFields");
+                classGenerator.addImport("java.util.HashSet");
+                classGenerator.addImport("java.lang.reflect.Modifier");
+                initFunction.add("    sFields = new HashSet<>();");
+                initFunction.add("    dFields = new HashSet<>();");
+                initFunction.add("    getFields(type()).forEach(f -> {");
+                initFunction.add("        if (Modifier.isStatic(f.getModifiers())) return;");
+                initFunction.add("        if (handledFields.contains(f)) return;");
+                initFunction.add("        if (Modifier.isPrivate(f.getModifiers())) {");
+                initFunction.add("            sFields.add(f);");
+                initFunction.add("            dFields.add(f);");
+                initFunction.add("            return;");
+                initFunction.add("        }");
+                initFunction.add("        if (Modifier.isFinal(f.getModifiers())) {");
+                initFunction.add("            dFields.add(f);");
+                initFunction.add("            return;");
+                initFunction.add("        }");
+                initFunction.add("        if (f.getDeclaringClass() != type()) {");
+                initFunction.add("            sFields.add(f);");
+                initFunction.add("            dFields.add(f);");
+                initFunction.add("        }");
+                initFunction.add("    });");
+            }
+
+            if (yapionSerializing.serializationStep()) {
+                classGenerator.addImport("yapion.serializing.ContextManager");
+                classGenerator.addImport("yapion.serializing.MethodManager");
+                serializerContextManager.set(true);
+                serializeFunction.add("ContextManager contextManager = new ContextManager(serializeData.context);");
+                serializeFunction.add("MethodManager.preSerializationStep(serializeData.object, type(), contextManager);");
+            }
+            serializeFunction.add("YAPIONObject yapionObject = new YAPIONObject(type());");
+            for (VariableElement e : elementList) {
+                generateFieldSerializer(serializeFunction, e, serializeFieldList.contains(e), serializerContextManager);
+            }
+            if (unknownSuper) {
+                serializeFunction.add("for (Field f : sFields) {");
+                serializeFunction.add("    if (contextManager.is(f.getAnnotationsByType(YAPIONSaveExclude.class))) continue;");
+                serializeFunction.add("    if (contextManager.is(f.getAnnotationsByType(YAPIONOptimize.class))) {");
+                serializeFunction.add("        Object fObject = serializeData.getField(f);");
+                serializeFunction.add("        if (fObject != null) yapionObject.add(f.getName(), serializeData.serialize(fObject));");
+                serializeFunction.add("    } else {");
+                serializeFunction.add("        serializeData.serialize(yapionObject, f);");
+                serializeFunction.add("    }");
+                serializeFunction.add("}");
+            }
+            if (yapionSerializing.serializationStep()) {
+                serializeFunction.add("MethodManager.postSerializationStep(serializeData.object, type(), contextManager);");
+            }
+            serializeFunction.add("return yapionObject;");
+
+            deserializeFunction.add(clazz.getSimpleName() + " object = deserializeData.getInstanceByFactoryOrObjenesis(type());");
+            if (yapionSerializing.deserializationStep()) {
+                classGenerator.addImport("yapion.serializing.ContextManager");
+                classGenerator.addImport("yapion.serializing.MethodManager");
+                deserializerContextManager.set(true);
+                deserializeFunction.add("ContextManager contextManager = new ContextManager(deserializeData.context);");
+                deserializeFunction.add("MethodManager.preDeserializationStep(object, type(), contextManager);");
+            }
+            for (VariableElement e : elementList) {
+                generateFieldDeserializer(deserializeFunction, e, deserializeFieldList.contains(e), deserializerContextManager);
+            }
+            if (unknownSuper) {
+                deserializeFunction.add("for (Field f : dFields) {");
+                deserializeFunction.add("    if (contextManager.is(f.getAnnotationsByType(YAPIONLoadExclude.class))) continue;");
+                deserializeFunction.add("    deserializeData.deserialize(object, f);");
+                deserializeFunction.add("}");
+            }
+            if (yapionSerializing.deserializationStep()) {
+                classGenerator.addImport("yapion.serializing.ContextManager");
+                classGenerator.addImport("yapion.serializing.MethodManager");
+                deserializeFunction.add("MethodManager.postDeserializationStep(object, type(), contextManager);");
+            }
+            deserializeFunction.add("return object;");
+
+            JavaFileObject f = processingEnv.getFiler().createSourceFile(clazz.getQualifiedName() + "Serializer");
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Creating " + f.toUri());
+            PrintWriter pw = new PrintWriter(f.openWriter());
+            classGenerator.output(0).forEach(pw::println);
+            pw.close();
         }
         return true;
     }
 
-    private void generateFieldSerializer(PrintWriter printWriter, VariableElement e, boolean reflective, AtomicBoolean contextManager) {
+    private void generateFieldSerializer(FunctionGenerator functionGenerator, VariableElement e, boolean reflective, AtomicBoolean contextManager) {
         YAPIONOptimize[] yapionOptimize = e.getAnnotationsByType(YAPIONOptimize.class);
         String yapionOptimizeContext = Arrays.stream(yapionOptimize).flatMap(o -> Arrays.stream(o.context())).distinct().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "));
 
@@ -311,7 +308,6 @@ public class SerializingProcessor extends AbstractProcessor {
 
         List<String> conditions = new ArrayList<>();
         boolean b = false;
-        int indent = 0;
         boolean contextManagerNeeded = false;
         if (yapionOptimize.length != 0) {
             if (!yapionOptimizeContext.isEmpty()) {
@@ -326,73 +322,60 @@ public class SerializingProcessor extends AbstractProcessor {
             contextManagerNeeded = true;
         }
         if (contextManagerNeeded && !contextManager.get()) {
-            newLine(printWriter, indent, "ContextManager contextManager = new ContextManager(serializeData.context);");
+            functionGenerator.add("ContextManager contextManager = new ContextManager(serializeData.context);");
             contextManager.set(true);
         }
         if (b) {
             if (reflective) {
-                newLine(printWriter, indent, "Object " + e.getSimpleName() + "Object = serializeData.getField(" + e.getSimpleName() + ");");
+                functionGenerator.add("Object " + e.getSimpleName() + "Object = serializeData.getField(" + e.getSimpleName() + ");");
             } else {
-                newLine(printWriter, indent, "Object " + e.getSimpleName() + "Object = serializeData.object." + e.getSimpleName() + ";");
+                functionGenerator.add("Object " + e.getSimpleName() + "Object = serializeData.object." + e.getSimpleName() + ";");
             }
         }
         if (!conditions.isEmpty()) {
-            newLine(printWriter, indent, "if (" + String.join(" && ", conditions) + ") {");
-            indent++;
+            functionGenerator.add("if (" + String.join(" && ", conditions) + ") {");
         }
         if (b) {
-            newLine(printWriter, indent, "yapionObject.add(\"" + e.getSimpleName() + "\", serializeData.serialize(" + e.getSimpleName() + "Object));");
+            functionGenerator.add("yapionObject.add(\"" + e.getSimpleName() + "\", serializeData.serialize(" + e.getSimpleName() + "Object));");
         } else {
             if (reflective) {
-                newLine(printWriter, indent, "serializeData.serialize(yapionObject, " + e.getSimpleName() + ");");
+                functionGenerator.add( "serializeData.serialize(yapionObject, " + e.getSimpleName() + ");");
             } else {
-                newLine(printWriter, indent, "yapionObject.add(\"" + e.getSimpleName() + "\", serializeData.serialize(serializeData.object." + e.getSimpleName() + "));");
+                functionGenerator.add( "yapionObject.add(\"" + e.getSimpleName() + "\", serializeData.serialize(serializeData.object." + e.getSimpleName() + "));");
             }
         }
         if (!conditions.isEmpty()) {
-            indent--;
-            newLine(printWriter, indent, "}");
+            functionGenerator.add("}");
         }
     }
 
-    private void generateFieldDeserializer(PrintWriter printWriter, VariableElement e, boolean reflective, AtomicBoolean contextManager) {
+    private void generateFieldDeserializer(FunctionGenerator functionGenerator, VariableElement e, boolean reflective, AtomicBoolean contextManager) {
         YAPIONLoadExclude[] yapionLoadExclude = e.getAnnotationsByType(YAPIONLoadExclude.class);
         String yapionSaveExcludeContext = Arrays.stream(yapionLoadExclude).flatMap(o -> Arrays.stream(o.context())).distinct().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "));
         if (yapionSaveExcludeContext.isEmpty() && yapionLoadExclude.length != 0) {
             return;
         }
         List<String> conditions = new ArrayList<>();
-        int indent = 0;
         boolean contextManagerNeeded = false;
         if (yapionLoadExclude.length != 0) {
             conditions.add("!contextManager.is(" + yapionSaveExcludeContext + ")");
             contextManagerNeeded = true;
         }
         if (contextManagerNeeded && !contextManager.get()) {
-            newLine(printWriter, indent, "ContextManager contextManager = new ContextManager(serializeData.context);");
+            functionGenerator.add("ContextManager contextManager = new ContextManager(serializeData.context);");
             contextManager.set(true);
         }
         if (!conditions.isEmpty()) {
-            newLine(printWriter, indent, "if (" + String.join(" && ", conditions) + ") {");
-            indent++;
+            functionGenerator.add("if (" + String.join(" && ", conditions) + ") {");
         }
         if (reflective) {
-            newLine(printWriter, indent, "deserializeData.deserialize(object, " + e.getSimpleName() + ");");
+            functionGenerator.add( "deserializeData.deserialize(object, " + e.getSimpleName() + ");");
         } else {
-            newLine(printWriter, indent, "object." + e.getSimpleName() + " = deserializeData.deserialize(\"" + e.getSimpleName() + "\");");
+            functionGenerator.add( "object." + e.getSimpleName() + " = deserializeData.deserialize(\"" + e.getSimpleName() + "\");");
         }
         if (!conditions.isEmpty()) {
-            indent--;
-            newLine(printWriter, indent, "}");
+            functionGenerator.add( "}");
         }
-    }
-
-    private void newLine(PrintWriter printWriter, int indent, String toAdd) {
-        printWriter.println(indent(indent) + toAdd);
-    }
-
-    private String indent(int indent) {
-        return Indentator.QUAD_SPACE.indent(indent + 2);
     }
 
     private void error(Element e, String msg, Object... args) {
