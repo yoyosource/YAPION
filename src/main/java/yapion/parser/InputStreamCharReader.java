@@ -33,20 +33,32 @@ public class InputStreamCharReader implements CharReader {
     private CharSupplier reader;
 
     public InputStreamCharReader(InputStream inputStream, boolean stopOnStreamEnd, InputStreamCharsets charset) {
-
         this.inputStream = inputStream;
         this.stopOnStreamEnd = stopOnStreamEnd;
         if (charset == InputStreamCharsets.US_ASCII) {
             reader = US_ASCII();
         } else if (charset == InputStreamCharsets.LATIN_1) {
-            reader = US_ASCII();
-        }
-        else {
+            reader = LATIN_1();
+        } else {
             reader = UTF_8();
         }
     }
 
     private CharSupplier US_ASCII() {
+        return () -> {
+            int i = inputStream.read();
+            if (i == -1 && !stopOnStreamEnd) {
+                throw new YAPIONParser.ParserSkipException();
+            }
+            available--;
+            if (i > 0x7F) {
+                throw new YAPIONIOException("Unrecognized US-ASCII Sequence");
+            }
+            return (char) i;
+        };
+    }
+
+    private CharSupplier LATIN_1() {
         return () -> {
             int i = inputStream.read();
             if (i == -1 && !stopOnStreamEnd) {
