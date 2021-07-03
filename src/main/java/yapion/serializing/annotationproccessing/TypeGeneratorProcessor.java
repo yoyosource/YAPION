@@ -18,8 +18,9 @@ import lombok.ToString;
 import yapion.annotations.api.ProcessorImplementation;
 import yapion.annotations.registration.YAPIONAccessGenerator;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.groups.YAPIONDataType;
-import yapion.hierarchy.types.*;
+import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.annotationproccessing.generator.*;
 
@@ -30,12 +31,10 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 @ProcessorImplementation
 @SupportedAnnotationTypes("yapion.annotations.registration.YAPIONAccessGenerator")
