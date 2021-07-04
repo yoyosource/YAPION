@@ -26,26 +26,37 @@ public class ExampleReceiver {
 
     public static void main(String[] args) {
         YAPIONPacketReceiver yapionPacketReceiver = new YAPIONPacketReceiver();
-        yapionPacketReceiver.setDropHandler(yapionPacket -> {
+        yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Hanlder.DROP, yapionPacket -> {
             // This 'yapionPacket' is an instance of 'DropPacket'
             // This code will be called for any data drop
         });
-        yapionPacketReceiver.setUnknownHandler(yapionPacket -> {
+        yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Hanlder.UNKNOWN, yapionPacket -> {
             // This code will be called if an unknown packet was handled
         });
-        yapionPacketReceiver.setDeserializationExceptionHandler(yapionPacket -> {
+        yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Hanlder.DESERIALIZE_EXCEPTION, yapionPacket -> {
             // This 'yapionPacket' is an instance of 'DeserializationExceptionPacket'
             // This code will be called if an Exception was thrown by deserialization
         });
-        yapionPacketReceiver.setHandleFailedHandler(yapionPacket -> {
+        yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Hanlder.HANDLE_FAILED, yapionPacket -> {
             // This 'yapionPacket' is an instance of 'HandleFailedPacket'
             // This code will be called if an unexpected this happened
         });
-        yapionPacketReceiver.setExceptionHandler(yapionPacket -> {
+        yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Hanlder.EXCEPTION, yapionPacket -> {
             // This code will be called if an exception was thrown while handling
         });
-        yapionPacketReceiver.setErrorHandler(yapionPacket -> {
+        yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Hanlder.ERROR, yapionPacket -> {
             // This code will be called if an exception was thrown internally or in the exception handler.
+        });
+        yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Hanlder.FILTERED, yapionPacket -> {
+            // This code will be called if an YAPIONPacket was filtered, see below
+        });
+        yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Hanlder.HEART_BEAT, yapionPacket -> {
+            // This 'yapionPacket' is an instance of 'HeartBeatPacket'
+            // This code will be called if a HeartBeat Packet was received, see below
+        });
+        yapionPacketReceiver.setHandler(YAPIONPacketReceiver.Hanlder.LOST_HEART_BEAT, yapionPacket -> {
+            // This 'yapionPacket' is an instance of 'LostHeartBeatPacket'
+            // This code will be called if a HeartBeat Packet was not received, see below
         });
     }
 
@@ -59,6 +70,7 @@ import yapion.hierarchy.output.StringOutput;
 import yapion.packet.YAPIONInputStream;
 import yapion.packet.YAPIONPacket;
 import yapion.packet.YAPIONPacketReceiver;
+import yapion.packet.YAPIONPacketStream;
 
 import java.io.ByteArrayInputStream;
 import java.util.UUID;
@@ -75,11 +87,11 @@ public class ExampleReceiver {
         });
         
         // Normally your input is read from an InputStream and not a ByteArrayInputStream 
-        String stringPacket = new ExamplePacket().toYAPION().toYAPION(new StringOutput()).getResult();
+        String stringPacket = new ExamplePacket().convertToYAPION().toYAPION(new StringOutput()).getResult();
         
         // This would not be just a string but an InputStream created by a socket or for a file or something else
-        YAPIONInputStream yapionInputStream = new YAPIONInputStream(new ByteArrayInputStream(stringPacket.getBytes()));
-        yapionInputStream.setYAPIONPacketReceiver(yapionPacketReceiver);
+        YAPIONPacketStream yapionPacketStream = new YAPIONPacketStream(new YAPIONInputStream(new ByteArrayInputStream(stringPacket.getBytes())), null);
+        yapionPacketStream.setYAPIONPacketReceiver(yapionPacketReceiver);
     }
 
 }
@@ -92,7 +104,7 @@ class ExamplePacket extends YAPIONPacket {
 }
 ```
 
-Do not get confused by 'toYAPION().toYAPION([...])' as the first call creates the 'YAPIONObject', and the next one will be the normal output call. If you use the YAPIONSocket instead of getting the InputStream and OutputStream from a socket yourself, you can get the YAPIONOutputStream from the YAPIONPacket corresponding to the YAPIONInputStream. You can define some more behaviour on the YAPIONPacketHandler individual for any implementation.
+If you use the YAPIONSocket instead of getting the InputStream and OutputStream from a socket yourself, you can get the YAPIONOutputStream from the YAPIONPacket corresponding to the YAPIONInputStream. You can define some more behaviour on the YAPIONPacketHandler individual for any implementation.
 
 ```java
 import yapion.packet.YAPIONPacket;
@@ -163,7 +175,7 @@ If you use all of this in conjunction you can create a complex protocol for a cl
 ```java
 import yapion.packet.YAPIONPacket;
 import yapion.packet.YAPIONPacketReceiver;
-import yapion.io.YAPIONSocket;
+import yapion.packet.YAPIONPacketStream;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -176,11 +188,11 @@ public class ExamplePacket {
         Socket socket = new Socket("localhost", <PORT>);
         Socket serverSocket = server.accept();
 
-        YAPIONSocket yapionSocket = new YAPIONSocket(socket);
-        YAPIONSocket serverYapionSocket = new YAPIONSocket(serverSocket);
+        YAPIONPacketStream yapionPacketStream = new YAPIONPacketStream(socket);
+        YAPIONPacketStream serverYapionPacketStream = new YAPIONPacketStream(serverSocket);
 
         YAPIONPacketReceiver serverReceiver = new YAPIONPacketReceiver();
-        serverReceiver.setUnknownHandler(yapionPacket -> {
+        serverReceiver.setHandler(YAPIONPacketReceiver.Handler.UNKNOWN, yapionPacket -> {
             try {
                 yapionPacket.getYAPIONOutputStream().close();
             } catch (IOException e) {
@@ -191,10 +203,10 @@ public class ExamplePacket {
             // Return the time after the Time Request
             yapionPacket.getYAPIONOutputStream().write(new TimePacket());
         });
-        serverYapionSocket.setYAPIONPacketReceiver(serverReceiver);
+        serverYapionPacketStream.setYAPIONPacketReceiver(serverReceiver);
 
-        yapionSocket.write(new GetTimePacket());
-        TimePacket timePacket = (TimePacket) yapionSocket.readObject();
+        yapionPacketStream.write(new GetTimePacket());
+        TimePacket timePacket = (TimePacket) yapionPacketStream.readObject();
         System.out.println(timePacket.time);
     }
 
@@ -217,7 +229,7 @@ You can also use the internal `#closeOnException()` method declared in the 'YAPI
 import yapion.packet.YAPIONPacket;
 import yapion.packet.YAPIONPacketHandler;
 import yapion.packet.YAPIONPacketReceiver;
-import yapion.io.YAPIONSocket;
+import yapion.packet.YAPIONPacketStream;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -230,11 +242,11 @@ public class ExamplePacket {
         Socket socket = new Socket("localhost", <PORT>);
         Socket serverSocket = server.accept();
 
-        YAPIONSocket yapionSocket = new YAPIONSocket(socket);
-        YAPIONSocket serverYapionSocket = new YAPIONSocket(serverSocket);
+        YAPIONPacketStream yapionPacketStream = new YAPIONPacketStream(socket);
+        YAPIONPacketStream serverYapionPacketStream = new YAPIONPacketStream(serverSocket);
 
         YAPIONPacketReceiver serverReceiver = new YAPIONPacketReceiver();
-        serverReceiver.setUnknownHandler(new YAPIONPacketHandler() {
+        serverReceiver.setHanlder(YAPIONPacketReceiver.Hanlder.UNKNOWN, new YAPIONPacketHandler() {
             @Override
             public void handlePacket(YAPIONPacket yapionPacket) {
                 throw new SecurityException();
@@ -249,10 +261,10 @@ public class ExamplePacket {
             // Return the time after the Time Request
             yapionPacket.getYAPIONOutputStream().write(new TimePacket());
         });
-        serverYapionSocket.setYAPIONPacketReceiver(serverReceiver);
+        serverYapionPacketStream.setYAPIONPacketReceiver(serverReceiver);
 
-        yapionSocket.write(new GetTimePacket());
-        TimePacket timePacket = (TimePacket) yapionSocket.readObject();
+        yapionPacketStream.write(new GetTimePacket());
+        TimePacket timePacket = (TimePacket) yapionPacketStream.readObject();
         System.out.println(timePacket.time);
     }
 
@@ -268,3 +280,5 @@ class TimePacket extends YAPIONPacket {
 
 }
 ```
+
+HeartBeat und Filtering [WIP]

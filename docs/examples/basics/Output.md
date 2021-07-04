@@ -8,15 +8,11 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONSerializer;
 
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.output.StringPrettifiedOutput;
 import yapion.hierarchy.output.FileOutput;
-import yapion.hierarchy.output.FilePrettifiedOutput;
 import yapion.hierarchy.output.FileGZIPOutput;
 import yapion.hierarchy.output.LengthOutput;
 import yapion.hierarchy.output.StreamOutput;
-import yapion.hierarchy.output.StringPrettifiedOutput;
 import yapion.hierarchy.output.StringBuilderOutput;
-import yapion.hierarchy.output.StringBuilderPrettifiedOutput;
 
 public class ExampleSerializationTwo {
 
@@ -27,14 +23,14 @@ public class ExampleSerializationTwo {
         String stringOutput = yapionObject.toYAPION(new StringOutput()).getResult();
 
         // This will result in a prettified string:
-        String stringPrettifiedOutput = yapionObject.toYAPION(new StringPrettifiedOutput()).getResult();
+        String stringPrettifiedOutput = yapionObject.toYAPION(new StringOutput(true)).getResult();
 
         try {
             // '<FILE>' should be replaced by your file. The result will be written into the file directly
             yapionObject.toYAPION(new FileOutput(new File("<FILE>"))).close();
 
             // '<FILE>' should be replaced by your file. The result will be written into the file directly and will be prettified
-            yapionObject.toYAPION(new FilePrettifiedOutput(new File("<FILE>"))).close();
+            yapionObject.toYAPION(new FileOutput(new File("<FILE>"), true)).close();
 
             // '<FILE>' should be replaced by your file. The result will be written into the file directly and will be prettified
             yapionObject.toYAPION(new FileGZIPOutput(new File("<FILE>"))).close();
@@ -46,21 +42,38 @@ public class ExampleSerializationTwo {
         yapionObject.toYAPION(new StreamOutput(/*<STREAM>*/)).close();
 
         // '/*<STREAM>*/' should be replaces by any OutputStream. The result will be written into the stream directly and will be prettified
-        yapionObject.toYAPION(new StringPrettifiedOutput(/*<STREAM>*/)).close();
+        yapionObject.toYAPION(new StreamOutput(/*<STREAM>*/, true)).close();
 
         // '/*<STRING_BUILDER>*/' should be replaces by either a new StringBuilder or a StringBuilder to reuse
         yapionObject.toYAPION(new StringBuilderOutput(/*<STRING_BUILDER>*/)).close();
 
         // '/*<STRING_BUILDER>*/' should be replaces by either a new StringBuilder or a StringBuilder to reuse. The output will be prettified.
-        yapionObject.toYAPION(new StringBuilderPrettifiedOutput(/*<STRING_BUILDER>*/)).close();
+        yapionObject.toYAPION(new StringBuilderOutput(/*<STRING_BUILDER>*/, true)).close();
 
         // Get the length of the underlying yapionObject
         yapionObject.toYAPION(new LengthOutput()).getLength();
     }
-
 }
 ```
 
-## Version 0.25.0
-As of Version `0.25.0` the OutputAPI was reworked and every `Prettified` implementation deprecated. You can now simply add a boolean to the constructor of the non `Prettified` implementation to prettify it.
-You can also use custom indentation, while prettifying, with the `Indentator` class. Use the `setIndentator` method on an `AbstractOutput` to set a custom Indentator.
+There are some utility methods directly defined on every YAPIONAnyType. For example:
+```java
+public class ExampleSerializationTwo {
+
+    public static void main(String[] args) {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new ExampleTwo());
+        
+        // This directly turns an YAPIONAnyType to a String
+        yapionObject.toYAPION();
+        
+        // To output the YAPIONAnyType to a file
+        yapionObject.toFile(new File("<FILE>"));
+
+        // To output the YAPIONAnyType to a file and prettify it
+        yapionObject.toFile(new File("<FILE>", true));
+
+        // Output the YAPIONAnyType to a file and compress it
+        yapionObject.toGZIPFile(new File("<FILE>"));
+    }
+}
+```

@@ -28,6 +28,7 @@ import yapion.utils.IdentifierUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,10 @@ public final class YAPIONPacketStream {
     private HeartBeatType heartBeatMode = null;
     private long lastHeartbeat = 0;
     private long heartBeatTimeOut = 10000;
+
+    public YAPIONPacketStream(Socket socket) throws IOException {
+        this(new YAPIONSocket(socket));
+    }
 
     public YAPIONPacketStream(YAPIONSocket yapionSocket) {
         this(yapionSocket.getYAPIONInputStream(), yapionSocket.getYAPIONOutputStream());

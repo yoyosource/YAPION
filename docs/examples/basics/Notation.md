@@ -77,3 +77,7 @@ BigDecimal: (0BD)
 String: ('Hallo Welt'), ("Hallo Welt"), (Hallo Welt)
 'null': (null)
 ```
+
+## JSON
+
+You can parse JSON with the YAPIONParser directly and mix JSON notation with YAPION notation.

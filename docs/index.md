@@ -37,3 +37,4 @@
 * [Factory](examples/advanced/FactoryAPI.md)
 * [Serializer](examples/advanced/SerializerAPI.md)
 * [YAPIONRegistrator](examples/advanced/YAPIONRegistrator.md)
+* [Annotation Processor](examples/advanced/AnnotationProcessor.md)
