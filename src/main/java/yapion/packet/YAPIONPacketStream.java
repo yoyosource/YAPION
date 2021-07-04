@@ -151,10 +151,10 @@ public final class YAPIONPacketStream {
                     Thread.currentThread().interrupt();
                 }
                 if (heartBeatMode == null) continue;
-                if (heartBeatMode == HeartBeatType.SEND) {
+                if (heartBeatMode == HeartBeatType.SEND && yapionOutputStream != null) {
                     yapionOutputStream.write(new HeartBeatPacket());
                 }
-                if (heartBeatMode == HeartBeatType.SEND_AND_RECEIVE) {
+                if (heartBeatMode == HeartBeatType.SEND_AND_RECEIVE && yapionOutputStream != null) {
                     yapionOutputStream.write(new HeartBeatPacket());
                 }
                 if (System.currentTimeMillis() - lastHeartbeat > heartBeatTimeOut) {
