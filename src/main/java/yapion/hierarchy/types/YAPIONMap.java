@@ -16,6 +16,7 @@ package yapion.hierarchy.types;
 import lombok.NonNull;
 import yapion.annotations.api.InternalAPI;
 import yapion.annotations.api.YAPIONEveryType;
+import yapion.exceptions.YAPIONException;
 import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -356,7 +357,9 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
             yapionParserMapValue1.value.setParent(this);
             yapionParserMapValue2.value.setParent(this);
         }
-        yapionParserMapValues.clear();
+        if (!yapionParserMapValues.isEmpty()) {
+            throw new YAPIONException("YAPIONMap was not fully qualified");
+        }
     }
 
     public YAPIONAnyType get(@NonNull YAPIONAnyType key) {
