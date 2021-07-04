@@ -336,23 +336,25 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     // Internal method for Parser
     @InternalAPI
     public void add(@NonNull YAPIONParserMapValue variable) {
-        check(variable.value);
-        discardReferenceValue();
         yapionParserMapValues.add(variable);
-        variable.value.setParent(this);
     }
 
     // Internal method for Parser
+    @InternalAPI
     public void finishMapping() {
-        discardReferenceValue();
         if (yapionParserMapValues.isEmpty()) {
             return;
         }
+        discardReferenceValue();
 
         while (yapionParserMapValues.size() > 1) {
             YAPIONParserMapValue yapionParserMapValue1 = yapionParserMapValues.remove(0);
             YAPIONParserMapValue yapionParserMapValue2 = yapionParserMapValues.remove(0);
+            check(yapionParserMapValue1.value);
+            check(yapionParserMapValue2.value);
             variables.put(yapionParserMapValue1.value, yapionParserMapValue2.value);
+            yapionParserMapValue1.value.setParent(this);
+            yapionParserMapValue2.value.setParent(this);
         }
         yapionParserMapValues.clear();
     }
