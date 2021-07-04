@@ -73,11 +73,7 @@ public interface ObjectOutput {
 
     default long toLength(boolean prettified) {
         LengthOutput lengthOutput = toYAPION(new LengthOutput());
-        if (prettified) {
-            return lengthOutput.getPrettifiedLength();
-        } else {
-            return lengthOutput.getLength();
-        }
+        return prettified ? lengthOutput.getPrettifiedLength() : lengthOutput.getLength();
     }
 
 }

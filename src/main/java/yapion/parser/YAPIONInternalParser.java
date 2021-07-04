@@ -30,7 +30,7 @@ import java.util.*;
 final class YAPIONInternalParser {
 
     // Parse steps done
-    private int count = 0;
+    private long count = 0;
 
     // last char
     private char lastChar = '\u0000';
@@ -70,12 +70,6 @@ final class YAPIONInternalParser {
         this.referenceFunction = referenceFunction;
     }
 
-    void advance(char c) {
-        step(c);
-        count++;
-        lastChar = c;
-    }
-
     boolean isFinished() {
         return finished;
     }
@@ -85,13 +79,15 @@ final class YAPIONInternalParser {
         return result;
     }
 
-    int count() {
+    long count() {
         return count;
     }
 
-    private void step(char c) {
+    void advance(char c) {
         log.debug("{} -> {}", typeStack, (int) c);
         if (typeStack.isEmpty() && initialType(c)) {
+            count++;
+            lastChar = c;
             return;
         }
 
@@ -110,7 +106,10 @@ final class YAPIONInternalParser {
                 break;
             default:
                 parseObject(c, lastChar);
+                break;
         }
+        count++;
+        lastChar = c;
     }
 
     private void parseFinish() {
@@ -380,13 +379,7 @@ final class YAPIONInternalParser {
     private boolean tryParseValueJSONEnd(char c, char lastChar) {
         log.debug("TryParse '{}' '{}'", c, lastChar);
         StringBuilder now = new StringBuilder(current);
-        while (true) {
-            char temp = now.charAt(now.length() - 1);
-            if (!(temp == ' ' || temp == '\t' || temp == '\n')) {
-                break;
-            }
-            now.deleteCharAt(now.length() - 1);
-        }
+        shortenJSON(now);
         log.debug("shortened StringBuilder '{}'", now);
 
         if (now.length() > 0 && now.charAt(0) == '"' && now.charAt(now.length() - 1) == '"') {
@@ -415,17 +408,21 @@ final class YAPIONInternalParser {
         return false;
     }
 
+    private void shortenJSON(StringBuilder now) {
+        while (true) {
+            char temp = now.charAt(now.length() - 1);
+            if (!(temp == ' ' || temp == '\t' || temp == '\n')) {
+                break;
+            }
+            now.deleteCharAt(now.length() - 1);
+        }
+    }
+
     private void parseValueJSONEnd(char c) {
         log.debug("ValueHandler to use -> {}", valueHandlerList);
         log.debug("END char -> {}", c);
         pop(YAPIONType.VALUE);
-        while (true) {
-            char temp = current.charAt(current.length() - 1);
-            if (!(temp == ' ' || temp == '\t' || temp == '\n')) {
-                break;
-            }
-            current.deleteCharAt(current.length() - 1);
-        }
+        shortenJSON(current);
         add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
         reset();
         mightValue = MightValue.FALSE;
