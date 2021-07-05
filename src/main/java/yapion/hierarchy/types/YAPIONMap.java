@@ -338,6 +338,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     @InternalAPI
     public void add(@NonNull YAPIONParserMapValue variable) {
         yapionParserMapValues.add(variable);
+        variable.value.setParent(this);
     }
 
     // Internal method for Parser
@@ -354,8 +355,6 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
             check(yapionParserMapValue1.value);
             check(yapionParserMapValue2.value);
             variables.put(yapionParserMapValue1.value, yapionParserMapValue2.value);
-            yapionParserMapValue1.value.setParent(this);
-            yapionParserMapValue2.value.setParent(this);
         }
         if (!yapionParserMapValues.isEmpty()) {
             throw new YAPIONException("YAPIONMap was not fully qualified");

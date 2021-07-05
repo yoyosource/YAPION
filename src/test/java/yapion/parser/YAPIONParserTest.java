@@ -307,7 +307,7 @@ public class YAPIONParserTest {
 
     @Test
     public void testMapPointer() {
-        YAPIONParser.parse("{<->0000000000000000>}");
+        YAPIONParser.parse("{<():->0000000000000000>}");
     }
 
     @Test
