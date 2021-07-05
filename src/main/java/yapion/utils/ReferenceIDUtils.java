@@ -53,9 +53,9 @@ public class ReferenceIDUtils {
         }
         long l = 0x7D4FA32E5D92B68AL;
         for (int i = 0; i < 8; i++) {
-            l ^= s.length() << (i * 8);
+            l ^= (long) s.length() << (long) (i * 8);
         }
-        byte[] bytes = s.getBytes(StandardCharsets.UTF_16BE);
+        byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
         for (int i = 0; i < s.length(); i++) {
             byte b = bytes[i];
             for (int temp = 0; temp < 8; temp++) {
