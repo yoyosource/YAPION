@@ -52,19 +52,21 @@ public class ReferenceIDUtils {
             return referenceIDMapCache.get(s);
         }
         long l = 0x7D4FA32E5D92B68AL;
-        for (int i = 0; i < 8; i++) {
-            l ^= (long) s.length() << (long) (i * 8);
-        }
+        l = applyToBytes(s.length(), l);
         byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
         for (int i = 0; i < s.length(); i++) {
-            byte b = bytes[i];
-            for (int temp = 0; temp < 8; temp++) {
-                l ^= (long) b << (long) (temp * 8);
-            }
+            l = applyToBytes(bytes[i], l);
         }
         l &= 0x7FFFFFFFFFFFFFFFL;
         referenceIDMap.put(s, l);
         return l;
+    }
+
+    private static long applyToBytes(int toApply, long current) {
+        for (int temp = 0; temp < 8; temp++) {
+            current ^= (long) toApply << (long) (temp * 8);
+        }
+        return current;
     }
 
     /**
