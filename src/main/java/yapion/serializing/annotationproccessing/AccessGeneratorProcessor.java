@@ -38,7 +38,7 @@ import java.util.function.BiFunction;
 
 @ProcessorImplementation
 @SupportedAnnotationTypes("yapion.annotations.registration.YAPIONAccessGenerator")
-public class TypeGeneratorProcessor extends AbstractProcessor {
+public class AccessGeneratorProcessor extends AbstractProcessor {
 
     private Messager messager;
     private AtomicInteger index = new AtomicInteger(0);
