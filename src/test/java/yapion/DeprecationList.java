@@ -20,7 +20,6 @@ import yapion.annotations.api.DeprecationInfo;
 import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;

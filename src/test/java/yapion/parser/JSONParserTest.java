@@ -71,4 +71,9 @@ public class JSONParserTest {
                 "}").toYAPION(new StringOutput()).getResult(), is("{text(true)}"));
     }
 
+    @Test
+    public void testNegativeNumbers() {
+        assertThat(YAPIONParser.parse("{\"test\":-1}").toYAPION(), is("{test(-1)}"));
+    }
+
 }

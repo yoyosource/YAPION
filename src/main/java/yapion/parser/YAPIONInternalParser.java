@@ -194,7 +194,7 @@ final class YAPIONInternalParser {
             }
             mightValue = MightValue.FALSE;
 
-            if (c == '{' || c == '[' || c == '<' || c == '"' || (c >= '0' && c <= '9') || c == 't' || c == 'n' || c == 'f') {
+            if (c == '{' || c == '[' || c == '<' || c == '"' || (c >= '0' && c <= '9') || c == '-' || c == 't' || c == 'n' || c == 'f') {
                 current.delete(current.length() - 2, current.length());
                 current.deleteCharAt(0);
                 if (c != '{' && c != '[' && c != '<') {
@@ -401,7 +401,7 @@ final class YAPIONInternalParser {
             parseValueJSONEnd(c);
             return true;
         }
-        if (st.matches("\\d+(\\.\\d+)?")) {
+        if (st.matches("-?\\d+(\\.\\d+)?([eE][+-]?\\d+)?")) {
             parseValueJSONEnd(c);
             return true;
         }
