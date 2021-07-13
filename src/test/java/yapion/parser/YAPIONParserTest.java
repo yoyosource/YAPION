@@ -51,7 +51,7 @@ public class YAPIONParserTest {
 
     @Test(expected = YAPIONParserException.class)
     public void testTypeMismatch() {
-        System.out.println(YAPIONParser.parse("{]"));
+        YAPIONParser.parse("{]");
     }
 
     @Test

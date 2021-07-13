@@ -28,6 +28,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
 
     I itself();
 
+    @SuppressWarnings("unchecked")
     @OptionalAPI
     default <T extends YAPIONAnyType> T addIfAbsent(@NonNull K key, @NonNull T value) {
         if (internalContainsKey(key, YAPIONType.ANY)) {
@@ -36,6 +37,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return getOrSetDefault(key, value);
     }
 
+    @SuppressWarnings("unchecked")
     @OptionalAPI
     default <T extends YAPIONAnyType> T addIfAbsent(@NonNull K key, @NonNull YAPIONType yapionType, @NonNull T value) {
         if (internalContainsKey(key, yapionType)) {
@@ -44,6 +46,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return getOrSetDefault(key, value);
     }
 
+    @SuppressWarnings("unchecked")
     @OptionalAPI
     default <@YAPIONPrimitive T> YAPIONValue<T> addIfAbsent(@NonNull K key, @NonNull Class<T> type, @NonNull T value) {
         if (internalContainsKey(key, YAPIONType.VALUE)) {
@@ -52,6 +55,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return getOrSetDefault(key, new YAPIONValue<>(value));
     }
 
+    @SuppressWarnings("unchecked")
     @OptionalAPI
     default <T extends YAPIONAnyType> T computeIfAbsent(@NonNull K key, @NonNull Function<K, T> mappingFunction) {
         if (internalContainsKey(key, YAPIONType.ANY)) {
@@ -130,7 +134,8 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return stream().filter(yapionAnyType -> YAPIONArray.class.isAssignableFrom(yapionAnyType.getClass())).map(YAPIONArray.class::cast);
     }
 
-    default Stream<YAPIONValue> streamValue() {
+    @SuppressWarnings("unchecked")
+    default <T> Stream<YAPIONValue<T>> streamValue() {
         return stream().filter(yapionAnyType -> YAPIONValue.class.isAssignableFrom(yapionAnyType.getClass())).map(YAPIONValue.class::cast);
     }
 
@@ -265,12 +270,14 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return getOrSetDefault(key, defaultValue);
     }
 
-    default YAPIONValue<?> getYAPIONValueOrSetDefault(@NonNull K key, @NonNull YAPIONValue<?> defaultValue) {
-        return getOrSetDefault(key, defaultValue);
+    @SuppressWarnings("unchecked")
+    default <T> YAPIONValue<T> getYAPIONValueOrSetDefault(@NonNull K key, @NonNull YAPIONValue<?> defaultValue) {
+        return (YAPIONValue<T>) getOrSetDefault(key, defaultValue);
     }
 
-    default YAPIONValue<?> getValueOrSetDefault(@NonNull K key, @NonNull YAPIONValue<?> defaultValue) {
-        return getOrSetDefault(key, defaultValue);
+    @SuppressWarnings("unchecked")
+    default <T> YAPIONValue<T> getValueOrSetDefault(@NonNull K key, @NonNull YAPIONValue<?> defaultValue) {
+        return (YAPIONValue<T>) getOrSetDefault(key, defaultValue);
     }
 
     default YAPIONPointer getYAPIONPointerOrSetDefault(@NonNull K key, @NonNull YAPIONPointer defaultValue) {
@@ -281,6 +288,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return getOrSetDefault(key, defaultValue);
     }
 
+    @SuppressWarnings("unchecked")
     default <T extends YAPIONAnyType> T getOrSetDefault(@NonNull K key, @NonNull T defaultValue) {
         if (!internalContainsKey(key, defaultValue.getType())) {
             internalAdd(key, defaultValue);
@@ -296,4 +304,10 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return itself();
     }
 
+    default I swap(@NonNull K currentKey, @NonNull K newKey) {
+        YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(currentKey);
+        internalAdd(currentKey, internalGetYAPIONAnyType(newKey));
+        internalAdd(newKey, yapionAnyType);
+        return itself();
+    }
 }
