@@ -20,9 +20,11 @@ import yapion.annotations.registration.YAPIONAccessGenerator;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.annotationproccessing.generator.*;
+import yapion.utils.ClassUtils;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -95,23 +97,63 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             classGenerator.add(functionGenerator);
 
             functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "getObject", "<T> T", new ParameterGenerator(YAPIONObject.class.getTypeName(), "data"), new ParameterGenerator("String", "name"), new ParameterGenerator(BiFunction.class.getTypeName() + "<" + YAPIONObject.class.getTypeName() + ", java.util.Map<yapion.hierarchy.api.groups.YAPIONDataType<?, ?>, Object>, T>", "mapper"), new ParameterGenerator("java.util.Map<yapion.hierarchy.api.groups.YAPIONDataType<?, ?>, Object>", "_pointerData"));
-            // POINTER Support
             functionGenerator.add("if (data.containsKey(name, yapion.hierarchy.types.YAPIONType.POINTER)) {");
             functionGenerator.add("    return (T) _pointerData.get(data.getPointer(name));");
             functionGenerator.add("}");
             functionGenerator.add(YAPIONObject.class.getTypeName() + " value = data.getObjectOrDefault(name, null);");
             functionGenerator.add("if (value == null) return null;");
-            functionGenerator.add("return mapper.apply(value, _pointerData);");
+            functionGenerator.add("T returnValue = mapper.apply(value, _pointerData);");
+            functionGenerator.add("_pointerData.put(value, returnValue);");
+            functionGenerator.add("return returnValue;");
             classGenerator.add(functionGenerator);
 
             functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "getNonNullObject", "<T> T", new ParameterGenerator(YAPIONObject.class.getTypeName(), "data"), new ParameterGenerator("String", "name"), new ParameterGenerator(BiFunction.class.getTypeName() + "<" + YAPIONObject.class.getTypeName() + ", java.util.Map<yapion.hierarchy.api.groups.YAPIONDataType<?, ?>, Object>, T>", "mapper"), new ParameterGenerator("java.util.Map<yapion.hierarchy.api.groups.YAPIONDataType<?, ?>, Object>", "_pointerData"));
-            // POINTER Support
             functionGenerator.add("if (data.containsKey(name, yapion.hierarchy.types.YAPIONType.POINTER)) {");
             functionGenerator.add("    return (T) _pointerData.get(data.getPointer(name));");
             functionGenerator.add("}");
             functionGenerator.add(YAPIONObject.class.getTypeName() + " value = data.getObjectOrDefault(name, null);");
             functionGenerator.add("if (value == null) throw new yapion.exceptions.YAPIONException(\"Null Value not allowed\");");
-            functionGenerator.add("return mapper.apply(value, _pointerData);");
+            functionGenerator.add("T returnValue = mapper.apply(value, _pointerData);");
+            functionGenerator.add("_pointerData.put(value, returnValue);");
+            functionGenerator.add("return returnValue;");
+            classGenerator.add(functionGenerator);
+
+            functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "getArray", "<T> T[]", new ParameterGenerator(YAPIONObject.class.getTypeName(), "data"), new ParameterGenerator("String", "name"), new ParameterGenerator("Class<?>", "clazz"), new ParameterGenerator(BiFunction.class.getTypeName() + "<" + YAPIONObject.class.getTypeName() + ", java.util.Map<yapion.hierarchy.api.groups.YAPIONDataType<?, ?>, Object>, T>", "mapper"), new ParameterGenerator("java.util.Map<yapion.hierarchy.api.groups.YAPIONDataType<?, ?>, Object>", "_pointerData"));
+            functionGenerator.add("if (data.containsKey(name, yapion.hierarchy.types.YAPIONType.POINTER)) {");
+            functionGenerator.add("    return (T[]) _pointerData.get(data.getPointer(name));");
+            functionGenerator.add("}");
+            functionGenerator.add(YAPIONArray.class.getTypeName() + " value = data.getArrayOrDefault(name, null);");
+            functionGenerator.add("if (value == null) return null;");
+            functionGenerator.add("java.util.List<T> list = value.stream().map(yapionAnyType -> {");
+            functionGenerator.add("    if (yapionAnyType instanceof " + YAPIONPointer.class.getTypeName() + ") return (T) _pointerData.get(((" + YAPIONPointer.class.getTypeName() + ") yapionAnyType).get());");
+            functionGenerator.add("    if (" + ClassUtils.class.getTypeName() + ".isPrimitive(clazz)) return (T) ((" + YAPIONValue.class.getTypeName() + "<?>) yapionAnyType).get();");
+            functionGenerator.add("    return mapper.apply((" + YAPIONObject.class.getTypeName() + ") yapionAnyType, _pointerData);");
+            functionGenerator.add("}).collect(java.util.stream.Collectors.toList());");
+            functionGenerator.add("Object array = java.lang.reflect.Array.newInstance(clazz, list.size());");
+            functionGenerator.add("for (int i = 0; i < list.size(); i++) {");
+            functionGenerator.add("    java.lang.reflect.Array.set(array, i, list.get(i));");
+            functionGenerator.add("}");
+            functionGenerator.add("_pointerData.put(value, array);");
+            functionGenerator.add("return (T[]) array;");
+            classGenerator.add(functionGenerator);
+
+            functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "getNonNullArray", "<T> T[]", new ParameterGenerator(YAPIONObject.class.getTypeName(), "data"), new ParameterGenerator("String", "name"), new ParameterGenerator("Class<?>", "clazz"), new ParameterGenerator(BiFunction.class.getTypeName() + "<" + YAPIONObject.class.getTypeName() + ", java.util.Map<yapion.hierarchy.api.groups.YAPIONDataType<?, ?>, Object>, T>", "mapper"), new ParameterGenerator("java.util.Map<yapion.hierarchy.api.groups.YAPIONDataType<?, ?>, Object>", "_pointerData"));
+            functionGenerator.add("if (data.containsKey(name, yapion.hierarchy.types.YAPIONType.POINTER)) {");
+            functionGenerator.add("    return (T[]) _pointerData.get(data.getPointer(name));");
+            functionGenerator.add("}");
+            functionGenerator.add(YAPIONArray.class.getTypeName() + " value = data.getArrayOrDefault(name, null);");
+            functionGenerator.add("if (value == null) throw new yapion.exceptions.YAPIONException(\"Null Value not allowed\");");
+            functionGenerator.add("java.util.List<T> list = value.stream().map(yapionAnyType -> {");
+            functionGenerator.add("    if (yapionAnyType instanceof " + YAPIONPointer.class.getTypeName() + ") return (T) _pointerData.get(((" + YAPIONPointer.class.getTypeName() + ") yapionAnyType).get());");
+            functionGenerator.add("    if (" + ClassUtils.class.getTypeName() + ".isPrimitive(clazz)) return (T) ((" + YAPIONValue.class.getTypeName() + "<?>) yapionAnyType).get();");
+            functionGenerator.add("    return mapper.apply((" + YAPIONObject.class.getTypeName() + ") yapionAnyType, _pointerData);");
+            functionGenerator.add("}).collect(java.util.stream.Collectors.toList());");
+            functionGenerator.add("Object array = java.lang.reflect.Array.newInstance(clazz, list.size());");
+            functionGenerator.add("for (int i = 0; i < list.size(); i++) {");
+            functionGenerator.add("    java.lang.reflect.Array.set(array, i, list.get(i));");
+            functionGenerator.add("}");
+            functionGenerator.add("_pointerData.put(value, array);");
+            functionGenerator.add("return (T[]) array;");
             classGenerator.add(functionGenerator);
 
             JavaFileObject f = processingEnv.getFiler().createSourceFile(classGenerator.getPackageName() + "." + classGenerator.getClassName());
@@ -193,18 +235,18 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                     valueType = "java.lang.Object";
                 }
                 classGenerator.add(new FieldGenerator(valueType + "[]", s, null), true, false, false);
-                functionGenerator.add("this." + s + " = data.getArray(\"" + s + "\").stream().filter(" + YAPIONValue.class.getTypeName() + ".class::isInstance).map(" + YAPIONValue.class.getTypeName() + ".class::cast).map(temp -> (" + valueType + ") temp.get()).toArray(" + valueType + "[]::new);");
+                functionGenerator.add("this." + s + " = get" + (forceNonNull ? "NonNull" : "") + "Array(data, \"" + s + "\", " + valueType + ".class, " + valueType + "::new, _pointerData);");
             } else if (current instanceof YAPIONObject) {
                 YAPIONObject current1 = (YAPIONObject) current;
                 if (current1.size() == 1 && current1.containsKey("@reference", String.class)) {
                     String name = current1.getPlainValue("@reference");
                     classGenerator.add(new FieldGenerator(name + "[]", s, null), true, false, false);
-                    functionGenerator.add("this." + s + " = data.getArray(\"" + s + "\").stream().filter(" + YAPIONObject.class.getTypeName() + ".class::isInstance).map(" + YAPIONObject.class.getTypeName() + ".class::cast).map(" + name + "::new).toArray(" + name + "[]::new);");
+                    functionGenerator.add("this." + s + " = get" + (forceNonNull ? "NonNull" : "") + "Array(data, \"" + s + "\", " + name + ".class, " + name + "::new, _pointerData);");
                 } else {
                     ClassGenerator currentGenerator = generate(element, current1, "");
                     classGenerator.add(currentGenerator);
                     classGenerator.add(new FieldGenerator(currentGenerator.getClassName() + "[]", s, null), true, false, false);
-                    functionGenerator.add("this." + s + " = data.getArray(\"" + s + "\").stream().filter(" + YAPIONObject.class.getTypeName() + ".class::isInstance).map(" + YAPIONObject.class.getTypeName() + ".class::cast).map(" + currentGenerator.getClassName() + "::new).toArray(" + currentGenerator.getClassName() + "[]::new);");
+                    functionGenerator.add("this." + s + " = get" + (forceNonNull ? "NonNull" : "") + "Array(data, \"" + s + "\", " + currentGenerator.getClassName() + ".class, " + currentGenerator.getClassName() + "::new, _pointerData);");
                 }
             }
         }
