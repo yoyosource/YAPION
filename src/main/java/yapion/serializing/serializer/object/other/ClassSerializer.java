@@ -25,12 +25,15 @@ import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
 import yapion.utils.ReflectionsUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.Base64;
 import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 @SerializerImplementation(since = "0.25.0")
 public class ClassSerializer implements FinalInternalSerializer<Class<?>> {
@@ -65,17 +68,18 @@ public class ClassSerializer implements FinalInternalSerializer<Class<?>> {
         }
         try {
             InputStream inputStream = ClassSerializer.class.getResourceAsStream("/" + serializeData.object.getTypeName().replace(".", "/") + ".class");
-            StringBuilder st = new StringBuilder();
-            List<Byte> byteList = new ArrayList<>();
-            while (inputStream.available() > 0) {
-                int i = inputStream.read();
-                if (i == -1) {
-                    break;
-                }
-                byteList.add((byte) i);
-                st.append(String.format("%02X", i));
+            if (inputStream == null) {
+                return yapionObject;
             }
-            yapionObject.add("byteCode", st.toString());
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);
+            while (inputStream.available() > 0) {
+                gzipOutputStream.write(inputStream.read());
+            }
+            gzipOutputStream.close();
+
+            yapionObject.add("byteCode", Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray()));
         } catch (IOException e) {
             throw new YAPIONSerializerException(e.getMessage(), e);
         }
@@ -103,9 +107,17 @@ public class ClassSerializer implements FinalInternalSerializer<Class<?>> {
         }
 
         String st = yapionObject.getPlainValue("byteCode");
-        byte[] bytes = new byte[st.length() / 2];
-        for (int i = 0; i < bytes.length; i++) {
-            bytes[i] = (byte) Integer.parseInt("" + st.charAt(i * 2) + st.charAt(i * 2 + 1), 16);
+        byte[] bytes = Base64.getDecoder().decode(st);
+        try {
+            GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            while (gzipInputStream.available() > 0) {
+                byteArrayOutputStream.write(gzipInputStream.read());
+            }
+            bytes = byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            throw yapionException;
         }
 
         try {

@@ -149,7 +149,7 @@ public class SerializeManager {
                 wrappedClasses.forEach(wrappedClass -> {
                     log.debug("Loading: {}", wrappedClass.name);
                     if (SYS_LOGGER) System.out.println("Loading: " + wrappedClass.name);
-                    add(classLoader.defineClass(wrappedClass.name, wrappedClass.bytes));
+                    internalAdd(classLoader.defineClass(wrappedClass.name, wrappedClass.bytes));
                 });
             });
         } catch (Exception e) {
@@ -162,8 +162,7 @@ public class SerializeManager {
         serializerGroups.add("java.");
     }
 
-    @InternalAPI
-    static void add(Class<?> clazz) {
+    private static void internalAdd(Class<?> clazz) {
         if (clazz.getTypeName().equals("yapion.serializing.serializer.FinalInternalSerializer") && FinalInternalSerializerClass == null) {
             FinalInternalSerializerClass = clazz;
         }
@@ -172,7 +171,7 @@ public class SerializeManager {
         Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
         if (o == null) return;
         if (!(o instanceof InternalSerializer)) return;
-        add((InternalSerializer<?>) o);
+        internalAdd((InternalSerializer<?>) o);
 
         if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.ArraySerializer") && ARRAY_SERIALIZER == null) {
             ARRAY_SERIALIZER = (InternalSerializer<Object>) o;
@@ -186,8 +185,22 @@ public class SerializeManager {
     }
 
     @InternalAPI
+    static void add(Class<?> clazz) {
+        if (clazz.isInterface()) return;
+        if (clazz.getInterfaces().length != 1) return;
+        Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
+        if (o == null) return;
+        if (!(o instanceof InternalSerializer)) return;
+        add((InternalSerializer<?>) o);
+    }
+
+    @InternalAPI
     public static void add(InternalSerializer<?> serializer) {
         if (!checkOverrideable(serializer)) return;
+        internalAdd(serializer);
+    }
+
+    private static void internalAdd(InternalSerializer<?> serializer) {
         serializer.init();
         serializerMap.put(serializer.type(), serializer);
 

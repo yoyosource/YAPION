@@ -289,4 +289,11 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         return (T) internalGetYAPIONAnyType(key);
     }
 
+    default I remap(@NonNull K currentKey, @NonNull K newKey) {
+        YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(currentKey);
+        internalRemove(currentKey);
+        internalAdd(newKey, yapionAnyType);
+        return itself();
+    }
+
 }

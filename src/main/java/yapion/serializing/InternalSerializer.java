@@ -49,6 +49,11 @@ public interface InternalSerializer<T> {
     }
 
     @InternalAPI
+    default boolean finished() {
+        return true;
+    }
+
+    @InternalAPI
     default boolean saveWithoutAnnotation() {
         return false;
     }

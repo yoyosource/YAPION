@@ -11,31 +11,17 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.notserializable.thread;
+package yapion.serializing.serializer.object.function;
 
 import yapion.annotations.api.SerializerImplementation;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.data.DeserializeData;
-import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
+import yapion.serializing.serializer.object.AbstractFunctionSerializer;
 
 @SerializerImplementation(since = "0.10.0")
-public class RunnableSerializer implements FinalInternalSerializer<Runnable> {
+public class RunnableSerializer extends AbstractFunctionSerializer<Runnable> implements FinalInternalSerializer<Runnable> {
 
     @Override
-    public Class<?> type() {
-        return Runnable.class;
-    }
-
-    @Override
-    public YAPIONAnyType serialize(SerializeData<Runnable> serializeData) {
-        serializeData.signalDataLoss();
-        return new YAPIONValue<>(null);
-    }
-
-    @Override
-    public Runnable deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        return null;
+    public void init() {
+        clazz = Runnable.class;
     }
 }

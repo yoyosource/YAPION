@@ -157,6 +157,7 @@ public final class YAPIONSerializer {
             throw new YAPIONSerializerException("Simple class name (" + object.getClass().getTypeName() + ") is not allowed to contain '$'");
         }
 
+        result = new YAPIONObject();
         Class<?> type = object.getClass();
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
@@ -164,7 +165,9 @@ public final class YAPIONSerializer {
             if (result instanceof YAPIONObject || result instanceof YAPIONArray || result instanceof YAPIONMap) {
                 pointerMap.put(object, new YAPIONPointer((YAPIONDataType<?, ?>) result));
             }
-            return this;
+            if (serializer.finished()) {
+                return this;
+            }
         }
 
         boolean saveWithoutAnnotation = serializer != null && serializer.saveWithoutAnnotation();
@@ -176,13 +179,14 @@ public final class YAPIONSerializer {
             return parseObject(object);
         }
 
-        YAPIONObject yapionObject = new YAPIONObject();
+        YAPIONObject yapionObject = (YAPIONObject) result;
         if (!pointerMap.containsKey(object)) {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
         }
         MethodManager.preSerializationStep(object, object.getClass(), contextManager);
-        yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName()));
-        this.result = yapionObject;
+        if (serializer == null) {
+            yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName()));
+        }
 
         Class<?> objectClass = object.getClass();
         for (Field field : ReflectionsUtils.getFields(objectClass)) {

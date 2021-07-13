@@ -46,6 +46,15 @@ public class IdentifierUtils {
     public static final String TYPE_IDENTIFIER = "@type";
 
     /**
+     * This variable is used in the {@link YAPIONSerializer}
+     * and {@link YAPIONDeserializer} for identifying an
+     * {@link YAPIONObject} type by its {@link Class#getTypeName()}.
+     * In the serialization this variable is used as the
+     * key of a the so called type variable.
+     */
+    public static final String CLASS_IDENTIFIER = "@class";
+
+    /**
      * This variable is used in the {@link EnumSerializer}
      * for identifying an {@link Enum} by its {@link Class#getTypeName()}.
      * In the serialization this variable is used as the

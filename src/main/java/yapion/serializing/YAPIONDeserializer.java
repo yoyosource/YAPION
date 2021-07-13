@@ -229,7 +229,10 @@ public final class YAPIONDeserializer {
         if (serializer != null && !serializer.empty()) {
             object = serializer.deserialize(new DeserializeData<>(yapionObject, contextManager.get(), this, typeReMapper));
             pointerMap.put(yapionObject, object);
-            return this;
+            if (serializer.finished()) {
+                return this;
+            }
+            clazz = object.getClass();
         }
 
         if (serializer == null && GeneratedSerializerLoader.loadSerializerIfNeeded(clazz)) {
@@ -242,10 +245,12 @@ public final class YAPIONDeserializer {
         if (!contextManager.is(clazz).load && !loadWithoutAnnotation) {
             throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
         }
-        try {
-            object = SerializeManager.getObjectInstance(clazz, type, contextManager.is(clazz).data || createWithObjenesis);
-        } catch (YAPIONReflectionException e) {
-            log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
+        if (serializer == null || serializer.finished() || serializer.empty()) {
+            try {
+                object = SerializeManager.getObjectInstance(clazz, type, contextManager.is(clazz).data || createWithObjenesis);
+            } catch (YAPIONReflectionException e) {
+                log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
+            }
         }
         MethodManager.preDeserializationStep(object, object.getClass(), contextManager);
         pointerMap.put(yapionObject, object);
