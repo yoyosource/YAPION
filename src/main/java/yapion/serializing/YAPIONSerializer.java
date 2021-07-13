@@ -184,7 +184,7 @@ public final class YAPIONSerializer {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
         }
         MethodManager.preSerializationStep(object, object.getClass(), contextManager);
-        if (serializer == null) {
+        if (serializer == null || serializer.empty()) {
             yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName()));
         }
 
