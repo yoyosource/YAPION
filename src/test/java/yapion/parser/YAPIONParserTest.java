@@ -59,9 +59,9 @@ public class YAPIONParserTest {
         assertThat(YAPIONParser.parse("[]"), isYAPION("{[]}"));
     }
 
-    @Test(expected = YAPIONParserException.class)
+    @Test
     public void testEmptyString() {
-        YAPIONParser.parse("");
+        assertThat(YAPIONParser.parse(""), isYAPION("{}"));
     }
 
     @Test

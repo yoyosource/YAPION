@@ -117,7 +117,9 @@ final class YAPIONInternalParser {
             parseValueJSONEnd('\u0000');
         }
         if (count == 0) {
-            throw new YAPIONParserException("No parse steps were done");
+            result = new YAPIONObject();
+            log.debug("finish   [done]");
+            return;
         }
         if (typeStack.isEmpty() && !hadInitial && typeStack.pop(YAPIONType.OBJECT) == YAPIONType.OBJECT) {
             throw new YAPIONParserException("Object is closed too often");
