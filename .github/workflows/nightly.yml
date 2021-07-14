@@ -23,8 +23,10 @@ jobs:
       run: |
         git pull --all
         git checkout nightly
-#        git merge master
-#        git push
+        git pull --all
+        git merge master
+#       TODO Nightly BUILD
+        git push -u
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
