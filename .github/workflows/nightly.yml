@@ -23,8 +23,8 @@ jobs:
         distribution: 'adopt'
     - name: Checkout 'nightly' merge master to 'nightly'
       run: |
-        git merge origin/master
-        git push -u
+#        git merge origin/master
+#        git push -u
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
