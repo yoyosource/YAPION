@@ -24,7 +24,7 @@ YAPION is licensed under the terms of the Apache License 2.0. See the file LICEN
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 ## Using in other Projects
-YAPION is not published on jcenter or mavenCentral. It is published directly to this GitHub repository. You can declare it as a dependency in your gradle.build with:
+YAPION is not published on jcenter or mavenCentral. It is published directly to this GitHub repository. You can declare it as a dependency in your build.gradle with:
 ```groovy
 repositories {
     maven {
