@@ -24,7 +24,7 @@ jobs:
         git pull --all
         git checkout nightly
         git pull --all
-        git merge master
+        git merge -f master
         git push -u
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
