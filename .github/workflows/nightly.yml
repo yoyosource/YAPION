@@ -14,6 +14,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: 'nightly'
     - name: Set up JDK 11
       uses: actions/setup-java@v2
       with:
@@ -21,10 +23,7 @@ jobs:
         distribution: 'adopt'
     - name: Checkout 'nightly' merge master to 'nightly'
       run: |
-        git pull --all
-        git checkout nightly
-        git pull --all
-        git merge master
+        git merge origin/master
         git push -u
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
