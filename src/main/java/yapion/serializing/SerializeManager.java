@@ -179,7 +179,7 @@ public class SerializeManager {
             return;
         }
         if (o instanceof InternalSerializer) {
-            add((InternalSerializer<?>) o);
+            internalAdd((InternalSerializer<?>) o);
         }
 
         if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.ArraySerializer") && ARRAY_SERIALIZER == null) {
