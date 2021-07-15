@@ -14,29 +14,16 @@
 package yapion.serializing.serializer.primitive.number;
 
 import yapion.annotations.api.SerializerImplementation;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.data.DeserializeData;
-import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
+import yapion.serializing.serializer.PrimitiveSerializer;
 
 import java.math.BigDecimal;
 
 @SerializerImplementation(since = "0.2.0")
-public class BigDecimalSerializer implements FinalInternalSerializer<BigDecimal> {
+public class BigDecimalSerializer extends PrimitiveSerializer<BigDecimal> implements FinalInternalSerializer<BigDecimal> {
 
     @Override
-    public Class<?> type() {
-        return BigDecimal.class;
-    }
-
-    @Override
-    public YAPIONAnyType serialize(SerializeData<BigDecimal> serializeData) {
-        return new YAPIONValue<>(serializeData.object);
-    }
-
-    @Override
-    public BigDecimal deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        return ((YAPIONValue<BigDecimal>) deserializeData.object).get();
+    public void init() {
+        clazz = BigDecimal.class;
     }
 }

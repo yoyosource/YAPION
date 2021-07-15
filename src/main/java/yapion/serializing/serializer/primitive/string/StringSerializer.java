@@ -14,27 +14,14 @@
 package yapion.serializing.serializer.primitive.string;
 
 import yapion.annotations.api.SerializerImplementation;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.data.DeserializeData;
-import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
+import yapion.serializing.serializer.PrimitiveSerializer;
 
 @SerializerImplementation(since = "0.2.0")
-public class StringSerializer implements FinalInternalSerializer<String> {
+public class StringSerializer extends PrimitiveSerializer<String> implements FinalInternalSerializer<String> {
 
     @Override
-    public Class<?> type() {
-        return String.class;
-    }
-
-    @Override
-    public YAPIONAnyType serialize(SerializeData<String> serializeData) {
-        return new YAPIONValue<>(serializeData.object);
-    }
-
-    @Override
-    public String deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        return ((YAPIONValue<String>) deserializeData.object).get();
+    public void init() {
+        clazz = String.class;
     }
 }

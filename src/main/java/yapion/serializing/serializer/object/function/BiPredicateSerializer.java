@@ -15,10 +15,9 @@ package yapion.serializing.serializer.object.function;
 
 import yapion.annotations.api.SerializerImplementation;
 import yapion.serializing.serializer.FinalInternalSerializer;
-import yapion.serializing.serializer.object.AbstractFunctionSerializer;
+import yapion.serializing.serializer.AbstractFunctionSerializer;
 
 import java.util.function.BiPredicate;
-import java.util.function.BinaryOperator;
 
 @SerializerImplementation(since = "0.26.0")
 public class BiPredicateSerializer extends AbstractFunctionSerializer<BiPredicate> implements FinalInternalSerializer<BiPredicate> {

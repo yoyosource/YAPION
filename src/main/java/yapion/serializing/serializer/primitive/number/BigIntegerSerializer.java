@@ -14,29 +14,16 @@
 package yapion.serializing.serializer.primitive.number;
 
 import yapion.annotations.api.SerializerImplementation;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.data.DeserializeData;
-import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
+import yapion.serializing.serializer.PrimitiveSerializer;
 
 import java.math.BigInteger;
 
 @SerializerImplementation(since = "0.2.0")
-public class BigIntegerSerializer implements FinalInternalSerializer<BigInteger> {
+public class BigIntegerSerializer extends PrimitiveSerializer<BigInteger> implements FinalInternalSerializer<BigInteger> {
 
     @Override
-    public Class<?> type() {
-        return BigInteger.class;
-    }
-
-    @Override
-    public YAPIONAnyType serialize(SerializeData<BigInteger> serializeData) {
-        return new YAPIONValue<>(serializeData.object);
-    }
-
-    @Override
-    public BigInteger deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        return ((YAPIONValue<BigInteger>) deserializeData.object).get();
+    public void init() {
+        clazz = BigInteger.class;
     }
 }

@@ -14,32 +14,14 @@
 package yapion.serializing.serializer.primitive.number;
 
 import yapion.annotations.api.SerializerImplementation;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.data.DeserializeData;
-import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
+import yapion.serializing.serializer.PrimitiveSerializer;
 
 @SerializerImplementation(since = "0.2.0")
-public class ShortSerializer implements FinalInternalSerializer<Short> {
+public class ShortSerializer extends PrimitiveSerializer<Short> implements FinalInternalSerializer<Short> {
 
     @Override
-    public Class<?> type() {
-        return Short.class;
-    }
-
-    @Override
-    public Class<?> primitiveType() {
-        return short.class;
-    }
-
-    @Override
-    public YAPIONAnyType serialize(SerializeData<Short> serializeData) {
-        return new YAPIONValue<>(serializeData.object);
-    }
-
-    @Override
-    public Short deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        return ((YAPIONValue<Short>) deserializeData.object).get();
+    public void init() {
+        clazz = Short.class;
     }
 }

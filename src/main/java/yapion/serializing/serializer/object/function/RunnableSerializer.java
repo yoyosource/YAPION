@@ -15,7 +15,7 @@ package yapion.serializing.serializer.object.function;
 
 import yapion.annotations.api.SerializerImplementation;
 import yapion.serializing.serializer.FinalInternalSerializer;
-import yapion.serializing.serializer.object.AbstractFunctionSerializer;
+import yapion.serializing.serializer.AbstractFunctionSerializer;
 
 @SerializerImplementation(since = "0.10.0")
 public class RunnableSerializer extends AbstractFunctionSerializer<Runnable> implements FinalInternalSerializer<Runnable> {

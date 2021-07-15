@@ -14,32 +14,14 @@
 package yapion.serializing.serializer.primitive;
 
 import yapion.annotations.api.SerializerImplementation;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONValue;
-import yapion.serializing.data.DeserializeData;
-import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
+import yapion.serializing.serializer.PrimitiveSerializer;
 
 @SerializerImplementation(since = "0.11.0")
-public class BooleanSerializer implements FinalInternalSerializer<Boolean> {
+public class BooleanSerializer extends PrimitiveSerializer<Boolean> implements FinalInternalSerializer<Boolean> {
 
     @Override
-    public Class<?> type() {
-        return Boolean.class;
-    }
-
-    @Override
-    public Class<?> primitiveType() {
-        return boolean.class;
-    }
-
-    @Override
-    public YAPIONAnyType serialize(SerializeData<Boolean> serializeData) {
-        return new YAPIONValue<>(serializeData.object);
-    }
-
-    @Override
-    public Boolean deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        return ((YAPIONValue<Boolean>) deserializeData.object).get();
+    public void init() {
+        clazz = Boolean.class;
     }
 }

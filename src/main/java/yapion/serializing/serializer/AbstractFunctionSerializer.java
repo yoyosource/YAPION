@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.object;
+package yapion.serializing.serializer;
 
 import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
