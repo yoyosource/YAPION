@@ -14,6 +14,7 @@
 package yapion.serializing.serializer.special;
 
 import yapion.annotations.api.DeprecationInfo;
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
@@ -25,6 +26,7 @@ import static yapion.utils.IdentifierUtils.ENUM_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 @SuppressWarnings({"java:S1192"})
+@SerializerImplementation(since = "0.10.0")
 public class EnumSerializer implements FinalInternalSerializer<Enum<?>> { // This Serializer exists since version 0.10.0
 
     @Override

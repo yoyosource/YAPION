@@ -27,6 +27,7 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.api.InstanceFactory;
 import yapion.serializing.api.SerializerBase;
+import yapion.serializing.api.YAPIONSerializerRegistrator;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.reflection.PureStrategy;
@@ -93,6 +94,7 @@ public class SerializeManager {
     private ReflectionStrategy reflectionStrategy = new PureStrategy();
 
     private Class<?> FinalInternalSerializerClass = null;
+    private final boolean initialized;
 
     @AllArgsConstructor
     private static class WrappedClass {
@@ -134,6 +136,7 @@ public class SerializeManager {
                 int depth = className.length() - className.replace(".", "").length();
                 if (className.endsWith(".KeySpecSerializer")) depth -= 1;
                 if (!className.endsWith("Serializer")) depth -= 1;
+                if (className.endsWith("Registrator")) depth += 1;
                 depth -= className.length() - className.replace("$", "").length();
                 log.debug("Entry Info: {} {} {} {} {}", entry.getName(), entry.getSize(), byteArray.length, depth, deepest);
                 if (SYS_LOGGER) System.out.println("Entry Info: "  + entry.getName() + " " + entry.getSize() + " " + byteArray.length + " " + depth + " " + deepest);
@@ -159,6 +162,7 @@ public class SerializeManager {
             log.error("No Serializer was loaded. Please inspect.");
         }
 
+        initialized = true;
         serializerGroups.add("java.");
     }
 
@@ -170,8 +174,13 @@ public class SerializeManager {
         if (clazz.getInterfaces().length != 1) return;
         Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
         if (o == null) return;
-        if (!(o instanceof InternalSerializer)) return;
-        internalAdd((InternalSerializer<?>) o);
+        if (o instanceof YAPIONSerializerRegistrator) {
+            ((YAPIONSerializerRegistrator) o).register();
+            return;
+        }
+        if (o instanceof InternalSerializer) {
+            add((InternalSerializer<?>) o);
+        }
 
         if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.ArraySerializer") && ARRAY_SERIALIZER == null) {
             ARRAY_SERIALIZER = (InternalSerializer<Object>) o;
@@ -190,8 +199,13 @@ public class SerializeManager {
         if (clazz.getInterfaces().length != 1) return;
         Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
         if (o == null) return;
-        if (!(o instanceof InternalSerializer)) return;
-        add((InternalSerializer<?>) o);
+        if (o instanceof YAPIONSerializerRegistrator) {
+            ((YAPIONSerializerRegistrator) o).register();
+            return;
+        }
+        if (o instanceof InternalSerializer) {
+            add((InternalSerializer<?>) o);
+        }
     }
 
     @InternalAPI
@@ -216,6 +230,9 @@ public class SerializeManager {
     }
 
     private static boolean checkOverrideable(InternalSerializer<?> serializer) {
+        if (!initialized) {
+            return true;
+        }
         if (!serializerMap.containsKey(serializer.type())) {
             return true;
         }

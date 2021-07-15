@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.special;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
@@ -30,6 +31,7 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 /**
  * This Serializer is inspired by 'https://github.com/EsotericSoftware/kryo/blob/master/src/com/esotericsoftware/kryo/serializers/RecordSerializer.java'
  */
+@SerializerImplementation(since = "0.26.0")
 public class RecordSerializer implements FinalInternalSerializer<Object> {
 
     private static Method isRecord;

@@ -15,6 +15,7 @@ package yapion.serializing.serializer.special;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import yapion.annotations.api.SerializerImplementation;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.registration.YAPIONSerializing;
 
@@ -22,6 +23,7 @@ import yapion.annotations.registration.YAPIONSerializing;
 @Getter
 @YAPIONSerializing(serializationStep = false, deserializationStep = false)
 @YAPIONData
+@SerializerImplementation(since = "0.26.0")
 public class RecordValue {
     protected String name;
     protected int index;

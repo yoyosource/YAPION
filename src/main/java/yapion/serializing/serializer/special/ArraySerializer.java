@@ -13,6 +13,7 @@
 
 package yapion.serializing.serializer.special;
 
+import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
+@SerializerImplementation(since = "0.26.0")
 public class ArraySerializer implements FinalInternalSerializer<Object> {
 
     @Override

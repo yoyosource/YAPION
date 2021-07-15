@@ -11,33 +11,34 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.notserializable.net;
+package yapion.serializing.serializer.primitive;
 
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
 
-import java.net.Socket;
-
-@SerializerImplementation(since = "0.12.0")
-public class SocketSerializer implements FinalInternalSerializer<Socket> {
+@SerializerImplementation(since = "0.2.0")
+public class StringBuilderSerializer implements FinalInternalSerializer<StringBuilder> {
 
     @Override
     public Class<?> type() {
-        return Socket.class;
+        return StringBuilder.class;
     }
 
     @Override
-    public YAPIONAnyType serialize(SerializeData<Socket> serializeData) {
-        serializeData.signalDataLoss();
-        return new YAPIONValue<>(null);
+    public YAPIONAnyType serialize(SerializeData<StringBuilder> serializeData) {
+        YAPIONObject yapionObject = new YAPIONObject(type());
+        yapionObject.add("string", serializeData.object.toString());
+        return yapionObject;
     }
 
     @Override
-    public Socket deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        return null;
+    public StringBuilder deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
+        return new StringBuilder(yapionObject.getPlainValue("string"));
     }
+
 }

@@ -11,31 +11,34 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer.notserializable.os;
+package yapion.serializing.serializer.primitive;
 
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
 
-@SerializerImplementation(since = "0.12.0")
-public class ProcessSerializer implements FinalInternalSerializer<Process> {
+@SerializerImplementation(since = "0.2.0")
+public class StringBufferSerializer implements FinalInternalSerializer<StringBuffer> {
 
     @Override
     public Class<?> type() {
-        return Process.class;
+        return StringBuffer.class;
     }
 
     @Override
-    public YAPIONAnyType serialize(SerializeData<Process> serializeData) {
-        serializeData.signalDataLoss();
-        return new YAPIONValue<>(null);
+    public YAPIONAnyType serialize(SerializeData<StringBuffer> serializeData) {
+        YAPIONObject yapionObject = new YAPIONObject(type());
+        yapionObject.add("string", serializeData.object.toString());
+        return yapionObject;
     }
 
     @Override
-    public Process deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
-        return null;
+    public StringBuffer deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
+        YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
+        return new StringBuffer(yapionObject.getPlainValue("string"));
     }
+
 }
