@@ -1,7 +1,1 @@
-{
-	rosenduftgenießer(null)
-	rosenduftgenießer(true)
-	rosenduftgenießer(false)
-	rosenduftgenießer(#A000B)
-	test->0000000000000000
-}
+rosenduftgenießer(null)
