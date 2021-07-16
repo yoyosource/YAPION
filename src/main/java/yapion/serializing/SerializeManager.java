@@ -38,6 +38,7 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
@@ -170,42 +171,36 @@ public class SerializeManager {
         if (clazz.getTypeName().equals("yapion.serializing.serializer.FinalInternalSerializer") && FinalInternalSerializerClass == null) {
             FinalInternalSerializerClass = clazz;
         }
-        if (clazz.isInterface()) return;
-        if (clazz.getInterfaces().length != 1) return;
-        Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
+        Object o = internalAdd(clazz, SerializeManager::internalAdd);
         if (o == null) return;
-        if (o instanceof YAPIONSerializerRegistrator) {
-            ((YAPIONSerializerRegistrator) o).register();
-            return;
-        }
-        if (o instanceof InternalSerializer) {
-            internalAdd((InternalSerializer<?>) o);
-        }
 
-        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.ArraySerializer") && ARRAY_SERIALIZER == null) {
+        if (clazz.getTypeName().equals("yapion.serializing.serializer.special.ArraySerializer") && ARRAY_SERIALIZER == null) {
             ARRAY_SERIALIZER = (InternalSerializer<Object>) o;
         }
-        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.EnumSerializer") && ENUM_SERIALIZER == null) {
+        if (clazz.getTypeName().equals("yapion.serializing.serializer.special.EnumSerializer") && ENUM_SERIALIZER == null) {
             ENUM_SERIALIZER = (InternalSerializer<Enum<?>>) o;
         }
-        if (o.getClass().getTypeName().equals("yapion.serializing.serializer.special.RecordSerializer") && RECORD_SERIALIZER == null) {
+        if (clazz.getTypeName().equals("yapion.serializing.serializer.special.RecordSerializer") && RECORD_SERIALIZER == null) {
             RECORD_SERIALIZER = (InternalSerializer<Object>) o;
         }
     }
 
     @InternalAPI
     static void add(Class<?> clazz) {
-        if (clazz.isInterface()) return;
-        if (clazz.getInterfaces().length != 1) return;
+        internalAdd(clazz, SerializeManager::add);
+    }
+
+    private static Object internalAdd(Class<?> clazz, Consumer<InternalSerializer<?>> internalSerializerConsumer) {
+        if (clazz.isInterface()) return null;
+        if (clazz.getInterfaces().length != 1) return null;
         Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
-        if (o == null) return;
+        if (o == null) return null;
         if (o instanceof YAPIONSerializerRegistrator) {
             ((YAPIONSerializerRegistrator) o).register();
-            return;
+        } else if (o instanceof InternalSerializer) {
+            internalSerializerConsumer.accept((InternalSerializer<?>) o);
         }
-        if (o instanceof InternalSerializer) {
-            add((InternalSerializer<?>) o);
-        }
+        return o;
     }
 
     @InternalAPI

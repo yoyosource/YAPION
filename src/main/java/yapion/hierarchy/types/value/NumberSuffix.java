@@ -22,7 +22,7 @@ import java.util.function.Function;
 final class NumberSuffix<T> {
 
     static final String NUMBER_NORMAL = "-?[0-9]+";
-    static final String NUMBER_HEX = "-?(0[xX]|#)[0-9A-F]+";
+    static final String NUMBER_HEX = "-?(0[xX]|#)[0-9a-fA-F]+";
     static final String NUMBER_FLOAT = "(-?[0-9]+\\.([0-9]+)?)|(-?\\.[0-9]+)";
 
     public static final NumberSuffix<Byte> BYTE = new NumberSuffix<>("B", Byte::parseByte, NUMBER_NORMAL);
