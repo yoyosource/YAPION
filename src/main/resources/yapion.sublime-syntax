@@ -1,0 +1,54 @@
+%YAML 1.2
+---
+name: yapion
+file_extensions: yapion
+scope: source.yapion
+
+contexts:
+  main:
+    - match: \\u[0-9]{4}|\\.
+      scope: constant.character.escape.yapion
+    - match: '\{'
+      push: main
+    - match: '\}'
+      pop: true
+    - match: '\('
+      push: value
+    - match: '->'
+      push: pointer
+    - match: .
+      scope: string.quoted.double.c
+
+  value:
+    - match: \\u[0-9]{4}|\\.
+      scope: constant.character.escape.yapion
+    - match: '(null|true|false)'
+      scope: constant.language.yapion
+    - match: '\b[0-9]+(BI|I|B|S|L)?\b'
+      scope: entity.name.class
+    - match: '\b((0[xX])|#)?[0-9a-fA-F]+(BI|I|B|S|L)?\b'
+      scope: entity.name.class
+    - match: '\)'
+      pop: true
+    - match: '"'
+      push: string
+    - match: "'"
+      push: string
+    - match: .
+      scope: string.quoted.double.yapion
+
+  string:
+    - meta_scope: string.quoted.double.yapion
+    - match: \\u[0-9]{4}|\\.
+      scope: constant.character.escape.yapion
+    - match: '"'
+      pop: true
+    - match: "'"
+      pop: true
+
+  pointer:
+    - match: '[0-9a-fA-F]{16}'
+      scope: constant.other.yapion
+      pop: true
+    - match: .
+      fail: open_parens
