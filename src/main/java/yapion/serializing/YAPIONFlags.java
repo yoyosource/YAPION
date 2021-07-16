@@ -28,9 +28,7 @@ public final class YAPIONFlags {
     private Map<YAPIONFlag, Boolean> flags = new HashMap<>();
 
     public YAPIONFlags() {
-        YAPIONFlag.YAPION_FLAG_KEYS.values().forEach(yapionSerializerFlag -> {
-            flags.put(yapionSerializerFlag, yapionSerializerFlag.getFlagDefault());
-        });
+        defaultFlags();
     }
 
     /**

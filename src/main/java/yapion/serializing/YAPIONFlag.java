@@ -15,7 +15,6 @@ package yapion.serializing;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.security.PrivateKey;
 import java.util.HashMap;

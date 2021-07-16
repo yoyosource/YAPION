@@ -26,7 +26,6 @@ import yapion.utils.ClassUtils;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-
 public class PrimitiveRegistrator implements YAPIONSerializerRegistrator {
 
     @Override
