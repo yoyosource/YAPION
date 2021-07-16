@@ -26,18 +26,10 @@ import static yapion.YAPIONAssertion.isYAPION;
 
 public class YAPIONParserTest {
 
-    /*public static void main(String[] args) {
-        System.out.println(YAPIONParser.parse("{test(), \"test2\":{}}"));
-        System.out.println(YAPIONParser.parse("{\"contributor\":[{\"name\":\"yoyosource\",\"owner\":true},{\"name\":\"chaoscaot444\",\"owner\":\"false\"}]}"));
-        System.out.println(YAPIONParser.parse("{\n" +
-                "  \"id\": 1,\n" +
-                "  \"first_name\": \"Jeanette\",\n" +
-                "  \"last_name\": \"Penddreth\",\n" +
-                "  \"email\": \"jpenddreth0@census.gov\",\n" +
-                "  \"gender\": \"Female\",\n" +
-                "  \"ip_address\": \"26.58.193.2\"\n" +
-                "}"));
-    }*/
+    public static void main(String[] args) {
+        YAPIONObject yapionObject = YAPIONParser.parse("1(#A000B)2(#a000B)");
+        System.out.println(yapionObject);
+    }
 
     @Test(expected = NullPointerException.class)
     public void testNullSafety() {

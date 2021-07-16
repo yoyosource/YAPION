@@ -28,7 +28,7 @@ public class HexNumberHandler {
                 case 0:
                     return c == '-' || c == '0' || c == '#';
                 case 1:
-                    return c == '0' || c == 'x' || c == 'X' || c == '#';
+                    if (c == '0' || c == 'x' || c == 'X' || c == '#') return true;
                 case 2:
                     if (c == 'x' || c == 'X') return true;
                 default:
@@ -67,7 +67,7 @@ public class HexNumberHandler {
                 case 0:
                     return c == '-' || c == '0' || c == '#';
                 case 1:
-                    return c == '0' || c == 'x' || c == 'X' || c == '#';
+                    if (c == '0' || c == 'x' || c == 'X' || c == '#') return true;
                 case 2:
                     if (c == 'x' || c == 'X') return true;
                 default:
@@ -106,7 +106,7 @@ public class HexNumberHandler {
                 case 0:
                     return c == '-' || c == '0' || c == '#';
                 case 1:
-                    return c == '0' || c == 'x' || c == 'X' || c == '#';
+                    if (c == '0' || c == 'x' || c == 'X' || c == '#') return true;
                 case 2:
                     if (c == 'x' || c == 'X') return true;
                 default:
@@ -145,7 +145,7 @@ public class HexNumberHandler {
                 case 0:
                     return c == '-' || c == '0' || c == '#';
                 case 1:
-                    return c == '0' || c == 'x' || c == 'X' || c == '#';
+                    if (c == '0' || c == 'x' || c == 'X' || c == '#') return true;
                 case 2:
                     if (c == 'x' || c == 'X') return true;
                 default:

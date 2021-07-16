@@ -72,13 +72,13 @@ public class YAPIONValue<T> extends YAPIONValueType {
         valueHandlers.put("java.lang.String", new StringHandler());
 
         VALUE_HANDLER_LIST = new ValueHandlerList(valueHandlers.size() + 4);
-        for (Map.Entry<String, ValueHandler<?>> entry : valueHandlers.entrySet()) {
-            VALUE_HANDLER_LIST.add(entry.getValue());
-        }
         VALUE_HANDLER_LIST.add(new ByteHexHandler());
         VALUE_HANDLER_LIST.add(new ShortHexHandler());
         VALUE_HANDLER_LIST.add(new IntegerHexHandler());
         VALUE_HANDLER_LIST.add(new LongHexHandler());
+        for (Map.Entry<String, ValueHandler<?>> entry : valueHandlers.entrySet()) {
+            VALUE_HANDLER_LIST.add(entry.getValue());
+        }
 
         typeIdentifier.put(allowedTypes[1], BYTE_IDENTIFIER);
         typeIdentifier.put(allowedTypes[2], SHORT_IDENTIFIER);
