@@ -15,7 +15,6 @@ package yapion.hierarchy.api;
 
 import lombok.SneakyThrows;
 import yapion.hierarchy.output.*;
-import yapion.utils.ReflectionsUtils;
 
 import java.io.File;
 
@@ -25,21 +24,21 @@ public interface ObjectOutput {
 
     @SneakyThrows
     default <T extends AbstractOutput & InstantiableOutput> T toYAPION(Class<T> clazz) {
-        return toYAPION((T) ReflectionsUtils.constructObjectObjenesis(clazz));
+        return toYAPION(clazz.getConstructor().newInstance());
     }
 
     <T extends AbstractOutput> T toJSON(T abstractOutput);
 
     @SneakyThrows
     default <T extends AbstractOutput & InstantiableOutput> T toJSON(Class<T> clazz) {
-        return toJSON((T) ReflectionsUtils.constructObjectObjenesis(clazz));
+        return toJSON(clazz.getConstructor().newInstance());
     }
 
     <T extends AbstractOutput> T toJSONLossy(T abstractOutput);
 
     @SneakyThrows
     default <T extends AbstractOutput & InstantiableOutput> T toJSONLossy(Class<T> clazz) {
-        return toJSONLossy((T) ReflectionsUtils.constructObjectObjenesis(clazz));
+        return toJSONLossy(clazz.getConstructor().newInstance());
     }
 
     /// Copied from {@link yapion.YAPIONExtension}
