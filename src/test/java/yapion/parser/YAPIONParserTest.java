@@ -18,7 +18,12 @@ import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.*;
 
-import java.io.InputStream;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -29,6 +34,223 @@ public class YAPIONParserTest {
     public static void main(String[] args) {
         YAPIONObject yapionObject = YAPIONParser.parse("1(#A000B)2(#a000B)");
         System.out.println(yapionObject);
+    }
+
+    @Test
+    public void testParser() throws Exception {
+        File file = new File(YAPIONParserTest.class.getResource("/parser").toURI());
+        List<File> fileList = Arrays.asList(file.listFiles());
+        fileList.sort(Comparator.comparing(File::getName));
+
+        List<TestFile> testFiles = new ArrayList<>();
+        fileList.forEach(f -> {
+            try {
+                testFiles.add(new TestFile(f));
+            } catch (Exception e) {
+                e.printStackTrace();
+                assertThat("Exception in Initializer", false);
+            }
+        });
+        testFiles.forEach(TestFile::test);
+        testFiles.forEach(testFile -> testFile.output(true));
+        if (testFiles.stream().anyMatch(testFile -> testFile.failed)) {
+            assertThat("Tests failed", false);
+        }
+    }
+
+    private static class TestFile {
+
+        private File file;
+        private List<TestCase> testCases = new ArrayList<>();
+        private boolean failed = false;
+
+        public TestFile(File file) throws Exception {
+            this.file = file;
+
+            List<String> strings = new BufferedReader(new InputStreamReader(new FileInputStream(file))).lines().collect(Collectors.toList());
+
+            TestCase testCase = null;
+
+            boolean inBlock = false;
+            String blockType = "";
+            StringBuilder st = new StringBuilder();
+
+            for (String s : strings) {
+                if (inBlock) {
+                    if (s.equals("```")) {
+                        if (blockType.contains("I")) {
+                            testCase.input = st.toString();
+                            if (blockType.contains("stream")) {
+                                testCase.inputStream = true;
+                            }
+                            if (blockType.contains("chars")) {
+                                testCase.chars = true;
+                            }
+                            if (blockType.contains("bytes")) {
+                                testCase.bytes = true;
+                            }
+                            if (blockType.contains("type:")) {
+                                if (blockType.contains("type:ascii")) {
+                                    testCase.charsets = InputStreamCharsets.US_ASCII;
+                                } else if (blockType.contains("type:utf8")) {
+                                    testCase.charsets = InputStreamCharsets.UTF_8;
+                                } else if (blockType.contains("type:latin1")) {
+                                    testCase.charsets = InputStreamCharsets.LATIN_1;
+                                }
+                            }
+                        } else if (blockType.contains("O")) {
+                            testCase.output = st.toString();
+                            if (blockType.contains("prettified")) {
+                                testCase.prettified = true;
+                            }
+                        } else if (blockType.contains("E")) {
+                            testCase.exception = Class.forName(st.toString());
+                        }
+                        st = new StringBuilder();
+                        inBlock = false;
+                        continue;
+                    }
+                    if (st.length() != 0) st.append("\n");
+                    st.append(s);
+                } else {
+                    if (s.startsWith("```") && testCase != null) {
+                        blockType = s;
+                        inBlock = true;
+                    }
+                    if (s.startsWith("# ")) {
+                        if (testCase != null && testCase.input != null && (testCase.output != null ^ testCase.exception != null)) {
+                            testCases.add(testCase);
+                        }
+                        testCase = new TestCase(s.substring(2));
+                    }
+                }
+            }
+            if (testCase != null && testCase.input != null && (testCase.output != null ^ testCase.exception != null)) {
+                testCases.add(testCase);
+            }
+        }
+
+        public TestFile test() {
+            testCases.forEach(testCase -> {
+                failed |= !testCase.test().passed;
+            });
+            return this;
+        }
+
+        public void output(boolean onlyFailed) {
+            if (!failed && onlyFailed) {
+                return;
+            }
+            System.out.println("=== " + file.getName() + " ===");
+            testCases.forEach(testCase -> {
+                if (!testCase.passed || !onlyFailed) {
+                    testCase.output();
+                }
+            });
+        }
+    }
+
+    private static class TestCase {
+
+        private String name;
+
+        private String input;
+        private String output;
+        private Class<?> exception;
+
+        private long time = 0;
+        private boolean passed = false;
+        private String actualOutput = null;
+        private List<String> unstableOutput = new ArrayList<>();
+        private Exception actualException = null;
+
+        private InputStreamCharsets charsets = InputStreamCharsets.US_ASCII;
+        private boolean inputStream = false;
+        private boolean chars = false;
+        private boolean bytes = false;
+
+        private boolean prettified = false;
+
+        private StringBuilder logOutput = new StringBuilder();
+
+        public TestCase(String name) {
+            this.name = name;
+        }
+
+        public TestCase test() {
+            PrintStream printStream = System.out;
+            System.setOut(new PrintStream(new OutputStream() {
+                @Override
+                public void write(int b) throws IOException {
+                    logOutput.append((char) b);
+                }
+            }));
+
+            time = System.currentTimeMillis();
+            try {
+                if (inputStream) {
+                    actualOutput = YAPIONParser.parse(new ByteArrayInputStream(input.getBytes()), charsets).toYAPION(prettified);
+                } else {
+                    if (chars) {
+                        actualOutput = new YAPIONParser(input.toCharArray()).parse().result().toYAPION(prettified);
+                    } else if (bytes) {
+                        actualOutput = new YAPIONParser(input.getBytes()).parse().result().toYAPION(prettified);
+                    } else {
+                        actualOutput = YAPIONParser.parse(input).toYAPION(prettified);
+                    }
+                }
+                if (output != null && output.equals(actualOutput)) passed = true;
+            } catch (Exception e) {
+                if (exception != null && e.getClass() == exception) passed = true;
+                actualException = e;
+            }
+            time = System.currentTimeMillis() - time;
+
+            if (output != null) {
+                System.setOut(new PrintStream(new OutputStream() {
+                    @Override
+                    public void write(int b) throws IOException {
+
+                    }
+                }));
+
+                do {
+                    String testOutput = YAPIONParser.parse(actualOutput).toYAPION(prettified);
+                    if (!testOutput.equals(unstableOutput.isEmpty() ? output : unstableOutput.get(unstableOutput.size() - 1))) {
+                        unstableOutput.add(testOutput);
+                        passed = false;
+                    } else {
+                        break;
+                    }
+                } while (true);
+            }
+
+            System.setOut(printStream);
+            return this;
+        }
+
+        public void output() {
+            StringBuilder st = new StringBuilder();
+            st.append(name).append(" ");
+            while (st.length() < 50) st.append(" ");
+            st.append(time).append("ms ");
+            while (st.length() < 60) st.append(" ");
+            st.append(passed ? "passed" : (!unstableOutput.isEmpty() ? "unstable": "failed"));
+
+            if (!passed) {
+                st.append("\n").append("  Expected: ");
+                st.append(exception != null ? exception : output);
+                st.append("\n").append("  Got     : ");
+                st.append(actualException != null ? actualException : actualOutput);
+                for (String s : unstableOutput) {
+                    st.append("\n").append("  Got     : ").append(s);
+                }
+                st.append("\n");
+                st.append(logOutput);
+                st.append("\n");
+            }
+            System.out.println(st);
+        }
     }
 
     @Test(expected = NullPointerException.class)
