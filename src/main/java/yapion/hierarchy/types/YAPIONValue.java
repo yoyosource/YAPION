@@ -125,7 +125,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
             string = "\\" + string;
         }
         string = ValueUtils.stringToUTFEscapedString(string, ValueUtils.EscapeCharacters.VALUE);
-        if (ValueUtils.startsWith(string, ValueUtils.EscapeCharacters.KEY)) {
+        if (ValueUtils.startsWith(string, ValueUtils.EscapeCharacters.KEY) || string.isEmpty()) {
             abstractOutput.consume("(").consume(string).consume(")");
         } else {
             abstractOutput.consume(string);

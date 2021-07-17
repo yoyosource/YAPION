@@ -121,11 +121,17 @@ final class YAPIONInternalParser {
             log.debug("finish   [done]");
             return;
         }
-        if (typeStack.isEmpty() && !hadInitial && typeStack.pop(YAPIONType.OBJECT) == YAPIONType.OBJECT) {
-            throw new YAPIONParserException("Object is closed too often");
-        }
-        if (typeStack.isNotEmpty() && hadInitial) {
-            throw new YAPIONParserException("Object is not closed correctly");
+        if (!hadInitial) {
+            if (typeStack.isEmpty()) {
+                throw new YAPIONParserException("Object is closed too often");
+            }
+            if (typeStack.pop(YAPIONType.OBJECT) != YAPIONType.OBJECT) {
+                throw new YAPIONParserException("Some types are open");
+            }
+        } else {
+            if (typeStack.isNotEmpty()) {
+                throw new YAPIONParserException("Object is not closed correctly");
+            }
         }
 
         if (!yapionPointerList.isEmpty()) {
