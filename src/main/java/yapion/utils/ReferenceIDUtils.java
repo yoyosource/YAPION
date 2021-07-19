@@ -56,8 +56,9 @@ public class ReferenceIDUtils {
         l = applyToBytes(s.hashCode(), l);
         byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
         for (int i = 0; i < s.length(); i++) {
-            l += bytes[i] & 0xFF;
-            l = applyToBytes(bytes[i] & 0xFF, l);
+            int value = bytes[i] & 0xFF;
+            l += value;
+            l = applyToBytes(value, l);
         }
         l &= 0x7FFFFFFFFFFFFFFFL;
         referenceIDMap.put(s, l);
