@@ -53,9 +53,11 @@ public class ReferenceIDUtils {
         }
         long l = 0x7D4FA32E5D92B68AL;
         l = applyToBytes(s.length(), l);
+        l = applyToBytes(s.hashCode(), l);
         byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
         for (int i = 0; i < s.length(); i++) {
-            l = applyToBytes(bytes[i], l);
+            l += bytes[i] & 0xFF;
+            l = applyToBytes(bytes[i] & 0xFF, l);
         }
         l &= 0x7FFFFFFFFFFFFFFFL;
         referenceIDMap.put(s, l);
@@ -63,6 +65,9 @@ public class ReferenceIDUtils {
     }
 
     private static long applyToBytes(int toApply, long current) {
+        int shiftBy = (int) ((current) % 8);
+        toApply = (toApply >>> shiftBy | toApply << (8 - shiftBy)) & 0b11111111;
+
         for (int temp = 0; temp < 8; temp++) {
             current ^= (long) toApply << (long) (temp * 8);
         }
