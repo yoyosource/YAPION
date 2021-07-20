@@ -27,6 +27,7 @@ import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.serializing.data.DeserializationContext;
 import yapion.serializing.data.DeserializeData;
 import yapion.utils.ClassUtils;
 import yapion.utils.ReflectionsUtils;
@@ -43,7 +44,7 @@ public final class YAPIONDeserializer {
     private Object object;
     private final SerializingType serializingType;
     private final ContextManager contextManager;
-    private TypeReMapper typeReMapper = new TypeReMapper();
+    private TypeReMapper typeReMapper = new TypeReMapper.FinalTypeReMapper(new TypeReMapper());
     private DeserializeResult deserializeResult = new DeserializeResult();
     private YAPIONFlags yapionFlags = new YAPIONFlags();
 
@@ -160,7 +161,7 @@ public final class YAPIONDeserializer {
     public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, String context, @NonNull TypeReMapper typeReMapper) {
         contextManager = new ContextManager(context);
         this.serializingType = (K) serializingType.internalCopy();
-        this.typeReMapper = typeReMapper;
+        this.typeReMapper = new TypeReMapper.FinalTypeReMapper(typeReMapper);
     }
 
     /**
@@ -173,7 +174,7 @@ public final class YAPIONDeserializer {
     public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, String context, @NonNull TypeReMapper typeReMapper, @NonNull YAPIONFlags yapionFlags) {
         contextManager = new ContextManager(context);
         this.serializingType = (K) serializingType.internalCopy();
-        this.typeReMapper = typeReMapper;
+        this.typeReMapper = new TypeReMapper.FinalTypeReMapper(typeReMapper);
         this.yapionFlags = yapionFlags;
     }
 
@@ -252,7 +253,7 @@ public final class YAPIONDeserializer {
                 log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
             }
         }
-        MethodManager.preDeserializationStep(object, object.getClass(), contextManager);
+        MethodManager.preDeserializationStep(object, object.getClass(), contextManager, new DeserializationContext(this, yapionObject));
         pointerMap.put(yapionObject, object);
 
         for (String fieldName : yapionObject.getKeys()) {
@@ -288,7 +289,7 @@ public final class YAPIONDeserializer {
 
             arrayType = "";
         }
-        MethodManager.postDeserializationStep(object, object.getClass(), contextManager);
+        MethodManager.postDeserializationStep(object, object.getClass(), contextManager, new DeserializationContext(this, yapionObject));
         return this;
     }
 

@@ -15,8 +15,8 @@ package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.serializing.YAPIONDataLossException;
-import yapion.exceptions.utils.YAPIONReflectionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.SerializeManager;
@@ -89,4 +89,8 @@ public class SerializeData<T> {
         });
     }
 
+    @InternalAPI
+    public YAPIONSerializer getYAPIONSerializer() {
+        return yapionSerializer;
+    }
 }

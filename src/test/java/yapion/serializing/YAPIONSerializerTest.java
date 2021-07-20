@@ -146,4 +146,10 @@ public class YAPIONSerializerTest {
         assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestMultiContextAnnotation)}"));
     }
 
+    @Test
+    public void testYAPIONSerDeAnnotations() {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestPreAndPostAnnotation());
+        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestPreAndPostAnnotation)pre(1)post(1)}"));
+    }
+
 }

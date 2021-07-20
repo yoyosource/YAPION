@@ -16,22 +16,21 @@ package yapion.serializing;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import yapion.annotations.deserialize.YAPIONLoad;
-import yapion.annotations.object.YAPIONData;
-import yapion.annotations.object.YAPIONField;
+import yapion.annotations.object.*;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONMap;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
+import yapion.serializing.data.DeserializationContext;
+import yapion.serializing.data.SerializationContext;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-
-import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 public class YAPIONTestObjects {
 
@@ -51,6 +50,7 @@ public class YAPIONTestObjects {
         private final Map<String, String> hugoStringMap = new HashMap<>();
         private final HashMap<String, String> hashMap = new HashMap<>();
         private final LinkedHashMap<Integer, String> linkedHashMap = new LinkedHashMap<>();
+
         {
             stringStringMap.put("Hello", "Hello");
             stringStringMap.put("Hello1", "Hello1");
@@ -67,6 +67,7 @@ public class YAPIONTestObjects {
         private final String[][] strings1 = new String[3][3];
         private final List<String> strings2 = new ArrayList<>();
         private final List<String> strings3 = new LinkedList<>();
+
         {
             strings[0] = "Hello World";
             strings1[0][0] = "Hello World";
@@ -115,8 +116,6 @@ public class YAPIONTestObjects {
         @EqualsAndHashCode.Exclude final StringBuffer stringb = new StringBuffer();
 
         private final File file = new File(getUserHome() + "/YAPI");
-
-        // file.getPath()
     }
 
     private enum EnumerationTest {
@@ -138,7 +137,6 @@ public class YAPIONTestObjects {
         private final EnumerationTest test3 = EnumerationTest.Hugo;
         private final EnumerationTest test4 = EnumerationTest.My;
         private final EnumerationTest test5 = EnumerationTest.Name;
-
     }
 
     public static class NoAnnotations {}
@@ -204,7 +202,6 @@ public class YAPIONTestObjects {
             this.cnc1 = cnc1;
             this.cnc2 = cnc2;
         }
-
     }
 
     @YAPIONSave(context = "empty")
@@ -224,7 +221,6 @@ public class YAPIONTestObjects {
             this.cnc1 = cnc1;
             this.cnc2 = cnc2;
         }
-
     }
 
     public static class NonSaved implements CNC {
@@ -240,7 +236,6 @@ public class YAPIONTestObjects {
             this.cnc1 = cnc1;
             this.cnc2 = cnc2;
         }
-
     }
 
     @YAPIONData
@@ -310,7 +305,6 @@ public class YAPIONTestObjects {
         private final EnumerationTest test3 = EnumerationTest.Hugo;
         private final EnumerationTest test4 = EnumerationTest.My;
         private final EnumerationTest test5 = EnumerationTest.Name;
-
     }
 
     @YAPIONData
@@ -321,7 +315,6 @@ public class YAPIONTestObjects {
         private YAPIONObject yapionObject = new YAPIONObject().add("Test", "Test");
         private YAPIONMap yapionMap = new YAPIONMap().add("Test", "Test");
         private YAPIONArray yapionArray = new YAPIONArray().add("Test");
-
     }
 
     @YAPIONSave(context = "Hello")
@@ -329,7 +322,20 @@ public class YAPIONTestObjects {
     public static class TestMultiContextAnnotation {
 
         private int i = 10;
+    }
 
+    @YAPIONData
+    public static class TestPreAndPostAnnotation {
+
+        @YAPIONPreSerialization
+        private void preSerialization(SerializationContext serializationContext) {
+            serializationContext.getYapionObject().add("pre", 1);
+        }
+
+        @YAPIONPostSerialization
+        private void postSerialization(SerializationContext serializationContext) {
+            serializationContext.getYapionObject().add("post", 1);
+        }
     }
 
     static String getUserHome() {

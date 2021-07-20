@@ -14,11 +14,14 @@
 package yapion.serializing;
 
 import yapion.annotations.api.InternalAPI;
+import yapion.serializing.data.DeserializationContext;
+import yapion.serializing.data.SerializationContext;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public final class MethodManager {
 
@@ -41,26 +44,26 @@ public final class MethodManager {
     }
 
     @InternalAPI
-    public static void preSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
-        step(object, clazz, contextManager, ObjectCache::preSerialization, false);
+    public static void preSerializationStep(Object object, Class<?> clazz, ContextManager contextManager, SerializationContext serializationContext) {
+        step(clazz, objectCache -> objectCache.preSerialization(object, contextManager, serializationContext), false);
     }
 
     @InternalAPI
-    public static void postSerializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
-        step(object, clazz, contextManager, ObjectCache::postSerialization, true);
+    public static void postSerializationStep(Object object, Class<?> clazz, ContextManager contextManager, SerializationContext serializationContext) {
+        step(clazz, objectCache -> objectCache.postSerialization(object, contextManager, serializationContext), true);
     }
 
     @InternalAPI
-    public static void preDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
-        step(object, clazz, contextManager, ObjectCache::preDeserialization, false);
+    public static void preDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager, DeserializationContext deserializationContext) {
+        step(clazz, objectCache -> objectCache.preDeserialization(object, contextManager, deserializationContext), false);
     }
 
     @InternalAPI
-    public static void postDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager) {
-        step(object, clazz, contextManager, ObjectCache::postDeserialization, true);
+    public static void postDeserializationStep(Object object, Class<?> clazz, ContextManager contextManager, DeserializationContext deserializationContext) {
+        step(clazz, objectCache -> objectCache.postDeserialization(object, contextManager, deserializationContext), true);
     }
 
-    private static void step(Object object, Class<?> clazz, ContextManager contextManager, TriConsumer<ObjectCache, Object, ContextManager> objectCacheConsumer, boolean order) {
+    private static void step(Class<?> clazz, Consumer<ObjectCache> objectCacheConsumer, boolean order) {
         LinkedList<Class<?>> stepOrder = new LinkedList<>();
         while (clazz != null) {
             stepOrder.addLast(clazz);
@@ -69,17 +72,7 @@ public final class MethodManager {
 
         Iterator<Class<?>> iterator = order ? stepOrder.iterator() : stepOrder.descendingIterator();
         iterator.forEachRemaining(iClazz -> {
-            String key = iClazz.getTypeName();
-            if (!methodMap.containsKey(key)) {
-                methodMap.put(key, new ObjectCache(iClazz));
-            }
-            objectCacheConsumer.accept(methodMap.get(key), object, contextManager);
+            objectCacheConsumer.accept(methodMap.computeIfAbsent(iClazz.getTypeName(), s -> new ObjectCache(iClazz)));
         });
     }
-
-    @FunctionalInterface
-    private interface TriConsumer<X, Y, Z> {
-        void accept(X x, Y y, Z z);
-    }
-
 }

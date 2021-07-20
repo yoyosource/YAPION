@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ToString
-public final class TypeReMapper {
+public class TypeReMapper {
 
-    private Map<String, String> typeMappings = new HashMap<>();
+    Map<String, String> typeMappings = new HashMap<>();
 
     @InternalAPI
     public String remap(String type) {
@@ -176,4 +176,55 @@ public final class TypeReMapper {
         return typeReMapper;
     }
 
+    public static class FinalTypeReMapper extends TypeReMapper {
+
+        public FinalTypeReMapper(TypeReMapper typeReMapper) {
+            this.typeMappings = new HashMap<>(typeReMapper.typeMappings);
+        }
+
+        @Override
+        public TypeReMapper addClassMapping(String fromType, String toType) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public TypeReMapper addClassMapping(Class<?> fromType, String toType) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public TypeReMapper addClassMapping(String fromType, Class<?> toType) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public TypeReMapper addClassMapping(Class<?> fromType, Class<?> toType) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public TypeReMapper addPackageMapping(String fromType, String toType) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public TypeReMapper addPackageMapping(Package fromType, String toType) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public TypeReMapper addPackageMapping(String fromType, Package toType) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public TypeReMapper addPackageMapping(Package fromType, Package toType) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public TypeReMapper copy() {
+            return new FinalTypeReMapper(this);
+        }
+    }
 }

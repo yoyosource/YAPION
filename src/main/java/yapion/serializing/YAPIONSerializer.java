@@ -18,6 +18,7 @@ import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.types.*;
+import yapion.serializing.data.SerializationContext;
 import yapion.serializing.data.SerializeData;
 import yapion.utils.ClassUtils;
 import yapion.utils.ReflectionsUtils;
@@ -183,10 +184,10 @@ public final class YAPIONSerializer {
         if (!pointerMap.containsKey(object)) {
             pointerMap.put(object, new YAPIONPointer(yapionObject));
         }
-        MethodManager.preSerializationStep(object, object.getClass(), contextManager);
         if (serializer == null || serializer.empty()) {
             yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName()));
         }
+        MethodManager.preSerializationStep(object, object.getClass(), contextManager, new SerializationContext(this, yapionObject));
 
         Class<?> objectClass = object.getClass();
         for (Field field : ReflectionsUtils.getFields(objectClass)) {
@@ -220,7 +221,7 @@ public final class YAPIONSerializer {
             }
             yapionObject.add(name, yapionAnyType);
         }
-        MethodManager.postSerializationStep(object, object.getClass(), contextManager);
+        MethodManager.postSerializationStep(object, object.getClass(), contextManager, new SerializationContext(this, yapionObject));
         return this;
     }
 

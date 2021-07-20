@@ -150,9 +150,13 @@ public class ReflectionsUtils {
      * @param object the object on which the method should be called
      * @return the possible return value
      */
-    public static MethodReturnValue<Object> invokeMethodObjectSystem(Method method, Object object) {
+    public static MethodReturnValue<Object> invokeMethodObjectSystem(Method method, Object object, Object... objects) {
         try {
-            return invokeMethodInternal(method, object);
+            if (method.getParameters().length == 0) {
+                return invokeMethodInternal(method, object);
+            } else {
+                return invokeMethodInternal(method, object, objects);
+            }
         } catch (InvocationTargetException e) {
             log.info("Exception in method call '" + method.getName() + "' declared in class '" + method.getDeclaringClass().getTypeName() + "' on the object '" + object.getClass().getTypeName() + "' with no parameters", e.getCause());
             throw new YAPIONReflectionInvocationException(e);

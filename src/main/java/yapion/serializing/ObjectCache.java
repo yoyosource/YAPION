@@ -13,16 +13,22 @@
 
 package yapion.serializing;
 
+import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.object.YAPIONPostDeserialization;
 import yapion.annotations.object.YAPIONPostSerialization;
 import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.object.YAPIONPreSerialization;
+import yapion.serializing.data.DeserializationContext;
+import yapion.serializing.data.SerializationContext;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
+@Slf4j
 final class ObjectCache {
 
     final Class<?> superClass;
@@ -38,18 +44,18 @@ final class ObjectCache {
 
         Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
-            if (method.getParameterCount() != 0) continue;
+            if (method.getParameterCount() > 1) continue;
             YAPIONPreSerialization[] yapionPreSerializations = method.getDeclaredAnnotationsByType(YAPIONPreSerialization.class);
             YAPIONPostSerialization[] yapionPostSerializations = method.getDeclaredAnnotationsByType(YAPIONPostSerialization.class);
 
             if (yapionPreSerializations.length != 0) {
                 for (YAPIONPreSerialization yapionPreSerialization : yapionPreSerializations) {
-                    cache(preSerializationCache, yapionPreSerialization.context(), method);
+                    cache(preSerializationCache, yapionPreSerialization.context(), method, this::serializationParameter);
                 }
             }
             if (yapionPostSerializations.length != 0) {
                 for (YAPIONPostSerialization yapionPostSerialization : yapionPostSerializations) {
-                    cache(postSerializationCache, yapionPostSerialization.context(), method);
+                    cache(postSerializationCache, yapionPostSerialization.context(), method, this::serializationParameter);
                 }
             }
 
@@ -58,18 +64,22 @@ final class ObjectCache {
 
             if (yapionPreDeserializations.length != 0) {
                 for (YAPIONPreDeserialization yapionPreDeserialization : yapionPreDeserializations) {
-                    cache(preDeserializationCache, yapionPreDeserialization.context(), method);
+                    cache(preDeserializationCache, yapionPreDeserialization.context(), method, this::deserializationParameter);
                 }
             }
             if (yapionPostDeserializations.length != 0) {
                 for (YAPIONPostDeserialization yapionPostDeserialization : yapionPostDeserializations) {
-                    cache(postDeserializationCache, yapionPostDeserialization.context(), method);
+                    cache(postDeserializationCache, yapionPostDeserialization.context(), method, this::deserializationParameter);
                 }
             }
         }
     }
 
-    private void cache(Map<String, Method> cache, String[] context, Method method) {
+    private void cache(Map<String, Method> cache, String[] context, Method method, Predicate<Class<?>[]> checkParameters) {
+        if (method.getParameterCount() != 0 && !checkParameters.test(method.getParameterTypes())) {
+            log.error("The method {} has an illegal signature", method);
+            return;
+        }
         for (String s : context) {
             cache.put(s, method);
         }
@@ -78,28 +88,36 @@ final class ObjectCache {
         }
     }
 
-    void preSerialization(Object object, ContextManager contextManager) {
+    private boolean serializationParameter(Class<?>[] parameters) {
+        return parameters.length == 1 && parameters[0] == SerializationContext.class;
+    }
+
+    private boolean deserializationParameter(Class<?>[] parameters) {
+        return parameters.length == 1 && parameters[0] == DeserializationContext.class;
+    }
+
+    void preSerialization(Object object, ContextManager contextManager, SerializationContext serializationContext) {
         String state = contextManager.get();
         if (!preSerializationCache.containsKey(state)) return;
-        ReflectionsUtils.invokeMethodObjectSystem(preSerializationCache.get(state), object);
+        ReflectionsUtils.invokeMethodObjectSystem(preSerializationCache.get(state), object, serializationContext);
     }
 
-    void postSerialization(Object object, ContextManager contextManager) {
+    void postSerialization(Object object, ContextManager contextManager, SerializationContext serializationContext) {
         String state = contextManager.get();
         if (!postSerializationCache.containsKey(state)) return;
-        ReflectionsUtils.invokeMethodObjectSystem(postSerializationCache.get(state), object);
+        ReflectionsUtils.invokeMethodObjectSystem(postSerializationCache.get(state), object, serializationContext);
     }
 
-    void preDeserialization(Object object, ContextManager contextManager) {
+    void preDeserialization(Object object, ContextManager contextManager, DeserializationContext deserializationContext) {
         String state = contextManager.get();
         if (!preDeserializationCache.containsKey(state)) return;
-        ReflectionsUtils.invokeMethodObjectSystem(preDeserializationCache.get(state), object);
+        ReflectionsUtils.invokeMethodObjectSystem(preDeserializationCache.get(state), object, deserializationContext);
     }
 
-    void postDeserialization(Object object, ContextManager contextManager) {
+    void postDeserialization(Object object, ContextManager contextManager, DeserializationContext deserializationContext) {
         String state = contextManager.get();
         if (!postDeserializationCache.containsKey(state)) return;
-        ReflectionsUtils.invokeMethodObjectSystem(postDeserializationCache.get(state), object);
+        ReflectionsUtils.invokeMethodObjectSystem(postDeserializationCache.get(state), object, deserializationContext);
     }
 
 }
