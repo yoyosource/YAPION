@@ -298,6 +298,9 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
     }
 
     default I remap(@NonNull K currentKey, @NonNull K newKey) {
+        if (!internalContainsKey(currentKey)) {
+            return itself();
+        }
         YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(currentKey);
         internalRemove(currentKey);
         internalAdd(newKey, yapionAnyType);
@@ -305,6 +308,9 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
     }
 
     default I swap(@NonNull K currentKey, @NonNull K newKey) {
+        if (!internalContainsKey(currentKey) || !internalContainsKey(newKey)) {
+            return itself();
+        }
         YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(currentKey);
         internalAdd(currentKey, internalGetYAPIONAnyType(newKey));
         internalAdd(newKey, yapionAnyType);
