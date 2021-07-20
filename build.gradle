@@ -1,5 +1,4 @@
 import org.apache.tools.ant.taskdefs.condition.Os
-import java.util.function.Consumer
 
 plugins {
     id 'java'

@@ -69,7 +69,7 @@ public class TypeStack {
             b = true;
             st.append(iterator.next().getName());
         }
-        return "TypeStack[" + st.toString() + "]";
+        return "TypeStack[" + st + "]";
     }
 
 }
