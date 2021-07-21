@@ -39,10 +39,6 @@ public class MapSerializer implements FinalInternalSerializer<Map<?, ?>> {
 
     private Map<Class<?>, Function<Map<?, ?>, Map<?, ?>>> wrapper = new HashMap<>();
 
-    {
-        init();
-    }
-
     @Override
     public void init() {
         wrapper = new HashMap<>();

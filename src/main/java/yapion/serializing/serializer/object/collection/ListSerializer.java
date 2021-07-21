@@ -37,10 +37,6 @@ public class ListSerializer implements FinalInternalSerializer<List<?>> {
 
     private Map<Class<?>, Function<List<?>, List<?>>> wrapper = new HashMap<>();
 
-    {
-        init();
-    }
-
     @Override
     public void init() {
         wrapper = new HashMap<>();

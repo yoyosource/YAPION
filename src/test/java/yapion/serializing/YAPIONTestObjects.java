@@ -349,8 +349,6 @@ public class YAPIONTestObjects {
         YAPIONObject yapionObject4 = YAPIONSerializer.serialize(new TestPrimitive());
         YAPIONObject yapionObject5 = YAPIONSerializer.serialize(new TestEnum());
 
-        if (true) return;
-
         System.out.println(yapionObject1);
         System.out.println(yapionObject1.toJSONLossy(new StringOutput()).getResult());
         System.out.println(YAPIONParser.parse(yapionObject1.toJSONLossy(new StringOutput()).getResult()));

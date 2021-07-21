@@ -357,10 +357,8 @@ final class YAPIONInternalParser {
             reset();
             return;
         }
-        if (mightValue == MightValue.TRUE && !escaped && (c == ',' || c == '}' || c == ']' || c == '>')) {
-            if (!(lastCharEscaped && lastChar == '"') && tryParseValueJSONEnd(c, lastChar)) {
-                return;
-            }
+        if (mightValue == MightValue.TRUE && !escaped && (c == ',' || c == '}' || c == ']' || c == '>') && !(lastCharEscaped && lastChar == '"') && tryParseValueJSONEnd(c, lastChar)) {
+            return;
         }
         if (c == '\\' && !escaped) {
             escaped = true;

@@ -39,10 +39,6 @@ public class SetSerializer implements FinalInternalSerializer<Set<?>> {
 
     private Map<Class<?>, Function<Set<?>, Set<?>>> wrapper = new HashMap<>();
 
-    {
-        init();
-    }
-
     @Override
     public void init() {
         wrapper = new HashMap<>();

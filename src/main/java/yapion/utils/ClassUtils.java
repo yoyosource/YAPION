@@ -142,13 +142,7 @@ public class ClassUtils {
 
     @InternalAPI
     public static boolean isPrimitive(Class<?> clazz) {
-        if (clazz.isPrimitive()) {
-            return true;
-        }
-        if (clazz == void.class) {
-            return true;
-        }
-        return false;
+        return clazz.isPrimitive() || clazz == void.class;
     }
 
 }
