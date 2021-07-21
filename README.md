@@ -120,12 +120,12 @@ JSON:   [true,false,null,"Hello"]
 YAPION: [true,false,null,Hello]
 
 Example for an YAPION array with objects
-JSON:   [{"name":"yoyosource","owner":true},{"name":"chaoscaot444","owner":"false"}]
-YAPION: [{name(yoyosource)owner(true)},{name(chaoscaot444)owner("false")}]
+JSON:   [{"name":"yoyosource","owner":true},{"name":"chaoscaot","owner":"false"}]
+YAPION: [{name(yoyosource)owner(true)},{name(chaoscaot)owner("false")}]
 
 Example for embedding an YAPION array in another object.
-JSON:   {"contributor":[{"name":"yoyosource","owner":true},{"name":"chaoscaot444","owner":"false"}]}
-YAPION: {contributor[{name(yoyosource)owner(true)},{name(chaoscaot444)owner("false")}]}
+JSON:   {"contributor":[{"name":"yoyosource","owner":true},{"name":"chaoscaot","owner":"false"}]}
+YAPION: {contributor[{name(yoyosource)owner(true)},{name(chaoscaot)owner("false")}]}
 ```
 ## YAPION Specific
 ### Maps
