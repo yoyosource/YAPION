@@ -114,10 +114,7 @@ public abstract class SerializerObject<T> extends SerializerBase<T, YAPIONObject
 
             @Override
             public Class<?> interfaceType() {
-                if (!SerializerObject.this.isSpecial()) {
-                    return null;
-                }
-                if (!SerializerObject.this.type().isInterface()) {
+                if (!SerializerObject.this.isSpecial() || !SerializerObject.this.type().isInterface()) {
                     return null;
                 }
                 return SerializerObject.this.type();
@@ -125,10 +122,7 @@ public abstract class SerializerObject<T> extends SerializerBase<T, YAPIONObject
 
             @Override
             public Class<?> classType() {
-                if (!SerializerObject.this.isSpecial()) {
-                    return null;
-                }
-                if (SerializerObject.this.type().isInterface()) {
+                if (!SerializerObject.this.isSpecial() || SerializerObject.this.type().isInterface()) {
                     return null;
                 }
                 return SerializerObject.this.type();
@@ -140,7 +134,6 @@ public abstract class SerializerObject<T> extends SerializerBase<T, YAPIONObject
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
                 return SerializerObject.this.deserialize((DeserializeData<YAPIONObject>) deserializeData);
             }
