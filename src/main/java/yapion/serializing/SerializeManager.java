@@ -52,10 +52,6 @@ public class SerializeManager {
 
     private final boolean SYS_LOGGER = false;
 
-    void init() {
-        // Init from YAPIONSerializerFlagDefault
-    }
-
     private final InternalSerializer<Object> defaultSerializer = null;
     private final InternalSerializer<Void> defaultNullSerializer = new InternalSerializer<Void>() {
         @Override
@@ -96,6 +92,10 @@ public class SerializeManager {
 
     private Class<?> FinalInternalSerializerClass = null;
     private final boolean initialized;
+
+    void init() {
+        // Init from YAPIONSerializerFlagDefault
+    }
 
     @AllArgsConstructor
     private static class WrappedClass {

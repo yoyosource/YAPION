@@ -51,7 +51,6 @@ public final class YAPIONPacketStream {
 
     private boolean running = true;
     private Thread yapionInputStreamHandler = null;
-    private Thread yapionHeartBeatHandler = null;
     private HeartBeatType heartBeatMode = null;
     private long lastHeartbeat = 0;
     private long heartBeatTimeOut = 10000;
@@ -141,7 +140,7 @@ public final class YAPIONPacketStream {
         yapionInputStreamHandler.setDaemon(true);
         yapionInputStreamHandler.start();
 
-        yapionHeartBeatHandler = new Thread(() -> {
+        Thread yapionHeartBeatHandler = new Thread(() -> {
             while (running) {
                 try {
                     long sleepTime = (heartBeatTimeOut - time) / 5;

@@ -32,6 +32,10 @@ public final class ContextManager {
     private final String state;
     private final boolean emptyState;
 
+    private boolean globalLoad = false;
+    private boolean globalSave = false;
+    private YAPIONData[] yapionDatas = null;
+
     public ContextManager(String state) {
         if (state == null) state = "";
         this.state = state;
@@ -130,10 +134,6 @@ public final class ContextManager {
         }
         return false;
     }
-
-    private boolean globalLoad = false;
-    private boolean globalSave = false;
-    private YAPIONData[] yapionDatas = null;
 
     @SuppressWarnings("java:S1117")
     boolean willBeCascading(Class<?> clazz) {

@@ -366,13 +366,10 @@ final class YAPIONInternalParser {
         }
         lastCharEscaped = escaped;
         if (escaped) {
-            if (mightValue == MightValue.TRUE && c == '"') {
-                // Ignored
-            } else if (typeStack.peek() == YAPIONType.ARRAY && (c == ',' || c == '-')) {
-                // Ignored
-            } else if (typeStack.peek() == YAPIONType.ARRAY && current.length() == 0 && c == ' ') {
-                // Ignored
-            } else if (c != '(' && c != ')') {
+            boolean b = mightValue == MightValue.TRUE && c == '"';
+            b |= typeStack.peek() == YAPIONType.ARRAY && (c == ',' || c == '-');
+            b |= typeStack.peek() == YAPIONType.ARRAY && current.length() == 0 && c == ' ';
+            if (!b && c != '(' && c != ')') {
                 sortValueHandler('\\', current.length());
                 current.append('\\');
             }

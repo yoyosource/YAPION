@@ -40,6 +40,10 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     private AtomicReference<Long> referenceValue = new AtomicReference<>(null);
     private ReferenceFunction referenceFunction = null;
 
+    // Parent System
+    private YAPIONAnyType parent = null;
+    private boolean valuePresent = false;
+
     protected final void cacheReferenceValue(long referenceValue) {
         this.referenceValue.set(referenceValue);
     }
@@ -98,10 +102,6 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     public String getPath(YAPIONAnyType yapionAnyType) {
         return "";
     }
-
-    // Parent System
-    private YAPIONAnyType parent = null;
-    private boolean valuePresent = false;
 
     public final void setParent(YAPIONAnyType yapionAnyType) {
         if (valuePresent) {

@@ -104,10 +104,7 @@ public class YAPIONDiff {
         if (first.isEmpty() && second.isEmpty()) {
             return true;
         }
-        if (first.equals(second)) {
-            return true;
-        }
-        return false;
+        return first.equals(second);
     }
 
     private void merge() {

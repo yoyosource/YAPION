@@ -51,7 +51,7 @@ public class YAPIONTestObjects {
         private final HashMap<String, String> hashMap = new HashMap<>();
         private final LinkedHashMap<Integer, String> linkedHashMap = new LinkedHashMap<>();
 
-        {
+        public TestMap() {
             stringStringMap.put("Hello", "Hello");
             stringStringMap.put("Hello1", "Hello1");
             stringStringMap.put("Hello2", "Hello2");
@@ -68,7 +68,7 @@ public class YAPIONTestObjects {
         private final List<String> strings2 = new ArrayList<>();
         private final List<String> strings3 = new LinkedList<>();
 
-        {
+        public TestArray() {
             strings[0] = "Hello World";
             strings1[0][0] = "Hello World";
             strings1[1][1] = "Hello World2";
@@ -146,7 +146,7 @@ public class YAPIONTestObjects {
 
         private final List<long[][]> intList = new ArrayList<>();
 
-        {
+        public TestInnerArray() {
             intList.add(new long[][]{{0}, {1}, {2}});
             intList.add(new long[][]{{1}, {2}, {3}});
             intList.add(new long[][]{{2}, {3}, {4}});
@@ -247,17 +247,18 @@ public class YAPIONTestObjects {
         private final Map<String, String> hugoStringMap = new HashMap<>();
         private final HashMap<String, String> hashMap = new HashMap<>();
         private final LinkedHashMap<Integer, String> linkedHashMap = new LinkedHashMap<>();
-        {
-            stringStringMap.put("Hello", "Hello");
-            stringStringMap.put("Hello1", "Hello1");
-            stringStringMap.put("Hello2", "Hello2");
-        }
 
         private final String[] strings = new String[2];
         private final String[][] strings1 = new String[3][3];
         private final List<String> strings2 = new ArrayList<>();
         private final List<String> strings3 = new LinkedList<>();
-        {
+
+        public TestReduced() {
+            stringStringMap.put("Hello", "Hello");
+            stringStringMap.put("Hello1", "Hello1");
+            stringStringMap.put("Hello2", "Hello2");
+
+
             strings[0] = "Hello World";
             strings1[0][0] = "Hello World";
             strings1[1][1] = "Hello World2";

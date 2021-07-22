@@ -26,27 +26,6 @@ import java.util.Map;
 @EqualsAndHashCode
 public final class YAPIONFlag {
 
-    static final Map<String, YAPIONFlag> YAPION_FLAG_KEYS = new HashMap<>();
-
-    @Getter
-    private final String keyName;
-
-    private boolean flagDefault;
-
-    private YAPIONFlag(String keyName) {
-        YAPION_FLAG_KEYS.put(keyName, this);
-        this.keyName = keyName;
-    }
-
-    public boolean getFlagDefault() {
-        return flagDefault;
-    }
-
-    public YAPIONFlag setFlagDefault(boolean flagDefault) {
-        this.flagDefault = flagDefault;
-        return this;
-    }
-
     /**
      * The key to specify if data loss should be handled silently {@code false} or should throw an exception {@code true}.
      */
@@ -81,6 +60,27 @@ public final class YAPIONFlag {
      * The key to specify a Class should serialize its byteCode {@code true} or not {@code false}.
      */
     public static final YAPIONFlag CLASS_INJECTION = new YAPIONFlag("base.reflection.class.injection").setFlagDefault(false);
+
+    static final Map<String, YAPIONFlag> YAPION_FLAG_KEYS = new HashMap<>();
+
+    @Getter
+    private final String keyName;
+
+    private boolean flagDefault;
+
+    private YAPIONFlag(String keyName) {
+        YAPION_FLAG_KEYS.put(keyName, this);
+        this.keyName = keyName;
+    }
+
+    public boolean getFlagDefault() {
+        return flagDefault;
+    }
+
+    public YAPIONFlag setFlagDefault(boolean flagDefault) {
+        this.flagDefault = flagDefault;
+        return this;
+    }
 
     /**
      * Retrieve every flagKey specified in the current Runtime up until now.
