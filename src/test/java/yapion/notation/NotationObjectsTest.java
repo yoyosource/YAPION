@@ -75,7 +75,7 @@ public class NotationObjectsTest {
 
     @Test
     public void testOutsideLatin1() {
-        // TODO: This is just so you can just './gradlew build' on Windows without errors
+        // TODO: This is to enable './gradlew build' on Windows without any testing errors
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
             return;
         }
