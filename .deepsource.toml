@@ -1,0 +1,10 @@
+version = 1
+
+test_patterns = ["*/*.java"]
+
+[[analyzers]]
+name = "java"
+enabled = true
+
+  [analyzers.meta]
+  runtime_version = "8"
