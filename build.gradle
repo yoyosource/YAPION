@@ -41,12 +41,12 @@ targetCompatibility = '1.8'
 
 compileJava.options.encoding = 'UTF-8'
 compileJava {
-    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
+    options.compilerArgs << '-Xlint:deprecation' /*<< '--enable-preview'*/
 }
 
 compileTestJava.options.encoding = 'UTF-8'
 compileTestJava {
-    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
+    options.compilerArgs << '-Xlint:deprecation' /* << '--enable-preview' */
 }
 
 mainClassName = ''
