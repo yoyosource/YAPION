@@ -17,6 +17,7 @@ import lombok.SneakyThrows;
 import yapion.hierarchy.output.*;
 
 import java.io.File;
+import java.io.OutputStream;
 
 public interface ObjectOutput {
 
@@ -73,6 +74,16 @@ public interface ObjectOutput {
     default long toLength(boolean prettified) {
         LengthOutput lengthOutput = toYAPION(new LengthOutput());
         return prettified ? lengthOutput.getPrettifiedLength() : lengthOutput.getLength();
+    }
+
+    @SneakyThrows
+    default void toStream(OutputStream outputStream) {
+        toYAPION(new StreamOutput(outputStream)).flush();
+    }
+
+    @SneakyThrows
+    default void toStream(OutputStream outputStream, boolean prettified) {
+        toYAPION(new StreamOutput(outputStream, prettified)).flush();
     }
 
 }

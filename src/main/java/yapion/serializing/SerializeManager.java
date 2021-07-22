@@ -18,8 +18,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.kamranzafar.jtar.TarEntry;
-import org.kamranzafar.jtar.TarInputStream;
 import yapion.annotations.api.InternalAPI;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.exceptions.YAPIONException;
@@ -31,11 +29,11 @@ import yapion.serializing.api.YAPIONSerializerRegistrator;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.reflection.PureStrategy;
+import yapion.serializing.zar.ZarInputStream;
 import yapion.utils.ReflectionsUtils;
 import yapion.utils.YAPIONClassLoader;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -50,7 +48,7 @@ import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
 @UtilityClass
 public class SerializeManager {
 
-    private final boolean SYS_LOGGER = false;
+    private final boolean SYS_LOGGER = true;
 
     private final InternalSerializer<Object> defaultSerializer = null;
     private final InternalSerializer<Void> defaultNullSerializer = new InternalSerializer<Void>() {
@@ -109,38 +107,47 @@ public class SerializeManager {
     }
 
     static {
-        InputStream inputStream = SerializeManager.class.getResourceAsStream("serializer.tar.gz");
+        InputStream inputStream = SerializeManager.class.getResourceAsStream("serializer.zar.gz");
+        try {
+            inputStream = new FileInputStream(new File("/Users/jojo/IdeaProjects/YAPION/build/classes/java/main/yapion/serializing/serializer.zar.gz"));
+        } catch (IOException e) {
+            throw new IllegalStateException();
+        }
         if (inputStream == null) {
             log.error("No Serializer was loaded. Please inspect.");
             throw new YAPIONException("No Serializer was loaded. Please inspect.");
         }
-        try (TarInputStream tarInputStream = new TarInputStream(new GZIPInputStream(new BufferedInputStream(inputStream), 8192))) {
+
+        try (ZarInputStream zarInputStream = new ZarInputStream(new GZIPInputStream(new BufferedInputStream(inputStream)))) {
             Map<Integer, List<WrappedClass>> depthMap = new TreeMap<>(Comparator.comparingInt(value -> value));
             int deepest = 0;
 
-            TarEntry entry;
-            while ((entry = tarInputStream.getNextEntry()) != null) {
-                log.debug("Entry: {} {} {}", entry.getName(), entry.getSize(), entry.isDirectory());
-                if (SYS_LOGGER) System.out.println("Entry: " + entry.getName() + " " + entry.getSize() + " " + entry.isDirectory());
-                if (entry.isDirectory() || !entry.getName().endsWith(".class")) continue;
+            while (zarInputStream.hasFile()) {
+                zarInputStream.nextFile();
+
+                String name = zarInputStream.getFile();
+                long size = zarInputStream.getSize();
+
+                log.debug("Entry: {} {}", name, size);
+                if (SYS_LOGGER) System.out.println("Entry: " + name + " " + size);
 
                 List<Byte> bytes = new ArrayList<>();
-                while (tarInputStream.available() > 0 && bytes.size() < entry.getSize()) {
-                    bytes.add((byte) tarInputStream.read());
+                while (size > bytes.size()) {
+                    bytes.add((byte) zarInputStream.read());
                 }
                 byte[] byteArray = new byte[bytes.size()];
                 for (int i = 0; i < byteArray.length; i++) {
                     byteArray[i] = bytes.get(i);
                 }
 
-                String className = "yapion.serializing.serializer." + entry.getName().substring(0, entry.getName().indexOf('.')).replace("/", ".");
+                String className = "yapion.serializing.serializer." + name.substring(0, name.indexOf('.')).replace("/", ".");
                 int depth = className.length() - className.replace(".", "").length();
                 if (className.endsWith(".KeySpecSerializer")) depth -= 1;
                 if (!className.endsWith("Serializer")) depth -= 1;
                 if (className.endsWith("Registrator")) depth += 1;
                 depth -= className.length() - className.replace("$", "").length();
-                log.debug("Entry Info: {} {} {} {} {}", entry.getName(), entry.getSize(), byteArray.length, depth, deepest);
-                if (SYS_LOGGER) System.out.println("Entry Info: "  + entry.getName() + " " + entry.getSize() + " " + byteArray.length + " " + depth + " " + deepest);
+                log.debug("Entry Info: {} {} {} {} {}", name, size, byteArray.length, depth, deepest);
+                if (SYS_LOGGER) System.out.println("Entry Info: "  + name + " " + size + " " + byteArray.length + " " + depth + " " + deepest);
 
                 deepest = Math.max(deepest, depth);
                 depthMap.computeIfAbsent(depth, d -> new ArrayList<>()).add(new WrappedClass(className, byteArray));

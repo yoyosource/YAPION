@@ -54,7 +54,7 @@ dependencies {
 
     implementation 'org.objenesis:objenesis:3.1'
     implementation 'eu.infomas:annotation-detector:3.0.5'
-    implementation 'org.kamranzafar:jtar:2.3'
+    // implementation 'org.kamranzafar:jtar:2.3'
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
 
     testCompile 'junit:junit:4.12'
@@ -92,11 +92,7 @@ task compressSerializer {
             return
         }
 
-        shell("rm ${buildDir}/classes/java/main/yapion/serializing/serializer.tar")
-        shell("rm ${buildDir}/classes/java/main/yapion/serializing/serializer.tar.gz")
-        shell("cd ${buildDir}/classes/java/main/yapion/serializing/serializer; tar -c * > ../serializer.tar")
-        shell("gzip -9k ${buildDir}/classes/java/main/yapion/serializing/serializer.tar")
-        shell("rm ${buildDir}/classes/java/main/yapion/serializing/serializer.tar")
+        shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker")
         shell("rm -r ${buildDir}/classes/java/main/yapion/serializing/serializer")
     }
 }
