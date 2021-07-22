@@ -90,7 +90,7 @@ public class SerializeData<T> {
     }
 
     @InternalAPI
-    public YAPIONSerializer getYAPIONSerializer() {
+    public YAPIONSerializer getSerializer() {
         return yapionSerializer;
     }
 }

@@ -253,7 +253,8 @@ public final class YAPIONDeserializer {
                 log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
             }
         }
-        MethodManager.preDeserializationStep(object, object.getClass(), contextManager, new DeserializationContext(this, yapionObject));
+        DeserializationContext deserializationContext = new DeserializationContext(this, yapionObject);
+        MethodManager.preDeserializationStep(object, object.getClass(), contextManager, deserializationContext);
         pointerMap.put(yapionObject, object);
 
         for (String fieldName : yapionObject.getKeys()) {
@@ -289,7 +290,7 @@ public final class YAPIONDeserializer {
 
             arrayType = "";
         }
-        MethodManager.postDeserializationStep(object, object.getClass(), contextManager, new DeserializationContext(this, yapionObject));
+        MethodManager.postDeserializationStep(object, object.getClass(), contextManager, deserializationContext);
         return this;
     }
 

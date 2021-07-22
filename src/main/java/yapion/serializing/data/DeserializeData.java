@@ -117,7 +117,7 @@ public class DeserializeData<T extends YAPIONAnyType> {
     }
 
     @InternalAPI
-    public YAPIONDeserializer getYAPIONDeserializer() {
+    public YAPIONDeserializer getDeserializer() {
         return yapionDeserializer;
     }
 }

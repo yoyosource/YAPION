@@ -236,14 +236,16 @@ public class SerializingProcessor extends AbstractProcessor {
                 initFunction.add("    });");
             }
 
+            serializeFunction.add("YAPIONObject yapionObject = new YAPIONObject(type());");
             if (yapionSerializing.serializationStep()) {
                 classGenerator.addImport("yapion.serializing.ContextManager");
                 classGenerator.addImport("yapion.serializing.MethodManager");
+                classGenerator.addImport("yapion.serializing.data.SerializationContext");
                 serializerContextManager.set(true);
                 serializeFunction.add("ContextManager contextManager = new ContextManager(serializeData.context);");
-                serializeFunction.add("MethodManager.preSerializationStep(serializeData.object, type(), contextManager);");
+                serializeFunction.add("SerializationContext serializationContext = new SerializationContext(serializeData.getSerializer(), yapionObject);");
+                serializeFunction.add("MethodManager.preSerializationStep(serializeData.object, type(), contextManager, serializationContext);");
             }
-            serializeFunction.add("YAPIONObject yapionObject = new YAPIONObject(type());");
             for (VariableElement e : elementList) {
                 generateFieldSerializer(serializeFunction, e, serializeFieldList.contains(e), serializerContextManager);
             }
@@ -259,7 +261,7 @@ public class SerializingProcessor extends AbstractProcessor {
                 serializeFunction.add("}");
             }
             if (yapionSerializing.serializationStep()) {
-                serializeFunction.add("MethodManager.postSerializationStep(serializeData.object, type(), contextManager);");
+                serializeFunction.add("MethodManager.postSerializationStep(serializeData.object, type(), contextManager, serializationContext);");
             }
             serializeFunction.add("return yapionObject;");
 
@@ -267,9 +269,11 @@ public class SerializingProcessor extends AbstractProcessor {
             if (yapionSerializing.deserializationStep()) {
                 classGenerator.addImport("yapion.serializing.ContextManager");
                 classGenerator.addImport("yapion.serializing.MethodManager");
+                classGenerator.addImport("yapion.serializing.data.DeserializationContext");
                 deserializerContextManager.set(true);
                 deserializeFunction.add("ContextManager contextManager = new ContextManager(deserializeData.context);");
-                deserializeFunction.add("MethodManager.preDeserializationStep(object, type(), contextManager);");
+                deserializeFunction.add("DeserializationContext deserializationContext = new DeserializationContext(deserializeData.getDeserializer(), (YAPIONObject) deserializeData.object);");
+                deserializeFunction.add("MethodManager.preDeserializationStep(object, type(), contextManager, deserializationContext);");
             }
             for (VariableElement e : elementList) {
                 generateFieldDeserializer(deserializeFunction, e, deserializeFieldList.contains(e), deserializerContextManager);
@@ -281,9 +285,7 @@ public class SerializingProcessor extends AbstractProcessor {
                 deserializeFunction.add("}");
             }
             if (yapionSerializing.deserializationStep()) {
-                classGenerator.addImport("yapion.serializing.ContextManager");
-                classGenerator.addImport("yapion.serializing.MethodManager");
-                deserializeFunction.add("MethodManager.postDeserializationStep(object, type(), contextManager);");
+                deserializeFunction.add("MethodManager.postDeserializationStep(object, type(), contextManager, deserializationContext);");
             }
             deserializeFunction.add("return object;");
 

@@ -187,7 +187,8 @@ public final class YAPIONSerializer {
         if (serializer == null || serializer.empty()) {
             yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName()));
         }
-        MethodManager.preSerializationStep(object, object.getClass(), contextManager, new SerializationContext(this, yapionObject));
+        SerializationContext serializationContext = new SerializationContext(this, yapionObject);
+        MethodManager.preSerializationStep(object, object.getClass(), contextManager, serializationContext);
 
         Class<?> objectClass = object.getClass();
         for (Field field : ReflectionsUtils.getFields(objectClass)) {
@@ -221,7 +222,7 @@ public final class YAPIONSerializer {
             }
             yapionObject.add(name, yapionAnyType);
         }
-        MethodManager.postSerializationStep(object, object.getClass(), contextManager, new SerializationContext(this, yapionObject));
+        MethodManager.postSerializationStep(object, object.getClass(), contextManager, serializationContext);
         return this;
     }
 
