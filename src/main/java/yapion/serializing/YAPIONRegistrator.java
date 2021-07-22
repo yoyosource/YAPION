@@ -15,6 +15,7 @@ package yapion.serializing;
 
 import eu.infomas.annotation.AnnotationDetector;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.registration.YAPIONRegistratorProvider;
 import yapion.serializing.api.*;
@@ -30,11 +31,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
 @Slf4j
+@UtilityClass
 public final class YAPIONRegistrator {
-
-    private YAPIONRegistrator() {
-        throw new IllegalStateException("Utility class");
-    }
 
     private static final Set<Predicate<Object>> registerPredicates = new HashSet<>();
     private static final Set<Class<?>> constructClass = new HashSet<>();

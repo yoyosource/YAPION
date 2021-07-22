@@ -38,6 +38,9 @@ public class YAPIONPacketTest {
 
     private static ServerSocket serverSocket;
 
+    @Rule
+    public Timeout timeout = new Timeout(5, TimeUnit.SECONDS);
+
     @Before
     public void setUp() throws Exception {
         serverSocket = new ServerSocket(22222);
@@ -47,9 +50,6 @@ public class YAPIONPacketTest {
     public void tearDown() throws Exception {
         serverSocket.close();
     }
-
-    @Rule
-    public Timeout timeout = new Timeout(5, TimeUnit.SECONDS);
 
     private static synchronized YAPIONPacketStream[] connection() throws Exception {
         Socket socket = new Socket("127.0.0.1", 22222);

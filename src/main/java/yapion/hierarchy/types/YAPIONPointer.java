@@ -29,6 +29,10 @@ import static yapion.utils.IdentifierUtils.POINTER_IDENTIFIER;
 
 public class YAPIONPointer extends YAPIONValueType {
 
+    private long pointerID;
+    private ReferenceFunction referenceFunction;
+    private YAPIONDataType<?, ?> object = null;
+
     @Override
     public YAPIONType getType() {
         return YAPIONType.POINTER;
@@ -60,10 +64,6 @@ public class YAPIONPointer extends YAPIONValueType {
     public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
         return toJSON(abstractOutput);
     }
-
-    private long pointerID;
-    private ReferenceFunction referenceFunction;
-    private YAPIONDataType<?, ?> object = null;
 
     public <T extends YAPIONDataType<?, ?>> YAPIONPointer(T object) {
         referenceFunction = ReferenceIDUtils.REFERENCE_FUNCTION;

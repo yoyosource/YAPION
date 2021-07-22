@@ -253,28 +253,6 @@ public class YAPIONTestObjects {
         private final List<String> strings2 = new ArrayList<>();
         private final List<String> strings3 = new LinkedList<>();
 
-        public TestReduced() {
-            stringStringMap.put("Hello", "Hello");
-            stringStringMap.put("Hello1", "Hello1");
-            stringStringMap.put("Hello2", "Hello2");
-
-
-            strings[0] = "Hello World";
-            strings1[0][0] = "Hello World";
-            strings1[1][1] = "Hello World2";
-            strings1[2][2] = "Hello World3";
-
-            strings2.add("Hello World");
-            strings2.add("Hello World1");
-            strings2.add("Hello World2");
-            strings2.add("Hello World3");
-
-            strings3.add("Hello World");
-            strings3.add("Hello World1");
-            strings3.add("Hello World2");
-            strings3.add("Hello World3");
-        }
-
         private final boolean t = false;
         private final Boolean T = true;
         private final byte b = 0;
@@ -306,6 +284,28 @@ public class YAPIONTestObjects {
         private final EnumerationTest test3 = EnumerationTest.Hugo;
         private final EnumerationTest test4 = EnumerationTest.My;
         private final EnumerationTest test5 = EnumerationTest.Name;
+
+        public TestReduced() {
+            stringStringMap.put("Hello", "Hello");
+            stringStringMap.put("Hello1", "Hello1");
+            stringStringMap.put("Hello2", "Hello2");
+
+
+            strings[0] = "Hello World";
+            strings1[0][0] = "Hello World";
+            strings1[1][1] = "Hello World2";
+            strings1[2][2] = "Hello World3";
+
+            strings2.add("Hello World");
+            strings2.add("Hello World1");
+            strings2.add("Hello World2");
+            strings2.add("Hello World3");
+
+            strings3.add("Hello World");
+            strings3.add("Hello World1");
+            strings3.add("Hello World2");
+            strings3.add("Hello World3");
+        }
     }
 
     @YAPIONData

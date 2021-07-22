@@ -25,12 +25,12 @@ public class InputStreamCharReader implements CharReader {
     private InputStream inputStream;
     private boolean stopOnStreamEnd;
 
+    private CharSupplier reader;
+
     @FunctionalInterface
     private interface CharSupplier {
         char read() throws IOException;
     }
-
-    private CharSupplier reader;
 
     public InputStreamCharReader(InputStream inputStream, boolean stopOnStreamEnd, InputStreamCharsets charset) {
         this.inputStream = inputStream;
