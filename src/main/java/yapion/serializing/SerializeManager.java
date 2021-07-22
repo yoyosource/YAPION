@@ -108,11 +108,6 @@ public class SerializeManager {
 
     static {
         InputStream inputStream = SerializeManager.class.getResourceAsStream("serializer.zar.gz");
-        try {
-            inputStream = new FileInputStream(new File("/Users/jojo/IdeaProjects/YAPION/build/classes/java/main/yapion/serializing/serializer.zar.gz"));
-        } catch (IOException e) {
-            throw new IllegalStateException();
-        }
         if (inputStream == null) {
             log.error("No Serializer was loaded. Please inspect.");
             throw new YAPIONException("No Serializer was loaded. Please inspect.");
