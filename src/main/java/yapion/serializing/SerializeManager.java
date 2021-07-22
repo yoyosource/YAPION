@@ -169,7 +169,7 @@ public class SerializeManager {
         }
         if (serializerMap.isEmpty()) {
             log.error("No Serializer was loaded. Please inspect.");
-            throw new IllegalStateException("No Serializer was loaded. Please inspect.");
+            throw new IllegalArgumentException("No Serializer was loaded. Please inspect.");
         }
 
         initialized = true;
