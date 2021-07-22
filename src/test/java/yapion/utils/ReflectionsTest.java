@@ -39,10 +39,6 @@ public class ReflectionsTest {
     private static class MapSerializer implements InternalSerializer<Map<?, ?>> {
         private Map<Class<?>, Function<Map<?, ?>, Map<?, ?>>> wrapper = new HashMap<>();
 
-        {
-            init();
-        }
-
         @Override
         public void init() {
             wrapper = new HashMap<>();

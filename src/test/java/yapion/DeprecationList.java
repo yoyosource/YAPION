@@ -102,10 +102,7 @@ public class DeprecationList {
         if (version[0] < major.get()) {
             return true;
         }
-        if (version[1] < minor.get() - 2) {
-            return true;
-        }
-        return false;
+        return version[1] < minor.get() - 2;
     }
 
 }
