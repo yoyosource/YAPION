@@ -17,6 +17,7 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.object.*;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.annotations.serialize.YAPIONSave;
+import yapion.serializing.data.SerializationContext;
 
 public class AnnotationTestObjects {
 
@@ -99,7 +100,7 @@ public class AnnotationTestObjects {
 
         @YAPIONPreSerialization(context = "Test")
         private void test() {
-
+            // Ignored
         }
 
     }
@@ -109,7 +110,7 @@ public class AnnotationTestObjects {
 
         @YAPIONPreSerialization
         private void test() {
-
+            // Ignored
         }
 
     }
@@ -121,6 +122,20 @@ public class AnnotationTestObjects {
             throw new UnsupportedOperationException();
         }
 
+    }
+
+    @YAPIONData
+    public static class TestPreAndPostAnnotation {
+
+        @YAPIONPreSerialization
+        private void preSerialization(SerializationContext serializationContext) {
+            serializationContext.getYapionObject().add("pre", 1);
+        }
+
+        @YAPIONPostSerialization
+        private void postSerialization(SerializationContext serializationContext) {
+            serializationContext.getYapionObject().add("post", 1);
+        }
     }
 
 }

@@ -21,7 +21,9 @@ import yapion.serializing.data.SerializeData;
 @InternalAPI
 public interface InternalSerializer<T> {
 
-    default void init() {}
+    default void init() {
+        // Used to initialize some internal state if needed
+    }
     
     Class<?> type();
 

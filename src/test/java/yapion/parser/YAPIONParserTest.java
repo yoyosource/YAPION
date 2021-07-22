@@ -210,7 +210,7 @@ public class YAPIONParserTest {
                 System.setOut(new PrintStream(new OutputStream() {
                     @Override
                     public void write(int b) throws IOException {
-
+                        // Output ignored
                     }
                 }));
 

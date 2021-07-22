@@ -47,29 +47,29 @@ public final class StringHandler implements ValueHandler<String> {
             return '"' + s + '"';
         }
 
-        if (NumberSuffix.tryValueAssemble(s, BYTE)) {
+        if (tryValueAssemble(s, BYTE)) {
             return '"' + s + '"';
         }
-        if (NumberSuffix.tryValueAssemble(s, SHORT)) {
+        if (tryValueAssemble(s, SHORT)) {
             return '"' + s + '"';
         }
-        if (NumberSuffix.tryValueAssemble(s, INTEGER)) {
+        if (tryValueAssemble(s, INTEGER)) {
             return '"' + s + '"';
         }
-        if (NumberSuffix.tryValueAssemble(s, LONG)) {
+        if (tryValueAssemble(s, LONG)) {
             return '"' + s + '"';
         }
-        if (NumberSuffix.tryValueAssemble(s, BIG_INTEGER)) {
+        if (tryValueAssemble(s, BIG_INTEGER)) {
             return '"' + s + '"';
         }
 
-        if (NumberSuffix.tryValueAssemble(s, FLOAT)) {
+        if (tryValueAssemble(s, FLOAT)) {
             return '"' + s + '"';
         }
-        if (NumberSuffix.tryValueAssemble(s, DOUBLE)) {
+        if (tryValueAssemble(s, DOUBLE)) {
             return '"' + s + '"';
         }
-        if (NumberSuffix.tryValueAssemble(s, BIG_DECIMAL)) {
+        if (tryValueAssemble(s, BIG_DECIMAL)) {
             return '"' + s + '"';
         }
 

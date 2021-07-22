@@ -325,20 +325,6 @@ public class YAPIONTestObjects {
         private int i = 10;
     }
 
-    @YAPIONData
-    public static class TestPreAndPostAnnotation {
-
-        @YAPIONPreSerialization
-        private void preSerialization(SerializationContext serializationContext) {
-            serializationContext.getYapionObject().add("pre", 1);
-        }
-
-        @YAPIONPostSerialization
-        private void postSerialization(SerializationContext serializationContext) {
-            serializationContext.getYapionObject().add("post", 1);
-        }
-    }
-
     static String getUserHome() {
         return System.getProperty("user.home");
     }

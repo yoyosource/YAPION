@@ -62,7 +62,7 @@ public class DeprecationList {
                         DeprecationInfo deprecationInfo = method.getAnnotation(DeprecationInfo.class);
                         System.out.println("# " + method);
                         if (deprecationInfo != null) {
-                            if (outputIfRemove(major, minor, patch, parseVersion(deprecationInfo.since()))) {
+                            if (outputIfRemove(major, minor, parseVersion(deprecationInfo.since()))) {
                                 System.out.println("Remove      " + deprecationInfo.since());
                             } else {
                                 System.out.println("Since       " + deprecationInfo.since());
@@ -98,7 +98,7 @@ public class DeprecationList {
         return ints;
     }
 
-    private boolean outputIfRemove(AtomicInteger major, AtomicInteger minor, AtomicInteger patch, int[] version) {
+    private boolean outputIfRemove(AtomicInteger major, AtomicInteger minor, int[] version) {
         if (version[0] < major.get()) {
             return true;
         }

@@ -14,9 +14,13 @@
 package yapion.annotation;
 
 import org.junit.Test;
+import yapion.annotation.AnnotationTestObjects.TestPreAndPostAnnotation;
 import yapion.exceptions.YAPIONException;
+import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONSerializer;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static yapion.YAPIONAssertion.isYAPION;
 import static yapion.annotation.AnnotationTestObjects.PostTest;
 import static yapion.annotation.AnnotationTestObjects.PreTest;
 
@@ -40,6 +44,12 @@ public class AnnotationSerializationTest {
     @Test
     public void testPost() {
         YAPIONSerializer.serialize(new PostTest(), "noException");
+    }
+
+    @Test
+    public void testYAPIONSerDeAnnotations() {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestPreAndPostAnnotation());
+        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestPreAndPostAnnotation)pre(1)post(1)}"));
     }
 
 }

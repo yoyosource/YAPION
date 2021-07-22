@@ -24,9 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static yapion.serializing.YAPIONTestObjects.*;
 import static yapion.YAPIONAssertion.isYAPION;
+import static yapion.serializing.YAPIONTestObjects.*;
 
 public class YAPIONSerializerTest {
 
@@ -145,11 +144,4 @@ public class YAPIONSerializerTest {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestMultiContextAnnotation(), "Hello");
         assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestMultiContextAnnotation)}"));
     }
-
-    @Test
-    public void testYAPIONSerDeAnnotations() {
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestPreAndPostAnnotation());
-        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestPreAndPostAnnotation)pre(1)post(1)}"));
-    }
-
 }

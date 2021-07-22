@@ -34,11 +34,9 @@ public class UtilsTestObjects {
     }
 
     public static class UtilModifierTest {
-
         private static final int i = 0;
         private final transient int j = 0;
         private final int k = 0;
-
     }
 
 }

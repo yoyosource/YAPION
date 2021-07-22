@@ -25,6 +25,7 @@ public abstract class SerializerBase<T, K extends YAPIONAnyType> {
     private InternalSerializer<T> generated = null;
 
     public void init() {
+        // Used to initialize some internal state if needed
     }
 
     public abstract Class<T> type();
