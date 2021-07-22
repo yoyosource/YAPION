@@ -36,12 +36,14 @@ public class SerializerPacker {
         if (!source.exists()) return;
 
         File destination = new File(s.substring(0, s.lastIndexOf('/')), "serializer.zar.gz");
+        System.out.println(destination.getAbsolutePath());
         destination.delete();
         destination.createNewFile();
         ZarOutputStream zarOutputStream = new ZarOutputStream(new GZIPOutputStream(new FileOutputStream(destination), 512));
 
         int substringLength = s.length() + 1;
         Files.walk(source.toPath()).map(Path::toUri).map(File::new).filter(f -> f.getName().endsWith(".class")).forEach(f -> {
+            System.out.println("Packing: " + f.getAbsolutePath());
             if (f.getName().equals("SerializerPacker.class")) return;
             String fileName = f.getAbsolutePath().substring(substringLength);
 
@@ -56,5 +58,6 @@ public class SerializerPacker {
             }
         });
         zarOutputStream.close();
+        System.out.println("Destination Size: " + destination.length());
     }
 }

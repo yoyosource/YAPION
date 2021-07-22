@@ -92,7 +92,7 @@ task compressSerializer {
             return
         }
 
-        shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker")
+        print(shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker")[0])
         shell("rm -r ${buildDir}/classes/java/main/yapion/serializing/serializer")
     }
 }
