@@ -49,7 +49,7 @@ public class AnnotationSerializationTest {
     @Test
     public void testYAPIONSerDeAnnotations() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestPreAndPostAnnotation());
-        assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestPreAndPostAnnotation)pre(1)post(1)}"));
+        assertThat(yapionObject, isYAPION("{@type(yapion.annotation.AnnotationTestObjects$TestPreAndPostAnnotation)pre(1)post(1)}"));
     }
 
 }
