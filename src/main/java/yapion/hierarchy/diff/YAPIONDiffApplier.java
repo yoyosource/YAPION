@@ -83,19 +83,19 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
         switch (diff.type()) {
             case DELETE:
                 DiffDelete diffDelete = (DiffDelete) diff;
-                reverseApplyDelete(diffDelete.getPath(), diffDelete.getDeleted());
+                applyInsert(diffDelete.getPath(), diffDelete.getDeleted());
                 break;
             case INSERT:
                 DiffInsert diffInsert = (DiffInsert) diff;
-                reverseApplyInsert(diffInsert.getPath());
+                applyDelete(diffInsert.getPath());
                 break;
             case CHANGE:
                 DiffChange diffChange = (DiffChange) diff;
-                reverseApplyDelete(diffChange.getPath(), diffChange.getFrom());
+                applyInsert(diffChange.getPath(), diffChange.getFrom());
                 break;
             case MOVE:
                 DiffMove diffMove = (DiffMove) diff;
-                reverseApplyMove(diffMove.getFromPath(), diffMove.getToPath());
+                applyMove(diffMove.getToPath(), diffMove.getFromPath());
                 break;
             default:
                 throw new UnsupportedOperationException();
@@ -135,73 +135,22 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
         }
     }
 
-    private void applyMove(String[] fromPath, String[] toPath) {
-        if (fromPath.length == 0 || toPath.length == 0) {
+    private void applyMove(String[] from, String[] to) {
+        if (from.length == 0 || to.length == 0) {
             return;
         }
-        YAPIONAnyType fromYapionAnyType = resolvePath(fromPath);
-        if (fromYapionAnyType instanceof YAPIONObject) {
-            YAPIONAnyType yapionAnyType = ((YAPIONObject) fromYapionAnyType).removeAndGet(fromPath[fromPath.length - 1]);
-            applyInsert(toPath, yapionAnyType);
-        }
-        if (fromYapionAnyType instanceof YAPIONMap) {
-            YAPIONAnyType yapionAnyType = ((YAPIONMap) fromYapionAnyType).removeAndGet(YAPIONParser.parse(fromPath[fromPath.length - 1]));
-            applyInsert(toPath, yapionAnyType);
-        }
-        if (fromYapionAnyType instanceof YAPIONArray) {
-            YAPIONAnyType yapionAnyType = ((YAPIONArray) fromYapionAnyType).removeAndGet(Integer.parseInt(fromPath[fromPath.length - 1]));
-            applyInsert(toPath, yapionAnyType);
-        }
-    }
-
-    private void reverseApplyDelete(String[] path, YAPIONAnyType deleted) {
-        if (path.length == 0) {
-            return;
-        }
-        YAPIONAnyType yapionAnyType = resolvePath(path);
-        if (yapionAnyType instanceof YAPIONObject) {
-            ((YAPIONObject) yapionAnyType).add(path[path.length - 1], deleted);
-        }
-        if (yapionAnyType instanceof YAPIONMap) {
-            ((YAPIONMap) yapionAnyType).add(YAPIONParser.parse(path[path.length - 1]), deleted);
-        }
-        if (yapionAnyType instanceof YAPIONArray) {
-            ((YAPIONArray) yapionAnyType).add(Integer.parseInt(path[path.length - 1]), deleted);
-        }
-    }
-
-    private void reverseApplyInsert(String[] path) {
-        if (path.length == 0) {
-            return;
-        }
-        YAPIONAnyType yapionAnyType = resolvePath(path);
-        if (yapionAnyType instanceof YAPIONObject) {
-            ((YAPIONObject) yapionAnyType).remove(path[path.length - 1]);
-        }
-        if (yapionAnyType instanceof YAPIONMap) {
-            ((YAPIONMap) yapionAnyType).remove(YAPIONParser.parse(path[path.length - 1]));
-        }
-        if (yapionAnyType instanceof YAPIONArray) {
-            ((YAPIONArray) yapionAnyType).remove(Integer.parseInt(path[path.length - 1]));
-        }
-    }
-
-    private void reverseApplyMove(String[] fromPath, String[] toPath) {
-        if (fromPath.length == 0 || toPath.length == 0) {
-            return;
-        }
-        YAPIONAnyType toYapionAnyType = resolvePath(toPath);
+        YAPIONAnyType toYapionAnyType = resolvePath(from);
         if (toYapionAnyType instanceof YAPIONObject) {
-            YAPIONAnyType yapionAnyType = ((YAPIONObject) toYapionAnyType).removeAndGet(toPath[toPath.length - 1]);
-            applyInsert(fromPath, yapionAnyType);
+            YAPIONAnyType yapionAnyType = ((YAPIONObject) toYapionAnyType).removeAndGet(to[to.length - 1]);
+            applyInsert(from, yapionAnyType);
         }
         if (toYapionAnyType instanceof YAPIONMap) {
-            YAPIONAnyType yapionAnyType = ((YAPIONMap) toYapionAnyType).removeAndGet(YAPIONParser.parse(toPath[toPath.length - 1]));
-            applyInsert(fromPath, yapionAnyType);
+            YAPIONAnyType yapionAnyType = ((YAPIONMap) toYapionAnyType).removeAndGet(YAPIONParser.parse(to[to.length - 1]));
+            applyInsert(from, yapionAnyType);
         }
         if (toYapionAnyType instanceof YAPIONArray) {
-            YAPIONAnyType yapionAnyType = ((YAPIONArray) toYapionAnyType).removeAndGet(Integer.parseInt(toPath[toPath.length - 1]));
-            applyInsert(fromPath, yapionAnyType);
+            YAPIONAnyType yapionAnyType = ((YAPIONArray) toYapionAnyType).removeAndGet(Integer.parseInt(to[to.length - 1]));
+            applyInsert(from, yapionAnyType);
         }
     }
 
