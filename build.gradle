@@ -1,5 +1,14 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.frgaal:compiler-gradle-plugin:15.0.0"
+    }
+}
+
 plugins {
     id 'java'
     id 'application'
@@ -8,6 +17,8 @@ plugins {
     id 'maven-publish'
     // id 'org.jetbrains.kotlin.jvm' version '1.5.0'
 }
+
+apply plugin: 'org.frgaal.compiler'
 
 group 'YAPION'
 def groupID = 'yoyosource'
@@ -25,10 +36,18 @@ ext {
     releasePath = "releases/${groupID}/${group}"
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = '15'
+targetCompatibility = '1.8'
 
 compileJava.options.encoding = 'UTF-8'
+compileJava {
+    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
+}
+
+compileTestJava.options.encoding = 'UTF-8'
+compileTestJava {
+    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
+}
 
 mainClassName = ''
 
@@ -57,7 +76,7 @@ dependencies {
     // implementation 'org.kamranzafar:jtar:2.3'
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
 
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest:2.2'
 
     testImplementation 'ch.qos.logback:logback-classic:1.3.0-alpha5'
