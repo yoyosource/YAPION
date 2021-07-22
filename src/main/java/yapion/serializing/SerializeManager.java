@@ -33,7 +33,8 @@ import yapion.serializing.zar.ZarInputStream;
 import yapion.utils.ReflectionsUtils;
 import yapion.utils.YAPIONClassLoader;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -160,11 +161,9 @@ public class SerializeManager {
             });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new IllegalStateException(e.getMessage(), e);
         }
         if (serializerMap.isEmpty()) {
             log.error("No Serializer was loaded. Please inspect.");
-            throw new IllegalArgumentException("No Serializer was loaded. Please inspect.");
         }
 
         initialized = true;
