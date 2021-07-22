@@ -74,14 +74,8 @@ public final class ValueUtils {
         if (c == '\n') return "\\n";
         if (c == '\t') return "\\t";
         if (c == '\r') return "\\r";
-        if (c < 0x20) {
+        if (c < 0x20 || (c >= 0x7F && c < 0xA1) || c > 0xFF || escapeCharacters.contains(c)) {
             return "\\u" + (String.format("%04X", (short) c));
-        } else if (c >= 0x7F && c < 0xA1) {
-            return "\\u" + (String.format("%04X", (short) c));
-        } else if (c > 0xFF) {
-            return "\\u" + (String.format("%04X", (short) c));
-        } else if (escapeCharacters.contains(c)) {
-            return "\\" + c;
         } else {
             return c + "";
         }
