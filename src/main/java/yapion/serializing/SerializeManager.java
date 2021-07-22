@@ -165,9 +165,11 @@ public class SerializeManager {
             });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            throw new IllegalStateException(e.getMessage(), e);
         }
         if (serializerMap.isEmpty()) {
             log.error("No Serializer was loaded. Please inspect.");
+            throw new IllegalStateException("No Serializer was loaded. Please inspect.");
         }
 
         initialized = true;
