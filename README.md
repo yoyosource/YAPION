@@ -37,7 +37,7 @@ dependencies {
 }
 ```
 
-# APIs used
+# APIs/Libs/Other used
 - easymock/objenesis (https://github.com/easymock/objenesis)
   - [V] 3.1
   - [L] Apache-2.0
@@ -53,7 +53,8 @@ dependencies {
 - rmuller/infomas-asl (https://github.com/rmuller/infomas-asl)
   - [V] 3.0.5
   - [L] Apache-2.0
-- eppleton/frgaal (https://github.com/eppleton/frgaal) I am using the frgaal compiler to be able to use newer java features in an older environment.
+- eppleton/frgaal (https://github.com/eppleton/frgaal)
+  - I am using the frgaal compiler to be able to use newer java features in an older environment.
   - [V] 15.0.0
   - [L] GPL-2.0
 
