@@ -4,7 +4,7 @@ plugins {
     id 'java'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '5.0.0'
-    id 'org.frgaal.compiler' version '15.0.0'
+    id 'org.frgaal.compiler'
 
     id 'maven-publish'
     // id 'org.jetbrains.kotlin.jvm' version '1.5.0'
