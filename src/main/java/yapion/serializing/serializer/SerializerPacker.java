@@ -19,8 +19,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -42,22 +40,33 @@ public class SerializerPacker {
         ZarOutputStream zarOutputStream = new ZarOutputStream(new GZIPOutputStream(new FileOutputStream(destination), 512));
 
         int substringLength = s.length() + 1;
-        Files.walk(source.toPath()).map(Path::toUri).map(File::new).filter(f -> f.getName().endsWith(".class")).forEach(f -> {
-            System.out.println("Packing: " + f.getAbsolutePath());
-            if (f.getName().equals("SerializerPacker.class")) return;
-            String fileName = f.getAbsolutePath().substring(substringLength);
-
-            try {
-                zarOutputStream.addFile(fileName, f.length());
-                FileInputStream fileInputStream = new FileInputStream(f);
-                for (int i = 0; i < f.length(); i++) {
-                    zarOutputStream.write(fileInputStream.read());
-                }
-            } catch (IOException e) {
-                throw new IllegalStateException("");
-            }
-        });
+        packIntoZarFile(zarOutputStream, substringLength, source);
         zarOutputStream.close();
         System.out.println("Destination Size: " + destination.length());
+    }
+
+    private static void packIntoZarFile(ZarOutputStream zarOutputStream, int substringLength, File file) throws IOException {
+        if (file == null) return;
+        File[] files = file.listFiles();
+        if (files == null) return;
+
+        for (File f : files) {
+            if (!f.isFile()) continue;
+
+            System.out.println("Packing: " + f.getAbsolutePath());
+            if (f.getName().equals("SerializerPacker.class")) continue;
+            String fileName = f.getAbsolutePath().substring(substringLength);
+
+            zarOutputStream.addFile(fileName, f.length());
+            FileInputStream fileInputStream = new FileInputStream(f);
+            for (int i = 0; i < f.length(); i++) {
+                zarOutputStream.write(fileInputStream.read());
+            }
+        }
+
+        for (File f : files) {
+            if (!f.isDirectory()) continue;
+            packIntoZarFile(zarOutputStream, substringLength, f);
+        }
     }
 }
