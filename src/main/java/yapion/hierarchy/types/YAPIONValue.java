@@ -17,20 +17,19 @@ import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.types.value.*;
-import yapion.hierarchy.types.value.HexNumberHandler.ByteHexHandler;
-import yapion.hierarchy.types.value.HexNumberHandler.IntegerHexHandler;
-import yapion.hierarchy.types.value.HexNumberHandler.LongHexHandler;
-import yapion.hierarchy.types.value.HexNumberHandler.ShortHexHandler;
+import yapion.hierarchy.types.value.ValueHandler;
+import yapion.hierarchy.types.value.ValueHandlerUtils;
+import yapion.hierarchy.types.value.ValueUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-import static yapion.hierarchy.types.value.FractionNumberHandler.*;
-import static yapion.hierarchy.types.value.WholeNumberHandler.*;
 import static yapion.utils.IdentifierUtils.*;
 
 public class YAPIONValue<T> extends YAPIONValueType {
