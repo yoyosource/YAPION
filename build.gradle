@@ -121,6 +121,7 @@ task processMetaINF {
 }
 jar.finalizedBy(processMetaINF)
 
+/*
 task afterTest {
     description 'Process Tests'
     group "verification"
@@ -136,6 +137,7 @@ task afterTest {
     }
 }
 test.finalizedBy(afterTest)
+*/
 
 shadowJar {
     manifest {
