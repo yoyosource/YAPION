@@ -158,9 +158,11 @@ public class SerializeManager {
                 });
             });
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage(), e);
         }
         if (serializerMap.isEmpty()) {
+            System.out.println("EMPTY");
             log.error("No Serializer was loaded. Please inspect.");
         }
 
