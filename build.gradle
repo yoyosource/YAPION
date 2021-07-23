@@ -57,8 +57,8 @@ dependencies {
     testAnnotationProcessor 'org.atteo.classindex:classindex:3.4'
 
     if (file("./libs/YAPION-SNAPSHOT.jar").exists()) {
-        annotationProcessor files("./libs/YAPION-SNAPSHOT.jar")
-        testAnnotationProcessor files("./libs/YAPION-SNAPSHOT.jar")
+        // annotationProcessor files("./libs/YAPION-SNAPSHOT.jar")
+        // testAnnotationProcessor files("./libs/YAPION-SNAPSHOT.jar")
     }
 
     implementation 'org.objenesis:objenesis:3.1'
@@ -120,6 +120,22 @@ task processMetaINF {
     }
 }
 jar.finalizedBy(processMetaINF)
+
+task afterTest {
+    description 'Process Tests'
+    group "verification"
+
+    doLast {
+        File file = new File("${buildDir}/test-results/test/TEST-yapion.utils.ReflectionsTest.xml");
+        def line = 0;
+        file.withReader { reader ->
+            while ((line = reader.readLine()) != null) {
+                println "${line}"
+            }
+        }
+    }
+}
+test.finalizedBy(afterTest)
 
 shadowJar {
     manifest {
