@@ -25,6 +25,7 @@ public class ZarInputStream extends InputStream implements AutoCloseable {
     private YAPIONObject metaData;
     private long size;
 
+    private boolean hasNext = false;
     private final InputStream inputStream;
     private long lengthLeft;
 
@@ -33,13 +34,14 @@ public class ZarInputStream extends InputStream implements AutoCloseable {
         if (inputStream.read() != 'z' || inputStream.read() != 'a' || inputStream.read() != 'r') {
             throw new IOException("Illegal Identifier");
         }
+        nextFile();
     }
 
-    public boolean hasFile() throws IOException {
-        return lengthLeft == 0 && inputStream.available() > 0;
+    public boolean hasFile() {
+        return hasNext;
     }
 
-    public void nextFile() throws IOException {
+    private void nextFile() throws IOException {
         if (lengthLeft != 0) {
             throw new IOException("Last File was not finished completely");
         }
@@ -51,6 +53,7 @@ public class ZarInputStream extends InputStream implements AutoCloseable {
         }
         name = st.toString();
 
+        hasNext = length != 0;
         length = readLength();
         if (length == 0) {
             metaData = new YAPIONObject();
@@ -59,6 +62,7 @@ public class ZarInputStream extends InputStream implements AutoCloseable {
         }
 
         lengthLeft = readLength();
+        hasNext &= lengthLeft != 0;
         size = lengthLeft;
     }
 
@@ -84,7 +88,11 @@ public class ZarInputStream extends InputStream implements AutoCloseable {
             throw new IOException("Last File is completed");
         }
         lengthLeft--;
-        return inputStream.read();
+        int b = inputStream.read();
+        if (lengthLeft == 0) {
+            nextFile();
+        }
+        return b;
     }
 
     private long readLength() throws IOException {

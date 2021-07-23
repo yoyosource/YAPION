@@ -49,7 +49,7 @@ import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
 @UtilityClass
 public class SerializeManager {
 
-    private final boolean SYS_LOGGER = true;
+    private final boolean SYS_LOGGER = false;
 
     private final InternalSerializer<Object> defaultSerializer = null;
     private final InternalSerializer<Void> defaultNullSerializer = new InternalSerializer<Void>() {
@@ -119,8 +119,6 @@ public class SerializeManager {
             int deepest = 0;
 
             while (zarInputStream.hasFile()) {
-                zarInputStream.nextFile();
-
                 String name = zarInputStream.getFile();
                 long size = zarInputStream.getSize();
 

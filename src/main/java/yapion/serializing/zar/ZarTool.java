@@ -138,9 +138,8 @@ public class ZarTool {
 
         ZarInputStream zarInputStream = new ZarInputStream(new BufferedInputStream(new FileInputStream(archive)));
         while (zarInputStream.hasFile()) {
-            zarInputStream.nextFile();
-
             File file = new File(destination, zarInputStream.getFile());
+            System.out.println(file);
             file.getParentFile().mkdirs();
             file.createNewFile();
 
@@ -174,8 +173,6 @@ public class ZarTool {
 
         ZarInputStream zarInputStream = new ZarInputStream(new BufferedInputStream(new FileInputStream(archive)));
         while (zarInputStream.hasFile()) {
-            zarInputStream.nextFile();
-
             System.out.println(zarInputStream.getFile() + "   " + zarInputStream.getSize() + "   " + zarInputStream.getMetaData());
             for (long i = 0; i < zarInputStream.getSize(); i++) {
                 zarInputStream.read();

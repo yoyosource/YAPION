@@ -35,12 +35,14 @@ public class ZarOutputStream extends OutputStream implements AutoCloseable {
 
         writeLength(name.length());
         outputStream.write(name.getBytes());
+
         if (metaData == null) {
             writeLength(0);
         } else {
             writeLength(metaData.toLength());
             metaData.toStream(outputStream);
         }
+
         writeLength(length);
         lengthLeft = length;
     }
@@ -77,6 +79,12 @@ public class ZarOutputStream extends OutputStream implements AutoCloseable {
     }
 
     public void close() throws IOException {
+        outputStream.write((byte) 0);
+        outputStream.write((byte) 0);
+        outputStream.write((byte) 0);
+        outputStream.write((byte) 0);
+        outputStream.write((byte) 0);
+        outputStream.write((byte) 0);
         outputStream.close();
     }
 }
