@@ -77,8 +77,8 @@ public class JSONMapper {
     }
 
     private YAPIONAnyType map(YAPIONAnyType yapionAnyType) {
-        if (yapionAnyType instanceof YAPIONArray) {
-            return mapArray((YAPIONArray) yapionAnyType);
+        if (yapionAnyType instanceof YAPIONArray yapionArray) {
+            return mapArray(yapionArray);
         }
         if (!(yapionAnyType instanceof YAPIONObject)) {
             return yapionAnyType;

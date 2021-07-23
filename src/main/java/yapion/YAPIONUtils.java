@@ -16,6 +16,7 @@ package yapion;
 import lombok.experimental.UtilityClass;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
@@ -235,10 +236,9 @@ public class YAPIONUtils {
         YAPIONObject output = new YAPIONObject();
         walk(yapionObject, YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES).forEach(s -> {
             String path = s.getPath().join(".");
-            if (s instanceof YAPIONPointer) {
-                MethodReturnValue<Object> objectOptional = ReflectionsUtils.invokeMethod("getYAPIONObject", s);
-                if (!objectOptional.isPresent()) return;
-                output.add(path, "@pointer:" + String.join(",", ((YAPIONObject) objectOptional.get()).getPath().getPath()));
+            if (s instanceof YAPIONPointer yapionPointer) {
+                YAPIONDataType<?, ?> dataType = yapionPointer.get();
+                output.add(path, "@pointer:" + String.join(",", dataType.getPath().getPath()));
             } else {
                 output.add(path, s.internalCopy());
             }

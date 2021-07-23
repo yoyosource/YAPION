@@ -197,18 +197,18 @@ public final class YAPIONDeserializer {
      */
     @SuppressWarnings({"java:S3740"})
     public Object parse(YAPIONAnyType yapionAnyType) {
-        if (yapionAnyType instanceof YAPIONPointer) {
-            return pointerMap.getOrDefault(((YAPIONPointer) yapionAnyType).get(), null);
+        if (yapionAnyType instanceof YAPIONPointer yapionPointer) {
+            return pointerMap.getOrDefault(yapionPointer.get(), null);
         }
-        if (yapionAnyType instanceof YAPIONValue) {
-            return ((YAPIONValue) yapionAnyType).get();
+        if (yapionAnyType instanceof YAPIONValue yapionValue) {
+            return yapionValue.get();
         }
-        if (yapionAnyType instanceof YAPIONObject) {
-            return new YAPIONDeserializer((YAPIONObject) yapionAnyType, this).parse().getObject();
+        if (yapionAnyType instanceof YAPIONObject yapionObject) {
+            return new YAPIONDeserializer(yapionObject, this).parse().getObject();
         }
-        if (yapionAnyType instanceof YAPIONArray) {
-            Object o = SerializeManager.getArraySerializer().deserialize(new DeserializeData<>(yapionAnyType, contextManager.get(), this, typeReMapper));
-            pointerMap.put((YAPIONDataType<?, ?>) yapionAnyType, o);
+        if (yapionAnyType instanceof YAPIONArray yapionArray) {
+            Object o = SerializeManager.getArraySerializer().deserialize(new DeserializeData<>(yapionArray, contextManager.get(), this, typeReMapper));
+            pointerMap.put(yapionArray, o);
             return o;
         }
         return null;
@@ -272,8 +272,8 @@ public final class YAPIONDeserializer {
             arrayType = fieldType.getTypeName();
 
             YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(field.getName());
-            if (!YAPIONAnyType.class.isAssignableFrom(fieldType) && yapionAnyType instanceof YAPIONObject && !((YAPIONObject) yapionAnyType).containsKey(TYPE_IDENTIFIER, String.class)) {
-                ((YAPIONObject) yapionAnyType).add(TYPE_IDENTIFIER, arrayType);
+            if (!YAPIONAnyType.class.isAssignableFrom(fieldType) && yapionAnyType instanceof YAPIONObject currentObject && !((YAPIONObject) yapionAnyType).containsKey(TYPE_IDENTIFIER, String.class)) {
+                currentObject.add(TYPE_IDENTIFIER, arrayType);
             }
             YAPIONDeserializeType yapionDeserializeType = field.getDeclaredAnnotation(YAPIONDeserializeType.class);
             if (specialSet(field, yapionAnyType)) {
@@ -337,8 +337,8 @@ public final class YAPIONDeserializer {
      * Parses the YAPIONObject to the Object.
      */
     public YAPIONDeserializer parse() {
-        if (serializingType instanceof YAPIONObject) {
-            return parseObject((YAPIONObject) serializingType);
+        if (serializingType instanceof YAPIONObject yapionObject) {
+            return parseObject(yapionObject);
         } else {
             object = parse((YAPIONArray) serializingType);
             return this;

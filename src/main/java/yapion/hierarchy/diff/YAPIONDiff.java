@@ -141,22 +141,19 @@ public class YAPIONDiff {
                 return;
             }
             diffs.add(new DiffChange(first.getPath(), first, second));
-        } else if (first instanceof YAPIONObject) {
-            YAPIONObject firstObject = (YAPIONObject) first;
+        } else if (first instanceof YAPIONObject firstObject) {
             YAPIONObject secondObject = (YAPIONObject) second;
             if (firstObject.equals(secondObject)) {
                 return;
             }
             diffs.addAll(new YAPIONDiff(firstObject, secondObject).diffs);
-        } else if (first instanceof YAPIONArray) {
-            YAPIONArray firstArray = (YAPIONArray) first;
+        } else if (first instanceof YAPIONArray firstArray) {
             YAPIONArray secondArray = (YAPIONArray) second;
             if (firstArray.equals(secondArray)) {
                 return;
             }
             diffs.addAll(new YAPIONDiff(firstArray, secondArray).diffs);
-        } else if (first instanceof YAPIONMap) {
-            YAPIONMap firstMap = (YAPIONMap) first;
+        } else if (first instanceof YAPIONMap firstMap) {
             YAPIONMap secondMap = (YAPIONMap) second;
             if (firstMap.equals(secondMap)) {
                 return;

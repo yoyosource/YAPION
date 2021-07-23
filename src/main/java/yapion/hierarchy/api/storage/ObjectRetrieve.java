@@ -48,8 +48,8 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
     default YAPIONObject getObject(@NonNull K key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (yapionAnyType instanceof YAPIONObject) {
-            return (YAPIONObject) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONObject yapionObject) {
+            return yapionObject;
         }
         return null;
     }
@@ -57,8 +57,8 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
     default YAPIONObject getObjectOrDefault(@NonNull K key, YAPIONObject defaultValue) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return defaultValue;
-        if (yapionAnyType instanceof YAPIONObject) {
-            return (YAPIONObject) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONObject yapionObject) {
+            return yapionObject;
         }
         return defaultValue;
     }
@@ -75,8 +75,8 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
     default YAPIONArray getArray(@NonNull K key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (yapionAnyType instanceof YAPIONArray) {
-            return (YAPIONArray) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONArray yapionArray) {
+            return yapionArray;
         }
         return null;
     }
@@ -84,8 +84,8 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
     default YAPIONArray getArrayOrDefault(@NonNull K key, YAPIONArray defaultValue) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return defaultValue;
-        if (yapionAnyType instanceof YAPIONArray) {
-            return (YAPIONArray) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONArray yapionArray) {
+            return yapionArray;
         }
         return defaultValue;
     }
@@ -102,8 +102,8 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
     default YAPIONMap getMap(@NonNull K key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (yapionAnyType instanceof YAPIONMap) {
-            return (YAPIONMap) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONMap yapionMap) {
+            return yapionMap;
         }
         return null;
     }
@@ -111,8 +111,8 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
     default YAPIONMap getMapOrDefault(@NonNull K key, YAPIONMap defaultValue) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return defaultValue;
-        if (yapionAnyType instanceof YAPIONMap) {
-            return (YAPIONMap) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONMap yapionMap) {
+            return yapionMap;
         }
         return defaultValue;
     }
@@ -129,8 +129,8 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
     default YAPIONPointer getPointer(@NonNull K key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (yapionAnyType instanceof YAPIONPointer) {
-            return (YAPIONPointer) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONPointer yapionPointer) {
+            return yapionPointer;
         }
         return null;
     }
@@ -138,8 +138,8 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
     default YAPIONPointer getPointerOrDefault(@NonNull K key, YAPIONPointer defaultValue) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return defaultValue;
-        if (yapionAnyType instanceof YAPIONPointer) {
-            return (YAPIONPointer) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONPointer yapionPointer) {
+            return yapionPointer;
         }
         return defaultValue;
     }
@@ -157,8 +157,8 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
     default YAPIONValue getValue(@NonNull K key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (yapionAnyType instanceof YAPIONValue) {
-            return (YAPIONValue) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONValue yapionValue) {
+            return yapionValue;
         }
         return null;
     }
@@ -183,13 +183,10 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (!(yapionAnyType instanceof YAPIONValue)) {
-            return null;
+        if (yapionAnyType instanceof YAPIONValue<?> yapionValue && yapionValue.isValidCastType(type)) {
+            return (YAPIONValue<T>) yapionAnyType;
         }
-        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName())) {
-            return null;
-        }
-        return (YAPIONValue<T>) yapionAnyType;
+        return null;
     }
 
     default <T> YAPIONValue<T> getValueOrDefault(@NonNull K key, Class<T> type, T defaultValue) {
@@ -217,13 +214,10 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (!(yapionAnyType instanceof YAPIONValue)) {
-            return null;
+        if (yapionAnyType instanceof YAPIONValue<?> yapionValue && yapionValue.isValidCastType(type == null ? null : type.getClass())) {
+            return (YAPIONValue<T>) yapionAnyType;
         }
-        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getClass().getTypeName())) {
-            return null;
-        }
-        return (YAPIONValue<T>) yapionAnyType;
+        return null;
     }
 
     default <T> YAPIONValue<T> getValueOrDefault(@NonNull K key, T defaultValue) {

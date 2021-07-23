@@ -64,8 +64,8 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
 
             if (yapionAnyType == null) {
                 abstractOutput.consume("null");
-            } else if (yapionAnyType instanceof YAPIONValue) {
-                ((YAPIONValue) yapionAnyType).toStrippedYAPION(abstractOutput);
+            } else if (yapionAnyType instanceof YAPIONValue yapionValue) {
+                yapionValue.toStrippedYAPION(abstractOutput);
             } else {
                 yapionAnyType.toYAPION(abstractOutput);
             }
@@ -156,8 +156,10 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         try {
             YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
             if (yapionAnyType == null) return false;
-            if (!(yapionAnyType instanceof YAPIONValue)) return false;
-            return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
+            if (yapionAnyType instanceof YAPIONValue<?> yapionValue) {
+                return yapionValue.isValidCastType(type);
+            }
+            return false;
         } catch (YAPIONArrayIndexOutOfBoundsException e) {
             return false;
         }

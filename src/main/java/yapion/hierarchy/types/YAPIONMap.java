@@ -151,8 +151,10 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return false;
-        if (!(yapionAnyType instanceof YAPIONValue)) return false;
-        return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
+        if (yapionAnyType instanceof YAPIONValue<?> yapionValue) {
+            return yapionValue.isValidCastType(type);
+        }
+        return false;
     }
 
     @Override
@@ -313,8 +315,8 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     public long deepSize() {
         long size = size();
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
-            if (entry.getKey() instanceof YAPIONDataType) size += ((YAPIONDataType) entry.getKey()).deepSize();
-            if (entry.getValue() instanceof YAPIONDataType) size += ((YAPIONDataType) entry.getValue()).deepSize();
+            if (entry.getKey() instanceof YAPIONDataType yapionDataType) size += yapionDataType.deepSize();
+            if (entry.getValue() instanceof YAPIONDataType yapionDataType) size += yapionDataType.deepSize();
         }
         return size;
     }

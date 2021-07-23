@@ -87,9 +87,9 @@ public class YAPIONValue<T> extends YAPIONValueType {
             abstractOutput.consume("null");
             return abstractOutput;
         }
-        if (value instanceof String) {
+        if (value instanceof String s) {
             abstractOutput.consume("\"")
-                    .consume(value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"))
+                    .consume(s.replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"))
                     .consume("\"");
             return abstractOutput;
         }
@@ -167,6 +167,11 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     public String getValueType() {
         return type;
+    }
+
+    public boolean isValidCastType(Class<?> type) {
+        if (type == null) return true;
+        return isValidCastType(type.getTypeName());
     }
 
     public boolean isValidCastType(String type) {

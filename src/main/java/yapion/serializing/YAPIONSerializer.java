@@ -257,16 +257,16 @@ public final class YAPIONSerializer {
      * @return YAPIONObject from the object to serialize
      */
     public <T extends YAPIONAnyType> T getReducedYAPIONObject() {
-        if (result instanceof YAPIONObject) {
-            removeTypeVariables((YAPIONObject) result);
+        if (result instanceof YAPIONObject yapionObject) {
+            removeTypeVariables(yapionObject);
         }
         return (T) result;
     }
 
     private static void removeTypeVariables(YAPIONObject yapionObject) {
-        yapionObject.stream().filter(yapionAnyType -> yapionAnyType instanceof YAPIONObject).forEach(yapionAnyType -> {
-            ((YAPIONObject) yapionAnyType).remove(TYPE_IDENTIFIER);
-            removeTypeVariables((YAPIONObject) yapionAnyType);
+        yapionObject.stream().filter(YAPIONObject.class::isInstance).map(YAPIONObject.class::cast).forEach(current -> {
+            current.remove(TYPE_IDENTIFIER);
+            removeTypeVariables(current);
         });
     }
 }

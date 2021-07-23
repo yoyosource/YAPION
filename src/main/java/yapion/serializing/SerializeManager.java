@@ -147,10 +147,10 @@ public class SerializeManager {
         if (clazz.getInterfaces().length != 1) return null;
         Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
         if (o == null) return null;
-        if (o instanceof YAPIONSerializerRegistrator) {
-            ((YAPIONSerializerRegistrator) o).register();
-        } else if (o instanceof InternalSerializer) {
-            internalSerializerConsumer.accept((InternalSerializer<?>) o);
+        if (o instanceof YAPIONSerializerRegistrator yapionSerializerRegistrator) {
+            yapionSerializerRegistrator.register();
+        } else if (o instanceof InternalSerializer internalSerializer) {
+            internalSerializerConsumer.accept(internalSerializer);
         }
         return o;
     }

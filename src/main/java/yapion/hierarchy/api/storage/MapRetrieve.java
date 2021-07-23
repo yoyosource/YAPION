@@ -14,7 +14,6 @@
 package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
-import yapion.annotations.api.DeprecationInfo;
 import yapion.annotations.api.YAPIONEveryType;
 import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.exceptions.utils.YAPIONRetrieveException;
@@ -23,8 +22,6 @@ import yapion.hierarchy.api.internal.InternalRetrieve;
 import yapion.hierarchy.types.*;
 import yapion.utils.ClassUtils;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.function.Consumer;
 
 public interface MapRetrieve<K> extends InternalRetrieve<K> {
@@ -66,8 +63,8 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     default <@YAPIONEveryType T> YAPIONObject getObject(@NonNull T key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (yapionAnyType instanceof YAPIONObject) {
-            return (YAPIONObject) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONObject yapionObject) {
+            return yapionObject;
         }
         return null;
     }
@@ -84,8 +81,8 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     default <@YAPIONEveryType T> YAPIONArray getArray(@NonNull T key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (yapionAnyType instanceof YAPIONArray) {
-            return (YAPIONArray) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONArray yapionArray) {
+            return yapionArray;
         }
         return null;
     }
@@ -102,8 +99,8 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     default <@YAPIONEveryType T> YAPIONMap getMap(@NonNull T key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (yapionAnyType instanceof YAPIONMap) {
-            return (YAPIONMap) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONMap yapionMap) {
+            return yapionMap;
         }
         return null;
     }
@@ -120,8 +117,8 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     default <@YAPIONEveryType T> YAPIONPointer getPointer(@NonNull T key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (yapionAnyType instanceof YAPIONPointer) {
-            return (YAPIONPointer) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONPointer yapionPointer) {
+            return yapionPointer;
         }
         return null;
     }
@@ -139,8 +136,8 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     default <@YAPIONEveryType T> YAPIONValue getValue(@NonNull T key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (yapionAnyType instanceof YAPIONValue) {
-            return (YAPIONValue) yapionAnyType;
+        if (yapionAnyType instanceof YAPIONValue<?> yapionValue) {
+            return yapionValue;
         }
         return null;
     }
@@ -165,13 +162,10 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (!(yapionAnyType instanceof YAPIONValue)) {
-            return null;
+        if (yapionAnyType instanceof YAPIONValue<?> yapionValue && yapionValue.isValidCastType(type)) {
+            return (YAPIONValue<C>) yapionAnyType;
         }
-        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName())) {
-            return null;
-        }
-        return (YAPIONValue<C>) yapionAnyType;
+        return null;
     }
 
     default <@YAPIONEveryType T, C> YAPIONValue<C> getValueOrDefault(@NonNull T key, Class<C> type, C defaultValue) {
@@ -199,13 +193,10 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;
-        if (!(yapionAnyType instanceof YAPIONValue)) {
-            return null;
+        if (yapionAnyType instanceof YAPIONValue<?> yapionValue && yapionValue.isValidCastType(type == null ? null : type.getClass())) {
+            return (YAPIONValue<C>) yapionAnyType;
         }
-        if (!((YAPIONValue) yapionAnyType).isValidCastType(type.getClass().getTypeName())) {
-            return null;
-        }
-        return (YAPIONValue<C>) yapionAnyType;
+        return null;
     }
 
     default <@YAPIONEveryType T, C> YAPIONValue<C> getValueOrDefault(@NonNull T key, C defaultValue) {
@@ -220,7 +211,7 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
     @SuppressWarnings("unchecked")
     default <@YAPIONEveryType T, C> C getPlainValue(@NonNull T key) {
         YAPIONValue<C> yapionValue = getValue(key);
-        if (yapionValue == null) throw new YAPIONRetrieveException("Key '" + key.toString() + "' has no YAPIONValue associated with it");
+        if (yapionValue == null) throw new YAPIONRetrieveException("Key '" + key + "' has no YAPIONValue associated with it");
         return yapionValue.get();
     }
 

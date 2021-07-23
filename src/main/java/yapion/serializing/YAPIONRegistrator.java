@@ -39,59 +39,59 @@ public final class YAPIONRegistrator {
 
     static {
         registerPredicates.add(o -> {
-            if (o instanceof YAPIONSerializerRegistrator) {
-                ((YAPIONSerializerRegistrator) o).register();
+            if (o instanceof YAPIONSerializerRegistrator yapionSerializerRegistrator) {
+                yapionSerializerRegistrator.register();
                 return true;
             }
             return false;
         });
 
         registerPredicates.add(o -> {
-            if (o instanceof InstanceFactory) {
-                SerializeManager.add((InstanceFactory<?>) o);
+            if (o instanceof InstanceFactory<?> instanceFactory) {
+                SerializeManager.add(instanceFactory);
                 return true;
             }
             return false;
         });
         registerPredicates.add(o -> {
-            if (o instanceof SerializerList) {
-                SerializeManager.add((SerializerList<?>) o);
+            if (o instanceof SerializerList<?> serializerList) {
+                SerializeManager.add(serializerList);
                 return true;
             }
             return false;
         });
         registerPredicates.add(o -> {
-            if (o instanceof SerializerMap) {
-                SerializeManager.add((SerializerMap<?>) o);
+            if (o instanceof SerializerMap<?> serializerMap) {
+                SerializeManager.add(serializerMap);
                 return true;
             }
             return false;
         });
         registerPredicates.add(o -> {
-            if (o instanceof SerializerObject) {
-                SerializeManager.add((SerializerObject<?>) o);
+            if (o instanceof SerializerObject<?> serializerObject) {
+                SerializeManager.add(serializerObject);
                 return true;
             }
             return false;
         });
         registerPredicates.add(o -> {
-            if (o instanceof SerializerQueue) {
-                SerializeManager.add((SerializerQueue<?>) o);
+            if (o instanceof SerializerQueue<?> serializerQueue) {
+                SerializeManager.add(serializerQueue);
                 return true;
             }
             return false;
         });
         registerPredicates.add(o -> {
-            if (o instanceof SerializerSet) {
-                SerializeManager.add((SerializerSet<?>) o);
+            if (o instanceof SerializerSet<?> serializerSet) {
+                SerializeManager.add(serializerSet);
                 return true;
             }
             return false;
         });
 
         registerPredicates.add(o -> {
-            if (o instanceof Class<?>) {
-                MethodReturnValue<Object> methodReturnValue = constructObject((Class<?>) o);
+            if (o instanceof Class<?> clazz) {
+                MethodReturnValue<Object> methodReturnValue = constructObject(clazz);
                 if (methodReturnValue.isEmpty()) return false;
                 return loadRegistrator(methodReturnValue.get());
             }

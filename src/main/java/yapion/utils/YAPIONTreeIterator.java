@@ -70,11 +70,11 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
     }
 
     public int availableValues() {
-        return (int) yapionAnyTypes.stream().filter(yapionAnyType -> yapionAnyType instanceof YAPIONValueType).count();
+        return (int) yapionAnyTypes.stream().filter(YAPIONValueType.class::isInstance).count();
     }
 
     public int availableDatas() {
-        return (int) yapionAnyTypes.stream().filter(yapionAnyType -> yapionAnyType instanceof YAPIONDataType).count();
+        return (int) yapionAnyTypes.stream().filter(YAPIONDataType.class::isInstance).count();
     }
 
     // private int max = 0;
@@ -88,8 +88,8 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
             // max = Math.max(max, yapionAnyTypes.size());
             // System.out.println("MAX: " + max + "   VALUES: " + availableValues() + "   DATAS: " + availableDatas() + "   AVAILABLE: " + available());
             YAPIONAnyType yapionAnyType = yapionAnyTypes.removeFirst();
-            if (yapionAnyType instanceof YAPIONDataType) {
-                add((YAPIONDataType) yapionAnyType);
+            if (yapionAnyType instanceof YAPIONDataType<?, ?> yapionAnyTypes) {
+                add(yapionAnyTypes);
                 if (option != YAPIONTreeIteratorOption.TRAVERSE_VALUE_TYPES) return yapionAnyType;
             } else {
                 return yapionAnyType;

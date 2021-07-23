@@ -143,8 +143,10 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
         }
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return false;
-        if (!(yapionAnyType instanceof YAPIONValue)) return false;
-        return ((YAPIONValue) yapionAnyType).isValidCastType(type.getTypeName());
+        if (yapionAnyType instanceof YAPIONValue yapionValue) {
+            return yapionValue.isValidCastType(type);
+        }
+        return false;
     }
 
     @Override
