@@ -77,6 +77,10 @@ public class SetSerializer implements FinalInternalSerializer<Set<?>> {
         return HashSet.class;
     }
 
+    private Set<?> createDefaultImplementation() {
+        return new HashSet<>();
+    }
+
     @Override
     public Class<?> interfaceType() {
         return Set.class;
@@ -104,10 +108,8 @@ public class SetSerializer implements FinalInternalSerializer<Set<?>> {
         }
         try {
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
-            Set<?> list = SerializingUtils.deserializeCollection(deserializeData, yapionArray, (Set<Object>) defaultImplementation().newInstance());
+            Set<?> list = SerializingUtils.deserializeCollection(deserializeData, yapionArray, (Set<Object>) createDefaultImplementation());
             return wrapper.getOrDefault(ClassUtils.getClass(((YAPIONObject) deserializeData.object).getPlainValue(TYPE_IDENTIFIER)), objects -> objects).apply(list);
-        } catch (InstantiationException e) {
-            throw new YAPIONDeserializerException(e.getMessage(), e);
         } catch (YAPIONException e) {
             throw e;
         } catch (Exception e) {

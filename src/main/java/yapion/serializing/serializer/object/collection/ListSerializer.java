@@ -56,6 +56,10 @@ public class ListSerializer implements FinalInternalSerializer<List<?>> {
         return ArrayList.class;
     }
 
+    private List<?> createDefaultImplementation() {
+        return new ArrayList<>();
+    }
+
     @Override
     public Class<?> interfaceType() {
         return List.class;
@@ -80,10 +84,8 @@ public class ListSerializer implements FinalInternalSerializer<List<?>> {
         }
         try {
             YAPIONArray yapionArray = ((YAPIONObject) deserializeData.object).getArray("values");
-            List<?> list = SerializingUtils.deserializeCollection(deserializeData, yapionArray, (List<Object>) defaultImplementation().newInstance());
+            List<?> list = SerializingUtils.deserializeCollection(deserializeData, yapionArray, (List<Object>) createDefaultImplementation());
             return wrapper.getOrDefault(ClassUtils.getClass(((YAPIONObject) deserializeData.object).getPlainValue(TYPE_IDENTIFIER)), objects -> objects).apply(list);
-        } catch (InstantiationException e) {
-            throw new YAPIONDeserializerException(e.getMessage(), e);
         } catch (YAPIONException e) {
             throw e;
         } catch (Exception e) {

@@ -80,6 +80,10 @@ public class MapSerializer implements FinalInternalSerializer<Map<?, ?>> {
         return HashMap.class;
     }
 
+    private Map<?, ?> createDefaultImplementation() {
+        return new HashMap<>();
+    }
+
     @Override
     public Class<?> interfaceType() {
         return Map.class;
@@ -107,10 +111,8 @@ public class MapSerializer implements FinalInternalSerializer<Map<?, ?>> {
         }
         try {
             YAPIONMap yapionMap = ((YAPIONObject) deserializeData.object).getMap("values");
-            Map<?, ?> map = SerializingUtils.deserializeMap(deserializeData, yapionMap, (Map<Object, Object>) defaultImplementation().newInstance());
+            Map<?, ?> map = SerializingUtils.deserializeMap(deserializeData, yapionMap, (Map<Object, Object>) createDefaultImplementation());
             return wrapper.getOrDefault(ClassUtils.getClass(((YAPIONObject) deserializeData.object).getPlainValue(TYPE_IDENTIFIER)), objects -> objects).apply(map);
-        } catch (InstantiationException e) {
-            throw new YAPIONDeserializerException(e.getMessage(), e);
         } catch (YAPIONException e) {
             throw e;
         } catch (Exception e) {
