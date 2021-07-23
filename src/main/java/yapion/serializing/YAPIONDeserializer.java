@@ -222,7 +222,7 @@ public final class YAPIONDeserializer {
         try {
             clazz = Class.forName(type);
         } catch (ClassNotFoundException e) {
-            log.warn("The class '" + type + "' was not found.", e.getCause());
+            log.warn("The class '" + type + "' was not found.", e.getException());
             return this;
         }
 

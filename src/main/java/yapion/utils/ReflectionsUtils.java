@@ -199,7 +199,7 @@ public class ReflectionsUtils {
         try {
             return constructObjectObjenesis(Class.forName(className));
         } catch (ClassNotFoundException e) {
-            log.info("Exception while creating an Object with Objenesis because the specified class '" + className + "' was not found", e.getCause());
+            log.info("Exception while creating an Object with Objenesis because the specified class '" + className + "' was not found", e.getException());
             return null;
         }
     }
@@ -312,8 +312,8 @@ public class ReflectionsUtils {
             log.info("Exception while creating an Object with normal Constructor", e.getCause());
             throw new YAPIONReflectionException(e.getMessage(), e.getCause());
         } catch (ClassNotFoundException e) {
-            log.info("Exception while creating an Object with normal Constructor because the specified class '" + className + "' was not found", e.getCause());
-            throw new YAPIONReflectionException(e.getMessage(), e.getCause());
+            log.info("Exception while creating an Object with normal Constructor because the specified class '" + className + "' was not found", e.getException());
+            throw new YAPIONReflectionException(e.getMessage(), e.getException());
         }
     }
 
