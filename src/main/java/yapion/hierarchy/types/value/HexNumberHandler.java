@@ -14,6 +14,7 @@
 package yapion.hierarchy.types.value;
 
 import lombok.experimental.UtilityClass;
+import yapion.utils.IdentifierUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
@@ -25,6 +26,11 @@ public class HexNumberHandler {
         @Override
         public String type() {
             return "";
+        }
+
+        @Override
+        public String typeIdentifier() {
+            return null;
         }
 
         @Override
@@ -77,6 +83,11 @@ public class HexNumberHandler {
         }
 
         @Override
+        public String typeIdentifier() {
+            return null;
+        }
+
+        @Override
         public int index() {
             return 1;
         }
@@ -126,6 +137,11 @@ public class HexNumberHandler {
         }
 
         @Override
+        public String typeIdentifier() {
+            return null;
+        }
+
+        @Override
         public int index() {
             return 2;
         }
@@ -172,6 +188,11 @@ public class HexNumberHandler {
         @Override
         public String type() {
             return "";
+        }
+
+        @Override
+        public String typeIdentifier() {
+            return null;
         }
 
         @Override

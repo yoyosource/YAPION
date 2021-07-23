@@ -28,6 +28,11 @@ public final class StringHandler implements ValueHandler<String> {
     }
 
     @Override
+    public String typeIdentifier() {
+        return null;
+    }
+
+    @Override
     public int index() {
         return 15;
     }

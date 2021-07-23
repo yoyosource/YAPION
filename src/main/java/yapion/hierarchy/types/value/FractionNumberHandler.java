@@ -14,6 +14,7 @@
 package yapion.hierarchy.types.value;
 
 import lombok.experimental.UtilityClass;
+import yapion.utils.IdentifierUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
@@ -27,6 +28,11 @@ public class FractionNumberHandler {
         @Override
         public String type() {
             return Float.class.getTypeName();
+        }
+
+        @Override
+        public String typeIdentifier() {
+            return IdentifierUtils.FLOAT_IDENTIFIER;
         }
 
         @Override
@@ -78,6 +84,11 @@ public class FractionNumberHandler {
         }
 
         @Override
+        public String typeIdentifier() {
+            return IdentifierUtils.DOUBLE_IDENTIFIER;
+        }
+
+        @Override
         public int index() {
             return 12;
         }
@@ -119,6 +130,11 @@ public class FractionNumberHandler {
     }
 
     public static class BigDecimalHandler implements ValueHandler<BigDecimal> {
+
+        @Override
+        public String typeIdentifier() {
+            return IdentifierUtils.BIG_DECIMAL_IDENTIFIER;
+        }
 
         @Override
         public String type() {

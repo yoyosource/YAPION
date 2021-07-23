@@ -25,37 +25,13 @@ import yapion.utils.ReferenceFunction;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-
-import static yapion.utils.IdentifierUtils.*;
 
 public class YAPIONValue<T> extends YAPIONValueType {
 
-    private static final String[] allowedTypes = new String[] {
-            "java.lang.Boolean",
-            "java.lang.Byte", "java.lang.Short", "java.lang.Integer", "java.lang.Long", "java.math.BigInteger",
-            "java.lang.Float", "java.lang.Double", "java.math.BigDecimal",
-            "java.lang.String", "java.lang.Character"
-    };
-    private static final Map<String, String> typeIdentifier = new HashMap<>();
-
     public static List<ValueHandler<?>> allValueHandlers() {
         return ValueHandlerUtils.allValueHandlers();
-    }
-
-    static {
-        typeIdentifier.put(allowedTypes[1], BYTE_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[2], SHORT_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[3], INT_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[4], LONG_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[5], BIG_INTEGER_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[6], FLOAT_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[7], DOUBLE_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[8], BIG_DECIMAL_IDENTIFIER);
-        typeIdentifier.put(allowedTypes[10], CHAR_IDENTIFIER);
     }
 
     private final T value;
@@ -64,7 +40,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     public YAPIONValue(T value) {
         if (!validType(value)) {
-            throw new YAPIONException("Invalid YAPIONValue type " + value.getClass().getTypeName() + " only " + String.join(", ", allowedTypes) + " allowed");
+            throw new YAPIONException("Invalid YAPIONValue type " + value.getClass().getTypeName() + " only " + String.join(", ", ValueHandlerUtils.allowedTypesArray()) + " allowed");
         }
         this.value = value;
         this.valueHandler = (ValueHandler<T>) ValueHandlerUtils.get(value == null ? null : value.getClass().getTypeName());
@@ -117,8 +93,8 @@ public class YAPIONValue<T> extends YAPIONValueType {
                     .consume("\"");
             return abstractOutput;
         }
-        if (typeIdentifier.containsKey(type) || value instanceof Character) {
-            abstractOutput.consume("{\"").consume(typeIdentifier.get(type)).consume("\":");
+        if (ValueHandlerUtils.containsTypeIdentifier(type) || value instanceof Character) {
+            abstractOutput.consume("{\"").consume(ValueHandlerUtils.getTypeIdentifier(type)).consume("\":");
             toJSONLossy(abstractOutput, true);
             abstractOutput.consume("}");
             return abstractOutput;
@@ -182,14 +158,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     public static boolean validType(Class<?> t) {
-        if (t == null) return true;
-        String typeName = t.getTypeName();
-        for (String allowedType : allowedTypes) {
-            if (allowedType.equals(typeName)) {
-                return true;
-            }
-        }
-        return false;
+        return t == null || ValueHandlerUtils.allowedType(t.getTypeName());
     }
 
     public T get() {

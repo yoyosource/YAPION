@@ -17,7 +17,6 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.YAPIONException;
-import yapion.serializing.SerializeManager;
 import yapion.utils.ReflectionsUtils;
 import yapion.utils.Unpacker;
 
@@ -33,6 +32,9 @@ public class ValueHandlerUtils {
     private static final List<ValueHandler<?>> valueHandlerList = new ArrayList<>();
     private static final Map<String, ValueHandler<?>> stringValueHandlerMap = new HashMap<>();
 
+    private static final Set<String> allowedTypes = new HashSet<>();
+    private static final Map<String, String> typeIdentifier = new HashMap<>();
+
     @InternalAPI
     public static List<ValueHandler<?>> allValueHandlers() {
         return valueHandlerList;
@@ -41,6 +43,26 @@ public class ValueHandlerUtils {
     @InternalAPI
     public static ValueHandler<?> get(String type) {
         return stringValueHandlerMap.get(type);
+    }
+
+    @InternalAPI
+    public static boolean allowedType(String type) {
+        return allowedTypes.contains(type);
+    }
+
+    @InternalAPI
+    public static String[] allowedTypesArray() {
+        return allowedTypes.toArray(new String[0]);
+    }
+
+    @InternalAPI
+    public static boolean containsTypeIdentifier(String type) {
+        return typeIdentifier.containsKey(type);
+    }
+
+    @InternalAPI
+    public static String getTypeIdentifier(String type) {
+        return typeIdentifier.get(type);
     }
 
     static {
@@ -64,7 +86,7 @@ public class ValueHandlerUtils {
         if (valueHandlerList.isEmpty()) {
             log.error("No ValueHandler was loaded. Please inspect.");
         }
-        valueHandlerList.sort(Comparator.comparing(valueHandler -> valueHandler.index()));
+        valueHandlerList.sort(Comparator.comparing(ValueHandler::index));
     }
 
     private static void internalAdd(Class<?> clazz) {
@@ -72,8 +94,13 @@ public class ValueHandlerUtils {
         if (clazz.getInterfaces().length != 1) return;
         Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
         if (o == null) return;
-        if (o instanceof ValueHandler valueHandler) {
+        if (o instanceof ValueHandler<?> valueHandler) {
+            allowedTypes.add(valueHandler.type());
+            if (valueHandler.typeIdentifier() != null) {
+                typeIdentifier.put(valueHandler.type(), valueHandler.typeIdentifier());
+            }
             valueHandlerList.add(valueHandler);
+            if (valueHandler.type() != null && valueHandler.type().isEmpty()) return;
             stringValueHandlerMap.put(valueHandler.type(), valueHandler);
         }
     }

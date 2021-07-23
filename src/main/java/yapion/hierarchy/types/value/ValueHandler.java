@@ -20,6 +20,8 @@ public interface ValueHandler<T> {
 
     String type();
 
+    String typeIdentifier();
+
     int index();
 
     boolean allowed(char c, int length);

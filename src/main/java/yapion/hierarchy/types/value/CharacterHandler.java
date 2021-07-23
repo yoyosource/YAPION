@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.utils.IdentifierUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
@@ -24,6 +25,11 @@ public final class CharacterHandler implements ValueHandler<Character> {
     @Override
     public String type() {
         return Character.class.getTypeName();
+    }
+
+    @Override
+    public String typeIdentifier() {
+        return IdentifierUtils.CHAR_IDENTIFIER;
     }
 
     @Override

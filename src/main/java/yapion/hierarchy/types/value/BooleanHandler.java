@@ -24,6 +24,11 @@ public final class BooleanHandler implements ValueHandler<Boolean> {
     }
 
     @Override
+    public String typeIdentifier() {
+        return null;
+    }
+
+    @Override
     public int index() {
         return 4;
     }

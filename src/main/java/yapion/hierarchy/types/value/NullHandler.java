@@ -24,6 +24,11 @@ public final class NullHandler implements ValueHandler<Object> {
     }
 
     @Override
+    public String typeIdentifier() {
+        return null;
+    }
+
+    @Override
     public int index() {
         return 5;
     }

@@ -14,6 +14,7 @@
 package yapion.hierarchy.types.value;
 
 import lombok.experimental.UtilityClass;
+import yapion.utils.IdentifierUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
@@ -27,6 +28,11 @@ public class WholeNumberHandler {
         @Override
         public String type() {
             return Byte.class.getTypeName();
+        }
+
+        @Override
+        public String typeIdentifier() {
+            return IdentifierUtils.BYTE_IDENTIFIER;
         }
 
         @Override
@@ -75,6 +81,11 @@ public class WholeNumberHandler {
         }
 
         @Override
+        public String typeIdentifier() {
+            return IdentifierUtils.SHORT_IDENTIFIER;
+        }
+
+        @Override
         public int index() {
             return 7;
         }
@@ -120,6 +131,11 @@ public class WholeNumberHandler {
         }
 
         @Override
+        public String typeIdentifier() {
+            return IdentifierUtils.INT_IDENTIFIER;
+        }
+
+        @Override
         public int index() {
             return 8;
         }
@@ -158,6 +174,11 @@ public class WholeNumberHandler {
     }
 
     public static class LongHandler implements ValueHandler<Long> {
+
+        @Override
+        public String typeIdentifier() {
+            return IdentifierUtils.LONG_IDENTIFIER;
+        }
 
         @Override
         public String type() {
@@ -203,6 +224,11 @@ public class WholeNumberHandler {
     }
 
     public static class BigIntegerHandler implements ValueHandler<BigInteger> {
+
+        @Override
+        public String typeIdentifier() {
+            return IdentifierUtils.BIG_INTEGER_IDENTIFIER;
+        }
 
         @Override
         public String type() {
