@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.serializer;
+package yapion.hierarchy.types.value;
 
 import yapion.utils.Packer;
 
@@ -20,17 +20,17 @@ import java.io.File;
 /**
  * This class will be deleted by compile process
  */
-public class SerializerPacker {
+public class ValueHandlerPacker {
 
     public static void main(String[] args) throws Exception {
-        String s = SerializerPacker.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-        s += SerializerPacker.class.getPackage().getName().replace('.', '/');
+        String s = ValueHandlerPacker.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+        s += ValueHandlerPacker.class.getPackage().getName().replace('.', '/');
 
         File source = new File(s);
         if (!source.exists()) return;
 
-        File destination = new File(s.substring(0, s.lastIndexOf('/')), "serializer.zar.gz");
+        File destination = new File(s, "valueHandler.zar.gz");
 
-        Packer.pack(source, destination, file -> !file.getName().equals("SerializerPacker.class"), false);
+        Packer.pack(source, destination, file -> file.getName().endsWith("Handler.class") && !file.getName().equals("ValueHandler.class") || file.getName().equals("NumberSuffix.class"), true);
     }
 }

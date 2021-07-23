@@ -19,18 +19,23 @@ import yapion.utils.ReferenceFunction;
 public final class NullHandler implements ValueHandler<Object> {
 
     @Override
+    public String type() {
+        return null;
+    }
+
+    @Override
+    public int index() {
+        return 5;
+    }
+
+    @Override
     public boolean allowed(char c, int length) {
-        switch (length) {
-            case 0:
-                return c == 'n';
-            case 1:
-                return c == 'u';
-            case 2:
-            case 3:
-                return c == 'l';
-            default:
-                return false;
-        }
+        return switch (length) {
+            case 0 -> c == 'n';
+            case 1 -> c == 'u';
+            case 2, 3 -> c == 'l';
+            default -> false;
+        };
     }
 
     @Override

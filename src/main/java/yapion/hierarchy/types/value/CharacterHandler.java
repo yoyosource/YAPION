@@ -22,6 +22,16 @@ import static yapion.hierarchy.types.value.ValueUtils.charToUTFEscape;
 public final class CharacterHandler implements ValueHandler<Character> {
 
     @Override
+    public String type() {
+        return Character.class.getTypeName();
+    }
+
+    @Override
+    public int index() {
+        return 14;
+    }
+
+    @Override
     public boolean allowed(char c, int length) {
         switch (length) {
             case 0:

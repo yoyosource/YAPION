@@ -23,6 +23,16 @@ import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 public final class StringHandler implements ValueHandler<String> {
 
     @Override
+    public String type() {
+        return String.class.getTypeName();
+    }
+
+    @Override
+    public int index() {
+        return 15;
+    }
+
+    @Override
     public boolean allowed(char c, int length) {
         return true;
     }

@@ -13,7 +13,6 @@
 
 package yapion.serializing;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
@@ -29,18 +28,16 @@ import yapion.serializing.api.YAPIONSerializerRegistrator;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.reflection.PureStrategy;
-import yapion.serializing.zar.ZarInputStream;
 import yapion.utils.ReflectionsUtils;
-import yapion.utils.YAPIONClassLoader;
+import yapion.utils.Unpacker;
 
-import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.zip.GZIPInputStream;
 
 import static yapion.utils.ReflectionsUtils.implementsInterface;
 import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
@@ -48,8 +45,6 @@ import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
 @Slf4j
 @UtilityClass
 public class SerializeManager {
-
-    private final boolean SYS_LOGGER = false;
 
     private final InternalSerializer<Object> defaultSerializer = null;
     private final InternalSerializer<Void> defaultNullSerializer = new InternalSerializer<Void>() {
@@ -96,16 +91,7 @@ public class SerializeManager {
         // Init from YAPIONSerializerFlagDefault
     }
 
-    @AllArgsConstructor
-    private static class WrappedClass {
-        private final String name;
-        private final byte[] bytes;
 
-        @Override
-        public String toString() {
-            return "SerializeManager.WrappedClass(" + name + ")";
-        }
-    }
 
     static {
         InputStream inputStream = SerializeManager.class.getResourceAsStream("serializer.zar.gz");
@@ -114,55 +100,18 @@ public class SerializeManager {
             throw new YAPIONException("No Serializer was loaded. Please inspect.");
         }
 
-        try (ZarInputStream zarInputStream = new ZarInputStream(new GZIPInputStream(new BufferedInputStream(inputStream)))) {
-            Map<Integer, List<WrappedClass>> depthMap = new TreeMap<>(Comparator.comparingInt(value -> value));
-            int deepest = 0;
-
-            while (zarInputStream.hasFile()) {
-                String name = zarInputStream.getFile();
-                long size = zarInputStream.getSize();
-
-                log.debug("Entry: {} {}", name, size);
-                if (SYS_LOGGER) System.out.println("Entry: " + name + " " + size);
-
-                List<Byte> bytes = new ArrayList<>();
-                while (size > bytes.size()) {
-                    bytes.add((byte) zarInputStream.read());
-                }
-                byte[] byteArray = new byte[bytes.size()];
-                for (int i = 0; i < byteArray.length; i++) {
-                    byteArray[i] = bytes.get(i);
-                }
-
-                String className = "yapion.serializing.serializer." + name.substring(0, name.indexOf('.')).replace("/", ".");
-                int depth = className.length() - className.replace(".", "").length();
+        try {
+            Unpacker.unpack(inputStream, "yapion.serializing.serializer.", (className, depth) -> {
                 if (className.endsWith(".KeySpecSerializer")) depth -= 1;
                 if (!className.endsWith("Serializer")) depth -= 1;
                 if (className.endsWith("Registrator")) depth += 1;
-                depth -= className.length() - className.replace("$", "").length();
-                log.debug("Entry Info: {} {} {} {} {}", name, size, byteArray.length, depth, deepest);
-                if (SYS_LOGGER) System.out.println("Entry Info: "  + name + " " + size + " " + byteArray.length + " " + depth + " " + deepest);
-
-                deepest = Math.max(deepest, depth);
-                depthMap.computeIfAbsent(depth, d -> new ArrayList<>()).add(new WrappedClass(className, byteArray));
-            }
-
-            YAPIONClassLoader classLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
-            depthMap.forEach((i, wrappedClasses) -> {
-                log.debug("Depth: {}", i);
-                if (SYS_LOGGER) System.out.println("Depth: " + i);
-                wrappedClasses.forEach(wrappedClass -> {
-                    log.debug("Loading: {}", wrappedClass.name);
-                    if (SYS_LOGGER) System.out.println("Loading: " + wrappedClass.name);
-                    internalAdd(classLoader.defineClass(wrappedClass.name, wrappedClass.bytes));
-                });
-            });
-        } catch (Exception e) {
+                return depth;
+            }, SerializeManager::internalAdd);
+        } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage(), e);
         }
         if (serializerMap.isEmpty()) {
-            System.out.println("EMPTY");
             log.error("No Serializer was loaded. Please inspect.");
         }
 

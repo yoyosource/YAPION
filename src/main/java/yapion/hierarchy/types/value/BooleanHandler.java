@@ -19,6 +19,16 @@ import yapion.utils.ReferenceFunction;
 public final class BooleanHandler implements ValueHandler<Boolean> {
 
     @Override
+    public String type() {
+        return Boolean.class.getTypeName();
+    }
+
+    @Override
+    public int index() {
+        return 4;
+    }
+
+    @Override
     public boolean allowed(char c, int length) {
         switch (length) {
             case 0:

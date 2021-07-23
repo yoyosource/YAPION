@@ -25,6 +25,16 @@ public class WholeNumberHandler {
     public static class ByteHandler implements ValueHandler<Byte> {
 
         @Override
+        public String type() {
+            return Byte.class.getTypeName();
+        }
+
+        @Override
+        public int index() {
+            return 6;
+        }
+
+        @Override
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
@@ -58,6 +68,16 @@ public class WholeNumberHandler {
     }
 
     public static class ShortHandler implements ValueHandler<Short> {
+
+        @Override
+        public String type() {
+            return Short.class.getTypeName();
+        }
+
+        @Override
+        public int index() {
+            return 7;
+        }
 
         @Override
         public boolean allowed(char c, int length) {
@@ -95,6 +115,16 @@ public class WholeNumberHandler {
     public static class IntegerHandler implements ValueHandler<Integer> {
 
         @Override
+        public String type() {
+            return Integer.class.getTypeName();
+        }
+
+        @Override
+        public int index() {
+            return 8;
+        }
+
+        @Override
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
@@ -130,6 +160,16 @@ public class WholeNumberHandler {
     public static class LongHandler implements ValueHandler<Long> {
 
         @Override
+        public String type() {
+            return Long.class.getTypeName();
+        }
+
+        @Override
+        public int index() {
+            return 9;
+        }
+
+        @Override
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
@@ -163,6 +203,16 @@ public class WholeNumberHandler {
     }
 
     public static class BigIntegerHandler implements ValueHandler<BigInteger> {
+
+        @Override
+        public String type() {
+            return BigInteger.class.getTypeName();
+        }
+
+        @Override
+        public int index() {
+            return 10;
+        }
 
         @Override
         public boolean allowed(char c, int length) {

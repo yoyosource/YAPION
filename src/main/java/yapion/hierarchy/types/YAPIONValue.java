@@ -17,7 +17,6 @@ import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.types.utils.ValueHandlerList;
 import yapion.hierarchy.types.value.*;
 import yapion.hierarchy.types.value.HexNumberHandler.ByteHexHandler;
 import yapion.hierarchy.types.value.HexNumberHandler.IntegerHexHandler;
@@ -28,19 +27,13 @@ import yapion.utils.ReferenceFunction;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static yapion.hierarchy.types.value.FractionNumberHandler.*;
 import static yapion.hierarchy.types.value.WholeNumberHandler.*;
 import static yapion.utils.IdentifierUtils.*;
 
 public class YAPIONValue<T> extends YAPIONValueType {
-
-    private static final ValueHandlerList VALUE_HANDLER_LIST;
-    private static final LinkedHashMap<String, ValueHandler<?>> valueHandlers = new LinkedHashMap<>();
 
     private static final String[] allowedTypes = new String[] {
             "java.lang.Boolean",
@@ -50,36 +43,11 @@ public class YAPIONValue<T> extends YAPIONValueType {
     };
     private static final Map<String, String> typeIdentifier = new HashMap<>();
 
-    public static ValueHandlerList allValueHandlers() {
-        return VALUE_HANDLER_LIST;
+    public static List<ValueHandler<?>> allValueHandlers() {
+        return ValueHandlerUtils.allValueHandlers();
     }
 
     static {
-        valueHandlers.put("java.lang.Boolean", new BooleanHandler());
-        valueHandlers.put(null, new NullHandler());
-
-        valueHandlers.put("java.lang.Byte", new ByteHandler());
-        valueHandlers.put("java.lang.Short", new ShortHandler());
-        valueHandlers.put("java.lang.Integer", new IntegerHandler());
-        valueHandlers.put("java.lang.Long", new LongHandler());
-        valueHandlers.put("java.math.BigInteger", new BigIntegerHandler());
-
-        valueHandlers.put("java.lang.Float", new FloatHandler());
-        valueHandlers.put("java.lang.Double", new DoubleHandler());
-        valueHandlers.put("java.math.BigDecimal", new BigDecimalHandler());
-
-        valueHandlers.put("java.lang.Character", new CharacterHandler());
-        valueHandlers.put("java.lang.String", new StringHandler());
-
-        VALUE_HANDLER_LIST = new ValueHandlerList(valueHandlers.size() + 4);
-        VALUE_HANDLER_LIST.add(new ByteHexHandler());
-        VALUE_HANDLER_LIST.add(new ShortHexHandler());
-        VALUE_HANDLER_LIST.add(new IntegerHexHandler());
-        VALUE_HANDLER_LIST.add(new LongHexHandler());
-        for (Map.Entry<String, ValueHandler<?>> entry : valueHandlers.entrySet()) {
-            VALUE_HANDLER_LIST.add(entry.getValue());
-        }
-
         typeIdentifier.put(allowedTypes[1], BYTE_IDENTIFIER);
         typeIdentifier.put(allowedTypes[2], SHORT_IDENTIFIER);
         typeIdentifier.put(allowedTypes[3], INT_IDENTIFIER);
@@ -100,7 +68,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
             throw new YAPIONException("Invalid YAPIONValue type " + value.getClass().getTypeName() + " only " + String.join(", ", allowedTypes) + " allowed");
         }
         this.value = value;
-        this.valueHandler = (ValueHandler<T>) valueHandlers.get(value == null ? null : value.getClass().getTypeName());
+        this.valueHandler = (ValueHandler<T>) ValueHandlerUtils.get(value == null ? null : value.getClass().getTypeName());
 
         if (value == null) {
             this.type = "null";
@@ -186,7 +154,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @SuppressWarnings({"java:S3740", "java:S2789"})
     public static YAPIONValue parseValue(String s) {
-        return parseValue(s, VALUE_HANDLER_LIST.toArrayList());
+        return parseValue(s, ValueHandlerUtils.allValueHandlers());
     }
 
     @SuppressWarnings({"java:S3740", "java:S2789"})

@@ -23,6 +23,16 @@ public class HexNumberHandler {
     public static class ByteHexHandler implements ValueHandler<Byte> {
 
         @Override
+        public String type() {
+            return "";
+        }
+
+        @Override
+        public int index() {
+            return 0;
+        }
+
+        @Override
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
@@ -60,6 +70,16 @@ public class HexNumberHandler {
     }
 
     public static class ShortHexHandler implements ValueHandler<Short> {
+
+        @Override
+        public String type() {
+            return "";
+        }
+
+        @Override
+        public int index() {
+            return 1;
+        }
 
         @Override
         public boolean allowed(char c, int length) {
@@ -101,6 +121,16 @@ public class HexNumberHandler {
     public static class IntegerHexHandler implements ValueHandler<Integer> {
 
         @Override
+        public String type() {
+            return "";
+        }
+
+        @Override
+        public int index() {
+            return 2;
+        }
+
+        @Override
         public boolean allowed(char c, int length) {
             switch (length) {
                 case 0:
@@ -138,6 +168,16 @@ public class HexNumberHandler {
     }
 
     public static class LongHexHandler implements ValueHandler<Long> {
+
+        @Override
+        public String type() {
+            return "";
+        }
+
+        @Override
+        public int index() {
+            return 3;
+        }
 
         @Override
         public boolean allowed(char c, int length) {

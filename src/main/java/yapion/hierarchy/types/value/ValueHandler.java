@@ -18,6 +18,10 @@ import yapion.utils.ReferenceFunction;
 
 public interface ValueHandler<T> {
 
+    String type();
+
+    int index();
+
     boolean allowed(char c, int length);
 
     String output(T t);

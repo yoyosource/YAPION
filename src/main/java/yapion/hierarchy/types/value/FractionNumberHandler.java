@@ -25,6 +25,16 @@ public class FractionNumberHandler {
     public static class FloatHandler implements ValueHandler<Float> {
 
         @Override
+        public String type() {
+            return Float.class.getTypeName();
+        }
+
+        @Override
+        public int index() {
+            return 11;
+        }
+
+        @Override
         public boolean allowed(char c, int length) {
             if (length > 20) {
                 return false;
@@ -63,6 +73,16 @@ public class FractionNumberHandler {
     public static class DoubleHandler implements ValueHandler<Double> {
 
         @Override
+        public String type() {
+            return Double.class.getTypeName();
+        }
+
+        @Override
+        public int index() {
+            return 12;
+        }
+
+        @Override
         public boolean allowed(char c, int length) {
             if (length > 40) {
                 return false;
@@ -99,6 +119,16 @@ public class FractionNumberHandler {
     }
 
     public static class BigDecimalHandler implements ValueHandler<BigDecimal> {
+
+        @Override
+        public String type() {
+            return BigDecimal.class.getTypeName();
+        }
+
+        @Override
+        public int index() {
+            return 13;
+        }
 
         @Override
         public boolean allowed(char c, int length) {

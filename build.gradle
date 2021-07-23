@@ -92,20 +92,23 @@ processResources {
     }
 }
 
-task compressSerializer {
-    description 'Compress serializer'
+task compressClassFiles {
+    description 'Compress Class Files'
     group "build"
 
     doLast {
-        if (!file("${buildDir}/classes/java/main/yapion/serializing/serializer/").exists()) {
-            return
+        if (file("${buildDir}/classes/java/main/yapion/serializing/serializer/").exists()) {
+            println(shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker")[0])
+            shell("rm -r ${buildDir}/classes/java/main/yapion/serializing/serializer")
         }
-
-        print(shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker")[0])
-        shell("rm -r ${buildDir}/classes/java/main/yapion/serializing/serializer")
+        if (file("${buildDir}/classes/java/main/yapion/hierarchy/types/value/ValueHandlerPacker.class").exists()) {
+            println(shell("java -cp ${buildDir}/classes/java/main/ yapion/hierarchy/types/value/ValueHandlerPacker")[0])
+            shell("rm ${buildDir}/classes/java/main/yapion/hierarchy/types/value/ValueHandlerPacker.class")
+        }
+        shell("rm -r ${buildDir}/classes/java/main/yapion/utils/Packer.class")
     }
 }
-classes.finalizedBy(compressSerializer)
+classes.finalizedBy(compressClassFiles)
 
 task processMetaINF {
     description 'Process META-INF'

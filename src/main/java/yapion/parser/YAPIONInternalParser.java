@@ -159,7 +159,7 @@ final class YAPIONInternalParser {
         current = new StringBuilder();
 
         valueHandlerList.clear();
-        YAPIONValue.allValueHandlers().toArrayList(valueHandlerList);
+        valueHandlerList.addAll(YAPIONValue.allValueHandlers());
     }
 
     private void pop(YAPIONType yapionType) {
@@ -391,7 +391,7 @@ final class YAPIONInternalParser {
         }
         String st = now.toString();
         valueHandlerList.clear();
-        YAPIONValue.allValueHandlers().toArrayList(valueHandlerList);
+        valueHandlerList.addAll(YAPIONValue.allValueHandlers());
         if (st.equals("false")) {
             parseValueJSONEnd(c);
             return true;
@@ -477,7 +477,7 @@ final class YAPIONInternalParser {
             if (c == ',') {
                 current = new StringBuilder();
                 valueHandlerList.clear();
-                YAPIONValue.allValueHandlers().toArrayList(valueHandlerList);
+                valueHandlerList.addAll(YAPIONValue.allValueHandlers());
                 return;
             }
             parseEndArray();
