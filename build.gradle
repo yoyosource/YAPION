@@ -1,24 +1,14 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.frgaal:compiler-gradle-plugin:15.0.0"
-    }
-}
-
 plugins {
     id 'java'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '5.0.0'
+    id 'org.frgaal.compiler' version '15.0.0'
 
     id 'maven-publish'
     // id 'org.jetbrains.kotlin.jvm' version '1.5.0'
 }
-
-apply plugin: 'org.frgaal.compiler'
 
 group 'YAPION'
 def groupID = 'yoyosource'
@@ -36,24 +26,24 @@ ext {
     releasePath = "releases/${groupID}/${group}"
 }
 
-sourceCompatibility = '15'
+repositories {
+    mavenCentral()
+}
+
 targetCompatibility = '1.8'
+sourceCompatibility = '15'
 
 compileJava.options.encoding = 'UTF-8'
 compileJava {
-    options.compilerArgs << '-Xlint:deprecation' /*<< '--enable-preview'*/
+    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
 }
 
 compileTestJava.options.encoding = 'UTF-8'
 compileTestJava {
-    options.compilerArgs << '-Xlint:deprecation' /* << '--enable-preview' */
+    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
 }
 
 mainClassName = ''
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.6'

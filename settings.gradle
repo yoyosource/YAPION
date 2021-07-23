@@ -1,2 +1,18 @@
+pluginManagement {
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.namespace == 'org.frgaal') {
+                useModule('org.frgaal:compiler-gradle-plugin:15.0.0')
+            }
+        }
+    }
+    repositories {
+        maven {
+            url 'https://mvnrepository.com/artifact/org.frgaal'
+        }
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = 'YAPION'
 
