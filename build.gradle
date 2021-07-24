@@ -57,8 +57,8 @@ dependencies {
     testAnnotationProcessor 'org.atteo.classindex:classindex:3.4'
 
     if (file("./libs/YAPION-SNAPSHOT.jar").exists()) {
-        // annotationProcessor files("./libs/YAPION-SNAPSHOT.jar")
-        // testAnnotationProcessor files("./libs/YAPION-SNAPSHOT.jar")
+        annotationProcessor files("./libs/YAPION-SNAPSHOT.jar")
+        testAnnotationProcessor files("./libs/YAPION-SNAPSHOT.jar")
     }
 
     implementation 'org.objenesis:objenesis:3.1'
