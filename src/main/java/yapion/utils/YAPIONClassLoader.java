@@ -22,15 +22,24 @@ import java.util.Map;
 public class YAPIONClassLoader extends ClassLoader {
 
     private Map<String, Class<?>> current = new HashMap<>();
+    private ClassLoader parent;
 
     public YAPIONClassLoader(ClassLoader parent) {
         super(parent);
+        this.parent = parent;
     }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         if (current.containsKey(name)) {
             return current.get(name);
+        }
+        try {
+            if (parent != null) {
+                return parent.loadClass(name);
+            }
+        } catch (ClassNotFoundException e) {
+            // Ignored
         }
         return Class.forName(name);
     }
