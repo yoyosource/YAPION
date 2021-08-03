@@ -35,8 +35,8 @@ public final class YAPIONFlags {
      * Disallow any special serialization flags set in this {@link YAPIONFlags} instance.
      */
     public void strict() {
-        for (Map.Entry<YAPIONFlag, Boolean> entry : flags.entrySet()) {
-            entry.setValue(false);
+        for (YAPIONFlag yapionFlag : flags.keySet()) {
+            flags.put(yapionFlag, false);
         }
     }
 
@@ -44,9 +44,18 @@ public final class YAPIONFlags {
      * Default any special serialization flags set in this {@link YAPIONFlags} instance.
      */
     public void defaultFlags() {
-        YAPIONFlag.YAPION_FLAG_KEYS.values().forEach(yapionSerializerFlag -> {
-            flags.put(yapionSerializerFlag, yapionSerializerFlag.getFlagDefault());
-        });
+        for (YAPIONFlag yapionFlag : flags.keySet()) {
+            flags.put(yapionFlag, yapionFlag.getFlagDefault());
+        }
+    }
+
+    /**
+     * Default the special serialization denoted by <b>key</b>.
+     *
+     * @param key the special serialization to defailt
+     */
+    public void setDefault(YAPIONFlag key) {
+        set(key, key.getFlagDefault());
     }
 
     /**
