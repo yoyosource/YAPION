@@ -66,7 +66,6 @@ public class EnumSerializer implements FinalInternalSerializer<Enum<?>> { // Thi
                 }
             }
             throw new YAPIONDeserializerException("Enum element not found: " + type + "[" + enumType + "]");
-
         } catch (ClassNotFoundException e) {
             throw new YAPIONDeserializerException("Class not found: " + type);
         }
