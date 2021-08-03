@@ -90,6 +90,7 @@ public class DeserializeData<T extends YAPIONAnyType> {
         return true;
     }
 
+    @InternalAPI
     public String getArrayType() {
         return yapionDeserializer.getArrayType();
     }

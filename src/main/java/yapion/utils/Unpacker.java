@@ -97,5 +97,4 @@ public class Unpacker {
             return "SerializeManager.WrappedClass(" + name + ")";
         }
     }
-
 }
