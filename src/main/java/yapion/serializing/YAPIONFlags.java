@@ -28,7 +28,9 @@ public final class YAPIONFlags {
     private Map<YAPIONFlag, Boolean> flags = new HashMap<>();
 
     public YAPIONFlags() {
-        defaultFlags();
+        YAPIONFlag.YAPION_FLAG_KEYS.forEach((s, yapionFlag) -> {
+            flags.put(yapionFlag, yapionFlag.getFlagDefault());
+        });
     }
 
     /**
