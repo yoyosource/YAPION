@@ -47,23 +47,16 @@ public class Unpacker {
                 String name = zarInputStream.getFile();
                 long size = zarInputStream.getSize();
 
-                log.debug("Entry: {} {}", name, size);
-                if (SYS_LOGGER) System.out.println("Entry: " + name + " " + size);
-
-                List<Byte> bytes = new ArrayList<>();
-                while (size > bytes.size()) {
-                    bytes.add((byte) zarInputStream.read());
-                }
-                byte[] byteArray = new byte[bytes.size()];
-                for (int i = 0; i < byteArray.length; i++) {
-                    byteArray[i] = bytes.get(i);
+                byte[] bytes = new byte[(int) size];
+                for (int i = 0; i < bytes.length; i++) {
+                    bytes[i] = (byte) zarInputStream.read();
                 }
 
                 String className = prefix + name.substring(0, name.indexOf('.')).replace("/", ".");
-                log.debug("Entry Info: {} {} {}", name, size, byteArray.length);
-                if (SYS_LOGGER) System.out.println("Entry Info: "  + name + " " + size + " " + byteArray.length);
+                log.debug("Entry Info: {} {}bytes", name, size);
+                if (SYS_LOGGER) System.out.println("Entry Info: "  + name + " " + size + "bytes");
 
-                classLoader.addData(className, byteArray);
+                classLoader.addData(className, bytes);
             }
 
             classLoader.getDataKeys().forEach(s -> {
