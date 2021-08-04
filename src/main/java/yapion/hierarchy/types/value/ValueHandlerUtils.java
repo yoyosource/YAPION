@@ -73,12 +73,7 @@ public class ValueHandlerUtils {
         }
 
         try {
-            Unpacker.unpack(inputStream, "yapion.hierarchy.types.value.", (className, depth) -> {
-                if (className.endsWith("NumberSuffix.class")) {
-                    return depth - 1;
-                }
-                return depth;
-            }, ValueHandlerUtils::internalAdd);
+            Unpacker.unpack(inputStream, "yapion.hierarchy.types.value.", ValueHandlerUtils::internalAdd);
         } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage(), e);

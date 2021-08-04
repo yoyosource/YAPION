@@ -101,12 +101,7 @@ public class SerializeManager {
         }
 
         try {
-            Unpacker.unpack(inputStream, "yapion.serializing.serializer.", (className, depth) -> {
-                if (className.endsWith(".KeySpecSerializer")) depth -= 1;
-                if (!className.endsWith("Serializer")) depth -= 1;
-                if (className.endsWith("Registrator")) depth += 1;
-                return depth;
-            }, SerializeManager::internalAdd);
+            Unpacker.unpack(inputStream, "yapion.serializing.serializer.", SerializeManager::internalAdd);
         } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage(), e);

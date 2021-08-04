@@ -17,6 +17,7 @@ import yapion.annotations.api.InternalAPI;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @InternalAPI
 public class YAPIONClassLoader extends ClassLoader {
@@ -24,15 +25,24 @@ public class YAPIONClassLoader extends ClassLoader {
     private Map<String, Class<?>> current = new HashMap<>();
     private ClassLoader parent;
 
+    private Map<String, byte[]> classData = new HashMap<>();
+
     public YAPIONClassLoader(ClassLoader parent) {
         super(parent);
         this.parent = parent;
+    }
+
+    public void addData(String name, byte[] byteCode) {
+        classData.put(name, byteCode);
     }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         if (current.containsKey(name)) {
             return current.get(name);
+        }
+        if (classData.containsKey(name)) {
+            return defineClass(name, classData.get(name));
         }
         try {
             if (parent != null) {
@@ -42,6 +52,14 @@ public class YAPIONClassLoader extends ClassLoader {
             // Ignored
         }
         return Class.forName(name);
+    }
+
+    public Set<String> getDataKeys() {
+        return classData.keySet();
+    }
+
+    public Set<String> loadedClasses() {
+        return current.keySet();
     }
 
     public Class<?> forName(String name) throws ClassNotFoundException {

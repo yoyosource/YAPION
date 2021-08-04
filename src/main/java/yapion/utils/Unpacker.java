@@ -13,7 +13,6 @@
 
 package yapion.utils;
 
-import lombok.AllArgsConstructor;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.InternalAPI;
@@ -23,10 +22,10 @@ import yapion.serializing.zar.ZarInputStream;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 
@@ -40,10 +39,9 @@ public class Unpacker {
 
     private final boolean SYS_LOGGER = false;
 
-    public void unpack(InputStream inputStream, String prefix, BiFunction<String, Integer, Integer> depthCorrector, Consumer<Class<?>> classConsumer) throws IOException {
+    public void unpack(InputStream inputStream, String prefix, Consumer<Class<?>> classConsumer) throws IOException {
         try (ZarInputStream zarInputStream = new ZarInputStream(new GZIPInputStream(new BufferedInputStream(inputStream)))) {
-            Map<Integer, List<WrappedClass>> depthMap = new TreeMap<>(Comparator.comparingInt(value -> value));
-            int deepest = 0;
+            YAPIONClassLoader classLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
 
             while (zarInputStream.hasFile()) {
                 String name = zarInputStream.getFile();
@@ -62,39 +60,23 @@ public class Unpacker {
                 }
 
                 String className = prefix + name.substring(0, name.indexOf('.')).replace("/", ".");
-                int depth = className.length() - className.replace(".", "").length();
-                depth = depthCorrector.apply(className, depth);
-                depth -= className.length() - className.replace("$", "").length();
-                log.debug("Entry Info: {} {} {} {} {}", name, size, byteArray.length, depth, deepest);
-                if (SYS_LOGGER) System.out.println("Entry Info: "  + name + " " + size + " " + byteArray.length + " " + depth + " " + deepest);
+                log.debug("Entry Info: {} {} {}", name, size, byteArray.length);
+                if (SYS_LOGGER) System.out.println("Entry Info: "  + name + " " + size + " " + byteArray.length);
 
-                deepest = Math.max(deepest, depth);
-                depthMap.computeIfAbsent(depth, d -> new ArrayList<>()).add(new WrappedClass(className, byteArray));
+                classLoader.addData(className, byteArray);
             }
 
-            YAPIONClassLoader classLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
-            depthMap.forEach((i, wrappedClasses) -> {
-                log.debug("Depth: {}", i);
-                if (SYS_LOGGER) System.out.println("Depth: " + i);
-                wrappedClasses.forEach(wrappedClass -> {
-                    log.debug("Loading: {}", wrappedClass.name);
-                    if (SYS_LOGGER) System.out.println("Loading: " + wrappedClass.name);
-                    classConsumer.accept(classLoader.defineClass(wrappedClass.name, wrappedClass.bytes));
-                });
+            classLoader.getDataKeys().forEach(s -> {
+                log.debug("Loading: {}", s);
+                if (SYS_LOGGER) System.out.println("Loading: " + s);
+                try {
+                    classConsumer.accept(classLoader.forName(s));
+                } catch (ClassNotFoundException e) {
+                    log.error(e.getMessage(), e);
+                }
             });
         } catch (Exception e) {
             throw new YAPIONException(e.getMessage(), e.getCause());
-        }
-    }
-
-    @AllArgsConstructor
-    private static class WrappedClass {
-        private final String name;
-        private final byte[] bytes;
-
-        @Override
-        public String toString() {
-            return "SerializeManager.WrappedClass(" + name + ")";
         }
     }
 }
