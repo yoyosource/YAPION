@@ -96,7 +96,7 @@ public class ZarInputStream extends InputStream implements AutoCloseable {
     }
 
     private long readLength() throws IOException {
-        int bytesToRead = inputStream.read() + 1;
+        int bytesToRead = inputStream.read();
         long size = 0;
         for (int i = 0; i < bytesToRead; i++) {
             size |= inputStream.read() * (long) Math.pow(256, i);

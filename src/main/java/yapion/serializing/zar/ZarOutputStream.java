@@ -62,26 +62,23 @@ public class ZarOutputStream extends OutputStream implements AutoCloseable {
     }
 
     private void writeLength(long length) throws IOException {
-        int size = -1;
+        int size = 0;
         long tempLength = length;
-        do {
+        while (tempLength > 0) {
             size += 1;
             tempLength /= 256;
-        } while (tempLength > 0);
+        }
         if (size > 7) {
             throw new IOException("Size to long");
         }
         outputStream.write((byte) size);
-        do {
+        while (length > 0) {
             outputStream.write((byte) (length & 0b11111111));
             length /= 256;
-        } while (length > 0);
+        }
     }
 
     public void close() throws IOException {
-        outputStream.write((byte) 0);
-        outputStream.write((byte) 0);
-        outputStream.write((byte) 0);
         outputStream.write((byte) 0);
         outputStream.write((byte) 0);
         outputStream.write((byte) 0);
