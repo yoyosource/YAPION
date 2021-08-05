@@ -28,9 +28,11 @@ import yapion.serializing.api.YAPIONSerializerRegistrator;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.reflection.PureStrategy;
+import yapion.serializing.zar.ZarInputStream;
 import yapion.utils.ReflectionsUtils;
-import yapion.utils.Unpacker;
+import yapion.utils.YAPIONClassLoader;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -38,6 +40,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPInputStream;
 
 import static yapion.utils.ReflectionsUtils.implementsInterface;
 import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
@@ -100,8 +103,8 @@ public class SerializeManager {
             throw new YAPIONException("No Serializer was loaded. Please inspect.");
         }
 
-        try {
-            Unpacker.unpack(inputStream, "yapion.serializing.serializer.", SerializeManager::internalAdd);
+        try (ZarInputStream zarInputStream = new ZarInputStream(new GZIPInputStream(new BufferedInputStream(inputStream)))) {
+            new YAPIONClassLoader(Thread.currentThread().getContextClassLoader(), "yapion.serializing.serializer.", zarInputStream, SerializeManager::internalAdd);
         } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage(), e);

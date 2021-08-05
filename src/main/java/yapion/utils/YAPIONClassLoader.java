@@ -13,13 +13,18 @@
 
 package yapion.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.InternalAPI;
+import yapion.serializing.zar.ZarInputStream;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 @InternalAPI
+@Slf4j
 public class YAPIONClassLoader extends ClassLoader {
 
     private Map<String, Class<?>> current = new HashMap<>();
@@ -30,6 +35,33 @@ public class YAPIONClassLoader extends ClassLoader {
     public YAPIONClassLoader(ClassLoader parent) {
         super(parent);
         this.parent = parent;
+    }
+
+    public YAPIONClassLoader(ClassLoader parent, String prefix, ZarInputStream zarInputStream, Consumer<Class<?>> classConsumer) throws IOException {
+        this(parent);
+
+        while (zarInputStream.hasFile()) {
+            String name = zarInputStream.getFile();
+            long size = zarInputStream.getSize();
+
+            byte[] bytes = new byte[(int) size];
+            for (int i = 0; i < bytes.length; i++) {
+                bytes[i] = (byte) zarInputStream.read();
+            }
+
+            String className = prefix + name.substring(0, name.indexOf('.')).replace("/", ".");
+            log.debug("Entry Info: {} {}bytes", name, size);
+
+            addData(className, bytes);
+        }
+        getDataKeys().forEach(s -> {
+            log.debug("Loading: {}", s);
+            try {
+                classConsumer.accept(forName(s));
+            } catch (ClassNotFoundException e) {
+                log.error(e.getMessage(), e);
+            }
+        });
     }
 
     public void addData(String name, byte[] byteCode) {

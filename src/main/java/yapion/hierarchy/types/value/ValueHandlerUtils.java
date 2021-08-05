@@ -17,12 +17,15 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.YAPIONException;
+import yapion.serializing.zar.ZarInputStream;
 import yapion.utils.ReflectionsUtils;
-import yapion.utils.Unpacker;
+import yapion.utils.YAPIONClassLoader;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 @Slf4j
 @UtilityClass
@@ -72,8 +75,8 @@ public class ValueHandlerUtils {
             throw new YAPIONException("No ValueHandler was loaded. Please inspect.");
         }
 
-        try {
-            Unpacker.unpack(inputStream, "yapion.hierarchy.types.value.", ValueHandlerUtils::internalAdd);
+        try (ZarInputStream zarInputStream = new ZarInputStream(new GZIPInputStream(new BufferedInputStream(inputStream)))) {
+            new YAPIONClassLoader(Thread.currentThread().getContextClassLoader(), "yapion.hierarchy.types.value.", zarInputStream, ValueHandlerUtils::internalAdd);
         } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage(), e);
