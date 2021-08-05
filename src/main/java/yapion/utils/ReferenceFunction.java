@@ -33,5 +33,4 @@ public class ReferenceFunction {
     public long stringToReferenceValue(String s) {
         return reference.applyAsLong(s);
     }
-
 }

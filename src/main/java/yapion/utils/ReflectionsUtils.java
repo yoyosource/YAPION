@@ -399,10 +399,7 @@ public class ReflectionsUtils {
     }
 
     private static FieldCache getFieldCache(Class<?> clazz) {
-        if (!fieldCacheMap.containsKey(clazz)) {
-            fieldCacheMap.put(clazz, new FieldCache(clazz));
-        }
-        return fieldCacheMap.get(clazz);
+        return fieldCacheMap.computeIfAbsent(clazz, FieldCache::new);
     }
 
     public static List<Field> getFields(Class<?> clazz) {

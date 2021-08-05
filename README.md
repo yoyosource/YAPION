@@ -56,7 +56,7 @@ dependencies {
 - eppleton/frgaal (https://github.com/eppleton/frgaal)
   - I am using the frgaal compiler to be able to use newer java features in an older environment.
   - [V] 15.0.0
-  - [L] GPL-2.0
+  - [L] GPLv2+CPE
 
 * [V] Version
 * [L] License
