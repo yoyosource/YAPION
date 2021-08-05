@@ -31,6 +31,6 @@ public class SerializerPacker {
 
         File destination = new File(s.substring(0, s.lastIndexOf('/')), "serializer.zar.gz");
 
-        Packer.pack(source, destination, file -> !file.getName().equals("SerializerPacker.class"), false);
+        Packer.pack(source, destination, file -> !file.getName().equals("SerializerPacker.class"), true);
     }
 }
