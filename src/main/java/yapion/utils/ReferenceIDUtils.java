@@ -25,17 +25,12 @@ import java.util.Map;
 @UtilityClass
 public class ReferenceIDUtils {
 
-    private static final Map<String, Long> referenceIDMapCache = new HashMap<>();
     private static final Map<String, Long> referenceIDMap = new LinkedHashMap<String, Long>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Long> eldest) {
             return size() > 256;
         }
     };
-
-    static {
-        initCache();
-    }
 
     /**
      * Calculates the reference ID of a given String, primarily used for variable names.
@@ -47,9 +42,6 @@ public class ReferenceIDUtils {
     private static long reference(String s) {
         if (referenceIDMap.containsKey(s)) {
             return referenceIDMap.get(s);
-        }
-        if (referenceIDMapCache.containsKey(s)) {
-            return referenceIDMapCache.get(s);
         }
         long l = 0x7D4FA32E5D92B68AL;
         l = applyToBytes(s.length(), l);
@@ -90,28 +82,5 @@ public class ReferenceIDUtils {
      */
     public static String format(long l) {
         return String.format("%016X", l);
-    }
-
-    @SuppressWarnings({"java:S3011"})
-    private static void initCache() {
-        try {
-            Field field = YAPIONValue.class.getDeclaredField("allowedTypes");
-            field.setAccessible(true);
-            for (String s : ((String[]) field.get(null))) {
-                referenceIDMapCache.put(s, reference(s));
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            // Ignored
-        }
-
-        Field[] fields = IdentifierUtils.class.getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                String s = (String) field.get(null);
-                referenceIDMapCache.put(s, reference(s));
-            } catch (IllegalAccessException e) {
-                // Ignored
-            }
-        }
     }
 }

@@ -101,5 +101,4 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
     public void close() {
         yapionAnyTypes.clear();
     }
-
 }

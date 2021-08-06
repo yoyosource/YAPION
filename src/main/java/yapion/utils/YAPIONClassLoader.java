@@ -103,5 +103,4 @@ public class YAPIONClassLoader extends ClassLoader {
         current.put(name, clazz);
         return clazz;
     }
-
 }
