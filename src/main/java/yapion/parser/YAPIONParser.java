@@ -26,8 +26,6 @@ import yapion.utils.ReferenceFunction;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public final class YAPIONParser {

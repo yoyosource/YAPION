@@ -60,7 +60,7 @@ public final class YAPIONDeserializer {
      * @return Object from the YAPIONObject to deserialize
      */
     public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType) {
-        return (T) deserialize(serializingType, "");
+        return deserialize(serializingType, "");
     }
 
     /**
@@ -70,7 +70,7 @@ public final class YAPIONDeserializer {
      * @return Object from the YAPIONObject to deserialize
      */
     public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, @NonNull YAPIONFlags yapionFlags) {
-        return (T) deserialize(serializingType, "", yapionFlags);
+        return deserialize(serializingType, "", yapionFlags);
     }
 
     /**
@@ -81,7 +81,7 @@ public final class YAPIONDeserializer {
      * @return Object from the YAPIONObject to deserialize
      */
     public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, @NonNull TypeReMapper typeReMapper) {
-        return (T) deserialize(serializingType, "", typeReMapper);
+        return deserialize(serializingType, "", typeReMapper);
     }
 
     /**

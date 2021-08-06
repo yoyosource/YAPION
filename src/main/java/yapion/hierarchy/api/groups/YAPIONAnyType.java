@@ -14,22 +14,17 @@
 package yapion.hierarchy.api.groups;
 
 import lombok.NonNull;
-import lombok.SneakyThrows;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.ObjectPath;
 import yapion.hierarchy.api.ObjectSearch;
 import yapion.hierarchy.api.ObjectType;
-import yapion.hierarchy.output.FileGZIPOutput;
-import yapion.hierarchy.output.FileOutput;
-import yapion.hierarchy.output.LengthOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONPath;
 import yapion.parser.YAPIONParser;
 import yapion.utils.ReferenceFunction;
 
-import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 

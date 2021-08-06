@@ -45,7 +45,7 @@ public final class YAPIONSerializer {
      * @return YAPIONObject from the object to serialize
      */
     public static <T extends YAPIONAnyType> T serialize(@NonNull Object object) {
-        return (T) serialize(object, "");
+        return serialize(object, "");
     }
 
     /**
@@ -56,7 +56,7 @@ public final class YAPIONSerializer {
      * @return YAPIONObject from the object to serialize
      */
     public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, YAPIONFlags yapionFlags) {
-        return (T) serialize(object, "", yapionFlags);
+        return serialize(object, "", yapionFlags);
     }
 
     /**
@@ -67,7 +67,7 @@ public final class YAPIONSerializer {
      * @return YAPIONObject from the object to serialize
      */
     public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, String context) {
-        return (T) new YAPIONSerializer(object, context).parse().getYAPIONObject();
+        return new YAPIONSerializer(object, context).parse().getYAPIONObject();
     }
 
     /**
@@ -79,7 +79,7 @@ public final class YAPIONSerializer {
      * @return YAPIONObject from the object to serialize
      */
     public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, String context, YAPIONFlags yapionFlags) {
-        return (T) new YAPIONSerializer(object, context, yapionFlags).parse().getYAPIONObject();
+        return new YAPIONSerializer(object, context, yapionFlags).parse().getYAPIONObject();
     }
 
     /**

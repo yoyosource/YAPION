@@ -14,11 +14,8 @@
 package yapion.utils;
 
 import lombok.experimental.UtilityClass;
-import yapion.hierarchy.types.YAPIONValue;
 
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

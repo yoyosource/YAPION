@@ -14,7 +14,6 @@
 package yapion.hierarchy.types.value;
 
 import lombok.experimental.UtilityClass;
-import yapion.utils.IdentifierUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
