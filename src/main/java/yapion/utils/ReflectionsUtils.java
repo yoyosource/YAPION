@@ -185,7 +185,6 @@ public class ReflectionsUtils {
             this.clazz = clazz;
             this.object = object;
         }
-
     }
 
     /**
@@ -211,8 +210,16 @@ public class ReflectionsUtils {
      * @param clazz the class to create an instance from
      * @return an instance of the specified class
      */
-    public static Object constructObjectObjenesis(Class<?> clazz) {
+    public static <T> T constructObjectObjenesis(Class<T> clazz) {
         return objenesisBase.newInstance(clazz);
+    }
+
+    public static <T> T constructObject(String className, boolean data) {
+        try {
+            return (T) constructObject(Class.forName(className), data);
+        } catch (ClassNotFoundException e) {
+            throw new YAPIONException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -220,20 +227,19 @@ public class ReflectionsUtils {
      * By using the {@link ObjenesisBase}, only with {@link YAPIONData}
      * or {@link YAPIONObjenesis} or a NoArgument constructor.
      *
-     * @param className the class to create an instance from
+     * @param clazz the class to create an instance from
      * @param data branch to {@link #constructObjectObjenesis(String)}
      * @return an instance of the specified class
      */
-    public static Object constructObject(String className, boolean data) {
+    public static <T> T constructObject(Class<T> clazz, boolean data) {
         if (data) {
-            return constructObjectObjenesis(className);
+            return constructObjectObjenesis(clazz);
         }
         Object o = null;
-        if (className.contains("$")) {
-            String cName = className.substring(0, className.lastIndexOf('$'));
-            o = constructObject(cName, false);
+        if (clazz.getDeclaringClass() != null) {
+            o = constructObject(clazz.getDeclaringClass(), false);
         }
-        return constructInstance(className, o);
+        return constructInstance(clazz, o);
     }
 
     /**
@@ -246,7 +252,7 @@ public class ReflectionsUtils {
      * @param data branch to {@link #constructObjectObjenesis(String)}
      * @return an instance of the specified class
      */
-    public static Object constructObject(YAPIONObject yapionObject, InternalSerializer<?> internalSerializer, boolean data) {
+    public static <T> T constructObject(YAPIONObject yapionObject, InternalSerializer<?> internalSerializer, boolean data) {
         return constructObject(yapionObject, internalSerializer, data, null);
     }
 
@@ -260,7 +266,7 @@ public class ReflectionsUtils {
      * @param data branch to {@link #constructObjectObjenesis(String)}
      * @return an instance of the specified class
      */
-    public static Object constructObject(YAPIONObject yapionObject, InternalSerializer<?> internalSerializer, boolean data, TypeReMapper typeReMapper) {
+    public static <T> T constructObject(YAPIONObject yapionObject, InternalSerializer<?> internalSerializer, boolean data, TypeReMapper typeReMapper) {
         if (!yapionObject.containsKey(TYPE_IDENTIFIER, String.class)) {
             throw new YAPIONReflectionException("YAPIONObject does not contain value for key '" + TYPE_IDENTIFIER + "'");
         }
@@ -276,26 +282,25 @@ public class ReflectionsUtils {
         }
         for (Map.Entry<Class<?>, Function<YAPIONObject, ?>> entry : SPECIAL_CREATOR.entrySet()) {
             if (entry.getKey().isAssignableFrom(clazz)) {
-                return entry.getValue().apply(yapionObject);
+                return (T) entry.getValue().apply(yapionObject);
             }
         }
         if (SerializeManager.hasFactory(clazz)) {
             try {
-                return SerializeManager.getObjectInstance(clazz);
+                return (T) SerializeManager.getObjectInstance(clazz);
             } catch (ClassNotFoundException e) {
                 throw new YAPIONException(e.getMessage(), e);
             }
         }
         if (internalSerializer.interfaceType() != null && internalSerializer.defaultImplementation() != null && internalSerializer.interfaceType().getTypeName().equals(type)) {
-            type = internalSerializer.defaultImplementation().getTypeName();
+            clazz = internalSerializer.defaultImplementation();
         }
-        return constructObject(type, data);
+        return (T) constructObject(clazz, data);
     }
 
     @SuppressWarnings({"java:S3011"})
-    private static Object constructInstance(String className, Object o) {
+    private static <T> T constructInstance(Class<T> clazz, Object o) {
         try {
-            Class<?> clazz = Class.forName(className);
             Constructor<?> constructor;
             if (o == null || Modifier.isStatic(clazz.getModifiers())) {
                 constructor = clazz.getDeclaredConstructor();
@@ -304,16 +309,13 @@ public class ReflectionsUtils {
             }
             constructor.setAccessible(true);
             if (o == null || Modifier.isStatic(clazz.getModifiers())) {
-                return constructor.newInstance();
+                return (T) constructor.newInstance();
             } else {
-                return constructor.newInstance(o);
+                return (T) constructor.newInstance(o);
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             log.info("Exception while creating an Object with normal Constructor", e.getCause());
             throw new YAPIONReflectionException(e.getMessage(), e.getCause());
-        } catch (ClassNotFoundException e) {
-            log.info("Exception while creating an Object with normal Constructor because the specified class '" + className + "' was not found", e.getException());
-            throw new YAPIONReflectionException(e.getMessage(), e.getException());
         }
     }
 

@@ -58,9 +58,9 @@ public class ErrorSerializer implements FinalInternalSerializer<Error> {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         Error error;
         if (yapionObject.containsKey(EXCEPTION_IDENTIFIER, String.class)) {
-            error = (Error) ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, String.class).get(), false);
+            error = ReflectionsUtils.constructObject(yapionObject.getValue(EXCEPTION_IDENTIFIER, String.class).get(), false);
         } else {
-            error = (Error) ReflectionsUtils.constructObject(yapionObject.getValue(TYPE_IDENTIFIER, String.class).get(), false);
+            error = ReflectionsUtils.constructObject(yapionObject.getValue(TYPE_IDENTIFIER, String.class).get(), false);
         }
         deserializeData.deserialize("detailMessage", error, yapionObject.getValue("message"));
         deserializeData.deserialize("cause", error, yapionObject.getObject("cause"));

@@ -84,7 +84,6 @@ public class SerializeManager {
     private final Map<Class<?>, InstanceFactory<?>> instanceFactoryMap = new HashMap<>();
 
     @Getter
-    @Setter
     private ReflectionStrategy reflectionStrategy = new PureStrategy();
 
     private Class<?> FinalInternalSerializerClass = null;
@@ -93,8 +92,6 @@ public class SerializeManager {
     void init() {
         // Init from YAPIONSerializerFlagDefault
     }
-
-
 
     static {
         InputStream inputStream = SerializeManager.class.getResourceAsStream("serializer.zar.gz");
@@ -283,14 +280,14 @@ public class SerializeManager {
         return (T) instanceFactoryMap.get(clazz).instance();
     }
 
-    static <T> T getObjectInstance(Class<T> clazz, String type, boolean objenesis) {
+    static <T> T getObjectInstance(Class<T> clazz, boolean objenesis) {
         if (instanceFactoryMap.containsKey(clazz)) {
             return (T) instanceFactoryMap.get(clazz).instance();
         }
         if (clazz.getDeclaredAnnotation(YAPIONObjenesis.class) != null) {
-            return (T) ReflectionsUtils.constructObjectObjenesis(type);
+            return ReflectionsUtils.constructObjectObjenesis(clazz);
         } else {
-            return (T) ReflectionsUtils.constructObject(type, objenesis);
+            return ReflectionsUtils.constructObject(clazz, objenesis);
         }
     }
 
@@ -304,5 +301,10 @@ public class SerializeManager {
 
     public static Set<Class<?>> listRegisteredClassSerializer() {
         return classTypeSerializer.stream().map(InternalSerializer::classType).collect(Collectors.toSet());
+    }
+
+    public static void setReflectionStrategy(ReflectionStrategy reflectionStrategy) {
+        if (reflectionStrategy == null) throw new IllegalArgumentException("reflectionStrategy should never be null");
+        SerializeManager.reflectionStrategy = reflectionStrategy;
     }
 }

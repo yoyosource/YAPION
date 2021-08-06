@@ -248,7 +248,7 @@ public final class YAPIONDeserializer {
         }
         if (serializer == null || serializer.finished() || serializer.empty()) {
             try {
-                object = SerializeManager.getObjectInstance(clazz, type, contextManager.is(clazz).data || createWithObjenesis);
+                object = SerializeManager.getObjectInstance(clazz, contextManager.is(clazz).data || createWithObjenesis);
             } catch (YAPIONReflectionException e) {
                 log.warn("Exception while creating an Instance of the object '" + type + "'", e.getCause());
             }
