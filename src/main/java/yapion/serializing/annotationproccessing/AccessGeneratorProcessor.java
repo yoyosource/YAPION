@@ -13,6 +13,7 @@
 
 package yapion.serializing.annotationproccessing;
 
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import yapion.annotations.api.ProcessorImplementation;
@@ -45,6 +46,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     private Messager messager;
     private AtomicInteger index = new AtomicInteger(0);
     private AtomicBoolean lombokToString = new AtomicBoolean(false);
+    private AtomicBoolean lombokSetter = new AtomicBoolean(false);
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
@@ -73,6 +75,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
             YAPIONAccessGenerator yapionAccessGenerator = element.getAnnotation(YAPIONAccessGenerator.class);
             lombokToString.set(yapionAccessGenerator.lombokToString());
+            lombokSetter.set(yapionAccessGenerator.lombokSetter());
 
             TypeElement clazz = (TypeElement) element.getEnclosingElement();
             String packageName = clazz.getQualifiedName().toString();
@@ -183,6 +186,9 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         }
         if (lombokToString.get()) {
             classGenerator.addAnnotation(ToString.class);
+        }
+        if (lombokSetter.get()) {
+            classGenerator.addAnnotation(Setter.class);
         }
         FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE), null, classGenerator.getClassName(), new ParameterGenerator(YAPIONObject.class.getTypeName(), "data"), new ParameterGenerator("java.util.Map<yapion.hierarchy.api.groups.YAPIONDataType<?, ?>, Object>", "_pointerData"));
         classGenerator.add(functionGenerator);
