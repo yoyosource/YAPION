@@ -19,7 +19,6 @@ import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.registration.YAPIONSerializing;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.annotations.serialize.YAPIONSaveExclude;
-import yapion.hierarchy.output.Indentator;
 import yapion.serializing.InternalSerializer;
 import yapion.serializing.annotationproccessing.generator.*;
 
@@ -31,7 +30,6 @@ import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
