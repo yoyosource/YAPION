@@ -346,16 +346,26 @@ final class YAPIONInternalParser {
         return false;
     }
 
+    private int valueIndex = 0;
+
     private void parseValue(char c, char lastChar) {
         if (parseSpecialEscape(c)) {
             return;
         }
-        if (mightValue == MightValue.FALSE && !escaped && c == ')') {
+        if (mightValue == MightValue.FALSE && !escaped && c == ')' && valueIndex == 0) {
             log.debug("ValueHandler to use -> {}", valueHandlerList);
             pop(YAPIONType.VALUE);
             add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             reset();
             return;
+        }
+        if (!escaped) {
+            if (c == ')') {
+                valueIndex--;
+            }
+            if (c == '(') {
+                valueIndex++;
+            }
         }
         if (mightValue == MightValue.TRUE && !escaped && (c == ',' || c == '}' || c == ']' || c == '>') && !(lastCharEscaped && lastChar == '"') && tryParseValueJSONEnd(c, lastChar)) {
             return;
@@ -367,9 +377,9 @@ final class YAPIONInternalParser {
         lastCharEscaped = escaped;
         if (escaped) {
             boolean b = mightValue == MightValue.TRUE && c == '"';
-            b |= typeStack.peek() == YAPIONType.ARRAY && (c == ',' || c == '-');
+            b |= typeStack.peek() == YAPIONType.ARRAY && (c == ',' || c == '-' || c == '[' || c == ']');
             b |= typeStack.peek() == YAPIONType.ARRAY && current.length() == 0 && c == ' ';
-            if (!b && c != '(' && c != ')') {
+            if (!b) {
                 sortValueHandler('\\', current.length());
                 current.append('\\');
             }

@@ -17,7 +17,7 @@ import yapion.utils.IdentifierUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
-import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
+import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.ARRAY_VALUE;
 import static yapion.hierarchy.types.value.ValueUtils.charToUTFEscape;
 
 public final class CharacterHandler implements ValueHandler<Character> {
@@ -52,7 +52,7 @@ public final class CharacterHandler implements ValueHandler<Character> {
 
     @Override
     public String output(Character character) {
-        return "'" + charToUTFEscape(character, VALUE) + "'";
+        return "'" + charToUTFEscape(character, ARRAY_VALUE) + "'";
     }
 
     @Override

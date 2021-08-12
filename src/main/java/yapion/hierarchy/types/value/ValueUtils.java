@@ -24,7 +24,8 @@ public final class ValueUtils {
 
         NOTHING(),
         KEY('(', ')', '[', ']', '{', '}', '<', '>'),
-        VALUE('(', ')');
+        VALUE(),
+        ARRAY_VALUE('[', ']');
 
         private char[] chars;
 
@@ -77,6 +78,7 @@ public final class ValueUtils {
         if (c < 0x20 || (c >= 0x7F && c < 0xA1) || c > 0xFF) {
             return "\\u" + (String.format("%04X", (short) c));
         } else if (escapeCharacters.contains(c)) {
+            System.out.println("HERE");
             return "\\" + c;
         } else {
             return c + "";

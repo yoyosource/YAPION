@@ -67,7 +67,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
         if (string.startsWith(" ") || string.startsWith("-")) {
             string = "\\" + string;
         }
-        string = ValueUtils.stringToUTFEscapedString(string, ValueUtils.EscapeCharacters.VALUE);
+        string = ValueUtils.stringToUTFEscapedString(string, ValueUtils.EscapeCharacters.ARRAY_VALUE);
         if (ValueUtils.startsWith(string, ValueUtils.EscapeCharacters.KEY) || string.isEmpty()) {
             abstractOutput.consume("(").consume(string).consume(")");
         } else {

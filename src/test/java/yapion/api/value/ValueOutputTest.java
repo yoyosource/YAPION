@@ -72,7 +72,7 @@ public class ValueOutputTest {
 
     @Test
     public void testYAPIONStringParenthesis() {
-        assertThat(new YAPIONValue<>("()[]{}<>").toYAPION(new StringOutput()).getResult(), is("(\\(\\)[]{}<>)"));
+        assertThat(new YAPIONValue<>("()[]{}<>").toYAPION(new StringOutput()).getResult(), is("(()[]{}<>)"));
     }
 
     @Test

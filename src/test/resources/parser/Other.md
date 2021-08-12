@@ -9,11 +9,11 @@
 
 # Characters
 ```I
-{\ !"#$%&'\(\)*+,-./0123456789:;\<=\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\]^_`abcdefghijklmnopqrstuvwxyz\{|\}~( !"#$%&'\(\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}
+{\ !"#$%&'\(\)*+,-./0123456789:;\<=\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\]^_`abcdefghijklmnopqrstuvwxyz\{|\}~( !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}
 ```
 
 ```O
-{\ !"#$%&'\(\)*+,-./0123456789:;\<=\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\]^_`abcdefghijklmnopqrstuvwxyz\{|\}~( !"#$%&'\(\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}
+{\ !"#$%&'\(\)*+,-./0123456789:;\<=\>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\]^_`abcdefghijklmnopqrstuvwxyz\{|\}~( !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~)}
 ```
 
 # Array with Pointer
@@ -158,4 +158,22 @@ yapion.exceptions.parser.YAPIONParserException
 
 ```O
 {hello()}
+```
+
+# Array Value with Array inside and Value
+```I
+{[(@method(yapion.serializing.annotationproccessing.SerializingProcessor#test[String]))]}
+```
+
+```O
+{[@method(yapion.serializing.annotationproccessing.SerializingProcessor#test\[String\])]}
+```
+
+# Array Value with Array inside and Value 2
+```I
+{[@method(yapion.serializing.annotationproccessing.SerializingProcessor#test\[String\])]}
+```
+
+```O
+{[@method(yapion.serializing.annotationproccessing.SerializingProcessor#test\[String\])]}
 ```

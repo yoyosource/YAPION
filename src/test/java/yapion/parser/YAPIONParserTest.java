@@ -215,11 +215,16 @@ public class YAPIONParserTest {
                 }));
 
                 do {
-                    String testOutput = YAPIONParser.parse(actualOutput).toYAPION(prettified);
-                    if (!testOutput.equals(unstableOutput.isEmpty() ? output : unstableOutput.get(unstableOutput.size() - 1))) {
-                        unstableOutput.add(testOutput);
-                        passed = false;
-                    } else {
+                    try {
+                        String testOutput = YAPIONParser.parse(actualOutput).toYAPION(prettified);
+                        if (!testOutput.equals(unstableOutput.isEmpty() ? output : unstableOutput.get(unstableOutput.size() - 1))) {
+                            unstableOutput.add(testOutput);
+                            passed = false;
+                        } else {
+                            break;
+                        }
+                    } catch (Exception e) {
+                        // Ignored
                         break;
                     }
                 } while (true);
