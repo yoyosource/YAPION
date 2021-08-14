@@ -19,6 +19,7 @@ import lombok.ToString;
 import yapion.annotations.api.ProcessorImplementation;
 import yapion.annotations.registration.YAPIONAccessGenerator;
 import yapion.exceptions.YAPIONException;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
@@ -154,6 +155,8 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             functionGenerator.add("callback.accept(t);");
             classGenerator.add(functionGenerator);
 
+            // TODO: implement checkArray
+
             if (lombokExtensionMethod.get()) {
                 classGenerator.addAnnotation("@lombok.experimental.ExtensionMethod(yapion.serializing.annotationproccessing.ConstraintUtils.class)");
             }
@@ -171,8 +174,18 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         return true;
     }
 
-    private static <T> void checkArray(YAPIONArray array, boolean nonNull, Consumer<List<T>> callback) {
-
+    private static <T> void checkArray(YAPIONArray array, boolean nonNull, Function<YAPIONAnyType, T> converter, Consumer<List<T>> callback) {
+        if (array == null) {
+            if (nonNull) {
+                throw new YAPIONException("Array is not present");
+            } else {
+                callback.accept(null);
+                return;
+            }
+        }
+        List<T> list = new ArrayList<>();
+        array.forEach(yapionAnyType -> list.add(converter.apply(yapionAnyType)));
+        callback.accept(list);
     }
 
     private void error(String msg, Object... args) {
@@ -206,7 +219,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         private List<ContainerElement> containerElementList = new ArrayList<>();
         private String className;
-        private boolean hidden = false;
+        private boolean hidden;
 
         public ObjectContainer(String name, YAPIONObject yapionObject) {
             super(name);
@@ -241,9 +254,6 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                     error("Only YAPIONObjects are allowed to specify types: {}", yapionAnyType);
                 }
             });
-            if (name == null) {
-                System.out.println(containerElementList);
-            }
         }
 
         @Override

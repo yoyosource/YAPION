@@ -32,6 +32,9 @@
         @hidden(true)
         t(LONG)
     }
+    anotherArrayTest{
+        @arrayReference(HelloWorld)
+    }
     hugoOther{
         @name(Hugo)
         i{
