@@ -1,0 +1,66 @@
+{
+    @name(Test)
+    test{
+        @type(STRING)
+        constraints(
+            test -> {
+                return test.oneOf("Test2", "Test", "Test3");
+            }
+        )
+    }
+    testOther!{
+        @type(STRING)
+        constraints(
+            test -> {
+                return test.oneOf("TestOther2", "TestOther", "TestOther3");
+            }
+        )
+    }
+    hugo{
+        @reference(Test)
+    }
+    testArray!{
+        @arrayType(STRING)
+        constraints(
+            test -> {
+                return test.oneOf("TestOther2", "TestOther", "TestOther3");
+            }
+        )
+    }
+    anotherTest{
+        @name(HelloWorld)
+        @hidden(true)
+        t(LONG)
+    }
+    hugoOther{
+        @name(Hugo)
+        i{
+            @type(INT)
+            constraints(
+                i -> {
+                    return between(i, 0, 100);
+                }
+            )
+        }
+        j{
+            j{
+                @type(LONG)
+            }
+            j2{
+                j{
+                    @type(LONG)
+                    constraints(
+                        test -> {
+                            return test.oneOf(0L, 1L, 2L, 3L);
+                        }
+                    )
+                }
+            }
+            j3{
+                j{
+                    @type(LONG)
+                }
+            }
+        }
+    }
+}

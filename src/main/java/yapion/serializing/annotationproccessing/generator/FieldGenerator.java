@@ -43,6 +43,13 @@ public class FieldGenerator {
         this.defaultValue = defaultValue;
     }
 
+    public FieldGenerator(ModifierGenerator modifierGenerator, String type, String name, String defaultValue) {
+        this.modifierGenerator = modifierGenerator;
+        this.type = type;
+        this.name = name;
+        this.defaultValue = defaultValue;
+    }
+
     public FieldGenerator addAnnotation(Class<? extends Annotation> type) {
         annotations.add("@" + type.getTypeName());
         return this;

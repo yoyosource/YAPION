@@ -57,6 +57,11 @@ public class ClassGenerator {
         return this;
     }
 
+    public ClassGenerator addAnnotation(String type) {
+        annotations.add(type);
+        return this;
+    }
+
     public ClassGenerator addInterface(String type) {
         interfaces.add(type);
         return this;
