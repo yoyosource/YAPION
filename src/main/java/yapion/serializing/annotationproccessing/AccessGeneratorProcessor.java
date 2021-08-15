@@ -18,7 +18,6 @@ import lombok.SneakyThrows;
 import lombok.ToString;
 import yapion.annotations.api.ProcessorImplementation;
 import yapion.annotations.registration.YAPIONAccessGenerator;
-import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -99,12 +98,16 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
             VariableElement variableElement = (VariableElement) element;
             YAPIONObject yapionObject;
-            File file = new File("./" + variableElement.getConstantValue().toString());
-            try {
-                yapionObject = YAPIONParser.parse(file);
-            } catch (IOException e) {
-                error("Parsing of file '" + file.getAbsolutePath() + "' failed. Please specify a valid path relative from '" + new File(".").getAbsolutePath() + "'");
-                continue;
+            if (yapionAccessGenerator.inline()) {
+                yapionObject = YAPIONParser.parse(variableElement.getConstantValue().toString());
+            } else {
+                File file = new File("./" + variableElement.getConstantValue().toString());
+                try {
+                    yapionObject = YAPIONParser.parse(file);
+                } catch (IOException e) {
+                    error("Parsing of file '" + file.getAbsolutePath() + "' failed. Please specify a valid path relative from '" + new File(".").getAbsolutePath() + "'");
+                    continue;
+                }
             }
             if (!yapionObject.containsKey("@name", String.class)) {
                 error("Root Element needs to have a proper name. Use '@name' to specify one in the YAPIONObject");
@@ -329,12 +332,39 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public String constructorCall() {
-            return "// TODO: array " + getName();
+            return "checkArray(yapionObject.getArray(\"" + getName() + "\"), " + isNonNull() + ", " + YAPIONValue.class.getTypeName() + ".class, " + toClass().getTypeName() + ".class, value -> (" + toClass().getTypeName() + ") value.get(), " + constraints + ", value -> this." + getName() + " = value);";
         }
 
         @Override
         public void output(ClassGenerator classGenerator) {
+            classGenerator.add(new FieldGenerator(new ModifierGenerator(ModifierType.PRIVATE), "java.util.List<" + toClass().getTypeName() + ">", getName(), null));
 
+            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "get" + toCamelCase(getName()), "java.util.List<" + toClass().getTypeName() + ">");
+            functionGenerator.add("return " + getName() + ";");
+            classGenerator.add(functionGenerator);
+
+            if (setter.get()) {
+                functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "set" + toCamelCase(getName()), void.class, new ParameterGenerator("java.util.List<" + toClass().getTypeName() + ">", getName()));
+                functionGenerator.add("this." + getName() + " = " + getName() + ";");
+                classGenerator.add(functionGenerator);
+            }
+        }
+
+        private Class<?> toClass() {
+            return switch (type.toLowerCase()) {
+                case "string" -> String.class;
+                case "byte" -> Byte.class;
+                case "short" -> Short.class;
+                case "int", "integer" -> Integer.class;
+                case "long" -> Long.class;
+                case "biginteger" -> BigInteger.class;
+                case "float" -> Float.class;
+                case "double" -> Double.class;
+                case "bigdecimal" -> BigDecimal.class;
+                case "char", "character" -> Character.class;
+                case "bool", "boolean" -> Boolean.class;
+                default -> Object.class;
+            };
         }
     }
 
@@ -344,18 +374,12 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         private String type;
         private String constraints;
-        // private AtomicReference<Object> defaultValue = null;
 
         public ValueContainer(String name, YAPIONObject yapionObject) {
             super(name);
             type = yapionObject.getPlainValueOrDefault("@type", "OBJECT");
             constraints = yapionObject.getPlainValueOrDefault("constraints", "ignored -> true");
             constraints = Arrays.stream(constraints.split("\n")).map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.joining("\n"));
-            /*
-            if (yapionObject.containsKey("default", YAPIONType.VALUE)) {
-                defaultValue = new AtomicReference<>(yapionObject.getValue("default").get());
-            }
-            */
         }
 
         public ValueContainer(String name, YAPIONValue<String> yapionValue) {
@@ -447,25 +471,22 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public String constructorCall() {
-            // return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + reference + "::new, value -> this." + getName() + " = value);";
-            return "// TODO: array-reference " + getName();
+            return "checkArray(yapionObject.getArray(\"" + getName() + "\"), " + isNonNull() + ", " + YAPIONObject.class.getTypeName() + ".class, " + reference + ".class, " + reference + "::new, null, value -> this." + getName() + " = value);";
         }
 
         @Override
         public void output(ClassGenerator classGenerator) {
-            /*
-            classGenerator.add(new FieldGenerator(new ModifierGenerator(ModifierType.PRIVATE), reference, getName(), null));
+            classGenerator.add(new FieldGenerator(new ModifierGenerator(ModifierType.PRIVATE), "java.util.List<" + reference + ">", getName(), null));
 
-            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "get" + toCamelCase(getName()), reference);
+            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "get" + toCamelCase(getName()), "java.util.List<" + reference + ">");
             functionGenerator.add("return " + getName() + ";");
             classGenerator.add(functionGenerator);
 
             if (setter.get()) {
-                functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "set" + toCamelCase(getName()), void.class, new ParameterGenerator(reference, getName()));
+                functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "set" + toCamelCase(getName()), void.class, new ParameterGenerator("java.util.List<" + reference + ">", getName()));
                 functionGenerator.add("this." + getName() + " = " + getName() + ";");
                 classGenerator.add(functionGenerator);
             }
-            */
         }
     }
 

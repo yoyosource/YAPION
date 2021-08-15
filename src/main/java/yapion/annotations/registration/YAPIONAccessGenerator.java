@@ -21,7 +21,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.FIELD})
 public @interface YAPIONAccessGenerator {
-    boolean lombokToString() default false;
+    boolean inline() default false;
     boolean setter() default false;
+    boolean lombokToString() default false;
     boolean lombokExtensionMethods() default false;
 }
