@@ -50,9 +50,6 @@ import java.util.stream.Collectors;
 @SupportedAnnotationTypes("yapion.annotations.registration.YAPIONAccessGenerator")
 public class AccessGeneratorProcessor extends AbstractProcessor {
 
-    @YAPIONAccessGenerator(lombokExtensionMethods = true, setter = true)
-    private static final String accessTest = "src/main/java/yapion/serializing/annotationproccessing/accesstest.yapion";
-
     private Messager messager;
     private Element currentElement;
     private AtomicInteger index = new AtomicInteger(0);
