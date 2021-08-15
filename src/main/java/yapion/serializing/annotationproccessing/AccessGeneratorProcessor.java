@@ -115,7 +115,6 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
 
             ObjectContainer objectContainer = new ObjectContainer(yapionObject.getPlainValue("@name"), yapionObject);
-            System.out.println(objectContainer);
 
             ClassGenerator classGenerator = new ClassGenerator(packageName, objectContainer.getClassName());
             FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkValue", "<T> void", new ParameterGenerator(YAPIONValue.class.getTypeName() + "<?>", "value"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Consumer.class.getTypeName() + "<T>", "callback"), new ParameterGenerator(Predicate.class.getTypeName() + "<T>", "checkPredicate"));
@@ -185,7 +184,6 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 classGenerator.addAnnotation("@lombok.experimental.ExtensionMethod(yapion.serializing.annotationproccessing.ConstraintUtils.class)");
             }
             classGenerator.addImport("static yapion.serializing.annotationproccessing.ConstraintUtils.*");
-
             objectContainer.outputRoot(classGenerator);
 
             JavaFileObject f = processingEnv.getFiler().createSourceFile(classGenerator.getPackageName() + "." + classGenerator.getClassName());
@@ -290,17 +288,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         @Override
         public void output(ClassGenerator classGenerator) {
             if (!hidden) {
-                classGenerator.add(new FieldGenerator(new ModifierGenerator(ModifierType.PRIVATE), className, getName(), null));
-
-                FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "get" + toCamelCase(getName()), className);
-                functionGenerator.add("return " + getName() + ";");
-                classGenerator.add(functionGenerator);
-
-                if (setter.get()) {
-                    functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "set" + toCamelCase(getName()), void.class, new ParameterGenerator(className, getName()));
-                    functionGenerator.add("this." + getName() + " = " + getName() + ";");
-                    classGenerator.add(functionGenerator);
-                }
+                methodsAndField(classGenerator, getName(), className, isNonNull());
             }
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
@@ -332,39 +320,12 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public String constructorCall() {
-            return "checkArray(yapionObject.getArray(\"" + getName() + "\"), " + isNonNull() + ", " + YAPIONValue.class.getTypeName() + ".class, " + toClass().getTypeName() + ".class, value -> (" + toClass().getTypeName() + ") value.get(), " + constraints + ", value -> this." + getName() + " = value);";
+            return "checkArray(yapionObject.getArray(\"" + getName() + "\"), " + isNonNull() + ", " + YAPIONValue.class.getTypeName() + ".class, " + toClass(type).getTypeName() + ".class, value -> (" + toClass(type).getTypeName() + ") value.get(), " + constraints + ", value -> this." + getName() + " = value);";
         }
 
         @Override
         public void output(ClassGenerator classGenerator) {
-            classGenerator.add(new FieldGenerator(new ModifierGenerator(ModifierType.PRIVATE), "java.util.List<" + toClass().getTypeName() + ">", getName(), null));
-
-            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "get" + toCamelCase(getName()), "java.util.List<" + toClass().getTypeName() + ">");
-            functionGenerator.add("return " + getName() + ";");
-            classGenerator.add(functionGenerator);
-
-            if (setter.get()) {
-                functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "set" + toCamelCase(getName()), void.class, new ParameterGenerator("java.util.List<" + toClass().getTypeName() + ">", getName()));
-                functionGenerator.add("this." + getName() + " = " + getName() + ";");
-                classGenerator.add(functionGenerator);
-            }
-        }
-
-        private Class<?> toClass() {
-            return switch (type.toLowerCase()) {
-                case "string" -> String.class;
-                case "byte" -> Byte.class;
-                case "short" -> Short.class;
-                case "int", "integer" -> Integer.class;
-                case "long" -> Long.class;
-                case "biginteger" -> BigInteger.class;
-                case "float" -> Float.class;
-                case "double" -> Double.class;
-                case "bigdecimal" -> BigDecimal.class;
-                case "char", "character" -> Character.class;
-                case "bool", "boolean" -> Boolean.class;
-                default -> Object.class;
-            };
+            methodsAndField(classGenerator, getName(), "java.util.List<" + toClass(type).getTypeName() + ">", isNonNull());
         }
     }
 
@@ -390,39 +351,12 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public String constructorCall() {
-            return "checkValue(yapionObject.getValue(\"" + getName() + "\"), " + isNonNull() + ", " + toClass().getTypeName() + ".class, value -> this." + getName() + " = value, " + constraints + ");";
+            return "checkValue(yapionObject.getValue(\"" + getName() + "\"), " + isNonNull() + ", " + toClass(type).getTypeName() + ".class, value -> this." + getName() + " = value, " + constraints + ");";
         }
 
         @Override
         public void output(ClassGenerator classGenerator) {
-            classGenerator.add(new FieldGenerator(new ModifierGenerator(ModifierType.PRIVATE), toClass(), getName(), null));
-
-            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "get" + toCamelCase(getName()), toClass());
-            functionGenerator.add("return " + getName() + ";");
-            classGenerator.add(functionGenerator);
-
-            if (setter.get()) {
-                functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "set" + toCamelCase(getName()), void.class, new ParameterGenerator(toClass().getTypeName(), getName()));
-                functionGenerator.add("this." + getName() + " = " + getName() + ";");
-                classGenerator.add(functionGenerator);
-            }
-        }
-
-        private Class<?> toClass() {
-            return switch (type.toLowerCase()) {
-                case "string" -> String.class;
-                case "byte" -> Byte.class;
-                case "short" -> Short.class;
-                case "int", "integer" -> Integer.class;
-                case "long" -> Long.class;
-                case "biginteger" -> BigInteger.class;
-                case "float" -> Float.class;
-                case "double" -> Double.class;
-                case "bigdecimal" -> BigDecimal.class;
-                case "char", "character" -> Character.class;
-                case "bool", "boolean" -> Boolean.class;
-                default -> Object.class;
-            };
+            methodsAndField(classGenerator, getName(), toClass(type).getTypeName(), isNonNull());
         }
     }
 
@@ -444,17 +378,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public void output(ClassGenerator classGenerator) {
-            classGenerator.add(new FieldGenerator(new ModifierGenerator(ModifierType.PRIVATE), reference, getName(), null));
-
-            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "get" + toCamelCase(getName()), reference);
-            functionGenerator.add("return " + getName() + ";");
-            classGenerator.add(functionGenerator);
-
-            if (setter.get()) {
-                functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "set" + toCamelCase(getName()), void.class, new ParameterGenerator(reference, getName()));
-                functionGenerator.add("this." + getName() + " = " + getName() + ";");
-                classGenerator.add(functionGenerator);
-            }
+            methodsAndField(classGenerator, getName(), reference, isNonNull());
         }
     }
 
@@ -476,22 +400,49 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public void output(ClassGenerator classGenerator) {
-            classGenerator.add(new FieldGenerator(new ModifierGenerator(ModifierType.PRIVATE), "java.util.List<" + reference + ">", getName(), null));
-
-            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "get" + toCamelCase(getName()), "java.util.List<" + reference + ">");
-            functionGenerator.add("return " + getName() + ";");
-            classGenerator.add(functionGenerator);
-
-            if (setter.get()) {
-                functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "set" + toCamelCase(getName()), void.class, new ParameterGenerator("java.util.List<" + reference + ">", getName()));
-                functionGenerator.add("this." + getName() + " = " + getName() + ";");
-                classGenerator.add(functionGenerator);
-            }
+            methodsAndField(classGenerator, getName(), "java.util.List<" + reference + ">", isNonNull());
         }
     }
 
     public static String toCamelCase(String in) {
         if (in.isEmpty()) return in;
         return "" + Character.toTitleCase(in.charAt(0)) + in.substring(1);
+    }
+
+    public static Class<?> toClass(String type) {
+        return switch (type.toLowerCase()) {
+            case "string" -> String.class;
+            case "byte" -> Byte.class;
+            case "short" -> Short.class;
+            case "int", "integer" -> Integer.class;
+            case "long" -> Long.class;
+            case "biginteger" -> BigInteger.class;
+            case "float" -> Float.class;
+            case "double" -> Double.class;
+            case "bigdecimal" -> BigDecimal.class;
+            case "char", "character" -> Character.class;
+            case "bool", "boolean" -> Boolean.class;
+            default -> Object.class;
+        };
+    }
+
+    public void methodsAndField(ClassGenerator classGenerator, String name, String type, boolean nonNull) {
+        classGenerator.add(new FieldGenerator(new ModifierGenerator(ModifierType.PRIVATE), type, name, null));
+
+        if (!nonNull) {
+            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "is" + toCamelCase(name) + "Present", "boolean");
+            functionGenerator.add("return " + name + " != null;");
+            classGenerator.add(functionGenerator);
+        }
+
+        FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "get" + toCamelCase(name), type);
+        functionGenerator.add("return " + name + ";");
+        classGenerator.add(functionGenerator);
+
+        if (setter.get()) {
+            functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "set" + toCamelCase(name), void.class, new ParameterGenerator(type, name));
+            functionGenerator.add("this." + name + " = " + name + ";");
+            classGenerator.add(functionGenerator);
+        }
     }
 }
