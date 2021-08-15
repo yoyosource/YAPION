@@ -279,7 +279,9 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             containerElementList.forEach(containerElement -> {
                 String constructorCall = containerElement.constructorCall();
                 if (!constructorCall.isEmpty()) {
-                    functionGenerator.add(constructorCall);
+                    for (String s : constructorCall.split("\n")) {
+                        functionGenerator.add(s);
+                    }
                 }
                 containerElement.output(finalClassGenerator);
             });
@@ -298,7 +300,12 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             classGenerator.add(functionGenerator);
             ClassGenerator finalClassGenerator = classGenerator;
             containerElementList.forEach(containerElement -> {
-                functionGenerator.add(containerElement.constructorCall());
+                String constructorCall = containerElement.constructorCall();
+                if (!constructorCall.isEmpty()) {
+                    for (String s : constructorCall.split("\n")) {
+                        functionGenerator.add(s);
+                    }
+                }
                 containerElement.output(finalClassGenerator);
             });
         }
