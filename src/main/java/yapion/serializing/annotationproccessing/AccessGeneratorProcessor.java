@@ -155,7 +155,28 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             functionGenerator.add("callback.accept(t);");
             classGenerator.add(functionGenerator);
 
-            // TODO: implement checkArray
+            functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkArray", "<T, K extends " + YAPIONAnyType.class.getTypeName() + "> void", new ParameterGenerator(YAPIONArray.class.getTypeName(), "array"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<K>", "yapionType"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Function.class.getTypeName() + "<K, T>", "converter"), new ParameterGenerator(Predicate.class.getTypeName() + "<T>", "checkPredicate"), new ParameterGenerator(Consumer.class.getTypeName() + "<" + List.class.getTypeName() + "<T>>", "callback"));
+            functionGenerator.add("if (array == null) {");
+            functionGenerator.add("    if (nonNull) {");
+            functionGenerator.add("        throw new yapion.exceptions.YAPIONException(\"Array is not present\");");
+            functionGenerator.add("    } else {");
+            functionGenerator.add("        callback.accept(null);");
+            functionGenerator.add("        return;");
+            functionGenerator.add("    }");
+            functionGenerator.add("}");
+            functionGenerator.add("java.util.List<T> list = new java.util.ArrayList<>();");
+            functionGenerator.add("array.forEach(yapionAnyType -> {");
+            functionGenerator.add("    if (!yapionType.isInstance(yapionAnyType)) {");
+            functionGenerator.add("        throw new yapion.exceptions.YAPIONException(\"Illegal Instance\");");
+            functionGenerator.add("    }");
+            functionGenerator.add("    T converted = converter.apply((K) yapionAnyType);");
+            functionGenerator.add("    if (checkPredicate != null && !checkPredicate.test(converted)) {");
+            functionGenerator.add("        throw new yapion.exceptions.YAPIONException(\"Checks failed\");");
+            functionGenerator.add("    }");
+            functionGenerator.add("    list.add(converted);");
+            functionGenerator.add("});");
+            functionGenerator.add("callback.accept(list);");
+            classGenerator.add(functionGenerator);
 
             if (lombokExtensionMethod.get()) {
                 classGenerator.addAnnotation("@lombok.experimental.ExtensionMethod(yapion.serializing.annotationproccessing.ConstraintUtils.class)");
@@ -172,20 +193,6 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         }
 
         return true;
-    }
-
-    private static <T> void checkArray(YAPIONArray array, boolean nonNull, Function<YAPIONAnyType, T> converter, Consumer<List<T>> callback) {
-        if (array == null) {
-            if (nonNull) {
-                throw new YAPIONException("Array is not present");
-            } else {
-                callback.accept(null);
-                return;
-            }
-        }
-        List<T> list = new ArrayList<>();
-        array.forEach(yapionAnyType -> list.add(converter.apply(yapionAnyType)));
-        callback.accept(list);
     }
 
     private void error(String msg, Object... args) {
