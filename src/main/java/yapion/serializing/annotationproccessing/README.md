@@ -174,16 +174,21 @@ The variable definition for `test` can be written in another way like:
 }
 ```
 
-This defines the same as the above, but can do one more thing, constraints:
+This defines the same as the above, but can do more things:
 ```yapion
 {
     @name(Config)
     test{
         @type(LONG)
         constraints(<SOME JAVA-LAMBDA EXPRESSION>)
+        default(<DEFAULT VALUE>)
     }
 }
 ```
 
+#### Constraints
 A constraint is one more validation step for this variable. You can use it to check for specific String lengths or number ranges or even more complex stuff with the variable given. The lambda expression needs to return a boolean where `true` means valid and `false` invalid.
 The `ConstraintsUtils` class defines some utilities to validate values. You can just call them without importing them, as they are statically imported directly.
+
+#### Default
+The default value needs to have the same type as the `@type` variable defines and can have any value. It will not be checked against the constraints. 

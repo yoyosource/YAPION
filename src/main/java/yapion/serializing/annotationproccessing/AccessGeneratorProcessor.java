@@ -21,6 +21,7 @@ import yapion.annotations.registration.YAPIONAccessGenerator;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.annotationproccessing.generator.*;
@@ -35,15 +36,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ProcessorImplementation
@@ -114,8 +113,12 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             ObjectContainer objectContainer = new ObjectContainer(yapionObject.getPlainValue("@name"), yapionObject);
 
             ClassGenerator classGenerator = new ClassGenerator(packageName, objectContainer.getClassName());
-            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkValue", "<T> void", new ParameterGenerator(YAPIONValue.class.getTypeName() + "<?>", "value"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Consumer.class.getTypeName() + "<T>", "callback"), new ParameterGenerator(Predicate.class.getTypeName() + "<T>", "checkPredicate"));
+            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkValue", "<T> void", new ParameterGenerator(YAPIONValue.class.getTypeName() + "<?>", "value"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Supplier.class.getTypeName() + "<T>", "defaultValue"), new ParameterGenerator(Consumer.class.getTypeName() + "<T>", "callback"), new ParameterGenerator(Predicate.class.getTypeName() + "<T>", "checkPredicate"));
             functionGenerator.add("if (value == null) {");
+            functionGenerator.add("    if (defaultValue != null) {");
+            functionGenerator.add("        callback.accept(defaultValue.get());");
+            functionGenerator.add("        return;");
+            functionGenerator.add("    }");
             functionGenerator.add("    if (nonNull) {");
             functionGenerator.add("        throw new yapion.exceptions.YAPIONException(\"Value is not present\");");
             functionGenerator.add("    } else {");
@@ -125,6 +128,10 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             functionGenerator.add("}");
             functionGenerator.add("T t = (T) value.get();");
             functionGenerator.add("if (t == null) {");
+            functionGenerator.add("    if (defaultValue != null) {");
+            functionGenerator.add("        callback.accept(defaultValue.get());");
+            functionGenerator.add("        return;");
+            functionGenerator.add("    }");
             functionGenerator.add("    if (nonNull) {");
             functionGenerator.add("        throw new yapion.exceptions.YAPIONException(\"Value is null\");");
             functionGenerator.add("    } else {");
@@ -133,6 +140,10 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             functionGenerator.add("    }");
             functionGenerator.add("}");
             functionGenerator.add("if (!checkPredicate.test(t)) {");
+            functionGenerator.add("    if (defaultValue != null) {");
+            functionGenerator.add("        callback.accept(defaultValue.get());");
+            functionGenerator.add("        return;");
+            functionGenerator.add("    }");
             functionGenerator.add("    throw new yapion.exceptions.YAPIONException(\"Checks failed\");");
             functionGenerator.add("}");
             functionGenerator.add("callback.accept(t);");
@@ -339,12 +350,46 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         private String type;
         private String constraints;
+        private Optional<String> defaultValue = Optional.empty();
 
         public ValueContainer(String name, YAPIONObject yapionObject) {
             super(name);
             type = yapionObject.getPlainValueOrDefault("@type", "OBJECT");
             constraints = yapionObject.getPlainValueOrDefault("constraints", "ignored -> true");
             constraints = Arrays.stream(constraints.split("\n")).map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.joining("\n"));
+
+            if (yapionObject.containsKey("default", YAPIONType.VALUE)) {
+                Object object = yapionObject.getValue("default").get();
+                if (object.getClass() != toClass(type)) {
+                    error("The type of the default value did not match the given variable type");
+                    return;
+                }
+                if (object instanceof String s) {
+                    defaultValue = Optional.of("\"" + s + "\"");
+                } else if (object instanceof Byte b) {
+                    defaultValue = Optional.of("(byte) " + b);
+                } else if (object instanceof Short s) {
+                    defaultValue = Optional.of("(short) " + s);
+                } else if (object instanceof Integer i) {
+                    defaultValue = Optional.of("" + i);
+                } else if (object instanceof Long l) {
+                    defaultValue = Optional.of("" + l + "L");
+                } else if (object instanceof BigInteger bi) {
+                    defaultValue = Optional.of("new " + BigInteger.class.getTypeName() + "(" + bi.toString() + ")");
+                } else if (object instanceof Float f) {
+                    defaultValue = Optional.of("" + f + "F");
+                } else if (object instanceof Double d) {
+                    defaultValue = Optional.of("" + d + "D");
+                } else if (object instanceof BigDecimal bd) {
+                    defaultValue = Optional.of("new " + BigDecimal.class.getTypeName() + "(" + bd.toString() + ")");
+                } else if (object instanceof Character c) {
+                    defaultValue = Optional.of("'" + c + "'");
+                } else if (object instanceof Boolean b) {
+                    defaultValue = Optional.of("" + b);
+                } else {
+                    defaultValue = Optional.of("null");
+                }
+            }
         }
 
         public ValueContainer(String name, YAPIONValue<String> yapionValue) {
@@ -355,7 +400,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public String constructorCall() {
-            return "checkValue(yapionObject.getValue(\"" + getName() + "\"), " + isNonNull() + ", " + toClass(type).getTypeName() + ".class, value -> this." + getName() + " = value, " + constraints + ");";
+            return "checkValue(yapionObject.getValue(\"" + getName() + "\"), " + isNonNull() + ", " + toClass(type).getTypeName() + ".class, " + (defaultValue.map(s -> "() -> " + s).orElse("null")) + ", value -> this." + getName() + " = value, " + constraints + ");";
         }
 
         @Override
