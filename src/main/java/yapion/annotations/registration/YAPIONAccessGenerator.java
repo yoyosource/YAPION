@@ -21,8 +21,32 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.FIELD})
 public @interface YAPIONAccessGenerator {
+
+    /**
+     * Inline configuration instead of file reference.
+     *
+     * @return {@code true} for inline, {@code false} for file reference from repository root.
+     */
     boolean inline() default false;
+
+    /**
+     * Generate setter as well.
+     *
+     * @return {@code true} for setter generation, {@code false} otherwise.
+     */
     boolean setter() default false;
+
+    /**
+     * Apply the {@link lombok.ToString} annotation to every class.
+     *
+     * @return {@code true} for toString generation, {@code false} otherwise.
+     */
     boolean lombokToString() default false;
+
+    /**
+     * Apply the {@link lombok.experimental.ExtensionMethod} annotation to the root class with the {@link yapion.serializing.annotationproccessing.ConstraintUtils} class parameter.
+     *
+     * @return {@code true} for extensionMethod usage, {@code false} otherwise.
+     */
     boolean lombokExtensionMethods() default false;
 }

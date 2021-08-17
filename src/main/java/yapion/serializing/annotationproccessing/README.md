@@ -228,4 +228,60 @@ While using the long reference form you can add more values to the object if nee
 }
 ```
 
+### Hidden
+You can also hide an object. This will not generate a field in the current class.
+```yapion
+{
+    @name(Config)
+    auth{
+        @name(Auth)
+        @hidden(true)
+        port{
+            @type(INT)
+            constraints(i -> i >= 0 && i < 65536)
+        }
+        username(STRING)
+        password(String)
+    }
+    authWithIp{
+        @name(AuthWithIp)
+        @reference(Auth)
+        @hidden(true)
+        ip(String)
+    }
+    database(@Auth)
+    websiteLogin(@Auth)
+    queryLogin(@AuthWithIp)
+}
+```
+
 ## Arrays
+There are two types of arrays, reference arrays and value arrays. Both have a short and long form. Any array will be a `java.util.List` as type and a `java.util.ArrayList` as implementation.
+```yapion
+{
+    @name(Config)
+    longArray(LONG[])
+    anotherLongArray{
+        @arrayType(LONG)
+        constraints(element -> element >= 0)
+    }
+    reference{
+        @name(SSH)
+        @hidden(true)
+        name(STRING)
+        ip!(String)
+    }
+    sshArray(@SSH[])
+    anotherSshArray{
+        @arrayReference(SSH)
+        @name(SHHWithPort)
+        port{
+            @type(INT)
+            cosntraints(port -> port >= 0 && port <= 65536)
+        }
+    }
+}
+```
+
+## Pointers and Maps
+YAPIONPointer's and YAPIONMap's are not supported by this AccessGeneratorProcessor **yet**. I plan to implement YAPIONMap's in the future.

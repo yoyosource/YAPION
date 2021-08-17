@@ -191,6 +191,9 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             if (lombokExtensionMethod.get()) {
                 classGenerator.addAnnotation("@lombok.experimental.ExtensionMethod(yapion.serializing.annotationproccessing.ConstraintUtils.class)");
             }
+            if (lombokToString.get()) {
+                classGenerator.addAnnotation(ToString.class.getTypeName());
+            }
             classGenerator.addImport("static yapion.serializing.annotationproccessing.ConstraintUtils.*");
             objectContainer.outputRoot(classGenerator);
 
@@ -245,36 +248,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 className = "_" + index.incrementAndGet();
             }
             hidden = yapionObject.getPlainValueOrDefault("@hidden", false);
-            yapionObject.forEach((s, yapionAnyType) -> {
-                if (s.equals("@name")) {
-                    return;
-                }
-                if (s.equals("@hidden")) {
-                    return;
-                }
-                if (yapionAnyType instanceof YAPIONObject object) {
-                    if (object.containsKey("@type", String.class)) {
-                        containerElementList.add(new ValueContainer(s, object));
-                    } else if (object.containsKey("@arrayType", String.class)) {
-                        containerElementList.add(new ArrayContainer(s, object));
-                    } else if (object.containsKey("@reference", String.class)) {
-                        containerElementList.add(new ObjectReferenceContainer(s, object));
-                    } else if (object.containsKey("@arrayReference", String.class)) {
-                        containerElementList.add(new ArrayReferenceContainer(s, object));
-                    } else {
-                        containerElementList.add(new ObjectContainer(s, object));
-                    }
-                } else if (yapionAnyType instanceof YAPIONValue value) {
-                    String v = value.get().toString();
-                    if (v.startsWith("@")) {
-                        containerElementList.add(new ObjectReferenceContainer(s, value));
-                    } else {
-                        containerElementList.add(new ValueContainer(s, value));
-                    }
-                } else {
-                    error("Only YAPIONObjects are allowed to specify types: {}", yapionAnyType);
-                }
-            });
+            checkElements(yapionObject, containerElementList::add);
         }
 
         @Override
@@ -307,6 +281,9 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
+            if (lombokToString.get()) {
+                currentGenerator.addAnnotation(ToString.class.getTypeName());
+            }
             classGenerator.add(currentGenerator);
             classGenerator = currentGenerator;
             FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName(), new ParameterGenerator(YAPIONObject.class.getTypeName(), "yapionObject"));
@@ -342,40 +319,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
             hidden = yapionObject.getPlainValueOrDefault("@hidden", false);
             reference = yapionObject.getPlainValue("@reference");
-
-            yapionObject.forEach((s, yapionAnyType) -> {
-                if (s.equals("@name")) {
-                    return;
-                }
-                if (s.equals("@hidden")) {
-                    return;
-                }
-                if (s.equals("@reference")) {
-                    return;
-                }
-                if (yapionAnyType instanceof YAPIONObject object) {
-                    if (object.containsKey("@type", String.class)) {
-                        containerElementList.add(new ValueContainer(s, object));
-                    } else if (object.containsKey("@arrayType", String.class)) {
-                        containerElementList.add(new ArrayContainer(s, object));
-                    } else if (object.containsKey("@reference", String.class)) {
-                        containerElementList.add(new ObjectReferenceContainer(s, object));
-                    } else if (object.containsKey("@arrayReference", String.class)) {
-                        containerElementList.add(new ArrayReferenceContainer(s, object));
-                    } else {
-                        containerElementList.add(new ObjectContainer(s, object));
-                    }
-                } else if (yapionAnyType instanceof YAPIONValue value) {
-                    String v = value.get().toString();
-                    if (v.startsWith("@")) {
-                        containerElementList.add(new ObjectReferenceContainer(s, value));
-                    } else {
-                        containerElementList.add(new ValueContainer(s, value));
-                    }
-                } else {
-                    error("Only YAPIONObjects are allowed to specify types: {}", yapionAnyType);
-                }
-            });
+            checkElements(yapionObject, containerElementList::add);
         }
 
         public ObjectReferenceContainer(String name, YAPIONValue<String> yapionValue) {
@@ -405,6 +349,72 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
+            if (lombokToString.get()) {
+                currentGenerator.addAnnotation(ToString.class.getTypeName());
+            }
+            currentGenerator.setExtendsString(reference);
+            classGenerator.add(currentGenerator);
+            classGenerator = currentGenerator;
+            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName(), new ParameterGenerator(YAPIONObject.class.getTypeName(), "yapionObject"));
+            functionGenerator.add("super(yapionObject);");
+            classGenerator.add(functionGenerator);
+            ClassGenerator finalClassGenerator = classGenerator;
+            containerElementList.forEach(containerElement -> {
+                String constructorCall = containerElement.constructorCall();
+                if (!constructorCall.isEmpty()) {
+                    for (String s : constructorCall.split("\n")) {
+                        functionGenerator.add(s);
+                    }
+                }
+                containerElement.output(finalClassGenerator);
+            });
+        }
+    }
+
+    @ToString(callSuper = true)
+    @Getter
+    private class ArrayReferenceContainer extends ContainerElement {
+
+        private List<ContainerElement> containerElementList = new ArrayList<>();
+        private String className;
+        private String reference;
+
+        public ArrayReferenceContainer(String name, YAPIONObject yapionObject) {
+            super(name);
+            if (yapionObject.containsKey("@name", String.class)) {
+                className = yapionObject.getPlainValue("@name");
+            } else {
+                className = "_" + index.incrementAndGet();
+            }
+            reference = yapionObject.getPlainValue("@arrayReference");
+            checkElements(yapionObject, containerElementList::add);
+        }
+
+        public ArrayReferenceContainer(String name, YAPIONValue<String> yapionValue) {
+            super(name);
+            reference = yapionValue.get().substring(1, yapionValue.get().length() - 2);
+        }
+
+        @Override
+        public String constructorCall() {
+            if (containerElementList.isEmpty()) {
+                return "checkArray(yapionObject.getArray(\"" + getName() + "\"), " + isNonNull() + ", " + YAPIONObject.class.getTypeName() + ".class, " + reference + ".class, " + reference + "::new, null, value -> this." + getName() + " = value);";
+            }
+            return "checkArray(yapionObject.getArray(\"" + getName() + "\"), " + isNonNull() + ", " + YAPIONObject.class.getTypeName() + ".class, " + className + ".class, " + className + "::new, null, value -> this." + getName() + " = value);";
+        }
+
+        @Override
+        public void output(ClassGenerator classGenerator) {
+            if (containerElementList.isEmpty()) {
+                methodsAndField(classGenerator, getName(), "java.util.List<" + reference + ">", isNonNull());
+                return;
+            }
+            methodsAndField(classGenerator, getName(), "java.util.List<" + className + ">", isNonNull());
+
+            ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
+            if (lombokToString.get()) {
+                currentGenerator.addAnnotation(ToString.class.getTypeName());
+            }
             currentGenerator.setExtendsString(reference);
             classGenerator.add(currentGenerator);
             classGenerator = currentGenerator;
@@ -436,6 +446,12 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             type = yapionObject.getPlainValueOrDefault("@arrayType", "OBJECT");
             constraints = yapionObject.getPlainValueOrDefault("constraints", "ignored -> true");
             constraints = Arrays.stream(constraints.split("\n")).map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.joining("\n"));
+        }
+
+        public ArrayContainer(String name, YAPIONValue<String> yapionValue) {
+            super(name);
+            type = yapionValue.get().substring(0, yapionValue.get().length() - 2);
+            constraints = "ignored -> true";
         }
 
         @Override
@@ -514,26 +530,42 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         }
     }
 
-    @ToString(callSuper = true)
-    @Getter
-    private class ArrayReferenceContainer extends ContainerElement {
-
-        private String reference;
-
-        public ArrayReferenceContainer(String name, YAPIONObject yapionObject) {
-            super(name);
-            reference = yapionObject.getPlainValue("@arrayReference");
-        }
-
-        @Override
-        public String constructorCall() {
-            return "checkArray(yapionObject.getArray(\"" + getName() + "\"), " + isNonNull() + ", " + YAPIONObject.class.getTypeName() + ".class, " + reference + ".class, " + reference + "::new, null, value -> this." + getName() + " = value);";
-        }
-
-        @Override
-        public void output(ClassGenerator classGenerator) {
-            methodsAndField(classGenerator, getName(), "java.util.List<" + reference + ">", isNonNull());
-        }
+    public void checkElements(YAPIONObject yapionObject, Consumer<ContainerElement> resultConsumer) {
+        yapionObject.forEach((s, yapionAnyType) -> {
+            if (s.startsWith("@")) {
+                return;
+            }
+            if (yapionAnyType instanceof YAPIONObject object) {
+                if (object.containsKey("@type", String.class)) {
+                    resultConsumer.accept(new ValueContainer(s, object));
+                } else if (object.containsKey("@arrayType", String.class)) {
+                    resultConsumer.accept(new ArrayContainer(s, object));
+                } else if (object.containsKey("@reference", String.class)) {
+                    resultConsumer.accept(new ObjectReferenceContainer(s, object));
+                } else if (object.containsKey("@arrayReference", String.class)) {
+                    resultConsumer.accept(new ArrayReferenceContainer(s, object));
+                } else {
+                    resultConsumer.accept(new ObjectContainer(s, object));
+                }
+            } else if (yapionAnyType instanceof YAPIONValue value) {
+                String v = value.get().toString();
+                if (v.endsWith("[]")) {
+                    if (v.startsWith("@")) {
+                        resultConsumer.accept(new ArrayReferenceContainer(s, value));
+                    } else {
+                        resultConsumer.accept(new ArrayContainer(s, value));
+                    }
+                } else {
+                    if (v.startsWith("@")) {
+                        resultConsumer.accept(new ObjectReferenceContainer(s, value));
+                    } else {
+                        resultConsumer.accept(new ValueContainer(s, value));
+                    }
+                }
+            } else {
+                error("Only YAPIONObjects are allowed to specify types: {}", yapionAnyType);
+            }
+        });
     }
 
     public static String toCamelCase(String in) {
