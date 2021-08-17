@@ -265,7 +265,12 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                         containerElementList.add(new ObjectContainer(s, object));
                     }
                 } else if (yapionAnyType instanceof YAPIONValue value) {
-                    containerElementList.add(new ValueContainer(s, value));
+                    String v = value.get().toString();
+                    if (v.startsWith("@")) {
+                        containerElementList.add(new ObjectReferenceContainer(s, value));
+                    } else {
+                        containerElementList.add(new ValueContainer(s, value));
+                    }
                 } else {
                     error("Only YAPIONObjects are allowed to specify types: {}", yapionAnyType);
                 }
@@ -305,6 +310,106 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             classGenerator.add(currentGenerator);
             classGenerator = currentGenerator;
             FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName(), new ParameterGenerator(YAPIONObject.class.getTypeName(), "yapionObject"));
+            classGenerator.add(functionGenerator);
+            ClassGenerator finalClassGenerator = classGenerator;
+            containerElementList.forEach(containerElement -> {
+                String constructorCall = containerElement.constructorCall();
+                if (!constructorCall.isEmpty()) {
+                    for (String s : constructorCall.split("\n")) {
+                        functionGenerator.add(s);
+                    }
+                }
+                containerElement.output(finalClassGenerator);
+            });
+        }
+    }
+
+    @ToString(callSuper = true)
+    @Getter
+    private class ObjectReferenceContainer extends ContainerElement {
+
+        private List<ContainerElement> containerElementList = new ArrayList<>();
+        private String className;
+        private boolean hidden;
+        private String reference;
+
+        public ObjectReferenceContainer(String name, YAPIONObject yapionObject) {
+            super(name);
+            if (yapionObject.containsKey("@name", String.class)) {
+                className = yapionObject.getPlainValue("@name");
+            } else {
+                className = "_" + index.incrementAndGet();
+            }
+            hidden = yapionObject.getPlainValueOrDefault("@hidden", false);
+            reference = yapionObject.getPlainValue("@reference");
+
+            yapionObject.forEach((s, yapionAnyType) -> {
+                if (s.equals("@name")) {
+                    return;
+                }
+                if (s.equals("@hidden")) {
+                    return;
+                }
+                if (s.equals("@reference")) {
+                    return;
+                }
+                if (yapionAnyType instanceof YAPIONObject object) {
+                    if (object.containsKey("@type", String.class)) {
+                        containerElementList.add(new ValueContainer(s, object));
+                    } else if (object.containsKey("@arrayType", String.class)) {
+                        containerElementList.add(new ArrayContainer(s, object));
+                    } else if (object.containsKey("@reference", String.class)) {
+                        containerElementList.add(new ObjectReferenceContainer(s, object));
+                    } else if (object.containsKey("@arrayReference", String.class)) {
+                        containerElementList.add(new ArrayReferenceContainer(s, object));
+                    } else {
+                        containerElementList.add(new ObjectContainer(s, object));
+                    }
+                } else if (yapionAnyType instanceof YAPIONValue value) {
+                    String v = value.get().toString();
+                    if (v.startsWith("@")) {
+                        containerElementList.add(new ObjectReferenceContainer(s, value));
+                    } else {
+                        containerElementList.add(new ValueContainer(s, value));
+                    }
+                } else {
+                    error("Only YAPIONObjects are allowed to specify types: {}", yapionAnyType);
+                }
+            });
+        }
+
+        public ObjectReferenceContainer(String name, YAPIONValue<String> yapionValue) {
+            super(name);
+            reference = yapionValue.get().substring(1);
+        }
+
+        @Override
+        public String constructorCall() {
+            if (containerElementList.isEmpty()) {
+                return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + reference + "::new, value -> this." + getName() + " = value);";
+            }
+            if (hidden) {
+                return "";
+            }
+            return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + getClassName() + "::new, value -> this." + getName() + " = value);";
+        }
+
+        @Override
+        public void output(ClassGenerator classGenerator) {
+            if (containerElementList.isEmpty()) {
+                methodsAndField(classGenerator, getName(), reference, isNonNull());
+                return;
+            }
+            if (!hidden) {
+                methodsAndField(classGenerator, getName(), className, isNonNull());
+            }
+
+            ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
+            currentGenerator.setExtendsString(reference);
+            classGenerator.add(currentGenerator);
+            classGenerator = currentGenerator;
+            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName(), new ParameterGenerator(YAPIONObject.class.getTypeName(), "yapionObject"));
+            functionGenerator.add("super(yapionObject);");
             classGenerator.add(functionGenerator);
             ClassGenerator finalClassGenerator = classGenerator;
             containerElementList.forEach(containerElement -> {
@@ -406,28 +511,6 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         @Override
         public void output(ClassGenerator classGenerator) {
             methodsAndField(classGenerator, getName(), toClass(type).getTypeName(), isNonNull());
-        }
-    }
-
-    @ToString(callSuper = true)
-    @Getter
-    private class ObjectReferenceContainer extends ContainerElement {
-
-        private String reference;
-
-        public ObjectReferenceContainer(String name, YAPIONObject yapionObject) {
-            super(name);
-            reference = yapionObject.getPlainValue("@reference");
-        }
-
-        @Override
-        public String constructorCall() {
-            return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + reference + "::new, value -> this." + getName() + " = value);";
-        }
-
-        @Override
-        public void output(ClassGenerator classGenerator) {
-            methodsAndField(classGenerator, getName(), reference, isNonNull());
         }
     }
 

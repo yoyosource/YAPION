@@ -36,6 +36,7 @@ public class ClassGenerator {
     private final String className;
 
     private Set<String> imports = new LinkedHashSet<>();
+    private String extendsString = null;
     private List<String> interfaces = new ArrayList<>();
     private List<FieldGenerator> fields = new ArrayList<>();
     private List<FunctionGenerator> functions = new ArrayList<>();
@@ -49,6 +50,11 @@ public class ClassGenerator {
 
     public ClassGenerator addImport(String importName) {
         imports.add(importName);
+        return this;
+    }
+
+    public ClassGenerator setExtendsString(String extendsString) {
+        this.extendsString = extendsString;
         return this;
     }
 
@@ -121,7 +127,7 @@ public class ClassGenerator {
             strings.add(Indentator.QUAD_SPACE.indent(indent) + s);
         });
         String s = String.join(", ", interfaces);
-        strings.add(Indentator.QUAD_SPACE.indent(indent) + modifierGenerator.output() + "class " + className + (s.isEmpty() ? "" : " implements " + s) + " {");
+        strings.add(Indentator.QUAD_SPACE.indent(indent) + modifierGenerator.output() + "class " + className + (extendsString == null ? "" : " extends " + extendsString) + (s.isEmpty() ? "" : " implements " + s) + " {");
         fields.forEach(fieldGenerator -> {
             List<String> current = fieldGenerator.output(indent + 1);
             if (current.size() != 1) {

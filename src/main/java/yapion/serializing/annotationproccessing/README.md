@@ -1,13 +1,11 @@
 # SerializingProcessor
 
 # AccessGeneratorProcessor
-
 The AccessGeneratorProcessor is for generating class files used to access YAPIONObjects statically and strong types. This can be used to access configs or some other kind of configuration oder data file.
 
 This feature consist of two mayor parts, the java code to define the generation and an optional external source.
 
 ## Simple usage
-
 For the generator to function you need a field in any class annotated by `YAPIONAccessGenerator` holding a string and having the modifiers `static` and `final`.
 ```java
 import yapion.annotations.registration.YAPIONAccessGenerator;
@@ -22,10 +20,9 @@ public class TestAccessGenerator {
 }
 ```
 
-The config can be written in YAPION or JSON, either directly as a String into the as the second field or in an external file.
+The config can be written in YAPION or JSON, either directly as a String into the field or in an external file.
 
 ### A simple Config
-
 A simple config just defines some values to hold, nothing fancy.
 ```yapion
 {
@@ -48,7 +45,7 @@ Allowed value types are, mixed case is allowed:
 - bool or boolean
 - any or anything else will be converted to Object or any value
 
-The example config above is not complete though. When compiling the compiler will a `@name` variable is missing. This variable defines the name of the current object or generated class.  
+The example config above is not complete though. When compiling the compiler will say that a `@name` variable is missing. This variable defines the name of the current object or generated class.  
 The complete config would look something like this:
 ```yapion
 {
@@ -102,9 +99,7 @@ One example config for the above stated definition could look something like thi
 ```
 
 ## Using the generated code
-
 After generating such a config file or config string we can use the so called `Config` class within our code.
-
 ```java
 import yapion.annotations.registration.YAPIONAccessGenerator;
 import yapion.hierarchy.types.YAPIONObject;
@@ -135,9 +130,7 @@ public class TestAccessGenerator {
 ```
 
 ### Null magic
-
 Sometimes null values are not desired, if so just append an exclamation point after the variable name. This does not apply to any variable prefixed with '@'.
-
 ```yapion
 {
     @name(Config)
@@ -155,7 +148,6 @@ Sometimes null values are not desired, if so just append an exclamation point af
 This now defines to always have the `auth` section and also the `token` variable within the `auth` section. The `is???Present()` methods will not be generated as the keys cannot be null.
 
 ### This is too short
-
 If we go back to the basic config:
 ```yapion
 {
@@ -191,4 +183,49 @@ A constraint is one more validation step for this variable. You can use it to ch
 The `ConstraintsUtils` class defines some utilities to validate values. You can just call them without importing them, as they are statically imported directly.
 
 #### Default
-The default value needs to have the same type as the `@type` variable defines and can have any value. It will not be checked against the constraints. 
+The default value needs to have the same type as the `@type` variable defines and can have any value. It will not be checked against the constraints.
+
+## What about duplications?
+If you have 2 parts in one configuration that have the same structure you can use a `reference`.
+```yapion
+{
+    @name(Config)
+    database{
+        @name(Auth)
+        port{
+            @type(INT)
+            constraints(i -> i >= 0 && i < 65536)
+        }
+        username(STRING)
+        password(String)
+    }
+    websiteLogin(@Auth)
+    queryLogin{
+        @reference(Auth)
+    }
+}
+```
+
+You can either use the long form or the short form, as you see above. This can be useful when many sections are the same in your config.
+While using the long reference form you can add more values to the object if need be. Something like this:
+```yapion
+{
+    @name(Config)
+    database{
+        @name(Auth)
+        port{
+            @type(INT)
+            constraints(i -> i >= 0 && i < 65536)
+        }
+        username(STRING)
+        password(String)
+    }
+    websiteLogin(@Auth)
+    queryLogin{
+        @reference(Auth)
+        ip(STRING)
+    }
+}
+```
+
+## Arrays
