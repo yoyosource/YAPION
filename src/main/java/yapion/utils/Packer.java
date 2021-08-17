@@ -52,8 +52,9 @@ public class Packer {
             if (!f.isFile()) continue;
             if (!filter.test(f)) continue;
 
-            System.out.println("Packing: " + f.getAbsolutePath());
-            String fileName = f.getAbsolutePath().substring(substringLength);
+            String fileName = f.getAbsolutePath().replace('\\', '/');
+            System.out.println("Packing: " + fileName);
+            fileName = f.getAbsolutePath().substring(substringLength);
 
             zarOutputStream.addFile(fileName, f.length());
             FileInputStream fileInputStream = new FileInputStream(f);
