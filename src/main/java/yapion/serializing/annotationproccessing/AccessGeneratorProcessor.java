@@ -192,7 +192,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 classGenerator.addAnnotation("@lombok.experimental.ExtensionMethod(yapion.serializing.annotationproccessing.ConstraintUtils.class)");
             }
             if (lombokToString.get()) {
-                classGenerator.addAnnotation(ToString.class.getTypeName());
+                classGenerator.addAnnotation(ToString.class);
             }
             classGenerator.addImport("static yapion.serializing.annotationproccessing.ConstraintUtils.*");
             objectContainer.outputRoot(classGenerator);
@@ -282,7 +282,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
             if (lombokToString.get()) {
-                currentGenerator.addAnnotation(ToString.class.getTypeName());
+                currentGenerator.addAnnotation(ToString.class);
             }
             classGenerator.add(currentGenerator);
             classGenerator = currentGenerator;
@@ -350,7 +350,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
             if (lombokToString.get()) {
-                currentGenerator.addAnnotation(ToString.class.getTypeName());
+                currentGenerator.addAnnotation(ToString.class);
             }
             currentGenerator.setExtendsString(reference);
             classGenerator.add(currentGenerator);
@@ -413,7 +413,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
             if (lombokToString.get()) {
-                currentGenerator.addAnnotation(ToString.class.getTypeName());
+                currentGenerator.addAnnotation(ToString.class);
             }
             currentGenerator.setExtendsString(reference);
             classGenerator.add(currentGenerator);

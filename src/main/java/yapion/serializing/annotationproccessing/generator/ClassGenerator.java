@@ -64,7 +64,11 @@ public class ClassGenerator {
     }
 
     public ClassGenerator addAnnotation(String type) {
-        annotations.add(type);
+        if (type.startsWith("@")) {
+            annotations.add(type);
+        } else {
+            annotations.add("@" + type);
+        }
         return this;
     }
 
