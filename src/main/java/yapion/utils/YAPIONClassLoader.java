@@ -19,6 +19,7 @@ import yapion.serializing.zar.ZarInputStream;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -30,7 +31,7 @@ public class YAPIONClassLoader extends ClassLoader {
     private Map<String, Class<?>> current = new HashMap<>();
     private ClassLoader parent;
 
-    private Map<String, byte[]> classData = new HashMap<>();
+    private Map<String, byte[]> classData = new LinkedHashMap<>();
 
     public YAPIONClassLoader(ClassLoader parent) {
         super(parent);
