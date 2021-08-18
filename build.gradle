@@ -329,7 +329,7 @@ task projectJavaDoc {
 
 def deleteDirRecursively(String dir) {
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        return shell("del /F /S /Q /A ${dir}")
+        return shell("del /F /S /Q /A ${dir.replace('/', '\\')}")
     } else {
         return shell("rm -r ${dir}")
     }
