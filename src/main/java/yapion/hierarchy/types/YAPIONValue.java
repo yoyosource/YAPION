@@ -63,11 +63,10 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     void toStrippedYAPION(AbstractOutput abstractOutput) {
-        String string = valueHandler.output(value).replace(",", "\\,");
+        String string = valueHandler.output(value, YAPIONType.ARRAY);
         if (string.startsWith(" ") || string.startsWith("-")) {
             string = "\\" + string;
         }
-        string = ValueUtils.stringToUTFEscapedString(string, ValueUtils.EscapeCharacters.ARRAY_VALUE);
         if (ValueUtils.startsWith(string, ValueUtils.EscapeCharacters.KEY) || string.isEmpty()) {
             abstractOutput.consume("(").consume(string).consume(")");
         } else {
@@ -77,7 +76,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @Override
     public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
-        abstractOutput.consume("(" + valueHandler.output(value) + ")");
+        abstractOutput.consume("(" + valueHandler.output(value, YAPIONType.VALUE) + ")");
         return abstractOutput;
     }
 

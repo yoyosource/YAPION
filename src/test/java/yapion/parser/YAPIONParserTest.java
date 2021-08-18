@@ -444,6 +444,7 @@ public class YAPIONParserTest {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add("", yapionArray);
         yapionArray.add("Hello, World");
+        System.out.println(yapionObject);
         assertThat(yapionObject, is(YAPIONParser.parse(yapionObject.toString())));
     }
 
@@ -550,7 +551,7 @@ public class YAPIONParserTest {
     public void testBackslashedR() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("test", "\\r\\\r");
-        assertThat(yapionObject.toYAPION(), is("{test(\\r\\\\r)}"));
+        assertThat(yapionObject.toYAPION(), is("{test(\\\\r\\\\\\r)}"));
     }
 
     @Test

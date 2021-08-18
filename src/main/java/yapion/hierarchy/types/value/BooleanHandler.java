@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.hierarchy.types.YAPIONType;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
@@ -53,7 +54,7 @@ public final class BooleanHandler implements ValueHandler<Boolean> {
 
     @Override
     @SuppressWarnings("java:S5411")
-    public String output(Boolean aBoolean) {
+    public String output(Boolean aBoolean, YAPIONType parent) {
         if (aBoolean) {
             return "true";
         } else {

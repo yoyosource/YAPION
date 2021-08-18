@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.hierarchy.types.YAPIONType;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
@@ -44,7 +45,7 @@ public final class NullHandler implements ValueHandler<Object> {
     }
 
     @Override
-    public String output(Object o) {
+    public String output(Object o, YAPIONType parent) {
         return "null";
     }
 

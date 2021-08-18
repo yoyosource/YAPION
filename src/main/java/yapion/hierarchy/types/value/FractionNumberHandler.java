@@ -14,6 +14,7 @@
 package yapion.hierarchy.types.value;
 
 import lombok.experimental.UtilityClass;
+import yapion.hierarchy.types.YAPIONType;
 import yapion.utils.IdentifierUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
@@ -55,7 +56,7 @@ public class FractionNumberHandler {
         }
 
         @Override
-        public String output(Float aFloat) {
+        public String output(Float aFloat, YAPIONType parent) {
             return aFloat + NumberSuffix.FLOAT.getSuffix();
         }
 
@@ -108,7 +109,7 @@ public class FractionNumberHandler {
         }
 
         @Override
-        public String output(Double aDouble) {
+        public String output(Double aDouble, YAPIONType parent) {
             return aDouble + "";
         }
 
@@ -161,7 +162,7 @@ public class FractionNumberHandler {
         }
 
         @Override
-        public String output(BigDecimal bigDecimal) {
+        public String output(BigDecimal bigDecimal, YAPIONType parent) {
             return bigDecimal + NumberSuffix.BIG_DECIMAL.getSuffix();
         }
 

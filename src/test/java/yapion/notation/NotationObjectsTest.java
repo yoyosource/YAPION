@@ -40,7 +40,7 @@ public class NotationObjectsTest {
     public void testBackslash() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("a", "\\\\");
-        assertThat(yapionObject, isYAPION("{a(\\\\)}"));
+        assertThat(yapionObject, isYAPION("{a(\\\\\\\\)}"));
     }
 
     /*

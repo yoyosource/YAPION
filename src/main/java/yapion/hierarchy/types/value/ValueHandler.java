@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.hierarchy.types.YAPIONType;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
@@ -26,7 +27,7 @@ public interface ValueHandler<T> {
 
     boolean allowed(char c, int length);
 
-    String output(T t);
+    String output(T t, YAPIONType parent);
 
     MethodReturnValue<T> preParse(String s);
 

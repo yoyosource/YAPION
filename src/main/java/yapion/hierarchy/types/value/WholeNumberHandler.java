@@ -14,6 +14,7 @@
 package yapion.hierarchy.types.value;
 
 import lombok.experimental.UtilityClass;
+import yapion.hierarchy.types.YAPIONType;
 import yapion.utils.IdentifierUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
@@ -52,7 +53,7 @@ public class WholeNumberHandler {
         }
 
         @Override
-        public String output(Byte aByte) {
+        public String output(Byte aByte, YAPIONType parent) {
             return aByte + NumberSuffix.BYTE.getSuffix();
         }
 
@@ -102,7 +103,7 @@ public class WholeNumberHandler {
         }
 
         @Override
-        public String output(Short aShort) {
+        public String output(Short aShort, YAPIONType parent) {
             return aShort + NumberSuffix.SHORT.getSuffix();
         }
 
@@ -152,7 +153,7 @@ public class WholeNumberHandler {
         }
 
         @Override
-        public String output(Integer integer) {
+        public String output(Integer integer, YAPIONType parent) {
             return integer + "";
         }
 
@@ -202,7 +203,7 @@ public class WholeNumberHandler {
         }
 
         @Override
-        public String output(Long aLong) {
+        public String output(Long aLong, YAPIONType parent) {
             return aLong + NumberSuffix.LONG.getSuffix();
         }
 
@@ -251,7 +252,7 @@ public class WholeNumberHandler {
         }
 
         @Override
-        public String output(BigInteger bigInteger) {
+        public String output(BigInteger bigInteger, YAPIONType parent) {
             return bigInteger + NumberSuffix.BIG_INTEGER.getSuffix();
         }
 

@@ -13,6 +13,7 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.hierarchy.types.YAPIONType;
 import yapion.utils.IdentifierUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
@@ -51,7 +52,7 @@ public final class CharacterHandler implements ValueHandler<Character> {
     }
 
     @Override
-    public String output(Character character) {
+    public String output(Character character, YAPIONType parent) {
         return "'" + charToUTFEscape(character, ARRAY_VALUE) + "'";
     }
 

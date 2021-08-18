@@ -25,7 +25,7 @@ public final class ValueUtils {
         NOTHING(),
         KEY('(', ')', '[', ']', '{', '}', '<', '>'),
         VALUE(),
-        ARRAY_VALUE('[', ']');
+        ARRAY_VALUE('[', ']', ',');
 
         private char[] chars;
 
@@ -63,7 +63,7 @@ public final class ValueUtils {
     }
 
     public static String stringToUTFEscapedString(String s, EscapeCharacters escapeCharacters) {
-        s = s.replaceAll("\\\\([nrt])", "\\\\$1");
+        s = s.replace("\\", "\\\\");
         byte[] bytes = s.getBytes(StandardCharsets.UTF_16BE);
         StringBuilder st = new StringBuilder();
         for (int i = 0; i < bytes.length; i += 2) {

@@ -13,10 +13,13 @@
 
 package yapion.hierarchy.types.value;
 
+import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONType;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import static yapion.hierarchy.types.value.NumberSuffix.*;
+import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.ARRAY_VALUE;
 import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 
@@ -43,8 +46,12 @@ public final class StringHandler implements ValueHandler<String> {
     }
 
     @Override
-    public String output(String s) {
-        s = stringToUTFEscapedString(s, VALUE);
+    public String output(String s, YAPIONType parent) {
+        if (parent == YAPIONType.ARRAY) {
+            s = stringToUTFEscapedString(s, ARRAY_VALUE);
+        } else {
+            s = stringToUTFEscapedString(s, VALUE);
+        }
         if (s.equals("\"") || (s.startsWith("\"") && s.endsWith("\""))) {
             return '"' + s + '"';
         }

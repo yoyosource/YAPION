@@ -318,6 +318,10 @@ final class YAPIONInternalParser {
                 sortValueHandler('\r', current.length());
                 current.append("\r");
                 break;
+            case '\\':
+                sortValueHandler('\\', current.length());
+                current.append("\\");
+                break;
             default:
                 return false;
         }
