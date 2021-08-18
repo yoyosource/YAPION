@@ -546,4 +546,17 @@ public class YAPIONParserTest {
         assertThat(yapionObject.toYAPION(), is("{rosenduftgenießer(null)}"));
     }
 
+    @Test
+    public void testBackslashedR() {
+        YAPIONObject yapionObject = new YAPIONObject();
+        yapionObject.add("test", "\\r\\\r");
+        assertThat(yapionObject.toYAPION(), is("{test(\\r\\\\r)}"));
+    }
+
+    @Test
+    public void testBackslahedRParse() {
+        YAPIONObject yapionObject = YAPIONParser.parse("{test(\\r\\\\r)}");
+        assertThat(yapionObject.toYAPION(), is("{test(\\r\\\\r)}"));
+    }
+
 }

@@ -390,7 +390,6 @@ task testOutput {
     group "Build"
 
     doLast {
-        println(new File("${buildDir}/test-results/test/").listFiles())
         for (def file : new File("${buildDir}/test-results/test/").listFiles()) {
             if (file.isDirectory()) {
                 continue

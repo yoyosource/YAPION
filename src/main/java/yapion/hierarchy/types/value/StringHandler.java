@@ -44,10 +44,10 @@ public final class StringHandler implements ValueHandler<String> {
 
     @Override
     public String output(String s) {
+        s = stringToUTFEscapedString(s, VALUE);
         if (s.equals("\"") || (s.startsWith("\"") && s.endsWith("\""))) {
             return '"' + s + '"';
         }
-        s = stringToUTFEscapedString(s, VALUE);
         if (s.equals("true") || s.equals("false") || s.equals("null")) {
             return '"' + s + '"';
         }

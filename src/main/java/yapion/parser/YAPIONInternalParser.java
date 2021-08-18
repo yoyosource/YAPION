@@ -84,7 +84,7 @@ final class YAPIONInternalParser {
     }
 
     void advance(char c) {
-        log.debug("{} -> {}", typeStack, (int) c);
+        log.debug("{} -> {}{}", typeStack, (int) c, (c >= ' ' && c <= '~' ? " '" + c + "'" : ""));
         if (typeStack.isEmpty() && initialType(c)) {
             count++;
             lastChar = c;

@@ -63,6 +63,7 @@ public final class ValueUtils {
     }
 
     public static String stringToUTFEscapedString(String s, EscapeCharacters escapeCharacters) {
+        s = s.replaceAll("\\\\([nrt])", "\\\\$1");
         byte[] bytes = s.getBytes(StandardCharsets.UTF_16BE);
         StringBuilder st = new StringBuilder();
         for (int i = 0; i < bytes.length; i += 2) {
@@ -78,7 +79,6 @@ public final class ValueUtils {
         if (c < 0x20 || (c >= 0x7F && c < 0xA1) || c > 0xFF) {
             return "\\u" + (String.format("%04X", (short) c));
         } else if (escapeCharacters.contains(c)) {
-            System.out.println("HERE");
             return "\\" + c;
         } else {
             return c + "";
