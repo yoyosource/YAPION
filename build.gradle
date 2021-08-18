@@ -400,9 +400,8 @@ task testOutput {
                 continue
             }
             println "Content ${file}:"
-            strings.eachLine {
-                line ->
-                println ": $line"
+            strings.each {
+                line -> println ": $line"
             }
             println ""
         }
