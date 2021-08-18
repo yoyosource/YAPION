@@ -385,6 +385,31 @@ task buildProject {
 build.finalizedBy(buildProject)
 assemble.finalizedBy(buildProject)
 
+task testOutput {
+    description 'Print Test output'
+    group "Build"
+
+    doLast {
+        println(new File("${buildDir}/test-results/test/").listFiles())
+        for (def file : new File("${buildDir}/test-results/test/").listFiles()) {
+            if (file.isDirectory()) {
+                continue
+            }
+            def strings = file.readLines()
+            if (strings.get(1).contains("failures=\"0\"")) {
+                continue
+            }
+            println "Content ${file}:"
+            strings.eachLine {
+                line ->
+                println ": $line"
+            }
+            println ""
+        }
+    }
+}
+test.finalizedBy(testOutput)
+
 /*
 compileKotlin {
     kotlinOptions {
