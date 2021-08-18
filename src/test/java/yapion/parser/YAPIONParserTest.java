@@ -99,6 +99,11 @@ public class YAPIONParserTest {
                                 }
                             }
                         } else if (blockType.contains("O")) {
+                            InputStreamCharReader inputStreamCharReader = new InputStreamCharReader(new ByteArrayInputStream(st.toString().getBytes()), true, InputStreamCharsets.UTF_8);
+                            st = new StringBuilder();
+                            while (inputStreamCharReader.hasNext()) {
+                                st.append(inputStreamCharReader.next());
+                            }
                             testCase.output = st.toString();
                             if (blockType.contains("prettified")) {
                                 testCase.prettified = true;
