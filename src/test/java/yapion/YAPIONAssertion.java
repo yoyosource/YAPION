@@ -20,6 +20,17 @@ import yapion.parser.YAPIONParser;
 
 public class YAPIONAssertion {
 
+    public static void main(String[] args) {
+        String s = """
+                {
+                    /*This is the key ip with the IP to the server*/
+                    ip(127.0.0.1)
+                    /*This is another comment*/
+                    port(22)
+                }""";
+        System.out.println(YAPIONParser.parseWithComments(s));
+    }
+
     @SuppressWarnings({"unchecked"})
     public static <T extends YAPIONAnyType> Matcher<T> isYAPION(String value) {
         return Is.is((T) YAPIONParser.parse("{" + value + "}").getYAPIONAnyType(""));

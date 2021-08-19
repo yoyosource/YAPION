@@ -66,6 +66,9 @@ final class YAPIONInternalParser {
     // YAPIONValue type specifications
     private final List<ValueHandler<?>> valueHandlerList = new LinkedList<>();
 
+    // Comments
+    boolean comments = false;
+
     void setReferenceFunction(ReferenceFunction referenceFunction) {
         this.referenceFunction = referenceFunction;
     }
@@ -103,6 +106,9 @@ final class YAPIONInternalParser {
                 break;
             case MAP:
                 parseMap(c, lastChar);
+                break;
+            case COMMENT:
+                parseComment(c, lastChar);
                 break;
             default:
                 parseObject(c, lastChar);
@@ -247,6 +253,12 @@ final class YAPIONInternalParser {
                 current.deleteCharAt(current.length() - 1);
             }
             push(YAPIONType.POINTER);
+            return true;
+        }
+        if (comments && lastChar == '/' && c == '*' && current.length() == 1 && typeStack.peek() == YAPIONType.OBJECT) {
+            log.debug("type    [COMMENT]");
+            push(YAPIONType.COMMENT);
+            key = "";
             return true;
         }
         if (c == '<') {
@@ -513,6 +525,19 @@ final class YAPIONInternalParser {
         pop(YAPIONType.ARRAY);
         currentObject = currentObject.getParent();
         reset();
+    }
+
+    private void parseComment(char c, char lastChar) {
+        if (lastChar == '*' && c == '/') {
+            if (current.length() > 0) {
+                current.deleteCharAt(current.length() - 1);
+            }
+            log.debug("COMMENT: {}", current);
+            pop(YAPIONType.COMMENT);
+            reset();
+            return;
+        }
+        current.append(c);
     }
 
     public void sortValueHandler(char c, int length) {

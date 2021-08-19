@@ -41,6 +41,10 @@ public enum YAPIONType {
     }),
     VALUE(0xf86bfba6285c9be2L, "VAL", (yapionAnyType, s, yapionAnyType2) -> {
         throw new YAPIONParserException("VALUE is no YAPIONType to call add on");
+    }),
+
+    COMMENT(0x0, "CMT", (yapionAnyType, s, yapionAnyType2) -> {
+        throw new YAPIONParserException("COMMENT is no YAPIONType to call add on");
     });
 
     private final long referenceValue;

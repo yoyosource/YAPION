@@ -41,6 +41,16 @@ public final class YAPIONParser {
     }
 
     /**
+     * Parses the String to an YAPIONObject.
+     *
+     * @param s the string to parse
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parseWithComments(String s) {
+        return new YAPIONParser(s).allowComments().parse().result();
+    }
+
+    /**
      * Parses the File content to an YAPIONObject.
      *
      * @param file the file content to parse
@@ -55,12 +65,35 @@ public final class YAPIONParser {
      * Parses the File content to an YAPIONObject.
      *
      * @param file the file content to parse
+     * @return The YAPIONObject parsed out of the file content
+     * @throws IOException by FileInputStream creation
+     */
+    public static YAPIONObject parseWithComments(File file) throws IOException {
+        return new YAPIONParser(file).allowComments().parse().result();
+    }
+
+    /**
+     * Parses the File content to an YAPIONObject.
+     *
+     * @param file the file content to parse
      * @param charset to use
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
     public static YAPIONObject parse(File file, InputStreamCharsets charset) throws IOException {
         return new YAPIONParser(file, charset).parse().result();
+    }
+
+    /**
+     * Parses the File content to an YAPIONObject.
+     *
+     * @param file the file content to parse
+     * @param charset to use
+     * @return The YAPIONObject parsed out of the file content
+     * @throws IOException by FileInputStream creation
+     */
+    public static YAPIONObject parseWithComments(File file, InputStreamCharsets charset) throws IOException {
+        return new YAPIONParser(file, charset).allowComments().parse().result();
     }
 
     /**
@@ -80,12 +113,37 @@ public final class YAPIONParser {
      *
      * @param file the file content to parse
      * @param stopOnStreamEnd stop on Stream end or not
+     * @return The YAPIONObject parsed out of the file content
+     * @throws IOException by FileInputStream creation
+     */
+    public static YAPIONObject parseWithComments(File file, boolean stopOnStreamEnd) throws IOException {
+        return new YAPIONParser(file, stopOnStreamEnd).allowComments().parse().result();
+    }
+
+    /**
+     * Parses the File content to an YAPIONObject.
+     *
+     * @param file the file content to parse
+     * @param stopOnStreamEnd stop on Stream end or not
      * @param charset to use
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
     public static YAPIONObject parse(File file, boolean stopOnStreamEnd, InputStreamCharsets charset) throws IOException {
         return new YAPIONParser(file, stopOnStreamEnd, charset).parse().result();
+    }
+
+    /**
+     * Parses the File content to an YAPIONObject.
+     *
+     * @param file the file content to parse
+     * @param stopOnStreamEnd stop on Stream end or not
+     * @param charset to use
+     * @return The YAPIONObject parsed out of the file content
+     * @throws IOException by FileInputStream creation
+     */
+    public static YAPIONObject parseWithComments(File file, boolean stopOnStreamEnd, InputStreamCharsets charset) throws IOException {
+        return new YAPIONParser(file, stopOnStreamEnd, charset).allowComments().parse().result();
     }
 
     /**
@@ -112,11 +170,42 @@ public final class YAPIONParser {
      * Input passed.
      *
      * @param inputStream the inputStream to parse
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parseWithComments(InputStream inputStream) {
+        return new YAPIONParser(inputStream).allowComments().parse().result();
+    }
+
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will not cancel even when
+     * the end of Stream is reached. It will only cancel after it has a
+     * complete and valid YAPIONObject or 1 second without any new
+     * Input passed.
+     *
+     * @param inputStream the inputStream to parse
      * @param charset to use
      * @return YAPIONObject parsed out of the string
      */
     public static YAPIONObject parse(InputStream inputStream, InputStreamCharsets charset) {
         return new YAPIONParser(inputStream, charset).parse().result();
+    }
+
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will not cancel even when
+     * the end of Stream is reached. It will only cancel after it has a
+     * complete and valid YAPIONObject or 1 second without any new
+     * Input passed.
+     *
+     * @param inputStream the inputStream to parse
+     * @param charset to use
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parseWithComments(InputStream inputStream, InputStreamCharsets charset) {
+        return new YAPIONParser(inputStream, charset).allowComments().parse().result();
     }
 
     /**
@@ -145,11 +234,44 @@ public final class YAPIONParser {
      *
      * @param inputStream the inputStream to parse
      * @param stopOnStreamEnd stop on Stream end or not
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parseWithComments(InputStream inputStream, boolean stopOnStreamEnd) {
+        return new YAPIONParser(inputStream, stopOnStreamEnd).allowComments().parse().result();
+    }
+
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will not cancel even when
+     * the end of Stream is reached. It will only cancel after it has a
+     * complete and valid YAPIONObject or 1 second without any new
+     * Input passed.
+     *
+     * @param inputStream the inputStream to parse
+     * @param stopOnStreamEnd stop on Stream end or not
      * @param charset to use
      * @return YAPIONObject parsed out of the string
      */
     public static YAPIONObject parse(InputStream inputStream, boolean stopOnStreamEnd, InputStreamCharsets charset) {
         return new YAPIONParser(inputStream, stopOnStreamEnd, charset).parse().result();
+    }
+
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will not cancel even when
+     * the end of Stream is reached. It will only cancel after it has a
+     * complete and valid YAPIONObject or 1 second without any new
+     * Input passed.
+     *
+     * @param inputStream the inputStream to parse
+     * @param stopOnStreamEnd stop on Stream end or not
+     * @param charset to use
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parseWithComments(InputStream inputStream, boolean stopOnStreamEnd, InputStreamCharsets charset) {
+        return new YAPIONParser(inputStream, stopOnStreamEnd, charset).allowComments().parse().result();
     }
 
     /**
@@ -434,6 +556,16 @@ public final class YAPIONParser {
 
     public YAPIONParser setReferenceFunction(@NonNull ReferenceFunction referenceFunction) {
         yapionInternalParser.setReferenceFunction(referenceFunction);
+        return this;
+    }
+
+    public YAPIONParser allowComments() {
+        yapionInternalParser.comments = true;
+        return this;
+    }
+
+    public YAPIONParser disallowComments() {
+        yapionInternalParser.comments = false;
         return this;
     }
 
