@@ -16,6 +16,7 @@ package yapion;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.Is;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 
 public class YAPIONAssertion {
@@ -30,13 +31,24 @@ public class YAPIONAssertion {
                     test[
                         /*Hello World*/
                         test,
+                        /*This one is interesting*/
                     ]
                     map<
                         /*This is also a comment*/
-                        ():()
+                        ():
+                        /*THis is also a comment*/
+                        ()
+                        /*What to do with this one*/
                     >
+                    /*This one is interesting as well*/
                 }""";
-        System.out.println(YAPIONParser.parseWithComments(s));
+        YAPIONObject yapionObject = YAPIONParser.parse(s);
+        YAPIONObject yapionObjectWithComment = YAPIONParser.parseWithComments(s);
+        System.out.println();
+        System.out.println(yapionObject);
+        System.out.println(yapionObject.toYAPION(true));
+        System.out.println(yapionObjectWithComment);
+        System.out.println(yapionObjectWithComment.toYAPION(true));
     }
 
     @SuppressWarnings({"unchecked"})

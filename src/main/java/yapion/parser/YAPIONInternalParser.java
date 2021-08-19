@@ -255,11 +255,15 @@ final class YAPIONInternalParser {
             push(YAPIONType.POINTER);
             return true;
         }
-        if (comments && lastChar == '/' && c == '*' && (current.length() == 1 || current.length() == 0)) {
-            log.debug("type    [COMMENT]");
-            push(YAPIONType.COMMENT);
-            key = "";
-            return true;
+        if (lastChar == '/' && c == '*' && current.length() <= 1) {
+            if (comments) {
+                log.debug("type    [COMMENT]");
+                push(YAPIONType.COMMENT);
+                key = "";
+                return true;
+            } else {
+                log.info("Enabling Comment support could benefit the parsing? Use 'parseWithComments()' or 'allowComments()' to enable it");
+            }
         }
         if (c == '<') {
             log.debug("type     [MAP]");
