@@ -87,7 +87,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
             valueConsumer.accept(entry.getValue(), abstractOutput);
         }
         outputComments(abstractOutput, getEndingComments(), indent);
-        if (!variables.isEmpty() && hasEndingComments()) abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
+        if (!variables.isEmpty() || hasEndingComments()) abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
         abstractOutput.consume("}");
     }
 

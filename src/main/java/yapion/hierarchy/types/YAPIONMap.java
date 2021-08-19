@@ -75,7 +75,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         }
 
         outputComments(abstractOutput, getEndingComments(), indent);
-        if (!variables.isEmpty() && hasEndingComments()) {
+        if (!variables.isEmpty() || hasEndingComments()) {
             abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
         }
 

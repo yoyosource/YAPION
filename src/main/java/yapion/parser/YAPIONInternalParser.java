@@ -205,12 +205,12 @@ final class YAPIONInternalParser {
     }
 
     private void addComments(YAPIONAnyType value, boolean ending) {
+        log.debug("COMMENT: add {} to {}", currentComments, value);
         if (ending) {
             ((YAPIONDataType) value).getEndingComments().addAll(currentComments);
         } else {
             value.getComments().addAll(currentComments);
         }
-        System.out.println(value + " " + currentComments + " " + value.commentsCount() + " " + value.getComments() + " " + value);
         currentComments.clear();
     }
 

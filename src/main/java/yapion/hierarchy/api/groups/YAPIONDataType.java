@@ -14,8 +14,8 @@
 package yapion.hierarchy.api.groups;
 
 import yapion.annotations.api.InternalAPI;
-import yapion.hierarchy.api.internal.InternalAdd;
 import yapion.hierarchy.api.internal.AdvancedOperations;
+import yapion.hierarchy.api.internal.InternalAdd;
 import yapion.hierarchy.api.internal.InternalRemove;
 import yapion.hierarchy.api.internal.InternalRetrieve;
 
@@ -41,31 +41,7 @@ public abstract class YAPIONDataType<I, K> extends YAPIONAnyType implements Inte
         return !endingComments.isEmpty();
     }
 
-    public int endingCommentsCount() {
-        return endingComments.size();
-    }
-
-    public void addEndingComment(String comment) {
-        endingComments.add(comment);
-    }
-
-    public void removeEndingComment(int index) {
-        endingComments.remove(index);
-    }
-
-    public void removeEndingComment(String comment) {
-        endingComments.remove(comment);
-    }
-
-    public boolean hasEndingComment(String comment) {
-        return endingComments.contains(comment);
-    }
-
     public List<String> getEndingComments() {
         return endingComments;
-    }
-
-    public void clearEndingComments() {
-        endingComments.clear();
     }
 }

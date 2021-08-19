@@ -74,7 +74,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
             b = true;
         }
 
-        if (!array.isEmpty() && hasEndingComments()) {
+        if (!array.isEmpty() || hasEndingComments()) {
             if (array.get(array.size() - 1) instanceof YAPIONValue) {
                 abstractOutput.consumePrettified(",");
             }

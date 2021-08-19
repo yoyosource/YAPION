@@ -173,31 +173,7 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         return !comments.isEmpty();
     }
 
-    public int commentsCount() {
-        return comments.size();
-    }
-
-    public void addComment(String comment) {
-        comments.add(comment);
-    }
-
-    public void removeComment(int index) {
-        comments.remove(index);
-    }
-
-    public void removeComment(String comment) {
-        comments.remove(comment);
-    }
-
-    public boolean hasComment(String comment) {
-        return comments.contains(comment);
-    }
-
     public List<String> getComments() {
         return comments;
-    }
-
-    public void clearComments() {
-        comments.clear();
     }
 }
