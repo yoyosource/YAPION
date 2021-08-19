@@ -17,6 +17,7 @@ import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.function.Predicate;
 
 @UtilityClass
 public class ConstraintUtils {
@@ -79,21 +80,34 @@ public class ConstraintUtils {
         return what;
     }
 
+    public static <T> T or(T what, T alternative, Predicate<T> test) {
+        if (!test.test(what)) return alternative;
+        return what;
+    }
+
+    public static <T> boolean nonNull(T what) {
+        return what != null;
+    }
+
+    public static <T> boolean isNull(T what) {
+        return what == null;
+    }
+
     public static <T extends Number> boolean between(T what, T min, T max) {
         if (what instanceof Byte checkedWhat && min instanceof Byte checkedMin && max instanceof Byte checkedMax) {
-            return checkedWhat >= checkedMin && checkedWhat <= checkedMax;
+            return checkedWhat >= checkedMin && checkedWhat < checkedMax;
         }
         if (what instanceof Integer checkedWhat && min instanceof Integer checkedMin && max instanceof Integer checkedMax) {
-            return checkedWhat >= checkedMin && checkedWhat <= checkedMax;
+            return checkedWhat >= checkedMin && checkedWhat < checkedMax;
         }
         if (what instanceof Long checkedWhat && min instanceof Long checkedMin && max instanceof Long checkedMax) {
-            return checkedWhat >= checkedMin && checkedWhat <= checkedMax;
+            return checkedWhat >= checkedMin && checkedWhat < checkedMax;
         }
         if (what instanceof Float checkedWhat && min instanceof Float checkedMin && max instanceof Float checkedMax) {
-            return checkedWhat >= checkedMin && checkedWhat <= checkedMax;
+            return checkedWhat >= checkedMin && checkedWhat < checkedMax;
         }
         if (what instanceof Double checkedWhat && min instanceof Double checkedMin && max instanceof Double checkedMax) {
-            return checkedWhat >= checkedMin && checkedWhat <= checkedMax;
+            return checkedWhat >= checkedMin && checkedWhat < checkedMax;
         }
         if (what instanceof BigInteger checkedWhat && min instanceof BigInteger checkedMin && max instanceof BigInteger checkedMax) {
             return checkedWhat.compareTo(checkedMin) >= 0 && checkedWhat.compareTo(checkedMax) < 0;
@@ -106,6 +120,64 @@ public class ConstraintUtils {
 
     public static boolean between(char what, char min, char max) {
         return what >= min && what < max;
+    }
+
+    public static <T extends Number> boolean greater(T what, T min) {
+        if (what instanceof Byte checkedWhat && min instanceof Byte checkedMin) {
+            return checkedWhat > checkedMin;
+        }
+        if (what instanceof Integer checkedWhat && min instanceof Integer checkedMin) {
+            return checkedWhat > checkedMin;
+        }
+        if (what instanceof Long checkedWhat && min instanceof Long checkedMin) {
+            return checkedWhat > checkedMin;
+        }
+        if (what instanceof Float checkedWhat && min instanceof Float checkedMin) {
+            return checkedWhat > checkedMin;
+        }
+        if (what instanceof Double checkedWhat && min instanceof Double checkedMin) {
+            return checkedWhat > checkedMin;
+        }
+        if (what instanceof BigInteger checkedWhat && min instanceof BigInteger checkedMin) {
+            return checkedWhat.compareTo(checkedMin) > 0;
+        }
+        if (what instanceof BigDecimal checkedWhat && min instanceof BigDecimal checkedMin) {
+            return checkedWhat.compareTo(checkedMin) > 0;
+        }
+        return false;
+    }
+
+    public static boolean greater(char what, char min) {
+        return what > min;
+    }
+
+    public static <T extends Number> boolean less(T what, T max) {
+        if (what instanceof Byte checkedWhat && max instanceof Byte checkedMin) {
+            return checkedWhat < checkedMin;
+        }
+        if (what instanceof Integer checkedWhat && max instanceof Integer checkedMin) {
+            return checkedWhat < checkedMin;
+        }
+        if (what instanceof Long checkedWhat && max instanceof Long checkedMin) {
+            return checkedWhat < checkedMin;
+        }
+        if (what instanceof Float checkedWhat && max instanceof Float checkedMin) {
+            return checkedWhat < checkedMin;
+        }
+        if (what instanceof Double checkedWhat && max instanceof Double checkedMin) {
+            return checkedWhat < checkedMin;
+        }
+        if (what instanceof BigInteger checkedWhat && max instanceof BigInteger checkedMin) {
+            return checkedWhat.compareTo(checkedMin) < 0;
+        }
+        if (what instanceof BigDecimal checkedWhat && max instanceof BigDecimal checkedMin) {
+            return checkedWhat.compareTo(checkedMin) < 0;
+        }
+        return false;
+    }
+
+    public static boolean less(char what, char max) {
+        return what < max;
     }
 
     public static boolean containsIgnoreCase(String what, String toContain) {
