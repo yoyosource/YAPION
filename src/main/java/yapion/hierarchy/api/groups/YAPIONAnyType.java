@@ -20,11 +20,14 @@ import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.ObjectPath;
 import yapion.hierarchy.api.ObjectSearch;
 import yapion.hierarchy.api.ObjectType;
+import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONPath;
 import yapion.parser.YAPIONParser;
 import yapion.utils.ReferenceFunction;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -38,6 +41,9 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     // Parent System
     private YAPIONAnyType parent = null;
     private boolean valuePresent = false;
+
+    // Comment System
+    private List<String> comments = new ArrayList<>();
 
     protected final void cacheReferenceValue(long referenceValue) {
         this.referenceValue.set(referenceValue);
@@ -142,4 +148,56 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         return Optional.empty();
     }
 
+    protected <T extends AbstractOutput> void outputComments(T abstractOutput, List<String> comments, String indent) {
+        comments.forEach(s -> {
+            String[] strings = s.split("\n|\r\n|\n\r|\r");
+            abstractOutput.consumePrettified(indent);
+            abstractOutput.consume("/*");
+            for (int i = 0; i < strings.length; i++) {
+                if (i != 0) {
+                    abstractOutput.consumePrettified(indent);
+                }
+
+                String current = strings[i];
+                int index = 0;
+                while (index < current.length() && Character.isWhitespace(current.charAt(index))) {
+                    index++;
+                }
+                abstractOutput.consume(current.substring(index));
+            }
+            abstractOutput.consume("*/");
+        });
+    }
+
+    public boolean hasComments() {
+        return !comments.isEmpty();
+    }
+
+    public int commentsCount() {
+        return comments.size();
+    }
+
+    public void addComment(String comment) {
+        comments.add(comment);
+    }
+
+    public void removeComment(int index) {
+        comments.remove(index);
+    }
+
+    public void removeComment(String comment) {
+        comments.remove(comment);
+    }
+
+    public boolean hasComment(String comment) {
+        return comments.contains(comment);
+    }
+
+    public List<String> getComments() {
+        return comments;
+    }
+
+    public void clearComments() {
+        comments.clear();
+    }
 }

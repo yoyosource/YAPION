@@ -81,11 +81,13 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
             if (b) commaConsumer.accept(abstractOutput);
             b = true;
 
+            outputComments(abstractOutput, entry.getValue().getComments(), indent);
             abstractOutput.consumePrettified(indent);
             nameConsumer.accept(entry.getKey(), abstractOutput);
             valueConsumer.accept(entry.getValue(), abstractOutput);
         }
-        if (!variables.isEmpty()) abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
+        outputComments(abstractOutput, getEndingComments(), indent);
+        if (!variables.isEmpty() && hasEndingComments()) abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
         abstractOutput.consume("}");
     }
 

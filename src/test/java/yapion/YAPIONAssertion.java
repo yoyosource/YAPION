@@ -40,7 +40,9 @@ public class YAPIONAssertion {
                         ()
                         /*What to do with this one*/
                     >
-                    /*This one is interesting as well*/
+                    /*
+                    This one is interesting as well
+                    */
                 }""";
         YAPIONObject yapionObject = YAPIONParser.parse(s);
         YAPIONObject yapionObjectWithComment = YAPIONParser.parseWithComments(s);
@@ -49,6 +51,7 @@ public class YAPIONAssertion {
         System.out.println(yapionObject.toYAPION(true));
         System.out.println(yapionObjectWithComment);
         System.out.println(yapionObjectWithComment.toYAPION(true));
+        System.out.println(yapionObjectWithComment.hasComments());
     }
 
     @SuppressWarnings({"unchecked"})

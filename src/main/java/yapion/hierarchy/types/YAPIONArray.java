@@ -60,8 +60,9 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         boolean b = false;
         for (YAPIONAnyType yapionAnyType : array) {
             if (b) abstractOutput.consume(",");
-            abstractOutput.consumePrettified(indent);
+            outputComments(abstractOutput, yapionAnyType.getComments(), indent);
 
+            abstractOutput.consumePrettified(indent);
             if (yapionAnyType == null) {
                 abstractOutput.consume("null");
             } else if (yapionAnyType instanceof YAPIONValue yapionValue) {
@@ -73,10 +74,11 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
             b = true;
         }
 
-        if (!array.isEmpty()) {
+        if (!array.isEmpty() && hasEndingComments()) {
             if (array.get(array.size() - 1) instanceof YAPIONValue) {
                 abstractOutput.consumePrettified(",");
             }
+            outputComments(abstractOutput, getEndingComments(), indent);
             abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
         }
 

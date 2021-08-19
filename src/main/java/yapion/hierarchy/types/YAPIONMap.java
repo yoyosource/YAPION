@@ -63,13 +63,19 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
 
         final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
+            outputComments(abstractOutput, entry.getKey().getComments(), indent);
             abstractOutput.consumePrettified(indent);
             entry.getKey().toYAPION(abstractOutput);
             abstractOutput.consume(":");
+            outputComments(abstractOutput, entry.getValue().getComments(), indent);
+            if (entry.getValue().hasComments()) {
+                abstractOutput.consumePrettified(indent);
+            }
             entry.getValue().toYAPION(abstractOutput);
         }
 
-        if (!variables.isEmpty()) {
+        outputComments(abstractOutput, getEndingComments(), indent);
+        if (!variables.isEmpty() && hasEndingComments()) {
             abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
         }
 

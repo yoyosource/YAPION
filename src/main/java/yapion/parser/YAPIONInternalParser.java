@@ -68,6 +68,7 @@ final class YAPIONInternalParser {
 
     // Comments
     boolean comments = false;
+    private List<String> currentComments = new ArrayList<>();
 
     void setReferenceFunction(ReferenceFunction referenceFunction) {
         this.referenceFunction = referenceFunction;
@@ -139,6 +140,7 @@ final class YAPIONInternalParser {
                 throw new YAPIONParserException("Object is not closed correctly");
             }
         }
+        addComments(result, true);
 
         if (!yapionPointerList.isEmpty()) {
             log.debug("pFinish  [init]");
@@ -171,6 +173,9 @@ final class YAPIONInternalParser {
     private void pop(YAPIONType yapionType) {
         log.debug("pop      [{}]", yapionType);
         typeStack.pop(yapionType);
+        if (yapionType == YAPIONType.OBJECT || yapionType == YAPIONType.ARRAY || yapionType == YAPIONType.MAP) {
+            addComments(currentObject, true);
+        }
     }
 
     private void reset() {
@@ -196,6 +201,17 @@ final class YAPIONInternalParser {
     private void add(@NonNull String key, @NonNull YAPIONAnyType value) {
         log.debug("add      ['{}'='{}']", key.replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t"), value);
         currentObject.getType().getAddConsumer().accept(currentObject, key, value);
+        addComments(value, false);
+    }
+
+    private void addComments(YAPIONAnyType value, boolean ending) {
+        if (ending) {
+            ((YAPIONDataType) value).getEndingComments().addAll(currentComments);
+        } else {
+            value.getComments().addAll(currentComments);
+        }
+        System.out.println(value + " " + currentComments + " " + value.commentsCount() + " " + value.getComments() + " " + value);
+        currentComments.clear();
     }
 
     private boolean everyType(char c, char lastChar) {
@@ -262,7 +278,7 @@ final class YAPIONInternalParser {
                 key = "";
                 return true;
             } else {
-                log.info("Enabling Comment support could benefit the parsing? Use 'parseWithComments()' or 'allowComments()' to enable it");
+                log.info("Enabling comment support could benefit the parsing? Use 'parseWithComments()' or 'allowComments()' to enable it");
             }
         }
         if (c == '<') {
@@ -536,6 +552,7 @@ final class YAPIONInternalParser {
             if (current.length() > 0) {
                 current.deleteCharAt(current.length() - 1);
             }
+            currentComments.add(current.toString());
             log.debug("COMMENT: {}", current);
             pop(YAPIONType.COMMENT);
             reset();

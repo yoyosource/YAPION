@@ -19,10 +19,13 @@ import yapion.hierarchy.api.internal.AdvancedOperations;
 import yapion.hierarchy.api.internal.InternalRemove;
 import yapion.hierarchy.api.internal.InternalRetrieve;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @InternalAPI
 public abstract class YAPIONDataType<I, K> extends YAPIONAnyType implements InternalAdd<I, K>, AdvancedOperations<I, K>, InternalRemove<I, K>, InternalRetrieve<K> {
+
+    private List<String> endingComments = new ArrayList<>();
 
     public abstract int size();
 
@@ -34,4 +37,35 @@ public abstract class YAPIONDataType<I, K> extends YAPIONAnyType implements Inte
 
     public abstract List<YAPIONAnyType> getAllValues();
 
+    public boolean hasEndingComments() {
+        return !endingComments.isEmpty();
+    }
+
+    public int endingCommentsCount() {
+        return endingComments.size();
+    }
+
+    public void addEndingComment(String comment) {
+        endingComments.add(comment);
+    }
+
+    public void removeEndingComment(int index) {
+        endingComments.remove(index);
+    }
+
+    public void removeEndingComment(String comment) {
+        endingComments.remove(comment);
+    }
+
+    public boolean hasEndingComment(String comment) {
+        return endingComments.contains(comment);
+    }
+
+    public List<String> getEndingComments() {
+        return endingComments;
+    }
+
+    public void clearEndingComments() {
+        endingComments.clear();
+    }
 }
