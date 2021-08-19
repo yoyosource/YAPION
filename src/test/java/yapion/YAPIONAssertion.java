@@ -27,6 +27,14 @@ public class YAPIONAssertion {
                     ip(127.0.0.1)
                     /*This is another comment*/
                     port(22)
+                    test[
+                        /*Hello World*/
+                        test,
+                    ]
+                    map<
+                        /*This is also a comment*/
+                        ():()
+                    >
                 }""";
         System.out.println(YAPIONParser.parseWithComments(s));
     }

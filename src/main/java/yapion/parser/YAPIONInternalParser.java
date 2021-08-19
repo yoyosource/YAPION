@@ -255,7 +255,7 @@ final class YAPIONInternalParser {
             push(YAPIONType.POINTER);
             return true;
         }
-        if (comments && lastChar == '/' && c == '*' && current.length() == 1 && typeStack.peek() == YAPIONType.OBJECT) {
+        if (comments && lastChar == '/' && c == '*' && (current.length() == 1 || current.length() == 0)) {
             log.debug("type    [COMMENT]");
             push(YAPIONType.COMMENT);
             key = "";
@@ -512,7 +512,7 @@ final class YAPIONInternalParser {
         if (!lastCharEscaped && current.length() == 0 && everyType(c, lastChar)) {
             return;
         }
-        if (!lastCharEscaped && current.length() == 1 && lastChar == '-' && everyType(c, lastChar)) {
+        if (!lastCharEscaped && current.length() == 1 && (lastChar == '-' || lastChar == '/') && everyType(c, lastChar)) {
             return;
         }
         if (current.length() == 0 && isWhiteSpace(c) && !escaped) {
