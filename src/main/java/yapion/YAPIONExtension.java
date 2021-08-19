@@ -14,9 +14,14 @@
 package yapion;
 
 import lombok.experimental.UtilityClass;
+import yapion.hierarchy.api.groups.SerializingType;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
+import yapion.serializing.TypeReMapper;
+import yapion.serializing.YAPIONDeserializer;
+import yapion.serializing.YAPIONFlags;
 import yapion.serializing.YAPIONSerializer;
 
 import java.io.File;
@@ -74,6 +79,34 @@ public class YAPIONExtension {
 
     public static <T extends YAPIONAnyType> T serializeReduced(Object object) {
         return new YAPIONSerializer(object).parse().getReducedYAPIONObject();
+    }
+
+    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType) {
+        return YAPIONDeserializer.deserialize(serializingType);
+    }
+
+    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, String context) {
+        return YAPIONDeserializer.deserialize(serializingType, context);
+    }
+
+    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, TypeReMapper typeReMapper) {
+        return YAPIONDeserializer.deserialize(serializingType, typeReMapper);
+    }
+
+    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, YAPIONFlags yapionFlags) {
+        return YAPIONDeserializer.deserialize(serializingType, yapionFlags);
+    }
+
+    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, String context, TypeReMapper typeReMapper) {
+        return YAPIONDeserializer.deserialize(serializingType, context, typeReMapper);
+    }
+
+    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, String context, YAPIONFlags yapionFlags) {
+        return YAPIONDeserializer.deserialize(serializingType, context, yapionFlags);
+    }
+
+    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, String context, TypeReMapper typeReMapper, YAPIONFlags yapionFlags) {
+        return YAPIONDeserializer.deserialize(serializingType, context, typeReMapper, yapionFlags);
     }
 
 }
