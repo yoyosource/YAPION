@@ -278,7 +278,7 @@ final class YAPIONInternalParser {
                 key = "";
                 return true;
             } else {
-                log.info("Enabling comment support could benefit the parsing? Use 'parseWithComments()' or 'allowComments()' to enable it");
+                log.info("Enabling comment support could benefit the parsing?");
             }
         }
         if (c == '<') {

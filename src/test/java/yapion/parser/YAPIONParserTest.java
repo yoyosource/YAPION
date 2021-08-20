@@ -98,6 +98,15 @@ public class YAPIONParserTest {
                                     testCase.charsets = InputStreamCharsets.LATIN_1;
                                 }
                             }
+                            if (blockType.contains("comments:")) {
+                                if (blockType.contains("comments:ignore")) {
+                                    testCase.comments = CommentParsing.IGNORE;
+                                } else if (blockType.contains("comments:skip")) {
+                                    testCase.comments = CommentParsing.SKIP;
+                                } else if (blockType.contains("comments:keep")) {
+                                    testCase.comments = CommentParsing.KEEP;
+                                }
+                            }
                         } else if (blockType.contains("O")) {
                             InputStreamCharReader inputStreamCharReader = new InputStreamCharReader(new ByteArrayInputStream(st.toString().getBytes()), true, InputStreamCharsets.UTF_8);
                             st = new StringBuilder();
@@ -170,6 +179,7 @@ public class YAPIONParserTest {
         private Exception actualException = null;
 
         private InputStreamCharsets charsets = InputStreamCharsets.US_ASCII;
+        private CommentParsing comments = CommentParsing.IGNORE;
         private boolean inputStream = false;
         private boolean chars = false;
         private boolean bytes = false;
@@ -193,17 +203,7 @@ public class YAPIONParserTest {
 
             time = System.currentTimeMillis();
             try {
-                if (inputStream) {
-                    actualOutput = YAPIONParser.parse(new ByteArrayInputStream(input.getBytes()), charsets).toYAPION(prettified);
-                } else {
-                    if (chars) {
-                        actualOutput = new YAPIONParser(input.toCharArray()).parse().result().toYAPION(prettified);
-                    } else if (bytes) {
-                        actualOutput = new YAPIONParser(input.getBytes()).parse().result().toYAPION(prettified);
-                    } else {
-                        actualOutput = YAPIONParser.parse(input).toYAPION(prettified);
-                    }
-                }
+                actualOutput = parse(input);
                 if (output != null && output.equals(actualOutput)) passed = true;
             } catch (Exception e) {
                 if (exception != null && e.getClass() == exception) passed = true;
@@ -221,7 +221,7 @@ public class YAPIONParserTest {
 
                 do {
                     try {
-                        String testOutput = YAPIONParser.parse(actualOutput).toYAPION(prettified);
+                        String testOutput = parse(unstableOutput.isEmpty() ? output : unstableOutput.get(unstableOutput.size() - 1));
                         if (!testOutput.equals(unstableOutput.isEmpty() ? output : unstableOutput.get(unstableOutput.size() - 1))) {
                             unstableOutput.add(testOutput);
                             passed = false;
@@ -232,11 +232,28 @@ public class YAPIONParserTest {
                         // Ignored
                         break;
                     }
+                    if (unstableOutput.size() > 10) {
+                        break;
+                    }
                 } while (true);
             }
 
             System.setOut(printStream);
             return this;
+        }
+
+        private String parse(String input) {
+            if (inputStream) {
+                return YAPIONParser.parse(new ByteArrayInputStream(input.getBytes()), charsets, comments).toYAPION(prettified);
+            } else {
+                if (chars) {
+                    return new YAPIONParser(input.toCharArray()).setCommentParsing(comments).parse().result().toYAPION(prettified);
+                } else if (bytes) {
+                    return new YAPIONParser(input.getBytes()).setCommentParsing(comments).parse().result().toYAPION(prettified);
+                } else {
+                    return YAPIONParser.parse(input, comments).toYAPION(prettified);
+                }
+            }
         }
 
         public void output() {
@@ -249,11 +266,15 @@ public class YAPIONParserTest {
 
             if (!passed) {
                 st.append("\n").append("  Expected: ");
+                if (prettified) st.append("\n");
                 st.append(exception != null ? exception : output);
                 st.append("\n").append("  Got     : ");
+                if (prettified) st.append("\n");
                 st.append(actualException != null ? actualException : actualOutput);
                 for (String s : unstableOutput) {
-                    st.append("\n").append("  Got     : ").append(s);
+                    st.append("\n").append("  Got     : ");
+                    if (prettified) st.append("\n");
+                    st.append(s);
                 }
                 st.append("\n");
                 st.append(logOutput);

@@ -35,7 +35,9 @@ public class YAPIONAssertion {
                         test,
                         /*This one is interesting*/
                         {}
-                        /*HELLO THERE*/,(),,,,
+                        /*HELLO THERE*/,
+                        ()
+                        /*HELLO THERE*/,,,,
                         /*Hello THERE 2*/
                         whatever this is,
                     ]
