@@ -17,6 +17,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.core.Is;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.parser.CommentParsing;
 import yapion.parser.YAPIONParser;
 
 public class YAPIONAssertion {
@@ -28,10 +29,15 @@ public class YAPIONAssertion {
                     ip(127.0.0.1)
                     /*This is another comment*/
                     port(22)
+                    /*Test comment*/
                     test[
                         /*Hello World*/
                         test,
                         /*This one is interesting*/
+                        {}
+                        /*HELLO THERE*/,(),,,,
+                        /*Hello THERE 2*/
+                        whatever this is,
                     ]
                     map<
                         /*This is also a comment*/
@@ -44,14 +50,10 @@ public class YAPIONAssertion {
                     This one is interesting as well
                     */
                 }""";
-        YAPIONObject yapionObject = YAPIONParser.parse(s);
-        YAPIONObject yapionObjectWithComment = YAPIONParser.parseWithComments(s);
+        YAPIONObject yapionObject = YAPIONParser.parse(s, CommentParsing.KEEP);
         System.out.println();
         System.out.println(yapionObject);
         System.out.println(yapionObject.toYAPION(true));
-        System.out.println(yapionObjectWithComment);
-        System.out.println(yapionObjectWithComment.toYAPION(true));
-        System.out.println(yapionObjectWithComment.hasComments());
     }
 
     @SuppressWarnings({"unchecked"})

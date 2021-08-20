@@ -67,7 +67,7 @@ final class YAPIONInternalParser {
     private final List<ValueHandler<?>> valueHandlerList = new LinkedList<>();
 
     // Comments
-    boolean comments = false;
+    CommentParsing comments = CommentParsing.IGNORE;
     private List<String> currentComments = new ArrayList<>();
 
     void setReferenceFunction(ReferenceFunction referenceFunction) {
@@ -272,7 +272,7 @@ final class YAPIONInternalParser {
             return true;
         }
         if (lastChar == '/' && c == '*' && current.length() <= 1) {
-            if (comments) {
+            if (comments.isParse()) {
                 log.debug("type    [COMMENT]");
                 push(YAPIONType.COMMENT);
                 key = "";
@@ -552,8 +552,10 @@ final class YAPIONInternalParser {
             if (current.length() > 0) {
                 current.deleteCharAt(current.length() - 1);
             }
-            currentComments.add(current.toString());
-            log.debug("COMMENT: {}", current);
+            if (comments.isAdd()) {
+                currentComments.add(current.toString());
+                log.debug("COMMENT: {}", current);
+            }
             pop(YAPIONType.COMMENT);
             reset();
             return;
