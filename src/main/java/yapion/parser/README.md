@@ -56,6 +56,45 @@ key{}
 ```
 
 ## YAPIONValue
+A YAPIONValue holds a YAPION primitive type, those are String, Character, Boolean, Byte, Short, Integer, Long, BigInteger, Float, Double and BigDecimal, as well as the 'null' value.
+
+### String
+A String is denoted mainly denoted by '"' at the start and end but often those can be omitted.
+You can also specify a String with "'" at the start and end but only with a length not equal to 1 in between.
+The leading and trailing quotes can be omitted, if no type matches with the string other than a string.
+
+### Character
+A Character is denoted by "'" at the start and end with one character in between.
+
+### Boolean
+A Boolean is either 'true' oder 'false'.
+
+### Byte
+A Byte is a number either hex or normally suffixed by a 'B'. A hex number starts with 0x or 0X or # and can optionally be negative with a leading minus.
+
+### Short
+A Short is like a Byte just with 'S' as suffix.
+
+### Integer
+An Integer is like a Byte just with 'I' as suffix or no suffix when the number is inside the range of an Integer.
+
+### Long
+A Long is like a Byte just with 'L' as suffix or no suffix when the number is inside the range of a Long and outside the range of an Integer.
+
+### BigInteger
+A BigInteger is like a Byte just with 'BI' as suffix or no suffix when the number outside the range of an Long.
+
+### Float
+A Float is a number with optional '.' suffixed by 'F'. Leading and or trailing dots are allowed.
+
+### Double
+A Double is like a Float with optional '.' suffixed by 'D' or without a suffix when the number is inside the range of a Float.
+
+### BigDecimal
+A BigDecimal is like a Float with optional '.' suffixed by 'BD' or without a suffix when the number is outside the range of a Double.
+
+### 'null'
+The null value is denoted by 'null'.
 
 ## YAPIONArray
 A YAPIONArray just holds any type in the order inputted. The start and end is denoted by square brackets.
@@ -151,3 +190,9 @@ And with commas:
   ]
 }
 ```
+
+## YAPIONMap
+
+## YAPIONPointer
+
+## Comments
