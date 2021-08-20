@@ -13,6 +13,8 @@
 
 package yapion.annotations.registration;
 
+import yapion.parser.CommentParsing;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -49,4 +51,11 @@ public @interface YAPIONAccessGenerator {
      * @return {@code true} for extensionMethod usage, {@code false} otherwise.
      */
     boolean lombokExtensionMethods() default false;
+
+    /**
+     * How to process comments.
+     *
+     * @return {@link CommentParsing}
+     */
+    CommentParsing commentParsing() default CommentParsing.SKIP;
 }

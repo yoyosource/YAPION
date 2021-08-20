@@ -95,11 +95,11 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             VariableElement variableElement = (VariableElement) element;
             YAPIONObject yapionObject;
             if (yapionAccessGenerator.inline()) {
-                yapionObject = YAPIONParser.parse(variableElement.getConstantValue().toString());
+                yapionObject = YAPIONParser.parse(variableElement.getConstantValue().toString(), yapionAccessGenerator.commentParsing());
             } else {
                 File file = new File("./" + variableElement.getConstantValue().toString());
                 try {
-                    yapionObject = YAPIONParser.parse(file);
+                    yapionObject = YAPIONParser.parse(file, yapionAccessGenerator.commentParsing());
                 } catch (IOException e) {
                     error("Parsing of file '" + file.getAbsolutePath() + "' failed. Please specify a valid path relative from '" + new File(".").getAbsolutePath() + "'");
                     continue;
