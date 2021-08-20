@@ -49,6 +49,8 @@ import java.util.stream.Collectors;
 @SupportedAnnotationTypes("yapion.annotations.registration.YAPIONAccessGenerator")
 public class AccessGeneratorProcessor extends AbstractProcessor {
 
+    // TODO (keyConstraints?) so multiple keys with some values?
+
     private Messager messager;
     private Element currentElement;
     private AtomicInteger index = new AtomicInteger(0);
