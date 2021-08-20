@@ -25,6 +25,7 @@ public class YAPIONAssertion {
     public static void main(String[] args) {
         String s = """
                 {
+                    test/*hello*/(This is a test)
                     /*This is the key ip with the IP to the server*/
                     ip(127.0.0.1)
                     /*This is another comment*/

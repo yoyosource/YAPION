@@ -159,6 +159,7 @@ Example for an YAPION pointer
 # Code examples
 ## [Parsing](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/hierarchy)
 The Parser itself is located [here](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/parser).
+The specifications are [here](https://github.com/yoyosource/YAPION/tree/master/src/main/java/yapion/parser/README.md).
 ```java
 YAPIONObject yapionObject = YAPIONParser.parse("[...]");
 YAPIONObject yapionObject = YAPIONParser.parse(new FileInputStream(new File([...])));
