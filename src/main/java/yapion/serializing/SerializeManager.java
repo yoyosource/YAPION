@@ -42,6 +42,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
+import static yapion.YAPIONInstrumentation.METHOD_END;
+import static yapion.YAPIONInstrumentation.METHOD_START;
 import static yapion.utils.ReflectionsUtils.implementsInterface;
 import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
 
@@ -94,9 +96,11 @@ public class SerializeManager {
     }
 
     static {
+        METHOD_START();
         InputStream inputStream = SerializeManager.class.getResourceAsStream("serializer.zar.gz");
         if (inputStream == null) {
             log.error("No Serializer was loaded. Please inspect.");
+            METHOD_END();
             throw new YAPIONException("No Serializer was loaded. Please inspect.");
         }
 
@@ -112,6 +116,7 @@ public class SerializeManager {
 
         initialized = true;
         serializerGroups.add("java.");
+        METHOD_END();
     }
 
     private static void internalAdd(Class<?> clazz) {
@@ -203,19 +208,29 @@ public class SerializeManager {
 
     @SuppressWarnings({"java:S1452"})
     static InternalSerializer<?> getInternalSerializer(Class<?> type) {
-        if (type == null) return null;
+        METHOD_START();
+        if (type == null) {
+            METHOD_END();
+            return null;
+        }
         if (type.isArray()) {
+            METHOD_END();
             return ARRAY_SERIALIZER;
         }
         if (type.isEnum() || type == Enum.class) {
+            METHOD_END();
             return ENUM_SERIALIZER;
         }
         if (isRecord.test(type)) {
+            METHOD_END();
             return RECORD_SERIALIZER;
         }
 
         InternalSerializer<?> initialSerializer = serializerMap.getOrDefault(type, defaultSerializer);
-        if (initialSerializer != null) return initialSerializer;
+        if (initialSerializer != null) {
+            METHOD_END();
+            return initialSerializer;
+        }
 
         AtomicReference<Class<?>> currentType = new AtomicReference<>(type);
         interfaceTypeSerializer.stream()
@@ -229,9 +244,16 @@ public class SerializeManager {
         type = currentType.get();
 
         InternalSerializer<?> internalSerializer = serializerMap.getOrDefault(type, defaultSerializer);
-        if (internalSerializer != null) return internalSerializer;
+        if (internalSerializer != null) {
+            METHOD_END();
+            return internalSerializer;
+        }
         String typeName = type.getTypeName();
-        if (serializerGroups.stream().anyMatch(typeName::startsWith)) return defaultNullSerializer;
+        if (serializerGroups.stream().anyMatch(typeName::startsWith)) {
+            METHOD_END();
+            return defaultNullSerializer;
+        }
+        METHOD_END();
         return null;
     }
 

@@ -14,6 +14,7 @@
 package yapion.serializing;
 
 import lombok.NonNull;
+import yapion.YAPIONInstrumentation;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
@@ -27,6 +28,7 @@ import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+import static yapion.YAPIONInstrumentation.*;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 public final class YAPIONSerializer {
@@ -88,8 +90,10 @@ public final class YAPIONSerializer {
      * @param object to serialize
      */
     public YAPIONSerializer(@NonNull Object object) {
+        METHOD_START();
         contextManager = new ContextManager("");
         this.object = object;
+        METHOD_END();
     }
 
     /**
@@ -99,8 +103,10 @@ public final class YAPIONSerializer {
      * @param context the context for serialization
      */
     public YAPIONSerializer(@NonNull Object object, String context) {
+        METHOD_START();
         contextManager = new ContextManager(context);
         this.object = object;
+        METHOD_END();
     }
 
     /**
@@ -111,12 +117,15 @@ public final class YAPIONSerializer {
      * @param yapionFlags the flags used for this serialization
      */
     public YAPIONSerializer(@NonNull Object object, String context, YAPIONFlags yapionFlags) {
+        METHOD_START();
         contextManager = new ContextManager(context);
         this.object = object;
         this.yapionFlags = yapionFlags;
+        METHOD_END();
     }
 
     private YAPIONSerializer(@NonNull Object object, YAPIONSerializer yapionSerializer) {
+        METHOD_START();
         this.object = object;
         if (yapionSerializer.contextManager.willBeCascading(object.getClass()) && !yapionSerializer.contextManager.isCascading()) {
             this.contextManager = new ContextManager(yapionSerializer.contextManager.get());
@@ -125,6 +134,7 @@ public final class YAPIONSerializer {
         }
         this.pointerMap = yapionSerializer.pointerMap;
         this.yapionFlags = yapionSerializer.yapionFlags;
+        METHOD_END();
     }
 
     /**
@@ -154,7 +164,9 @@ public final class YAPIONSerializer {
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONSerializer parseObject(Object object) {
+        METHOD_START();
         if (object.getClass().getSimpleName().contains("$")) {
+            METHOD_END();
             throw new YAPIONSerializerException("Simple class name (" + object.getClass().getTypeName() + ") is not allowed to contain '$'");
         }
 
@@ -167,6 +179,7 @@ public final class YAPIONSerializer {
                 pointerMap.put(object, new YAPIONPointer((YAPIONDataType<?, ?>) result));
             }
             if (serializer.finished()) {
+                METHOD_END();
                 return this;
             }
         }
@@ -223,6 +236,7 @@ public final class YAPIONSerializer {
             yapionObject.add(name, yapionAnyType);
         }
         MethodManager.postSerializationStep(object, object.getClass(), contextManager, serializationContext);
+        METHOD_END();
         return this;
     }
 
@@ -239,6 +253,7 @@ public final class YAPIONSerializer {
      * Parses the Object to the YAPIONObject.
      */
     public YAPIONSerializer parse() {
+        METHOD_INFO();
         return parseObject(object);
     }
 

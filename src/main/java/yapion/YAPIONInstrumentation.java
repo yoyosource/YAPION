@@ -15,6 +15,10 @@ package yapion;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.YAPIONFlag;
+import yapion.serializing.YAPIONSerializer;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -65,13 +69,29 @@ public class YAPIONInstrumentation {
             }
             return st.toString();
         }
+
+        public YAPIONObject toYAPION() {
+            YAPIONObject yapionObject = new YAPIONObject();
+            yapionObject.add("class", className);
+            yapionObject.add("method", methodName);
+            yapionObject.add("start", startTime);
+            yapionObject.add("end", endTime);
+            yapionObject.add("delta", endTime - startTime);
+            if (parent != null) {
+                yapionObject.add("offset", startTime - parent.startTime);
+            }
+            YAPIONArray yapionArray = new YAPIONArray();
+            yapionObject.add("other", yapionArray);
+            methodCallList.forEach(methodCall -> yapionArray.add(methodCall.toYAPION()));
+            return yapionObject;
+        }
     }
 
     private StackTraceElement stackTraceElement(Thread thread) {
         return thread.getStackTrace()[3];
     }
 
-    public void METHOD_START() {
+    public static void METHOD_START() {
         if (instrumentationConsumer.isEmpty()) {
             return;
         }
@@ -80,7 +100,7 @@ public class YAPIONInstrumentation {
         methodStart(currentTime, thread, stackTraceElement(thread));
     }
 
-    public void METHOD_END() {
+    public static void METHOD_END() {
         if (instrumentationConsumer.isEmpty()) {
             return;
         }
@@ -90,7 +110,7 @@ public class YAPIONInstrumentation {
         methodStop(currentTime, thread, stackTraceElement(thread));
     }
 
-    public void METHOD_INFO() {
+    public static void METHOD_INFO() {
         if (instrumentationConsumer.isEmpty()) {
             return;
         }
@@ -146,27 +166,23 @@ public class YAPIONInstrumentation {
         instrumentationConsumer.add(new MethodCallConsumer() {
             @Override
             public void accept(MethodCall methodCall) {
-                System.out.println(methodCall);
+                System.out.println(methodCall.toYAPION().toYAPION(true));
             }
         });
         METHOD_START();
-        System.out.println("Hello World");
-        for (int i = 0; i < 100; i++) {
-            test();
-        }
+        YAPIONFlag.CLASS_INJECTION.setFlagDefault(true);
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Hello World");
+            }
+        });
+        yapionObject = YAPIONSerializer.serialize(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Hello World");
+            }
+        });
         METHOD_END();
-    }
-
-    private void test() {
-        METHOD_START();
-        System.out.println("This is another Hello World");
-        if (Math.random() > 0.5) {
-            test2();
-        }
-        METHOD_END();
-    }
-
-    private void test2() {
-        METHOD_INFO();
     }
 }
