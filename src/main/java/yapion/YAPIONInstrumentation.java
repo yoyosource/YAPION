@@ -13,17 +13,28 @@
 
 package yapion;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 @UtilityClass
 public class YAPIONInstrumentation {
 
-    private List<MethodCall> finishedMethodCalls = new ArrayList<>();
+    public static abstract class MethodCallConsumer implements Consumer<MethodCall> {
+
+    }
+
+    private Set<MethodCallConsumer> instrumentationConsumer = new HashSet<>();
     private Map<Thread, MethodCall> instrumentations = new HashMap<>();
 
-    private static class MethodCall {
+    @Getter
+    public static class MethodCall {
+
+        private MethodCall() {
+
+        }
 
         private MethodCall parent = null;
 
@@ -45,7 +56,10 @@ public class YAPIONInstrumentation {
                 st.append("+").append(startTime - parent.startTime).append(" (").append(endTime - startTime).append("ms)");
             }
             st.append(", ");
-            st.append(className).append(" ").append(methodName);
+            if (parent == null || !parent.className.equals(className)) {
+                st.append(className).append(" ");
+            }
+            st.append(methodName);
             if (!methodCallList.isEmpty()) {
                 st.append(", ").append(methodCallList);
             }
@@ -58,12 +72,18 @@ public class YAPIONInstrumentation {
     }
 
     public void METHOD_START() {
+        if (instrumentationConsumer.isEmpty()) {
+            return;
+        }
         long currentTime = System.currentTimeMillis();
         Thread thread = Thread.currentThread();
         methodStart(currentTime, thread, stackTraceElement(thread));
     }
 
     public void METHOD_END() {
+        if (instrumentationConsumer.isEmpty()) {
+            return;
+        }
         long currentTime = System.currentTimeMillis();
 
         Thread thread = Thread.currentThread();
@@ -71,6 +91,9 @@ public class YAPIONInstrumentation {
     }
 
     public void METHOD_INFO() {
+        if (instrumentationConsumer.isEmpty()) {
+            return;
+        }
         long currentTime = System.currentTimeMillis();
 
         Thread thread = Thread.currentThread();
@@ -112,7 +135,7 @@ public class YAPIONInstrumentation {
         }
         methodCall.endTime = currentTime;
         if (methodCall.parent == null) {
-            finishedMethodCalls.add(methodCall);
+            instrumentationConsumer.forEach(methodCallConsumer -> methodCallConsumer.accept(methodCall));
             instrumentations.remove(thread);
             return;
         }
@@ -120,21 +143,26 @@ public class YAPIONInstrumentation {
     }
 
     public void main(String[] args) {
+        instrumentationConsumer.add(new MethodCallConsumer() {
+            @Override
+            public void accept(MethodCall methodCall) {
+                System.out.println(methodCall);
+            }
+        });
         METHOD_START();
         System.out.println("Hello World");
-        test();
-        test();
-        test();
-        test();
-        test();
+        for (int i = 0; i < 100; i++) {
+            test();
+        }
         METHOD_END();
-        System.out.println(finishedMethodCalls);
     }
 
     private void test() {
         METHOD_START();
         System.out.println("This is another Hello World");
-        test2();
+        if (Math.random() > 0.5) {
+            test2();
+        }
         METHOD_END();
     }
 
