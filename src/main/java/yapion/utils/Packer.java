@@ -57,10 +57,11 @@ public class Packer {
             fileName = fileName.substring(substringLength);
 
             zarOutputStream.addFile(fileName, f.length());
-            FileInputStream fileInputStream = new FileInputStream(f);
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(f));
             for (int i = 0; i < f.length(); i++) {
-                zarOutputStream.write(fileInputStream.read());
+                zarOutputStream.write(bufferedInputStream.read());
             }
+            bufferedInputStream.close();
             if (deleteAfterPack) {
                 f.delete();
             }
