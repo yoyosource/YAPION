@@ -13,6 +13,7 @@
 
 package yapion.utils;
 
+import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 import yapion.annotations.api.InternalAPI;
 import yapion.serializing.zar.ZarOutputStream;
@@ -57,11 +58,11 @@ public class Packer {
             fileName = fileName.substring(substringLength);
 
             zarOutputStream.addFile(fileName, f.length());
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(f));
-            for (int i = 0; i < f.length(); i++) {
-                zarOutputStream.write(bufferedInputStream.read());
+            try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(f));) {
+                for (int i = 0; i < f.length(); i++) {
+                    zarOutputStream.write(bufferedInputStream.read());
+                }
             }
-            bufferedInputStream.close();
             if (deleteAfterPack) {
                 f.delete();
             }
