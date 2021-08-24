@@ -13,7 +13,6 @@
 
 package yapion.utils;
 
-import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 import yapion.annotations.api.InternalAPI;
 import yapion.serializing.zar.ZarOutputStream;
@@ -76,5 +75,4 @@ public class Packer {
             }
         }
     }
-
 }
