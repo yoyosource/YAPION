@@ -70,6 +70,9 @@ final class YAPIONInternalParser {
     CommentParsing comments = CommentParsing.IGNORE;
     private List<String> currentComments = new ArrayList<>();
 
+    // lazy parsing
+    boolean lazy = false;
+
     void setReferenceFunction(ReferenceFunction referenceFunction) {
         this.referenceFunction = referenceFunction;
     }
@@ -163,6 +166,11 @@ final class YAPIONInternalParser {
     private void push(YAPIONType yapionType) {
         log.debug("push     [{}]", yapionType);
         typeStack.push(yapionType);
+        if (lazy) {
+            while (current.length() > 0 && isWhiteSpace(current.charAt(current.length() - 1))) {
+                current.deleteCharAt(current.length() - 1);
+            }
+        }
         key = stringBuilderToUTF8String(current);
         current = new StringBuilder();
 

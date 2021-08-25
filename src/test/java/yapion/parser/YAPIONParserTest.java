@@ -108,6 +108,9 @@ public class YAPIONParserTest {
                                     testCase.comments = CommentParsing.KEEP;
                                 }
                             }
+                            if (blockType.contains("lazy")) {
+                                testCase.lazy = true;
+                            }
                         } else if (blockType.contains("O")) {
                             InputStreamCharReader inputStreamCharReader = new InputStreamCharReader(new ByteArrayInputStream(st.toString().getBytes()), true, InputStreamCharsets.UTF_8);
                             st = new StringBuilder();
@@ -181,6 +184,7 @@ public class YAPIONParserTest {
 
         private InputStreamCharsets charsets = InputStreamCharsets.US_ASCII;
         private CommentParsing comments = CommentParsing.IGNORE;
+        private boolean lazy = false;
         private boolean inputStream = false;
         private boolean chars = false;
         private boolean bytes = false;
@@ -244,15 +248,16 @@ public class YAPIONParserTest {
         }
 
         private String parse(String input) {
+            StreamOptions streamOptions = new StreamOptions().charset(charsets).commentParsing(comments).lazy(lazy);
             if (inputStream) {
-                return YAPIONParser.parse(new ByteArrayInputStream(input.getBytes()), charsets, comments).toYAPION(prettified);
+                return YAPIONParser.parse(new ByteArrayInputStream(input.getBytes()), streamOptions).toYAPION(prettified);
             } else {
                 if (chars) {
-                    return new YAPIONParser(input.toCharArray(), new StreamOptions().commentParsing(comments)).parse().result().toYAPION(prettified);
+                    return new YAPIONParser(input.toCharArray(), streamOptions).parse().result().toYAPION(prettified);
                 } else if (bytes) {
-                    return new YAPIONParser(input.getBytes(), new StreamOptions().commentParsing(comments)).parse().result().toYAPION(prettified);
+                    return new YAPIONParser(input.getBytes(), streamOptions).parse().result().toYAPION(prettified);
                 } else {
-                    return YAPIONParser.parse(input, comments).toYAPION(prettified);
+                    return YAPIONParser.parse(input, streamOptions).toYAPION(prettified);
                 }
             }
         }

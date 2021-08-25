@@ -473,6 +473,7 @@ public final class YAPIONParser {
             }
         };
         yapionInternalParser.comments = parseOptions.getCommentParsing();
+        yapionInternalParser.lazy = parseOptions.isLazy();
     }
 
     /**
@@ -493,6 +494,7 @@ public final class YAPIONParser {
     public YAPIONParser(@NonNull byte[] bytes, StreamOptions streamOptions) {
         charReader = new InputStreamCharReader(new ByteArrayInputStream(bytes), streamOptions.isStopOnStreamEnd(), streamOptions.getCharset());
         yapionInternalParser.comments = streamOptions.getCommentParsing();
+        yapionInternalParser.lazy = streamOptions.isLazy();
     }
 
     /**
@@ -526,6 +528,7 @@ public final class YAPIONParser {
             }
         };
         yapionInternalParser.comments = parseOptions.getCommentParsing();
+        yapionInternalParser.lazy = parseOptions.isLazy();
     }
 
     /**
@@ -563,6 +566,7 @@ public final class YAPIONParser {
             };
         }
         yapionInternalParser.comments = streamOptions.getCommentParsing();
+        yapionInternalParser.lazy = streamOptions.isLazy();
     }
 
     public YAPIONParser setReferenceFunction(@NonNull ReferenceFunction referenceFunction) {

@@ -20,9 +20,15 @@ import yapion.parser.CommentParsing;
 @Getter
 public class ParseOptions {
     private @NonNull CommentParsing commentParsing = CommentParsing.IGNORE;
+    private boolean lazy = false;
 
     public ParseOptions commentParsing(@NonNull CommentParsing commentParsing) {
         this.commentParsing = commentParsing;
+        return this;
+    }
+
+    public ParseOptions lazy(boolean lazy) {
+        this.lazy = lazy;
         return this;
     }
 }

@@ -15,7 +15,6 @@ package yapion.parser.options;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.experimental.Accessors;
 import yapion.parser.CommentParsing;
 import yapion.parser.InputStreamCharsets;
 
@@ -27,6 +26,12 @@ public class StreamOptions extends ParseOptions {
     @Override
     public StreamOptions commentParsing(@NonNull CommentParsing commentParsing) {
         super.commentParsing(commentParsing);
+        return this;
+    }
+
+    @Override
+    public StreamOptions lazy(boolean lazy) {
+        super.lazy(lazy);
         return this;
     }
 
