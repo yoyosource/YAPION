@@ -24,6 +24,8 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
+import yapion.parser.options.FileOptions;
+import yapion.parser.options.ParseOptions;
 import yapion.serializing.annotationproccessing.generator.*;
 
 import javax.annotation.processing.*;
@@ -105,11 +107,11 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             VariableElement variableElement = (VariableElement) element;
             YAPIONObject yapionObject;
             if (yapionAccessGenerator.inline()) {
-                yapionObject = YAPIONParser.parse(variableElement.getConstantValue().toString(), yapionAccessGenerator.commentParsing());
+                yapionObject = YAPIONParser.parse(variableElement.getConstantValue().toString(), new ParseOptions().commentParsing(yapionAccessGenerator.commentParsing()));
             } else {
                 File file = new File("./" + variableElement.getConstantValue().toString());
                 try {
-                    yapionObject = YAPIONParser.parse(file, yapionAccessGenerator.commentParsing());
+                    yapionObject = YAPIONParser.parse(file, new FileOptions().commentParsing(yapionAccessGenerator.commentParsing()));
                 } catch (IOException e) {
                     error("Parsing of file '" + file.getAbsolutePath() + "' failed. Please specify a valid path relative from '" + new File(".").getAbsolutePath() + "'");
                     continue;

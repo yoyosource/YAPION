@@ -16,6 +16,7 @@ package yapion.io;
 import yapion.exceptions.utils.YAPIONIOException;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
+import yapion.parser.options.StreamOptions;
 import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
 
@@ -71,7 +72,7 @@ public class YAPIONInputStream implements AutoCloseable {
      */
     public synchronized YAPIONObject read() {
         if (closed) throw new YAPIONIOException("Reading from a closed Stream");
-        return YAPIONParser.parse(inputStream, false);
+        return YAPIONParser.parse(inputStream, new StreamOptions().stopOnStreamEnd(false));
     }
 
     /**

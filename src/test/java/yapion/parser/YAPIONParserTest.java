@@ -17,6 +17,7 @@ import org.junit.Test;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.*;
+import yapion.parser.options.StreamOptions;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -247,9 +248,9 @@ public class YAPIONParserTest {
                 return YAPIONParser.parse(new ByteArrayInputStream(input.getBytes()), charsets, comments).toYAPION(prettified);
             } else {
                 if (chars) {
-                    return new YAPIONParser(input.toCharArray()).setCommentParsing(comments).parse().result().toYAPION(prettified);
+                    return new YAPIONParser(input.toCharArray(), new StreamOptions().commentParsing(comments)).parse().result().toYAPION(prettified);
                 } else if (bytes) {
-                    return new YAPIONParser(input.getBytes()).setCommentParsing(comments).parse().result().toYAPION(prettified);
+                    return new YAPIONParser(input.getBytes(), new StreamOptions().commentParsing(comments)).parse().result().toYAPION(prettified);
                 } else {
                     return YAPIONParser.parse(input, comments).toYAPION(prettified);
                 }
@@ -563,7 +564,7 @@ public class YAPIONParserTest {
 
     @Test
     public void testParsingOfUTF8File() {
-        YAPIONObject yapionObject = new YAPIONParser(YAPIONParserTest.class.getResourceAsStream("/test2.yapion"), InputStreamCharsets.UTF_8).parse().result();
+        YAPIONObject yapionObject = new YAPIONParser(YAPIONParserTest.class.getResourceAsStream("/test2.yapion"), new StreamOptions().charset(InputStreamCharsets.UTF_8)).parse().result();
         yapionObject = YAPIONParser.parse(yapionObject.toYAPION());
         assertThat(yapionObject.toYAPION(), is("{rosenduftgenießer(null)}"));
     }

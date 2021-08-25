@@ -21,11 +21,15 @@ import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.*;
+import yapion.parser.options.FileOptions;
+import yapion.parser.options.ParseOptions;
+import yapion.parser.options.StreamOptions;
 import yapion.utils.ReferenceFunction;
 
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.zip.GZIPInputStream;
 
 @Slf4j
 public final class YAPIONParser {
@@ -37,7 +41,18 @@ public final class YAPIONParser {
      * @return YAPIONObject parsed out of the string
      */
     public static YAPIONObject parse(String s) {
-        return new YAPIONParser(s).parse().result();
+        return new YAPIONParser(s, new ParseOptions()).parse().result();
+    }
+
+    /**
+     * Parses the String to an YAPIONObject.
+     *
+     * @param s the string to parse
+     * @param parseOptions the parse options
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parse(String s, ParseOptions parseOptions) {
+        return new YAPIONParser(s, parseOptions).parse().result();
     }
 
     /**
@@ -47,8 +62,10 @@ public final class YAPIONParser {
      * @param commentParsing how comments should be parsed
      * @return YAPIONObject parsed out of the string
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(String, ParseOptions)")
     public static YAPIONObject parse(String s, CommentParsing commentParsing) {
-        return new YAPIONParser(s).setCommentParsing(commentParsing).parse().result();
+        return new YAPIONParser(s, new ParseOptions().commentParsing(commentParsing)).parse().result();
     }
 
     /**
@@ -59,7 +76,19 @@ public final class YAPIONParser {
      * @throws IOException by FileInputStream creation
      */
     public static YAPIONObject parse(File file) throws IOException {
-        return new YAPIONParser(file).parse().result();
+        return new YAPIONParser(file, new FileOptions()).parse().result();
+    }
+
+    /**
+     * Parses the File content to an YAPIONObject.
+     *
+     * @param file the file content to parse
+     * @param fileOptions the parse options
+     * @return The YAPIONObject parsed out of the file content
+     * @throws IOException by FileInputStream creation
+     */
+    public static YAPIONObject parse(File file, FileOptions fileOptions) throws IOException {
+        return new YAPIONParser(file, fileOptions).parse().result();
     }
 
     /**
@@ -70,8 +99,10 @@ public final class YAPIONParser {
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(File, FileOptions)")
     public static YAPIONObject parse(File file, CommentParsing commentParsing) throws IOException {
-        return new YAPIONParser(file).setCommentParsing(commentParsing).parse().result();
+        return new YAPIONParser(file, new FileOptions().commentParsing(commentParsing)).parse().result();
     }
 
     /**
@@ -82,8 +113,10 @@ public final class YAPIONParser {
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(File, FileOptions)")
     public static YAPIONObject parse(File file, InputStreamCharsets charset) throws IOException {
-        return new YAPIONParser(file, charset).parse().result();
+        return new YAPIONParser(file, new FileOptions().charset(charset)).result();
     }
 
     /**
@@ -95,8 +128,10 @@ public final class YAPIONParser {
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(File, FileOptions)")
     public static YAPIONObject parse(File file, InputStreamCharsets charset, CommentParsing commentParsing) throws IOException {
-        return new YAPIONParser(file, charset).setCommentParsing(commentParsing).parse().result();
+        return new YAPIONParser(file, new FileOptions().charset(charset).commentParsing(commentParsing)).parse().result();
     }
 
     /**
@@ -107,8 +142,10 @@ public final class YAPIONParser {
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(File, FileOptions)")
     public static YAPIONObject parse(File file, boolean stopOnStreamEnd) throws IOException {
-        return new YAPIONParser(file, stopOnStreamEnd).parse().result();
+        return new YAPIONParser(file, new FileOptions().stopOnStreamEnd(stopOnStreamEnd)).parse().result();
     }
 
     /**
@@ -120,8 +157,10 @@ public final class YAPIONParser {
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(File, FileOptions)")
     public static YAPIONObject parse(File file, boolean stopOnStreamEnd, CommentParsing commentParsing) throws IOException {
-        return new YAPIONParser(file, stopOnStreamEnd).setCommentParsing(commentParsing).parse().result();
+        return new YAPIONParser(file, new FileOptions().stopOnStreamEnd(stopOnStreamEnd).commentParsing(commentParsing)).parse().result();
     }
 
     /**
@@ -133,8 +172,10 @@ public final class YAPIONParser {
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(File, FileOptions)")
     public static YAPIONObject parse(File file, boolean stopOnStreamEnd, InputStreamCharsets charset) throws IOException {
-        return new YAPIONParser(file, stopOnStreamEnd, charset).parse().result();
+        return new YAPIONParser(file, new FileOptions().stopOnStreamEnd(stopOnStreamEnd).charset(charset)).parse().result();
     }
 
     /**
@@ -147,8 +188,10 @@ public final class YAPIONParser {
      * @return The YAPIONObject parsed out of the file content
      * @throws IOException by FileInputStream creation
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(File, FileOptions)")
     public static YAPIONObject parse(File file, boolean stopOnStreamEnd, InputStreamCharsets charset, CommentParsing commentParsing) throws IOException {
-        return new YAPIONParser(file, stopOnStreamEnd, charset).setCommentParsing(commentParsing).parse().result();
+        return new YAPIONParser(file, new FileOptions().stopOnStreamEnd(stopOnStreamEnd).charset(charset).commentParsing(commentParsing)).parse().result();
     }
 
     /**
@@ -162,7 +205,22 @@ public final class YAPIONParser {
      * @return YAPIONObject parsed out of the string
      */
     public static YAPIONObject parse(InputStream inputStream) {
-        return new YAPIONParser(inputStream).parse().result();
+        return new YAPIONParser(inputStream, new StreamOptions()).parse().result();
+    }
+
+    /**
+     * Parses the InputStream to an YAPIONObject.
+     * This method only parses the next YAPIONObject and tries to read
+     * until the YAPIONObject is finished. It will cancel on EOF and
+     * throw an {@link YAPIONParserException} if reached without
+     * a finished {@link YAPIONObject}.
+     *
+     * @param inputStream the inputStream to parse
+     * @param streamOptions the parse options
+     * @return YAPIONObject parsed out of the string
+     */
+    public static YAPIONObject parse(InputStream inputStream, StreamOptions streamOptions) {
+        return new YAPIONParser(inputStream, streamOptions).parse().result();
     }
 
     /**
@@ -176,8 +234,10 @@ public final class YAPIONParser {
      * @param commentParsing how comments should be parsed
      * @return YAPIONObject parsed out of the string
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(InputStream, StreamOptions)")
     public static YAPIONObject parse(InputStream inputStream, CommentParsing commentParsing) {
-        return new YAPIONParser(inputStream).setCommentParsing(commentParsing).parse().result();
+        return new YAPIONParser(inputStream, new StreamOptions().commentParsing(commentParsing)).parse().result();
     }
 
     /**
@@ -191,8 +251,10 @@ public final class YAPIONParser {
      * @param charset to use
      * @return YAPIONObject parsed out of the string
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(InputStream, StreamOptions)")
     public static YAPIONObject parse(InputStream inputStream, InputStreamCharsets charset) {
-        return new YAPIONParser(inputStream, charset).parse().result();
+        return new YAPIONParser(inputStream, new StreamOptions().charset(charset)).parse().result();
     }
 
     /**
@@ -207,8 +269,10 @@ public final class YAPIONParser {
      * @param commentParsing how comments should be parsed
      * @return YAPIONObject parsed out of the string
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(InputStream, StreamOptions)")
     public static YAPIONObject parse(InputStream inputStream, InputStreamCharsets charset, CommentParsing commentParsing) {
-        return new YAPIONParser(inputStream, charset).setCommentParsing(commentParsing).parse().result();
+        return new YAPIONParser(inputStream, new StreamOptions().charset(charset).commentParsing(commentParsing)).parse().result();
     }
 
     /**
@@ -218,8 +282,10 @@ public final class YAPIONParser {
      * @param stopOnStreamEnd stop on Stream end or not
      * @return YAPIONObject parsed out of the string
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(InputStream, StreamOptions)")
     public static YAPIONObject parse(InputStream inputStream, boolean stopOnStreamEnd) {
-        return new YAPIONParser(inputStream, stopOnStreamEnd).parse().result();
+        return new YAPIONParser(inputStream, new StreamOptions().stopOnStreamEnd(stopOnStreamEnd)).parse().result();
     }
 
     /**
@@ -230,8 +296,10 @@ public final class YAPIONParser {
      * @param commentParsing how comments should be parsed
      * @return YAPIONObject parsed out of the string
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(InputStream, StreamOptions)")
     public static YAPIONObject parse(InputStream inputStream, boolean stopOnStreamEnd, CommentParsing commentParsing) {
-        return new YAPIONParser(inputStream, stopOnStreamEnd).setCommentParsing(commentParsing).parse().result();
+        return new YAPIONParser(inputStream, new StreamOptions().stopOnStreamEnd(stopOnStreamEnd).commentParsing(commentParsing)).parse().result();
     }
 
     /**
@@ -242,8 +310,10 @@ public final class YAPIONParser {
      * @param charset to use
      * @return YAPIONObject parsed out of the string
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(InputStream, StreamOptions)")
     public static YAPIONObject parse(InputStream inputStream, boolean stopOnStreamEnd, InputStreamCharsets charset) {
-        return new YAPIONParser(inputStream, stopOnStreamEnd, charset).parse().result();
+        return new YAPIONParser(inputStream, new StreamOptions().stopOnStreamEnd(stopOnStreamEnd).charset(charset)).parse().result();
     }
 
     /**
@@ -255,8 +325,10 @@ public final class YAPIONParser {
      * @param commentParsing how comments should be parsed
      * @return YAPIONObject parsed out of the string
      */
+    @Deprecated
+    @DeprecationInfo(since = "0.26.0", alternative = "#parse(InputStream, StreamOptions)")
     public static YAPIONObject parse(InputStream inputStream, boolean stopOnStreamEnd, InputStreamCharsets charset, CommentParsing commentParsing) {
-        return new YAPIONParser(inputStream, stopOnStreamEnd, charset).setCommentParsing(commentParsing).parse().result();
+        return new YAPIONParser(inputStream, new StreamOptions().stopOnStreamEnd(stopOnStreamEnd).charset(charset)).parse().result();
     }
 
     /**
@@ -372,9 +444,10 @@ public final class YAPIONParser {
      * Creates a YAPIONParser for parsing a string to an YAPIONObject.
      *
      * @param string to parse from
+     * @param parseOptions the parse options
      */
-    public YAPIONParser(@NonNull String string) {
-        this(string.toCharArray());
+    public YAPIONParser(@NonNull String string, ParseOptions parseOptions) {
+        this(string.toCharArray(), parseOptions);
     }
 
     /**
@@ -382,7 +455,7 @@ public final class YAPIONParser {
      *
      * @param stringBuilder to parse from
      */
-    public YAPIONParser(@NonNull StringBuilder stringBuilder) {
+    public YAPIONParser(@NonNull StringBuilder stringBuilder, ParseOptions parseOptions) {
         char[] chars = new char[stringBuilder.length()];
         stringBuilder.getChars(0, stringBuilder.length(), chars, 0);
         charReader = new CharReader() {
@@ -407,17 +480,18 @@ public final class YAPIONParser {
      * @param bytes to parse from
      */
     public YAPIONParser(@NonNull byte[] bytes) {
-        this(bytes, InputStreamCharsets.US_ASCII);
+        this(bytes, new StreamOptions());
     }
 
     /**
      * Creates a YAPIONParser for parsing a byte array to an YAPIONObject.
      *
      * @param bytes to parse from
-     * @param charset to use
+     * @param streamOptions the parse options
      */
-    public YAPIONParser(@NonNull byte[] bytes, InputStreamCharsets charset) {
-        charReader = new InputStreamCharReader(new ByteArrayInputStream(bytes), true, charset);
+    public YAPIONParser(@NonNull byte[] bytes, StreamOptions streamOptions) {
+        charReader = new InputStreamCharReader(new ByteArrayInputStream(bytes), streamOptions.isStopOnStreamEnd(), streamOptions.getCharset());
+        yapionInternalParser.comments = streamOptions.getCommentParsing();
     }
 
     /**
@@ -426,6 +500,16 @@ public final class YAPIONParser {
      * @param chars to parse from
      */
     public YAPIONParser(@NonNull char[] chars) {
+        this(chars, new ParseOptions());
+    }
+
+    /**
+     * Creates a YAPIONParser for parsing a char array to an YAPIONObject.
+     *
+     * @param chars to parse from
+     * @param parseOptions the parse options
+     */
+    public YAPIONParser(@NonNull char[] chars, ParseOptions parseOptions) {
         charReader = new CharReader() {
             private int index = 0;
             private int available = chars.length;
@@ -440,94 +524,34 @@ public final class YAPIONParser {
                 return index < available;
             }
         };
+        yapionInternalParser.comments = parseOptions.getCommentParsing();
     }
 
     /**
      * Creates a YAPIONParser for parsing an InputStream to an YAPIONObject.
      *
      * @param inputStream to parse from
+     * @param streamOptions the parse options
      */
-    public YAPIONParser(@NonNull InputStream inputStream) {
-        this(inputStream, true, false, InputStreamCharsets.US_ASCII);
-    }
-
-    /**
-     * Creates a YAPIONParser for parsing an InputStream to an YAPIONObject.
-     *
-     * @param inputStream to parse from
-     * @param charset to use
-     */
-    public YAPIONParser(@NonNull InputStream inputStream, InputStreamCharsets charset) {
-        this(inputStream, true, false, charset);
-    }
-
-    /**
-     * Creates a YAPIONParser for parsing an InputStream to an YAPIONObject.
-     *
-     * @param inputStream to parse from
-     * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
-     */
-    public YAPIONParser(@NonNull InputStream inputStream, boolean stopOnStreamEnd) {
-        this(inputStream, stopOnStreamEnd, false, InputStreamCharsets.US_ASCII);
-    }
-
-    /**
-     * Creates a YAPIONParser for parsing an InputStream to an YAPIONObject.
-     *
-     * @param inputStream to parse from
-     * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
-     * @param charset to use
-     */
-    public YAPIONParser(@NonNull InputStream inputStream, boolean stopOnStreamEnd, InputStreamCharsets charset) {
-        this(inputStream, stopOnStreamEnd, false, charset);
+    public YAPIONParser(@NonNull InputStream inputStream, StreamOptions streamOptions) {
+        this(inputStream, streamOptions, false);
     }
 
     /**
      * Creates a YAPIONParser for parsing a file content to an YAPIONObject.
      *
      * @param file to parse from
+     * @param fileOptions the parse options
      * @throws IOException by FileInputStream creation
      */
-    public YAPIONParser(File file) throws IOException {
-        this(new BufferedInputStream(new FileInputStream(file)), true, true, InputStreamCharsets.US_ASCII);
+    public YAPIONParser(File file, FileOptions fileOptions) throws IOException {
+        this(fileOptions.isGzipped()
+                ? new GZIPInputStream(new BufferedInputStream(new FileInputStream(file)))
+                : new BufferedInputStream(new FileInputStream(file)), fileOptions, true);
     }
 
-    /**
-     * Creates a YAPIONParser for parsing a file content to an YAPIONObject.
-     *
-     * @param file to parse from
-     * @param charset to use
-     * @throws IOException by FileInputStream creation
-     */
-    public YAPIONParser(File file, InputStreamCharsets charset) throws IOException {
-        this(new BufferedInputStream(new FileInputStream(file)), true, true, charset);
-    }
-
-    /**
-     * Creates a YAPIONParser for parsing a file content to an YAPIONObject.
-     *
-     * @param file to parse from
-     * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
-     * @throws IOException by FileInputStream creation
-     */
-    public YAPIONParser(File file, boolean stopOnStreamEnd) throws IOException {
-        this(new BufferedInputStream(new FileInputStream(file)), stopOnStreamEnd, true, InputStreamCharsets.US_ASCII);
-    }
-
-    /**
-     * Creates a YAPIONParser for parsing a file content to an YAPIONObject.
-     *
-     * @param file to parse from
-     * @param stopOnStreamEnd {@code true} if it should stop at the end of the stream, {@code false} otherwise
-     * @param charset to use
-     * @throws IOException by FileInputStream creation
-     */
-    public YAPIONParser(File file, boolean stopOnStreamEnd, InputStreamCharsets charset) throws IOException {
-        this(new BufferedInputStream(new FileInputStream(file)), stopOnStreamEnd, true, charset);
-    }
-
-    private YAPIONParser(InputStream inputStream, boolean stopOnStreamEnd, boolean closeAfterRead, InputStreamCharsets charset) {
-        charReader = new InputStreamCharReader(inputStream, stopOnStreamEnd, charset);
+    private YAPIONParser(InputStream inputStream, StreamOptions streamOptions, boolean closeAfterRead) {
+        charReader = new InputStreamCharReader(inputStream, streamOptions.isStopOnStreamEnd(), streamOptions.getCharset());
         if (closeAfterRead) {
             finishRunnable = () -> {
                 try {
@@ -537,15 +561,11 @@ public final class YAPIONParser {
                 }
             };
         }
+        yapionInternalParser.comments = streamOptions.getCommentParsing();
     }
 
     public YAPIONParser setReferenceFunction(@NonNull ReferenceFunction referenceFunction) {
         yapionInternalParser.setReferenceFunction(referenceFunction);
-        return this;
-    }
-
-    public YAPIONParser setCommentParsing(CommentParsing commentParsing) {
-        yapionInternalParser.comments = commentParsing;
         return this;
     }
 

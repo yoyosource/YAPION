@@ -15,13 +15,14 @@ package yapion.parser.options;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import yapion.parser.CommentParsing;
 
-@Accessors(fluent = true)
 @Getter
-@Setter
 public class ParseOptions {
     private @NonNull CommentParsing commentParsing = CommentParsing.IGNORE;
+
+    public ParseOptions commentParsing(@NonNull CommentParsing commentParsing) {
+        this.commentParsing = commentParsing;
+        return this;
+    }
 }

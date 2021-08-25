@@ -19,6 +19,9 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
+import yapion.parser.options.FileOptions;
+import yapion.parser.options.ParseOptions;
+import yapion.parser.options.StreamOptions;
 import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONFlags;
@@ -37,35 +40,51 @@ public class YAPIONExtension {
     /// Parser
 
     public static YAPIONObject parse(String s) {
-        return new YAPIONParser(s).parse().result();
+        return new YAPIONParser(s, new ParseOptions()).parse().result();
+    }
+
+    public static YAPIONObject parse(String s, ParseOptions parseOptions) {
+        return new YAPIONParser(s, parseOptions).parse().result();
     }
 
     public static YAPIONObject parse(StringBuilder s) {
-        return new YAPIONParser(s).parse().result();
+        return new YAPIONParser(s, new ParseOptions()).parse().result();
+    }
+
+    public static YAPIONObject parse(StringBuilder s, ParseOptions parseOptions) {
+        return new YAPIONParser(s, parseOptions).parse().result();
     }
 
     public static YAPIONObject parse(byte[] s) {
         return new YAPIONParser(s).parse().result();
     }
 
+    public static YAPIONObject parse(byte[] s, StreamOptions streamOptions) {
+        return new YAPIONParser(s, streamOptions).parse().result();
+    }
+
     public static YAPIONObject parse(char[] s) {
         return new YAPIONParser(s).parse().result();
     }
 
-    public static YAPIONObject parse(InputStream inputStream) {
-        return new YAPIONParser(inputStream).parse().result();
+    public static YAPIONObject parse(char[] s, StreamOptions streamOptions) {
+        return new YAPIONParser(s, streamOptions).parse().result();
     }
 
-    public static YAPIONObject parse(InputStream inputStream, boolean stopOnEnd) {
-        return new YAPIONParser(inputStream, stopOnEnd).parse().result();
+    public static YAPIONObject parse(InputStream inputStream) {
+        return new YAPIONParser(inputStream, new StreamOptions()).parse().result();
+    }
+
+    public static YAPIONObject parse(InputStream inputStream, StreamOptions streamOptions) {
+        return new YAPIONParser(inputStream, streamOptions).parse().result();
     }
 
     public static YAPIONObject parse(File file) throws IOException {
-        return new YAPIONParser(file).parse().result();
+        return new YAPIONParser(file, new FileOptions()).parse().result();
     }
 
-    public static YAPIONObject parse(File file, boolean stopOnEnd) throws IOException {
-        return new YAPIONParser(file, stopOnEnd).parse().result();
+    public static YAPIONObject parse(File file, FileOptions fileOptions) throws IOException {
+        return new YAPIONParser(file, fileOptions).parse().result();
     }
 
     /// Output - is defined on ObjectOutput

@@ -14,12 +14,35 @@
 package yapion.parser.options;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NonNull;
 import lombok.experimental.Accessors;
+import yapion.parser.CommentParsing;
+import yapion.parser.InputStreamCharsets;
 
-@Accessors(fluent = true)
 @Getter
-@Setter
 public class FileOptions extends StreamOptions {
     private boolean gzipped = false;
+
+    @Override
+    public FileOptions commentParsing(@NonNull CommentParsing commentParsing) {
+        super.commentParsing(commentParsing);
+        return this;
+    }
+
+    @Override
+    public FileOptions charset(InputStreamCharsets charset) {
+        super.charset(charset);
+        return this;
+    }
+
+    @Override
+    public FileOptions stopOnStreamEnd(boolean stopOnStreamEnd) {
+        super.stopOnStreamEnd(stopOnStreamEnd);
+        return this;
+    }
+
+    public FileOptions gzipped(boolean gzipped) {
+        this.gzipped = gzipped;
+        return this;
+    }
 }

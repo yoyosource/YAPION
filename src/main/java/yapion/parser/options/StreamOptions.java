@@ -15,14 +15,28 @@ package yapion.parser.options;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.experimental.Accessors;
+import yapion.parser.CommentParsing;
 import yapion.parser.InputStreamCharsets;
 
-@Accessors(fluent = true)
 @Getter
-@Setter
 public class StreamOptions extends ParseOptions {
     private @NonNull InputStreamCharsets charset = InputStreamCharsets.US_ASCII;
     private boolean stopOnStreamEnd = true;
+
+    @Override
+    public StreamOptions commentParsing(@NonNull CommentParsing commentParsing) {
+        super.commentParsing(commentParsing);
+        return this;
+    }
+
+    public StreamOptions charset(InputStreamCharsets charset) {
+        this.charset = charset;
+        return this;
+    }
+
+    public StreamOptions stopOnStreamEnd(boolean stopOnStreamEnd) {
+        this.stopOnStreamEnd = stopOnStreamEnd;
+        return this;
+    }
 }
