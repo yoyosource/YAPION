@@ -472,6 +472,7 @@ public final class YAPIONParser {
                 return index < available;
             }
         };
+        yapionInternalParser.comments = parseOptions.getCommentParsing();
     }
 
     /**
