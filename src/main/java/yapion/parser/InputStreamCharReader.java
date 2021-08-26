@@ -71,7 +71,6 @@ public class InputStreamCharReader implements CharReader {
         };
     }
 
-    // TODO: lookup Latin1 spec and implement
     private CharSupplier LATIN_1() {
         return () -> {
             int i = inputStream.read();
