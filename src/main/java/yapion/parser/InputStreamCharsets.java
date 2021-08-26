@@ -20,6 +20,11 @@ public enum InputStreamCharsets {
     US_ASCII,
 
     /**
+     * Just the default 0x00 - 0xFF
+     */
+    EXTENDED_US_ASCII,
+
+    /**
      * Also known as ISO_8859_1
      * Just the default 0x00 - 0xFF
      */

@@ -37,6 +37,8 @@ public class InputStreamCharReader implements CharReader {
         this.stopOnStreamEnd = stopOnStreamEnd;
         if (charset == InputStreamCharsets.US_ASCII) {
             reader = US_ASCII();
+        } else if (charset == InputStreamCharsets.EXTENDED_US_ASCII) {
+            reader = EXTENDED_US_ASCII();
         } else if (charset == InputStreamCharsets.LATIN_1) {
             reader = LATIN_1();
         } else {
@@ -58,6 +60,18 @@ public class InputStreamCharReader implements CharReader {
         };
     }
 
+    private CharSupplier EXTENDED_US_ASCII() {
+        return () -> {
+            int i = inputStream.read();
+            if (i == -1 && !stopOnStreamEnd) {
+                throw new YAPIONParser.ParserSkipException();
+            }
+            available--;
+            return (char) i;
+        };
+    }
+
+    // TODO: lookup Latin1 spec and implement
     private CharSupplier LATIN_1() {
         return () -> {
             int i = inputStream.read();
