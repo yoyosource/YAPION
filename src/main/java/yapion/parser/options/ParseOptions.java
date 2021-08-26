@@ -36,6 +36,10 @@ public class ParseOptions {
     /**
      * Set how the parser should parse 'keys', either lazy, removing any whiteSpace at the end, or not lazy keeping them.
      *
+     * <br><br>Example:
+     * <br>Input: <code>{test (Hello World)}</code>
+     * <br>Output: <code>{test (Hello World)}</code>
+     * <br>Output lazy: <code>{test(Hello World)}</code>
      *
      * @param lazy {@code true} for lazy parsing, {@code false} otherwise, default is {@code false}
      * @return itself
