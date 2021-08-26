@@ -23,23 +23,41 @@ public class StreamOptions extends ParseOptions {
     private @NonNull InputStreamCharsets charset = InputStreamCharsets.US_ASCII;
     private boolean stopOnStreamEnd = true;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public StreamOptions commentParsing(@NonNull CommentParsing commentParsing) {
         super.commentParsing(commentParsing);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public StreamOptions lazy(boolean lazy) {
         super.lazy(lazy);
         return this;
     }
 
+    /**
+     * Set with which encoding the Stream should be read.
+     *
+     * @param charset the encoding of the Stream, {@link InputStreamCharsets#US_ASCII} by default.
+     * @return itself
+     */
     public StreamOptions charset(InputStreamCharsets charset) {
         this.charset = charset;
         return this;
     }
 
+    /**
+     * Set whether an EOF should stop the parsing or not.
+     *
+     * @param stopOnStreamEnd {@code true} to stop with EOF, {@code false} otherwise, default is {@code true}
+     * @return itself
+     */
     public StreamOptions stopOnStreamEnd(boolean stopOnStreamEnd) {
         this.stopOnStreamEnd = stopOnStreamEnd;
         return this;

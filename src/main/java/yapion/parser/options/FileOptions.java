@@ -22,30 +22,48 @@ import yapion.parser.InputStreamCharsets;
 public class FileOptions extends StreamOptions {
     private boolean gzipped = false;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FileOptions commentParsing(@NonNull CommentParsing commentParsing) {
         super.commentParsing(commentParsing);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FileOptions lazy(boolean lazy) {
         super.lazy(lazy);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FileOptions charset(InputStreamCharsets charset) {
         super.charset(charset);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FileOptions stopOnStreamEnd(boolean stopOnStreamEnd) {
         super.stopOnStreamEnd(stopOnStreamEnd);
         return this;
     }
 
+    /**
+     * Set if the File you want to read should be read with a {@link java.util.zip.GZIPInputStream} or not.
+     *
+     * @param gzipped {@code true} for {@link java.util.zip.GZIPInputStream}, {@code false} otherwise, default is {@code false}
+     * @return itself
+     */
     public FileOptions gzipped(boolean gzipped) {
         this.gzipped = gzipped;
         return this;

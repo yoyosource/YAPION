@@ -22,11 +22,24 @@ public class ParseOptions {
     private @NonNull CommentParsing commentParsing = CommentParsing.IGNORE;
     private boolean lazy = false;
 
+    /**
+     * Set how comments should be treated by the parser.
+     *
+     * @param commentParsing the comment parsing behaviour, default is {@link CommentParsing#IGNORE}
+     * @return itself
+     */
     public ParseOptions commentParsing(@NonNull CommentParsing commentParsing) {
         this.commentParsing = commentParsing;
         return this;
     }
 
+    /**
+     * Set how the parser should parse 'keys', either lazy, removing any whiteSpace at the end, or not lazy keeping them.
+     *
+     *
+     * @param lazy {@code true} for lazy parsing, {@code false} otherwise, default is {@code false}
+     * @return itself
+     */
     public ParseOptions lazy(boolean lazy) {
         this.lazy = lazy;
         return this;
