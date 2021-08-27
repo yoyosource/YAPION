@@ -25,6 +25,9 @@ public class StreamOptions extends ParseOptions {
 
     /**
      * {@inheritDoc}
+     *
+     * @param commentParsing the comment parsing behaviour, default is {@link CommentParsing#IGNORE}
+     * @return itself
      */
     @Override
     public StreamOptions commentParsing(@NonNull CommentParsing commentParsing) {
@@ -34,6 +37,9 @@ public class StreamOptions extends ParseOptions {
 
     /**
      * {@inheritDoc}
+     *
+     * @param lazy {@code true} for lazy parsing, {@code false} otherwise, default is {@code false}
+     * @return itself
      */
     @Override
     public StreamOptions lazy(boolean lazy) {

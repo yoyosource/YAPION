@@ -24,6 +24,9 @@ public class FileOptions extends StreamOptions {
 
     /**
      * {@inheritDoc}
+     *
+     * @param commentParsing the comment parsing behaviour, default is {@link CommentParsing#IGNORE}
+     * @return itself
      */
     @Override
     public FileOptions commentParsing(@NonNull CommentParsing commentParsing) {
@@ -33,6 +36,9 @@ public class FileOptions extends StreamOptions {
 
     /**
      * {@inheritDoc}
+     *
+     * @param lazy {@code true} for lazy parsing, {@code false} otherwise, default is {@code false}
+     * return itself
      */
     @Override
     public FileOptions lazy(boolean lazy) {
@@ -42,6 +48,9 @@ public class FileOptions extends StreamOptions {
 
     /**
      * {@inheritDoc}
+     *
+     * @param charset the encoding of the Stream, {@link InputStreamCharsets#US_ASCII} by default.
+     * @return itself
      */
     @Override
     public FileOptions charset(InputStreamCharsets charset) {
@@ -51,6 +60,9 @@ public class FileOptions extends StreamOptions {
 
     /**
      * {@inheritDoc}
+     *
+     * @param stopOnStreamEnd {@code true} to stop with EOF, {@code false} otherwise, default is {@code true}
+     * @return itself
      */
     @Override
     public FileOptions stopOnStreamEnd(boolean stopOnStreamEnd) {
