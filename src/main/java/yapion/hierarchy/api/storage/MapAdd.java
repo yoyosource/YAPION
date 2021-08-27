@@ -90,5 +90,4 @@ public interface MapAdd<I, K> extends InternalAdd<I, K> {
     default <@YAPIONEveryType C> YAPIONAnyType putOrPointer(@NonNull C key, @NonNull YAPIONAnyType value) {
         return addOrPointerAndGetPrevious(key, value);
     }
-
 }

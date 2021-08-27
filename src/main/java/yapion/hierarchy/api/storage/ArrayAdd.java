@@ -55,5 +55,4 @@ public interface ArrayAdd<I, K> extends ObjectAdd<I, K> {
     default I setOrPointer(@NonNull K key, @NonNull YAPIONAnyType value) {
         throw new UnsupportedOperationException();
     }
-
 }

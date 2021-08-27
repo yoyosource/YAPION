@@ -98,5 +98,4 @@ public interface ObjectAdd<I, K> extends InternalAdd<I, K> {
     default YAPIONAnyType putOrPointer(@NonNull K key, @NonNull YAPIONAnyType value) {
         return addOrPointerAndGetPrevious(key, value);
     }
-
 }

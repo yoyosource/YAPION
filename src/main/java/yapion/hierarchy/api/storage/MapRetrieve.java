@@ -234,5 +234,4 @@ public interface MapRetrieve<K> extends InternalRetrieve<K> {
             valueConsumer.accept(yapionValue.get());
         }
     }
-
 }

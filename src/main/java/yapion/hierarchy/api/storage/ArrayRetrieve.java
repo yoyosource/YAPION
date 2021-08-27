@@ -13,17 +13,11 @@
 
 package yapion.hierarchy.api.storage;
 
-import lombok.NonNull;
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.internal.InternalRemove;
+import yapion.annotations.api.YAPIONEveryType;
 
-public interface ObjectRemove<I, K> extends InternalRemove<I, K> {
+public interface ArrayRetrieve<K> extends ObjectRetrieve<K> {
 
-    default I remove(@NonNull K key) {
-        return internalRemove(key);
-    }
+    <@YAPIONEveryType T> int indexOf(T element);
 
-    default YAPIONAnyType removeAndGet(@NonNull K key) {
-        return internalRemoveAndGet(key);
-    }
+    <@YAPIONEveryType T> int lastIndexOf(T element);
 }

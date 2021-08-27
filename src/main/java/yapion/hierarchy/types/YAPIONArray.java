@@ -15,14 +15,15 @@ package yapion.hierarchy.types;
 
 import lombok.NonNull;
 import yapion.annotations.api.InternalAPI;
+import yapion.exceptions.YAPIONException;
 import yapion.exceptions.utils.YAPIONArrayIndexOutOfBoundsException;
 import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.groups.SerializingType;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.storage.ArrayAdd;
-import yapion.hierarchy.api.storage.ObjectRemove;
-import yapion.hierarchy.api.storage.ObjectRetrieve;
+import yapion.hierarchy.api.storage.ArrayRemove;
+import yapion.hierarchy.api.storage.ArrayRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.utils.RecursionUtils;
@@ -32,7 +33,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements ArrayAdd<YAPIONArray, Integer>, ObjectRemove<YAPIONArray, Integer>, ObjectRetrieve<Integer>, SerializingType {
+public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements ArrayAdd<YAPIONArray, Integer>, ArrayRemove<YAPIONArray, Integer>, ArrayRetrieve<Integer>, SerializingType {
 
     private final List<YAPIONAnyType> array = new ArrayList<>();
 
@@ -319,6 +320,46 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         array.remove((int) key);
         yapionAnyType.removeParent();
         return yapionAnyType;
+    }
+
+    @Override
+    public <T> YAPIONArray remove(T element) {
+        if (YAPIONValue.validType(element)) {
+            return remove(new YAPIONValue<>(element));
+        } else if (!(element instanceof YAPIONAnyType)) {
+            throw new YAPIONException("element is not from valid type");
+        }
+        return internalRemove(array.indexOf(element));
+    }
+
+    @Override
+    public <T> YAPIONAnyType removeAndGet(T element) {
+        if (YAPIONValue.validType(element)) {
+            return removeAndGet(new YAPIONValue<>(element));
+        } else if (!(element instanceof YAPIONAnyType)) {
+            throw new YAPIONException("element is not from valid type");
+        }
+        return internalRemoveAndGet(array.indexOf(element));
+    }
+
+    @Override
+    public <T> int indexOf(T element) {
+        if (YAPIONValue.validType(element)) {
+            return indexOf(new YAPIONValue<>(element));
+        } else if (!(element instanceof YAPIONAnyType)) {
+            throw new YAPIONException("element is not from valid type");
+        }
+        return array.indexOf(element);
+    }
+
+    @Override
+    public <T> int lastIndexOf(T element) {
+        if (YAPIONValue.validType(element)) {
+            return lastIndexOf(new YAPIONValue<>(element));
+        } else if (!(element instanceof YAPIONAnyType)) {
+            throw new YAPIONException("element is not from valid type");
+        }
+        return array.lastIndexOf(element);
     }
 
     @Override

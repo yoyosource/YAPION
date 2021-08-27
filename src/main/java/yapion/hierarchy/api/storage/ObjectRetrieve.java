@@ -14,7 +14,6 @@
 package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
-import yapion.annotations.api.DeprecationInfo;
 import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.internal.InternalRetrieve;
@@ -255,5 +254,4 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
             valueConsumer.accept(yapionValue.get());
         }
     }
-
 }
