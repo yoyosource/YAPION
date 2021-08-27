@@ -27,5 +27,4 @@ public interface ObjectType {
     }
 
     long referenceValue(@NonNull ReferenceFunction referenceFunction);
-
 }

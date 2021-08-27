@@ -201,5 +201,4 @@ public final class YAPIONRegistrator {
         log.warn("Specified class (" + clazz.getTypeName() + ") is not any supported type");
         return MethodReturnValue.empty();
     }
-
 }

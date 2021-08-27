@@ -28,5 +28,4 @@ public class YAPIONIOException extends YAPIONException {
     public YAPIONIOException(Throwable cause) {
         super(cause);
     }
-
 }

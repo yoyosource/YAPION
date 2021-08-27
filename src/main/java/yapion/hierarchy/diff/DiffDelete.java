@@ -38,5 +38,4 @@ public class DiffDelete implements DiffBase {
     public DiffType type() {
         return DiffType.DELETE;
     }
-
 }

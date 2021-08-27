@@ -15,7 +15,7 @@ package yapion.hierarchy.api.retrieve;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
-import yapion.hierarchy.api.storage.ObjectRetrieve;
+import yapion.hierarchy.api.internal.InternalRetrieve;
 import yapion.hierarchy.types.*;
 
 import java.math.BigDecimal;
@@ -147,12 +147,11 @@ public class RetrieveBuilder<K> {
     }
 
     @SuppressWarnings("all")
-    public Retriever<K> retrieve(ObjectRetrieve<K> objectRetrieve) {
+    public Retriever<K> retrieve(InternalRetrieve<K> internalRetrieve) {
         Query<YAPIONDataType<?, K>, ?>[] supplyArray = new Query[suppliers.size()];
         for (int i = 0; i < supplyArray.length; i++) {
             supplyArray[i] = suppliers.get(i);
         }
-        return new Retriever<>(supplyArray, objectRetrieve);
+        return new Retriever<>(supplyArray, internalRetrieve);
     }
-
 }

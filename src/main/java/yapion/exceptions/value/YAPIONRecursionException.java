@@ -28,5 +28,4 @@ public class YAPIONRecursionException extends YAPIONException {
     public YAPIONRecursionException(Throwable cause) {
         super(cause);
     }
-
 }

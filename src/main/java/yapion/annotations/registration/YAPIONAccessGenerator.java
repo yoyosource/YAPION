@@ -58,4 +58,11 @@ public @interface YAPIONAccessGenerator {
      * @return {@link CommentParsing}
      */
     CommentParsing commentParsing() default CommentParsing.SKIP;
+
+    /**
+     * If lazy parsing should be enabled
+     *
+     * @return {@code true} for lazy parsing, {@code false} otherwise
+     */
+    boolean lazy() default false;
 }

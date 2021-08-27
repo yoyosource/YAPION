@@ -28,5 +28,4 @@ public class YAPIONDataLossException extends YAPIONException {
     public YAPIONDataLossException(Throwable cause) {
         super(cause);
     }
-
 }

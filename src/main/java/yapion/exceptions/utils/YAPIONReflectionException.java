@@ -28,5 +28,4 @@ public class YAPIONReflectionException extends YAPIONException {
     public YAPIONReflectionException(Throwable cause) {
         super(cause);
     }
-
 }

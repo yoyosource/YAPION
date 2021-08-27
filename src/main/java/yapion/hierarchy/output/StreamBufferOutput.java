@@ -33,5 +33,4 @@ public class StreamBufferOutput extends StreamOutput {
     public StreamBufferOutput(OutputStream outputStream, int bufferSize, boolean prettified) {
         super(new BufferedOutputStream(outputStream, bufferSize), prettified);
     }
-
 }

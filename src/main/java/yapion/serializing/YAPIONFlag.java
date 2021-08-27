@@ -103,5 +103,4 @@ public final class YAPIONFlag {
         }
         return new YAPIONFlag(key);
     }
-
 }

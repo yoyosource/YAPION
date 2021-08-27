@@ -34,5 +34,4 @@ public class FileBufferOutput extends StreamBufferOutput {
     public FileBufferOutput(File file, int bufferSize, boolean prettified) throws IOException {
         super(new FileOutputStream(file), bufferSize, prettified);
     }
-
 }

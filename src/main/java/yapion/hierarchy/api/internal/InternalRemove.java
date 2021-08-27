@@ -23,5 +23,4 @@ public interface InternalRemove<I, K> {
     I internalRemove(@NonNull K key);
 
     YAPIONAnyType internalRemoveAndGet(@NonNull K key);
-
 }

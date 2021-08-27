@@ -85,5 +85,4 @@ public interface ObjectOutput {
     default void toStream(OutputStream outputStream, boolean prettified) {
         toYAPION(new StreamOutput(outputStream, prettified)).flush();
     }
-
 }

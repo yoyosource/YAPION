@@ -272,7 +272,5 @@ public final class ContextManager {
             this.optimize = optimize;
             this.data = data;
         }
-
     }
-
 }

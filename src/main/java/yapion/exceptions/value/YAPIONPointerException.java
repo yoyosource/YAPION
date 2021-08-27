@@ -28,5 +28,4 @@ public class YAPIONPointerException extends YAPIONException {
     public YAPIONPointerException(Throwable cause) {
         super(cause);
     }
-
 }

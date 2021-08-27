@@ -26,5 +26,4 @@ public class StringOutput extends StringBuilderOutput implements InstantiableOut
     public String getResult() {
         return getStringBuilder().toString();
     }
-
 }

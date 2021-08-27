@@ -161,5 +161,4 @@ public class YAPIONDiff {
             diffs.addAll(new YAPIONDiff(firstMap, secondMap).diffs);
         }
     }
-
 }

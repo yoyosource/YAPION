@@ -88,5 +88,4 @@ public abstract class Indentator {
     }
 
     public abstract String indent(int indentLevel);
-
 }

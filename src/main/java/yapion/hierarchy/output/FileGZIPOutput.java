@@ -27,5 +27,4 @@ public class FileGZIPOutput extends StreamOutput {
     public FileGZIPOutput(File file, int size) throws IOException {
         super(new GZIPOutputStream(new FileOutputStream(file), size));
     }
-
 }

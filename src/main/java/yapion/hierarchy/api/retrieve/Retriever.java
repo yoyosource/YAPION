@@ -15,7 +15,6 @@ package yapion.hierarchy.api.retrieve;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
-import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.api.internal.InternalRetrieve;
 
 import java.util.ArrayList;
@@ -27,9 +26,9 @@ public class Retriever<K> {
     private Query<YAPIONDataType<?, K>, ?>[] suppliers;
     private InternalRetrieve<K> objectRetrieve;
 
-    Retriever(Query<YAPIONDataType<?, K>, ?>[] suppliers, ObjectRetrieve<K> objectRetrieve) {
+    Retriever(Query<YAPIONDataType<?, K>, ?>[] suppliers, InternalRetrieve<K> internalRetrieve) {
         this.suppliers = suppliers;
-        this.objectRetrieve = objectRetrieve;
+        this.objectRetrieve = internalRetrieve;
     }
 
     public Retriever<K> result(Consumer<RetrieveResult> resultConsumer) {
@@ -128,5 +127,4 @@ public class Retriever<K> {
         }
         return new RetrieveResult(yapionAnyTypes.toArray(new YAPIONAnyType[0]));
     }
-
 }

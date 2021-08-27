@@ -58,5 +58,4 @@ public final class DeserializeResult {
         resultMap.computeIfAbsent(object, fields -> new ArrayList<>())
                 .add(new DeserializeField(fieldName, ignoredValue));
     }
-
 }

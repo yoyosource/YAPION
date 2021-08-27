@@ -64,5 +64,4 @@ public class RetrieveResult {
     public <T> YAPIONValue<T> getValue(int index) {
         return get(index);
     }
-
 }

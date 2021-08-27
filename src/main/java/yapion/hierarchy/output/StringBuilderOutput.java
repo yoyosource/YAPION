@@ -44,5 +44,4 @@ public class StringBuilderOutput extends AbstractOutput {
     public boolean prettified() {
         return prettified;
     }
-
 }

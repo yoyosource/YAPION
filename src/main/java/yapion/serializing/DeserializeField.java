@@ -33,5 +33,4 @@ public final class DeserializeField {
      */
     @EqualsAndHashCode.Exclude
     public final YAPIONAnyType ignoredValue;
-
 }

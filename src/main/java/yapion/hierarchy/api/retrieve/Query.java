@@ -46,5 +46,4 @@ public interface Query<I extends YAPIONAnyType, O extends YAPIONAnyType> {
     default <K extends YAPIONAnyType> Query<K, O> backChainFunction(@NonNull Function<K, I> previous) {
         return backChainQuery(previous::apply);
     }
-
 }

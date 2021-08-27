@@ -26,5 +26,4 @@ public class YAPIONException extends RuntimeException {
     public YAPIONException(Throwable cause) {
         super(cause);
     }
-
 }

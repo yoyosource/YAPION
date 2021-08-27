@@ -73,5 +73,4 @@ public interface InternalSerializer<T> {
     YAPIONAnyType serialize(SerializeData<T> serializeData);
 
     T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData);
-
 }

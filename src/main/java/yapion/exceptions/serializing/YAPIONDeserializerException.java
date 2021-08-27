@@ -28,5 +28,4 @@ public class YAPIONDeserializerException extends YAPIONException {
     public YAPIONDeserializerException(Throwable cause) {
         super(cause);
     }
-
 }

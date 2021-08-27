@@ -27,5 +27,4 @@ public class YAPIONReflectionInvocationException extends YAPIONReflectionExcepti
     public Throwable getTargetException() {
         return target;
     }
-
 }

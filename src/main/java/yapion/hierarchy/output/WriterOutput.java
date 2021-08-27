@@ -45,5 +45,4 @@ public class WriterOutput extends AbstractOutput {
     public boolean prettified() {
         return prettified;
     }
-
 }

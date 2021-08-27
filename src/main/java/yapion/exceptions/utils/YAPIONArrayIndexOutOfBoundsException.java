@@ -28,5 +28,4 @@ public class YAPIONArrayIndexOutOfBoundsException extends YAPIONException {
     public YAPIONArrayIndexOutOfBoundsException(Throwable cause) {
         super(cause);
     }
-
 }

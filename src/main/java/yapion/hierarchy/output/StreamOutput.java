@@ -61,5 +61,4 @@ public class StreamOutput extends AbstractOutput implements AutoCloseable {
             throw new YAPIONIOException(e.getMessage(), e);
         }
     }
-
 }

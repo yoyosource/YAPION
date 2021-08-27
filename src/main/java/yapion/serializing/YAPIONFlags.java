@@ -97,5 +97,4 @@ public final class YAPIONFlags {
     public boolean isSet(YAPIONFlag key) {
         return flags.getOrDefault(key, false);
     }
-
 }

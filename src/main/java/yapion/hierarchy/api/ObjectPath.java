@@ -23,5 +23,4 @@ public interface ObjectPath {
     YAPIONPath getPath();
 
     int getDepth();
-
 }

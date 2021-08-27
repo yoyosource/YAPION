@@ -23,5 +23,4 @@ public interface InternalAdd<I, K> {
     I internalAdd(@NonNull K key, @NonNull YAPIONAnyType value);
 
     YAPIONAnyType internalAddAndGetPrevious(@NonNull K key, @NonNull YAPIONAnyType value);
-
 }

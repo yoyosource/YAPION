@@ -31,5 +31,4 @@ public class FileBufferGZIPOutput extends StreamBufferOutput {
     public FileBufferGZIPOutput(File file, int size, int bufferSize) throws IOException {
         super(new GZIPOutputStream(new FileOutputStream(file), size), bufferSize);
     }
-
 }

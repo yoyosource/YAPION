@@ -28,5 +28,4 @@ public class YAPIONSerializerException extends YAPIONException {
     public YAPIONSerializerException(Throwable cause) {
         super(cause);
     }
-
 }

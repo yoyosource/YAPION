@@ -40,5 +40,4 @@ public class LengthOutput extends AbstractOutput implements InstantiableOutput {
     public boolean prettified() {
         return true;
     }
-
 }

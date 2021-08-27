@@ -170,5 +170,4 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
         }
         return current;
     }
-
 }
