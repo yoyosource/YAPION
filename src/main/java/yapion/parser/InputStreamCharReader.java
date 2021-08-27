@@ -37,9 +37,7 @@ public class InputStreamCharReader implements CharReader {
         this.stopOnStreamEnd = stopOnStreamEnd;
         if (charset == InputStreamCharsets.US_ASCII) {
             reader = US_ASCII();
-        } else if (charset == InputStreamCharsets.EXTENDED_US_ASCII) {
-            reader = EXTENDED_US_ASCII();
-        } else if (charset == InputStreamCharsets.LATIN_1) {
+        } else if (charset == InputStreamCharsets.LATIN_1 || charset == InputStreamCharsets.EXTENDED_US_ASCII) {
             reader = LATIN_1();
         } else {
             reader = UTF_8();
@@ -56,17 +54,6 @@ public class InputStreamCharReader implements CharReader {
             if (i > 0x7F) {
                 throw new YAPIONIOException("Unrecognized US-ASCII Sequence");
             }
-            return (char) i;
-        };
-    }
-
-    private CharSupplier EXTENDED_US_ASCII() {
-        return () -> {
-            int i = inputStream.read();
-            if (i == -1 && !stopOnStreamEnd) {
-                throw new YAPIONParser.ParserSkipException();
-            }
-            available--;
             return (char) i;
         };
     }
