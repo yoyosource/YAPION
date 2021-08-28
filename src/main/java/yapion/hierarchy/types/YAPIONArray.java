@@ -323,26 +323,6 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public <T> YAPIONArray remove(T element) {
-        if (YAPIONValue.validType(element)) {
-            return remove(new YAPIONValue<>(element));
-        } else if (!(element instanceof YAPIONAnyType)) {
-            throw new YAPIONException("element is not from valid type");
-        }
-        return internalRemove(array.indexOf(element));
-    }
-
-    @Override
-    public <T> YAPIONAnyType removeAndGet(T element) {
-        if (YAPIONValue.validType(element)) {
-            return removeAndGet(new YAPIONValue<>(element));
-        } else if (!(element instanceof YAPIONAnyType)) {
-            throw new YAPIONException("element is not from valid type");
-        }
-        return internalRemoveAndGet(array.indexOf(element));
-    }
-
-    @Override
     public <T> int indexOf(T element) {
         if (YAPIONValue.validType(element)) {
             return indexOf(new YAPIONValue<>(element));

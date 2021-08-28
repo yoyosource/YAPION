@@ -19,6 +19,7 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.CommentParsing;
 import yapion.parser.YAPIONParser;
+import yapion.parser.options.ParseOptions;
 
 public class YAPIONAssertion {
 
@@ -53,7 +54,7 @@ public class YAPIONAssertion {
                     This one is interesting as well
                     */
                 }""";
-        YAPIONObject yapionObject = YAPIONParser.parse(s, CommentParsing.KEEP);
+        YAPIONObject yapionObject = YAPIONParser.parse(s, new ParseOptions().commentParsing(CommentParsing.KEEP));
         System.out.println();
         System.out.println(yapionObject);
         System.out.println(yapionObject.toYAPION(true));
