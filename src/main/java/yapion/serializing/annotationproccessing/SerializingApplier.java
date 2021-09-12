@@ -15,7 +15,6 @@ package yapion.serializing.annotationproccessing;
 
 import lombok.SneakyThrows;
 import org.objectweb.asm.*;
-import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.annotationproccessing.serializingdata.ClassData;
@@ -26,10 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -50,11 +46,9 @@ public class SerializingApplier {
             throw new SecurityException("program args need to contain the class folder (example: './build/classes/java/main' or './target/classes')");
         }
 
-        YAPIONObject yapionObject = YAPIONParser.parse(file);
-        file.delete();
-
-        Set<ClassData> classDatas = YAPIONDeserializer.deserialize(yapionObject);
+        Set<ClassData> classDatas = YAPIONDeserializer.deserialize(YAPIONParser.parse(file));
         classDatas.forEach(SerializingApplier::process);
+        file.delete();
     }
 
     @SneakyThrows
@@ -308,8 +302,8 @@ public class SerializingApplier {
 
         Label label9 = new Label();
         methodVisitor.visitLabel(label9);
-        methodVisitor.visitLocalVariable("this", "Lde/yoyosource/ExampleSerializer;", null, label0, label9, 0);
-        methodVisitor.visitLocalVariable("serializeData", "Lyapion/serializing/data/SerializeData;", "Lyapion/serializing/data/SerializeData<L" + classData.getSimpleName().replace('.', '/') + ";>;", label0, label9, 1);
+        methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, label0, label9, 0);
+        methodVisitor.visitLocalVariable("serializeData", "Lyapion/serializing/data/SerializeData;", "Lyapion/serializing/data/SerializeData<L" + outerClass + ";>;", label0, label9, 1);
         methodVisitor.visitLocalVariable("yapionObject", "Lyapion/hierarchy/types/YAPIONObject;", null, label0, label9, 2);
         methodVisitor.visitLocalVariable("contextManager", "Lyapion/serializing/ContextManager;", null, label0, label9, 3);
         methodVisitor.visitMaxs(0, 0);
@@ -356,80 +350,81 @@ public class SerializingApplier {
             methodVisitor.visitMethodInsn(INVOKESTATIC, "yapion/serializing/MethodManager", "preDeserializationStep", "(Ljava/lang/Object;Ljava/lang/Class;Lyapion/serializing/ContextManager;Lyapion/serializing/data/DeserializationContext;)V", false);
         }
 
-        for (FieldData fieldData : classData.getFieldDataList()) {
-            if (fieldData.getLoadExclude() != null && fieldData.getLoadExclude().length == 0) {
-                continue;
-            }
-            Label jump = new Label();
-            if (fieldData.getLoadExclude() != null) {
-                methodVisitor.visitVarInsn(ALOAD, 3);
-                methodVisitor.visitLdcInsn(fieldData.getSaveExclude().length);
-                methodVisitor.visitTypeInsn(ANEWARRAY, "java/lang/String");
-                for (int i = 0; i < fieldData.getLoadExclude().length; i++) {
-                    methodVisitor.visitInsn(DUP);
-                    methodVisitor.visitLdcInsn(i);
-                    methodVisitor.visitLdcInsn(fieldData.getLoadExclude()[i]);
-                    methodVisitor.visitInsn(AASTORE);
+        if (false) {
+            for (FieldData fieldData : classData.getFieldDataList()) {
+                if (fieldData.getLoadExclude() != null && fieldData.getLoadExclude().length == 0) {
+                    continue;
                 }
-                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/ContextManager", "is", "([Ljava/lang/String;)Z", false);
-                methodVisitor.visitJumpInsn(IFNE, jump);
-            }
-
-            if (Modifier.isFinal(fieldData.getModifiers())) {
-                methodVisitor.visitVarInsn(ALOAD, 1);
-                methodVisitor.visitVarInsn(ALOAD, 2);
-                methodVisitor.visitVarInsn(ALOAD, 0);
-                methodVisitor.visitFieldInsn(GETFIELD, owner, fieldData.getFieldName(), "Ljava/lang/reflect/Field;");
-                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/data/DeserializeData", "deserialize", "(Ljava/lang/Object;Ljava/lang/reflect/Field;)Z", false);
-                methodVisitor.visitInsn(POP);
-            } else {
-                methodVisitor.visitVarInsn(ALOAD, 2);
-                methodVisitor.visitVarInsn(ALOAD, 1);
-                methodVisitor.visitLdcInsn(fieldData.getFieldName());
-                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/data/DeserializeData", "deserialize", "(Ljava/lang/String;)Ljava/lang/Object;", false);
-                if ("ZCBSIFJD".contains(fieldData.getFieldType())) {
-                    switch (fieldData.getFieldType()) {
-                        case "Z" -> {
-                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
-                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", false);
-                        }
-                        case "C" -> {
-                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Character");
-                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Character", "charValue", "()C", false);
-                        }
-                        case "B" -> {
-                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Byte");
-                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B", false);
-                        }
-                        case "S" -> {
-                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Short");
-                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S", false);
-                        }
-                        case "I" -> {
-                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Integer");
-                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "()I", false);
-                        }
-                        case "F" -> {
-                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Float");
-                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Float", "floatValue", "()F", false);
-                        }
-                        case "J" -> {
-                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Long");
-                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Long", "longValue", "()J", false);
-                        }
-                        case "D" -> {
-                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Double");
-                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D", false);
-                        }
-                        default -> throw new SecurityException();
+                Label jump = new Label();
+                if (fieldData.getLoadExclude() != null) {
+                    methodVisitor.visitVarInsn(ALOAD, 3);
+                    methodVisitor.visitLdcInsn(fieldData.getLoadExclude().length);
+                    methodVisitor.visitTypeInsn(ANEWARRAY, "java/lang/String");
+                    for (int i = 0; i < fieldData.getLoadExclude().length; i++) {
+                        methodVisitor.visitInsn(DUP);
+                        methodVisitor.visitLdcInsn(i);
+                        methodVisitor.visitLdcInsn(fieldData.getLoadExclude()[i]);
+                        methodVisitor.visitInsn(AASTORE);
                     }
-                } else {
-                    methodVisitor.visitTypeInsn(CHECKCAST, fieldData.getFieldType());
+                    methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/ContextManager", "is", "([Ljava/lang/String;)Z", false);
+                    methodVisitor.visitJumpInsn(IFNE, jump);
                 }
-                methodVisitor.visitFieldInsn(PUTFIELD, outerClass, fieldData.getFieldName(), fieldData.getFieldType());
+
+                if (Modifier.isFinal(fieldData.getModifiers())) {
+                    methodVisitor.visitVarInsn(ALOAD, 1);
+                    methodVisitor.visitVarInsn(ALOAD, 2);
+                    methodVisitor.visitVarInsn(ALOAD, 0);
+                    methodVisitor.visitFieldInsn(GETFIELD, owner, fieldData.getFieldName(), "Ljava/lang/reflect/Field;");
+                    methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/data/DeserializeData", "deserialize", "(Ljava/lang/Object;Ljava/lang/reflect/Field;)Z", false);
+                    methodVisitor.visitInsn(POP);
+                } else {
+                    methodVisitor.visitVarInsn(ALOAD, 2);
+                    methodVisitor.visitVarInsn(ALOAD, 1);
+                    methodVisitor.visitLdcInsn(fieldData.getFieldName());
+                    methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/data/DeserializeData", "deserialize", "(Ljava/lang/String;)Ljava/lang/Object;", false);
+                    if ("ZCBSIFJD".contains(fieldData.getFieldType())) {
+                        switch (fieldData.getFieldType()) {
+                            case "Z" -> {
+                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
+                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", false);
+                            }
+                            case "C" -> {
+                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Character");
+                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Character", "charValue", "()C", false);
+                            }
+                            case "B" -> {
+                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Byte");
+                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B", false);
+                            }
+                            case "S" -> {
+                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Short");
+                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S", false);
+                            }
+                            case "I" -> {
+                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Integer");
+                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "()I", false);
+                            }
+                            case "F" -> {
+                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Float");
+                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Float", "floatValue", "()F", false);
+                            }
+                            case "J" -> {
+                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Long");
+                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Long", "longValue", "()J", false);
+                            }
+                            case "D" -> {
+                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Double");
+                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D", false);
+                            }
+                            default -> throw new SecurityException();
+                        }
+                    } else {
+                        methodVisitor.visitTypeInsn(CHECKCAST, fieldData.getFieldType());
+                    }
+                    methodVisitor.visitFieldInsn(PUTFIELD, outerClass, fieldData.getFieldName(), fieldData.getFieldType());
+                }
+                methodVisitor.visitLabel(jump);
             }
-            methodVisitor.visitLabel(jump);
-            methodVisitor.visitEnd();
         }
 
         if (classData.isDeserializerMethods()) {
@@ -453,11 +448,11 @@ public class SerializingApplier {
 
         Label label8 = new Label();
         methodVisitor.visitLabel(label8);
-        methodVisitor.visitLocalVariable("this", "Lde/yoyosource/ExampleSerializer;", null, label0, label8, 0);
+        methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, label0, label8, 0);
         methodVisitor.visitLocalVariable("deserializeData", "Lyapion/serializing/data/DeserializeData;", "Lyapion/serializing/data/DeserializeData<Lyapion/hierarchy/types/YAPIONObject;>;", label0, label8, 1);
-        methodVisitor.visitLocalVariable("object", "Lde/yoyosource/Test;", null, label0, label8, 2);
+        methodVisitor.visitLocalVariable("object", "L" + outerClass + ";", null, label0, label8, 2);
         methodVisitor.visitLocalVariable("contextManager", "Lyapion/serializing/ContextManager;", null, label0, label8, 3);
-        methodVisitor.visitMaxs(7, 4);
+        methodVisitor.visitMaxs(0, 0);
         methodVisitor.visitEnd();
     }
 }
