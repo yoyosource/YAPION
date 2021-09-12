@@ -65,6 +65,7 @@ dependencies {
     implementation 'eu.infomas:annotation-detector:3.0.5'
     // implementation 'org.kamranzafar:jtar:2.3'
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
+    implementation 'org.ow2.asm:asm:9.2'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest:2.2'
@@ -92,6 +93,16 @@ processResources {
     }
 }
 
+task buildClean {
+    description 'Clean classes Folder in build'
+    group "build"
+
+    doLast {
+        // deleteDirRecursively("${buildDir}/classes")
+    }
+}
+compileJava.dependsOn buildClean
+
 task compressClassFiles {
     description 'Compress Class Files'
     group "build"
@@ -109,6 +120,21 @@ task compressClassFiles {
     }
 }
 classes.finalizedBy(compressClassFiles)
+
+if (file("./libs/YAPION-SNAPSHOT.jar").exists()) {
+    task applySerializingProcessing {
+        description 'Finalize YAPIONAnnotationProcessing'
+        group "build"
+
+        doLast {
+            String[] strings = shell("java -cp libs/YAPION-SNAPSHOT.jar yapion.serializing.annotationproccessing.SerializingApplier ${buildDir}/classes/java/main");
+            println(strings[0])
+            println(strings[1])
+        }
+    }
+    classes.finalizedBy applySerializingProcessing
+    compressClassFiles.dependsOn applySerializingProcessing
+}
 
 task processMetaINF {
     description 'Process META-INF'

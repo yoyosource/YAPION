@@ -11,20 +11,21 @@
  * limitations under the License.
  */
 
-/**
- * This class exists since Java is incapable to handle Type-Parameters properly...
- */
-package yapion.serializing
+package yapion.serializing.annotationproccessing.serializingdata;
 
-fun <T> test(internalSerializer: InternalSerializer<T>) {
-    // println(TypeManagerMagic.getType(internalSerializer as InternalSerializer<T>))
-}
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-class TypeManagerMagic {
+@Getter
+@Setter
+@ToString
+public class FieldData {
+    private String fieldName;
+    private String fieldType;
+    private int modifiers;
 
-    companion object {
-        /*inline fun <reified T> getType(internalSerializer: InternalSerializer<T>): Class<T> {
-            return T::class.java
-        }*/
-    }
+    private String[] optimize = null;
+    private String[] saveExclude = null;
+    private String[] loadExclude = null;
 }

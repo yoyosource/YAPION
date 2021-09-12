@@ -17,6 +17,7 @@ import lombok.experimental.UtilityClass;
 import yapion.annotations.api.InternalAPI;
 import yapion.annotations.registration.YAPIONSerializing;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -72,6 +73,7 @@ public class GeneratedSerializerLoader {
             return false;
         }
         try {
+            System.out.println(Arrays.toString(clazz.getDeclaredClasses()));
             Class<?> serializerClass = Class.forName(clazz.getTypeName() + "Serializer");
             SerializeManager.add(serializerClass);
             return true;
