@@ -127,9 +127,7 @@ if (file("./libs/YAPION-SNAPSHOT.jar").exists()) {
         group "build"
 
         doLast {
-            String[] strings = shell("java -cp libs/YAPION-SNAPSHOT.jar yapion.serializing.annotationproccessing.SerializingApplier ${buildDir}/classes/java/main");
-            println(strings[0])
-            println(strings[1])
+            shell("java -cp libs/YAPION-SNAPSHOT.jar yapion.serializing.annotationproccessing.SerializingApplier ${buildDir}/classes/java/main")
         }
     }
     classes.finalizedBy applySerializingProcessing

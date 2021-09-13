@@ -39,6 +39,47 @@ dependencies {
 }
 ```
 
+### Annotation Processing
+Using the YAPION annotation processor is as easy as just writing two new dependency lines:
+```groovy
+dependencies {
+    implementation 'yoyosource:YAPION:0.25.3'
+    annotationProcessor 'yoyosource:YAPION:0.25.3'
+    testAnnotationProcessor 'yoyosource:YAPION:0.25.3'
+}
+```
+This will enable both `@YAPIONAccessGenerator` and `@YAPIONSerializing` to be processed. But the later needs some more steps to create the desired output.
+For that you need a post classes step to modify the class file directly and produce the desired output. For this you need to run the following command:
+```
+java -cp <Folder to YAPION jar>/YAPION-<VERSION>.jar yapion.serializing.annotationproccessing.SerializingApplier <output classes directory>
+```
+
+You will need to replace everything surrounded by '<>' with the values you need. One implementation in a gradle build script could look something like this:
+```groovy
+task applySerializingProcessing {
+    description 'Finalize YAPIONAnnotationProcessing'
+    group "build"
+
+    doLast {
+        shell("java -cp <Folder to YAPION jar>/YAPION-<VERSION>.jar yapion.serializing.annotationproccessing.SerializingApplier ${buildDir}/classes/java/main")
+    }
+}
+classes.finalizedBy applySerializingProcessing
+
+def shell(String command) {
+    def proc
+    if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
+        proc = ['bash', '-c', command].execute()
+    } else {
+        proc = ["cmd", "/c", command].execute()
+    }
+    def out = new StringBuilder()
+    def err = new StringBuilder()
+    proc.waitForProcessOutput(out, err)
+    return [out.toString().trim(), err.toString().trim(), proc.exitValue()]
+}
+```
+
 # APIs/Libs/Other used
 - easymock/objenesis (https://github.com/easymock/objenesis)
   - [V] 3.1
