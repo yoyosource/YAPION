@@ -19,9 +19,9 @@ import yapion.annotations.serialize.YAPIONSaveExclude;
 
 @YAPIONSerializing
 public class Test {
-    private int test = 0;
+    protected int test = 0;
     @YAPIONOptimize(context = {"Hello"})
-    private Integer hugo = null;
+    protected Integer hugo = null;
     @YAPIONSaveExclude(context = {"Hello"})
     protected final int k = 0;
 

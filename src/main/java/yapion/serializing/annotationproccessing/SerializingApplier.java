@@ -350,81 +350,79 @@ public class SerializingApplier {
             methodVisitor.visitMethodInsn(INVOKESTATIC, "yapion/serializing/MethodManager", "preDeserializationStep", "(Ljava/lang/Object;Ljava/lang/Class;Lyapion/serializing/ContextManager;Lyapion/serializing/data/DeserializationContext;)V", false);
         }
 
-        if (false) {
-            for (FieldData fieldData : classData.getFieldDataList()) {
-                if (fieldData.getLoadExclude() != null && fieldData.getLoadExclude().length == 0) {
-                    continue;
-                }
-                Label jump = new Label();
-                if (fieldData.getLoadExclude() != null) {
-                    methodVisitor.visitVarInsn(ALOAD, 3);
-                    methodVisitor.visitLdcInsn(fieldData.getLoadExclude().length);
-                    methodVisitor.visitTypeInsn(ANEWARRAY, "java/lang/String");
-                    for (int i = 0; i < fieldData.getLoadExclude().length; i++) {
-                        methodVisitor.visitInsn(DUP);
-                        methodVisitor.visitLdcInsn(i);
-                        methodVisitor.visitLdcInsn(fieldData.getLoadExclude()[i]);
-                        methodVisitor.visitInsn(AASTORE);
-                    }
-                    methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/ContextManager", "is", "([Ljava/lang/String;)Z", false);
-                    methodVisitor.visitJumpInsn(IFNE, jump);
-                }
-
-                if (Modifier.isFinal(fieldData.getModifiers())) {
-                    methodVisitor.visitVarInsn(ALOAD, 1);
-                    methodVisitor.visitVarInsn(ALOAD, 2);
-                    methodVisitor.visitVarInsn(ALOAD, 0);
-                    methodVisitor.visitFieldInsn(GETFIELD, owner, fieldData.getFieldName(), "Ljava/lang/reflect/Field;");
-                    methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/data/DeserializeData", "deserialize", "(Ljava/lang/Object;Ljava/lang/reflect/Field;)Z", false);
-                    methodVisitor.visitInsn(POP);
-                } else {
-                    methodVisitor.visitVarInsn(ALOAD, 2);
-                    methodVisitor.visitVarInsn(ALOAD, 1);
-                    methodVisitor.visitLdcInsn(fieldData.getFieldName());
-                    methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/data/DeserializeData", "deserialize", "(Ljava/lang/String;)Ljava/lang/Object;", false);
-                    if ("ZCBSIFJD".contains(fieldData.getFieldType())) {
-                        switch (fieldData.getFieldType()) {
-                            case "Z" -> {
-                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
-                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", false);
-                            }
-                            case "C" -> {
-                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Character");
-                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Character", "charValue", "()C", false);
-                            }
-                            case "B" -> {
-                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Byte");
-                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B", false);
-                            }
-                            case "S" -> {
-                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Short");
-                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S", false);
-                            }
-                            case "I" -> {
-                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Integer");
-                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "()I", false);
-                            }
-                            case "F" -> {
-                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Float");
-                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Float", "floatValue", "()F", false);
-                            }
-                            case "J" -> {
-                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Long");
-                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Long", "longValue", "()J", false);
-                            }
-                            case "D" -> {
-                                methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Double");
-                                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D", false);
-                            }
-                            default -> throw new SecurityException();
-                        }
-                    } else {
-                        methodVisitor.visitTypeInsn(CHECKCAST, fieldData.getFieldType());
-                    }
-                    methodVisitor.visitFieldInsn(PUTFIELD, outerClass, fieldData.getFieldName(), fieldData.getFieldType());
-                }
-                methodVisitor.visitLabel(jump);
+        for (FieldData fieldData : classData.getFieldDataList()) {
+            if (fieldData.getLoadExclude() != null && fieldData.getLoadExclude().length == 0) {
+                continue;
             }
+            Label jump = new Label();
+            if (fieldData.getLoadExclude() != null && true) {
+                methodVisitor.visitVarInsn(ALOAD, 3);
+                methodVisitor.visitLdcInsn(fieldData.getLoadExclude().length);
+                methodVisitor.visitTypeInsn(ANEWARRAY, "java/lang/String");
+                for (int i = 0; i < fieldData.getLoadExclude().length; i++) {
+                    methodVisitor.visitInsn(DUP);
+                    methodVisitor.visitLdcInsn(i);
+                    methodVisitor.visitLdcInsn(fieldData.getLoadExclude()[i]);
+                    methodVisitor.visitInsn(AASTORE);
+                }
+                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/ContextManager", "is", "([Ljava/lang/String;)Z", false);
+                methodVisitor.visitJumpInsn(IFNE, jump);
+            }
+
+            if (Modifier.isFinal(fieldData.getModifiers())) {
+                methodVisitor.visitVarInsn(ALOAD, 1);
+                methodVisitor.visitVarInsn(ALOAD, 2);
+                methodVisitor.visitVarInsn(ALOAD, 0);
+                methodVisitor.visitFieldInsn(GETFIELD, owner, fieldData.getFieldName(), "Ljava/lang/reflect/Field;");
+                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/data/DeserializeData", "deserialize", "(Ljava/lang/Object;Ljava/lang/reflect/Field;)Z", false);
+                methodVisitor.visitInsn(POP);
+            } else {
+                methodVisitor.visitVarInsn(ALOAD, 2);
+                methodVisitor.visitVarInsn(ALOAD, 1);
+                methodVisitor.visitLdcInsn(fieldData.getFieldName());
+                methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/data/DeserializeData", "deserialize", "(Ljava/lang/String;)Ljava/lang/Object;", false);
+                if ("ZCBSIFJD".contains(fieldData.getFieldType())) {
+                    switch (fieldData.getFieldType()) {
+                        case "Z" -> {
+                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
+                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", false);
+                        }
+                        case "C" -> {
+                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Character");
+                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Character", "charValue", "()C", false);
+                        }
+                        case "B" -> {
+                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Byte");
+                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B", false);
+                        }
+                        case "S" -> {
+                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Short");
+                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S", false);
+                        }
+                        case "I" -> {
+                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Integer");
+                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "()I", false);
+                        }
+                        case "F" -> {
+                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Float");
+                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Float", "floatValue", "()F", false);
+                        }
+                        case "J" -> {
+                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Long");
+                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Long", "longValue", "()J", false);
+                        }
+                        case "D" -> {
+                            methodVisitor.visitTypeInsn(CHECKCAST, "java/lang/Double");
+                            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D", false);
+                        }
+                        default -> throw new SecurityException();
+                    }
+                } else {
+                    methodVisitor.visitTypeInsn(CHECKCAST, Type.getType(fieldData.getFieldType()).getInternalName());
+                }
+                methodVisitor.visitFieldInsn(PUTFIELD, outerClass, fieldData.getFieldName(), fieldData.getFieldType());
+            }
+            methodVisitor.visitLabel(jump);
         }
 
         if (classData.isDeserializerMethods()) {
