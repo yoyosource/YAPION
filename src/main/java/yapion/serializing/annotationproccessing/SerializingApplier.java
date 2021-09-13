@@ -70,21 +70,21 @@ public class SerializingApplier {
         String innerClassName = classData.getSimpleName() + "Serializer";
 
         classWriter.visitNestMember(innerClassIdentifier);
-        classWriter.visitInnerClass(innerClassIdentifier, outerClassIdentifier, innerClassName, ACC_PROTECTED | ACC_STATIC);
+        classWriter.visitInnerClass(innerClassIdentifier, outerClassIdentifier, innerClassName, ACC_PROTECTED | ACC_STATIC | ACC_SYNTHETIC);
         output(classWriter, file);
 
         classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-        classWriter.visit(V11, ACC_PROTECTED | ACC_SUPER, innerClassIdentifier, "L" + SerializerObject.class.getTypeName().replace('.', '/') + "<L" + outerClassIdentifier + ";>;", SerializerObject.class.getTypeName().replace('.', '/'), null);
+        classWriter.visit(V11, ACC_PROTECTED | ACC_SUPER | ACC_SYNTHETIC, innerClassIdentifier, "L" + SerializerObject.class.getTypeName().replace('.', '/') + "<L" + outerClassIdentifier + ";>;", SerializerObject.class.getTypeName().replace('.', '/'), null);
         classWriter.visitSource(outerClassIdentifier, null);
         classWriter.visitNestHost(outerClassIdentifier);
-        classWriter.visitInnerClass(innerClassIdentifier, outerClassIdentifier, innerClassName, ACC_PROTECTED | ACC_STATIC);
+        classWriter.visitInnerClass(innerClassIdentifier, outerClassIdentifier, innerClassName, ACC_PROTECTED | ACC_STATIC | ACC_SYNTHETIC);
         objectInitMethod(classWriter, innerClassIdentifier);
         create(classWriter, classData);
         output(classWriter, new File(source, innerClassIdentifier + ".class"));
     }
 
     private static void objectInitMethod(ClassWriter classWriter, String innerClassIdentifier) {
-        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PROTECTED, "<init>", "()V", null, null);
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PROTECTED | ACC_SYNTHETIC, "<init>", "()V", null, null);
         methodVisitor.visitCode();
         Label label0 = new Label();
         methodVisitor.visitLabel(label0);
@@ -111,12 +111,13 @@ public class SerializingApplier {
         createType(classWriter, classData);
         createSerialize(classWriter, classData);
         createDeserialize(classWriter, classData);
+        createBridges(classWriter, classData);
     }
 
     private static void createFields(ClassWriter classWriter, ClassData classData) {
         for (FieldData fieldData : classData.getFieldDataList()) {
             if (Modifier.isFinal(fieldData.getModifiers())) {
-                classWriter.visitField(ACC_PRIVATE | ACC_FINAL, fieldData.getFieldName(), "Ljava/lang/reflect/Field;", null, null).visitEnd();
+                classWriter.visitField(ACC_PRIVATE | ACC_FINAL | ACC_SYNTHETIC, fieldData.getFieldName(), "Ljava/lang/reflect/Field;", null, null).visitEnd();
             }
         }
     }
@@ -125,7 +126,7 @@ public class SerializingApplier {
         if (!classData.isInitNeeded()) return;
         String owner = classData.getQualifiedName().replace('.', '/') + "$" + classData.getSimpleName() + "Serializer";
 
-        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "init", "()V", null, null);
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_SYNTHETIC, "init", "()V", null, null);
         methodVisitor.visitCode();
         Label label0 = new Label();
         Label label1 = new Label();
@@ -175,7 +176,7 @@ public class SerializingApplier {
     }
 
     private static void createType(ClassWriter classWriter, ClassData classData) {
-        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "type", "()Ljava/lang/Class;", "()Ljava/lang/Class<L" + classData.getSimpleName().replace('.', '/') + ";>;", null);
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_SYNTHETIC, "type", "()Ljava/lang/Class;", "()Ljava/lang/Class<L" + classData.getSimpleName().replace('.', '/') + ";>;", null);
         methodVisitor.visitCode();
         Label label0 = new Label();
         methodVisitor.visitLabel(label0);
@@ -192,7 +193,7 @@ public class SerializingApplier {
         String owner = classData.getQualifiedName().replace('.', '/') + "$" + classData.getSimpleName() + "Serializer";
         String outerClass = classData.getQualifiedName().replace('.', '/');
 
-        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "serialize", "(Lyapion/serializing/data/SerializeData;)Lyapion/hierarchy/types/YAPIONObject;", "(Lyapion/serializing/data/SerializeData<Lde/yoyosource/Test;>;)Lyapion/hierarchy/types/YAPIONObject;", null);
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_SYNTHETIC, "serialize", "(Lyapion/serializing/data/SerializeData;)Lyapion/hierarchy/types/YAPIONObject;", "(Lyapion/serializing/data/SerializeData<Lde/yoyosource/Test;>;)Lyapion/hierarchy/types/YAPIONObject;", null);
         methodVisitor.visitCode();
         Label label0 = new Label();
         methodVisitor.visitLabel(label0);
@@ -314,7 +315,7 @@ public class SerializingApplier {
         String owner = classData.getQualifiedName().replace('.', '/') + "$" + classData.getSimpleName() + "Serializer";
         String outerClass = classData.getQualifiedName().replace('.', '/');
 
-        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "deserialize", "(Lyapion/serializing/data/DeserializeData;)L" + outerClass + ";", "(Lyapion/serializing/data/DeserializeData<Lyapion/hierarchy/types/YAPIONObject;>;)L" + outerClass + ";", null);
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_SYNTHETIC, "deserialize", "(Lyapion/serializing/data/DeserializeData;)L" + outerClass + ";", "(Lyapion/serializing/data/DeserializeData<Lyapion/hierarchy/types/YAPIONObject;>;)L" + outerClass + ";", null);
         methodVisitor.visitCode();
 
         Label label0 = new Label();
@@ -452,5 +453,43 @@ public class SerializingApplier {
         methodVisitor.visitLocalVariable("contextManager", "Lyapion/serializing/ContextManager;", null, label0, label8, 3);
         methodVisitor.visitMaxs(0, 0);
         methodVisitor.visitEnd();
+    }
+
+    private static void createBridges(ClassWriter classWriter, ClassData classData) {
+        String owner = classData.getQualifiedName().replace('.', '/') + "$" + classData.getSimpleName() + "Serializer";
+        String outerClass = classData.getQualifiedName().replace('.', '/');
+
+        {
+            MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_BRIDGE | ACC_SYNTHETIC, "serialize", "(Lyapion/serializing/data/SerializeData;)Lyapion/hierarchy/api/groups/YAPIONAnyType;", null, null);
+            methodVisitor.visitCode();
+            Label label0 = new Label();
+            methodVisitor.visitLabel(label0);
+            methodVisitor.visitLineNumber(22, label0);
+            methodVisitor.visitVarInsn(ALOAD, 0);
+            methodVisitor.visitVarInsn(ALOAD, 1);
+            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, owner, "serialize", "(Lyapion/serializing/data/SerializeData;)Lyapion/hierarchy/types/YAPIONObject;", false);
+            methodVisitor.visitInsn(ARETURN);
+            Label label1 = new Label();
+            methodVisitor.visitLabel(label1);
+            methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, label0, label1, 0);
+            methodVisitor.visitMaxs(0, 0);
+            methodVisitor.visitEnd();
+        }
+        {
+            MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_BRIDGE | ACC_SYNTHETIC, "deserialize", "(Lyapion/serializing/data/DeserializeData;)Ljava/lang/Object;", null, null);
+            methodVisitor.visitCode();
+            Label label0 = new Label();
+            methodVisitor.visitLabel(label0);
+            methodVisitor.visitLineNumber(22, label0);
+            methodVisitor.visitVarInsn(ALOAD, 0);
+            methodVisitor.visitVarInsn(ALOAD, 1);
+            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, owner, "deserialize", "(Lyapion/serializing/data/DeserializeData;)L" + outerClass + ";", false);
+            methodVisitor.visitInsn(ARETURN);
+            Label label1 = new Label();
+            methodVisitor.visitLabel(label1);
+            methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, label0, label1, 0);
+            methodVisitor.visitMaxs(0, 0);
+            methodVisitor.visitEnd();
+        }
     }
 }
