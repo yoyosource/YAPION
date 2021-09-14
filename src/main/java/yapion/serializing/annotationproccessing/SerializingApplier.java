@@ -54,9 +54,22 @@ public class SerializingApplier {
     @SneakyThrows
     private static void process(ClassData classData) {
         File file = new File(source, classData.getQualifiedName().replace('.', '/') + ".class");
+        if (!file.exists()) return;
+
+        String innerClassIdentifier = classData.getQualifiedName().replace('.', '/') + "$" + classData.getSimpleName() + "Serializer";
+        String outerClassIdentifier = classData.getQualifiedName().replace('.', '/');
+        String innerClassName = classData.getSimpleName() + "Serializer";
+
         ClassReader classReader = new ClassReader(new FileInputStream(file));
         ClassWriter classWriter = new ClassWriter(classReader, 0);
         ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM9, classWriter) {
+            @Override
+            public void visitSource(String source, String debug) {
+                super.visitSource(source, debug);
+                super.visitNestMember(Type.getType("L" + innerClassIdentifier + ";").getInternalName());
+                super.visitInnerClass(innerClassIdentifier, outerClassIdentifier, innerClassName, ACC_PROTECTED | ACC_STATIC | ACC_SYNTHETIC);
+            }
+
             @Override
             public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
                 classData.setFieldType(name, descriptor);
@@ -64,19 +77,12 @@ public class SerializingApplier {
             }
         };
         classReader.accept(classVisitor, 0);
-
-        String innerClassIdentifier = classData.getQualifiedName().replace('.', '/') + "$" + classData.getSimpleName() + "Serializer";
-        String outerClassIdentifier = classData.getQualifiedName().replace('.', '/');
-        String innerClassName = classData.getSimpleName() + "Serializer";
-
-        classWriter.visitNestMember(innerClassIdentifier);
-        classWriter.visitInnerClass(innerClassIdentifier, outerClassIdentifier, innerClassName, ACC_PROTECTED | ACC_STATIC | ACC_SYNTHETIC);
         output(classWriter, file);
 
         classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         classWriter.visit(V11, ACC_PROTECTED | ACC_STATIC | ACC_SUPER | ACC_SYNTHETIC, innerClassIdentifier, "L" + SerializerObject.class.getTypeName().replace('.', '/') + "<L" + outerClassIdentifier + ";>;", SerializerObject.class.getTypeName().replace('.', '/'), null);
         classWriter.visitSource(outerClassIdentifier, null);
-        classWriter.visitNestHost(outerClassIdentifier);
+        classWriter.visitNestHost(Type.getType("L" + outerClassIdentifier + ";").getInternalName());
         classWriter.visitInnerClass(innerClassIdentifier, outerClassIdentifier, innerClassName, ACC_PROTECTED | ACC_STATIC | ACC_SYNTHETIC);
         objectInitMethod(classWriter, innerClassIdentifier);
         create(classWriter, classData);
@@ -86,14 +92,14 @@ public class SerializingApplier {
     private static void objectInitMethod(ClassWriter classWriter, String innerClassIdentifier) {
         MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PROTECTED | ACC_SYNTHETIC, "<init>", "()V", null, null);
         methodVisitor.visitCode();
-        Label label0 = new Label();
-        methodVisitor.visitLabel(label0);
+        Label methodStart = new Label();
+        methodVisitor.visitLabel(methodStart);
         methodVisitor.visitVarInsn(ALOAD, 0);
         methodVisitor.visitMethodInsn(INVOKESPECIAL, "yapion/serializing/api/SerializerObject", "<init>", "()V", false);
         methodVisitor.visitInsn(RETURN);
-        Label label1 = new Label();
-        methodVisitor.visitLabel(label1);
-        methodVisitor.visitLocalVariable("this", "L" + innerClassIdentifier + ";", null, label0, label1, 0);
+        Label methodEnd = new Label();
+        methodVisitor.visitLabel(methodEnd);
+        methodVisitor.visitLocalVariable("this", "L" + innerClassIdentifier + ";", null, methodStart, methodEnd, 0);
         methodVisitor.visitMaxs(0, 0);
         methodVisitor.visitEnd();
     }
@@ -176,29 +182,27 @@ public class SerializingApplier {
     }
 
     private static void createType(ClassWriter classWriter, ClassData classData) {
-        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_SYNTHETIC, "type", "()Ljava/lang/Class;", "()Ljava/lang/Class<L" + classData.getSimpleName().replace('.', '/') + ";>;", null);
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_SYNTHETIC, "type", "()Ljava/lang/Class;", "()Ljava/lang/Class<L" + classData.getQualifiedName().replace('.', '/') + ";>;", null);
         methodVisitor.visitCode();
-        Label label0 = new Label();
-        methodVisitor.visitLabel(label0);
-        methodVisitor.visitLdcInsn(Type.getType("L" + classData.getSimpleName().replace('.', '/') + ";"));
+        Label methodStart = new Label();
+        methodVisitor.visitLabel(methodStart);
+        methodVisitor.visitLdcInsn(Type.getType("L" + classData.getQualifiedName().replace('.', '/') + ";"));
         methodVisitor.visitInsn(ARETURN);
-        Label label1 = new Label();
-        methodVisitor.visitLabel(label1);
-        methodVisitor.visitLocalVariable("this", "L" + classData.getQualifiedName().replace('.', '/') + "$" + classData.getSimpleName() + "Serializer;", null, label0, label1, 0);
+        Label methodEnd = new Label();
+        methodVisitor.visitLabel(methodEnd);
+        methodVisitor.visitLocalVariable("this", "L" + classData.getQualifiedName().replace('.', '/') + "$" + classData.getSimpleName() + "Serializer;", null, methodStart, methodEnd, 0);
         methodVisitor.visitMaxs(0, 0);
         methodVisitor.visitEnd();
     }
 
-    // TODO: fix serialize problem
-    // Type integer (current frame, stack[3]) is not assignable to 'java/lang/Object'
     private static void createSerialize(ClassWriter classWriter, ClassData classData) {
         String owner = classData.getQualifiedName().replace('.', '/') + "$" + classData.getSimpleName() + "Serializer";
         String outerClass = classData.getQualifiedName().replace('.', '/');
 
         MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_SYNTHETIC, "serialize", "(Lyapion/serializing/data/SerializeData;)Lyapion/hierarchy/types/YAPIONObject;", "(Lyapion/serializing/data/SerializeData<Lde/yoyosource/Test;>;)Lyapion/hierarchy/types/YAPIONObject;", null);
         methodVisitor.visitCode();
-        Label label0 = new Label();
-        methodVisitor.visitLabel(label0);
+        Label methodStart = new Label();
+        methodVisitor.visitLabel(methodStart);
 
         methodVisitor.visitTypeInsn(NEW, "yapion/hierarchy/types/YAPIONObject");
         methodVisitor.visitInsn(DUP);
@@ -208,8 +212,6 @@ public class SerializingApplier {
         methodVisitor.visitVarInsn(ASTORE, 2);
 
         if (classData.isSerializerContextManager() || classData.isSerializerMethods()) {
-            Label label1 = new Label();
-            methodVisitor.visitLabel(label1);
             methodVisitor.visitTypeInsn(NEW, "yapion/serializing/ContextManager");
             methodVisitor.visitInsn(DUP);
             methodVisitor.visitVarInsn(ALOAD, 1);
@@ -218,7 +220,7 @@ public class SerializingApplier {
             methodVisitor.visitVarInsn(ASTORE, 3);
         }
 
-        if (classData.isSerializerMethods() && false) {
+        if (classData.isSerializerMethods()) {
             methodVisitor.visitVarInsn(ALOAD, 1);
             methodVisitor.visitFieldInsn(GETFIELD, "yapion/serializing/data/SerializeData", "object", "Ljava/lang/Object;");
             methodVisitor.visitVarInsn(ALOAD, 0);
@@ -238,7 +240,7 @@ public class SerializingApplier {
                 continue;
             }
             Label jump = new Label();
-            if (fieldData.getOptimize() != null && false) {
+            if (fieldData.getOptimize() != null) {
                 methodVisitor.visitVarInsn(ALOAD, 1);
                 methodVisitor.visitFieldInsn(GETFIELD, "yapion/serializing/data/SerializeData", "object", "Ljava/lang/Object;");
                 methodVisitor.visitTypeInsn(CHECKCAST, outerClass);
@@ -258,7 +260,7 @@ public class SerializingApplier {
                     methodVisitor.visitJumpInsn(IFEQ, jump);
                 }
             }
-            if (fieldData.getSaveExclude() != null && false) {
+            if (fieldData.getSaveExclude() != null) {
                 methodVisitor.visitVarInsn(ALOAD, 3);
                 methodVisitor.visitLdcInsn(fieldData.getSaveExclude().length);
                 methodVisitor.visitTypeInsn(ANEWARRAY, "java/lang/String");
@@ -314,7 +316,7 @@ public class SerializingApplier {
             methodVisitor.visitLabel(jump);
         }
 
-        if (classData.isSerializerMethods() && false) {
+        if (classData.isSerializerMethods()) {
             methodVisitor.visitVarInsn(ALOAD, 1);
             methodVisitor.visitFieldInsn(GETFIELD, "yapion/serializing/data/SerializeData", "object", "Ljava/lang/Object;");
             methodVisitor.visitVarInsn(ALOAD, 0);
@@ -332,12 +334,12 @@ public class SerializingApplier {
         methodVisitor.visitVarInsn(ALOAD, 2);
         methodVisitor.visitInsn(ARETURN);
 
-        Label label9 = new Label();
-        methodVisitor.visitLabel(label9);
-        methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, label0, label9, 0);
-        methodVisitor.visitLocalVariable("serializeData", "Lyapion/serializing/data/SerializeData;", "Lyapion/serializing/data/SerializeData<L" + outerClass + ";>;", label0, label9, 1);
-        methodVisitor.visitLocalVariable("yapionObject", "Lyapion/hierarchy/types/YAPIONObject;", null, label0, label9, 2);
-        methodVisitor.visitLocalVariable("contextManager", "Lyapion/serializing/ContextManager;", null, label0, label9, 3);
+        Label methodEnd = new Label();
+        methodVisitor.visitLabel(methodEnd);
+        methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, methodStart, methodEnd, 0);
+        methodVisitor.visitLocalVariable("serializeData", "Lyapion/serializing/data/SerializeData;", "Lyapion/serializing/data/SerializeData<L" + outerClass + ";>;", methodStart, methodEnd, 1);
+        methodVisitor.visitLocalVariable("yapionObject", "Lyapion/hierarchy/types/YAPIONObject;", null, methodStart, methodEnd, 2);
+        methodVisitor.visitLocalVariable("contextManager", "Lyapion/serializing/ContextManager;", null, methodStart, methodEnd, 3);
         methodVisitor.visitMaxs(0, 0);
         methodVisitor.visitEnd();
     }
@@ -349,8 +351,8 @@ public class SerializingApplier {
         MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_SYNTHETIC, "deserialize", "(Lyapion/serializing/data/DeserializeData;)L" + outerClass + ";", "(Lyapion/serializing/data/DeserializeData<Lyapion/hierarchy/types/YAPIONObject;>;)L" + outerClass + ";", null);
         methodVisitor.visitCode();
 
-        Label label0 = new Label();
-        methodVisitor.visitLabel(label0);
+        Label methodStart = new Label();
+        methodVisitor.visitLabel(methodStart);
         methodVisitor.visitVarInsn(ALOAD, 0);
         methodVisitor.visitMethodInsn(INVOKEVIRTUAL, owner, "type", "()Ljava/lang/Class;", false);
         methodVisitor.visitMethodInsn(INVOKESTATIC, "yapion/utils/ReflectionsUtils", "constructObjectObjenesis", "(Ljava/lang/Class;)Ljava/lang/Object;", false);
@@ -387,7 +389,7 @@ public class SerializingApplier {
                 continue;
             }
             Label jump = new Label();
-            if (fieldData.getLoadExclude() != null && true) {
+            if (fieldData.getLoadExclude() != null) {
                 methodVisitor.visitVarInsn(ALOAD, 3);
                 methodVisitor.visitLdcInsn(fieldData.getLoadExclude().length);
                 methodVisitor.visitTypeInsn(ANEWARRAY, "java/lang/String");
@@ -476,12 +478,12 @@ public class SerializingApplier {
         methodVisitor.visitVarInsn(ALOAD, 2);
         methodVisitor.visitInsn(ARETURN);
 
-        Label label8 = new Label();
-        methodVisitor.visitLabel(label8);
-        methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, label0, label8, 0);
-        methodVisitor.visitLocalVariable("deserializeData", "Lyapion/serializing/data/DeserializeData;", "Lyapion/serializing/data/DeserializeData<Lyapion/hierarchy/types/YAPIONObject;>;", label0, label8, 1);
-        methodVisitor.visitLocalVariable("object", "L" + outerClass + ";", null, label0, label8, 2);
-        methodVisitor.visitLocalVariable("contextManager", "Lyapion/serializing/ContextManager;", null, label0, label8, 3);
+        Label methodEnd = new Label();
+        methodVisitor.visitLabel(methodEnd);
+        methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, methodStart, methodEnd, 0);
+        methodVisitor.visitLocalVariable("deserializeData", "Lyapion/serializing/data/DeserializeData;", "Lyapion/serializing/data/DeserializeData<Lyapion/hierarchy/types/YAPIONObject;>;", methodStart, methodEnd, 1);
+        methodVisitor.visitLocalVariable("object", "L" + outerClass + ";", null, methodStart, methodEnd, 2);
+        methodVisitor.visitLocalVariable("contextManager", "Lyapion/serializing/ContextManager;", null, methodStart, methodEnd, 3);
         methodVisitor.visitMaxs(0, 0);
         methodVisitor.visitEnd();
     }
@@ -493,32 +495,30 @@ public class SerializingApplier {
         {
             MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_BRIDGE | ACC_SYNTHETIC, "serialize", "(Lyapion/serializing/data/SerializeData;)Lyapion/hierarchy/api/groups/YAPIONAnyType;", null, null);
             methodVisitor.visitCode();
-            Label label0 = new Label();
-            methodVisitor.visitLabel(label0);
-            methodVisitor.visitLineNumber(22, label0);
+            Label methodStart = new Label();
+            methodVisitor.visitLabel(methodStart);
             methodVisitor.visitVarInsn(ALOAD, 0);
             methodVisitor.visitVarInsn(ALOAD, 1);
             methodVisitor.visitMethodInsn(INVOKEVIRTUAL, owner, "serialize", "(Lyapion/serializing/data/SerializeData;)Lyapion/hierarchy/types/YAPIONObject;", false);
             methodVisitor.visitInsn(ARETURN);
-            Label label1 = new Label();
-            methodVisitor.visitLabel(label1);
-            methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, label0, label1, 0);
+            Label methodEnd = new Label();
+            methodVisitor.visitLabel(methodEnd);
+            methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, methodStart, methodEnd, 0);
             methodVisitor.visitMaxs(0, 0);
             methodVisitor.visitEnd();
         }
         {
             MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_BRIDGE | ACC_SYNTHETIC, "deserialize", "(Lyapion/serializing/data/DeserializeData;)Ljava/lang/Object;", null, null);
             methodVisitor.visitCode();
-            Label label0 = new Label();
-            methodVisitor.visitLabel(label0);
-            methodVisitor.visitLineNumber(22, label0);
+            Label methodStart = new Label();
+            methodVisitor.visitLabel(methodStart);
             methodVisitor.visitVarInsn(ALOAD, 0);
             methodVisitor.visitVarInsn(ALOAD, 1);
             methodVisitor.visitMethodInsn(INVOKEVIRTUAL, owner, "deserialize", "(Lyapion/serializing/data/DeserializeData;)L" + outerClass + ";", false);
             methodVisitor.visitInsn(ARETURN);
-            Label label1 = new Label();
-            methodVisitor.visitLabel(label1);
-            methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, label0, label1, 0);
+            Label methodEnd = new Label();
+            methodVisitor.visitLabel(methodEnd);
+            methodVisitor.visitLocalVariable("this", "L" + owner + ";", null, methodStart, methodEnd, 0);
             methodVisitor.visitMaxs(0, 0);
             methodVisitor.visitEnd();
         }
