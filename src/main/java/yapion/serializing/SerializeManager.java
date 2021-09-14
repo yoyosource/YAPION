@@ -139,8 +139,12 @@ public class SerializeManager {
 
     private static Object internalAdd(Class<?> clazz, Consumer<InternalSerializer<?>> internalSerializerConsumer) {
         if (clazz.isInterface()) return null;
-        if (clazz.getInterfaces().length != 1) return null;
         Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
+        if (o instanceof SerializerBase<?, ?> serializerBase) {
+            internalSerializerConsumer.accept(serializerBase.convert());
+            return o;
+        }
+        if (clazz.getInterfaces().length != 1) return null;
         if (o == null) return null;
         if (o instanceof YAPIONSerializerRegistrator yapionSerializerRegistrator) {
             yapionSerializerRegistrator.register();

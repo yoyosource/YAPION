@@ -16,6 +16,7 @@ package yapion.serializing;
 import lombok.experimental.UtilityClass;
 import yapion.annotations.api.InternalAPI;
 import yapion.annotations.registration.YAPIONSerializing;
+import yapion.serializing.api.SerializerObject;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,6 +24,12 @@ import java.util.Set;
 
 @UtilityClass
 public class GeneratedSerializerLoader {
+
+    public static void main(String[] args) {
+        addClass(Test.class);
+        Test test = new Test();
+        System.out.println(YAPIONSerializer.serialize(test));
+    }
 
     private static Set<Class<?>> allowedClasses = new HashSet<>();
     private static Set<String> allowedPackages = new HashSet<>();
@@ -72,13 +79,12 @@ public class GeneratedSerializerLoader {
         if (!allowed(clazz)) {
             return false;
         }
-        try {
-            System.out.println(Arrays.toString(clazz.getDeclaredClasses()));
-            Class<?> serializerClass = Class.forName(clazz.getTypeName() + "Serializer");
-            SerializeManager.add(serializerClass);
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
+        for (Class<?> innerClazz : clazz.getDeclaredClasses()) {
+            if (innerClazz.getSuperclass() == SerializerObject.class) {
+                SerializeManager.add(innerClazz);
+                return true;
+            }
         }
+        return false;
     }
 }

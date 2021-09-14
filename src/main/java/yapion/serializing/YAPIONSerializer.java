@@ -169,15 +169,13 @@ public final class YAPIONSerializer {
             if (serializer.finished()) {
                 return this;
             }
+        } else if (GeneratedSerializerLoader.loadSerializerIfNeeded(type)) {
+            return parseObject(object);
         }
 
         boolean saveWithoutAnnotation = serializer != null && serializer.saveWithoutAnnotation();
         if (!contextManager.is(object).save && !saveWithoutAnnotation) {
             throw new YAPIONSerializerException("No suitable serializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
-        }
-
-        if (serializer == null && GeneratedSerializerLoader.loadSerializerIfNeeded(type)) {
-            return parseObject(object);
         }
 
         YAPIONObject yapionObject = (YAPIONObject) result;

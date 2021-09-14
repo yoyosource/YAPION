@@ -74,7 +74,7 @@ public class SerializingApplier {
         output(classWriter, file);
 
         classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-        classWriter.visit(V11, ACC_PROTECTED | ACC_SUPER | ACC_SYNTHETIC, innerClassIdentifier, "L" + SerializerObject.class.getTypeName().replace('.', '/') + "<L" + outerClassIdentifier + ";>;", SerializerObject.class.getTypeName().replace('.', '/'), null);
+        classWriter.visit(V11, ACC_PROTECTED | ACC_STATIC | ACC_SUPER | ACC_SYNTHETIC, innerClassIdentifier, "L" + SerializerObject.class.getTypeName().replace('.', '/') + "<L" + outerClassIdentifier + ";>;", SerializerObject.class.getTypeName().replace('.', '/'), null);
         classWriter.visitSource(outerClassIdentifier, null);
         classWriter.visitNestHost(outerClassIdentifier);
         classWriter.visitInnerClass(innerClassIdentifier, outerClassIdentifier, innerClassName, ACC_PROTECTED | ACC_STATIC | ACC_SYNTHETIC);
@@ -189,6 +189,8 @@ public class SerializingApplier {
         methodVisitor.visitEnd();
     }
 
+    // TODO: fix serialize problem
+    // Type integer (current frame, stack[3]) is not assignable to 'java/lang/Object'
     private static void createSerialize(ClassWriter classWriter, ClassData classData) {
         String owner = classData.getQualifiedName().replace('.', '/') + "$" + classData.getSimpleName() + "Serializer";
         String outerClass = classData.getQualifiedName().replace('.', '/');
@@ -216,7 +218,7 @@ public class SerializingApplier {
             methodVisitor.visitVarInsn(ASTORE, 3);
         }
 
-        if (classData.isSerializerMethods()) {
+        if (classData.isSerializerMethods() && false) {
             methodVisitor.visitVarInsn(ALOAD, 1);
             methodVisitor.visitFieldInsn(GETFIELD, "yapion/serializing/data/SerializeData", "object", "Ljava/lang/Object;");
             methodVisitor.visitVarInsn(ALOAD, 0);
@@ -236,7 +238,7 @@ public class SerializingApplier {
                 continue;
             }
             Label jump = new Label();
-            if (fieldData.getOptimize() != null) {
+            if (fieldData.getOptimize() != null && false) {
                 methodVisitor.visitVarInsn(ALOAD, 1);
                 methodVisitor.visitFieldInsn(GETFIELD, "yapion/serializing/data/SerializeData", "object", "Ljava/lang/Object;");
                 methodVisitor.visitTypeInsn(CHECKCAST, outerClass);
@@ -256,7 +258,7 @@ public class SerializingApplier {
                     methodVisitor.visitJumpInsn(IFEQ, jump);
                 }
             }
-            if (fieldData.getSaveExclude() != null) {
+            if (fieldData.getSaveExclude() != null && false) {
                 methodVisitor.visitVarInsn(ALOAD, 3);
                 methodVisitor.visitLdcInsn(fieldData.getSaveExclude().length);
                 methodVisitor.visitTypeInsn(ANEWARRAY, "java/lang/String");
@@ -277,13 +279,42 @@ public class SerializingApplier {
             methodVisitor.visitFieldInsn(GETFIELD, "yapion/serializing/data/SerializeData", "object", "Ljava/lang/Object;");
             methodVisitor.visitTypeInsn(CHECKCAST, outerClass);
             methodVisitor.visitFieldInsn(GETFIELD, outerClass, fieldData.getFieldName(), fieldData.getFieldType());
+            if ("ZCBSIFJD".contains(fieldData.getFieldType())) {
+                switch (fieldData.getFieldType()) {
+                    case "Z" -> {
+                        methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;", false);
+                    }
+                    case "C" -> {
+                        methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Character", "valueOf", "(C)Ljava/lang/Character;", false);
+                    }
+                    case "B" -> {
+                        methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Byte", "valueOf", "(B)Ljava/lang/Byte;", false);
+                    }
+                    case "S" -> {
+                        methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Short", "valueOf", "(S)Ljava/lang/Short;", false);
+                    }
+                    case "I" -> {
+                        methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", false);
+                    }
+                    case "F" -> {
+                        methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", false);
+                    }
+                    case "J" -> {
+                        methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;", false);
+                    }
+                    case "D" -> {
+                        methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;", false);
+                    }
+                    default -> throw new SecurityException();
+                }
+            }
             methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/serializing/data/SerializeData", "serialize", "(Ljava/lang/Object;)Lyapion/hierarchy/api/groups/YAPIONAnyType;", false);
             methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "yapion/hierarchy/types/YAPIONObject", "add", "(Ljava/lang/Object;Lyapion/hierarchy/api/groups/YAPIONAnyType;)Ljava/lang/Object;", false);
             methodVisitor.visitInsn(POP);
             methodVisitor.visitLabel(jump);
         }
 
-        if (classData.isSerializerMethods()) {
+        if (classData.isSerializerMethods() && false) {
             methodVisitor.visitVarInsn(ALOAD, 1);
             methodVisitor.visitFieldInsn(GETFIELD, "yapion/serializing/data/SerializeData", "object", "Ljava/lang/Object;");
             methodVisitor.visitVarInsn(ALOAD, 0);
