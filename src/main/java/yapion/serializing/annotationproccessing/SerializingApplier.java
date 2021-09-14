@@ -65,6 +65,7 @@ public class SerializingApplier {
         ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM9, classWriter) {
             @Override
             public void visitSource(String source, String debug) {
+                System.out.println(source + " " + debug);
                 super.visitSource(source, debug);
                 super.visitNestMember(Type.getType("L" + innerClassIdentifier + ";").getInternalName());
                 super.visitInnerClass(innerClassIdentifier, outerClassIdentifier, innerClassName, ACC_PROTECTED | ACC_STATIC | ACC_SYNTHETIC);
