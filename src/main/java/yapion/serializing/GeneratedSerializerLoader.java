@@ -18,18 +18,11 @@ import yapion.annotations.api.InternalAPI;
 import yapion.annotations.registration.YAPIONSerializing;
 import yapion.serializing.api.SerializerObject;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 @UtilityClass
 public class GeneratedSerializerLoader {
-
-    public static void main(String[] args) {
-        addClass(Test.class);
-        Test test = new Test();
-        System.out.println(YAPIONSerializer.serialize(test));
-    }
 
     private static Set<Class<?>> allowedClasses = new HashSet<>();
     private static Set<String> allowedPackages = new HashSet<>();
@@ -73,6 +66,7 @@ public class GeneratedSerializerLoader {
 
     @InternalAPI
     public static boolean loadSerializerIfNeeded(Class<?> clazz) {
+        if (false) return false;
         if (clazz.getAnnotation(YAPIONSerializing.class) == null) {
             return false;
         }
@@ -85,6 +79,18 @@ public class GeneratedSerializerLoader {
                 return true;
             }
         }
-        return false;
+        try {
+            Class<?> serializerClass = Class.forName(clazz.getTypeName() + "$" + clazz.getSimpleName() + "Serializer");
+            SerializeManager.add(serializerClass);
+            return true;
+        } catch (ClassNotFoundException e) {
+        }
+        try {
+            Class<?> serializerClass = Class.forName(clazz.getTypeName() + "Serializer");
+            SerializeManager.add(serializerClass);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 }

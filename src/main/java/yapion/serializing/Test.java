@@ -13,9 +13,12 @@
 
 package yapion.serializing;
 
+import yapion.annotations.object.YAPIONData;
 import yapion.annotations.registration.YAPIONSerializing;
 
-@YAPIONSerializing
+@YAPIONSerializing(serializationStep = false, deserializationStep = false)
+@YAPIONData
 public class Test {
     private int i = 0;
+    private int j = 0;
 }
