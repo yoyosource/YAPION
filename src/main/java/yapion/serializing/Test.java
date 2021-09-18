@@ -19,6 +19,22 @@ import yapion.annotations.registration.YAPIONSerializing;
 @YAPIONSerializing(serializationStep = false, deserializationStep = false)
 @YAPIONData
 public class Test {
+
+    public static void main(String[] args) {
+        GeneratedSerializerLoader.addClass(Test.class);
+        Test test = new Test();
+        YAPIONSerializer.serialize(test);
+        long time = System.currentTimeMillis();
+        // 54.5ms - without serializer loading
+        // 9.39ms - with serializer loading
+        for (int j = 0; j < 100; j++) {
+            for (int i = 0; i < 10000; i++) {
+                YAPIONSerializer.serialize(test);
+            }
+        }
+        System.out.println((System.currentTimeMillis() - time) / 100.0 + "ms");
+    }
+
     private int i = 0;
     private int j = 0;
 }

@@ -14,6 +14,7 @@
 package yapion.serializing;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.InternalAPI;
 import yapion.annotations.registration.YAPIONSerializing;
 import yapion.serializing.api.SerializerObject;
@@ -22,6 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @UtilityClass
+@Slf4j
 public class GeneratedSerializerLoader {
 
     private static Set<Class<?>> allowedClasses = new HashSet<>();
@@ -66,27 +68,32 @@ public class GeneratedSerializerLoader {
 
     @InternalAPI
     public static boolean loadSerializerIfNeeded(Class<?> clazz) {
-        if (false) return false;
         if (clazz.getAnnotation(YAPIONSerializing.class) == null) {
             return false;
         }
         if (!allowed(clazz)) {
             return false;
         }
+        log.debug("Trying to load via inner class");
         for (Class<?> innerClazz : clazz.getDeclaredClasses()) {
             if (innerClazz.getSuperclass() == SerializerObject.class) {
+                log.debug("Loading inner class: " + innerClazz);
                 SerializeManager.add(innerClazz);
                 return true;
             }
         }
+        log.debug("Trying to load via 'inner' class identifier");
         try {
             Class<?> serializerClass = Class.forName(clazz.getTypeName() + "$" + clazz.getSimpleName() + "Serializer");
+            log.debug("Loading 'inner' class identifier: " + serializerClass);
             SerializeManager.add(serializerClass);
             return true;
         } catch (ClassNotFoundException e) {
         }
+        log.debug("Trying to load via className and Serializer appended");
         try {
             Class<?> serializerClass = Class.forName(clazz.getTypeName() + "Serializer");
+            log.debug("Loading className and Serializer appended: " + serializerClass);
             SerializeManager.add(serializerClass);
             return true;
         } catch (ClassNotFoundException e) {
