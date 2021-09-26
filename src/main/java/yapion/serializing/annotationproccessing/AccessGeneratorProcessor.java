@@ -544,7 +544,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public void output(ClassGenerator classGenerator) {
-            methodsAndField(classGenerator, getName(), toClass(type).getTypeName(), isNonNull());
+            methodsAndField(classGenerator, getName(), toClass(type).getTypeName(), isNonNull() || defaultValue.isPresent());
         }
     }
 
