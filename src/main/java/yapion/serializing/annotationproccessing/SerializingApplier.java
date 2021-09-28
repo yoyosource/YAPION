@@ -66,7 +66,7 @@ public class SerializingApplier {
             @Override
             public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
                 classData.setFieldType(name, descriptor);
-                if (Modifier.isPrivate(access) && false) {
+                if (Modifier.isPrivate(access)) {
                     return super.visitField(access ^ Modifier.PRIVATE, name, descriptor, signature, value);
                 } else {
                     return super.visitField(access, name, descriptor, signature, value);

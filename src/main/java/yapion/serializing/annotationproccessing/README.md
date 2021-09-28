@@ -285,3 +285,32 @@ There are two types of arrays, reference arrays and value arrays. Both have a sh
 
 ## Pointers and Maps
 YAPIONPointer's and YAPIONMap's are not supported by this AccessGeneratorProcessor **yet**. I plan to implement YAPIONMap's in the future.
+
+## Defaults
+
+### Values
+see section 'Default' under 'This is too short'.
+
+### Objects/Object References
+You can define defaults for any internal objects by using the variable '@default'. The root object cannot have a default defined. The default need to define a valid object part, this will not be checked at compile time.
+```yapion
+{
+    @name(Config)
+    auth{
+        @name(Auth)
+        @hidden(true)
+        @default{
+            port(4000)
+            userName(Hugo)
+            password(1234)
+        }
+        port{
+            @type(INT)
+            constraints(i -> i >= 0 && i < 65536)
+        }
+        username(STRING)
+        password(String)
+    }
+}
+```
+ 

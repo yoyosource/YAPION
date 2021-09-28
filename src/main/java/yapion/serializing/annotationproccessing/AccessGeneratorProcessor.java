@@ -125,6 +125,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             ObjectContainer objectContainer = new ObjectContainer(yapionObject.getPlainValue("@name"), yapionObject);
 
             ClassGenerator classGenerator = new ClassGenerator(packageName, objectContainer.getClassName());
+            classGenerator.addImport(YAPIONParser.class.getTypeName());
             if (checkValueNeeded) {
                 FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkValue", "<T> void", new ParameterGenerator(YAPIONValue.class.getTypeName() + "<?>", "value"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Supplier.class.getTypeName() + "<T>", "defaultValue"), new ParameterGenerator(Consumer.class.getTypeName() + "<T>", "callback"), new ParameterGenerator(Predicate.class.getTypeName() + "<T>", "checkPredicate"));
                 functionGenerator.add("if (value == null) {");
@@ -236,6 +237,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     @Getter
     private abstract class ContainerElement {
         private String name;
+
         private boolean nonNull = false;
 
         public ContainerElement(String name) {
@@ -248,6 +250,9 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         public abstract String constructorCall();
         public abstract void output(ClassGenerator classGenerator);
+        public boolean isDefaultPresent() {
+            return false;
+        }
     }
 
     @ToString(callSuper = true)
@@ -257,6 +262,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         private List<ContainerElement> containerElementList = new ArrayList<>();
         private String className;
         private boolean hidden;
+        private YAPIONObject defaultValue = null;
 
         public ObjectContainer(String name, YAPIONObject yapionObject) {
             super(name);
@@ -267,14 +273,29 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
             hidden = yapionObject.getPlainValueOrDefault("@hidden", false);
             checkElements(yapionObject, containerElementList::add);
+            if (yapionObject.containsKey("@default", YAPIONType.OBJECT)) {
+                defaultValue = yapionObject.getObject("@default");
+            }
         }
 
         @Override
         public String constructorCall() {
+            containerElementList.forEach(containerElement -> {
+                if (containerElement.isNonNull() && !containerElement.isDefaultPresent()) {
+                    if (!defaultValue.containsKey(containerElement.name)) {
+                        error("Default of '" + className + "' does not define value for '" + containerElement.name + "'");
+                    }
+                }
+            });
+
             if (hidden) {
                 return "";
             }
-            return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + getClassName() + "::new, value -> this." + getName() + " = value);";
+            if (defaultValue == null) {
+                return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + getClassName() + "::new, value -> this." + getName() + " = value);";
+            } else {
+                return "checkObject(yapionObject.getObjectOrDefault(\"" + getName() + "\", " + createParseStatement(defaultValue.toYAPION()) + "), " + isNonNull() + ", " + getClassName() + "::new, value -> this." + getName() + " = value);";
+            }
         }
 
         public void outputRoot(ClassGenerator classGenerator) {
@@ -295,7 +316,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         @Override
         public void output(ClassGenerator classGenerator) {
             if (!hidden) {
-                methodsAndField(classGenerator, getName(), className, isNonNull());
+                methodsAndField(classGenerator, getName(), className, isNonNull() || isDefaultPresent());
             }
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
@@ -317,6 +338,11 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 containerElement.output(finalClassGenerator);
             });
         }
+
+        @Override
+        public boolean isDefaultPresent() {
+            return defaultValue != null;
+        }
     }
 
     @ToString(callSuper = true)
@@ -327,6 +353,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         private String className;
         private boolean hidden;
         private String reference;
+        private Optional<String> defaultValue = Optional.empty();
 
         public ObjectReferenceContainer(String name, YAPIONObject yapionObject) {
             super(name);
@@ -338,6 +365,9 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             hidden = yapionObject.getPlainValueOrDefault("@hidden", false);
             reference = yapionObject.getPlainValue("@reference");
             checkElements(yapionObject, containerElementList::add);
+            if (yapionObject.containsKey("@default", YAPIONType.OBJECT)) {
+                defaultValue = Optional.of(yapionObject.getObject("@default").toYAPION());
+            }
         }
 
         public ObjectReferenceContainer(String name, YAPIONValue<String> yapionValue) {
@@ -348,22 +378,24 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         @Override
         public String constructorCall() {
             if (containerElementList.isEmpty()) {
-                return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + reference + "::new, value -> this." + getName() + " = value);";
+                return defaultValue.map(s -> "checkObject(yapionObject.getObjectOrDefault(\"" + getName() + "\", " + createParseStatement(s) + "), " + isNonNull() + ", " + reference + "::new, value -> this." + getName() + " = value);")
+                        .orElseGet(() -> "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + reference + "::new, value -> this." + getName() + " = value);");
             }
             if (hidden) {
                 return "";
             }
-            return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + getClassName() + "::new, value -> this." + getName() + " = value);";
+            return defaultValue.map(s -> "checkObject(yapionObject.getObjectOrDefault(\"" + getName() + "\", " + createParseStatement(s) + "), " + isNonNull() + ", " + getClassName() + "::new, value -> this." + getName() + " = value);")
+                    .orElseGet(() -> "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + getClassName() + "::new, value -> this." + getName() + " = value);");
         }
 
         @Override
         public void output(ClassGenerator classGenerator) {
             if (containerElementList.isEmpty()) {
-                methodsAndField(classGenerator, getName(), reference, isNonNull());
+                methodsAndField(classGenerator, getName(), reference, isNonNull() || isDefaultPresent());
                 return;
             }
             if (!hidden) {
-                methodsAndField(classGenerator, getName(), className, isNonNull());
+                methodsAndField(classGenerator, getName(), className, isNonNull() || isDefaultPresent());
             }
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
@@ -386,6 +418,11 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 }
                 containerElement.output(finalClassGenerator);
             });
+        }
+
+        @Override
+        public boolean isDefaultPresent() {
+            return defaultValue.isPresent();
         }
     }
 
@@ -544,7 +581,12 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public void output(ClassGenerator classGenerator) {
-            methodsAndField(classGenerator, getName(), toClass(type).getTypeName(), isNonNull() || defaultValue.isPresent());
+            methodsAndField(classGenerator, getName(), toClass(type).getTypeName(), isNonNull() || isDefaultPresent());
+        }
+
+        @Override
+        public boolean isDefaultPresent() {
+            return defaultValue.isPresent();
         }
     }
 
@@ -635,5 +677,9 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             functionGenerator.add("this." + name + " = " + name + ";");
             classGenerator.add(functionGenerator);
         }
+    }
+
+    public String createParseStatement(String s) {
+        return "YAPIONParser.parse(\"" + s.replace("\"", "\\\"") + "\")";
     }
 }
