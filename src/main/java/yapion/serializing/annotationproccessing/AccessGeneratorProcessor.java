@@ -63,6 +63,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     private boolean checkValueNeeded = false;
     private boolean checkObjectNeeded = false;
     private boolean checkArrayNeeded = false;
+    private boolean checkMapNeeded = false;
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
@@ -522,6 +523,32 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
     @ToString(callSuper = true)
     @Getter
+    // TODO: implement
+    private class MapContainer extends ContainerElement {
+
+        private String type;
+        private String constraints;
+
+        public MapContainer(String name, YAPIONObject yapionObject) {
+            super(name);
+            type = yapionObject.getPlainValueOrDefault("@arrayType", "OBJECT");
+            constraints = yapionObject.getPlainValueOrDefault("constraints", "ignored -> true");
+            constraints = Arrays.stream(constraints.split("\n")).map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.joining("\n"));
+        }
+
+        @Override
+        public String constructorCall() {
+            return "checkArray(yapionObject.getArray(\"" + getName() + "\"), " + isNonNull() + ", " + YAPIONValue.class.getTypeName() + ".class, " + toClass(type).getTypeName() + ".class, value -> (" + toClass(type).getTypeName() + ") value.get(), " + constraints + ", value -> this." + getName() + " = value);";
+        }
+
+        @Override
+        public void output(ClassGenerator classGenerator) {
+            methodsAndField(classGenerator, getName(), "java.util.List<" + toClass(type).getTypeName() + ">", isNonNull());
+        }
+    }
+
+    @ToString(callSuper = true)
+    @Getter
     private class ValueContainer extends ContainerElement {
 
         private String type;
@@ -608,6 +635,9 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 } else if (object.containsKey("@arrayReference", String.class)) {
                     resultConsumer.accept(new ArrayReferenceContainer(s, object));
                     checkArrayNeeded = true;
+                } else if (object.containsKey("@value")) {
+                    resultConsumer.accept(new MapContainer(s, object));
+                    checkMapNeeded = true;
                 } else {
                     resultConsumer.accept(new ObjectContainer(s, object));
                     checkObjectNeeded = true;

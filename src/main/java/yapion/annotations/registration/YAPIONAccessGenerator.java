@@ -64,5 +64,5 @@ public @interface YAPIONAccessGenerator {
      *
      * @return {@code true} for lazy parsing, {@code false} otherwise
      */
-    boolean lazy() default false;
+    boolean lazy() default true;
 }
