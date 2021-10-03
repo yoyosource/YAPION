@@ -289,10 +289,10 @@ YAPIONPointer's and YAPIONMap's are not supported by this AccessGeneratorProcess
 ## Defaults
 
 ### Values
-see section 'Default' under 'This is too short'.
+See section 'Default' under 'This is too short'.
 
 ### Objects/Object References
-You can define defaults for any internal objects by using the variable '@default'. The root object cannot have a default defined. The default need to define a valid object part, this will not be checked at compile time.
+You can define defaults for any internal objects by using the variable '@default'. The root object cannot have a default defined. The default need to define a valid object part, this will be checked at compile time.
 ```yapion
 {
     @name(Config)
@@ -313,4 +313,6 @@ You can define defaults for any internal objects by using the variable '@default
     }
 }
 ```
- 
+
+### Arrays/Array References
+Currently, unsupported.
