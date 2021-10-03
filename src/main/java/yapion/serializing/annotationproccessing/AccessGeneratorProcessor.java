@@ -18,6 +18,7 @@ import lombok.SneakyThrows;
 import lombok.ToString;
 import yapion.annotations.api.ProcessorImplementation;
 import yapion.annotations.registration.YAPIONAccessGenerator;
+import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -100,6 +101,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             checkValueNeeded = false;
             checkObjectNeeded = false;
             checkArrayNeeded = false;
+            checkMapNeeded = false;
 
             TypeElement clazz = (TypeElement) element.getEnclosingElement();
             String packageName = clazz.getQualifiedName().toString();
@@ -208,6 +210,27 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 classGenerator.add(functionGenerator);
             }
 
+            if (checkMapNeeded) {
+                FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkMap", "<T> void", new ParameterGenerator(YAPIONObject.class.getTypeName(), "object"), new ParameterGenerator("java.util.function.Predicate<String>", "keys"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Function.class.getTypeName() + "<" + YAPIONAnyType.class.getTypeName() + ", T>", "converter"), new ParameterGenerator(Consumer.class.getTypeName() + "<" + Map.class.getTypeName() + "<String, T>>", "callback"));
+                functionGenerator.add("java.util.Map<String, T> map = new java.util.HashMap<>();");
+                functionGenerator.add("object.allKeys().stream().filter(keys).forEach(s -> {");
+                functionGenerator.add("    try {");
+                functionGenerator.add("        map.put(s, converter.apply(object.getYAPIONAnyType(s)));");
+                functionGenerator.add("    } catch (Exception e) {");
+                functionGenerator.add("        // Ignored");
+                functionGenerator.add("    }");
+                functionGenerator.add("});");
+                functionGenerator.add("if (nonNull && map.isEmpty()) {");
+                functionGenerator.add("    throw new yapion.exceptions.YAPIONException(\"Map is empty (null)\");");
+                functionGenerator.add("}");
+                functionGenerator.add("if (map.isEmpty()) {");
+                functionGenerator.add("    callback.accept(null);");
+                functionGenerator.add("} else {");
+                functionGenerator.add("    callback.accept(map);");
+                functionGenerator.add("}");
+                classGenerator.add(functionGenerator);
+            }
+
             if (lombokExtensionMethod.get()) {
                 classGenerator.addAnnotation("@lombok.experimental.ExtensionMethod(yapion.serializing.annotationproccessing.ConstraintUtils.class)");
             }
@@ -250,9 +273,22 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         }
 
         public abstract String constructorCall();
+
+        public String constructorCallMap() {
+            return constructorCall();
+        }
+
         public abstract void output(ClassGenerator classGenerator);
+
         public boolean isDefaultPresent() {
             return false;
+        }
+
+        public String type() {
+            return "";
+        }
+
+        public void setHidden() {
         }
     }
 
@@ -279,6 +315,14 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
         }
 
+        private String constructor(boolean toOutput) {
+            if (defaultValue == null) {
+                return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + getClassName() + "::new, " + (toOutput ? "output::set" : "value -> this." + getName() + " = value") + ");";
+            } else {
+                return "checkObject(yapionObject.getObjectOrDefault(\"" + getName() + "\", " + createParseStatement(defaultValue.toYAPION()) + "), " + isNonNull() + ", " + getClassName() + "::new, " + (toOutput ? "output::set" : "value -> this." + getName() + " = value") + ");";
+            }
+        }
+
         @Override
         public String constructorCall() {
             containerElementList.forEach(containerElement -> {
@@ -292,10 +336,15 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             if (hidden) {
                 return "";
             }
-            if (defaultValue == null) {
-                return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + getClassName() + "::new, value -> this." + getName() + " = value);";
+            return constructor(false);
+        }
+
+        @Override
+        public String constructorCallMap() {
+            if (defaultValue != null) {
+                return constructor(true).replace("yapionObject.getObjectOrDefault(\"" + getName() + "\", " + createParseStatement(defaultValue.toYAPION()) + ")", YAPIONObject.class.getTypeName() + ".class.isInstance(any) ? (" + YAPIONObject.class.getTypeName() + ") any : " + createParseStatement(defaultValue.toYAPION())).replace("this.", "output");
             } else {
-                return "checkObject(yapionObject.getObjectOrDefault(\"" + getName() + "\", " + createParseStatement(defaultValue.toYAPION()) + "), " + isNonNull() + ", " + getClassName() + "::new, value -> this." + getName() + " = value);";
+                return constructor(true).replace("yapionObject.getObject(\"" + getName() + "\")", "(" + YAPIONObject.class.getTypeName() + ") any").replace("this.", "output");
             }
         }
 
@@ -317,7 +366,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         @Override
         public void output(ClassGenerator classGenerator) {
             if (!hidden) {
-                methodsAndField(classGenerator, getName(), className, isNonNull() || isDefaultPresent());
+                methodsAndField(classGenerator, getName(), type(), isNonNull() || isDefaultPresent());
             }
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
@@ -344,6 +393,16 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         public boolean isDefaultPresent() {
             return defaultValue != null;
         }
+
+        @Override
+        public String type() {
+            return className;
+        }
+
+        @Override
+        public void setHidden() {
+            hidden = true;
+        }
     }
 
     @ToString(callSuper = true)
@@ -354,7 +413,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         private String className;
         private boolean hidden;
         private String reference;
-        private Optional<String> defaultValue = Optional.empty();
+        private YAPIONObject defaultValue = null;
 
         public ObjectReferenceContainer(String name, YAPIONObject yapionObject) {
             super(name);
@@ -367,7 +426,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             reference = yapionObject.getPlainValue("@reference");
             checkElements(yapionObject, containerElementList::add);
             if (yapionObject.containsKey("@default", YAPIONType.OBJECT)) {
-                defaultValue = Optional.of(yapionObject.getObject("@default").toYAPION());
+                defaultValue = yapionObject.getObject("@default");
             }
         }
 
@@ -376,27 +435,52 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             reference = yapionValue.get().substring(1);
         }
 
+        private String constructor(boolean toOutput) {
+            if (containerElementList.isEmpty()) {
+                if (defaultValue != null) {
+                    return "checkObject(yapionObject.getObjectOrDefault(\"" + getName() + "\", " + createParseStatement(defaultValue.toYAPION()) + "), " + isNonNull() + ", " + reference + "::new, " + (toOutput ? "output::set" : "value -> this." + getName() + " = value") + ");";
+                } else {
+                    return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + reference + "::new, " + (toOutput ? "output::set" : "value -> this." + getName() + " = value") + ");";
+                }
+            }
+            if (defaultValue != null) {
+                return "checkObject(yapionObject.getObjectOrDefault(\"" + getName() + "\", " + createParseStatement(defaultValue.toYAPION()) + "), " + isNonNull() + ", " + getClassName() + "::new, " + (toOutput ? "output::set" : "value -> this." + getName() + " = value") + ");";
+            } else {
+                return "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + getClassName() + "::new, " + (toOutput ? "output::set" : "value -> this." + getName() + " = value") + ");";
+            }
+        }
+
         @Override
         public String constructorCall() {
-            if (containerElementList.isEmpty()) {
-                return defaultValue.map(s -> "checkObject(yapionObject.getObjectOrDefault(\"" + getName() + "\", " + createParseStatement(s) + "), " + isNonNull() + ", " + reference + "::new, value -> this." + getName() + " = value);")
-                        .orElseGet(() -> "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + reference + "::new, value -> this." + getName() + " = value);");
-            }
+            containerElementList.forEach(containerElement -> {
+                if (containerElement.isNonNull() && !containerElement.isDefaultPresent()) {
+                    if (!defaultValue.containsKey(containerElement.name)) {
+                        error("Default of '" + className + "' does not define value for '" + containerElement.name + "'");
+                    }
+                }
+            });
             if (hidden) {
                 return "";
             }
-            return defaultValue.map(s -> "checkObject(yapionObject.getObjectOrDefault(\"" + getName() + "\", " + createParseStatement(s) + "), " + isNonNull() + ", " + getClassName() + "::new, value -> this." + getName() + " = value);")
-                    .orElseGet(() -> "checkObject(yapionObject.getObject(\"" + getName() + "\"), " + isNonNull() + ", " + getClassName() + "::new, value -> this." + getName() + " = value);");
+            return constructor(false);
+        }
+
+        @Override
+        public String constructorCallMap() {
+            if (defaultValue != null) {
+                return constructor(true).replace("yapionObject.getObjectOrDefault(\"" + getName() + "\", " + createParseStatement(defaultValue.toYAPION()) + ")", YAPIONObject.class.getTypeName() + ".class.isInstance(any) ? (" + YAPIONObject.class.getTypeName() + ") any : " + createParseStatement(defaultValue.toYAPION()));
+            } else {
+                return constructor(true).replace("yapionObject.getObject(\"" + getName() + "\")", "(" + YAPIONObject.class.getTypeName() + ") any");
+            }
         }
 
         @Override
         public void output(ClassGenerator classGenerator) {
-            if (containerElementList.isEmpty()) {
-                methodsAndField(classGenerator, getName(), reference, isNonNull() || isDefaultPresent());
-                return;
-            }
             if (!hidden) {
-                methodsAndField(classGenerator, getName(), className, isNonNull() || isDefaultPresent());
+                methodsAndField(classGenerator, getName(), type(), isNonNull() || isDefaultPresent());
+            }
+            if (containerElementList.isEmpty()) {
+                return;
             }
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
@@ -423,7 +507,21 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public boolean isDefaultPresent() {
-            return defaultValue.isPresent();
+            return defaultValue != null;
+        }
+
+        @Override
+        public String type() {
+            if (containerElementList.isEmpty()) {
+                return reference;
+            } else {
+                return className;
+            }
+        }
+
+        @Override
+        public void setHidden() {
+            hidden = true;
         }
     }
 
@@ -433,6 +531,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         private List<ContainerElement> containerElementList = new ArrayList<>();
         private String className;
+        private boolean hidden;
         private String reference;
 
         public ArrayReferenceContainer(String name, YAPIONObject yapionObject) {
@@ -442,6 +541,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             } else {
                 className = "_" + index.incrementAndGet();
             }
+            hidden = yapionObject.getPlainValueOrDefault("@hidden", false);
             reference = yapionObject.getPlainValue("@arrayReference");
             checkElements(yapionObject, containerElementList::add);
         }
@@ -453,6 +553,9 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public String constructorCall() {
+            if (hidden) {
+                return "";
+            }
             if (containerElementList.isEmpty()) {
                 return "checkArray(yapionObject.getArray(\"" + getName() + "\"), " + isNonNull() + ", " + YAPIONObject.class.getTypeName() + ".class, " + reference + ".class, " + reference + "::new, null, value -> this." + getName() + " = value);";
             }
@@ -460,12 +563,21 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         }
 
         @Override
-        public void output(ClassGenerator classGenerator) {
+        public String constructorCallMap() {
             if (containerElementList.isEmpty()) {
-                methodsAndField(classGenerator, getName(), "java.util.List<" + reference + ">", isNonNull());
+                return "checkArray((" + YAPIONArray.class.getTypeName() + ") any, " + isNonNull() + ", " + YAPIONObject.class.getTypeName() + ".class, " + reference + ".class, " + reference + "::new, null, output::set);";
+            }
+            return "checkArray((" + YAPIONArray.class.getTypeName() + ") any, " + isNonNull() + ", " + YAPIONObject.class.getTypeName() + ".class, " + className + ".class, " + className + "::new, null, output::set);";
+        }
+
+        @Override
+        public void output(ClassGenerator classGenerator) {
+            if (!hidden) {
+                methodsAndField(classGenerator, getName(), type(), isNonNull());
+            }
+            if (containerElementList.isEmpty()) {
                 return;
             }
-            methodsAndField(classGenerator, getName(), "java.util.List<" + className + ">", isNonNull());
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
             if (lombokToString.get()) {
@@ -488,17 +600,33 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 containerElement.output(finalClassGenerator);
             });
         }
+
+        @Override
+        public String type() {
+            if (containerElementList.isEmpty()) {
+                return "java.util.List<" + reference + ">";
+            } else {
+                return "java.util.List<" + className + ">";
+            }
+        }
+
+        @Override
+        public void setHidden() {
+            hidden = true;
+        }
     }
 
     @ToString(callSuper = true)
     @Getter
     private class ArrayContainer extends ContainerElement {
 
+        private boolean hidden;
         private String type;
         private String constraints;
 
         public ArrayContainer(String name, YAPIONObject yapionObject) {
             super(name);
+            hidden = yapionObject.getPlainValueOrDefault("@hidden", false);
             type = yapionObject.getPlainValueOrDefault("@arrayType", "OBJECT");
             constraints = yapionObject.getPlainValueOrDefault("constraints", "ignored -> true");
             constraints = Arrays.stream(constraints.split("\n")).map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.joining("\n"));
@@ -512,38 +640,70 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public String constructorCall() {
+            if (hidden) {
+                return "";
+            }
             return "checkArray(yapionObject.getArray(\"" + getName() + "\"), " + isNonNull() + ", " + YAPIONValue.class.getTypeName() + ".class, " + toClass(type).getTypeName() + ".class, value -> (" + toClass(type).getTypeName() + ") value.get(), " + constraints + ", value -> this." + getName() + " = value);";
         }
 
         @Override
+        public String constructorCallMap() {
+            return "checkArray((" + YAPIONArray.class.getTypeName() + ") any, " + isNonNull() + ", " + YAPIONValue.class.getTypeName() + ".class, " + toClass(type).getTypeName() + ".class, value -> (" + toClass(type).getTypeName() + ") value.get(), " + constraints + ", output::set);";
+        }
+
+        @Override
         public void output(ClassGenerator classGenerator) {
-            methodsAndField(classGenerator, getName(), "java.util.List<" + toClass(type).getTypeName() + ">", isNonNull());
+            if (!hidden) {
+                methodsAndField(classGenerator, getName(), type(), isNonNull());
+            }
+        }
+
+        @Override
+        public String type() {
+            return "java.util.List<" + toClass(type).getTypeName() + ">";
+        }
+
+        @Override
+        public void setHidden() {
+            hidden = true;
         }
     }
 
     @ToString(callSuper = true)
     @Getter
-    // TODO: implement
     private class MapContainer extends ContainerElement {
 
-        private String type;
-        private String constraints;
+        private String keyConstraints;
+        private ContainerElement containerElement;
 
         public MapContainer(String name, YAPIONObject yapionObject) {
             super(name);
-            type = yapionObject.getPlainValueOrDefault("@arrayType", "OBJECT");
-            constraints = yapionObject.getPlainValueOrDefault("constraints", "ignored -> true");
-            constraints = Arrays.stream(constraints.split("\n")).map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.joining("\n"));
+            keyConstraints = yapionObject.getPlainValueOrDefault("@keys", "ignored -> true");
+            checkElement("", yapionObject.getYAPIONAnyType("@value"), containerElement -> {
+                MapContainer.this.containerElement = containerElement;
+            });
+            if (containerElement instanceof MapContainer) {
+                error("No Map directly inside another map");
+            }
+            containerElement.setHidden();
         }
 
         @Override
         public String constructorCall() {
-            return "checkArray(yapionObject.getArray(\"" + getName() + "\"), " + isNonNull() + ", " + YAPIONValue.class.getTypeName() + ".class, " + toClass(type).getTypeName() + ".class, value -> (" + toClass(type).getTypeName() + ") value.get(), " + constraints + ", value -> this." + getName() + " = value);";
+            return "checkMap(yapionObject, " + keyConstraints + ", " + isNonNull() + ", " + containerElement.type() + ".class, any -> {\n    java.util.concurrent.atomic.AtomicReference<" + containerElement.type() + "> output = new java.util.concurrent.atomic.AtomicReference<>(null);\n    " + containerElement.constructorCallMap() + "\n    return output.get();\n}, value -> this." + getName() + " = value);";
         }
 
         @Override
         public void output(ClassGenerator classGenerator) {
-            methodsAndField(classGenerator, getName(), "java.util.List<" + toClass(type).getTypeName() + ">", isNonNull());
+            methodsAndField(classGenerator, getName(), type(), isNonNull());
+            if (!(containerElement instanceof ValueContainer)) {
+                containerElement.output(classGenerator);
+            }
+        }
+
+        @Override
+        public String type() {
+            return "java.util.Map<java.lang.String, " + containerElement.type() + ">";
         }
     }
 
@@ -603,7 +763,12 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
         @Override
         public String constructorCall() {
-            return "checkValue(yapionObject.getValue(\"" + getName() + "\"), " + isNonNull() + ", " + toClass(type).getTypeName() + ".class, " + (defaultValue.map(s -> "() -> " + s).orElse("null")) + ", value -> this." + getName() + " = value, " + constraints + ");";
+            return "checkValue(yapionObject.getValue(\"" + getName() + "\"), " + isNonNull() + ", " + type() + ".class, " + (defaultValue.map(s -> "() -> " + s).orElse("null")) + ", value -> this." + getName() + " = value, " + constraints + ");";
+        }
+
+        @Override
+        public String constructorCallMap() {
+            return "checkValue(" + YAPIONValue.class.getTypeName() + ".class.isInstance(any) ? (" + YAPIONValue.class.getTypeName() + "<?>) any : null, " + isNonNull() + ", " + type() + ".class, " + (defaultValue.map(s -> "() -> " + s).orElse("null")) + ", output::set, " + constraints + ");";
         }
 
         @Override
@@ -615,6 +780,11 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         public boolean isDefaultPresent() {
             return defaultValue.isPresent();
         }
+
+        @Override
+        public String type() {
+            return toClass(type).getTypeName();
+        }
     }
 
     public void checkElements(YAPIONObject yapionObject, Consumer<ContainerElement> resultConsumer) {
@@ -622,49 +792,53 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             if (s.startsWith("@")) {
                 return;
             }
-            if (yapionAnyType instanceof YAPIONObject object) {
-                if (object.containsKey("@type", String.class)) {
-                    resultConsumer.accept(new ValueContainer(s, object));
-                    checkValueNeeded = true;
-                } else if (object.containsKey("@arrayType", String.class)) {
-                    resultConsumer.accept(new ArrayContainer(s, object));
+            checkElement(s, yapionAnyType, resultConsumer);
+        });
+    }
+
+    public void checkElement(String s, YAPIONAnyType yapionAnyType, Consumer<ContainerElement> resultConsumer) {
+        if (yapionAnyType instanceof YAPIONObject object) {
+            if (object.containsKey("@type", String.class)) {
+                resultConsumer.accept(new ValueContainer(s, object));
+                checkValueNeeded = true;
+            } else if (object.containsKey("@arrayType", String.class)) {
+                resultConsumer.accept(new ArrayContainer(s, object));
+                checkArrayNeeded = true;
+            } else if (object.containsKey("@reference", String.class)) {
+                resultConsumer.accept(new ObjectReferenceContainer(s, object));
+                checkObjectNeeded = true;
+            } else if (object.containsKey("@arrayReference", String.class)) {
+                resultConsumer.accept(new ArrayReferenceContainer(s, object));
+                checkArrayNeeded = true;
+            } else if (object.containsKey("@value")) {
+                resultConsumer.accept(new MapContainer(s, object));
+                checkMapNeeded = true;
+            } else {
+                resultConsumer.accept(new ObjectContainer(s, object));
+                checkObjectNeeded = true;
+            }
+        } else if (yapionAnyType instanceof YAPIONValue value) {
+            String v = value.get().toString();
+            if (v.endsWith("[]")) {
+                if (v.startsWith("@")) {
+                    resultConsumer.accept(new ArrayReferenceContainer(s, value));
                     checkArrayNeeded = true;
-                } else if (object.containsKey("@reference", String.class)) {
-                    resultConsumer.accept(new ObjectReferenceContainer(s, object));
-                    checkObjectNeeded = true;
-                } else if (object.containsKey("@arrayReference", String.class)) {
-                    resultConsumer.accept(new ArrayReferenceContainer(s, object));
+                } else {
+                    resultConsumer.accept(new ArrayContainer(s, value));
                     checkArrayNeeded = true;
-                } else if (object.containsKey("@value")) {
-                    resultConsumer.accept(new MapContainer(s, object));
-                    checkMapNeeded = true;
-                } else {
-                    resultConsumer.accept(new ObjectContainer(s, object));
-                    checkObjectNeeded = true;
-                }
-            } else if (yapionAnyType instanceof YAPIONValue value) {
-                String v = value.get().toString();
-                if (v.endsWith("[]")) {
-                    if (v.startsWith("@")) {
-                        resultConsumer.accept(new ArrayReferenceContainer(s, value));
-                        checkArrayNeeded = true;
-                    } else {
-                        resultConsumer.accept(new ArrayContainer(s, value));
-                        checkArrayNeeded = true;
-                    }
-                } else {
-                    if (v.startsWith("@")) {
-                        resultConsumer.accept(new ObjectReferenceContainer(s, value));
-                        checkObjectNeeded = true;
-                    } else {
-                        resultConsumer.accept(new ValueContainer(s, value));
-                        checkValueNeeded = true;
-                    }
                 }
             } else {
-                error("Only YAPIONObjects are allowed to specify types: {}", yapionAnyType);
+                if (v.startsWith("@")) {
+                    resultConsumer.accept(new ObjectReferenceContainer(s, value));
+                    checkObjectNeeded = true;
+                } else {
+                    resultConsumer.accept(new ValueContainer(s, value));
+                    checkValueNeeded = true;
+                }
             }
-        });
+        } else {
+            error("Only YAPIONObjects are allowed to specify types: {}", yapionAnyType);
+        }
     }
 
     public static String toCamelCase(String in) {
