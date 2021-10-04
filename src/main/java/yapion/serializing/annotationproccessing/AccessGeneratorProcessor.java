@@ -18,7 +18,6 @@ import lombok.SneakyThrows;
 import lombok.ToString;
 import yapion.annotations.api.ProcessorImplementation;
 import yapion.annotations.registration.YAPIONAccessGenerator;
-import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -51,8 +50,6 @@ import java.util.stream.Collectors;
 @ProcessorImplementation
 @SupportedAnnotationTypes("yapion.annotations.registration.YAPIONAccessGenerator")
 public class AccessGeneratorProcessor extends AbstractProcessor {
-
-    // TODO (keyConstraints?) so multiple keys with some values?
 
     private Messager messager;
     private Element currentElement;
