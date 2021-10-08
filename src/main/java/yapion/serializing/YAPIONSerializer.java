@@ -196,6 +196,7 @@ public final class YAPIONSerializer {
             }
             ContextManager.YAPIONInfo yapionInfo = contextManager.is(object, field);
             if (!yapionInfo.save && !saveWithoutAnnotation) continue;
+            if (!SerializeManager.getReflectionStrategy().checkGet(field, object)) continue;
 
             String name = field.getName();
             Object fieldObject = SerializeManager.getReflectionStrategy().get(field, object);

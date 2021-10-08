@@ -75,7 +75,7 @@ public class DeserializeData<T extends YAPIONAnyType> {
         if (hasFactory(clazz)) {
             return getInstance(clazz);
         }
-        return (T) ReflectionsUtils.constructObjectObjenesis(clazz);
+        return ReflectionsUtils.constructObjectObjenesis(clazz);
     }
 
     public boolean setField(String fieldName, Object object, Object objectToSet) {

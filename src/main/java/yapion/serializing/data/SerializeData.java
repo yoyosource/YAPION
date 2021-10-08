@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.serializing.YAPIONDataLossException;
+import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.SerializeManager;
@@ -64,7 +65,14 @@ public class SerializeData<T> {
     }
 
     public final Object getField(Field field) {
+        if (!SerializeManager.getReflectionStrategy().checkGet(field, object)) {
+            throw new YAPIONSerializerException("Field getting denied by ReflectionStrategy");
+        }
         return SerializeManager.getReflectionStrategy().get(field, object);
+    }
+
+    public final boolean checkFieldGet(Field field) {
+        return SerializeManager.getReflectionStrategy().checkGet(field, object);
     }
 
     public YAPIONFlags getYAPIONFlags() {

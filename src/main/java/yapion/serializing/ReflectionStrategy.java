@@ -21,5 +21,9 @@ import java.lang.reflect.Field;
 public interface ReflectionStrategy {
     void set(Field field, Object object, Object value);
 
+    default boolean checkGet(Field field, Object object) {
+        return true;
+    }
+
     <T> T get(Field field, Object object);
 }
