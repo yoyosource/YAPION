@@ -88,7 +88,9 @@ public class VisibilityStrategy implements ReflectionStrategy {
     public static Predicate<Field> fieldTypes(Class<?>... types) {
         return field -> {
             for (Class<?> type : types) {
-                return field.getType().getTypeName().equals(type.getTypeName());
+                if (field.getType().getTypeName().equals(type.getTypeName())) {
+                    return true;
+                }
             }
             return false;
         };
