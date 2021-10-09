@@ -19,7 +19,7 @@ import yapion.serializing.ReflectionStrategy;
 
 import java.lang.reflect.Field;
 
-public class PureStrategy implements ReflectionStrategy {
+public final class PureStrategy implements ReflectionStrategy {
 
     @Override
     public void set(Field field, Object object, Object value) {

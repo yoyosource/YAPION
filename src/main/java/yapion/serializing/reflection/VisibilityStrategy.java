@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class VisibilityStrategy implements ReflectionStrategy {
+public final class VisibilityStrategy implements ReflectionStrategy {
 
     private final Predicate<Field> getVisibility;
     private final Predicate<Field> setVisibility;
