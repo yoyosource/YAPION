@@ -29,6 +29,17 @@ public final class VisibilityStrategy implements ReflectionStrategy {
     private final Predicate<Field> setVisibility;
     private ReflectionStrategy reflectionStrategy = new PureStrategy();
 
+    public VisibilityStrategy(Predicate<Field> fieldPredicate) {
+        getVisibility = fieldPredicate;
+        setVisibility = fieldPredicate;
+    }
+
+    public VisibilityStrategy(Predicate<Field> fieldPredicate, ReflectionStrategy reflectionStrategy) {
+        getVisibility = fieldPredicate;
+        setVisibility = fieldPredicate;
+        this.reflectionStrategy = reflectionStrategy;
+    }
+
     @Override
     public void set(Field field, Object object, Object value) {
         if (setVisibility.test(field)) {
