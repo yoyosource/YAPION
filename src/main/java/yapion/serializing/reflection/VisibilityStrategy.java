@@ -81,63 +81,45 @@ public final class VisibilityStrategy implements ReflectionStrategy {
         return field -> !Modifier.isPrivate(field.getModifiers()) && !Modifier.isProtected(field.getModifiers()) && !Modifier.isPublic(field.getModifiers());
     }
 
-    public static Predicate<Field> allowClass(Class<?> type) {
-        return field -> field.getDeclaringClass().equals(type);
+    public static Predicate<Field> checkClass(boolean allowed, Class<?> type) {
+        return field -> {
+            if (allowed) {
+                return field.getDeclaringClass().equals(type);
+            } else {
+                return !field.getDeclaringClass().equals(type);
+            }
+        };
     }
 
-    public static Predicate<Field> denyClass(Class<?> type) {
-        return field -> !field.getDeclaringClass().equals(type);
-    }
-
-    public static Predicate<Field> allowClasses(Class<?>... types) {
+    public static Predicate<Field> checkClasses(boolean allowed, Class<?>... types) {
         return field -> {
             for (Class<?> type : types) {
                 if (field.getDeclaringClass().equals(type)) {
-                    return true;
+                    return allowed;
                 }
             }
-            return false;
+            return !allowed;
         };
     }
 
-    public static Predicate<Field> denyClasses(Class<?>... types) {
+    public static Predicate<Field> allowFieldType(boolean allowed, Class<?> type) {
         return field -> {
-            for (Class<?> type : types) {
-                if (field.getDeclaringClass().equals(type)) {
-                    return false;
-                }
+            if (allowed) {
+                return field.getType().getTypeName().equals(type.getTypeName());
+            } else {
+                return !field.getType().getTypeName().equals(type.getTypeName());
             }
-            return true;
         };
     }
 
-    public static Predicate<Field> allowFieldType(Class<?> type) {
-        return field -> field.getType().getTypeName().equals(type.getTypeName());
-    }
-
-    public static Predicate<Field> denyFieldType(Class<?> type) {
-        return field -> !field.getType().getTypeName().equals(type.getTypeName());
-    }
-
-    public static Predicate<Field> allowFieldTypes(Class<?>... types) {
+    public static Predicate<Field> allowFieldTypes(boolean allowed, Class<?>... types) {
         return field -> {
             for (Class<?> type : types) {
                 if (field.getType().getTypeName().equals(type.getTypeName())) {
-                    return true;
+                    return allowed;
                 }
             }
-            return false;
-        };
-    }
-
-    public static Predicate<Field> denyFieldTypes(Class<?>... types) {
-        return field -> {
-            for (Class<?> type : types) {
-                if (field.getType().getTypeName().equals(type.getTypeName())) {
-                    return false;
-                }
-            }
-            return true;
+            return !allowed;
         };
     }
 }
