@@ -57,28 +57,27 @@ public final class VisibilityStrategy implements ReflectionStrategy {
         return reflectionStrategy.get(field, object);
     }
 
-    public static Predicate<Field> finalFields() {
-        return field -> Modifier.isFinal(field.getModifiers());
+    @AllArgsConstructor
+    public enum FieldVisibilityModifier {
+        FINAL(field -> Modifier.isFinal(field.getModifiers())),
+        VOLATILE(field -> Modifier.isVolatile(field.getModifiers())),
+        PUBLIC(field -> Modifier.isPublic(field.getModifiers())),
+        PRIVATE(field -> Modifier.isPrivate(field.getModifiers())),
+        PROTECTED(field -> Modifier.isProtected(field.getModifiers())),
+        PACKAGE_PRIVATE(field -> {
+            int modifier = field.getModifiers();
+            return !Modifier.isPrivate(modifier) && !Modifier.isProtected(modifier) && !Modifier.isPublic(modifier);
+        });
+
+        private Predicate<Field> predicate;
     }
 
-    public static Predicate<Field> volatileFields() {
-        return field -> Modifier.isVolatile(field.getModifiers());
-    }
-
-    public static Predicate<Field> publicFields() {
-        return field -> Modifier.isPublic(field.getModifiers());
-    }
-
-    public static Predicate<Field> privateFields() {
-        return field -> Modifier.isPrivate(field.getModifiers());
-    }
-
-    public static Predicate<Field> protectedFields() {
-        return field -> Modifier.isProtected(field.getModifiers());
-    }
-
-    public static Predicate<Field> packagePrivateFields() {
-        return field -> !Modifier.isPrivate(field.getModifiers()) && !Modifier.isProtected(field.getModifiers()) && !Modifier.isPublic(field.getModifiers());
+    public static Predicate<Field> checkField(boolean allowed, FieldVisibilityModifier fieldVisibilityModifier) {
+        if (allowed) {
+            return fieldVisibilityModifier.predicate;
+        } else {
+            return fieldVisibilityModifier.predicate.negate();
+        }
     }
 
     public static Predicate<Field> checkClass(boolean allowed, Class<?> type) {
