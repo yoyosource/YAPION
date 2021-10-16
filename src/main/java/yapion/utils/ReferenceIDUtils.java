@@ -44,7 +44,7 @@ public class ReferenceIDUtils {
         l = applyToBytes(s.length(), l);
         l = applyToBytes(s.hashCode(), l);
         byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = 0; i < bytes.length; i++) {
             int value = bytes[i] & 0xFF;
             l += value;
             l = applyToBytes(value, l);
