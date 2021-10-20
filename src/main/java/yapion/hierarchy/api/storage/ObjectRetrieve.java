@@ -44,6 +44,18 @@ public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
         return internalGetYAPIONAnyType(key);
     }
 
+    default YAPIONAnyType getAny(@NonNull K key) {
+        return internalGetYAPIONAnyType(key);
+    }
+
+    default void getAny(@NonNull K key, Consumer<YAPIONAnyType> valueConsumer, Runnable noValue) {
+        if (containsKey(key)) {
+            valueConsumer.accept(internalGetYAPIONAnyType(key));
+        } else {
+            noValue.run();
+        }
+    }
+
     default YAPIONObject getObject(@NonNull K key) {
         YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
         if (yapionAnyType == null) return null;

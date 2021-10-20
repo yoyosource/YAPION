@@ -11,33 +11,28 @@
  * limitations under the License.
  */
 
-package yapion.path;
+package yapion.path.elements;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.path.PathElement;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Implement YAPIONPath like xPath or jsonPath
-public class YAPIONPath {
+public class AnyElement implements PathElement {
 
-    private PathElement[] pathElements;
-
-    public YAPIONPath(PathElement... pathElements) {
-        this.pathElements = pathElements;
-    }
-
-    public List<YAPIONAnyType> apply(YAPIONAnyType element) {
-        List<YAPIONAnyType> elements = new ArrayList<>();
-        elements.add(element);
-        return apply(elements);
-    }
-
-    public List<YAPIONAnyType> apply(List<YAPIONAnyType> elements) {
-        for (int i = 0; i < pathElements.length; i++) {
-            elements = pathElements[i].apply(elements, i < pathElements.length - 1 ? pathElements[i + 1] : null);
+    @Override
+    public List<YAPIONAnyType> apply(List<YAPIONAnyType> current, PathElement possibleNext) {
+        List<YAPIONAnyType> result = new ArrayList<>();
+        for (YAPIONAnyType element : current) {
+            if (element instanceof YAPIONObject yapionObject) {
+                result.addAll(yapionObject.getAllValues());
+            } else if (element instanceof YAPIONArray yapionArray) {
+                result.addAll(yapionArray.getAllValues());
+            }
         }
-        return elements;
+        return result;
     }
-
 }
