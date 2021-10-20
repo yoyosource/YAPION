@@ -19,17 +19,17 @@ Chaining Elements:
 Example `test.test`
 
 ### Advanced number checks
-Index greater number:
+Index greater number, both ends inclusive:
 ```
-><NUMBER>
+[<NUMBER>-]
 ```
-Example `>0`
+Example `[0-]`
 
-Index smaller number:
+Index smaller number, both ends inclusive:
 ```
-<<NUMBER>
+[-<NUMBER>]
 ```
-Example `<10`
+Example `[-10]`
 
 Number range, both ends inclusive:
 ```
