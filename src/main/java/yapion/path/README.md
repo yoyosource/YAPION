@@ -1,5 +1,8 @@
 # YAPIONPath
 
+## Examples:
+[Examples](examples/README.md)
+
 ## Syntax
 
 ### Elements
@@ -33,6 +36,12 @@ Number range, both ends inclusive:
 [<NUMBER>-<NUMBER>]
 ```
 Example `[0-10]`
+
+Multiple Keys:
+```
+[<TEXT>,<TEXT>,...]
+```
+Example `[test,hugo,example]`
 
 ### Any Element on this level
 ```
