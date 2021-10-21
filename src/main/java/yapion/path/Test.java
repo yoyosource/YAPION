@@ -13,15 +13,12 @@
 
 package yapion.path;
 
-import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 import yapion.path.elements.AnyDeeperElement;
-import yapion.path.elements.AnyElement;
 import yapion.path.elements.Element;
-
-import java.util.ArrayList;
-import java.util.List;
+import yapion.path.elements.ElementFilter;
+import yapion.path.filters.ContainsFilter;
 
 public class Test {
 
@@ -166,7 +163,15 @@ public class Test {
                 new Element("artists"),
                 // new AnyElement(),
                 new AnyDeeperElement(),
-                new Element("title")
+                // new Element("title")
+                new ElementFilter(
+                        new ContainsFilter(
+                                new Element("title")
+                        ).and(new ContainsFilter(
+                                new AnyDeeperElement(),
+                                new Element("duration")
+                        ))
+                )
         );
         System.out.println(yapionPath.apply(yapionObject));
     }
