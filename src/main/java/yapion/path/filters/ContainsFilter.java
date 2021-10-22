@@ -15,10 +15,11 @@ package yapion.path.filters;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.path.PathElement;
-import yapion.path.PathFilter;
 import yapion.path.YAPIONPath;
 
-public class ContainsFilter implements PathFilter {
+import java.util.function.Predicate;
+
+public class ContainsFilter implements Predicate<YAPIONAnyType> {
 
     YAPIONPath yapionPath;
 
@@ -27,7 +28,7 @@ public class ContainsFilter implements PathFilter {
     }
 
     @Override
-    public boolean check(YAPIONAnyType element) {
+    public boolean test(YAPIONAnyType element) {
         return !yapionPath.apply(element).isEmpty();
     }
 }

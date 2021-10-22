@@ -15,21 +15,21 @@ package yapion.path.elements;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.path.PathElement;
-import yapion.path.PathFilter;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public class ElementFilter implements PathElement {
 
-    private PathFilter pathFilter;
+    private Predicate<YAPIONAnyType> pathFilter;
 
-    public ElementFilter(PathFilter pathFilter) {
+    public ElementFilter(Predicate<YAPIONAnyType> pathFilter) {
         this.pathFilter = pathFilter;
     }
 
     @Override
     public List<YAPIONAnyType> apply(List<YAPIONAnyType> current, PathElement possibleNext) {
-        current.removeIf(yapionAnyType -> !pathFilter.check(yapionAnyType));
+        current.removeIf(pathFilter.negate());
         return current;
     }
 }

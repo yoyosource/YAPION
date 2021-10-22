@@ -16,11 +16,10 @@ package yapion.path.filters;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.path.PathFilter;
 
 import java.util.function.Predicate;
 
-public abstract class SizeFilter implements PathFilter {
+public abstract class SizeFilter implements Predicate<YAPIONAnyType> {
 
     private Predicate<Integer> sizeCheck;
 
@@ -29,7 +28,7 @@ public abstract class SizeFilter implements PathFilter {
     }
 
     @Override
-    public boolean check(YAPIONAnyType element) {
+    public boolean test(YAPIONAnyType element) {
         if (element instanceof YAPIONObject yapionObject) {
             return sizeCheck.test(yapionObject.getKeys().size());
         } else if (element instanceof YAPIONArray yapionArray) {
