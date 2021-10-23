@@ -82,5 +82,4 @@ public final class BooleanHandler implements ValueHandler<Boolean> {
     public long referenceValue(ReferenceFunction referenceFunction) {
         return referenceFunction.stringToReferenceValue("java.lang.Boolean");
     }
-
 }

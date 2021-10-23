@@ -86,5 +86,4 @@ final class NumberSuffix<T> {
         String s = input.substring(0, input.length() - numberSuffix.suffix.length());
         return s.matches(numberSuffix.matcher);
     }
-
 }

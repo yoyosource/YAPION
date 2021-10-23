@@ -74,7 +74,6 @@ public class FractionNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.lang.Float");
         }
-
     }
 
     public static class DoubleHandler implements ValueHandler<Double> {
@@ -127,7 +126,6 @@ public class FractionNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.lang.Double");
         }
-
     }
 
     public static class BigDecimalHandler implements ValueHandler<BigDecimal> {
@@ -180,7 +178,5 @@ public class FractionNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.math.BigDecimal");
         }
-
     }
-
 }

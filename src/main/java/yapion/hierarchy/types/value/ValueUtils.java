@@ -39,7 +39,6 @@ public final class ValueUtils {
             }
             return false;
         }
-
     }
 
     public static boolean startsWith(String s, EscapeCharacters escapeCharacters) {
@@ -84,5 +83,4 @@ public final class ValueUtils {
             return c + "";
         }
     }
-
 }

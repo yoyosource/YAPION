@@ -73,5 +73,4 @@ public final class CharacterHandler implements ValueHandler<Character> {
     public long referenceValue(ReferenceFunction referenceFunction) {
         return referenceFunction.stringToReferenceValue("java.lang.Character");
     }
-
 }

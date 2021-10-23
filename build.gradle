@@ -109,12 +109,8 @@ task compressClassFiles {
 
     doLast {
         if (file("${buildDir}/classes/java/main/yapion/serializing/serializer/").exists()) {
-            println(shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker")[0])
+            println(shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker"))
             deleteDirRecursively("${buildDir}/classes/java/main/yapion/serializing/serializer")
-        }
-        if (file("${buildDir}/classes/java/main/yapion/hierarchy/types/value/ValueHandlerPacker.class").exists()) {
-            println(shell("java -cp ${buildDir}/classes/java/main/ yapion/hierarchy/types/value/ValueHandlerPacker")[0])
-            deleteDirRecursively("${buildDir}/classes/java/main/yapion/hierarchy/types/value/ValueHandlerPacker.class")
         }
         deleteDirRecursively("${buildDir}/classes/java/main/yapion/utils/Packer.class")
     }

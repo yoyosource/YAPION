@@ -66,5 +66,4 @@ public final class NullHandler implements ValueHandler<Object> {
     public long referenceValue(ReferenceFunction referenceFunction) {
         return referenceFunction.stringToReferenceValue("null");
     }
-
 }

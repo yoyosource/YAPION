@@ -72,7 +72,6 @@ public class HexNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.lang.Byte");
         }
-
     }
 
     public static class ShortHexHandler implements ValueHandler<Short> {
@@ -126,7 +125,6 @@ public class HexNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.lang.Short");
         }
-
     }
 
     public static class IntegerHexHandler implements ValueHandler<Integer> {
@@ -180,7 +178,6 @@ public class HexNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.lang.Integer");
         }
-
     }
 
     public static class LongHexHandler implements ValueHandler<Long> {
@@ -234,7 +231,5 @@ public class HexNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.lang.Long");
         }
-
     }
-
 }

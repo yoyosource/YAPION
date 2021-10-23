@@ -69,38 +69,32 @@ public class ValueHandlerUtils {
     }
 
     static {
-        InputStream inputStream = ValueHandlerUtils.class.getResourceAsStream("valueHandler.zar.gz");
-        if (inputStream == null) {
-            log.error("No ValueHandler was loaded. Please inspect.");
-            throw new YAPIONException("No ValueHandler was loaded. Please inspect.");
-        }
-
-        try (ZarInputStream zarInputStream = new ZarInputStream(new GZIPInputStream(new BufferedInputStream(inputStream)))) {
-            new YAPIONClassLoader(Thread.currentThread().getContextClassLoader(), "yapion.hierarchy.types.value.", zarInputStream, ValueHandlerUtils::internalAdd);
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.error(e.getMessage(), e);
-        }
-        if (valueHandlerList.isEmpty()) {
-            log.error("No ValueHandler was loaded. Please inspect.");
-        }
-        valueHandlerList.sort(Comparator.comparing(ValueHandler::index));
+        internalAdd(new BooleanHandler());
+        internalAdd(new CharacterHandler());
+        internalAdd(new FractionNumberHandler.FloatHandler());
+        internalAdd(new FractionNumberHandler.DoubleHandler());
+        internalAdd(new FractionNumberHandler.BigDecimalHandler());
+        internalAdd(new HexNumberHandler.ByteHexHandler());
+        internalAdd(new HexNumberHandler.ShortHexHandler());
+        internalAdd(new HexNumberHandler.IntegerHexHandler());
+        internalAdd(new HexNumberHandler.LongHexHandler());
+        internalAdd(new NullHandler());
+        internalAdd(new StringHandler());
+        internalAdd(new WholeNumberHandler.ByteHandler());
+        internalAdd(new WholeNumberHandler.ShortHandler());
+        internalAdd(new WholeNumberHandler.IntegerHandler());
+        internalAdd(new WholeNumberHandler.LongHandler());
+        internalAdd(new WholeNumberHandler.BigIntegerHandler());
     }
 
-    private static void internalAdd(Class<?> clazz) {
-        if (clazz.isInterface()) return;
-        if (clazz.getInterfaces().length != 1) return;
-        Object o = ReflectionsUtils.constructObjectObjenesis(clazz);
-        if (o == null) return;
-        if (o instanceof ValueHandler<?> valueHandler) {
-            allowedTypes.add(valueHandler.type());
-            if (valueHandler.typeIdentifier() != null) {
-                typeIdentifier.put(valueHandler.type(), valueHandler.typeIdentifier());
-            }
-            valueHandlerList.add(valueHandler);
-            if (valueHandler.type() != null && valueHandler.type().isEmpty()) return;
-            stringValueHandlerMap.put(valueHandler.type(), valueHandler);
+    private static void internalAdd(ValueHandler<?> valueHandler) {
+        allowedTypes.add(valueHandler.type());
+        if (valueHandler.typeIdentifier() != null) {
+            typeIdentifier.put(valueHandler.type(), valueHandler.typeIdentifier());
         }
+        valueHandlerList.add(valueHandler);
+        if (valueHandler.type() != null && valueHandler.type().isEmpty()) return;
+        stringValueHandlerMap.put(valueHandler.type(), valueHandler);
     }
 
 }

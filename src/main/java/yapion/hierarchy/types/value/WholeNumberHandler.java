@@ -71,7 +71,6 @@ public class WholeNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.lang.Byte");
         }
-
     }
 
     public static class ShortHandler implements ValueHandler<Short> {
@@ -121,7 +120,6 @@ public class WholeNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.lang.Short");
         }
-
     }
 
     public static class IntegerHandler implements ValueHandler<Integer> {
@@ -171,7 +169,6 @@ public class WholeNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.lang.Integer");
         }
-
     }
 
     public static class LongHandler implements ValueHandler<Long> {
@@ -221,7 +218,6 @@ public class WholeNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.lang.Long");
         }
-
     }
 
     public static class BigIntegerHandler implements ValueHandler<BigInteger> {
@@ -270,7 +266,5 @@ public class WholeNumberHandler {
         public long referenceValue(ReferenceFunction referenceFunction) {
             return referenceFunction.stringToReferenceValue("java.math.BigInteger");
         }
-
     }
-
 }

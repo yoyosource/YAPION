@@ -34,5 +34,4 @@ public interface ValueHandler<T> {
     MethodReturnValue<T> parse(String s);
 
     long referenceValue(ReferenceFunction referenceFunction);
-
 }

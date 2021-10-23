@@ -118,5 +118,4 @@ public final class StringHandler implements ValueHandler<String> {
     public long referenceValue(ReferenceFunction referenceFunction) {
         return referenceFunction.stringToReferenceValue("java.lang.String");
     }
-
 }
