@@ -74,7 +74,7 @@ public class DeprecationList {
                         System.out.println();
                     }
                 } catch (ClassNotFoundException e) {
-
+                    System.err.println(e.message); // It may be better to make use of a more robust logging solution like logback.
                 }
             }
 
