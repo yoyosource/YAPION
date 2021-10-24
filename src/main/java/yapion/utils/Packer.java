@@ -37,10 +37,19 @@ public class Packer {
         System.out.println(destination.getAbsolutePath());
 
         ZarOutputStream zarOutputStream = new ZarOutputStream(new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(destination))));
+        zarOutputStream.useIndex();
         int substringLength = source.getAbsolutePath().length() + 1;
         packIntoZarFile(zarOutputStream, substringLength, source, filter, deleteAfterPack);
         zarOutputStream.close();
         System.out.println("Destination Size: " + destination.length());
+
+        StringBuilder st = new StringBuilder();
+        st.append("{");
+        zarOutputStream.getIndex().forEach((s, aLong) -> {
+            st.append(s).append("(").append(aLong).append("L)");
+        });
+        st.append("}");
+        System.out.println(st);
     }
 
     private void packIntoZarFile(ZarOutputStream zarOutputStream, int substringLength, File file, Predicate<File> filter, boolean deleteAfterPack) throws IOException {

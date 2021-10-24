@@ -109,7 +109,13 @@ task compressClassFiles {
 
     doLast {
         if (file("${buildDir}/classes/java/main/yapion/serializing/serializer/").exists()) {
-            println(shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker"))
+            String[] strings = shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker")
+            if (strings[2] == '0') {
+                print(strings[0])
+            } else {
+                print(strings[0])
+                print(strings[1])
+            }
             deleteDirRecursively("${buildDir}/classes/java/main/yapion/serializing/serializer")
         }
         deleteDirRecursively("${buildDir}/classes/java/main/yapion/utils/Packer.class")

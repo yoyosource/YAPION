@@ -13,24 +13,38 @@
 
 package yapion.serializing.zar;
 
+import lombok.Getter;
 import yapion.hierarchy.types.YAPIONObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ZarOutputStream extends OutputStream implements AutoCloseable {
 
     private final OutputStream outputStream;
     private long lengthLeft;
 
+    @Getter
+    private Map<String, Long> index = null;
+    private long currentIndex = 3;
+
     public ZarOutputStream(OutputStream outputStream) throws IOException {
         this.outputStream = outputStream;
         outputStream.write("zar".getBytes());
     }
 
+    public void useIndex() {
+        index = new HashMap<>();
+    }
+
     public void addFile(String name, long length, YAPIONObject metaData) throws IOException {
         if (lengthLeft != 0) {
             throw new IOException("Last File was not finished completely");
+        }
+        if (index != null) {
+            index.put(name, currentIndex);
         }
 
         writeLength(name.length());
@@ -62,6 +76,8 @@ public class ZarOutputStream extends OutputStream implements AutoCloseable {
     }
 
     private void writeLength(long length) throws IOException {
+        currentIndex += length;
+
         int size = 0;
         long tempLength = length;
         while (tempLength > 0) {
