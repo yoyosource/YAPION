@@ -13,7 +13,6 @@
 
 package yapion.hierarchy.types.value;
 
-import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONType;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;

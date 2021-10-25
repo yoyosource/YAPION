@@ -16,16 +16,8 @@ package yapion.hierarchy.types.value;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.InternalAPI;
-import yapion.exceptions.YAPIONException;
-import yapion.serializing.zar.ZarInputStream;
-import yapion.utils.ReflectionsUtils;
-import yapion.utils.YAPIONClassLoader;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
-import java.util.zip.GZIPInputStream;
 
 @Slf4j
 @UtilityClass
@@ -85,6 +77,7 @@ public class ValueHandlerUtils {
         internalAdd(new WholeNumberHandler.IntegerHandler());
         internalAdd(new WholeNumberHandler.LongHandler());
         internalAdd(new WholeNumberHandler.BigIntegerHandler());
+        valueHandlerList.sort(Comparator.comparing(ValueHandler::index));
     }
 
     private static void internalAdd(ValueHandler<?> valueHandler) {
