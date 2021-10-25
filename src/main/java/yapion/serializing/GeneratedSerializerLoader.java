@@ -89,7 +89,7 @@ public class GeneratedSerializerLoader {
             SerializeManager.add(serializerClass);
             return true;
         } catch (ClassNotFoundException e) {
-            log.error("Error trying to load via 'inner' class identifier", e)
+            log.error("Error trying to load via 'inner' class identifier", e);
         }
         log.debug("Trying to load via className and Serializer appended");
         try {
