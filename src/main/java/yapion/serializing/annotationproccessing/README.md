@@ -1,7 +1,7 @@
 # SerializingProcessor
 
 # AccessGeneratorProcessor
-The AccessGeneratorProcessor is for generating class files used to access YAPIONObjects statically and strong types. This can be used to access configs or some other kind of configuration oder data file.
+The AccessGeneratorProcessor is for generating class files used to access YAPIONObjects statically and strongly typed. This can be used to access configs or some other kind of configuration oder data file.
 
 This feature consist of two mayor parts, the java code to define the generation and an optional external source.
 
