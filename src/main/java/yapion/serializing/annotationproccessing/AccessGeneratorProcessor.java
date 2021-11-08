@@ -53,10 +53,10 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
     private Messager messager;
     private Element currentElement;
-    private AtomicInteger index = new AtomicInteger(0);
-    private AtomicBoolean lombokToString = new AtomicBoolean(false);
-    private AtomicBoolean setter = new AtomicBoolean(false);
-    private AtomicBoolean lombokExtensionMethod = new AtomicBoolean(false);
+    private final AtomicInteger index = new AtomicInteger(0);
+    private final AtomicBoolean lombokToString = new AtomicBoolean(false);
+    private final AtomicBoolean setter = new AtomicBoolean(false);
+    private final AtomicBoolean lombokExtensionMethod = new AtomicBoolean(false);
 
     private boolean checkValueNeeded = false;
     private boolean checkObjectNeeded = false;
@@ -126,6 +126,10 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
             ClassGenerator classGenerator = new ClassGenerator(packageName, objectContainer.getClassName());
             classGenerator.addImport(YAPIONParser.class.getTypeName());
+            yapionObject.getArrayOrDefault("@imports", new YAPIONArray()).forEach(yapionAnyType -> {
+                classGenerator.addImport(((YAPIONValue<String>) yapionAnyType).get());
+            });
+
             if (checkValueNeeded) {
                 FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkValue", "<T> void", new ParameterGenerator(YAPIONValue.class.getTypeName() + "<?>", "value"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Supplier.class.getTypeName() + "<T>", "defaultValue"), new ParameterGenerator(Consumer.class.getTypeName() + "<T>", "callback"), new ParameterGenerator(Predicate.class.getTypeName() + "<T>", "checkPredicate"));
                 functionGenerator.add("if (value == null) {");
@@ -257,7 +261,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     @ToString
     @Getter
     private abstract class ContainerElement {
-        private String name;
+        private final String name;
 
         private boolean nonNull = false;
 
@@ -293,8 +297,8 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     @Getter
     private class ObjectContainer extends ContainerElement {
 
-        private List<ContainerElement> containerElementList = new ArrayList<>();
-        private String className;
+        private final List<ContainerElement> containerElementList = new ArrayList<>();
+        private final String className;
         private boolean hidden;
         private YAPIONObject defaultValue = null;
 
@@ -406,10 +410,10 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     @Getter
     private class ObjectReferenceContainer extends ContainerElement {
 
-        private List<ContainerElement> containerElementList = new ArrayList<>();
+        private final List<ContainerElement> containerElementList = new ArrayList<>();
         private String className;
         private boolean hidden;
-        private String reference;
+        private final String reference;
         private YAPIONObject defaultValue = null;
 
         public ObjectReferenceContainer(String name, YAPIONObject yapionObject) {
@@ -526,10 +530,10 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     @Getter
     private class ArrayReferenceContainer extends ContainerElement {
 
-        private List<ContainerElement> containerElementList = new ArrayList<>();
+        private final List<ContainerElement> containerElementList = new ArrayList<>();
         private String className;
         private boolean hidden;
-        private String reference;
+        private final String reference;
 
         public ArrayReferenceContainer(String name, YAPIONObject yapionObject) {
             super(name);
@@ -618,7 +622,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     private class ArrayContainer extends ContainerElement {
 
         private boolean hidden;
-        private String type;
+        private final String type;
         private String constraints;
 
         public ArrayContainer(String name, YAPIONObject yapionObject) {
@@ -670,7 +674,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     @Getter
     private class MapContainer extends ContainerElement {
 
-        private String keyConstraints;
+        private final String keyConstraints;
         private ContainerElement containerElement;
 
         public MapContainer(String name, YAPIONObject yapionObject) {
@@ -708,7 +712,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     @Getter
     private class ValueContainer extends ContainerElement {
 
-        private String type;
+        private final String type;
         private String constraints;
         private Optional<String> defaultValue = Optional.empty();
 
@@ -735,13 +739,13 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 } else if (object instanceof Long l) {
                     defaultValue = Optional.of("" + l + "L");
                 } else if (object instanceof BigInteger bi) {
-                    defaultValue = Optional.of("new " + BigInteger.class.getTypeName() + "(" + bi.toString() + ")");
+                    defaultValue = Optional.of("new " + BigInteger.class.getTypeName() + "(" + bi + ")");
                 } else if (object instanceof Float f) {
                     defaultValue = Optional.of("" + f + "F");
                 } else if (object instanceof Double d) {
                     defaultValue = Optional.of("" + d + "D");
                 } else if (object instanceof BigDecimal bd) {
-                    defaultValue = Optional.of("new " + BigDecimal.class.getTypeName() + "(" + bd.toString() + ")");
+                    defaultValue = Optional.of("new " + BigDecimal.class.getTypeName() + "(" + bd + ")");
                 } else if (object instanceof Character c) {
                     defaultValue = Optional.of("'" + c + "'");
                 } else if (object instanceof Boolean b) {

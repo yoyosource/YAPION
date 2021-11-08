@@ -283,8 +283,32 @@ There are two types of arrays, reference arrays and value arrays. Both have a sh
 }
 ```
 
-## Pointers and Maps
-YAPIONPointer's and YAPIONMap's are not supported by this AccessGeneratorProcessor **yet**. I plan to implement YAPIONMap's in the future.
+## Maps
+Any map will be a `java.util.Map` as type and a `java.util.HashMap` as implementation. You indicate that you want to use a map by the `@value` value inside an Object, without a `@key` value every element will be converted to the specified `@value`, if not applicable the key will be ignored. If the map is defined as a non null value and no keys match it will be considered as null.
+```yapion
+{
+    @name(Config)
+    test{
+        @value(STRING)
+    }
+}
+```
+
+Example with key constraints:
+```yapion
+{
+    @name(Config)
+    test{
+        @keys(s -> s.length() == 3)
+        @value(STRING)
+    }
+}
+```
+
+The limitations of the map are, that you cannot have a map inside another map directly.
+
+## Pointers
+YAPIONPointer's are not supported by this AccessGeneratorProcessor **yet**.
 
 ## Defaults
 
@@ -316,3 +340,15 @@ You can define defaults for any internal objects by using the variable '@default
 
 ### Arrays/Array References
 Currently, unsupported.
+
+## Imports
+You can also import special Classes by using the variable '@imports'.
+```yapion
+{
+    @name(Config)
+    @imports[
+        '<your import>',
+        '<another import>',
+    ]
+}
+```
