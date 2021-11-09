@@ -16,6 +16,7 @@ package yapion.serializing.annotationproccessing;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.ToString;
+import lombok.experimental.ExtensionMethod;
 import yapion.annotations.api.ProcessorImplementation;
 import yapion.annotations.registration.YAPIONAccessGenerator;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -233,7 +234,17 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
 
             if (lombokExtensionMethod.get()) {
-                classGenerator.addAnnotation("@lombok.experimental.ExtensionMethod(yapion.serializing.annotationproccessing.ConstraintUtils.class)");
+                List<String> strings = new ArrayList<>();
+                strings.add("yapion.serializing.annotationproccessing.ConstraintUtils.class");
+                yapionObject.getArrayOrDefault("@extensions", new YAPIONArray()).forEach(yapionAnyType -> {
+                    String current = ((YAPIONValue<String>) yapionAnyType).get();
+                    if (current.endsWith(".class")) {
+                        strings.add(current);
+                    } else {
+                        strings.add(current + ".class");
+                    }
+                });
+                classGenerator.addAnnotation("@lombok.experimental.ExtensionMethod({" + String.join(", ", strings) + "})");
             }
             if (lombokToString.get()) {
                 classGenerator.addAnnotation(ToString.class);

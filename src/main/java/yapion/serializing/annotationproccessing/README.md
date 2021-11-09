@@ -342,13 +342,25 @@ You can define defaults for any internal objects by using the variable '@default
 Currently, unsupported.
 
 ## Imports
-You can also import special Classes by using the variable '@imports'.
+You can also import special Classes by using the variable `@imports`.
 ```yapion
 {
     @name(Config)
     @imports[
         '<your import>',
         '<another import>',
+    ]
+}
+```
+
+## ExtensionMethods
+You can define extension classes by using the `@extensions` variable. This can only be used if `lombokExtensionMethod` is set to `true`.
+```yapion
+{
+    @name(Config)
+    @extensions[
+        '<your extension>',
+        '<another extension>',
     ]
 }
 ```
