@@ -31,20 +31,20 @@ public class YAPIONCascadingTest {
     @Test(expected = YAPIONSerializerException.class)
     public void testNonSavedInNonCascading() {
         NonCascading nonCascading = new NonCascading(new NonSaved(null));
-        YAPIONSerializer.serialize(nonCascading, "empty");
+        YAPIONSerializer.serialize(nonCascading, YAPIONTestObjects.EmptyView.class);
     }
 
     @Test
     public void testNonCascadingInCascading() {
         Cascading cascading = new Cascading(new NonSaved(null));
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(cascading, "empty");
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(cascading, YAPIONTestObjects.EmptyView.class);
         assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$Cascading)cnc1{@type(yapion.serializing.YAPIONTestObjects$NonSaved)cnc1(null)cnc2(null)}cnc2(null)}"));
     }
 
     @Test
     public void testNotUpCascading() {
         NonCascading nonCascading = new NonCascading(new Cascading(null), new NonSaved(null));
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(nonCascading, "empty");
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(nonCascading, YAPIONTestObjects.EmptyView.class);
         assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$NonCascading)cnc1{@type(yapion.serializing.YAPIONTestObjects$Cascading)cnc1(null)cnc2(null)}}"));
     }
 
@@ -58,7 +58,7 @@ public class YAPIONCascadingTest {
     @Test
     public void testNonSavedInNonSavedInCascading() {
         Cascading cascading = new Cascading(new NonSaved(new NonSaved(null)));
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(cascading, "empty");
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(cascading, YAPIONTestObjects.EmptyView.class);
         assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$Cascading)cnc1{@type(yapion.serializing.YAPIONTestObjects$NonSaved)cnc1{@type(yapion.serializing.YAPIONTestObjects$NonSaved)cnc1(null)cnc2(null)}cnc2(null)}cnc2(null)}"));
     }
 

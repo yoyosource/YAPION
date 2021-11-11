@@ -19,6 +19,7 @@ import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.value.ValueUtils;
 import yapion.parser.YAPIONParser;
+import yapion.serializing.views.View;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -97,7 +98,10 @@ public class YAPIONSerializerTest {
 
     @Test(expected = NullPointerException.class)
     public void testNPECheckState() {
-        YAPIONSerializer.serialize(null, "some state");
+        YAPIONSerializer.serialize(null, SomeStateView.class);
+    }
+
+    public static class SomeStateView implements View {
     }
 
     @Test
@@ -131,18 +135,21 @@ public class YAPIONSerializerTest {
 
     @Test(expected = YAPIONSerializerException.class)
     public void testYAPIONMultiContextAnnotationWrongContext() {
-        YAPIONSerializer.serialize(new TestMultiContextAnnotation(), "Hugo");
+        YAPIONSerializer.serialize(new TestMultiContextAnnotation(), HugoView.class);
+    }
+
+    public static class HugoView implements View {
     }
 
     @Test
     public void testYAPIONMultiContextAnnotationCorrectContext() {
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestMultiContextAnnotation(), "Hello World");
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestMultiContextAnnotation(), HelloWorldView.class);
         assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestMultiContextAnnotation)}"));
     }
 
     @Test
     public void testYAPIONMultiContextAnnotationCorrectSecondContext() {
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestMultiContextAnnotation(), "Hello");
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new TestMultiContextAnnotation(), HelloView.class);
         assertThat(yapionObject, isYAPION("{@type(yapion.serializing.YAPIONTestObjects$TestMultiContextAnnotation)}"));
     }
 }

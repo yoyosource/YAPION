@@ -17,10 +17,11 @@ import org.junit.Test;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.views.View;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static yapion.annotation.AnnotationTestObjects.ObjenesisTest;
 import static yapion.YAPIONAssertion.isYAPION;
+import static yapion.annotation.AnnotationTestObjects.ObjenesisTest;
 
 public class AnnotationObjensisTest {
 
@@ -28,8 +29,10 @@ public class AnnotationObjensisTest {
     public void testObjenesis() {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(new ObjenesisTest());
         assertThat(yapionObject, isYAPION("{@type(yapion.annotation.AnnotationTestObjects$ObjenesisTest)s(objenesis)}"));
-        yapionObject = YAPIONSerializer.serialize(YAPIONDeserializer.deserialize(yapionObject, "noObjenesis"));
+        yapionObject = YAPIONSerializer.serialize(YAPIONDeserializer.deserialize(yapionObject, NoObjenesisView.class));
         assertThat(yapionObject, isYAPION("{@type(yapion.annotation.AnnotationTestObjects$ObjenesisTest)s(null)}"));
     }
 
+    public static class NoObjenesisView implements View {
+    }
 }

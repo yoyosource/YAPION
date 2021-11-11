@@ -35,7 +35,7 @@ public class AnnotationSuperClassTest {
     @Test
     public void testSuperClassCallOtherContext() {
         ClassC classC = new ClassC();
-        YAPIONSerializer.serialize(classC, "other");
+        YAPIONSerializer.serialize(classC, OtherView.class);
     }
 
 }

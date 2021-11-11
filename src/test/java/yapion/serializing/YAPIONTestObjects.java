@@ -206,11 +206,11 @@ public class YAPIONTestObjects {
     }
 
     // Class<? extends View>
-    @YAPIONSave(context = "empty")
-    @YAPIONLoad(context = "empty")
+    @YAPIONSave(context = EmptyView.class)
+    @YAPIONLoad(context = EmptyView.class)
     public static class NonCascading implements CNC {
 
-        @YAPIONField(context = "empty")
+        @YAPIONField(context = EmptyView.class)
         private final CNC cnc1;
 
         private CNC cnc2 = null;
@@ -320,11 +320,20 @@ public class YAPIONTestObjects {
         private final YAPIONArray yapionArray = new YAPIONArray().add("Test");
     }
 
-    @YAPIONSave(context = "Hello")
-    @YAPIONSave(context = "Hello World")
+    @YAPIONSave(context = HelloView.class)
+    @YAPIONSave(context = HelloWorldView.class)
     public static class TestMultiContextAnnotation {
 
         private final int i = 10;
+    }
+
+    public static class EmptyView implements View {
+    }
+
+    public static class HelloView implements View {
+    }
+
+    public static class HelloWorldView implements View {
     }
 
     static String getUserHome() {

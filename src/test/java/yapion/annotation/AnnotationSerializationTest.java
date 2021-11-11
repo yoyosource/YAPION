@@ -28,22 +28,22 @@ public class AnnotationSerializationTest {
 
     @Test(expected = YAPIONException.class)
     public void testPreException() {
-        YAPIONSerializer.serialize(new PreTest(), "exception");
+        YAPIONSerializer.serialize(new PreTest(), AnnotationTestObjects.ExceptionView.class);
     }
 
     @Test
     public void testPre() {
-        YAPIONSerializer.serialize(new PreTest(), "noException");
+        YAPIONSerializer.serialize(new PreTest(), AnnotationTestObjects.NoExceptionView.class);
     }
 
     @Test(expected = YAPIONException.class)
     public void testPostException() {
-        YAPIONSerializer.serialize(new PostTest(), "exception");
+        YAPIONSerializer.serialize(new PostTest(), AnnotationTestObjects.ExceptionView.class);
     }
 
     @Test
     public void testPost() {
-        YAPIONSerializer.serialize(new PostTest(), "noException");
+        YAPIONSerializer.serialize(new PostTest(), AnnotationTestObjects.NoExceptionView.class);
     }
 
     @Test

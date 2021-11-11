@@ -19,6 +19,7 @@ import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.value.ValueUtils;
 import yapion.parser.YAPIONParser;
+import yapion.serializing.views.View;
 
 import java.io.File;
 
@@ -91,7 +92,10 @@ public class YAPIONDeserializerTest {
 
     @Test(expected = NullPointerException.class)
     public void testNPECheckState() {
-        YAPIONDeserializer.deserialize(null, "some state");
+        YAPIONDeserializer.deserialize(null, SomeStateView.class);
+    }
+
+    private static class SomeStateView implements View {
     }
 
     @Test(expected = YAPIONDeserializerException.class)
@@ -114,7 +118,7 @@ public class YAPIONDeserializerTest {
     @Test
     public void testYAPIONAnyTypeSerialization() {
         YAPIONObject yapionObject = YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestYAPIONAnyType)yapionObject{Test(Test)}yapionMap<(Test):(Test)>yapionArray[Test]}");
-        TestYAPIONAnyType testYAPIONAnyType = (TestYAPIONAnyType) YAPIONDeserializer.deserialize(yapionObject);
+        TestYAPIONAnyType testYAPIONAnyType = YAPIONDeserializer.deserialize(yapionObject);
         assertThat(testYAPIONAnyType, is(new TestYAPIONAnyType()));
     }
 

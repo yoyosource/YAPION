@@ -18,20 +18,21 @@ import yapion.annotations.object.*;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.serializing.data.SerializationContext;
+import yapion.serializing.views.View;
 
 public class AnnotationTestObjects {
 
     @YAPIONData
     public static class PreTest {
 
-        @YAPIONPreDeserialization(context = {"exception"})
-        @YAPIONPreSerialization(context = {"exception"})
+        @YAPIONPreDeserialization(context = ExceptionView.class)
+        @YAPIONPreSerialization(context = ExceptionView.class)
         private void pre() {
             throw new UnsupportedOperationException();
         }
 
-        @YAPIONPreDeserialization(context = {"noException"})
-        @YAPIONPreSerialization(context = {"noException"})
+        @YAPIONPreDeserialization(context = NoExceptionView.class)
+        @YAPIONPreSerialization(context = NoExceptionView.class)
         private void preOther() {
 
         }
@@ -41,14 +42,14 @@ public class AnnotationTestObjects {
     @YAPIONData
     public static class PostTest {
 
-        @YAPIONPostDeserialization(context = {"exception"})
-        @YAPIONPostSerialization(context = {"exception"})
+        @YAPIONPostDeserialization(context = ExceptionView.class)
+        @YAPIONPostSerialization(context = ExceptionView.class)
         private void post() {
             throw new UnsupportedOperationException();
         }
 
-        @YAPIONPostDeserialization(context = "noException")
-        @YAPIONPostSerialization(context = {"noException"})
+        @YAPIONPostDeserialization(context = NoExceptionView.class)
+        @YAPIONPostSerialization(context = NoExceptionView.class)
         private void postOther() {
 
         }
@@ -73,24 +74,24 @@ public class AnnotationTestObjects {
     public static class ObjenesisTest {
 
         @YAPIONSave
-        @YAPIONLoad(context = {"objenesis"})
+        @YAPIONLoad(context = ObjenesisView.class)
         private final String s = "objenesis";
 
     }
 
-    @YAPIONData(context = "type")
-    @YAPIONSave(context = "fieldOther")
+    @YAPIONData(context = TypeView.class)
+    @YAPIONSave(context = FieldOtherView.class)
     public static class FieldTypeTest1 {
 
-        @YAPIONField(context = {"fieldOther"})
+        @YAPIONField(context = FieldOtherView.class)
         private final String s = "some-string";
 
     }
 
-    @YAPIONSave(context = "other")
+    @YAPIONSave(context = OtherView.class)
     public static class FieldTypeTest2 {
 
-        @YAPIONField(context = {"fieldOther"})
+        @YAPIONField(context = FieldOtherView.class)
         private final String s = "some-string";
 
     }
@@ -98,7 +99,7 @@ public class AnnotationTestObjects {
     @YAPIONData
     public static class ClassC extends ClassB {
 
-        @YAPIONPreSerialization(context = "Test")
+        @YAPIONPreSerialization(context = TestView.class)
         private void test() {
             // Ignored
         }
@@ -138,4 +139,24 @@ public class AnnotationTestObjects {
         }
     }
 
+    public static class ExceptionView implements View {
+    }
+
+    public static class NoExceptionView implements View {
+    }
+
+    public static class ObjenesisView implements View {
+    }
+
+    public static class TypeView implements View {
+    }
+
+    public static class FieldOtherView implements View {
+    }
+
+    public static class OtherView implements View {
+    }
+
+    public static class TestView implements View {
+    }
 }

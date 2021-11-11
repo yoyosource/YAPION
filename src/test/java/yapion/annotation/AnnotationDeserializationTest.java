@@ -25,22 +25,22 @@ public class AnnotationDeserializationTest {
 
     @Test(expected = YAPIONReflectionInvocationException.class)
     public void testPreException() {
-        YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PreTest()), "exception");
+        YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PreTest()), AnnotationTestObjects.ExceptionView.class);
     }
 
     @Test
     public void testPre() {
-        YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PreTest()), "noException");
+        YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PreTest()), AnnotationTestObjects.NoExceptionView.class);
     }
 
     @Test(expected = YAPIONReflectionInvocationException.class)
     public void testPostException() {
-        YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PostTest()), "exception");
+        YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PostTest()), AnnotationTestObjects.ExceptionView.class);
     }
 
     @Test
     public void testPost() {
-        YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PostTest()), "noException");
+        YAPIONDeserializer.deserialize(YAPIONSerializer.serialize(new PostTest()), AnnotationTestObjects.NoExceptionView.class);
     }
 
 }

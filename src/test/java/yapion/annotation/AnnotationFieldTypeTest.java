@@ -17,25 +17,31 @@ import org.junit.Test;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.views.View;
+
+import javax.swing.text.FieldView;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static yapion.YAPIONAssertion.isYAPION;
 import static yapion.annotation.AnnotationTestObjects.FieldTypeTest1;
 import static yapion.annotation.AnnotationTestObjects.FieldTypeTest2;
-import static yapion.YAPIONAssertion.isYAPION;
 
 public class AnnotationFieldTypeTest {
 
     @Test(expected = YAPIONSerializerException.class)
     public void testSerializeStateNotDefinedAsClassContext() {
         // No context with name "field" defined in @YAPIONData or @YAPIONSave
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new FieldTypeTest1(), "field");
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new FieldTypeTest1(), FieldView.class);
+    }
+
+    public static class FieldView implements View {
     }
 
     @Test
     public void testSerializeStateDefinedAsClassContextInSave() {
         // A context with name "fieldOther" defined in @YAPIONSave (but not in @YAPIONData, but this does not matter):
         // Field IS serialized
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new FieldTypeTest1(), "fieldOther");
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new FieldTypeTest1(), AnnotationTestObjects.FieldOtherView.class);
         assertThat(yapionObject, isYAPION("{@type(yapion.annotation.AnnotationTestObjects$FieldTypeTest1)s(some-string)}"));
     }
 
@@ -43,7 +49,7 @@ public class AnnotationFieldTypeTest {
     public void testSerializeStateDefinedAsClassContextInDataOverwriteFieldAnnotation() {
         // A context with name "type" defined in @YAPIONData (but not in @YAPIONSave, but this does not matter):
         // Field IS serialized
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new FieldTypeTest1(), "type");
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new FieldTypeTest1(), AnnotationTestObjects.TypeView.class);
         assertThat(yapionObject, isYAPION("{@type(yapion.annotation.AnnotationTestObjects$FieldTypeTest1)s(some-string)}"));
     }
 
@@ -51,7 +57,7 @@ public class AnnotationFieldTypeTest {
     public void testSerializeStateDefinedAsClassContextInSaveNotOverwritingFieldAnnotation() {
         // A context with name "other" defined in @YAPIONSave, but not in @YAPIONField:
         // Field is NOT serialized
-        YAPIONObject yapionObject = YAPIONSerializer.serialize(new FieldTypeTest2(), "other");
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new FieldTypeTest2(), AnnotationTestObjects.OtherView.class);
         assertThat(yapionObject, isYAPION("{@type(yapion.annotation.AnnotationTestObjects$FieldTypeTest2)}"));
     }
 
