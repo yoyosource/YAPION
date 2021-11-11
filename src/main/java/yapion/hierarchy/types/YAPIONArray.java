@@ -399,16 +399,6 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public int length() {
-        return array.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return array.isEmpty();
-    }
-
-    @Override
     public List<YAPIONAnyType> getAllValues() {
         return array;
     }

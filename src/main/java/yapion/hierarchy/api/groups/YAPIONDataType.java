@@ -25,15 +25,23 @@ import java.util.List;
 @InternalAPI
 public abstract class YAPIONDataType<I, K> extends YAPIONAnyType implements InternalAdd<I, K>, AdvancedOperations<I, K>, InternalRemove<I, K>, InternalRetrieve<K> {
 
-    private List<String> endingComments = new ArrayList<>();
+    private final List<String> endingComments = new ArrayList<>();
 
     public abstract int size();
 
     public abstract long deepSize();
 
-    public abstract int length();
+    public int length() {
+        return size();
+    }
 
-    public abstract boolean isEmpty();
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    public boolean isNotEmpty() {
+        return !isEmpty();
+    }
 
     public abstract List<YAPIONAnyType> getAllValues();
 

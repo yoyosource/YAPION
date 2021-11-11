@@ -328,16 +328,6 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
-    public int length() {
-        return variables.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return variables.isEmpty();
-    }
-
-    @Override
     public List<YAPIONAnyType> getAllValues() {
         return new ArrayList<>(variables.values());
     }
