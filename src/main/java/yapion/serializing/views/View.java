@@ -11,22 +11,10 @@
  * limitations under the License.
  */
 
-package yapion.serializing.annotationproccessing.serializingdata;
+package yapion.serializing.views;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import yapion.serializing.views.View;
-
-@Getter
-@Setter
-@ToString
-public class FieldData {
-    private String fieldName;
-    private String fieldType;
-    private int modifiers;
-
-    private Class<? extends View>[] optimize = null;
-    private Class<? extends View>[] saveExclude = null;
-    private Class<? extends View>[] loadExclude = null;
+/**
+ *
+ */
+public interface View {
 }

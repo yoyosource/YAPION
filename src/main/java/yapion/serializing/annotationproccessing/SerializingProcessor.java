@@ -23,6 +23,7 @@ import yapion.hierarchy.output.FileOutput;
 import yapion.serializing.YAPIONSerializer;
 import yapion.serializing.annotationproccessing.serializingdata.ClassData;
 import yapion.serializing.annotationproccessing.serializingdata.FieldData;
+import yapion.serializing.views.View;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
 public class SerializingProcessor extends AbstractProcessor {
 
     private Messager messager;
-    private Set<ClassData> classDatas = new HashSet<>();
+    private final Set<ClassData> classDatas = new HashSet<>();
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
@@ -116,34 +117,34 @@ public class SerializingProcessor extends AbstractProcessor {
                 classData.getFieldDataList().add(fieldData);
 
                 {
-                    List<String> contexts = new ArrayList<>();
+                    List<Class<? extends View>> contexts = new ArrayList<>();
                     YAPIONOptimize[] yapionOptimizes = variableElement.getAnnotationsByType(YAPIONOptimize.class);
                     if (yapionOptimizes.length != 0) {
                         for (YAPIONOptimize yapionOptimize : yapionOptimizes) {
                             contexts.addAll(Arrays.asList(yapionOptimize.context()));
                         }
-                        fieldData.setOptimize(contexts.toArray(new String[0]));
+                        fieldData.setOptimize(contexts.toArray(new Class[0]));
                     }
                 }
                 {
-                    List<String> contexts = new ArrayList<>();
+                    List<Class<? extends View>> contexts = new ArrayList<>();
                     YAPIONSaveExclude[] yapionSaveExcludes = variableElement.getAnnotationsByType(YAPIONSaveExclude.class);
                     if (yapionSaveExcludes.length != 0) {
                         for (YAPIONSaveExclude yapionSaveExclude : yapionSaveExcludes) {
                             contexts.addAll(Arrays.asList(yapionSaveExclude.context()));
                         }
-                        fieldData.setSaveExclude(contexts.toArray(new String[0]));
+                        fieldData.setSaveExclude(contexts.toArray(new Class[0]));
                     }
                     classData.setSerializerContextManager(true);
                 }
                 {
-                    List<String> contexts = new ArrayList<>();
+                    List<Class<? extends View>> contexts = new ArrayList<>();
                     YAPIONLoadExclude[] yapionLoadExcludes = variableElement.getAnnotationsByType(YAPIONLoadExclude.class);
                     if (yapionLoadExcludes.length != 0) {
                         for (YAPIONLoadExclude yapionLoadExclude : yapionLoadExcludes) {
                             contexts.addAll(Arrays.asList(yapionLoadExclude.context()));
                         }
-                        fieldData.setLoadExclude(contexts.toArray(new String[0]));
+                        fieldData.setLoadExclude(contexts.toArray(new Class[0]));
                     }
                     if (java.lang.reflect.Modifier.isFinal(modifier) && !contexts.isEmpty()) {
                         initNeeded.set(true);

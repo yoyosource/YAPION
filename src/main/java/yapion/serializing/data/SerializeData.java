@@ -24,6 +24,7 @@ import yapion.serializing.SerializeManager;
 import yapion.serializing.YAPIONFlag;
 import yapion.serializing.YAPIONFlags;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.views.View;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
@@ -33,7 +34,7 @@ import java.lang.reflect.Field;
 public class SerializeData<T> {
 
     public final T object;
-    public final String context;
+    public final Class<? extends View> context;
 
     @ToString.Exclude
     private final YAPIONSerializer yapionSerializer;

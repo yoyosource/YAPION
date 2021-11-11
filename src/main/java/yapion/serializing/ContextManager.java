@@ -18,10 +18,14 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONField;
+import yapion.annotations.object.YAPIONMutator;
 import yapion.annotations.serialize.YAPIONOptimize;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.annotations.serialize.YAPIONSaveExclude;
+import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.views.Mutator;
+import yapion.serializing.views.View;
 
 import java.lang.reflect.Field;
 
@@ -29,31 +33,48 @@ import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 public final class ContextManager {
 
-    private final String state;
+    private final Class<? extends View> state;
     private final boolean emptyState;
 
     private boolean globalLoad = false;
     private boolean globalSave = false;
     private YAPIONData[] yapionDatas = null;
 
-    public ContextManager(String state) {
-        if (state == null) state = "";
+    public ContextManager(Class<? extends View> state) {
+        if (state != null && (state.isInterface() || state.isEnum() || state.isAnnotation())) {
+            throw new YAPIONException("State should be a class");
+        }
+        emptyState = state == null;
         this.state = state;
-        this.emptyState = state.isEmpty();
     }
 
-    protected String get() {
+    protected Class<? extends View> get() {
         return state;
     }
 
     @InternalAPI
-    public boolean is(String... strings) {
+    public Class<? extends Mutator> getMutator(Class<?> clazz) {
+        YAPIONMutator[] yapionMutators = clazz.getAnnotationsByType(YAPIONMutator.class);
+        if (yapionMutators.length == 0) return null;
+        for (YAPIONMutator yapionMutator : yapionMutators) {
+            if (is(new Class[]{yapionMutator.value()})) {
+                return yapionMutator.value();
+            }
+        }
+        return null;
+    }
+
+    @InternalAPI
+    public boolean is(Class<? extends View>... states) {
         if (emptyState) return true;
-        if (strings.length == 0) return true;
-        for (String s : strings) {
-            if (s.equals("*")) return true;
-            if (s.isEmpty()) return true;
-            if (s.equals(state)) return true;
+        if (states.length == 0) return true;
+        for (Class<? extends View> state : states) {
+            if (state == null) {
+                return true;
+            }
+            if (state.isAssignableFrom(this.state)) {
+                return true;
+            }
         }
         return false;
     }

@@ -14,6 +14,7 @@
 package yapion.annotations.deserialize;
 
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.views.View;
 
 import java.lang.annotation.*;
 
@@ -30,7 +31,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.TYPE})
 @Repeatable(YAPIONLoadExclude.YAPIONLoadExcludes.class)
 public @interface YAPIONLoadExclude {
-    String[] context() default {};
+    Class<? extends View>[] context() default {};
 
     /**
      * This is just a container to make the outer class {@link Repeatable}.

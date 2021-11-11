@@ -25,6 +25,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 import yapion.serializing.data.DeserializationContext;
 import yapion.serializing.data.SerializationContext;
+import yapion.serializing.views.View;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -204,6 +205,7 @@ public class YAPIONTestObjects {
         }
     }
 
+    // Class<? extends View>
     @YAPIONSave(context = "empty")
     @YAPIONLoad(context = "empty")
     public static class NonCascading implements CNC {
@@ -313,16 +315,16 @@ public class YAPIONTestObjects {
     @EqualsAndHashCode
     public static class TestYAPIONAnyType {
 
-        private YAPIONObject yapionObject = new YAPIONObject().add("Test", "Test");
-        private YAPIONMap yapionMap = new YAPIONMap().add("Test", "Test");
-        private YAPIONArray yapionArray = new YAPIONArray().add("Test");
+        private final YAPIONObject yapionObject = new YAPIONObject().add("Test", "Test");
+        private final YAPIONMap yapionMap = new YAPIONMap().add("Test", "Test");
+        private final YAPIONArray yapionArray = new YAPIONArray().add("Test");
     }
 
     @YAPIONSave(context = "Hello")
     @YAPIONSave(context = "Hello World")
     public static class TestMultiContextAnnotation {
 
-        private int i = 10;
+        private final int i = 10;
     }
 
     static String getUserHome() {

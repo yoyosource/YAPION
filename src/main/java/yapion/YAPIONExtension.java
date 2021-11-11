@@ -26,6 +26,7 @@ import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONFlags;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.views.View;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +105,7 @@ public class YAPIONExtension {
         return YAPIONDeserializer.deserialize(serializingType);
     }
 
-    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, String context) {
+    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, Class<? extends View> context) {
         return YAPIONDeserializer.deserialize(serializingType, context);
     }
 
@@ -116,15 +117,15 @@ public class YAPIONExtension {
         return YAPIONDeserializer.deserialize(serializingType, yapionFlags);
     }
 
-    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, String context, TypeReMapper typeReMapper) {
+    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, Class<? extends View> context, TypeReMapper typeReMapper) {
         return YAPIONDeserializer.deserialize(serializingType, context, typeReMapper);
     }
 
-    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, String context, YAPIONFlags yapionFlags) {
+    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, Class<? extends View> context, YAPIONFlags yapionFlags) {
         return YAPIONDeserializer.deserialize(serializingType, context, yapionFlags);
     }
 
-    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, String context, TypeReMapper typeReMapper, YAPIONFlags yapionFlags) {
+    public static <K, T extends YAPIONDataType<?, ?> & SerializingType<T>> K deserialize(T serializingType, Class<? extends View> context, TypeReMapper typeReMapper, YAPIONFlags yapionFlags) {
         return YAPIONDeserializer.deserialize(serializingType, context, typeReMapper, yapionFlags);
     }
 

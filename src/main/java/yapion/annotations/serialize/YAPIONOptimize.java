@@ -14,6 +14,7 @@
 package yapion.annotations.serialize;
 
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.views.View;
 
 import java.lang.annotation.*;
 
@@ -30,7 +31,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Repeatable(YAPIONOptimize.YAPIONOptimizes.class)
 public @interface YAPIONOptimize {
-    String[] context() default {};
+    Class<? extends View>[] context() default {};
 
     /**
      * This is just a container to make the outer class {@link Repeatable}.

@@ -11,22 +11,15 @@
  * limitations under the License.
  */
 
-package yapion.serializing.annotationproccessing.serializingdata;
+package yapion.serializing.data;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
 import lombok.ToString;
-import yapion.serializing.views.View;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 
-@Getter
-@Setter
+@AllArgsConstructor
 @ToString
-public class FieldData {
-    private String fieldName;
-    private String fieldType;
-    private int modifiers;
-
-    private Class<? extends View>[] optimize = null;
-    private Class<? extends View>[] saveExclude = null;
-    private Class<? extends View>[] loadExclude = null;
+public class MutationContext {
+    public final String fieldName;
+    public final YAPIONAnyType value;
 }

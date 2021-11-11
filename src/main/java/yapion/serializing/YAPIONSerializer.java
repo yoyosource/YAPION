@@ -20,6 +20,7 @@ import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.types.*;
 import yapion.serializing.data.SerializationContext;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.views.View;
 import yapion.utils.ClassUtils;
 import yapion.utils.ReflectionsUtils;
 
@@ -45,7 +46,7 @@ public final class YAPIONSerializer {
      * @return YAPIONObject from the object to serialize
      */
     public static <T extends YAPIONAnyType> T serialize(@NonNull Object object) {
-        return serialize(object, "");
+        return serialize(object, (Class<? extends View>) null);
     }
 
     /**
@@ -56,7 +57,7 @@ public final class YAPIONSerializer {
      * @return YAPIONObject from the object to serialize
      */
     public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, YAPIONFlags yapionFlags) {
-        return serialize(object, "", yapionFlags);
+        return serialize(object, null, yapionFlags);
     }
 
     /**
@@ -66,7 +67,7 @@ public final class YAPIONSerializer {
      * @param context the context for serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, String context) {
+    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, Class<? extends View> context) {
         return new YAPIONSerializer(object, context).parse().getYAPIONObject();
     }
 
@@ -78,7 +79,7 @@ public final class YAPIONSerializer {
      * @param yapionFlags the flags used for this serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, String context, YAPIONFlags yapionFlags) {
+    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, Class<? extends View> context, YAPIONFlags yapionFlags) {
         return new YAPIONSerializer(object, context, yapionFlags).parse().getYAPIONObject();
     }
 
@@ -88,7 +89,7 @@ public final class YAPIONSerializer {
      * @param object to serialize
      */
     public YAPIONSerializer(@NonNull Object object) {
-        contextManager = new ContextManager("");
+        contextManager = new ContextManager(null);
         this.object = object;
     }
 
@@ -98,7 +99,7 @@ public final class YAPIONSerializer {
      * @param object to serialize
      * @param context the context for serialization
      */
-    public YAPIONSerializer(@NonNull Object object, String context) {
+    public YAPIONSerializer(@NonNull Object object, Class<? extends View> context) {
         contextManager = new ContextManager(context);
         this.object = object;
     }
@@ -110,7 +111,7 @@ public final class YAPIONSerializer {
      * @param context the context for serialization
      * @param yapionFlags the flags used for this serialization
      */
-    public YAPIONSerializer(@NonNull Object object, String context, YAPIONFlags yapionFlags) {
+    public YAPIONSerializer(@NonNull Object object, Class<? extends View> context, YAPIONFlags yapionFlags) {
         contextManager = new ContextManager(context);
         this.object = object;
         this.yapionFlags = yapionFlags;

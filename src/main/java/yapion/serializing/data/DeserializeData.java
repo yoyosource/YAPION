@@ -21,6 +21,7 @@ import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.serializing.*;
+import yapion.serializing.views.View;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
@@ -30,7 +31,7 @@ import java.lang.reflect.Field;
 public class DeserializeData<T extends YAPIONAnyType> {
 
     public final T object;
-    public final String context;
+    public final Class<? extends View> context;
 
     @ToString.Exclude
     private final YAPIONDeserializer yapionDeserializer;

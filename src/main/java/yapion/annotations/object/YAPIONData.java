@@ -17,6 +17,7 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.views.View;
 
 import java.lang.annotation.*;
 
@@ -35,7 +36,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Repeatable(YAPIONData.YAPIONDatas.class)
 public @interface YAPIONData {
-    String[] context() default {};
+    Class<? extends View>[] context() default {};
 
     /**
      * Cascade this annotation to instance properties / objects and their properties, too.

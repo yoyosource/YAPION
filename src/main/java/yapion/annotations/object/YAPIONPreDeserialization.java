@@ -15,6 +15,7 @@ package yapion.annotations.object;
 
 import org.objenesis.ObjenesisBase;
 import yapion.serializing.YAPIONDeserializer;
+import yapion.serializing.views.View;
 
 import java.lang.annotation.*;
 
@@ -39,7 +40,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Repeatable(YAPIONPreDeserialization.YAPIONPreDeserializations.class)
 public @interface YAPIONPreDeserialization {
-    String[] context() default {};
+    Class<? extends View>[] context() default {};
 
     /**
      * This is just a container to make the outer class {@link Repeatable}.

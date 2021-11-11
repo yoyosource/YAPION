@@ -17,6 +17,7 @@ import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.serialize.YAPIONSave;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.views.View;
 
 import java.lang.annotation.*;
 
@@ -33,7 +34,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Repeatable(YAPIONField.YAPIONFields.class)
 public @interface YAPIONField {
-    String[] context() default {};
+    Class<? extends View>[] context() default {};
 
     /**
      * This is just a container to make the outer class {@link Repeatable}.

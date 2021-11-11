@@ -16,6 +16,7 @@ package yapion.io;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.packet.YAPIONPacket;
 import yapion.serializing.TypeReMapper;
+import yapion.serializing.views.View;
 
 import java.io.*;
 import java.net.Socket;
@@ -90,8 +91,8 @@ public final class YAPIONSocket {
         yapionOutputStream.write(object);
     }
 
-    public void write(Object object, String state) {
-        yapionOutputStream.write(object, state);
+    public void write(Object object, Class<? extends View> view) {
+        yapionOutputStream.write(object, view);
     }
 
 }

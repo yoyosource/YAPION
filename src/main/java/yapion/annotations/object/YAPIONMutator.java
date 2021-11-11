@@ -11,34 +11,25 @@
  * limitations under the License.
  */
 
-package yapion.annotations.deserialize;
+package yapion.annotations.object;
 
-import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.views.Mutator;
 import yapion.serializing.views.View;
 
 import java.lang.annotation.*;
 
-/**
- * This annotation describes a Field or Type to be loaded in the process
- * of deserialization. Loading means that the Field or Type annotated by
- * this annotation will be written back into the java object. If this
- * annotation annotates a Type it is considered as a class description.
- *
- * <br><br>The context describes the state in which the {@link YAPIONSerializer}
- * should be in this annotation to take effect.
- */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.TYPE})
-@Repeatable(YAPIONLoad.YAPIONLoads.class)
-public @interface YAPIONLoad {
-    Class<? extends View>[] context() default {};
+@Target({ElementType.TYPE})
+@Repeatable(YAPIONMutator.YAPIONMutators.class)
+public @interface YAPIONMutator {
+    Class<? extends Mutator> value();
 
     /**
      * This is just a container to make the outer class {@link Repeatable}.
      */
     @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD, ElementType.TYPE})
-    @interface YAPIONLoads {
-        YAPIONLoad[] value() default {};
+    @Target({ElementType.TYPE})
+    @interface YAPIONMutators {
+        YAPIONMutator[] value() default {};
     }
 }

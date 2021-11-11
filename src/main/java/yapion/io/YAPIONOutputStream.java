@@ -18,6 +18,7 @@ import yapion.hierarchy.output.StreamOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.packet.YAPIONPacket;
 import yapion.serializing.YAPIONSerializer;
+import yapion.serializing.views.View;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -80,7 +81,7 @@ public class YAPIONOutputStream implements AutoCloseable {
      *
      * @throws YAPIONIOException if the outputStream was closed
      */
-    public void write(Object object, String state) {
+    public void write(Object object, Class<? extends View> state) {
         if (closed) throw new YAPIONIOException("Reading from a closed Stream");
         write(YAPIONSerializer.serialize(object, state));
     }

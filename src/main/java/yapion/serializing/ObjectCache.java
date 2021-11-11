@@ -20,6 +20,7 @@ import yapion.annotations.object.YAPIONPreDeserialization;
 import yapion.annotations.object.YAPIONPreSerialization;
 import yapion.serializing.data.DeserializationContext;
 import yapion.serializing.data.SerializationContext;
+import yapion.serializing.views.View;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Method;
@@ -32,11 +33,11 @@ final class ObjectCache {
 
     final Class<?> superClass;
 
-    private final Map<String, Method> preSerializationCache = new HashMap<>();
-    private final Map<String, Method> postSerializationCache = new HashMap<>();
+    private final Map<Class<? extends View>, Method> preSerializationCache = new HashMap<>();
+    private final Map<Class<? extends View>, Method> postSerializationCache = new HashMap<>();
 
-    private final Map<String, Method> preDeserializationCache = new HashMap<>();
-    private final Map<String, Method> postDeserializationCache = new HashMap<>();
+    private final Map<Class<? extends View>, Method> preDeserializationCache = new HashMap<>();
+    private final Map<Class<? extends View>, Method> postDeserializationCache = new HashMap<>();
 
     ObjectCache(Class<?> clazz) {
         superClass = clazz.getSuperclass();
@@ -74,16 +75,16 @@ final class ObjectCache {
         }
     }
 
-    private void cache(Map<String, Method> cache, String[] context, Method method, Predicate<Class<?>[]> checkParameters) {
+    private void cache(Map<Class<? extends View>, Method> cache, Class<? extends View>[] context, Method method, Predicate<Class<?>[]> checkParameters) {
         if (method.getParameterCount() != 0 && !checkParameters.test(method.getParameterTypes())) {
             log.error("The method {} has an illegal signature", method);
             return;
         }
-        for (String s : context) {
-            cache.put(s, method);
+        for (Class<? extends View> current : context) {
+            cache.put(current, method);
         }
         if (context.length == 0) {
-            cache.put("", method);
+            cache.put(null, method);
         }
     }
 
@@ -96,25 +97,25 @@ final class ObjectCache {
     }
 
     void preSerialization(Object object, ContextManager contextManager, SerializationContext serializationContext) {
-        String state = contextManager.get();
+        Class<? extends View> state = contextManager.get();
         if (!preSerializationCache.containsKey(state)) return;
         ReflectionsUtils.invokeMethodObjectSystem(preSerializationCache.get(state), object, serializationContext);
     }
 
     void postSerialization(Object object, ContextManager contextManager, SerializationContext serializationContext) {
-        String state = contextManager.get();
+        Class<? extends View> state = contextManager.get();
         if (!postSerializationCache.containsKey(state)) return;
         ReflectionsUtils.invokeMethodObjectSystem(postSerializationCache.get(state), object, serializationContext);
     }
 
     void preDeserialization(Object object, ContextManager contextManager, DeserializationContext deserializationContext) {
-        String state = contextManager.get();
+        Class<? extends View> state = contextManager.get();
         if (!preDeserializationCache.containsKey(state)) return;
         ReflectionsUtils.invokeMethodObjectSystem(preDeserializationCache.get(state), object, deserializationContext);
     }
 
     void postDeserialization(Object object, ContextManager contextManager, DeserializationContext deserializationContext) {
-        String state = contextManager.get();
+        Class<? extends View> state = contextManager.get();
         if (!postDeserializationCache.containsKey(state)) return;
         ReflectionsUtils.invokeMethodObjectSystem(postDeserializationCache.get(state), object, deserializationContext);
     }
