@@ -34,7 +34,7 @@ public class AnnotationTestObjects {
         @YAPIONPreDeserialization(context = NoExceptionView.class)
         @YAPIONPreSerialization(context = NoExceptionView.class)
         private void preOther() {
-
+            // Ignored
         }
 
     }
@@ -51,7 +51,7 @@ public class AnnotationTestObjects {
         @YAPIONPostDeserialization(context = NoExceptionView.class)
         @YAPIONPostSerialization(context = NoExceptionView.class)
         private void postOther() {
-
+            // Ignored
         }
 
     }

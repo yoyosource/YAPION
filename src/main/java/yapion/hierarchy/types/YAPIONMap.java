@@ -26,7 +26,6 @@ import yapion.hierarchy.api.storage.MapRemove;
 import yapion.hierarchy.api.storage.MapRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
-import yapion.parser.YAPIONParserMapValue;
 import yapion.utils.RecursionUtils;
 import yapion.utils.ReferenceFunction;
 
@@ -39,7 +38,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
 
     private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
 
-    private final List<YAPIONParserMapValue> yapionParserMapValues = new ArrayList<>();
+    private final List<YAPIONAnyType> yapionParserMapValues = new ArrayList<>();
 
     @Override
     public YAPIONType getType() {
@@ -334,9 +333,9 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
 
     // Internal method for Parser
     @InternalAPI
-    public void add(@NonNull YAPIONParserMapValue variable) {
+    public void unsafeAdd(@NonNull YAPIONAnyType variable) {
         yapionParserMapValues.add(variable);
-        variable.value.setParent(this);
+        variable.setParent(this);
     }
 
     // Internal method for Parser
@@ -348,11 +347,11 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         discardReferenceValue();
 
         while (yapionParserMapValues.size() > 1) {
-            YAPIONParserMapValue yapionParserMapValue1 = yapionParserMapValues.remove(0);
-            YAPIONParserMapValue yapionParserMapValue2 = yapionParserMapValues.remove(0);
-            check(yapionParserMapValue1.value);
-            check(yapionParserMapValue2.value);
-            variables.put(yapionParserMapValue1.value, yapionParserMapValue2.value);
+            YAPIONAnyType yapionParserMapValue1 = yapionParserMapValues.remove(0);
+            YAPIONAnyType yapionParserMapValue2 = yapionParserMapValues.remove(0);
+            check(yapionParserMapValue1);
+            check(yapionParserMapValue2);
+            variables.put(yapionParserMapValue1, yapionParserMapValue2);
         }
         if (!yapionParserMapValues.isEmpty()) {
             throw new YAPIONException("YAPIONMap was not fully qualified");

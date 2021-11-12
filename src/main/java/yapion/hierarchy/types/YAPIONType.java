@@ -16,7 +16,6 @@ package yapion.hierarchy.types;
 import lombok.Getter;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.parser.YAPIONParserMapValue;
 
 @Getter
 public enum YAPIONType {
@@ -34,7 +33,7 @@ public enum YAPIONType {
         yapionAnyType2.setParent(yapionAnyType);
     }),
     MAP(0x29548df23a131510L, "MAP", (yapionAnyType, s, yapionAnyType2) -> {
-        ((YAPIONMap) yapionAnyType).add(new YAPIONParserMapValue(yapionAnyType2));
+        ((YAPIONMap) yapionAnyType).unsafeAdd(yapionAnyType2);
     }),
     POINTER(0x4e958af3539fb57cL, "PNR", (yapionAnyType, s, yapionAnyType2) -> {
         throw new YAPIONParserException("POINTER is no YAPIONType to call add on");
