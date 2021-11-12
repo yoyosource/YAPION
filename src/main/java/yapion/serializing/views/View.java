@@ -14,7 +14,8 @@
 package yapion.serializing.views;
 
 /**
- *
+ * With a {@link View} object you can define what the serialization or deserialization can see.
+ * You need to implement this interface for your own custom views.
  */
 public interface View {
 }

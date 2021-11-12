@@ -14,10 +14,14 @@
 package yapion.annotations.object;
 
 import yapion.serializing.views.Mutator;
-import yapion.serializing.views.View;
 
 import java.lang.annotation.*;
 
+/**
+ * This annotation is used to add a specific {@link Mutator} to a class.
+ * When a specific {@link yapion.serializing.views.View} is used while deserializing and the view itself
+ * is also a {@link Mutator} that has this annotation standing on the class file the mutation will take place.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 @Repeatable(YAPIONMutator.YAPIONMutators.class)
