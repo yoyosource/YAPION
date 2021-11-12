@@ -34,7 +34,7 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return ValueHandlerUtils.allValueHandlers();
     }
 
-    private final T value;
+    private T value;
     private final ValueHandler<T> valueHandler;
     private final String type;
 
@@ -162,6 +162,22 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     public T get() {
         return value;
+    }
+
+    public YAPIONValue<T> set(T value) {
+        if (validType(value)) {
+            if (value == null) {
+                this.value = null;
+            } else {
+                if (!value.getClass().getTypeName().equals(type)) {
+                    throw new IllegalArgumentException("Invalid type: " + value.getClass().getTypeName());
+                }
+                this.value = value;
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid type: " + value.getClass().getTypeName());
+        }
+        return this;
     }
 
     public String getValueType() {

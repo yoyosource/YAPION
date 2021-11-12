@@ -16,6 +16,7 @@ package yapion.serializing;
 import yapion.annotations.api.InternalAPI;
 import yapion.annotations.deserialize.YAPIONLoad;
 import yapion.annotations.deserialize.YAPIONLoadExclude;
+import yapion.annotations.object.YAPIONClass;
 import yapion.annotations.object.YAPIONData;
 import yapion.annotations.object.YAPIONField;
 import yapion.annotations.object.YAPIONMutator;
@@ -146,6 +147,17 @@ public final class ContextManager {
     }
 
     @InternalAPI
+    public boolean is(YAPIONClass[] annotations) {
+        if (annotations.length == 0) return false;
+        for (YAPIONClass annotation : annotations) {
+            if (is(annotation.context())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @InternalAPI
     public boolean is(YAPIONField[] annotations) {
         if (annotations.length == 0) return false;
         for (YAPIONField annotation : annotations) {
@@ -186,6 +198,11 @@ public final class ContextManager {
         globalLoad = is(clazz.getDeclaredAnnotationsByType(YAPIONLoad.class));
         if (is(clazz.getDeclaredAnnotationsByType(YAPIONSaveExclude.class))) globalSave = false;
         globalSave = is(clazz.getDeclaredAnnotationsByType(YAPIONSave.class));
+
+        if (is(clazz.getDeclaredAnnotationsByType(YAPIONClass.class))) {
+            globalLoad = true;
+            globalSave = true;
+        }
 
         if (yapionDatas == null || yapionDatas.length == 0) {
             yapionDatas = clazz.getDeclaredAnnotationsByType(YAPIONData.class);

@@ -17,9 +17,43 @@ import lombok.AllArgsConstructor;
 import lombok.ToString;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 @AllArgsConstructor
 @ToString
 public class MutationContext {
     public final String fieldName;
     public final YAPIONAnyType value;
+
+    public MutationContext ignore() {
+        return new MutationContext(null, null);
+    }
+
+    public MutationContext withFieldName(String fieldName) {
+        return new MutationContext(fieldName, value);
+    }
+
+    public MutationContext withValue(YAPIONAnyType value) {
+        return new MutationContext(fieldName, value);
+    }
+
+    public <T extends YAPIONAnyType> MutationContext valueMutator(Class<T> clazz, Consumer<T> valueMutator) {
+        return valueMutator(clazz, t -> {
+            valueMutator.accept(t);
+            return t;
+        });
+    }
+
+    public <T extends YAPIONAnyType> MutationContext valueMutator(Class<T> clazz, Function<T, YAPIONAnyType> valueMutator) {
+        if (value == null) return this;
+        if (clazz.isInstance(value)) {
+            YAPIONAnyType yapionAnyType = valueMutator.apply(clazz.cast(value));
+            if (yapionAnyType == value) {
+                return this;
+            }
+            return withValue(yapionAnyType);
+        }
+        return this;
+    }
 }
