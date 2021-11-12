@@ -301,6 +301,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         }
 
         public void setHidden() {
+            // Ignored
         }
     }
 
