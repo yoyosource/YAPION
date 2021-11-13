@@ -254,6 +254,14 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
     }
 
     @Override
+    public YAPIONObject internalClear() {
+        discardReferenceValue();
+        variables.forEach((s, yapionAnyType) -> yapionAnyType.removeParent());
+        variables.clear();
+        return this;
+    }
+
+    @Override
     public YAPIONObject itself() {
         return this;
     }

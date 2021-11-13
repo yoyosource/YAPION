@@ -292,6 +292,17 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
+    public YAPIONMap internalClear() {
+        discardReferenceValue();
+        variables.forEach((key, value) -> {
+            key.removeParent();
+            value.removeParent();
+        });
+        variables.clear();
+        return this;
+    }
+
+    @Override
     public YAPIONMap itself() {
         return this;
     }

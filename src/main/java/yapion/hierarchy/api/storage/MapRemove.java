@@ -41,4 +41,8 @@ public interface MapRemove<I, K> extends InternalRemove<I, K> {
         }
         return internalRemoveAndGet((K) new YAPIONValue<>(key));
     }
+
+    default I clear() {
+        return internalClear();
+    }
 }

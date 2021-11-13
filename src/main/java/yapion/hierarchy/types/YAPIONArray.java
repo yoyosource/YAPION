@@ -323,6 +323,14 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
+    public YAPIONArray internalClear() {
+        discardReferenceValue();
+        array.forEach(YAPIONAnyType::removeParent);
+        array.clear();
+        return this;
+    }
+
+    @Override
     public <T> int indexOf(T element) {
         if (YAPIONValue.validType(element)) {
             return indexOf(new YAPIONValue<>(element));

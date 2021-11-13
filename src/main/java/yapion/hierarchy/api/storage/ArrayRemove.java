@@ -26,4 +26,8 @@ public interface ArrayRemove<I, K> extends InternalRemove<I, K> {
     default YAPIONAnyType removeAndGet(@NonNull K key) {
         return internalRemoveAndGet(key);
     }
+
+    default I clear() {
+        return internalClear();
+    }
 }
