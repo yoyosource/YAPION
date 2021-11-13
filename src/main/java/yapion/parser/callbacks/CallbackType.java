@@ -13,8 +13,10 @@
 
 package yapion.parser.callbacks;
 
+import lombok.Getter;
 import yapion.hierarchy.types.*;
 
+@Getter
 public class CallbackType<T> {
     public static final CallbackType<YAPIONObject> OBJECT = new CallbackType<>(YAPIONObject.class);
     public static final CallbackType<YAPIONArray> ARRAY = new CallbackType<>(YAPIONArray.class);
