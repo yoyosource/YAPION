@@ -17,6 +17,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import yapion.parser.CommentParsing;
 import yapion.parser.InputStreamCharsets;
+import yapion.parser.callbacks.CallbackType;
+import yapion.parser.callbacks.ParseCallback;
 
 @Getter
 public class StreamOptions extends ParseOptions {
@@ -44,6 +46,20 @@ public class StreamOptions extends ParseOptions {
     @Override
     public StreamOptions lazy(boolean lazy) {
         super.lazy(lazy);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param type
+     * @param callback
+     * @param <T>
+     * @return itself
+     */
+    @Override
+    public <T> StreamOptions parseCallback(CallbackType<T> type, ParseCallback<T> callback) {
+        super.parseCallback(type, callback);
         return this;
     }
 

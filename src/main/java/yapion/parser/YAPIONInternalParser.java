@@ -20,6 +20,9 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.types.*;
 import yapion.hierarchy.types.value.ValueHandler;
+import yapion.parser.callbacks.CallbackResult;
+import yapion.parser.callbacks.CallbackType;
+import yapion.parser.callbacks.ParseCallback;
 import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 
@@ -72,6 +75,8 @@ final class YAPIONInternalParser {
 
     // lazy parsing
     boolean lazy = false;
+
+    Map<CallbackType<?>, ParseCallback<?>> parseCallbackMap = new HashMap<>();
 
     void setReferenceFunction(ReferenceFunction referenceFunction) {
         this.referenceFunction = referenceFunction;
@@ -337,6 +342,20 @@ final class YAPIONInternalParser {
 
     private void parseEndObject() {
         pop(YAPIONType.OBJECT);
+        ParseCallback<YAPIONObject> callback = (ParseCallback<YAPIONObject>) parseCallbackMap.get(CallbackType.OBJECT);
+        if (callback != null) {
+            CallbackResult callbackResult = callback.onParse(key, (YAPIONObject) currentObject);
+            if (callbackResult == CallbackResult.IGNORE) {
+                YAPIONAnyType tempParent = currentObject.getParent();
+                if (tempParent != null) {
+                    ((YAPIONDataType) tempParent).removeIf(yapionAnyType -> yapionAnyType == currentObject);
+                }
+                currentObject = tempParent;
+                reset();
+                finished = typeStack.isEmpty();
+                return;
+            }
+        }
         reset();
         currentObject = currentObject.getParent();
         finished = typeStack.isEmpty();
@@ -399,7 +418,16 @@ final class YAPIONInternalParser {
         if (mightValue == MightValue.FALSE && !escaped && c == ')' && valueIndex == 0) {
             log.debug("ValueHandler to use -> {}", valueHandlerList);
             pop(YAPIONType.VALUE);
-            add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
+            YAPIONValue yapionValue = YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList);
+            ParseCallback<YAPIONValue> callback = (ParseCallback<YAPIONValue>) parseCallbackMap.get(CallbackType.VALUE);
+            if (callback != null) {
+                CallbackResult callbackResult = callback.onParse(key, yapionValue);
+                if (callbackResult == CallbackResult.IGNORE) {
+                    reset();
+                    return;
+                }
+            }
+            add(key, yapionValue);
             reset();
             return;
         }
@@ -503,6 +531,14 @@ final class YAPIONInternalParser {
         if (current.length() == 16) {
             pop(YAPIONType.POINTER);
             YAPIONPointer yapionPointer = new YAPIONPointer(stringBuilderToUTF8String(current));
+            ParseCallback<YAPIONPointer> callback = (ParseCallback<YAPIONPointer>) parseCallbackMap.get(CallbackType.POINTER);
+            if (callback != null) {
+                CallbackResult callbackResult = callback.onParse(key, yapionPointer);
+                if (callbackResult == CallbackResult.IGNORE) {
+                    reset();
+                    return;
+                }
+            }
             yapionPointerList.add(yapionPointer);
             add(key, yapionPointer);
             reset();
@@ -517,6 +553,17 @@ final class YAPIONInternalParser {
 
     private void parseEndMap() {
         pop(YAPIONType.MAP);
+        ParseCallback<YAPIONMap> callback = (ParseCallback<YAPIONMap>) parseCallbackMap.get(CallbackType.MAP);
+        if (callback != null) {
+            CallbackResult callbackResult = callback.onParse(key, (YAPIONMap) currentObject);
+            if (callbackResult == CallbackResult.IGNORE) {
+                YAPIONAnyType tempParent = currentObject.getParent();
+                ((YAPIONDataType) tempParent).removeIf(yapionAnyType -> yapionAnyType == currentObject);
+                currentObject = tempParent;
+                reset();
+                return;
+            }
+        }
         ((YAPIONMap) currentObject).finishMapping();
         currentObject = currentObject.getParent();
         reset();
@@ -551,6 +598,17 @@ final class YAPIONInternalParser {
 
     private void parseEndArray() {
         pop(YAPIONType.ARRAY);
+        ParseCallback<YAPIONArray> callback = (ParseCallback<YAPIONArray>) parseCallbackMap.get(CallbackType.ARRAY);
+        if (callback != null) {
+            CallbackResult callbackResult = callback.onParse(key, (YAPIONArray) currentObject);
+            if (callbackResult == CallbackResult.IGNORE) {
+                YAPIONAnyType tempParent = currentObject.getParent();
+                ((YAPIONDataType) tempParent).removeIf(yapionAnyType -> yapionAnyType == currentObject);
+                currentObject = tempParent;
+                reset();
+                return;
+            }
+        }
         currentObject = currentObject.getParent();
         reset();
     }
@@ -560,11 +618,19 @@ final class YAPIONInternalParser {
             if (current.length() > 0) {
                 current.deleteCharAt(current.length() - 1);
             }
+            pop(YAPIONType.COMMENT);
             if (comments.isAdd()) {
+                ParseCallback<String> callback = (ParseCallback<String>) parseCallbackMap.get(CallbackType.COMMENT);
+                if (callback != null) {
+                    CallbackResult callbackResult = callback.onParse(null, current.toString());
+                    if (callbackResult == CallbackResult.IGNORE) {
+                        reset();
+                        return;
+                    }
+                }
                 currentComments.add(current.toString());
                 log.debug("COMMENT: {}", current);
             }
-            pop(YAPIONType.COMMENT);
             reset();
             return;
         }

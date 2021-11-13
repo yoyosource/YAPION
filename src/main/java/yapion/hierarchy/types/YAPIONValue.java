@@ -17,6 +17,7 @@ import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.types.value.NullHandler;
 import yapion.hierarchy.types.value.ValueHandler;
 import yapion.hierarchy.types.value.ValueHandlerUtils;
 import yapion.hierarchy.types.value.ValueUtils;
@@ -165,17 +166,21 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     public YAPIONValue<T> set(T value) {
-        if (validType(value)) {
-            if (value == null) {
+        if (!validType(value)) {
+            throw new IllegalArgumentException("Invalid type: " + value.getClass().getTypeName());
+        }
+
+        if (value == null) {
+            if (valueHandler.getClass() == NullHandler.class) {
                 this.value = null;
             } else {
-                if (!value.getClass().getTypeName().equals(type)) {
-                    throw new IllegalArgumentException("Invalid type: " + value.getClass().getTypeName());
-                }
-                this.value = value;
+                throw new IllegalArgumentException("Invalid type: null");
             }
         } else {
-            throw new IllegalArgumentException("Invalid type: " + value.getClass().getTypeName());
+            if (!value.getClass().getTypeName().equals(type)) {
+                throw new IllegalArgumentException("Invalid type: " + value.getClass().getTypeName());
+            }
+            this.value = value;
         }
         return this;
     }

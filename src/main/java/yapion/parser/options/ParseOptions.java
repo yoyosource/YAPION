@@ -16,11 +16,17 @@ package yapion.parser.options;
 import lombok.Getter;
 import lombok.NonNull;
 import yapion.parser.CommentParsing;
+import yapion.parser.callbacks.CallbackType;
+import yapion.parser.callbacks.ParseCallback;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public class ParseOptions {
     private @NonNull CommentParsing commentParsing = CommentParsing.IGNORE;
     private boolean lazy = false;
+    private Map<CallbackType<?>, ParseCallback<?>> parseCallbackMap = new HashMap<>();
 
     /**
      * Set how comments should be treated by the parser.
@@ -46,6 +52,18 @@ public class ParseOptions {
      */
     public ParseOptions lazy(boolean lazy) {
         this.lazy = lazy;
+        return this;
+    }
+
+    /**
+     *
+     * @param type
+     * @param callback
+     * @param <T>
+     * @return itself
+     */
+    public <T> ParseOptions parseCallback(CallbackType<T> type, ParseCallback<T> callback) {
+        parseCallbackMap.put(type, callback);
         return this;
     }
 }
