@@ -15,5 +15,7 @@ package yapion.parser.callbacks;
 
 public enum CallbackResult {
     KEEP,
-    IGNORE
+    IGNORE,
+    STOP,
+    IGNORE_AND_STOP
 }

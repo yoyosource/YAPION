@@ -45,6 +45,10 @@ public class TypeStack {
         return stack.getFirst();
     }
 
+    public void clear() {
+        stack.clear();
+    }
+
     private boolean empty() {
         return stack.isEmpty();
     }

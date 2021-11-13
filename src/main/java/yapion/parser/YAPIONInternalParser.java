@@ -345,14 +345,21 @@ final class YAPIONInternalParser {
         ParseCallback<YAPIONObject> callback = (ParseCallback<YAPIONObject>) parseCallbackMap.get(CallbackType.OBJECT);
         if (callback != null) {
             CallbackResult callbackResult = callback.onParse(key, (YAPIONObject) currentObject);
-            if (callbackResult == CallbackResult.IGNORE) {
+            if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                typeStack.clear();
+                finished = true;
+            }
+            if (callbackResult == CallbackResult.IGNORE || callbackResult == CallbackResult.IGNORE_AND_STOP) {
                 YAPIONAnyType tempParent = currentObject.getParent();
                 if (tempParent != null) {
                     ((YAPIONDataType) tempParent).removeIf(yapionAnyType -> yapionAnyType == currentObject);
                 }
                 currentObject = tempParent;
                 reset();
-                finished = typeStack.isEmpty();
+                return;
+            }
+            if (callbackResult == CallbackResult.STOP) {
+                reset();
                 return;
             }
         }
@@ -422,7 +429,18 @@ final class YAPIONInternalParser {
             ParseCallback<YAPIONValue> callback = (ParseCallback<YAPIONValue>) parseCallbackMap.get(CallbackType.VALUE);
             if (callback != null) {
                 CallbackResult callbackResult = callback.onParse(key, yapionValue);
-                if (callbackResult == CallbackResult.IGNORE) {
+                if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                    typeStack.clear();
+                    finished = true;
+                }
+                if (callbackResult == CallbackResult.IGNORE || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                    YAPIONAnyType tempParent = currentObject.getParent();
+                    ((YAPIONDataType) tempParent).removeIf(yapionAnyType -> yapionAnyType == currentObject);
+                    currentObject = tempParent;
+                    reset();
+                    return;
+                }
+                if (callbackResult == CallbackResult.STOP) {
                     reset();
                     return;
                 }
@@ -534,7 +552,18 @@ final class YAPIONInternalParser {
             ParseCallback<YAPIONPointer> callback = (ParseCallback<YAPIONPointer>) parseCallbackMap.get(CallbackType.POINTER);
             if (callback != null) {
                 CallbackResult callbackResult = callback.onParse(key, yapionPointer);
-                if (callbackResult == CallbackResult.IGNORE) {
+                if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                    typeStack.clear();
+                    finished = true;
+                }
+                if (callbackResult == CallbackResult.IGNORE || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                    YAPIONAnyType tempParent = currentObject.getParent();
+                    ((YAPIONDataType) tempParent).removeIf(yapionAnyType -> yapionAnyType == currentObject);
+                    currentObject = tempParent;
+                    reset();
+                    return;
+                }
+                if (callbackResult == CallbackResult.STOP) {
                     reset();
                     return;
                 }
@@ -556,10 +585,18 @@ final class YAPIONInternalParser {
         ParseCallback<YAPIONMap> callback = (ParseCallback<YAPIONMap>) parseCallbackMap.get(CallbackType.MAP);
         if (callback != null) {
             CallbackResult callbackResult = callback.onParse(key, (YAPIONMap) currentObject);
-            if (callbackResult == CallbackResult.IGNORE) {
+            if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                typeStack.clear();
+                finished = true;
+            }
+            if (callbackResult == CallbackResult.IGNORE || callbackResult == CallbackResult.IGNORE_AND_STOP) {
                 YAPIONAnyType tempParent = currentObject.getParent();
                 ((YAPIONDataType) tempParent).removeIf(yapionAnyType -> yapionAnyType == currentObject);
                 currentObject = tempParent;
+                reset();
+                return;
+            }
+            if (callbackResult == CallbackResult.STOP) {
                 reset();
                 return;
             }
@@ -601,10 +638,18 @@ final class YAPIONInternalParser {
         ParseCallback<YAPIONArray> callback = (ParseCallback<YAPIONArray>) parseCallbackMap.get(CallbackType.ARRAY);
         if (callback != null) {
             CallbackResult callbackResult = callback.onParse(key, (YAPIONArray) currentObject);
-            if (callbackResult == CallbackResult.IGNORE) {
+            if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                typeStack.clear();
+                finished = true;
+            }
+            if (callbackResult == CallbackResult.IGNORE || callbackResult == CallbackResult.IGNORE_AND_STOP) {
                 YAPIONAnyType tempParent = currentObject.getParent();
                 ((YAPIONDataType) tempParent).removeIf(yapionAnyType -> yapionAnyType == currentObject);
                 currentObject = tempParent;
+                reset();
+                return;
+            }
+            if (callbackResult == CallbackResult.STOP) {
                 reset();
                 return;
             }
@@ -623,8 +668,14 @@ final class YAPIONInternalParser {
                 ParseCallback<String> callback = (ParseCallback<String>) parseCallbackMap.get(CallbackType.COMMENT);
                 if (callback != null) {
                     CallbackResult callbackResult = callback.onParse(null, current.toString());
-                    if (callbackResult == CallbackResult.IGNORE) {
+                    if (callbackResult == CallbackResult.IGNORE || callbackResult == CallbackResult.IGNORE_AND_STOP) {
                         reset();
+                        return;
+                    }
+                    if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                        typeStack.clear();
+                        reset();
+                        finished = true;
                         return;
                     }
                 }
