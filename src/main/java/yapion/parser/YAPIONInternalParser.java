@@ -434,9 +434,7 @@ final class YAPIONInternalParser {
                     finished = true;
                 }
                 if (callbackResult == CallbackResult.IGNORE || callbackResult == CallbackResult.IGNORE_AND_STOP) {
-                    YAPIONAnyType tempParent = currentObject.getParent();
-                    ((YAPIONDataType) tempParent).removeIf(yapionAnyType -> yapionAnyType == currentObject);
-                    currentObject = tempParent;
+                    currentObject = currentObject.getParent();
                     reset();
                     return;
                 }
@@ -678,9 +676,6 @@ final class YAPIONInternalParser {
                         finished = true;
                     }
                     if (callbackResult == CallbackResult.IGNORE || callbackResult == CallbackResult.IGNORE_AND_STOP) {
-                        YAPIONAnyType tempParent = currentObject.getParent();
-                        ((YAPIONDataType) tempParent).removeIf(yapionAnyType -> yapionAnyType == currentObject);
-                        currentObject = tempParent;
                         reset();
                         return;
                     }
