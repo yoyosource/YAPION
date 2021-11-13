@@ -441,6 +441,7 @@ final class YAPIONInternalParser {
                     return;
                 }
                 if (callbackResult == CallbackResult.STOP) {
+                    add(key, yapionValue);
                     reset();
                     return;
                 }
@@ -564,6 +565,8 @@ final class YAPIONInternalParser {
                     return;
                 }
                 if (callbackResult == CallbackResult.STOP) {
+                    yapionPointerList.add(yapionPointer);
+                    add(key, yapionPointer);
                     reset();
                     return;
                 }
@@ -597,6 +600,8 @@ final class YAPIONInternalParser {
                 return;
             }
             if (callbackResult == CallbackResult.STOP) {
+                ((YAPIONMap) currentObject).finishMapping();
+                currentObject = currentObject.getParent();
                 reset();
                 return;
             }
@@ -668,14 +673,21 @@ final class YAPIONInternalParser {
                 ParseCallback<String> callback = (ParseCallback<String>) parseCallbackMap.get(CallbackType.COMMENT);
                 if (callback != null) {
                     CallbackResult callbackResult = callback.onParse(null, current.toString());
+                    if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                        typeStack.clear();
+                        finished = true;
+                    }
                     if (callbackResult == CallbackResult.IGNORE || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                        YAPIONAnyType tempParent = currentObject.getParent();
+                        ((YAPIONDataType) tempParent).removeIf(yapionAnyType -> yapionAnyType == currentObject);
+                        currentObject = tempParent;
                         reset();
                         return;
                     }
-                    if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
-                        typeStack.clear();
+                    if (callbackResult == CallbackResult.STOP) {
+                        currentComments.add(current.toString());
+                        log.debug("COMMENT: {}", current);
                         reset();
-                        finished = true;
                         return;
                     }
                 }
