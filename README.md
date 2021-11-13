@@ -189,7 +189,8 @@ Example for an YAPION map with Integer to String mapping
 Example for an YAPION map with Object to Object mapping
 <{}:{}>
 ```
-## Pointer
+
+### Pointer
 These pointers point to another YAPION Object in the same serialization. For reconstructing the recursion this pointer points to the object it is referring to.
 A pointer is not a hash and is not intended to be secure. If 2 objects in your tree have the same pointer it will point to the first by default.
 All pointers shown in here are valid pointers but are mostly meaningless because a pointer gets constructed by your current object state.
@@ -197,6 +198,15 @@ The list of chars for pointers is as follows: '0123456789ABCDEF'
 ```
 Example for an YAPION pointer
 {hello->7FFFFFE53E6CBDFE}
+```
+
+### Comments
+Comments are only supported by enabling them on the YAPIONParser.
+```
+{
+    /* This is a Comment */
+    name(yoyosource)
+}
 ```
 
 # Code examples
