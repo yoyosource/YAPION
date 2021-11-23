@@ -531,6 +531,7 @@ public final class YAPIONParser {
         };
         yapionInternalParser.comments = parseOptions.getCommentParsing();
         yapionInternalParser.lazy = parseOptions.isLazy();
+        yapionInternalParser.forceOnlyJSON = parseOptions.isForceOnlyJSON();
         yapionInternalParser.parseCallbackMap = parseOptions.getParseCallbackMap();
     }
 
@@ -570,6 +571,7 @@ public final class YAPIONParser {
         }
         yapionInternalParser.comments = streamOptions.getCommentParsing();
         yapionInternalParser.lazy = streamOptions.isLazy();
+        yapionInternalParser.forceOnlyJSON = streamOptions.isForceOnlyJSON();
         yapionInternalParser.parseCallbackMap = streamOptions.getParseCallbackMap();
     }
 

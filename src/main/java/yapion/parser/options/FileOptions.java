@@ -51,6 +51,17 @@ public class FileOptions extends StreamOptions {
     /**
      * {@inheritDoc}
      *
+     * @param forceOnlyJSON
+     * @return itself
+     */
+    public FileOptions forceOnlyJSON(boolean forceOnlyJSON) {
+        super.forceOnlyJSON(forceOnlyJSON);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @param type
      * @param callback
      * @param <T>

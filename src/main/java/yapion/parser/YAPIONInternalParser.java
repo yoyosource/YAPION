@@ -76,6 +76,9 @@ final class YAPIONInternalParser {
     // lazy parsing
     boolean lazy = false;
 
+    // json parsing
+    boolean forceOnlyJSON = false;
+
     Map<CallbackType<?>, ParseCallback<?>> parseCallbackMap = new HashMap<>();
 
     void setReferenceFunction(ReferenceFunction referenceFunction) {
@@ -271,12 +274,12 @@ final class YAPIONInternalParser {
             key = "";
             return true;
         }
-        if (c == '(') {
+        if (c == '(' && !forceOnlyJSON) {
             log.debug("type     [VALUE]");
             push(YAPIONType.VALUE);
             return true;
         }
-        if (lastChar == '-' && c == '>') {
+        if (lastChar == '-' && c == '>' && !forceOnlyJSON) {
             log.debug("type     [POINTER]");
             if (typeStack.peek() != YAPIONType.MAP) {
                 current.deleteCharAt(current.length() - 1);
@@ -284,7 +287,7 @@ final class YAPIONInternalParser {
             push(YAPIONType.POINTER);
             return true;
         }
-        if (lastChar == '/' && c == '*' && current.length() <= 1) {
+        if (lastChar == '/' && c == '*' && current.length() <= 1 && !forceOnlyJSON) {
             if (comments.isParse()) {
                 log.debug("type    [COMMENT]");
                 push(YAPIONType.COMMENT);
@@ -294,7 +297,7 @@ final class YAPIONInternalParser {
                 log.info("Enabling comment support could benefit the parsing?");
             }
         }
-        if (c == '<') {
+        if (c == '<' && !forceOnlyJSON) {
             log.debug("type     [MAP]");
             push(YAPIONType.MAP);
             YAPIONMap yapionMap = new YAPIONMap();

@@ -26,6 +26,7 @@ import java.util.Map;
 public class ParseOptions {
     private @NonNull CommentParsing commentParsing = CommentParsing.IGNORE;
     private boolean lazy = false;
+    private boolean forceOnlyJSON = false;
     private Map<CallbackType<?>, ParseCallback<?>> parseCallbackMap = new HashMap<>();
 
     /**
@@ -52,6 +53,16 @@ public class ParseOptions {
      */
     public ParseOptions lazy(boolean lazy) {
         this.lazy = lazy;
+        return this;
+    }
+
+    /**
+     *
+     * @param forceOnlyJSON
+     * @return itself
+     */
+    public ParseOptions forceOnlyJSON(boolean forceOnlyJSON) {
+        this.forceOnlyJSON = forceOnlyJSON;
         return this;
     }
 

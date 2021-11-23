@@ -52,6 +52,17 @@ public class StreamOptions extends ParseOptions {
     /**
      * {@inheritDoc}
      *
+     * @param forceOnlyJSON
+     * @return itself
+     */
+    public StreamOptions forceOnlyJSON(boolean forceOnlyJSON) {
+        super.forceOnlyJSON(forceOnlyJSON);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @param type
      * @param callback
      * @param <T>
