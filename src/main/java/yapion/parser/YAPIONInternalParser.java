@@ -235,7 +235,7 @@ final class YAPIONInternalParser {
         if (escaped) {
             return false;
         }
-        if (mightValue != MightValue.FALSE && !forceOnlyYAPION) {
+        if (!forceOnlyYAPION && mightValue != MightValue.FALSE) {
             if (c == ' ') {
                 return true;
             }
@@ -275,12 +275,12 @@ final class YAPIONInternalParser {
             key = "";
             return true;
         }
-        if (c == '(' && !forceOnlyJSON) {
+        if (!forceOnlyJSON && c == '(') {
             log.debug("type     [VALUE]");
             push(YAPIONType.VALUE);
             return true;
         }
-        if (lastChar == '-' && c == '>' && !forceOnlyJSON) {
+        if (!forceOnlyJSON && lastChar == '-' && c == '>') {
             log.debug("type     [POINTER]");
             if (typeStack.peek() != YAPIONType.MAP) {
                 current.deleteCharAt(current.length() - 1);
@@ -288,7 +288,7 @@ final class YAPIONInternalParser {
             push(YAPIONType.POINTER);
             return true;
         }
-        if (lastChar == '/' && c == '*' && current.length() <= 1 && !forceOnlyJSON) {
+        if (!forceOnlyJSON && lastChar == '/' && c == '*' && current.length() <= 1) {
             if (comments.isParse()) {
                 log.debug("type    [COMMENT]");
                 push(YAPIONType.COMMENT);
@@ -298,7 +298,7 @@ final class YAPIONInternalParser {
                 log.info("Enabling comment support could benefit the parsing?");
             }
         }
-        if (c == '<' && !forceOnlyJSON) {
+        if (!forceOnlyJSON && c == '<') {
             log.debug("type     [MAP]");
             push(YAPIONType.MAP);
             YAPIONMap yapionMap = new YAPIONMap();
@@ -308,7 +308,7 @@ final class YAPIONInternalParser {
             key = "";
             return true;
         }
-        if (c == ':' && typeStack.peek() == YAPIONType.OBJECT && current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"' && !forceOnlyYAPION) {
+        if (!forceOnlyYAPION && c == ':' && typeStack.peek() == YAPIONType.OBJECT && current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"') {
             log.debug("type     [JSON ?]");
             mightValue = MightValue.MIGHT;
             return false;
