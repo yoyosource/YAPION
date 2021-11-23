@@ -63,6 +63,17 @@ public class StreamOptions extends ParseOptions {
     /**
      * {@inheritDoc}
      *
+     * @param forceOnlyYAPION
+     * @return itself
+     */
+    public StreamOptions forceOnlyYAPION(boolean forceOnlyYAPION) {
+        super.forceOnlyYAPION(forceOnlyYAPION);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @param type
      * @param callback
      * @param <T>

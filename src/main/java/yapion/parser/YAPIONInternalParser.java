@@ -76,8 +76,9 @@ final class YAPIONInternalParser {
     // lazy parsing
     boolean lazy = false;
 
-    // json parsing
+    // json/yapion parsing
     boolean forceOnlyJSON = false;
+    boolean forceOnlyYAPION = false;
 
     Map<CallbackType<?>, ParseCallback<?>> parseCallbackMap = new HashMap<>();
 
@@ -234,7 +235,7 @@ final class YAPIONInternalParser {
         if (escaped) {
             return false;
         }
-        if (mightValue != MightValue.FALSE) {
+        if (mightValue != MightValue.FALSE && !forceOnlyYAPION) {
             if (c == ' ') {
                 return true;
             }
@@ -307,7 +308,7 @@ final class YAPIONInternalParser {
             key = "";
             return true;
         }
-        if (c == ':' && typeStack.peek() == YAPIONType.OBJECT && current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"') {
+        if (c == ':' && typeStack.peek() == YAPIONType.OBJECT && current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"' && !forceOnlyYAPION) {
             log.debug("type     [JSON ?]");
             mightValue = MightValue.MIGHT;
             return false;
@@ -482,6 +483,9 @@ final class YAPIONInternalParser {
     }
 
     private boolean tryParseValueJSONEnd(char c, char lastChar) {
+        if (forceOnlyYAPION) {
+            return false;
+        }
         log.debug("TryParse '{}' '{}'", c, lastChar);
         StringBuilder now = new StringBuilder(current);
         shortenJSON(now);

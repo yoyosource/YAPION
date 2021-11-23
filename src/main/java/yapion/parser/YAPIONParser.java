@@ -472,9 +472,7 @@ public final class YAPIONParser {
                 return index < available;
             }
         };
-        yapionInternalParser.comments = parseOptions.getCommentParsing();
-        yapionInternalParser.lazy = parseOptions.isLazy();
-        yapionInternalParser.parseCallbackMap = parseOptions.getParseCallbackMap();
+        setupInternalParser(parseOptions);
     }
 
     /**
@@ -494,9 +492,7 @@ public final class YAPIONParser {
      */
     public YAPIONParser(@NonNull byte[] bytes, StreamOptions streamOptions) {
         charReader = new InputStreamCharReader(new ByteArrayInputStream(bytes), streamOptions.isStopOnStreamEnd(), streamOptions.getCharset());
-        yapionInternalParser.comments = streamOptions.getCommentParsing();
-        yapionInternalParser.lazy = streamOptions.isLazy();
-        yapionInternalParser.parseCallbackMap = streamOptions.getParseCallbackMap();
+        setupInternalParser(streamOptions);
     }
 
     /**
@@ -529,10 +525,7 @@ public final class YAPIONParser {
                 return index < available;
             }
         };
-        yapionInternalParser.comments = parseOptions.getCommentParsing();
-        yapionInternalParser.lazy = parseOptions.isLazy();
-        yapionInternalParser.forceOnlyJSON = parseOptions.isForceOnlyJSON();
-        yapionInternalParser.parseCallbackMap = parseOptions.getParseCallbackMap();
+        setupInternalParser(parseOptions);
     }
 
     /**
@@ -569,10 +562,23 @@ public final class YAPIONParser {
                 }
             };
         }
-        yapionInternalParser.comments = streamOptions.getCommentParsing();
-        yapionInternalParser.lazy = streamOptions.isLazy();
-        yapionInternalParser.forceOnlyJSON = streamOptions.isForceOnlyJSON();
-        yapionInternalParser.parseCallbackMap = streamOptions.getParseCallbackMap();
+        setupInternalParser(streamOptions);
+    }
+
+    private void setupInternalParser(ParseOptions parseOptions) {
+        if (parseOptions.isForceOnlyJSON()) {
+            if (parseOptions.isForceOnlyYAPION()) {
+                throw new YAPIONException("Can't force YAPION and JSON at the same time");
+            }
+            if (parseOptions.getCommentParsing() != CommentParsing.IGNORE) {
+                throw new YAPIONException("Can't force JSON with comments at the same time");
+            }
+        }
+        yapionInternalParser.comments = parseOptions.getCommentParsing();
+        yapionInternalParser.lazy = parseOptions.isLazy();
+        yapionInternalParser.forceOnlyJSON = parseOptions.isForceOnlyJSON();
+        yapionInternalParser.forceOnlyYAPION = parseOptions.isForceOnlyYAPION();
+        yapionInternalParser.parseCallbackMap = parseOptions.getParseCallbackMap();
     }
 
     public YAPIONParser setReferenceFunction(@NonNull ReferenceFunction referenceFunction) {

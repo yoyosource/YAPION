@@ -62,6 +62,17 @@ public class FileOptions extends StreamOptions {
     /**
      * {@inheritDoc}
      *
+     * @param forceOnlyYAPION
+     * @return itself
+     */
+    public FileOptions forceOnlyYAPION(boolean forceOnlyYAPION) {
+        super.forceOnlyYAPION(forceOnlyYAPION);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @param type
      * @param callback
      * @param <T>

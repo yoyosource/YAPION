@@ -27,6 +27,7 @@ public class ParseOptions {
     private @NonNull CommentParsing commentParsing = CommentParsing.IGNORE;
     private boolean lazy = false;
     private boolean forceOnlyJSON = false;
+    private boolean forceOnlyYAPION = false;
     private Map<CallbackType<?>, ParseCallback<?>> parseCallbackMap = new HashMap<>();
 
     /**
@@ -63,6 +64,16 @@ public class ParseOptions {
      */
     public ParseOptions forceOnlyJSON(boolean forceOnlyJSON) {
         this.forceOnlyJSON = forceOnlyJSON;
+        return this;
+    }
+
+    /**
+     *
+     * @param forceOnlyYAPION
+     * @return itself
+     */
+    public ParseOptions forceOnlyYAPION(boolean forceOnlyYAPION) {
+        this.forceOnlyYAPION = forceOnlyYAPION;
         return this;
     }
 
