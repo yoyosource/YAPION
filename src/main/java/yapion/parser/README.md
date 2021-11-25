@@ -35,6 +35,19 @@ This is parsed to with implicit YAPIONObject surrounding it:
 }
 ```
 
+Inside a YAPIONObject the key can also be omitted for one key-value-pair. It will then be represented as an empty string.
+```
+{test{}{}}
+```
+This can also be written in prettified form like:
+```
+{
+  test{}
+  {}
+}
+```
+
+
 Just be aware that unbalanced brackets will result in an exception.
 This will throw an exception:
 ```
@@ -192,7 +205,134 @@ And with commas:
 ```
 
 ## YAPIONMap
+A YAPIONMap is a key-value-store that can any type of key and any type of value. The start and end is denoted by pointy ('<>') brackets.
+
+Empty YAPIONMap:
+```
+<>
+```
+This is parsed to with implicit YAPIONObject surrounding it:
+```
+{<>}
+```
+This can also be written in prettified form like:
+```
+{
+  <>
+}
+```
+
+Keys and values are separated by a colon.
+```
+<key:value>
+```
+
+A Key can be any YAPION type.
+```
+<(key):(value)>
+```
+In this example both the key and value are YAPIONValues.
+This is parsed to with implicit YAPIONObject surrounding it:
+```
+{<(key):(value)>}
+```
+This can also be written in prettified form like:
+```
+{
+  <
+    (key):(value)
+  >
+}
+```
+
+For more lazy writters the colon can be omitted.
+```
+<(key)(value)>
+```
+This is parsed to with implicit YAPIONObject surrounding it:
+```
+{<(key):(value)>}
+```
+This can also be written in prettified form like:
+```
+{
+  <
+    (key):(value)
+  >
+}
+```
 
 ## YAPIONPointer
+A YAPIONPointer is a reference to a YAPION type and starts with '->' and is followed by a 16 digit hex number without any prefix.
+
+Example:
+```
+->1234567890ABCDEF
+```
+This is parsed to with implicit YAPIONObject surrounding it:
+```
+{->1234567890ABCDEF}
+```
+This can also be written in prettified form like:
+```
+{
+  ->1234567890ABCDEF
+}
+```
 
 ## Comments
+Comments are started with '/\*' and end with '\*/'. They can be on their own line or on the same line as the YAPION type. They can be in between the key from a YAPIONObject or at the start of any Object or end.
+
+Empty Comment:
+```
+/**/
+```
+This is parsed to with implicit YAPIONObject surrounding it:
+```
+{/**/}
+```
+This can also be written in prettified form like:
+```
+{
+  /**/
+}
+```
+
+A Comment saying 'Hello World':
+```
+/* Hello World */
+```
+This is parsed to with implicit YAPIONObject surrounding it:
+```
+{/* Hello World */}
+```
+This can also be written in prettified form like:
+```
+{
+  /* Hello World */
+}
+```
+
+You can write anything inside a comment as long as it is not '*/'. No special unicode parsing or escaping is done.
+```
+/*
+  Hello World
+  Test
+*/
+```
+This is parsed to with implicit YAPIONObject surrounding it:
+```
+{/*
+  Hello World
+  Test
+*/}
+```
+This can also be written in prettified form like:
+```
+{
+  /*
+    Hello World
+    Test
+  */
+}
+```
