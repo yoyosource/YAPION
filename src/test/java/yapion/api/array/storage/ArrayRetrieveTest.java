@@ -64,7 +64,7 @@ public class ArrayRetrieveTest {
         YAPIONArray yapionArray = new YAPIONArray();
         YAPIONObject yapionAnyTypes = new YAPIONObject();
         yapionArray.add(yapionAnyTypes);
-        assertThat(yapionArray.getYAPIONAnyType(0), is(yapionAnyTypes));
+        assertThat(yapionArray.getAnyType(0), is(yapionAnyTypes));
     }
 
     @Test

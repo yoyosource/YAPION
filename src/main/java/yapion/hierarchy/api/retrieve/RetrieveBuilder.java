@@ -57,42 +57,42 @@ public class RetrieveBuilder<K> {
 
     public RetrieveBuilder<K> object(K key) {
         suppliers.add(kObjectRetrieve -> {
-            return (YAPIONObject) kObjectRetrieve.internalGetYAPIONAnyType(key);
+            return (YAPIONObject) kObjectRetrieve.internalGetAnyType(key);
         });
         return this;
     }
 
     public RetrieveBuilder<K> map(K key) {
         suppliers.add(kObjectRetrieve -> {
-            return (YAPIONMap) kObjectRetrieve.internalGetYAPIONAnyType(key);
+            return (YAPIONMap) kObjectRetrieve.internalGetAnyType(key);
         });
         return this;
     }
 
     public RetrieveBuilder<K> array(K key) {
         suppliers.add(kObjectRetrieve -> {
-            return (YAPIONArray) kObjectRetrieve.internalGetYAPIONAnyType(key);
+            return (YAPIONArray) kObjectRetrieve.internalGetAnyType(key);
         });
         return this;
     }
 
     public RetrieveBuilder<K> pointer(K key) {
         suppliers.add(kObjectRetrieve -> {
-            return (YAPIONPointer) kObjectRetrieve.internalGetYAPIONAnyType(key);
+            return (YAPIONPointer) kObjectRetrieve.internalGetAnyType(key);
         });
         return this;
     }
 
     public RetrieveBuilder<K> value(K key) {
         suppliers.add(kObjectRetrieve -> {
-            return (YAPIONValue) kObjectRetrieve.internalGetYAPIONAnyType(key);
+            return (YAPIONValue) kObjectRetrieve.internalGetAnyType(key);
         });
         return this;
     }
 
     public <T> RetrieveBuilder<K> value(K key, Class<T> clazz) {
         suppliers.add(kObjectRetrieve -> {
-            return (YAPIONValue<T>) kObjectRetrieve.internalGetYAPIONAnyType(key);
+            return (YAPIONValue<T>) kObjectRetrieve.internalGetAnyType(key);
         });
         return this;
     }

@@ -54,7 +54,7 @@ public class SerializingUtils {
 
     public static <T extends Collection<Object>> T deserializeCollection(DeserializeData<?> deserializeData, YAPIONArray yapionArray, T collection) {
         for (int i = 0; i < yapionArray.length(); i++) {
-            collection.add(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
+            collection.add(deserializeData.deserialize(yapionArray.getAnyType(i)));
         }
         return collection;
     }

@@ -62,7 +62,7 @@ public class YAPIONAssertion {
 
     @SuppressWarnings({"unchecked"})
     public static <T extends YAPIONAnyType> Matcher<T> isYAPION(String value) {
-        return Is.is((T) YAPIONParser.parse("{" + value + "}").getYAPIONAnyType(""));
+        return Is.is((T) YAPIONParser.parse("{" + value + "}").getAnyType(""));
     }
 
     public static <T extends YAPIONAnyType> Matcher<T> isYAPION(T yapionAnyType) {

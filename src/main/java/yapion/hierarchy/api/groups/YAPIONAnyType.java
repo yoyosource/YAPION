@@ -80,7 +80,9 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     }
 
     public YAPIONAnyType internalCopy() {
-        return YAPIONParser.parse("{" + toYAPION(new StringOutput()).getResult() + "}").getYAPIONAnyType("");
+        YAPIONAnyType yapionAnyType = YAPIONParser.parse("{" + toYAPION(new StringOutput()).getResult() + "}").getAnyType("");
+        yapionAnyType.removeParent();
+        return yapionAnyType;
     }
 
     // Depth System / Pretty YAPION String

@@ -429,19 +429,19 @@ public class YAPIONParserTest {
     @Test
     public void testArrayStringWithPointer() {
         YAPIONObject yapionObject = YAPIONParser.parse("{[a->b,b->c]}");
-        assertThat(yapionObject.getArray("").getYAPIONAnyType(0), instanceOf(YAPIONValue.class));
-        assertThat(yapionObject.getArray("").getYAPIONAnyType(1), instanceOf(YAPIONValue.class));
+        assertThat(yapionObject.getArray("").getAnyType(0), instanceOf(YAPIONValue.class));
+        assertThat(yapionObject.getArray("").getAnyType(1), instanceOf(YAPIONValue.class));
         assertThat(yapionObject, isYAPION("{[a->b,b->c]}"));
     }
 
     @Test
     public void testArrayWithAnyType() {
         YAPIONObject yapionObject = YAPIONParser.parse("{[{},[],(),->0000000000000000,<>]}");
-        assertThat(yapionObject.getArray("").getYAPIONAnyType(0), instanceOf(YAPIONObject.class));
-        assertThat(yapionObject.getArray("").getYAPIONAnyType(1), instanceOf(YAPIONArray.class));
-        assertThat(yapionObject.getArray("").getYAPIONAnyType(2), instanceOf(YAPIONValue.class));
-        assertThat(yapionObject.getArray("").getYAPIONAnyType(3), instanceOf(YAPIONPointer.class));
-        assertThat(yapionObject.getArray("").getYAPIONAnyType(4), instanceOf(YAPIONMap.class));
+        assertThat(yapionObject.getArray("").getAnyType(0), instanceOf(YAPIONObject.class));
+        assertThat(yapionObject.getArray("").getAnyType(1), instanceOf(YAPIONArray.class));
+        assertThat(yapionObject.getArray("").getAnyType(2), instanceOf(YAPIONValue.class));
+        assertThat(yapionObject.getArray("").getAnyType(3), instanceOf(YAPIONPointer.class));
+        assertThat(yapionObject.getArray("").getAnyType(4), instanceOf(YAPIONMap.class));
         assertThat(yapionObject, isYAPION("{[{},[],(),->0000000000000000,<>]}"));
     }
 
@@ -484,15 +484,15 @@ public class YAPIONParserTest {
     @Test
     public void testArrayStringWithoutSeparator() {
         YAPIONObject yapionObject = YAPIONParser.parse("{[{}{}HelloWorld,->0000000000000000]}");
-        assertThat(yapionObject.getArray("").getYAPIONAnyType(2), instanceOf(YAPIONValue.class));
-        assertThat(yapionObject.getArray("").getYAPIONAnyType(3), instanceOf(YAPIONPointer.class));
+        assertThat(yapionObject.getArray("").getAnyType(2), instanceOf(YAPIONValue.class));
+        assertThat(yapionObject.getArray("").getAnyType(3), instanceOf(YAPIONPointer.class));
         assertThat(yapionObject.toString(), is("{[{},{},HelloWorld,->0000000000000000]}"));
     }
 
     @Test
     public void testArrayStringPointerStartInValue() {
         YAPIONObject yapionObject = YAPIONParser.parse("{[\\->0000000000000000]}");
-        assertThat(yapionObject.getArray("").getYAPIONAnyType(0), instanceOf(YAPIONValue.class));
+        assertThat(yapionObject.getArray("").getAnyType(0), instanceOf(YAPIONValue.class));
         assertThat(yapionObject.toString(), is("{[\\->0000000000000000]}"));
     }
 
@@ -507,7 +507,7 @@ public class YAPIONParserTest {
     @Test
     public void testArrayStringWhitespaceInValue() {
         YAPIONObject yapionObject = YAPIONParser.parse("{[ Hugo Hello World]}");
-        assertThat(yapionObject.getArray("").getYAPIONAnyType(0), instanceOf(YAPIONValue.class));
+        assertThat(yapionObject.getArray("").getAnyType(0), instanceOf(YAPIONValue.class));
         assertThat(yapionObject.getArray("").getValue(0).get(), instanceOf(String.class));
         assertThat(yapionObject.getArray("").getValue(0).get(), is("Hugo Hello World"));
     }

@@ -163,7 +163,7 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
         for (int i = 0; i < path.length - 1; i++) {
             String s = path[i];
             if (current instanceof YAPIONDataType yapionDataType) {
-                current = yapionDataType.internalGetYAPIONAnyType(s);
+                current = yapionDataType.internalGetAnyType(s);
             } else {
                 throw new YAPIONException("Resolution of the path '" + Arrays.toString(path) + "' failed as current value is not of type YAPIONDataType");
             }

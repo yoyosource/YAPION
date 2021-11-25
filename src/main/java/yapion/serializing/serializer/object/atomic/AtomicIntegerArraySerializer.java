@@ -51,7 +51,7 @@ public class AtomicIntegerArraySerializer implements FinalInternalSerializer<Ato
         YAPIONArray yapionArray = yapionObject.getArray("values");
         int[] ints = new int[length];
         for (int i = 0; i < length; i++) {
-            ints[i] = deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
+            ints[i] = deserializeData.deserialize(yapionArray.getAnyType(i));
         }
         return new AtomicIntegerArray(ints);
     }

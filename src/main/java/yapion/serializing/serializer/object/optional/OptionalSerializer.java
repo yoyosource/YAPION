@@ -43,7 +43,7 @@ public class OptionalSerializer implements FinalInternalSerializer<Optional<?>> 
     public Optional<?> deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         if (yapionObject.getValue("present", true).get()) {
-            return Optional.ofNullable(deserializeData.deserialize(yapionObject.getYAPIONAnyType("value")));
+            return Optional.ofNullable(deserializeData.deserialize(yapionObject.getAnyType("value")));
         }
         return Optional.empty();
     }

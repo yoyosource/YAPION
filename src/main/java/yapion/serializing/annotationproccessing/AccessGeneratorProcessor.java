@@ -16,7 +16,6 @@ package yapion.serializing.annotationproccessing;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.ToString;
-import lombok.experimental.ExtensionMethod;
 import yapion.annotations.api.ProcessorImplementation;
 import yapion.annotations.registration.YAPIONAccessGenerator;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
@@ -692,7 +691,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         public MapContainer(String name, YAPIONObject yapionObject) {
             super(name);
             keyConstraints = yapionObject.getPlainValueOrDefault("@keys", "ignored -> true");
-            checkElement("", yapionObject.getYAPIONAnyType("@value"), containerElement -> {
+            checkElement("", yapionObject.getAnyType("@value"), containerElement -> {
                 MapContainer.this.containerElement = containerElement;
             });
             if (containerElement instanceof MapContainer) {

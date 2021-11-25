@@ -42,11 +42,11 @@ public class DeserializeData<T extends YAPIONAnyType> {
     }
 
     public boolean deserialize(String fieldName, Object object) {
-        return deserialize(fieldName, object, ((YAPIONObject) this.object).internalGetYAPIONAnyType(fieldName));
+        return deserialize(fieldName, object, ((YAPIONObject) this.object).internalGetAnyType(fieldName));
     }
 
     public boolean deserialize(Object object, Field field) {
-        return setField(field, object, deserialize(((YAPIONObject) object).getYAPIONAnyType(field.getName())));
+        return setField(field, object, deserialize(((YAPIONObject) object).getAnyType(field.getName())));
     }
 
     public boolean deserialize(String fieldName, Object object, YAPIONAnyType yapionAnyType) {
@@ -55,7 +55,7 @@ public class DeserializeData<T extends YAPIONAnyType> {
     }
 
     public <T> T deserialize(String name) {
-        return (T) yapionDeserializer.parse(((YAPIONObject) object).getYAPIONAnyType(name));
+        return (T) yapionDeserializer.parse(((YAPIONObject) object).getAnyType(name));
     }
 
     @SuppressWarnings("unchecked")

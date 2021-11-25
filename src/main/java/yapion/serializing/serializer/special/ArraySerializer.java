@@ -57,7 +57,7 @@ public class ArraySerializer implements FinalInternalSerializer<Object> {
 
         Object object = Array.newInstance(ClassUtils.getClass(s), deepSize(yapionArray));
         for (int i = 0; i < yapionArray.length(); i++) {
-            Array.set(object, i, deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
+            Array.set(object, i, deserializeData.deserialize(yapionArray.getAnyType(i)));
         }
         return object;
     }
@@ -86,13 +86,13 @@ public class ArraySerializer implements FinalInternalSerializer<Object> {
         String type = null;
         boolean primitive = true;
         for (int i = 0; i < yapionArray.length(); i++) {
-            YAPIONAnyType yapionAnyType = yapionArray.getYAPIONAnyType(i);
+            YAPIONAnyType yapionAnyType = yapionArray.getAnyType(i);
             switch (yapionAnyType.getType()) {
                 case OBJECT:
                     primitive = false;
                     YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
-                    if (yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER) != null) {
-                        type = ((YAPIONValue<String>) yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER)).get();
+                    if (yapionObject.getAnyType(TYPE_IDENTIFIER) != null) {
+                        type = ((YAPIONValue<String>) yapionObject.getAnyType(TYPE_IDENTIFIER)).get();
                         break;
                     }
                 case MAP:

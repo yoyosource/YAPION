@@ -69,7 +69,7 @@ public class JSONMapper {
     private YAPIONObject mapObject(YAPIONObject json) {
         yapionObjectList.add(json);
         for (String s : json.getKeys()) {
-            YAPIONAnyType yapionAnyType = json.getYAPIONAnyType(s);
+            YAPIONAnyType yapionAnyType = json.getAnyType(s);
             if (yapionAnyType == null) continue;
             json.add(s, map(yapionAnyType));
         }
@@ -130,7 +130,7 @@ public class JSONMapper {
 
     private YAPIONArray mapArray(YAPIONArray json) {
         for (int i = 0; i < json.length(); i++) {
-            json.set(i, map(json.getYAPIONAnyType(i)));
+            json.set(i, map(json.getAnyType(i)));
         }
         return json;
     }
@@ -147,8 +147,8 @@ public class JSONMapper {
         YAPIONMap yapionMap = new YAPIONMap();
         for (int i = 0; i < mapping.length(); i++) {
             String[] mapped = mapping.getValue(i, String.class).get().split(":");
-            YAPIONAnyType key = map(yapionObject.getYAPIONAnyType("#" + mapped[0]));
-            YAPIONAnyType value = map(yapionObject.getYAPIONAnyType("#" + mapped[1]));
+            YAPIONAnyType key = map(yapionObject.getAnyType("#" + mapped[0]));
+            YAPIONAnyType value = map(yapionObject.getAnyType("#" + mapped[1]));
 
             yapionMap.add(key, value);
         }

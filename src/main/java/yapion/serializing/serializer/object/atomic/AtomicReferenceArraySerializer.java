@@ -51,7 +51,7 @@ public class AtomicReferenceArraySerializer implements FinalInternalSerializer<A
         YAPIONArray yapionArray = yapionObject.getArray("values");
         Object[] objects = new Object[length];
         for (int i = 0; i < length; i++) {
-            objects[i] = deserializeData.deserialize(yapionArray.getYAPIONAnyType(i));
+            objects[i] = deserializeData.deserialize(yapionArray.getAnyType(i));
         }
         return new AtomicReferenceArray<>(objects);
     }

@@ -34,9 +34,9 @@ public class YAPIONDiff {
         }
         for (String key : first.allKeys()) {
             if (second.containsKey(key)) {
-                diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
+                diff(first.getAnyType(key), second.getAnyType(key));
             } else {
-                YAPIONAnyType deleted = first.getYAPIONAnyType(key);
+                YAPIONAnyType deleted = first.getAnyType(key);
                 diffs.add(new DiffDelete(deleted.getPath(), deleted));
             }
         }
@@ -45,7 +45,7 @@ public class YAPIONDiff {
             if (first.containsKey(key)) {
                 continue;
             }
-            YAPIONAnyType inserted = second.getYAPIONAnyType(key);
+            YAPIONAnyType inserted = second.getAnyType(key);
             diffs.add(new DiffInsert(inserted.getPath(), inserted));
         }
         merge();
@@ -57,9 +57,9 @@ public class YAPIONDiff {
         }
         for (YAPIONAnyType key : first.allKeys()) {
             if (second.containsKey(key)) {
-                diff(first.getYAPIONAnyType(key), second.getYAPIONAnyType(key));
+                diff(first.getAnyType(key), second.getAnyType(key));
             } else {
-                YAPIONAnyType deleted = first.getYAPIONAnyType(key);
+                YAPIONAnyType deleted = first.getAnyType(key);
                 diffs.add(new DiffDelete(deleted.getPath(), deleted));
             }
         }
@@ -68,7 +68,7 @@ public class YAPIONDiff {
             if (first.containsKey(key)) {
                 continue;
             }
-            YAPIONAnyType inserted = second.getYAPIONAnyType(key);
+            YAPIONAnyType inserted = second.getAnyType(key);
             diffs.add(new DiffInsert(inserted.getPath(), inserted));
         }
         merge();
@@ -80,9 +80,9 @@ public class YAPIONDiff {
         }
         for (Integer index : first.allKeys()) {
             if (second.containsKey(index)) {
-                diff(first.getYAPIONAnyType(index), second.getYAPIONAnyType(index));
+                diff(first.getAnyType(index), second.getAnyType(index));
             } else {
-                YAPIONAnyType deleted = first.getYAPIONAnyType(index);
+                YAPIONAnyType deleted = first.getAnyType(index);
                 diffs.add(new DiffDelete(deleted.getPath(), deleted));
             }
         }
@@ -91,7 +91,7 @@ public class YAPIONDiff {
             if (first.containsKey(index)) {
                 continue;
             }
-            YAPIONAnyType inserted = second.getYAPIONAnyType(index);
+            YAPIONAnyType inserted = second.getAnyType(index);
             diffs.add(new DiffInsert(inserted.getPath(), inserted));
         }
         merge();

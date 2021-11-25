@@ -142,7 +142,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     @Override
     public boolean internalContainsKey(@NonNull Integer key, YAPIONType yapionType) {
         try {
-            YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+            YAPIONAnyType yapionAnyType = getAnyType(key);
             if (yapionAnyType == null) return false;
             if (yapionType == YAPIONType.ANY) return true;
             return yapionType == yapionAnyType.getType();
@@ -157,7 +157,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
             return false;
         }
         try {
-            YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+            YAPIONAnyType yapionAnyType = getAnyType(key);
             if (yapionAnyType == null) return false;
             if (yapionAnyType instanceof YAPIONValue<?> yapionValue) {
                 return yapionValue.isValidCastType(type);
@@ -173,7 +173,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         return array.contains(yapionAnyType);
     }
 
-    public YAPIONAnyType internalGetYAPIONAnyType(@NonNull Integer key) {
+    public YAPIONAnyType internalGetAnyType(@NonNull Integer key) {
         checkIndex(key);
         return array.get(key);
     }
@@ -414,7 +414,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     @Override
     public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(@NonNull String key) {
         try {
-            return Optional.of(new YAPIONSearchResult<>(getYAPIONAnyType(Integer.parseInt(key))));
+            return Optional.of(new YAPIONSearchResult<>(getAnyType(Integer.parseInt(key))));
         } catch (NumberFormatException | YAPIONArrayIndexOutOfBoundsException e) {
             return Optional.empty();
         }

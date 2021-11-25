@@ -49,7 +49,7 @@ public class StackSerializer implements FinalInternalSerializer<Stack<?>> {
         YAPIONArray yapionArray = yapionObject.getArray("values");
         Stack<Object> stack = new Stack<>();
         for (int i = 0; i < yapionArray.length(); i++) {
-            stack.push(deserializeData.deserialize(yapionArray.getYAPIONAnyType(i)));
+            stack.push(deserializeData.deserialize(yapionArray.getAnyType(i)));
         }
         return stack;
     }

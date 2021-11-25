@@ -223,7 +223,7 @@ public final class YAPIONDeserializer {
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
     private YAPIONDeserializer parseObject(YAPIONObject yapionObject) {
-        String type = ((YAPIONValue<String>) yapionObject.getYAPIONAnyType(TYPE_IDENTIFIER)).get();
+        String type = ((YAPIONValue<String>) yapionObject.getAnyType(TYPE_IDENTIFIER)).get();
         type = typeReMapper.remap(type);
         Class<?> clazz = null;
         try {
@@ -288,7 +288,7 @@ public final class YAPIONDeserializer {
             if (fieldName.equals(TYPE_IDENTIFIER)) continue;
 
             Method mutatorMethod = mutatorMethods.get(fieldName);
-            YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(fieldName);
+            YAPIONAnyType yapionAnyType = yapionObject.getAnyType(fieldName);
             if (mutatorMethod != null) {
                 MutationContext mutationContext = new MutationContext(fieldName, yapionAnyType.internalCopy());
                 MethodReturnValue<Object> methodReturnValue = ReflectionsUtils.invokeMethodObjectSystem(mutatorMethod, mutator, mutationContext);
@@ -304,7 +304,7 @@ public final class YAPIONDeserializer {
 
             Field field = ReflectionsUtils.getField(clazz, fieldName);
             if (field == null) {
-                deserializeResult.add(object, fieldName, yapionObject.getYAPIONAnyType(fieldName));
+                deserializeResult.add(object, fieldName, yapionObject.getAnyType(fieldName));
                 continue;
             }
 

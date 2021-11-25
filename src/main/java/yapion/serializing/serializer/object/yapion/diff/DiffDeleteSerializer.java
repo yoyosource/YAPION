@@ -41,6 +41,6 @@ public class DiffDeleteSerializer implements FinalInternalSerializer<DiffDelete>
     public DiffDelete deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         String[] path = deserializeData.deserialize(yapionObject.getArray("path"));
-        return new DiffDelete(path, yapionObject.getYAPIONAnyType("deleted"));
+        return new DiffDelete(path, yapionObject.getAnyType("deleted"));
     }
 }

@@ -143,7 +143,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
 
     @Override
     public boolean internalContainsKey(@NonNull YAPIONAnyType key, YAPIONType yapionType) {
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        YAPIONAnyType yapionAnyType = getAnyType(key);
         if (yapionAnyType == null) return false;
         if (yapionType == YAPIONType.ANY) return true;
         return yapionType == yapionAnyType.getType();
@@ -154,7 +154,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         if (!YAPIONValue.validType(type)) {
             return false;
         }
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        YAPIONAnyType yapionAnyType = getAnyType(key);
         if (yapionAnyType == null) return false;
         if (yapionAnyType instanceof YAPIONValue<?> yapionValue) {
             return yapionValue.isValidCastType(type);
@@ -167,7 +167,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         return variables.containsValue(yapionAnyType);
     }
 
-    public YAPIONAnyType internalGetYAPIONAnyType(@NonNull YAPIONAnyType key) {
+    public YAPIONAnyType internalGetAnyType(@NonNull YAPIONAnyType key) {
         return variables.get(key);
     }
 

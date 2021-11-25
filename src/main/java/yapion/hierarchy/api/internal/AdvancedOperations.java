@@ -32,7 +32,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
     @OptionalAPI
     default <T extends YAPIONAnyType> T addIfAbsent(@NonNull K key, @NonNull T value) {
         if (internalContainsKey(key, YAPIONType.ANY)) {
-            return (T) internalGetYAPIONAnyType(key);
+            return (T) internalGetAnyType(key);
         }
         return getOrSetDefault(key, value);
     }
@@ -41,7 +41,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
     @OptionalAPI
     default <T extends YAPIONAnyType> T addIfAbsent(@NonNull K key, @NonNull YAPIONType yapionType, @NonNull T value) {
         if (internalContainsKey(key, yapionType)) {
-            return (T) internalGetYAPIONAnyType(key);
+            return (T) internalGetAnyType(key);
         }
         return getOrSetDefault(key, value);
     }
@@ -50,7 +50,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
     @OptionalAPI
     default <@YAPIONPrimitive T> YAPIONValue<T> addIfAbsent(@NonNull K key, @NonNull Class<T> type, @NonNull T value) {
         if (internalContainsKey(key, YAPIONType.VALUE)) {
-            return (YAPIONValue<T>) internalGetYAPIONAnyType(key);
+            return (YAPIONValue<T>) internalGetAnyType(key);
         }
         return getOrSetDefault(key, new YAPIONValue<>(value));
     }
@@ -59,11 +59,11 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
     @OptionalAPI
     default <T extends YAPIONAnyType> T computeIfAbsent(@NonNull K key, @NonNull Function<K, T> mappingFunction) {
         if (internalContainsKey(key, YAPIONType.ANY)) {
-            return (T) internalGetYAPIONAnyType(key);
+            return (T) internalGetAnyType(key);
         }
         T newValue = mappingFunction.apply(key);
         if (newValue == null) {
-            return (T) internalGetYAPIONAnyType(key);
+            return (T) internalGetAnyType(key);
         }
         return getOrSetDefault(key, newValue);
     }
@@ -73,7 +73,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         if (!internalContainsKey(key, YAPIONType.ANY)) {
             return null;
         }
-        T newValue = remappingFunction.apply(key, (T) internalGetYAPIONAnyType(key));
+        T newValue = remappingFunction.apply(key, (T) internalGetAnyType(key));
         if (newValue == null) {
             internalRemove(key);
             return null;
@@ -84,7 +84,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
     @SuppressWarnings("unchecked")
     @OptionalAPI
     default <T extends YAPIONAnyType> T compute(@NonNull K key, @NonNull BiFunction<K, T, T> remappingFunction) {
-        YAPIONAnyType oldValue = internalGetYAPIONAnyType(key);
+        YAPIONAnyType oldValue = internalGetAnyType(key);
         T newValue = remappingFunction.apply(key, oldValue == null ? null : (T) oldValue);
         if (newValue == null) {
             internalRemove(key);
@@ -97,7 +97,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
     @SuppressWarnings("unchecked")
     default <T extends YAPIONAnyType> I merge(@NonNull K key, @NonNull T value, @NonNull BiFunction<K, T, T> remappingFunction) {
         if (internalContainsKey(key, YAPIONType.ANY)) {
-            YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(key);
+            YAPIONAnyType yapionAnyType = internalGetAnyType(key);
             if (yapionAnyType == null) {
                 return internalAdd(key, value);
             }
@@ -110,7 +110,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
     }
 
     default YAPIONAnyType replace(K key, YAPIONAnyType value) {
-        YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(key);
+        YAPIONAnyType yapionAnyType = internalGetAnyType(key);
         internalAdd(key, value);
         return yapionAnyType;
     }
@@ -161,7 +161,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
     default I forEach(@NonNull BiConsumer<K, YAPIONAnyType> action) {
         Set<K> allKeys = allKeys();
         for (K key : allKeys) {
-            action.accept(key, internalGetYAPIONAnyType(key));
+            action.accept(key, internalGetAnyType(key));
         }
         return itself();
     }
@@ -169,7 +169,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
     default I replaceAll(@NonNull BiFunction<K, YAPIONAnyType, YAPIONAnyType> function) {
         Set<K> allKeys = allKeys();
         for (K key : allKeys) {
-            YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(key);
+            YAPIONAnyType yapionAnyType = internalGetAnyType(key);
             yapionAnyType = function.apply(key, yapionAnyType);
             if (yapionAnyType == null) {
                 internalRemove(key);
@@ -202,7 +202,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         Set<K> allKeys = allKeys();
         boolean result = false;
         for (K key : allKeys) {
-            if (filter.test(internalGetYAPIONAnyType(key))) continue;
+            if (filter.test(internalGetAnyType(key))) continue;
             if (internalRemove(key) != null) result = true;
         }
         return result;
@@ -212,7 +212,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         Set<K> allKeys = allKeys();
         boolean result = false;
         for (K key : allKeys) {
-            if (filter.test(key, internalGetYAPIONAnyType(key))) continue;
+            if (filter.test(key, internalGetAnyType(key))) continue;
             if (internalRemove(key) != null) result = true;
         }
         return result;
@@ -222,7 +222,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         Set<K> allKeys = allKeys();
         boolean result = false;
         for (K key : allKeys) {
-            if (!filter.test(internalGetYAPIONAnyType(key))) continue;
+            if (!filter.test(internalGetAnyType(key))) continue;
             if (internalRemove(key) != null) result = true;
         }
         return result;
@@ -232,7 +232,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         Set<K> allKeys = allKeys();
         boolean result = false;
         for (K key : allKeys) {
-            if (!filter.test(key, internalGetYAPIONAnyType(key))) continue;
+            if (!filter.test(key, internalGetAnyType(key))) continue;
             if (internalRemove(key) != null) result = true;
         }
         return result;
@@ -243,7 +243,7 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
             internalAdd(key, defaultValue);
             return defaultValue;
         }
-        return internalGetYAPIONAnyType(key);
+        return internalGetAnyType(key);
     }
 
     default YAPIONArray getYAPIONArrayOrSetDefault(@NonNull K key, @NonNull YAPIONArray defaultValue) {
@@ -294,14 +294,14 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
             internalAdd(key, defaultValue);
             return defaultValue;
         }
-        return (T) internalGetYAPIONAnyType(key);
+        return (T) internalGetAnyType(key);
     }
 
     default I remap(@NonNull K currentKey, @NonNull K newKey) {
         if (!internalContainsKey(currentKey)) {
             return itself();
         }
-        YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(currentKey);
+        YAPIONAnyType yapionAnyType = internalGetAnyType(currentKey);
         internalRemove(currentKey);
         internalAdd(newKey, yapionAnyType);
         return itself();
@@ -311,8 +311,8 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
         if (!internalContainsKey(currentKey) || !internalContainsKey(newKey)) {
             return itself();
         }
-        YAPIONAnyType yapionAnyType = internalGetYAPIONAnyType(currentKey);
-        internalAdd(currentKey, internalGetYAPIONAnyType(newKey));
+        YAPIONAnyType yapionAnyType = internalGetAnyType(currentKey);
+        internalAdd(currentKey, internalGetAnyType(newKey));
         internalAdd(newKey, yapionAnyType);
         return itself();
     }

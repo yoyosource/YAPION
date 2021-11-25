@@ -251,7 +251,7 @@ public class YAPIONUtils {
             YAPIONObject current = output;
             for (int i = 0; i < path.length - 1; i++) {
                 String p = path[i];
-                if (current.getYAPIONAnyType(p) == null) {
+                if (current.getAnyType(p) == null) {
                     current.add(p, new YAPIONObject());
                 }
                 current = current.getObject(p);

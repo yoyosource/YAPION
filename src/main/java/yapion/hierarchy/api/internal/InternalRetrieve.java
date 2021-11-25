@@ -31,5 +31,5 @@ public interface InternalRetrieve<K> {
 
     boolean internalContainsValue(@NonNull YAPIONAnyType yapionAnyType);
 
-    YAPIONAnyType internalGetYAPIONAnyType(@NonNull K key);
+    YAPIONAnyType internalGetAnyType(@NonNull K key);
 }

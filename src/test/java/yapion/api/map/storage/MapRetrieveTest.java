@@ -63,7 +63,7 @@ public class MapRetrieveTest {
         YAPIONMap yapionMap = new YAPIONMap();
         YAPIONObject yapionAnyTypes = new YAPIONObject();
         yapionMap.add(new YAPIONValue<>(""), yapionAnyTypes);
-        assertThat(yapionMap.getYAPIONAnyType(new YAPIONValue<>("")), is(yapionAnyTypes));
+        assertThat(yapionMap.getAnyType(new YAPIONValue<>("")), is(yapionAnyTypes));
     }
 
     @Test

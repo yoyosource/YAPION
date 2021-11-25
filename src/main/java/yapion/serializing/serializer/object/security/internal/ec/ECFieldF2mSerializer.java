@@ -47,8 +47,8 @@ public class ECFieldF2mSerializer implements FinalInternalSerializer<ECFieldF2m>
     public ECFieldF2m deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         int m = yapionObject.getValue("m", Integer.class).get();
-        YAPIONAnyType ksAny = yapionObject.getYAPIONAnyType("ks");
-        YAPIONAnyType rpAny = yapionObject.getYAPIONAnyType("rp");
+        YAPIONAnyType ksAny = yapionObject.getAnyType("ks");
+        YAPIONAnyType rpAny = yapionObject.getAnyType("rp");
         if (ksAny == null && rpAny == null) {
             return new ECFieldF2m(m);
         }

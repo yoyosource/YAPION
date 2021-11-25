@@ -41,6 +41,6 @@ public class DiffInsertSerializer implements FinalInternalSerializer<DiffInsert>
     public DiffInsert deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         String[] path = deserializeData.deserialize(yapionObject.getArray("path"));
-        return new DiffInsert(path, yapionObject.getYAPIONAnyType("inserted"));
+        return new DiffInsert(path, yapionObject.getAnyType("inserted"));
     }
 }

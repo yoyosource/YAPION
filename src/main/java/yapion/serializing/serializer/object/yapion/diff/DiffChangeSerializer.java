@@ -42,6 +42,6 @@ public class DiffChangeSerializer implements FinalInternalSerializer<DiffChange>
     public DiffChange deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         String[] path = deserializeData.deserialize(yapionObject.getArray("path"));
-        return new DiffChange(path, yapionObject.getYAPIONAnyType("from"), yapionObject.getYAPIONAnyType("to"));
+        return new DiffChange(path, yapionObject.getAnyType("from"), yapionObject.getAnyType("to"));
     }
 }

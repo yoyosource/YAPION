@@ -119,7 +119,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
     @Override
     public String getPath(YAPIONAnyType yapionAnyType) {
         for (String s : getKeys()) {
-            if (getYAPIONAnyType(s) == yapionAnyType) {
+            if (getAnyType(s) == yapionAnyType) {
                 return s;
             }
         }
@@ -132,7 +132,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
 
     @Override
     public boolean internalContainsKey(@NonNull String key, YAPIONType yapionType) {
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        YAPIONAnyType yapionAnyType = getAnyType(key);
         if (yapionAnyType == null) return false;
         if (yapionType == YAPIONType.ANY) return true;
         return yapionType == yapionAnyType.getType();
@@ -143,7 +143,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
         if (!YAPIONValue.validType(type)) {
             return false;
         }
-        YAPIONAnyType yapionAnyType = getYAPIONAnyType(key);
+        YAPIONAnyType yapionAnyType = getAnyType(key);
         if (yapionAnyType == null) return false;
         if (yapionAnyType instanceof YAPIONValue yapionValue) {
             return yapionValue.isValidCastType(type);
@@ -156,7 +156,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
         return variables.containsValue(yapionAnyType);
     }
 
-    public YAPIONAnyType internalGetYAPIONAnyType(@NonNull String key) {
+    public YAPIONAnyType internalGetAnyType(@NonNull String key) {
         return variables.get(key);
     }
 
@@ -302,8 +302,8 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
 
     @Override
     public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(@NonNull String key) {
-        if (getYAPIONAnyType(key) == null) return Optional.empty();
-        return Optional.of(new YAPIONSearchResult<>(getYAPIONAnyType(key)));
+        if (getAnyType(key) == null) return Optional.empty();
+        return Optional.of(new YAPIONSearchResult<>(getAnyType(key)));
     }
 
     /**

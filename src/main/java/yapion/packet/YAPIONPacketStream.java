@@ -209,7 +209,7 @@ public final class YAPIONPacketStream {
     private synchronized HandleFailedPacket handle() {
         if (yapionPacketReceiver == null) return null;
         YAPIONObject yapionObject = yapionInputStream.read();
-        YAPIONAnyType yapionAnyType = yapionObject.getYAPIONAnyType(IdentifierUtils.TYPE_IDENTIFIER);
+        YAPIONAnyType yapionAnyType = yapionObject.getAnyType(IdentifierUtils.TYPE_IDENTIFIER);
         if (yapionAnyType == null) return new HandleFailedPacket(yapionObject);
         if (!(yapionAnyType instanceof YAPIONValue)) return new HandleFailedPacket(yapionObject);
         Object object = ((YAPIONValue) yapionAnyType).get();

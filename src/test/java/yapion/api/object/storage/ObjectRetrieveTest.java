@@ -62,7 +62,7 @@ public class ObjectRetrieveTest {
         YAPIONObject yapionObject = new YAPIONObject();
         YAPIONObject yapionAnyTypes = new YAPIONObject();
         yapionObject.add("", yapionAnyTypes);
-        assertThat(yapionObject.getYAPIONAnyType(""), is(yapionAnyTypes));
+        assertThat(yapionObject.getAnyType(""), is(yapionAnyTypes));
     }
 
     @Test
