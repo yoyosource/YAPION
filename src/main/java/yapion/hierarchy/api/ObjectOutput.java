@@ -49,6 +49,8 @@ public interface ObjectOutput {
         return toThunderFile(clazz.getConstructor().newInstance());
     }
 
+    <U> U unwrap();
+
     /// Copied from {@link yapion.YAPIONExtension}
 
     default String toYAPION() {

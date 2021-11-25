@@ -148,6 +148,15 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
+    public List<Object> unwrap() {
+        List<Object> result = new ArrayList<>();
+        for (YAPIONAnyType yapionAnyType : array) {
+            result.add(yapionAnyType.unwrap());
+        }
+        return result;
+    }
+
+    @Override
     public String getPath(YAPIONAnyType yapionAnyType) {
         for (int i = 0; i < array.size(); i++) {
             if (array.get(i) == yapionAnyType) {

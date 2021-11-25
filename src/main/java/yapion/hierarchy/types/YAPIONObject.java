@@ -145,6 +145,15 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
     }
 
     @Override
+    public Map<String, Object> unwrap() {
+        Map<String, Object> result = new HashMap<>();
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
+            result.put(entry.getKey(), entry.getValue().unwrap());
+        }
+        return result;
+    }
+
+    @Override
     public String getPath(YAPIONAnyType yapionAnyType) {
         for (String s : getKeys()) {
             if (getAnyType(s) == yapionAnyType) {

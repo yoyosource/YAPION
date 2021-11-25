@@ -130,6 +130,11 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
+    public <U> U unwrap() {
+        throw new UnsupportedOperationException("Unwrapping maps is not supported.");
+    }
+
+    @Override
     public String getPath(YAPIONAnyType yapionAnyType) {
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             if (entry.getValue() == yapionAnyType) {

@@ -70,6 +70,11 @@ public class YAPIONPointer extends YAPIONValueType {
         throw new UnsupportedOperationException("Thunder file format does not support pointers.");
     }
 
+    @Override
+    public <U> U unwrap() {
+        throw new UnsupportedOperationException("Pointers can not be unwrapped.");
+    }
+
     public <T extends YAPIONDataType<?, ?>> YAPIONPointer(T object) {
         referenceFunction = ReferenceIDUtils.REFERENCE_FUNCTION;
         this.object = object;

@@ -133,6 +133,11 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return abstractOutput;
     }
 
+    @Override
+    public T unwrap() {
+        return value;
+    }
+
     @SuppressWarnings({"java:S3740", "java:S2789"})
     public static YAPIONValue parseValue(String s) {
         return parseValue(s, ValueHandlerUtils.allValueHandlers());
