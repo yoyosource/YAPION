@@ -51,6 +51,13 @@ public interface ObjectOutput {
         return toThunderFile(clazz.getConstructor().newInstance());
     }
 
+    <T extends AbstractOutput> T toXML(T abstractOutput);
+
+    @SneakyThrows
+    default <T extends AbstractOutput & InstantiableOutput> T toXML(Class<T> clazz) {
+        return toXML(clazz.getConstructor().newInstance());
+    }
+
     /**
      * Unwrap a {@link yapion.hierarchy.api.groups.YAPIONAnyType} to the parsable form used
      * by {@link yapion.parser.YAPIONParser#fromMap(Map)} or {@link yapion.parser.YAPIONParser#fromList(List)}.

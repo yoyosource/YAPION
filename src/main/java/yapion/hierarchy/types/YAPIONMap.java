@@ -130,6 +130,11 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
+    public <T extends AbstractOutput> T toXML(T abstractOutput) {
+        throw new UnsupportedOperationException("XML format does not support maps.");
+    }
+
+    @Override
     public <U> U unwrap() {
         throw new UnsupportedOperationException("Unwrapping maps is not supported.");
     }

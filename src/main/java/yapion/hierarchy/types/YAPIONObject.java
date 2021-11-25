@@ -125,7 +125,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
         }
         final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth());
         for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            outputCommentsThungerFile(abstractOutput, entry.getValue().getComments(), indent);
+            outputCommentsThunderFile(abstractOutput, entry.getValue().getComments(), indent);
             abstractOutput.consume(indent);
             abstractOutput.consume(entry.getKey());
             if (entry.getValue() instanceof YAPIONObject yapionObject) {
@@ -136,10 +136,33 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
                 entry.getValue().toThunderFile(abstractOutput);
             }
         }
-        outputCommentsThungerFile(abstractOutput, getEndingComments(), indent);
+        outputCommentsThunderFile(abstractOutput, getEndingComments(), indent);
         if (hasParent()) {
-            if (!variables.isEmpty() || hasEndingComments()) abstractOutput.consume("\n").consumeIndent(getDepth());
+            if (!variables.isEmpty() || hasEndingComments()) abstractOutput.consume("\n").consumeIndentUnprettified(getDepth());
             abstractOutput.consume("}");
+        }
+        return abstractOutput;
+    }
+
+    @Override
+    public <T extends AbstractOutput> T toXML(T abstractOutput) {
+        if (!hasParent()) {
+            abstractOutput.consume("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>");
+        }
+        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
+            outputCommentsXMLFile(abstractOutput, entry.getValue().getComments(), indent);
+            abstractOutput.consumePrettified(indent);
+            abstractOutput.consume("<").consume(entry.getKey()).consume(">");
+            entry.getValue().toXML(abstractOutput);
+            abstractOutput.consume("</").consume(entry.getKey()).consume(">");
+        }
+        outputCommentsXMLFile(abstractOutput, getEndingComments(), indent);
+        if (hasParent()) {
+            if (!variables.isEmpty() || hasEndingComments()) abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
+        }
+        if (!hasParent()) {
+            abstractOutput.consumePrettified("\n").consume("</root>");
         }
         return abstractOutput;
     }

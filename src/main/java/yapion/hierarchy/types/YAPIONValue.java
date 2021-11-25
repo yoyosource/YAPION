@@ -134,6 +134,12 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     @Override
+    public <T extends AbstractOutput> T toXML(T abstractOutput) {
+        abstractOutput.consume(value.toString());
+        return abstractOutput;
+    }
+
+    @Override
     public T unwrap() {
         return value;
     }

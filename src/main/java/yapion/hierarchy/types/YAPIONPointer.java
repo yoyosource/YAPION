@@ -71,6 +71,11 @@ public class YAPIONPointer extends YAPIONValueType {
     }
 
     @Override
+    public <T extends AbstractOutput> T toXML(T abstractOutput) {
+        throw new UnsupportedOperationException("XML format does not support pointers.");
+    }
+
+    @Override
     public <U> U unwrap() {
         throw new UnsupportedOperationException("Pointers can not be unwrapped.");
     }
