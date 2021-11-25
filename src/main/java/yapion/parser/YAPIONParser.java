@@ -19,6 +19,7 @@ import yapion.annotations.api.DeprecationInfo;
 import yapion.exceptions.YAPIONException;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.api.ObjectOutput;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.*;
 import yapion.parser.options.FileOptions;
@@ -29,6 +30,8 @@ import yapion.utils.ReferenceFunction;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 @Slf4j
@@ -674,4 +677,45 @@ public final class YAPIONParser {
     static class ParserSkipException extends RuntimeException {
     }
 
+    /**
+     * Converts the input to a YAPIONObject. It can only convert from a Map to a
+     * YAPIONObject, from a List to an YAPIONArray and everything else will be converted
+     * to a YAPIONValue if applicable.
+     *
+     * @param map the map to convert
+     * @return the YAPIONObject
+     */
+    public static YAPIONObject fromMap(Map<String, Object> map) {
+        YAPIONObject result = new YAPIONObject();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            result.add(entry.getKey(), convertSingle(entry.getValue()));
+        }
+        return result;
+    }
+
+    /**
+     * Converts the input to a YAPIONArray. It can only convert from a Map to a
+     * YAPIONObject, from a List to an YAPIONArray and everything else will be converted
+     * to a YAPIONValue if applicable.
+     *
+     * @param list the list to convert
+     * @return the YAPIONArray
+     */
+    public static YAPIONArray fromList(List<Object> list) {
+        YAPIONArray result = new YAPIONArray();
+        for (Object object : list) {
+            result.add(convertSingle(object));
+        }
+        return result;
+    }
+
+    private static YAPIONAnyType convertSingle(Object value) {
+        if (value instanceof Map toConvert) {
+            return fromMap(toConvert);
+        } else if (value instanceof List toConvert) {
+            return fromList(toConvert);
+        } else {
+            return new YAPIONValue<>(value);
+        }
+    }
 }
