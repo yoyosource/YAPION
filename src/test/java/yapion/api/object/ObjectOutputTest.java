@@ -59,12 +59,12 @@ public class ObjectOutputTest {
 
     @Test
     public void testPrettifiedJSONDepth() {
-        assertThat(new YAPIONObject().add("", new YAPIONObject()).toJSON(new StringOutput(true)).getResult(), is("{\n  \"\":{}\n}"));
+        assertThat(new YAPIONObject().add("", new YAPIONObject()).toJSON(new StringOutput(true)).getResult(), is("{\n  \"\": {}\n}"));
     }
 
     @Test
     public void testPrettifiedLossyJSONDepth() {
-        assertThat(new YAPIONObject().add("", new YAPIONObject()).toJSONLossy(new StringOutput(true)).getResult(), is("{\n  \"\":{}\n}"));
+        assertThat(new YAPIONObject().add("", new YAPIONObject()).toJSONLossy(new StringOutput(true)).getResult(), is("{\n  \"\": {}\n}"));
     }
 
 }

@@ -44,12 +44,12 @@ public class MapOutputTest {
 
     @Test
     public void testPrettifiedJSON() {
-        assertThat(new YAPIONMap().toJSON(new StringOutput(true)).getResult(), is("{\n    \"@mapping\":[]\n  }"));
+        assertThat(new YAPIONMap().toJSON(new StringOutput(true)).getResult(), is("{\n    \"@mapping\": []\n  }"));
     }
 
     @Test
     public void testPrettifiedLossyJSON() {
-        assertThat(new YAPIONMap().toJSONLossy(new StringOutput(true)).getResult(), is("{\n    \"@mapping\":[]\n  }"));
+        assertThat(new YAPIONMap().toJSONLossy(new StringOutput(true)).getResult(), is("{\n    \"@mapping\": []\n  }"));
     }
 
     @Test
@@ -59,12 +59,12 @@ public class MapOutputTest {
 
     @Test
     public void testPrettifiedJSONDepth() {
-        assertThat(new YAPIONMap().add("", new YAPIONMap()).toJSON(new StringOutput(true)).getResult(), is("{\n    \"@mapping\":[\n      \"0:1\"\n    ],\n    \"#0\":\"\",\n    \"#1\":{\n      \"@mapping\":[]\n    }\n  }"));
+        assertThat(new YAPIONMap().add("", new YAPIONMap()).toJSON(new StringOutput(true)).getResult(), is("{\n    \"@mapping\": [\n      \"0:1\"\n    ],\n    \"#0\": \"\",\n    \"#1\": {\n      \"@mapping\": []\n    }\n  }"));
     }
 
     @Test
     public void testPrettifiedLossyJSONDepth() {
-        assertThat(new YAPIONMap().add("", new YAPIONMap()).toJSONLossy(new StringOutput(true)).getResult(), is("{\n    \"@mapping\":[\n      \"0:1\"\n    ],\n    \"#0\":\"\",\n    \"#1\":{\n      \"@mapping\":[]\n    }\n  }"));
+        assertThat(new YAPIONMap().add("", new YAPIONMap()).toJSONLossy(new StringOutput(true)).getResult(), is("{\n    \"@mapping\": [\n      \"0:1\"\n    ],\n    \"#0\": \"\",\n    \"#1\": {\n      \"@mapping\": []\n    }\n  }"));
     }
 
 }
