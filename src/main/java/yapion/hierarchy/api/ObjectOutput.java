@@ -18,6 +18,8 @@ import yapion.hierarchy.output.*;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
 
 public interface ObjectOutput {
 
@@ -49,6 +51,13 @@ public interface ObjectOutput {
         return toThunderFile(clazz.getConstructor().newInstance());
     }
 
+    /**
+     * Unwrap a {@link yapion.hierarchy.api.groups.YAPIONAnyType} to the parsable form used
+     * by {@link yapion.parser.YAPIONParser#fromMap(Map)} or {@link yapion.parser.YAPIONParser#fromList(List)}.
+     *
+     * @param <U> the type of the unwrapped object
+     * @return the unwrapped object
+     */
     <U> U unwrap();
 
     /// Copied from {@link yapion.YAPIONExtension}
