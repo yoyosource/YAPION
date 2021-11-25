@@ -103,7 +103,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
     @Override
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
         outputSystem(abstractOutput, t -> t.consume(","), (s, t) -> {
-            t.consume("\"").consume(s).consume("\":");
+            t.consume("\"").consume(s).consume("\": ");
         }, ObjectOutput::toJSON);
         return abstractOutput;
     }
@@ -111,7 +111,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
     @Override
     public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
         outputSystem(abstractOutput, t -> t.consume(","), (s, t) -> {
-            t.consume("\"").consume(s).consume("\":");
+            t.consume("\"").consume(s).consume("\": ");
         }, ObjectOutput::toJSONLossy);
         return abstractOutput;
     }
