@@ -65,6 +65,11 @@ public class YAPIONPointer extends YAPIONValueType {
         return toJSON(abstractOutput);
     }
 
+    @Override
+    public <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
+        throw new UnsupportedOperationException("Thunder file format does not support pointers.");
+    }
+
     public <T extends YAPIONDataType<?, ?>> YAPIONPointer(T object) {
         referenceFunction = ReferenceIDUtils.REFERENCE_FUNCTION;
         this.object = object;

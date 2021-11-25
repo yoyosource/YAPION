@@ -127,6 +127,12 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return abstractOutput;
     }
 
+    @Override
+    public <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
+        abstractOutput.consume(value.toString());
+        return abstractOutput;
+    }
+
     @SuppressWarnings({"java:S3740", "java:S2789"})
     public static YAPIONValue parseValue(String s) {
         return parseValue(s, ValueHandlerUtils.allValueHandlers());

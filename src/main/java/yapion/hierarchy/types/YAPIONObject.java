@@ -119,6 +119,32 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
     }
 
     @Override
+    public <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
+        if (hasParent()) {
+            abstractOutput.consume("{");
+        }
+        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth());
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
+            outputCommentsThungerFile(abstractOutput, entry.getValue().getComments(), indent);
+            abstractOutput.consume(indent);
+            abstractOutput.consume(entry.getKey());
+            if (entry.getValue() instanceof YAPIONObject yapionObject) {
+                abstractOutput.consume(" ");
+                yapionObject.toThunderFile(abstractOutput);
+            } else {
+                abstractOutput.consume(" = ");
+                entry.getValue().toThunderFile(abstractOutput);
+            }
+        }
+        outputCommentsThungerFile(abstractOutput, getEndingComments(), indent);
+        if (hasParent()) {
+            if (!variables.isEmpty() || hasEndingComments()) abstractOutput.consume("\n").consumeIndent(getDepth());
+            abstractOutput.consume("}");
+        }
+        return abstractOutput;
+    }
+
+    @Override
     public String getPath(YAPIONAnyType yapionAnyType) {
         for (String s : getKeys()) {
             if (getAnyType(s) == yapionAnyType) {

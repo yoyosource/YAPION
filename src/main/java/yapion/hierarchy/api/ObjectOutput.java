@@ -42,6 +42,13 @@ public interface ObjectOutput {
         return toJSONLossy(clazz.getConstructor().newInstance());
     }
 
+    <T extends AbstractOutput> T toThunderFile(T abstractOutput);
+
+    @SneakyThrows
+    default <T extends AbstractOutput & InstantiableOutput> T toThunderFile(Class<T> clazz) {
+        return toThunderFile(clazz.getConstructor().newInstance());
+    }
+
     /// Copied from {@link yapion.YAPIONExtension}
 
     default String toYAPION() {

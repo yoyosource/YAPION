@@ -125,6 +125,11 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
+    public <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
+        throw new UnsupportedOperationException("Thunder file format does not support maps.");
+    }
+
+    @Override
     public String getPath(YAPIONAnyType yapionAnyType) {
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             if (entry.getValue() == yapionAnyType) {

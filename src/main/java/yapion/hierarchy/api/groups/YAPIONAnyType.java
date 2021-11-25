@@ -157,7 +157,7 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
             abstractOutput.consume("/*");
             for (int i = 0; i < strings.length; i++) {
                 if (i != 0) {
-                    abstractOutput.consumePrettified(indent);
+                    abstractOutput.consume(indent);
                 }
 
                 String current = strings[i];
@@ -168,6 +168,25 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
                 abstractOutput.consume(current.substring(index));
             }
             abstractOutput.consume("*/");
+        });
+    }
+
+    protected <T extends AbstractOutput> void outputCommentsThungerFile(T abstractOutput, List<String> comments, String indent) {
+        comments.forEach(s -> {
+            String[] strings = s.split("\n|\r\n|\n\r|\r");
+            abstractOutput.consume(indent);
+            for (int i = 0; i < strings.length; i++) {
+                if (i != 0) {
+                    abstractOutput.consume(indent);
+                }
+
+                String current = strings[i];
+                int index = 0;
+                while (index < current.length() && Character.isWhitespace(current.charAt(index))) {
+                    index++;
+                }
+                abstractOutput.consume("# " + current.substring(index));
+            }
         });
     }
 

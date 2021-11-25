@@ -130,6 +130,24 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
+    public <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
+        abstractOutput.consume("[");
+
+        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth());
+        for (YAPIONAnyType yapionAnyType : array) {
+            abstractOutput.consume(indent).consume("- ");
+            yapionAnyType.toThunderFile(abstractOutput);
+        }
+
+        if (!array.isEmpty()) {
+            abstractOutput.consume("\n").consumeIndent(getDepth());
+        }
+
+        abstractOutput.consume("]");
+        return abstractOutput;
+    }
+
+    @Override
     public String getPath(YAPIONAnyType yapionAnyType) {
         for (int i = 0; i < array.size(); i++) {
             if (array.get(i) == yapionAnyType) {
