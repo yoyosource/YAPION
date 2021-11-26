@@ -132,6 +132,13 @@ final class YAPIONInternalParser {
     }
 
     private void parseFinish() {
+        List<String> strings = new ArrayList<>();
+        if (!key.isEmpty()) {
+            strings.add("A key was specified without a follow up value '" + key + "'");
+        }
+        if (current.length() != 0) {
+            strings.add("A value was specified without an end '" + current + "'");
+        }
         if (mightValue == MightValue.TRUE) {
             parseValueJSONEnd('\u0000');
         }
@@ -142,15 +149,20 @@ final class YAPIONInternalParser {
         }
         if (!hadInitial) {
             if (typeStack.isEmpty()) {
-                throw new YAPIONParserException("Object is closed too often");
+                strings.add("You cannot close an Object that is implicitly opened beforehand");
+                throw new YAPIONParserException("Exception while finishing the current parsed Object\n- " + String.join("\n- ", strings));
             }
-            if (typeStack.pop(YAPIONType.OBJECT) != YAPIONType.OBJECT) {
-                throw new YAPIONParserException("Some types are open");
+            typeStack.pop(YAPIONType.OBJECT);
+        }
+        if (typeStack.isNotEmpty()) {
+            while (typeStack.isNotEmpty()) {
+                try {
+                    typeStack.pop(YAPIONType.ANY);
+                } catch (YAPIONParserException e) {
+                    strings.add(e.getMessage());
+                }
             }
-        } else {
-            if (typeStack.isNotEmpty()) {
-                throw new YAPIONParserException("Object is not closed correctly");
-            }
+            throw new YAPIONParserException("Exception while finishing the current parsed Object\n- " + String.join("\n- ", strings));
         }
         addComments(result, true);
 
@@ -174,7 +186,7 @@ final class YAPIONInternalParser {
 
     private void push(YAPIONType yapionType) {
         log.debug("push     [{}]", yapionType);
-        typeStack.push(yapionType);
+        typeStack.push(yapionType, count);
         if (lazy) {
             while (current.length() > 0 && isWhiteSpace(current.charAt(current.length() - 1))) {
                 current.deleteCharAt(current.length() - 1);
@@ -208,7 +220,7 @@ final class YAPIONInternalParser {
             log.debug("initial  [CREATE] -> {}", (int) c);
             hadInitial = false;
         }
-        typeStack.push(YAPIONType.OBJECT);
+        typeStack.push(YAPIONType.OBJECT, count);
         result = new YAPIONObject();
         yapionDataTypes.add(result);
         currentObject = result;
@@ -713,5 +725,4 @@ final class YAPIONInternalParser {
     private boolean isWhiteSpace(char c) {
         return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == ',';
     }
-
 }

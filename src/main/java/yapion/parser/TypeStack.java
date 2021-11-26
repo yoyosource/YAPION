@@ -13,34 +13,43 @@
 
 package yapion.parser;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.types.YAPIONType;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 
+@Getter(AccessLevel.PACKAGE)
 public class TypeStack {
 
     private final LinkedList<YAPIONType> stack = new LinkedList<>();
+    private final LinkedList<Long> readStack = new LinkedList<>();
 
-    public void push(YAPIONType yapionType) {
+    public void push(YAPIONType yapionType, long reads) {
         stack.push(yapionType);
+        readStack.push(reads);
     }
 
     public YAPIONType pop(YAPIONType yapionType) {
         if (empty()) {
-            throw new YAPIONParserException("TypeStack is empty");
+            throw new YAPIONParserException("Cannot close " + yapionType + " because it was not opened beforehand");
         }
         YAPIONType current = stack.pop();
+        long reads = readStack.pop();
         if (current != yapionType) {
-            throw new YAPIONParserException("Current known type (" + current + ") is not expected specified type (" + yapionType + ")");
+            if (yapionType == YAPIONType.ANY) {
+                throw new YAPIONParserException("The opened type " + current + " at " + reads + " reads is not closed");
+            }
+            throw new YAPIONParserException("Cannot close " + yapionType + " because the last opened type is " + current + " at " + reads + " reads");
         }
         return current;
     }
 
     public YAPIONType peek() {
         if (empty()) {
-            throw new YAPIONParserException("TypeStack is empty");
+            throw new YAPIONParserException("Cannot look on top of an empty stack");
         }
         return stack.getFirst();
     }
