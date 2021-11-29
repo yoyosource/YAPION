@@ -140,7 +140,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         }
 
         if (!array.isEmpty()) {
-            abstractOutput.consume("\n").consumeIndent(getDepth());
+            abstractOutput.consume("\n").consumeIndent(getDepth() - 1);
         }
 
         abstractOutput.consume("]");

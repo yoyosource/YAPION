@@ -129,13 +129,21 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     @Override
     public <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
-        abstractOutput.consume(value.toString());
+        if (value == null) {
+            abstractOutput.consume("null");
+        } else {
+            abstractOutput.consume(value.toString());
+        }
         return abstractOutput;
     }
 
     @Override
     public <T extends AbstractOutput> T toXML(T abstractOutput) {
-        abstractOutput.consume(value.toString());
+        if (value == null) {
+            abstractOutput.consume("null");
+        } else {
+            abstractOutput.consume(value.toString());
+        }
         return abstractOutput;
     }
 

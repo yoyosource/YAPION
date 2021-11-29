@@ -138,7 +138,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
         }
         outputCommentsThunderFile(abstractOutput, getEndingComments(), indent);
         if (hasParent()) {
-            if (!variables.isEmpty() || hasEndingComments()) abstractOutput.consume("\n").consumeIndentUnprettified(getDepth());
+            if (!variables.isEmpty() || hasEndingComments()) abstractOutput.consume("\n").consumeIndentUnprettified(getDepth() - 1);
             abstractOutput.consume("}");
         }
         return abstractOutput;
