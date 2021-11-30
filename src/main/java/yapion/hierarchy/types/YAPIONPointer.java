@@ -19,6 +19,7 @@ import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.output.flavours.Flavour;
 import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 
@@ -27,7 +28,7 @@ import java.util.Optional;
 
 import static yapion.utils.IdentifierUtils.POINTER_IDENTIFIER;
 
-public class YAPIONPointer extends YAPIONValueType {
+public class YAPIONPointer extends YAPIONValueType<YAPIONPointer> {
 
     private long pointerID;
     private ReferenceFunction referenceFunction;
@@ -44,9 +45,10 @@ public class YAPIONPointer extends YAPIONValueType {
     }
 
     @Override
-    public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
-        abstractOutput.consume("->");
-        abstractOutput.consume(getPointerIDString());
+    public <T extends AbstractOutput> T output(T abstractOutput, Flavour flavour) {
+        abstractOutput.consume(flavour.beginPointer());
+        abstractOutput.consume(flavour.pointer(this));
+        abstractOutput.consume(flavour.endPointer());
         return abstractOutput;
     }
 
@@ -58,21 +60,6 @@ public class YAPIONPointer extends YAPIONValueType {
                 .consume(getPointerIDString())
                 .consume("\"}");
         return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
-        return toJSON(abstractOutput);
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
-        throw new UnsupportedOperationException("Thunder file format does not support pointers.");
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toXML(T abstractOutput) {
-        throw new UnsupportedOperationException("XML format does not support pointers.");
     }
 
     @Override
@@ -123,6 +110,11 @@ public class YAPIONPointer extends YAPIONValueType {
         if (object == null) return Optional.empty();
         if (key.equals("@reference")) return Optional.of(new YAPIONSearchResult<>(object));
         return Optional.empty();
+    }
+
+    @Override
+    public YAPIONPointer itself() {
+        return this;
     }
 
     @Override

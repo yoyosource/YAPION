@@ -26,6 +26,7 @@ import yapion.hierarchy.api.storage.ArrayRemove;
 import yapion.hierarchy.api.storage.ArrayRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.output.flavours.Flavour;
 import yapion.utils.RecursionUtils;
 import yapion.utils.ReferenceFunction;
 
@@ -54,36 +55,52 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         return referenceValue.referenceValue;
     }
 
-    public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
-        abstractOutput.consume("[");
+    @Override
+    public <T extends AbstractOutput> T output(T abstractOutput, Flavour flavour) {
+        abstractOutput.consume(flavour.beginArray());
 
-        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
+        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + (flavour.removeRootObject() ? 0 : 1));
+        Flavour.PrettifyBehaviour prettifyBehaviour = flavour.getPrettifyBehaviour();
         boolean b = false;
-        for (YAPIONAnyType yapionAnyType : array) {
-            if (b) abstractOutput.consume(",");
-            outputComments(abstractOutput, yapionAnyType.getComments(), indent);
+        for (int i = 0; i < array.size(); i++) {
+            YAPIONAnyType yapionAnyType = array.get(i);
+            if (b) abstractOutput.consume(flavour.arraySeparator());
+            b = true;
 
-            abstractOutput.consumePrettified(indent);
-            if (yapionAnyType == null) {
-                abstractOutput.consume("null");
-            } else if (yapionAnyType instanceof YAPIONValue yapionValue) {
-                yapionValue.toStrippedYAPION(abstractOutput);
-            } else {
-                yapionAnyType.toYAPION(abstractOutput);
+            outputComments(abstractOutput, flavour, prettifyBehaviour, yapionAnyType.getComments(), indent);
+
+            if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
+                abstractOutput.consumePrettified(indent);
+            } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
+                abstractOutput.consume(indent);
             }
 
-            b = true;
+            abstractOutput.consume(flavour.arrayElementBegin(i));
+            if (yapionAnyType instanceof YAPIONValue yapionValue) {
+                abstractOutput.consume(flavour.arrayValue(yapionValue));
+            } else {
+                yapionAnyType.output(abstractOutput, flavour);
+            }
+            abstractOutput.consume(flavour.arrayElementEnd(i));
         }
 
         if (!array.isEmpty() || hasEndingComments()) {
             if (array.get(array.size() - 1) instanceof YAPIONValue) {
-                abstractOutput.consumePrettified(",");
+                if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
+                    abstractOutput.consumePrettified(flavour.arrayLastElementSeparatorIfPrettified());
+                } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
+                    abstractOutput.consume(flavour.arrayLastElementSeparatorIfPrettified());
+                }
             }
-            outputComments(abstractOutput, getEndingComments(), indent);
-            abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
+            outputComments(abstractOutput, flavour, prettifyBehaviour, getEndingComments(), indent);
+            if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
+                abstractOutput.consumePrettified("\n").consumeIndent(getDepth() - (flavour.removeRootObject() ? 1 : 0));
+            } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
+                abstractOutput.consume("\n").consumeIndent(getDepth() - (flavour.removeRootObject() ? 1 : 0));
+            }
         }
 
-        abstractOutput.consume("]");
+        abstractOutput.consume(flavour.endArray());
         return abstractOutput;
     }
 
@@ -105,61 +122,6 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         }
 
         abstractOutput.consume("]");
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
-        abstractOutput.consume("[");
-
-        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
-        boolean b = false;
-        for (YAPIONAnyType yapionAnyType : array) {
-            if (b) abstractOutput.consume(",");
-            abstractOutput.consumePrettified(indent);
-            yapionAnyType.toJSONLossy(abstractOutput);
-            b = true;
-        }
-
-        if (!array.isEmpty()) {
-            abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
-        }
-
-        abstractOutput.consume("]");
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
-        abstractOutput.consume("[");
-
-        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth());
-        for (YAPIONAnyType yapionAnyType : array) {
-            abstractOutput.consume(indent).consume("- ");
-            yapionAnyType.toThunderFile(abstractOutput);
-        }
-
-        if (!array.isEmpty()) {
-            abstractOutput.consume("\n").consumeIndent(getDepth() - 1);
-        }
-
-        abstractOutput.consume("]");
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toXML(T abstractOutput) {
-        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
-        for (YAPIONAnyType yapionAnyType : array) {
-            abstractOutput.consumePrettified(indent);
-            abstractOutput.consume("<element>");
-            yapionAnyType.toXML(abstractOutput);
-            abstractOutput.consume("</element>");
-        }
-
-        if (!array.isEmpty()) {
-            abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
-        }
         return abstractOutput;
     }
 

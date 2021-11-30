@@ -25,6 +25,7 @@ import yapion.hierarchy.api.storage.ObjectRemove;
 import yapion.hierarchy.api.storage.ObjectRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.output.flavours.Flavour;
 import yapion.utils.IdentifierUtils;
 import yapion.utils.RecursionUtils;
 import yapion.utils.ReferenceFunction;
@@ -34,8 +35,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.KEY;
-import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
 public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implements ObjectRetrieve<String>, ObjectAdd<YAPIONObject, String>, ObjectRemove<YAPIONObject, String>, SerializingType {
@@ -92,11 +91,54 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
     }
 
     @Override
-    public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
-        outputSystem(abstractOutput, t -> {}, (s, t) -> {
-            if (s.startsWith(" ") || s.startsWith(",")) t.consume("\\");
-            t.consume(stringToUTFEscapedString(s, KEY));
-        }, ObjectOutput::toYAPION);
+    public <T extends AbstractOutput> T output(T abstractOutput, Flavour flavour) {
+        if (!hasParent()) {
+            abstractOutput.consume(flavour.header());
+        }
+        if (flavour.removeRootObject()) {
+            if (hasParent()) {
+                abstractOutput.consume(flavour.beginObject());
+            }
+        } else {
+            abstractOutput.consume(flavour.beginObject());
+        }
+        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + (flavour.removeRootObject() ? 0 : 1));
+        Flavour.PrettifyBehaviour prettifyBehaviour = flavour.getPrettifyBehaviour();
+        boolean b = false;
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
+            if (b) {
+                abstractOutput.consume(flavour.objectFullKeyPairSeparator());
+            }
+            b = true;
+
+            outputComments(abstractOutput, flavour, prettifyBehaviour, entry.getValue().getComments(), indent);
+            if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
+                abstractOutput.consumePrettified(indent);
+            } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
+                abstractOutput.consume(indent);
+            }
+            abstractOutput.consume(flavour.objectKeyPairStart(entry.getKey()));
+            entry.getValue().output(abstractOutput, flavour);
+            abstractOutput.consume(flavour.objectKeyPairEnd(entry.getKey()));
+        }
+        outputComments(abstractOutput, flavour, prettifyBehaviour, getEndingComments(), indent);
+        if (!variables.isEmpty() || hasEndingComments()) {
+            if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
+                abstractOutput.consumePrettified("\n").consumeIndent(getDepth() - (flavour.removeRootObject() ? 1 : 0));
+            } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
+                abstractOutput.consume("\n").consumeIndent(getDepth() - (flavour.removeRootObject() ? 1 : 0));
+            }
+        }
+        if (flavour.removeRootObject()) {
+            if (hasParent()) {
+                abstractOutput.consume(flavour.endObject());
+            }
+        } else {
+            abstractOutput.consume(flavour.endObject());
+        }
+        if (!hasParent()) {
+            abstractOutput.consume(flavour.footer());
+        }
         return abstractOutput;
     }
 
@@ -106,64 +148,6 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
             t.consume("\"").consume(s).consume("\":");
             t.consumePrettified(" ");
         }, ObjectOutput::toJSON);
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
-        outputSystem(abstractOutput, t -> t.consume(","), (s, t) -> {
-            t.consume("\"").consume(s).consume("\":");
-            t.consumePrettified(" ");
-        }, ObjectOutput::toJSONLossy);
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
-        if (hasParent()) {
-            abstractOutput.consume("{");
-        }
-        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth());
-        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            outputCommentsThunderFile(abstractOutput, entry.getValue().getComments(), indent);
-            abstractOutput.consume(indent);
-            abstractOutput.consume(entry.getKey());
-            if (entry.getValue() instanceof YAPIONObject yapionObject) {
-                abstractOutput.consume(" ");
-                yapionObject.toThunderFile(abstractOutput);
-            } else {
-                abstractOutput.consume(" = ");
-                entry.getValue().toThunderFile(abstractOutput);
-            }
-        }
-        outputCommentsThunderFile(abstractOutput, getEndingComments(), indent);
-        if (hasParent()) {
-            if (!variables.isEmpty() || hasEndingComments()) abstractOutput.consume("\n").consumeIndentUnprettified(getDepth() - 1);
-            abstractOutput.consume("}");
-        }
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toXML(T abstractOutput) {
-        if (!hasParent()) {
-            abstractOutput.consume("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>");
-        }
-        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
-        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            outputCommentsXMLFile(abstractOutput, entry.getValue().getComments(), indent);
-            abstractOutput.consumePrettified(indent);
-            abstractOutput.consume("<").consume(entry.getKey()).consume(">");
-            entry.getValue().toXML(abstractOutput);
-            abstractOutput.consume("</").consume(entry.getKey()).consume(">");
-        }
-        outputCommentsXMLFile(abstractOutput, getEndingComments(), indent);
-        if (hasParent()) {
-            if (!variables.isEmpty() || hasEndingComments()) abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
-        }
-        if (!hasParent()) {
-            abstractOutput.consumePrettified("\n").consume("</root>");
-        }
         return abstractOutput;
     }
 

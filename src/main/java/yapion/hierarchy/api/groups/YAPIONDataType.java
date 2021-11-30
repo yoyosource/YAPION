@@ -18,12 +18,14 @@ import yapion.hierarchy.api.internal.AdvancedOperations;
 import yapion.hierarchy.api.internal.InternalAdd;
 import yapion.hierarchy.api.internal.InternalRemove;
 import yapion.hierarchy.api.internal.InternalRetrieve;
+import yapion.hierarchy.api.storage.CommentManipulation;
+import yapion.hierarchy.api.storage.EndingComments;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @InternalAPI
-public abstract class YAPIONDataType<I, K> extends YAPIONAnyType implements InternalAdd<I, K>, AdvancedOperations<I, K>, InternalRemove<I, K>, InternalRetrieve<K> {
+public abstract class YAPIONDataType<I, K> extends YAPIONAnyType implements InternalAdd<I, K>, AdvancedOperations<I, K>, InternalRemove<I, K>, InternalRetrieve<K>, CommentManipulation<I>, EndingComments<I> {
 
     private final List<String> endingComments = new ArrayList<>();
 

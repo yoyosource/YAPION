@@ -13,10 +13,12 @@
 
 package yapion.hierarchy.types;
 
+import lombok.Getter;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.output.flavours.Flavour;
 import yapion.hierarchy.types.value.NullHandler;
 import yapion.hierarchy.types.value.ValueHandler;
 import yapion.hierarchy.types.value.ValueHandlerUtils;
@@ -29,13 +31,15 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
-public class YAPIONValue<T> extends YAPIONValueType {
+public class YAPIONValue<T> extends YAPIONValueType<YAPIONValue<T>> {
 
     public static List<ValueHandler<?>> allValueHandlers() {
         return ValueHandlerUtils.allValueHandlers();
     }
 
     private T value;
+
+    @Getter
     private final ValueHandler<T> valueHandler;
     private final String type;
 
@@ -76,8 +80,10 @@ public class YAPIONValue<T> extends YAPIONValueType {
     }
 
     @Override
-    public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
-        abstractOutput.consume("(" + valueHandler.output(value, YAPIONType.VALUE) + ")");
+    public <T extends AbstractOutput> T output(T abstractOutput, Flavour flavour) {
+        abstractOutput.consume(flavour.beginValue());
+        abstractOutput.consume(flavour.value(this));
+        abstractOutput.consume(flavour.endValue());
         return abstractOutput;
     }
 
@@ -103,11 +109,6 @@ public class YAPIONValue<T> extends YAPIONValueType {
         return abstractOutput;
     }
 
-    @Override
-    public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
-        return toJSONLossy(abstractOutput, false);
-    }
-
     private  <T extends AbstractOutput> T toJSONLossy(T abstractOutput, boolean bigAsStrings) {
         if (value instanceof String || value instanceof Character) {
             abstractOutput.consume("\"")
@@ -124,26 +125,6 @@ public class YAPIONValue<T> extends YAPIONValueType {
             return abstractOutput;
         }
         abstractOutput.consume(value.toString());
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
-        if (value == null) {
-            abstractOutput.consume("null");
-        } else {
-            abstractOutput.consume(value.toString());
-        }
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toXML(T abstractOutput) {
-        if (value == null) {
-            abstractOutput.consume("null");
-        } else {
-            abstractOutput.consume(value.toString());
-        }
         return abstractOutput;
     }
 
@@ -221,6 +202,11 @@ public class YAPIONValue<T> extends YAPIONValueType {
 
     public boolean isValidCastType(String type) {
         return this.type.equalsIgnoreCase(type) || this.type.equalsIgnoreCase("null");
+    }
+
+    @Override
+    public YAPIONValue<T> itself() {
+        return this;
     }
 
     @Override

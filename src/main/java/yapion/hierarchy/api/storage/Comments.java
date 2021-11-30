@@ -11,11 +11,19 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.api.groups;
+package yapion.hierarchy.api.storage;
 
-import yapion.annotations.api.InternalAPI;
-import yapion.hierarchy.api.storage.CommentManipulation;
+import java.util.List;
 
-@InternalAPI
-public abstract class YAPIONValueType<I> extends YAPIONAnyType implements CommentManipulation<I> {
+public interface Comments {
+
+    List<String> getComments();
+
+    default int commentsSize() {
+        return getComments().size();
+    }
+
+    default boolean hasComments() {
+        return !getComments().isEmpty();
+    }
 }

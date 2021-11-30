@@ -20,8 +20,10 @@ import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.ObjectPath;
 import yapion.hierarchy.api.ObjectSearch;
 import yapion.hierarchy.api.ObjectType;
+import yapion.hierarchy.api.storage.Comments;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.output.flavours.Flavour;
 import yapion.hierarchy.types.YAPIONPath;
 import yapion.parser.YAPIONParser;
 import yapion.utils.ReferenceFunction;
@@ -32,7 +34,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @InternalAPI
-public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectType, ObjectOutput {
+public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectType, ObjectOutput, Comments {
 
     // Reference Value System
     private AtomicReference<Long> referenceValue = new AtomicReference<>(null);
@@ -150,6 +152,35 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         return Optional.empty();
     }
 
+    protected <T extends AbstractOutput> void outputComments(T abstractOutput, Flavour flavour, Flavour.PrettifyBehaviour prettifyBehaviour, List<String> comments, String indent) {
+        comments.forEach(s -> {
+            String[] strings = s.split("\n|\r\n|\n\r|\r");
+            if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
+                abstractOutput.consumePrettified(indent);
+            } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
+                abstractOutput.consume(indent);
+            }
+            abstractOutput.consume(flavour.beginComment());
+            for (int i = 0; i < strings.length; i++) {
+                if (i != 0) {
+                    if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
+                        abstractOutput.consumePrettified(indent);
+                    } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
+                        abstractOutput.consume(indent);
+                    }
+                }
+
+                String current = strings[i];
+                int index = 0;
+                while (index < current.length() && Character.isWhitespace(current.charAt(index))) {
+                    index++;
+                }
+                abstractOutput.consume(flavour.comment(current.substring(index)));
+            }
+            abstractOutput.consume(flavour.endComment());
+        });
+    }
+
     protected <T extends AbstractOutput> void outputComments(T abstractOutput, List<String> comments, String indent) {
         comments.forEach(s -> {
             String[] strings = s.split("\n|\r\n|\n\r|\r");
@@ -169,48 +200,6 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
             }
             abstractOutput.consume("*/");
         });
-    }
-
-    protected <T extends AbstractOutput> void outputCommentsThunderFile(T abstractOutput, List<String> comments, String indent) {
-        comments.forEach(s -> {
-            String[] strings = s.split("\n|\r\n|\n\r|\r");
-            abstractOutput.consume(indent);
-            for (int i = 0; i < strings.length; i++) {
-                if (i != 0) {
-                    abstractOutput.consume(indent);
-                }
-
-                String current = strings[i];
-                int index = 0;
-                while (index < current.length() && Character.isWhitespace(current.charAt(index))) {
-                    index++;
-                }
-                abstractOutput.consume("# ").consume(current.substring(index));
-            }
-        });
-    }
-
-    protected <T extends AbstractOutput> void outputCommentsXMLFile(T abstractOutput, List<String> comments, String indent) {
-        comments.forEach(s -> {
-            String[] strings = s.split("\n|\r\n|\n\r|\r");
-            abstractOutput.consume(indent);
-            for (int i = 0; i < strings.length; i++) {
-                if (i != 0) {
-                    abstractOutput.consume(indent);
-                }
-
-                String current = strings[i];
-                int index = 0;
-                while (index < current.length() && Character.isWhitespace(current.charAt(index))) {
-                    index++;
-                }
-                abstractOutput.consume("<!-- ").consume(current.substring(index)).consume(" -->");
-            }
-        });
-    }
-
-    public boolean hasComments() {
-        return !comments.isEmpty();
     }
 
     public List<String> getComments() {

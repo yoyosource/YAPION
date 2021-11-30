@@ -11,11 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.api.groups;
+package yapion.hierarchy.output.flavours;
 
-import yapion.annotations.api.InternalAPI;
-import yapion.hierarchy.api.storage.CommentManipulation;
-
-@InternalAPI
-public abstract class YAPIONValueType<I> extends YAPIONAnyType implements CommentManipulation<I> {
+public class YAPIONConvertedJSONFlavour {
 }

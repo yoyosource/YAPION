@@ -34,22 +34,26 @@ public abstract class AbstractOutput {
 
     @InternalAPI
     public final AbstractOutput consume(String s) {
+        if (s == null) return this;
         internalConsume(s);
         return this;
     }
 
     @InternalAPI
     public final AbstractOutput consumeIndent(int indentLevel) {
+        if (indentLevel < 0) return this;
         return consumePrettified(indentator.indent(indentLevel));
     }
 
     @InternalAPI
     public final AbstractOutput consumeIndentUnprettified(int indentLevel) {
+        if (indentLevel < 0) return this;
         return consume(indentator.indent(indentLevel));
     }
 
     @InternalAPI
     public final AbstractOutput consumePrettified(String s) {
+        if (s == null) return this;
         if (prettified() && internalConsumePrettified(s)) {
             internalConsume(s);
         }

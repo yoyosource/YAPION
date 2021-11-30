@@ -26,6 +26,7 @@ import yapion.hierarchy.api.storage.MapRemove;
 import yapion.hierarchy.api.storage.MapRetrieve;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.output.flavours.Flavour;
 import yapion.utils.RecursionUtils;
 import yapion.utils.ReferenceFunction;
 
@@ -57,28 +58,39 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
-    public <T extends AbstractOutput> T toYAPION(T abstractOutput) {
-        abstractOutput.consume("<");
+    public <T extends AbstractOutput> T output(T abstractOutput, Flavour flavour) {
+        abstractOutput.consume(flavour.beginMap());
 
-        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
+        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + (flavour.removeRootObject() ? 0 : 1));
+        Flavour.PrettifyBehaviour prettifyBehaviour = flavour.getPrettifyBehaviour();
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
-            outputComments(abstractOutput, entry.getKey().getComments(), indent);
-            abstractOutput.consumePrettified(indent);
-            entry.getKey().toYAPION(abstractOutput);
-            abstractOutput.consume(":");
-            outputComments(abstractOutput, entry.getValue().getComments(), indent);
-            if (entry.getValue().hasComments()) {
+            outputComments(abstractOutput, flavour, prettifyBehaviour, entry.getKey().getComments(), indent);
+
+            if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
                 abstractOutput.consumePrettified(indent);
+            } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
+                abstractOutput.consume(indent);
             }
-            entry.getValue().toYAPION(abstractOutput);
+
+            entry.getKey().output(abstractOutput, flavour);
+            abstractOutput.consume(flavour.mapSeparator());
+            outputComments(abstractOutput, flavour, prettifyBehaviour, entry.getValue().getComments(), indent);
+            if (entry.getValue().hasComments()) {
+                if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
+                    abstractOutput.consumePrettified(indent);
+                } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
+                    abstractOutput.consume(indent);
+                }
+            }
+            entry.getValue().output(abstractOutput, flavour);
         }
 
-        outputComments(abstractOutput, getEndingComments(), indent);
+        outputComments(abstractOutput, flavour, prettifyBehaviour, getEndingComments(), indent);
         if (!variables.isEmpty() || hasEndingComments()) {
-            abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
+            abstractOutput.consumePrettified("\n").consumeIndent(getDepth() - (flavour.removeRootObject() ? 1 : 0));
         }
 
-        abstractOutput.consume(">");
+        abstractOutput.consume(flavour.endMap());
         return abstractOutput;
     }
 
@@ -101,37 +113,6 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         yapionObject.toJSON(abstractOutput);
         yapionObject.removeParent();
         return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
-        YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.setParent(this);
-        YAPIONArray mapping = new YAPIONArray();
-        yapionObject.add(MAP_IDENTIFIER, mapping);
-
-        long id = 0;
-        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
-            String id1 = String.format("%01X", id++);
-            String id2 = String.format("%01X", id++);
-
-            mapping.add(new YAPIONValue<>(id1 + ":" + id2));
-            yapionObject.add("#" + id1, entry.getKey());
-            yapionObject.add("#" + id2, entry.getValue());
-        }
-        yapionObject.toJSONLossy(abstractOutput);
-        yapionObject.removeParent();
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
-        throw new UnsupportedOperationException("Thunder file format does not support maps.");
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toXML(T abstractOutput) {
-        throw new UnsupportedOperationException("XML format does not support maps.");
     }
 
     @Override

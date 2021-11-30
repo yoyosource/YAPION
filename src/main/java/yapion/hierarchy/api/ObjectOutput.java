@@ -15,6 +15,7 @@ package yapion.hierarchy.api;
 
 import lombok.SneakyThrows;
 import yapion.hierarchy.output.*;
+import yapion.hierarchy.output.flavours.*;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -23,7 +24,13 @@ import java.util.Map;
 
 public interface ObjectOutput {
 
-    <T extends AbstractOutput> T toYAPION(T abstractOutput);
+    default <T extends AbstractOutput> T output(T abstractOutput, Flavour flavour) {
+        return abstractOutput;
+    }
+
+    default <T extends AbstractOutput> T toYAPION(T abstractOutput) {
+        return output(abstractOutput, new YAPIONFlavour());
+    }
 
     @SneakyThrows
     default <T extends AbstractOutput & InstantiableOutput> T toYAPION(Class<T> clazz) {
@@ -37,21 +44,27 @@ public interface ObjectOutput {
         return toJSON(clazz.getConstructor().newInstance());
     }
 
-    <T extends AbstractOutput> T toJSONLossy(T abstractOutput);
+    default <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
+        return output(abstractOutput, new JSONFlavour());
+    }
 
     @SneakyThrows
     default <T extends AbstractOutput & InstantiableOutput> T toJSONLossy(Class<T> clazz) {
         return toJSONLossy(clazz.getConstructor().newInstance());
     }
 
-    <T extends AbstractOutput> T toThunderFile(T abstractOutput);
+    default <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
+        return output(abstractOutput, new ThunderFileFlavour());
+    }
 
     @SneakyThrows
     default <T extends AbstractOutput & InstantiableOutput> T toThunderFile(Class<T> clazz) {
         return toThunderFile(clazz.getConstructor().newInstance());
     }
 
-    <T extends AbstractOutput> T toXML(T abstractOutput);
+    default <T extends AbstractOutput> T toXML(T abstractOutput) {
+        return output(abstractOutput, new XMLFlavour());
+    }
 
     @SneakyThrows
     default <T extends AbstractOutput & InstantiableOutput> T toXML(Class<T> clazz) {
