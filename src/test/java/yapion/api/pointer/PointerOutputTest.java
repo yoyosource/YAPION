@@ -32,9 +32,9 @@ public class PointerOutputTest {
         assertThat(new YAPIONPointer("0000000000000000").toJSON(new StringOutput()).getResult(), is("{\"@pointer\":\"0000000000000000\"}"));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testLossyJSON() {
-        assertThat(new YAPIONPointer("0000000000000000").toJSONLossy(new StringOutput()).getResult(), is("{\"@pointer\":\"0000000000000000\"}"));
+        new YAPIONPointer("0000000000000000").toJSONLossy(new StringOutput()).getResult();
     }
 
 }

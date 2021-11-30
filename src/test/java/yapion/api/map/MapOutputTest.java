@@ -32,9 +32,9 @@ public class MapOutputTest {
         assertThat(new YAPIONMap().toJSON(new StringOutput()).getResult(), is("{\"@mapping\":[]}"));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testLossyJSON() {
-        assertThat(new YAPIONMap().toJSONLossy(new StringOutput()).getResult(), is("{\"@mapping\":[]}"));
+        new YAPIONMap().toJSONLossy(new StringOutput()).getResult();
     }
 
     @Test
@@ -47,9 +47,9 @@ public class MapOutputTest {
         assertThat(new YAPIONMap().toJSON(new StringOutput(true)).getResult(), is("{\n    \"@mapping\": []\n  }"));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testPrettifiedLossyJSON() {
-        assertThat(new YAPIONMap().toJSONLossy(new StringOutput(true)).getResult(), is("{\n    \"@mapping\": []\n  }"));
+        new YAPIONMap().toJSONLossy(new StringOutput(true)).getResult();
     }
 
     @Test
@@ -62,9 +62,9 @@ public class MapOutputTest {
         assertThat(new YAPIONMap().add("", new YAPIONMap()).toJSON(new StringOutput(true)).getResult(), is("{\n    \"@mapping\": [\n      \"0:1\"\n    ],\n    \"#0\": \"\",\n    \"#1\": {\n      \"@mapping\": []\n    }\n  }"));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testPrettifiedLossyJSONDepth() {
-        assertThat(new YAPIONMap().add("", new YAPIONMap()).toJSONLossy(new StringOutput(true)).getResult(), is("{\n    \"@mapping\": [\n      \"0:1\"\n    ],\n    \"#0\": \"\",\n    \"#1\": {\n      \"@mapping\": []\n    }\n  }"));
+        new YAPIONMap().add("", new YAPIONMap()).toJSONLossy(new StringOutput(true)).getResult();
     }
 
 }

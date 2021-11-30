@@ -33,9 +33,9 @@ public class YAPIONFlavour implements Flavour {
     @Override
     public String objectKeyPairStart(String key) {
         if (key.startsWith(" ") || key.startsWith(",")) {
-            return "\\" + key;
+            return "\\" + ValueUtils.stringToUTFEscapedString(key, ValueUtils.EscapeCharacters.KEY);
         }
-        return key;
+        return ValueUtils.stringToUTFEscapedString(key, ValueUtils.EscapeCharacters.KEY);
     }
 
     @Override

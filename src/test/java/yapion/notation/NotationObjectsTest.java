@@ -89,9 +89,9 @@ public class NotationObjectsTest {
         assertThat(new YAPIONMap(), isYAPION("<>"));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testMapJSON() {
-        assertThat(new YAPIONMap().toJSONLossy(new StringOutput()).getResult(), is("{\"@mapping\":[]}"));
+        new YAPIONMap().toJSONLossy(new StringOutput()).getResult();
     }
 
     @Test

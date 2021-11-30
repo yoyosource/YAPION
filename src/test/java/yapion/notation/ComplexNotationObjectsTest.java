@@ -34,7 +34,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testObjectObjectJSON() {
-        assertThat(new YAPIONObject().add("object", new YAPIONObject()).toJSONLossy(new StringOutput()).getResult(), is("{\"object\":{}}"));
+        assertThat(new YAPIONObject().add("object", new YAPIONObject()).toJSONLossy(new StringOutput()).getResult(), is("{\"object\": {}}"));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testObjectArrayJSON() {
-        assertThat(new YAPIONObject().add("array", new YAPIONArray()).toJSONLossy(new StringOutput()).getResult(), is("{\"array\":[]}"));
+        assertThat(new YAPIONObject().add("array", new YAPIONArray()).toJSONLossy(new StringOutput()).getResult(), is("{\"array\": []}"));
     }
 
     @Test
@@ -52,9 +52,9 @@ public class ComplexNotationObjectsTest {
         assertThat(new YAPIONObject().add("map", new YAPIONMap()), isYAPION("{map<>}"));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testObjectMapJSON() {
-        assertThat(new YAPIONObject().add("map", new YAPIONMap()).toJSONLossy(new StringOutput()).getResult(), is("{\"map\":{\"@mapping\":[]}}"));
+        new YAPIONObject().add("map", new YAPIONMap()).toJSONLossy(new StringOutput()).getResult();
     }
 
     @Test
@@ -82,9 +82,9 @@ public class ComplexNotationObjectsTest {
         assertThat(new YAPIONArray().add(new YAPIONMap()), isYAPION("[<>]"));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testArrayMapJSON() {
-        assertThat(new YAPIONArray().add(new YAPIONMap()).toJSONLossy(new StringOutput()).getResult(), is("[{\"@mapping\":[]}]"));
+        new YAPIONArray().add(new YAPIONMap()).toJSONLossy(new StringOutput()).getResult();
     }
 
     @Test
@@ -92,9 +92,9 @@ public class ComplexNotationObjectsTest {
         assertThat(new YAPIONMap().add(new YAPIONValue<>("object"), new YAPIONObject()), isYAPION("<(object):{}>"));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testMapObjectJSON() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>("object"), new YAPIONObject()).toJSONLossy(new StringOutput()).getResult(), is("{\"@mapping\":[\"0:1\"],\"#0\":\"object\",\"#1\":{}}"));
+        new YAPIONMap().add(new YAPIONValue<>("object"), new YAPIONObject()).toJSONLossy(new StringOutput()).getResult();
     }
 
     @Test
@@ -102,9 +102,9 @@ public class ComplexNotationObjectsTest {
         assertThat(new YAPIONMap().add(new YAPIONValue<>("array"), new YAPIONArray()), isYAPION("<(array):[]>"));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testMapArrayJSON() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>("array"), new YAPIONArray()).toJSONLossy(new StringOutput()).getResult(), is("{\"@mapping\":[\"0:1\"],\"#0\":\"array\",\"#1\":[]}"));
+        new YAPIONMap().add(new YAPIONValue<>("array"), new YAPIONArray()).toJSONLossy(new StringOutput()).getResult();
     }
 
     @Test
@@ -112,9 +112,9 @@ public class ComplexNotationObjectsTest {
         assertThat(new YAPIONMap().add(new YAPIONValue<>("map"), new YAPIONMap()), isYAPION("<(map):<>>"));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testMapMapJSON() {
-        assertThat(new YAPIONMap().add(new YAPIONValue<>("map"), new YAPIONMap()).toJSONLossy(new StringOutput()).getResult(), is("{\"@mapping\":[\"0:1\"],\"#0\":\"map\",\"#1\":{\"@mapping\":[]}}"));
+        new YAPIONMap().add(new YAPIONValue<>("map"), new YAPIONMap()).toJSONLossy(new StringOutput()).getResult();
     }
 
 }
