@@ -86,6 +86,21 @@ public class XMLFlavour implements Flavour {
     }
 
     @Override
+    public String beginComment() {
+        return "<!--";
+    }
+
+    @Override
+    public String comment(String comment) {
+        return comment;
+    }
+
+    @Override
+    public String endComment() {
+        return "-->";
+    }
+
+    @Override
     public String footer() {
         return "</root>";
     }
