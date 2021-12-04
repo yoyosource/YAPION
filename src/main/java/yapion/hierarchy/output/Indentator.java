@@ -25,7 +25,7 @@ public abstract class Indentator {
             return "";
         }
         if (indentLevel > 4096) {
-            return source.substring(0, 4096);
+            indentLevel = 4096;
         }
         if (indentLevel > source.length()) {
             while (source.length() < indentLevel) {
