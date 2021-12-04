@@ -15,67 +15,31 @@ package yapion.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.InternalAPI;
-import yapion.serializing.zar.ZarInputStream;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @InternalAPI
 @Slf4j
 public class YAPIONClassLoader extends ClassLoader {
 
-    private Map<String, Class<?>> current = new HashMap<>();
+    private Map<String, Supplier<Class<?>>> classes = new HashMap<>();
     private ClassLoader parent;
-
-    private Map<String, byte[]> classData = new LinkedHashMap<>();
 
     public YAPIONClassLoader(ClassLoader parent) {
         super(parent);
         this.parent = parent;
     }
 
-    public YAPIONClassLoader(ClassLoader parent, String prefix, ZarInputStream zarInputStream, Consumer<Class<?>> classConsumer) throws IOException {
-        this(parent);
-
-        while (zarInputStream.hasFile()) {
-            String name = zarInputStream.getFile();
-            long size = zarInputStream.getSize();
-
-            byte[] bytes = new byte[(int) size];
-            for (int i = 0; i < bytes.length; i++) {
-                bytes[i] = (byte) zarInputStream.read();
-            }
-
-            String className = prefix + name.substring(0, name.indexOf('.')).replace("/", ".");
-            log.debug("Entry Info: {} {}bytes", name, size);
-
-            addData(className, bytes);
-        }
-        getDataKeys().forEach(s -> {
-            log.debug("Loading: {}", s);
-            try {
-                classConsumer.accept(forName(s));
-            } catch (ClassNotFoundException e) {
-                log.error(e.getMessage(), e);
-            }
-        });
-    }
-
-    public void addData(String name, byte[] byteCode) {
-        classData.put(name, byteCode);
+    public void addData(String name, Supplier<Class<?>> supplier) {
+        classes.put(name, supplier);
     }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        if (current.containsKey(name)) {
-            return current.get(name);
-        }
-        if (classData.containsKey(name)) {
-            return defineClass(name, classData.get(name));
+        if (classes.containsKey(name)) {
+            return classes.get(name).get();
         }
         try {
             if (parent != null) {
@@ -87,21 +51,16 @@ public class YAPIONClassLoader extends ClassLoader {
         return Class.forName(name);
     }
 
-    public Set<String> getDataKeys() {
-        return classData.keySet();
-    }
-
-    public Set<String> loadedClasses() {
-        return current.keySet();
-    }
 
     public Class<?> forName(String name) throws ClassNotFoundException {
         return findClass(name);
     }
 
     public Class<?> defineClass(String name, byte[] bytes) {
-        Class<?> clazz = defineClass(name, bytes, 0, bytes.length);
-        current.put(name, clazz);
-        return clazz;
+        return defineClass(name, bytes, 0, bytes.length);
+    }
+
+    public Class<?> publicDefineClass(String name, byte[] bytes, int offset, int length) {
+        return defineClass(name, bytes, offset, length);
     }
 }

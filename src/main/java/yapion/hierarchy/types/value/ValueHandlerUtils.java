@@ -14,12 +14,10 @@
 package yapion.hierarchy.types.value;
 
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.InternalAPI;
 
 import java.util.*;
 
-@Slf4j
 @UtilityClass
 @InternalAPI
 public class ValueHandlerUtils {
@@ -89,5 +87,4 @@ public class ValueHandlerUtils {
         if (valueHandler.type() != null && valueHandler.type().isEmpty()) return;
         stringValueHandlerMap.put(valueHandler.type(), valueHandler);
     }
-
 }

@@ -33,6 +33,7 @@ import java.io.Externalizable;
 import java.io.Serializable;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
@@ -339,6 +340,14 @@ public class ReflectionsUtils {
         }
     }
 
+    public static void traverseSuperClasses(@NonNull Class<?> toCheck, Consumer<Class<?>> consumer) {
+        Class<?> clazz = toCheck;
+        while (clazz != null) {
+            consumer.accept(clazz);
+            clazz = clazz.getSuperclass();
+        }
+    }
+
     public static boolean isClassSuperclassOf(@NonNull Class<?> toCheck, @NonNull Class<?> superClass) {
         if (toCheck == superClass) return true;
         Class<?> superClassToCheck = toCheck.getSuperclass();
@@ -346,6 +355,16 @@ public class ReflectionsUtils {
         if (superClassToCheck == superClass) return true;
         if (superClassToCheck == Object.class) return false;
         return isClassSuperclassOf(superClassToCheck, superClass);
+    }
+
+    public static void traverseInterfaceClasses(@NonNull Class<?> toCheck, Consumer<Class<?>> consumer) {
+        Class<?>[] interfaces = toCheck.getInterfaces();
+        for (Class<?> i : interfaces) {
+            consumer.accept(i);
+        }
+        if (toCheck.getSuperclass() != null) {
+            traverseInterfaceClasses(toCheck.getSuperclass(), consumer);
+        }
     }
 
     public static int implementsInterface(@NonNull Class<?> toCheck, @NonNull Class<?> interfaceClass) {

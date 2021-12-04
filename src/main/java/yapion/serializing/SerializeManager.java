@@ -14,21 +14,22 @@
 package yapion.serializing;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.InternalAPI;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.parser.YAPIONParser;
+import yapion.parser.options.StreamOptions;
 import yapion.serializing.api.InstanceFactory;
 import yapion.serializing.api.SerializerBase;
 import yapion.serializing.api.YAPIONSerializerRegistrator;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.reflection.PureStrategy;
-import yapion.serializing.zar.ZarInputStream;
 import yapion.utils.ReflectionsUtils;
 import yapion.utils.YAPIONClassLoader;
 
@@ -40,10 +41,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.zip.GZIPInputStream;
 
-import static yapion.utils.ReflectionsUtils.implementsInterface;
-import static yapion.utils.ReflectionsUtils.isClassSuperclassOf;
+import static yapion.utils.ReflectionsUtils.*;
 
 @Slf4j
 @UtilityClass
@@ -76,8 +75,11 @@ public class SerializeManager {
     public Predicate<Class<?>> isRecord = c -> false;
 
     private final Map<Class<?>, InternalSerializer<?>> serializerMap = new IdentityHashMap<>();
+    private final Map<String, SerializerFuture> toLoadSerializerMap = new HashMap<>();
     private final List<InternalSerializer<?>> interfaceTypeSerializer = new ArrayList<>();
+    private final Map<String, SerializerFuture> toLoadInterfaceTypeSerializer = new HashMap<>();
     private final List<InternalSerializer<?>> classTypeSerializer = new ArrayList<>();
+    private final Map<String, SerializerFuture> toLoadClassTypeSerializer = new HashMap<>();
 
     private final Set<String> serializerGroups = new HashSet<>();
 
@@ -94,24 +96,122 @@ public class SerializeManager {
     }
 
     static {
-        InputStream inputStream = SerializeManager.class.getResourceAsStream("serializer.zar.gz");
-        if (inputStream == null) {
+        long time = System.currentTimeMillis();
+        YAPIONObject metaData;
+        byte[] bytes;
+        try {
+            long loadTime = System.currentTimeMillis();
+            metaData = YAPIONParser.parse(SerializeManager.class.getResourceAsStream("serializer.pack.meta"), new StreamOptions().forceOnlyYAPION(true));
+            System.out.println("Loaded serializer.pack.meta in " + (System.currentTimeMillis() - loadTime) + "ms");
+
+            loadTime = System.currentTimeMillis();
+            BufferedInputStream inputStream = new BufferedInputStream(SerializeManager.class.getResourceAsStream("serializer.pack"));
+            bytes = readNBytes(inputStream, Integer.MAX_VALUE);
+            System.out.println("Loaded serializer pack in " + (System.currentTimeMillis() - loadTime) + "ms");
+
+            YAPIONClassLoader yapionClassLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
+            List<SerializerFuture> toDirectLoad = new ArrayList<>(metaData.size());
+            loadTime = System.currentTimeMillis();
+            metaData.forEach((s, yapionAnyType) -> {
+                String name = "yapion.serializing.serializer." + s;
+                SerializerFuture serializerFuture = new SerializerFuture((YAPIONObject) yapionAnyType, (start, length) -> yapionClassLoader.publicDefineClass(name, bytes, start, length));
+                yapionClassLoader.addData(name, serializerFuture::get);
+                if (serializerFuture.isDirectLoad()) {
+                    toDirectLoad.add(serializerFuture);
+                }
+                if (serializerFuture.getType() != null) {
+                    toLoadSerializerMap.put(serializerFuture.getType(), serializerFuture);
+                }
+                if (serializerFuture.getPrimitiveType() != null) {
+                    toLoadSerializerMap.put(serializerFuture.getPrimitiveType(), serializerFuture);
+                }
+                if (serializerFuture.getInterfaceType() != null) {
+                    toLoadInterfaceTypeSerializer.put(serializerFuture.getInterfaceType(), serializerFuture);
+                }
+                if (serializerFuture.getClassType() != null) {
+                    toLoadClassTypeSerializer.put(serializerFuture.getClassType(), serializerFuture);
+                }
+            });
+            System.out.println("Loaded serializer meta data in " + (System.currentTimeMillis() - loadTime) + "ms");
+            loadTime = System.currentTimeMillis();
+            toDirectLoad.forEach(serializerFuture -> {
+                internalAdd(serializerFuture.get());
+            });
+            System.out.println("Loaded serializers in " + (System.currentTimeMillis() - loadTime) + "ms");
+        } catch (Exception e) {
             log.error("No Serializer was loaded. Please inspect.");
             throw new YAPIONException("No Serializer was loaded. Please inspect.");
         }
-
-        try (ZarInputStream zarInputStream = new ZarInputStream(new GZIPInputStream(new BufferedInputStream(inputStream)))) {
-            new YAPIONClassLoader(Thread.currentThread().getContextClassLoader(), "yapion.serializing.serializer.", zarInputStream, SerializeManager::internalAdd);
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.error(e.getMessage(), e);
-        }
-        if (serializerMap.isEmpty()) {
-            log.error("No Serializer was loaded. Please inspect.");
-        }
+        time = System.currentTimeMillis() - time;
+        log.debug("SerializerManager initialized in {}ms", time);
+        System.out.println("Serializer init took: " + time + "ms");
 
         initialized = true;
         serializerGroups.add("java.");
+    }
+
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
+    private static final int MAX_BUFFER_SIZE = Integer.MAX_VALUE - 8;
+
+    private static byte[] readNBytes(InputStream inputStream, int len) throws IOException {
+        if (len < 0) {
+            throw new IllegalArgumentException("len < 0");
+        }
+
+        List<byte[]> bufs = null;
+        byte[] result = null;
+        int total = 0;
+        int remaining = len;
+        int n;
+        do {
+            byte[] buf = new byte[Math.min(remaining, DEFAULT_BUFFER_SIZE)];
+            int nread = 0;
+
+            // read to EOF which may read more or less than buffer size
+            while ((n = inputStream.read(buf, nread,
+                    Math.min(buf.length - nread, remaining))) > 0) {
+                nread += n;
+                remaining -= n;
+            }
+
+            if (nread > 0) {
+                if (MAX_BUFFER_SIZE - total < nread) {
+                    throw new OutOfMemoryError("Required array size too large");
+                }
+                total += nread;
+                if (result == null) {
+                    result = buf;
+                } else {
+                    if (bufs == null) {
+                        bufs = new ArrayList<>();
+                        bufs.add(result);
+                    }
+                    bufs.add(buf);
+                }
+            }
+            // if the last call to read returned -1 or the number of bytes
+            // requested have been read then break
+        } while (n >= 0 && remaining > 0);
+
+        if (bufs == null) {
+            if (result == null) {
+                return new byte[0];
+            }
+            return result.length == total ?
+                    result : Arrays.copyOf(result, total);
+        }
+
+        result = new byte[total];
+        int offset = 0;
+        remaining = total;
+        for (byte[] b : bufs) {
+            int count = Math.min(b.length, remaining);
+            System.arraycopy(b, 0, result, offset, count);
+            offset += count;
+            remaining -= count;
+        }
+
+        return result;
     }
 
     private static void internalAdd(Class<?> clazz) {
@@ -179,7 +279,7 @@ public class SerializeManager {
         if (!initialized) {
             return true;
         }
-        if (!serializerMap.containsKey(serializer.type())) {
+        if (!serializerMap.containsKey(serializer.type()) && !toLoadSerializerMap.containsKey(serializer.type().getTypeName())) {
             return true;
         }
         if (FinalInternalSerializerClass == null) return true;
@@ -201,7 +301,7 @@ public class SerializeManager {
      */
     public static void remove(Class<?> type) {
         if (type == null) return;
-        if (serializerMap.containsKey(type) && FinalInternalSerializerClass.isInstance(serializerMap.get(type))) return;
+        if (serializerMap.containsKey(type) && toLoadSerializerMap.containsKey(type.getTypeName()) && FinalInternalSerializerClass.isInstance(serializerMap.get(type))) return;
         serializerMap.remove(type);
     }
 
@@ -217,9 +317,34 @@ public class SerializeManager {
         if (isRecord.test(type)) {
             return RECORD_SERIALIZER;
         }
+        if (toLoadSerializerMap.containsKey(type.getTypeName())) { // Lazy loads if needed
+            log.debug("Loading serializer for '{}'", type.getTypeName());
+            System.out.println("Loading serializer for '" + type.getTypeName() + "'");
+            internalAdd(toLoadSerializerMap.get(type.getTypeName()).get());
+            toLoadSerializerMap.remove(type.getTypeName());
+            toLoadInterfaceTypeSerializer.remove(type.getTypeName());
+            toLoadClassTypeSerializer.remove(type.getTypeName());
+        }
 
         InternalSerializer<?> initialSerializer = serializerMap.getOrDefault(type, defaultSerializer);
         if (initialSerializer != null) return initialSerializer;
+
+        traverseSuperClasses(type, aClass -> {
+            if (toLoadClassTypeSerializer.containsKey(aClass.getTypeName())) {
+                log.debug("Loading serializer for '{}'", aClass.getTypeName());
+                System.out.println("Loading serializer for '" + aClass.getTypeName() + "'");
+                internalAdd(toLoadClassTypeSerializer.get(aClass.getTypeName()).get());
+                toLoadClassTypeSerializer.remove(aClass.getTypeName());
+            }
+        });
+        traverseInterfaceClasses(type, aClass -> {
+            if (toLoadInterfaceTypeSerializer.containsKey(aClass.getTypeName())) {
+                log.debug("Loading serializer for '{}'", aClass.getTypeName());
+                System.out.println("Loading serializer for '" + aClass.getTypeName() + "'");
+                internalAdd(toLoadInterfaceTypeSerializer.get(aClass.getTypeName()).get());
+                toLoadInterfaceTypeSerializer.remove(aClass.getTypeName());
+            }
+        });
 
         AtomicReference<Class<?>> currentType = new AtomicReference<>(type);
         interfaceTypeSerializer.stream()

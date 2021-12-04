@@ -15,44 +15,42 @@ package yapion.utils;
 
 import lombok.experimental.UtilityClass;
 import yapion.annotations.api.InternalAPI;
-import yapion.serializing.zar.ZarOutputStream;
+import yapion.hierarchy.types.YAPIONObject;
 
 import java.io.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.zip.GZIPOutputStream;
 
-/**
- * This class will be deleted by compile process
- */
 @InternalAPI
 @UtilityClass
 public class Packer {
 
-    public void pack(File source, File destination, Predicate<File> filter, boolean deleteAfterPack) throws Exception {
+    public void pack(File source, File destination, Predicate<File> filter, boolean deleteAfterPack, boolean gzip, UnaryOperator<String> fileMapper, BiConsumer<File, YAPIONObject> metaDataConsumer) throws Exception {
         if (!source.exists()) return;
+        if (!source.isDirectory()) return;
 
         destination.getParentFile().mkdirs();
         destination.delete();
         destination.createNewFile();
         System.out.println(destination.getAbsolutePath());
 
-        ZarOutputStream zarOutputStream = new ZarOutputStream(new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(destination))));
-        zarOutputStream.useIndex();
-        int substringLength = source.getAbsolutePath().length() + 1;
-        packIntoZarFile(zarOutputStream, substringLength, source, filter, deleteAfterPack);
-        zarOutputStream.close();
-        System.out.println("Destination Size: " + destination.length());
+        YAPIONObject metaData = new YAPIONObject();
+        AtomicInteger index = new AtomicInteger();
 
-        StringBuilder st = new StringBuilder();
-        st.append("{");
-        zarOutputStream.getIndex().forEach((s, aLong) -> {
-            st.append(s).append("(").append(aLong).append("L)");
-        });
-        st.append("}");
-        System.out.println(st);
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(destination));
+        OutputStream outputStream = gzip ? new GZIPOutputStream(bufferedOutputStream) : bufferedOutputStream;
+
+        int substringLength = source.getAbsolutePath().length() + 1;
+        internalPack(outputStream, substringLength, source, filter, deleteAfterPack, metaData, index, fileMapper, metaDataConsumer);
+        outputStream.close();
+
+        metaData.toFile(new File(destination.getAbsolutePath() + ".meta"));
     }
 
-    private void packIntoZarFile(ZarOutputStream zarOutputStream, int substringLength, File file, Predicate<File> filter, boolean deleteAfterPack) throws IOException {
+    private void internalPack(OutputStream outputStream, int substringLength, File file, Predicate<File> filter, boolean deleteAfterPack, YAPIONObject metaData, AtomicInteger index, UnaryOperator<String> fileMapper, BiConsumer<File, YAPIONObject> metaDataConsumer) throws IOException {
         if (file == null) return;
         File[] files = file.listFiles();
         if (files == null) return;
@@ -62,14 +60,21 @@ public class Packer {
             if (!filter.test(f)) continue;
 
             String fileName = f.getAbsolutePath().replace('\\', '/');
-            System.out.println("Packing: " + fileName);
             fileName = fileName.substring(substringLength);
+            System.out.println("Packing: " + fileName);
+            fileName = fileMapper.apply(fileName);
 
-            zarOutputStream.addFile(fileName, f.length());
+            metaData.add(fileName, new YAPIONObject()
+                    .add("start", index.get())
+                    .add("length", (int) f.length())
+            );
+            metaDataConsumer.accept(f, metaData.getObject(fileName));
+
             try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(f));) {
                 for (int i = 0; i < f.length(); i++) {
-                    zarOutputStream.write(bufferedInputStream.read());
+                    outputStream.write(bufferedInputStream.read());
                 }
+                index.getAndAdd((int) f.length());
             }
             if (deleteAfterPack) {
                 f.delete();
@@ -78,7 +83,7 @@ public class Packer {
 
         for (File f : files) {
             if (!f.isDirectory()) continue;
-            packIntoZarFile(zarOutputStream, substringLength, f, filter, deleteAfterPack);
+            internalPack(outputStream, substringLength, f, filter, deleteAfterPack, metaData, index, fileMapper, metaDataConsumer);
             if (deleteAfterPack) {
                 f.delete();
             }
