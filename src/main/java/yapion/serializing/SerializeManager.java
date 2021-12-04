@@ -318,7 +318,6 @@ public class SerializeManager {
         }
         if (toLoadSerializerMap.containsKey(type.getTypeName())) { // Lazy loads if needed
             log.debug("Loading serializer for '{}'", type.getTypeName());
-            System.out.println("Loading serializer for '" + type.getTypeName() + "'");
             internalAdd(toLoadSerializerMap.get(type.getTypeName()).get());
             toLoadSerializerMap.remove(type.getTypeName());
             toLoadInterfaceTypeSerializer.remove(type.getTypeName());
@@ -331,7 +330,6 @@ public class SerializeManager {
         traverseSuperClasses(type, aClass -> {
             if (toLoadClassTypeSerializer.containsKey(aClass.getTypeName())) {
                 log.debug("Loading serializer for '{}'", aClass.getTypeName());
-                System.out.println("Loading serializer for '" + aClass.getTypeName() + "'");
                 internalAdd(toLoadClassTypeSerializer.get(aClass.getTypeName()).get());
                 toLoadClassTypeSerializer.remove(aClass.getTypeName());
             }
@@ -339,7 +337,6 @@ public class SerializeManager {
         traverseInterfaceClasses(type, aClass -> {
             if (toLoadInterfaceTypeSerializer.containsKey(aClass.getTypeName())) {
                 log.debug("Loading serializer for '{}'", aClass.getTypeName());
-                System.out.println("Loading serializer for '" + aClass.getTypeName() + "'");
                 internalAdd(toLoadInterfaceTypeSerializer.get(aClass.getTypeName()).get());
                 toLoadInterfaceTypeSerializer.remove(aClass.getTypeName());
             }
