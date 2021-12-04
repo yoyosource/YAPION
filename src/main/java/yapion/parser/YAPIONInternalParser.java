@@ -80,6 +80,12 @@ final class YAPIONInternalParser {
     boolean forceOnlyJSON = false;
     boolean forceOnlyYAPION = false;
 
+    boolean disabledObject = false;
+    boolean disabledArray = false;
+    boolean disabledMap = false;
+    boolean disabledValue = false;
+    boolean disabledPointer = false;
+
     Map<CallbackType<?>, ParseCallback<?>> parseCallbackMap = new HashMap<>();
 
     void setReferenceFunction(ReferenceFunction referenceFunction) {
@@ -247,7 +253,7 @@ final class YAPIONInternalParser {
         if (escaped) {
             return false;
         }
-        if (!forceOnlyYAPION && mightValue != MightValue.FALSE) {
+        if (!disabledValue && !forceOnlyYAPION && mightValue != MightValue.FALSE) {
             if (c == ' ') {
                 return true;
             }
@@ -267,7 +273,7 @@ final class YAPIONInternalParser {
                 throw new YAPIONParserException("Invalid JSON");
             }
         }
-        if (c == '{') {
+        if (!disabledObject && c == '{') {
             log.debug("type     [OBJECT]");
             push(YAPIONType.OBJECT);
             YAPIONObject yapionObject = new YAPIONObject();
@@ -277,7 +283,7 @@ final class YAPIONInternalParser {
             key = "";
             return true;
         }
-        if (c == '[') {
+        if (!disabledArray && c == '[') {
             log.debug("type     [ARRAY]");
             push(YAPIONType.ARRAY);
             YAPIONArray yapionArray = new YAPIONArray();
@@ -287,12 +293,12 @@ final class YAPIONInternalParser {
             key = "";
             return true;
         }
-        if (!forceOnlyJSON && c == '(') {
+        if (!disabledValue && !forceOnlyJSON && c == '(') {
             log.debug("type     [VALUE]");
             push(YAPIONType.VALUE);
             return true;
         }
-        if (!forceOnlyJSON && lastChar == '-' && c == '>') {
+        if (!disabledPointer && !forceOnlyJSON && lastChar == '-' && c == '>') {
             log.debug("type     [POINTER]");
             if (typeStack.peek() != YAPIONType.MAP) {
                 current.deleteCharAt(current.length() - 1);
@@ -310,7 +316,7 @@ final class YAPIONInternalParser {
                 log.info("Enabling comment support could benefit the parsing?");
             }
         }
-        if (!forceOnlyJSON && c == '<') {
+        if (!disabledMap && !forceOnlyJSON && c == '<') {
             log.debug("type     [MAP]");
             push(YAPIONType.MAP);
             YAPIONMap yapionMap = new YAPIONMap();
@@ -320,7 +326,7 @@ final class YAPIONInternalParser {
             key = "";
             return true;
         }
-        if (!forceOnlyYAPION && c == ':' && typeStack.peek() == YAPIONType.OBJECT && current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"') {
+        if (!disabledValue && !forceOnlyYAPION && c == ':' && typeStack.peek() == YAPIONType.OBJECT && current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"') {
             log.debug("type     [JSON ?]");
             mightValue = MightValue.MIGHT;
             return false;

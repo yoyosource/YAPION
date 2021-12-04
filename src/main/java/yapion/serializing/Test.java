@@ -26,12 +26,6 @@ public class Test {
         YAPIONObject yapionObject = YAPIONSerializer.serialize(random);
         System.out.println(yapionObject);
         System.out.println((Random) YAPIONDeserializer.deserialize(yapionObject));
-
-        /*
-        long time = System.currentTimeMillis();
-        System.out.println(SerializeManager.isRecord);
-        System.out.println(System.currentTimeMillis() - time);
-         */
     }
 
     private static void profile() {

@@ -15,12 +15,15 @@ package yapion.parser.options;
 
 import lombok.Getter;
 import lombok.NonNull;
+import yapion.hierarchy.types.YAPIONType;
 import yapion.parser.CommentParsing;
 import yapion.parser.callbacks.CallbackType;
 import yapion.parser.callbacks.ParseCallback;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Getter
 public class ParseOptions {
@@ -29,6 +32,7 @@ public class ParseOptions {
     private boolean forceOnlyJSON = false;
     private boolean forceOnlyYAPION = false;
     private Map<CallbackType<?>, ParseCallback<?>> parseCallbackMap = new HashMap<>();
+    private Set<YAPIONType> disabledTypes = new HashSet<>();
 
     /**
      * Set how comments should be treated by the parser.
@@ -86,6 +90,16 @@ public class ParseOptions {
      */
     public <T> ParseOptions parseCallback(CallbackType<T> type, ParseCallback<T> callback) {
         parseCallbackMap.put(type, callback);
+        return this;
+    }
+
+    /**
+     *
+     * @param type
+     * @return itself
+     */
+    public ParseOptions disabledType(YAPIONType type) {
+        disabledTypes.add(type);
         return this;
     }
 }

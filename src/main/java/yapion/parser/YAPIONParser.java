@@ -582,6 +582,11 @@ public final class YAPIONParser {
         yapionInternalParser.forceOnlyJSON = parseOptions.isForceOnlyJSON();
         yapionInternalParser.forceOnlyYAPION = parseOptions.isForceOnlyYAPION();
         yapionInternalParser.parseCallbackMap = parseOptions.getParseCallbackMap();
+        yapionInternalParser.disabledObject = parseOptions.getDisabledTypes().contains(YAPIONType.OBJECT);
+        yapionInternalParser.disabledArray = parseOptions.getDisabledTypes().contains(YAPIONType.ARRAY);
+        yapionInternalParser.disabledMap = parseOptions.getDisabledTypes().contains(YAPIONType.MAP);
+        yapionInternalParser.disabledValue = parseOptions.getDisabledTypes().contains(YAPIONType.VALUE);
+        yapionInternalParser.disabledPointer = parseOptions.getDisabledTypes().contains(YAPIONType.POINTER);
     }
 
     public YAPIONParser setReferenceFunction(@NonNull ReferenceFunction referenceFunction) {

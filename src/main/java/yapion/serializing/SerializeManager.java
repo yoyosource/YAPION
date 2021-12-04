@@ -21,6 +21,7 @@ import yapion.annotations.object.YAPIONObjenesis;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONType;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
 import yapion.parser.options.StreamOptions;
@@ -100,18 +101,19 @@ public class SerializeManager {
         YAPIONObject metaData;
         byte[] bytes;
         try {
-            long loadTime = System.currentTimeMillis();
-            metaData = YAPIONParser.parse(SerializeManager.class.getResourceAsStream("serializer.pack.meta"), new StreamOptions().forceOnlyYAPION(true));
-            System.out.println("Loaded serializer.pack.meta in " + (System.currentTimeMillis() - loadTime) + "ms");
+            metaData = YAPIONParser.parse(new BufferedInputStream(SerializeManager.class.getResourceAsStream("serializer.pack.meta")),
+                    new StreamOptions()
+                            .forceOnlyYAPION(true)
+                            .disabledType(YAPIONType.ARRAY)
+                            .disabledType(YAPIONType.POINTER)
+                            .disabledType(YAPIONType.MAP)
+            );
 
-            loadTime = System.currentTimeMillis();
             BufferedInputStream inputStream = new BufferedInputStream(SerializeManager.class.getResourceAsStream("serializer.pack"));
             bytes = readNBytes(inputStream, Integer.MAX_VALUE);
-            System.out.println("Loaded serializer pack in " + (System.currentTimeMillis() - loadTime) + "ms");
 
             YAPIONClassLoader yapionClassLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
             List<SerializerFuture> toDirectLoad = new ArrayList<>(metaData.size());
-            loadTime = System.currentTimeMillis();
             metaData.forEach((s, yapionAnyType) -> {
                 String name = "yapion.serializing.serializer." + s;
                 SerializerFuture serializerFuture = new SerializerFuture((YAPIONObject) yapionAnyType, (start, length) -> yapionClassLoader.publicDefineClass(name, bytes, start, length));
@@ -132,12 +134,9 @@ public class SerializeManager {
                     toLoadClassTypeSerializer.put(serializerFuture.getClassType(), serializerFuture);
                 }
             });
-            System.out.println("Loaded serializer meta data in " + (System.currentTimeMillis() - loadTime) + "ms");
-            loadTime = System.currentTimeMillis();
             toDirectLoad.forEach(serializerFuture -> {
                 internalAdd(serializerFuture.get());
             });
-            System.out.println("Loaded serializers in " + (System.currentTimeMillis() - loadTime) + "ms");
         } catch (Exception e) {
             log.error("No Serializer was loaded. Please inspect.");
             throw new YAPIONException("No Serializer was loaded. Please inspect.");

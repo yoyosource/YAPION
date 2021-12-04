@@ -15,6 +15,7 @@ package yapion.parser.options;
 
 import lombok.Getter;
 import lombok.NonNull;
+import yapion.hierarchy.types.YAPIONType;
 import yapion.parser.CommentParsing;
 import yapion.parser.InputStreamCharsets;
 import yapion.parser.callbacks.CallbackType;
@@ -82,6 +83,18 @@ public class StreamOptions extends ParseOptions {
     @Override
     public <T> StreamOptions parseCallback(CallbackType<T> type, ParseCallback<T> callback) {
         super.parseCallback(type, callback);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param type
+     * @return itself
+     */
+    @Override
+    public StreamOptions disabledType(YAPIONType type) {
+        super.disabledType(type);
         return this;
     }
 
