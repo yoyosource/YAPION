@@ -327,20 +327,24 @@ public class SerializeManager {
         InternalSerializer<?> initialSerializer = serializerMap.getOrDefault(type, defaultSerializer);
         if (initialSerializer != null) return initialSerializer;
 
-        traverseSuperClasses(type, aClass -> {
-            if (toLoadClassTypeSerializer.containsKey(aClass.getTypeName())) {
-                log.debug("Loading serializer for '{}'", aClass.getTypeName());
-                internalAdd(toLoadClassTypeSerializer.get(aClass.getTypeName()).get());
-                toLoadClassTypeSerializer.remove(aClass.getTypeName());
-            }
-        });
-        traverseInterfaceClasses(type, aClass -> {
-            if (toLoadInterfaceTypeSerializer.containsKey(aClass.getTypeName())) {
-                log.debug("Loading serializer for '{}'", aClass.getTypeName());
-                internalAdd(toLoadInterfaceTypeSerializer.get(aClass.getTypeName()).get());
-                toLoadInterfaceTypeSerializer.remove(aClass.getTypeName());
-            }
-        });
+        if (!toLoadClassTypeSerializer.isEmpty()) {
+            traverseSuperClasses(type, aClass -> {
+                if (toLoadClassTypeSerializer.containsKey(aClass.getTypeName())) {
+                    log.debug("Loading serializer for '{}'", aClass.getTypeName());
+                    internalAdd(toLoadClassTypeSerializer.get(aClass.getTypeName()).get());
+                    toLoadClassTypeSerializer.remove(aClass.getTypeName());
+                }
+            });
+        }
+        if (!toLoadInterfaceTypeSerializer.isEmpty()) {
+            traverseInterfaceClasses(type, aClass -> {
+                if (toLoadInterfaceTypeSerializer.containsKey(aClass.getTypeName())) {
+                    log.debug("Loading serializer for '{}'", aClass.getTypeName());
+                    internalAdd(toLoadInterfaceTypeSerializer.get(aClass.getTypeName()).get());
+                    toLoadInterfaceTypeSerializer.remove(aClass.getTypeName());
+                }
+            });
+        }
 
         AtomicReference<Class<?>> currentType = new AtomicReference<>(type);
         interfaceTypeSerializer.stream()
