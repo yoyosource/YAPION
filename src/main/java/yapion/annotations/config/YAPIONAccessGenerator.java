@@ -11,8 +11,9 @@
  * limitations under the License.
  */
 
-package yapion.annotations.registration;
+package yapion.annotations.config;
 
+import yapion.config.annotationproccessing.ConstraintUtils;
 import yapion.parser.CommentParsing;
 
 import java.lang.annotation.ElementType;
@@ -46,7 +47,7 @@ public @interface YAPIONAccessGenerator {
     boolean lombokToString() default false;
 
     /**
-     * Apply the {@link lombok.experimental.ExtensionMethod} annotation to the root class with the {@link yapion.serializing.annotationproccessing.ConstraintUtils} class parameter.
+     * Apply the {@link lombok.experimental.ExtensionMethod} annotation to the root class with the {@link ConstraintUtils} class parameter.
      *
      * @return {@code true} for extensionMethod usage, {@code false} otherwise.
      */

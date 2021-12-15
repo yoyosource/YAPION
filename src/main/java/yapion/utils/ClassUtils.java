@@ -145,4 +145,8 @@ public class ClassUtils {
         return clazz.isPrimitive() || clazz == void.class;
     }
 
+    @InternalAPI
+    public static boolean isBoxedPrimitive(Class<?> clazz) {
+        return getPrimitive(clazz) != clazz;
+    }
 }

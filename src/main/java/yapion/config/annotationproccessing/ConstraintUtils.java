@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.annotationproccessing;
+package yapion.config.annotationproccessing;
 
 import lombok.experimental.UtilityClass;
 

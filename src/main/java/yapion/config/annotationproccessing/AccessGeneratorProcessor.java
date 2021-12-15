@@ -11,13 +11,14 @@
  * limitations under the License.
  */
 
-package yapion.serializing.annotationproccessing;
+package yapion.config.annotationproccessing;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import yapion.annotations.api.ProcessorImplementation;
-import yapion.annotations.registration.YAPIONAccessGenerator;
+import yapion.annotations.config.YAPIONAccessGenerator;
+import yapion.config.annotationproccessing.generator.*;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
@@ -26,7 +27,6 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.parser.YAPIONParser;
 import yapion.parser.options.FileOptions;
 import yapion.parser.options.ParseOptions;
-import yapion.serializing.annotationproccessing.generator.*;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -48,7 +48,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ProcessorImplementation
-@SupportedAnnotationTypes("yapion.annotations.registration.YAPIONAccessGenerator")
+@SupportedAnnotationTypes("yapion.annotations.config.YAPIONAccessGenerator")
 public class AccessGeneratorProcessor extends AbstractProcessor {
 
     private Messager messager;
@@ -234,7 +234,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
             if (lombokExtensionMethod.get()) {
                 List<String> strings = new ArrayList<>();
-                strings.add("yapion.serializing.annotationproccessing.ConstraintUtils.class");
+                strings.add("yapion.config.ConstraintUtils.class");
                 yapionObject.getArrayOrDefault("@extensions", new YAPIONArray()).forEach(yapionAnyType -> {
                     String current = ((YAPIONValue<String>) yapionAnyType).get();
                     if (current.endsWith(".class")) {
@@ -248,7 +248,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             if (lombokToString.get()) {
                 classGenerator.addAnnotation(ToString.class);
             }
-            classGenerator.addImport("static yapion.serializing.annotationproccessing.ConstraintUtils.*");
+            classGenerator.addImport("static yapion.config.ConstraintUtils.*");
             objectContainer.outputRoot(classGenerator);
 
             JavaFileObject f = processingEnv.getFiler().createSourceFile(classGenerator.getPackageName() + "." + classGenerator.getClassName());

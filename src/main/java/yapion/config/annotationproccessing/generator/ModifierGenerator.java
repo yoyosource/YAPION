@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.serializing.annotationproccessing.generator;
+package yapion.config.annotationproccessing.generator;
 
 import java.lang.reflect.Modifier;
 import java.util.Collections;
