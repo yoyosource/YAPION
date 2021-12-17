@@ -13,9 +13,9 @@
 
 package yapion.path.filters;
 
-public class RangeSizeFilter extends SizeFilter {
+public class RangeSizeFilter<T extends Number & Comparable<T>> extends SizeFilter<T> {
 
-    public RangeSizeFilter(int lowerBound, int higherBound) {
-        super(integer -> integer >= lowerBound && integer <= higherBound);
+    public RangeSizeFilter(T lowerBound, T higherBound) {
+        super(value -> value.compareTo(lowerBound) >= 0 && value.compareTo(higherBound) <= 0);
     }
 }

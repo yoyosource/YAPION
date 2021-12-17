@@ -11,11 +11,13 @@
  * limitations under the License.
  */
 
-package yapion.path.filters;
+package yapion.path;
 
-public class MinSizeFilter<T extends Number & Comparable<T>> extends SizeFilter<T> {
+public class TestParser {
 
-    public MinSizeFilter(T lowerBound) {
-        super(value -> value.compareTo(lowerBound) >= 0);
+    public static void main(String[] args) {
+        new YAPIONPathParser("test.*").parse();
+        new YAPIONPathParser("test./.*/(test.test&test.test2)").parse();
+        new YAPIONPathParser("artists.**(title&**.duration)").parse();
     }
 }

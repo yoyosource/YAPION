@@ -26,6 +26,7 @@ import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.output.flavours.Flavour;
 import yapion.hierarchy.types.YAPIONPath;
 import yapion.parser.YAPIONParser;
+import yapion.path.YAPIONPathParser;
 import yapion.utils.ReferenceFunction;
 
 import java.util.ArrayList;
@@ -204,5 +205,13 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
 
     public List<String> getComments() {
         return comments;
+    }
+
+    public List<YAPIONAnyType> select(yapion.path.YAPIONPath yapionPath) {
+        return yapionPath.apply(this);
+    }
+
+    public List<YAPIONAnyType> select(String pathIdentifier) {
+        return select(new YAPIONPathParser(pathIdentifier).parse());
     }
 }

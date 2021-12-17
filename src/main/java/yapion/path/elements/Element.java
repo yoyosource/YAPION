@@ -13,36 +13,53 @@
 
 package yapion.path.elements;
 
-import lombok.AllArgsConstructor;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.path.PathElement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-@AllArgsConstructor
 public class Element implements PathElement {
 
-    private String identifier;
-    private Integer intIdentifier;
+    private String[] elements;
+    private List<Integer> integers = new ArrayList<>();
 
-    public Element(String identifier) {
-        this.identifier = identifier;
-        try {
-            intIdentifier = Integer.parseInt(identifier);
-        } catch (NumberFormatException e) {
-            // Ignored
+    public Element(String... elements) {
+        this.elements = elements;
+        for (String s : elements) {
+            try {
+                integers.add(Integer.parseInt(s));
+            } catch (NumberFormatException e) {
+                // Ignored
+            }
         }
     }
 
     @Override
     public boolean check(YAPIONAnyType element) {
         if (element instanceof YAPIONObject yapionObject) {
-            return yapionObject.containsKey(identifier);
-        } else if (element instanceof YAPIONArray yapionArray && intIdentifier != null) {
-            return yapionArray.containsKey(intIdentifier);
+            for (String s : elements) {
+                if (yapionObject.containsKey(s)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if (element instanceof YAPIONArray yapionArray) {
+            for (int i : integers) {
+                if (i < 0) {
+                    if (yapionArray.containsKey(yapionArray.length() + i)) {
+                        return true;
+                    }
+                }
+                if (yapionArray.containsKey(i)) {
+                    return true;
+                }
+            }
+            return false;
         }
         return false;
     }
@@ -52,9 +69,18 @@ public class Element implements PathElement {
         List<YAPIONAnyType> result = new ArrayList<>();
         for (YAPIONAnyType element : current) {
             if (element instanceof YAPIONObject yapionObject) {
-                yapionObject.getAny(identifier, result::add, () -> {});
-            } else if (element instanceof YAPIONArray yapionArray && intIdentifier != null) {
-                yapionArray.getAny(intIdentifier, result::add, () -> {});
+                for (String s : elements) {
+                    if (yapionObject.containsKey(s)) {
+                        result.add(yapionObject.getAny(s));
+                    }
+                }
+            }
+            if (element instanceof YAPIONArray yapionArray) {
+                for (int i : integers) {
+                    if (yapionArray.containsKey(i)) {
+                        result.add(yapionArray.getAny(i));
+                    }
+                }
             }
         }
         return result;

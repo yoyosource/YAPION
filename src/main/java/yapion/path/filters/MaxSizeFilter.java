@@ -13,9 +13,9 @@
 
 package yapion.path.filters;
 
-public class MaxSizeFilter extends SizeFilter {
+public class MaxSizeFilter<T extends Number & Comparable<T>> extends SizeFilter<T> {
 
-    public MaxSizeFilter(int higherBound) {
-        super(integer -> integer <= higherBound);
+    public MaxSizeFilter(T higherBound) {
+        super(value -> value.compareTo(higherBound) <= 0);
     }
 }

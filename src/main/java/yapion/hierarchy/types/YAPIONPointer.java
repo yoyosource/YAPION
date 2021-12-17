@@ -34,6 +34,23 @@ public class YAPIONPointer extends YAPIONValueType<YAPIONPointer> {
     private ReferenceFunction referenceFunction;
     private YAPIONDataType<?, ?> object = null;
 
+    public <T extends YAPIONDataType<?, ?>> YAPIONPointer(T object) {
+        referenceFunction = ReferenceIDUtils.REFERENCE_FUNCTION;
+        this.object = object;
+    }
+
+    public <T extends YAPIONDataType<?, ?>> YAPIONPointer(T object, ReferenceFunction referenceFunction) {
+        this.referenceFunction = referenceFunction;
+        this.object = object;
+    }
+
+    public YAPIONPointer(String pointerID) {
+        if (!pointerID.matches("[0-9A-Fa-f]{16}")) {
+            throw new YAPIONPointerException("Invalid pointer id " + pointerID + " needs to be a HEX number");
+        }
+        this.pointerID = Long.parseLong(pointerID.toUpperCase(), 16);
+    }
+
     @Override
     public YAPIONType getType() {
         return YAPIONType.POINTER;
@@ -65,23 +82,6 @@ public class YAPIONPointer extends YAPIONValueType<YAPIONPointer> {
     @Override
     public <U> U unwrap() {
         throw new UnsupportedOperationException("Pointers can not be unwrapped.");
-    }
-
-    public <T extends YAPIONDataType<?, ?>> YAPIONPointer(T object) {
-        referenceFunction = ReferenceIDUtils.REFERENCE_FUNCTION;
-        this.object = object;
-    }
-
-    public <T extends YAPIONDataType<?, ?>> YAPIONPointer(T object, ReferenceFunction referenceFunction) {
-        this.referenceFunction = referenceFunction;
-        this.object = object;
-    }
-
-    public YAPIONPointer(String pointerID) {
-        if (!pointerID.matches("[0-9A-Fa-f]{16}")) {
-            throw new YAPIONPointerException("Invalid pointer id " + pointerID + " needs to be a HEX number");
-        }
-        this.pointerID = Long.parseLong(pointerID.toUpperCase(), 16);
     }
 
     public <T extends YAPIONDataType<?, ?>> void set(T object) {

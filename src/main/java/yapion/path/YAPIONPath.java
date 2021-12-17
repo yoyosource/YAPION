@@ -23,6 +23,10 @@ public class YAPIONPath {
 
     private PathElement[] pathElements;
 
+    public YAPIONPath(List<PathElement> pathElements) {
+        this(pathElements.toArray(new PathElement[0]));
+    }
+
     public YAPIONPath(PathElement... pathElements) {
         this.pathElements = pathElements;
     }

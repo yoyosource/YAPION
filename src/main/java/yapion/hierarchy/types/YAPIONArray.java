@@ -198,6 +198,10 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     private void checkIndex(Integer index) {
+        // TODO: Add negative index gets
+        // if (index < 0) {
+        //     index = length() + index;
+        // }
         if (index < 0 || index >= length()) {
             throw new YAPIONArrayIndexOutOfBoundsException("Index " + index + " out of bounds for length " + length());
         }

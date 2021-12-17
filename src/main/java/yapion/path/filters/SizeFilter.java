@@ -16,24 +16,52 @@ package yapion.path.filters;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.function.Predicate;
 
-public abstract class SizeFilter implements Predicate<YAPIONAnyType> {
+public abstract class SizeFilter<T extends Number & Comparable<T>> implements Predicate<YAPIONAnyType> {
 
-    private Predicate<Integer> sizeCheck;
+    private Predicate<T> sizeCheck;
 
-    public SizeFilter(Predicate<Integer> sizeCheck) {
+    protected SizeFilter(Predicate<T> sizeCheck) {
         this.sizeCheck = sizeCheck;
     }
 
     @Override
     public boolean test(YAPIONAnyType element) {
-        if (element instanceof YAPIONObject yapionObject) {
-            return sizeCheck.test(yapionObject.getKeys().size());
-        } else if (element instanceof YAPIONArray yapionArray) {
-            return sizeCheck.test(yapionArray.length());
+        try {
+            if (element instanceof YAPIONObject yapionObject) {
+                return sizeCheck.test((T) (Integer) yapionObject.getKeys().size());
+            } else if (element instanceof YAPIONArray yapionArray) {
+                return sizeCheck.test((T) (Integer) yapionArray.length());
+            } else if (element instanceof YAPIONValue yapionValue) {
+                Object object = yapionValue.get();
+                if (object instanceof String value) {
+                    return sizeCheck.test((T) (Integer) value.length());
+                } else if (object instanceof Byte value) {
+                    return sizeCheck.test((T) value);
+                } else if (object instanceof Short value) {
+                    return sizeCheck.test((T) value);
+                } else if (object instanceof Integer value) {
+                    return sizeCheck.test((T) value);
+                } else if (object instanceof Long value) {
+                    return sizeCheck.test((T) value);
+                } else if (object instanceof BigInteger value) {
+                    return sizeCheck.test((T) value);
+                } else if (object instanceof Float value) {
+                    return sizeCheck.test((T) value);
+                } else if (object instanceof Double value) {
+                    return sizeCheck.test((T) value);
+                } else if (object instanceof BigDecimal value) {
+                    return sizeCheck.test((T) value);
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
         }
-        return false;
     }
 }
