@@ -13,16 +13,13 @@
 
 package yapion.path;
 
-import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.YAPIONParser;
 import yapion.path.elements.AnyDeeperElement;
 import yapion.path.elements.Element;
 import yapion.path.elements.ElementFilter;
+import yapion.path.elements.Range;
 import yapion.path.filters.ContainsFilter;
-import yapion.path.filters.MaxSizeFilter;
-import yapion.path.filters.MinSizeFilter;
-import yapion.path.filters.RangeSizeFilter;
 
 public class Test {
 
@@ -175,14 +172,14 @@ public class Test {
                                 // new AnyDeeperElement(),
                                 new Element("duration"),
                                 new ElementFilter(
-                                        new RangeSizeFilter<>(20, 80)
+                                        Range.range(20, 80)
                                 )
                         ))
                 )
         );
         System.out.println(yapionPath.apply(yapionObject));
-        System.out.println(yapionObject.select("artists.**{title&duration}"));
-        System.out.println(yapionObject.select("artists.[1...]"));
-        System.out.println(yapionObject.select("artists.[0,1].title"));
+        System.out.println(yapionObject.select("artists.**{title&duration{?[20...80]}}"));
+        // System.out.println(yapionObject.select("artists.[1...]"));
+        // System.out.println(yapionObject.select("artists.[0,1].albums.*.title"));
     }
 }

@@ -20,7 +20,6 @@ import yapion.path.elements.*;
 import yapion.path.filters.ContainsFilter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -77,8 +76,8 @@ public class YAPIONPathParser {
                 YAPIONObject yapionObject = new YAPIONObject().add("", current.toString())
                         .add("filter", new YAPIONArray()
                                 .add(new YAPIONObject()
-                                        .add("", array)
                                         .add("operation", "&")
+                                        .add("", array)
                                 )
                         );
                 ((YAPIONArray) elements).add(yapionObject);
@@ -88,7 +87,9 @@ public class YAPIONPathParser {
                 continue;
             }
             if (c == '}' && !escaped && !regex && !array) {
-                ((YAPIONArray) elements).add(new YAPIONObject().add("", current.toString()));
+                if (s.charAt(index - 1) == '.' || current.length() > 0) {
+                    ((YAPIONArray) elements).add(new YAPIONObject().add("", current.toString()));
+                }
                 elements = elements.getParent().getParent().getParent().getParent();
                 current = new StringBuilder();
                 index++;
@@ -120,6 +121,7 @@ public class YAPIONPathParser {
             ((YAPIONArray) elements).add(new YAPIONObject().add("", current.toString()));
         }
 
+        System.out.println(elements.toYAPION(true));
         List<PathElement> pathElements = parseElements((YAPIONArray) elements);
         return new YAPIONPath(pathElements);
     }
@@ -153,11 +155,11 @@ public class YAPIONPathParser {
             split[0] = split[0].substring(1);
             split[1] = split[1].substring(0, split[1].length() - 1);
             if (split[0].length() == 0 && split[1].length() != 0) {
-                return RangeElement.max(Integer.parseInt(split[1]));
+                return Range.max(Integer.parseInt(split[1]));
             } else if (split[0].length() != 0 && split[1].length() == 0) {
-                return RangeElement.min(Integer.parseInt(split[0]));
+                return Range.min(Integer.parseInt(split[0]));
             } else {
-                return RangeElement.range(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
+                return Range.range(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
             }
         }
         if (identifier.startsWith("[") && identifier.endsWith("]")) {
@@ -176,12 +178,24 @@ public class YAPIONPathParser {
             YAPIONObject yapionObject = (YAPIONObject) yapionAnyType;
             String operation = yapionObject.getPlainValue("operation");
             // TODO: Size Filter
-            List<PathElement> pathElements = parseElements(yapionObject.getArray(""));
-            ContainsFilter containsFilter = new ContainsFilter(pathElements.toArray(new PathElement[0]));
+
+            YAPIONArray array = yapionObject.getArray("");
+            Predicate<YAPIONAnyType> newPredicate = null;
+            if (array.length() == 1) {
+                String value = array.getObject(0).getPlainValue("");
+                if (value.startsWith("?")) {
+                    newPredicate = (Range<Integer>) parseIdentifier(value.substring(1));
+                }
+            }
+            if (newPredicate == null) {
+                List<PathElement> pathElements = parseElements(array);
+                newPredicate = new ContainsFilter(pathElements.toArray(new PathElement[0]));
+            }
+
             if (operation.equals("&")) {
-                predicate = predicate.and(containsFilter);
+                predicate = predicate.and(newPredicate);
             } else if (operation.equals("|")) {
-                predicate = predicate.or(containsFilter);
+                predicate = predicate.or(newPredicate);
             }
         }
         return new ElementFilter(predicate);
