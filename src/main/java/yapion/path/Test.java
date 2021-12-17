@@ -176,6 +176,7 @@ public class Test {
         );
         System.out.println(yapionPath.apply(yapionObject));
         System.out.println(yapionObject.select("artists.**{title&duration{?[20...80]}}"));
+        System.out.println(yapionObject.select("**{title&duration{?[20...80]}}"));
         // System.out.println(yapionObject.select("artists.[1...]"));
         // System.out.println(yapionObject.select("artists.[0,1].albums.*.title"));
     }

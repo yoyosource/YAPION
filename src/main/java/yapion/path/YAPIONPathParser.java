@@ -121,7 +121,6 @@ public class YAPIONPathParser {
             ((YAPIONArray) elements).add(new YAPIONObject().add("", current.toString()));
         }
 
-        System.out.println(elements.toYAPION(true));
         List<PathElement> pathElements = parseElements((YAPIONArray) elements);
         return new YAPIONPath(pathElements);
     }
