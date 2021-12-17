@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONPath;
+import yapion.hierarchy.types.YAPIONElementPath;
 
 import java.util.Arrays;
 
@@ -29,7 +29,7 @@ public class DiffDelete implements DiffBase {
     private String[] path;
     private YAPIONAnyType deleted;
 
-    public DiffDelete(YAPIONPath path, YAPIONAnyType deleted) {
+    public DiffDelete(YAPIONElementPath path, YAPIONAnyType deleted) {
         this.path = Arrays.copyOf(path.getPath(), path.depth());
         this.deleted = deleted;
     }

@@ -14,13 +14,13 @@
 package yapion.hierarchy.api;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONPath;
+import yapion.hierarchy.types.YAPIONElementPath;
 
 public interface ObjectPath {
 
     String getPath(YAPIONAnyType yapionAnyType);
 
-    YAPIONPath getPath();
+    YAPIONElementPath getPath();
 
     int getDepth();
 }

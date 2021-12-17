@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONPath;
+import yapion.hierarchy.types.YAPIONElementPath;
 
 import java.util.Arrays;
 
@@ -30,7 +30,7 @@ public class DiffChange implements DiffBase {
     private YAPIONAnyType from;
     private YAPIONAnyType to;
 
-    public DiffChange(YAPIONPath path, YAPIONAnyType from, YAPIONAnyType to) {
+    public DiffChange(YAPIONElementPath path, YAPIONAnyType from, YAPIONAnyType to) {
         this.path = Arrays.copyOf(path.getPath(), path.depth());
         this.from = from;
         this.to = to;

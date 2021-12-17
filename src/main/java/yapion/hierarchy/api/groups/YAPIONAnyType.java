@@ -24,8 +24,9 @@ import yapion.hierarchy.api.storage.Comments;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.output.flavours.Flavour;
-import yapion.hierarchy.types.YAPIONPath;
+import yapion.hierarchy.types.YAPIONElementPath;
 import yapion.parser.YAPIONParser;
+import yapion.path.YAPIONPath;
 import yapion.path.YAPIONPathParser;
 import yapion.utils.ReferenceFunction;
 
@@ -100,8 +101,8 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
 
     // Path System
     @Override
-    public final YAPIONPath getPath() {
-        return new YAPIONPath(this);
+    public final YAPIONElementPath getPath() {
+        return new YAPIONElementPath(this);
     }
 
     @Override
@@ -207,7 +208,7 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         return comments;
     }
 
-    public List<YAPIONAnyType> select(yapion.path.YAPIONPath yapionPath) {
+    public List<YAPIONAnyType> select(YAPIONPath yapionPath) {
         return yapionPath.apply(this);
     }
 

@@ -22,15 +22,15 @@ import java.util.LinkedList;
 
 @ToString
 @EqualsAndHashCode
-public final class YAPIONPath {
+public final class YAPIONElementPath {
 
     private final String[] path;
 
-    public YAPIONPath(String[] path) {
+    public YAPIONElementPath(String[] path) {
         this.path = path;
     }
 
-    public YAPIONPath(YAPIONAnyType yapionAnyType) {
+    public YAPIONElementPath(YAPIONAnyType yapionAnyType) {
         LinkedList<String> path = new LinkedList<>();
         YAPIONAnyType last = yapionAnyType;
         while ((yapionAnyType = yapionAnyType.getParent()) != null) {

@@ -162,14 +162,11 @@ public class Test {
 
         YAPIONPath yapionPath = new YAPIONPath(
                 new Element("artists"),
-                // new AnyElement(),
                 new AnyDeeperElement(),
-                // new Element("title")
                 new ElementFilter(
                         new ContainsFilter(
                                 new Element("title")
                         ).and(new ContainsFilter(
-                                // new AnyDeeperElement(),
                                 new Element("duration"),
                                 new ElementFilter(
                                         Range.range(20, 80)

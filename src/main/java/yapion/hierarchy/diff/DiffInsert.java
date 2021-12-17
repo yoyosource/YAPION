@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONPath;
+import yapion.hierarchy.types.YAPIONElementPath;
 
 import java.util.Arrays;
 
@@ -29,7 +29,7 @@ public class DiffInsert implements DiffBase {
     private String[] path;
     private YAPIONAnyType inserted;
 
-    public DiffInsert(YAPIONPath path, YAPIONAnyType inserted) {
+    public DiffInsert(YAPIONElementPath path, YAPIONAnyType inserted) {
         this.path = Arrays.copyOf(path.getPath(), path.depth());
         this.inserted = inserted;
     }
