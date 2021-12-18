@@ -19,47 +19,76 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.path.PathElement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Element implements PathElement {
 
     private String[] elements;
-    private List<Integer> integers = new ArrayList<>();
+    private Function<YAPIONAnyType, List<YAPIONAnyType>>[] functions;
 
     public Element(String... elements) {
         this.elements = elements;
+
+        List<Function<YAPIONAnyType, List<YAPIONAnyType>>> functions = new ArrayList<>();
         for (String s : elements) {
+            Integer integer = null;
             try {
-                integers.add(Integer.parseInt(s));
-            } catch (NumberFormatException e) {
+                integer = Integer.parseInt(s);
+            } catch (NumberFormatException ignored) {
                 // Ignored
             }
+            Predicate<String> elementPredicate = null;
+            if (s.startsWith("*") && s.endsWith("*")) {
+                String checkAgainst = s.substring(1, s.length() - 1);
+                elementPredicate = current -> current.contains(checkAgainst);
+            } else if (s.startsWith("*")) {
+                String checkAgainst = s.substring(1);
+                elementPredicate = current -> current.endsWith(checkAgainst);
+            } else if (s.endsWith("*")) {
+                String checkAgainst = s.substring(0, s.length() - 1);
+                elementPredicate = current -> current.startsWith(checkAgainst);
+            }
+            Predicate<String> finalElementPredicate = elementPredicate;
+            Integer finalInteger = integer;
+            functions.add(element -> {
+                List<YAPIONAnyType> result = new ArrayList<>();
+                if (element instanceof YAPIONObject yapionObject) {
+                    if (finalElementPredicate != null) {
+                        for (String key : yapionObject.getKeys()) {
+                            if (finalElementPredicate.test(key)) {
+                                result.add(yapionObject.getAny(key));
+                            }
+                        }
+                    } else if (yapionObject.containsKey(s)) {
+                        result.add(yapionObject.getAny(s));
+                    }
+                }
+                if (element instanceof YAPIONArray yapionArray) {
+                    if (finalInteger != null) {
+                        if (finalInteger < 0) {
+                            if (yapionArray.containsKey(yapionArray.length() + finalInteger)) {
+                                result.add(yapionArray.getAny(yapionArray.length() + finalInteger));
+                            }
+                        }
+                        if (yapionArray.containsKey(finalInteger)) {
+                            result.add(yapionArray.getAny(finalInteger));
+                        }
+                    }
+                }
+                return result;
+            });
         }
+        this.functions = functions.toArray(new Function[0]);
     }
 
     @Override
     public boolean check(YAPIONAnyType element) {
-        if (element instanceof YAPIONObject yapionObject) {
-            for (String s : elements) {
-                if (yapionObject.containsKey(s)) {
-                    return true;
-                }
+        for (Function<YAPIONAnyType, List<YAPIONAnyType>> function : functions) {
+            if (!function.apply(element).isEmpty()) {
+                return true;
             }
-            return false;
-        }
-        if (element instanceof YAPIONArray yapionArray) {
-            for (int i : integers) {
-                if (i < 0) {
-                    if (yapionArray.containsKey(yapionArray.length() + i)) {
-                        return true;
-                    }
-                }
-                if (yapionArray.containsKey(i)) {
-                    return true;
-                }
-            }
-            return false;
         }
         return false;
     }
@@ -68,19 +97,8 @@ public class Element implements PathElement {
     public List<YAPIONAnyType> apply(List<YAPIONAnyType> current, PathElement possibleNext) {
         List<YAPIONAnyType> result = new ArrayList<>();
         for (YAPIONAnyType element : current) {
-            if (element instanceof YAPIONObject yapionObject) {
-                for (String s : elements) {
-                    if (yapionObject.containsKey(s)) {
-                        result.add(yapionObject.getAny(s));
-                    }
-                }
-            }
-            if (element instanceof YAPIONArray yapionArray) {
-                for (int i : integers) {
-                    if (yapionArray.containsKey(i)) {
-                        result.add(yapionArray.getAny(i));
-                    }
-                }
+            for (Function<YAPIONAnyType, List<YAPIONAnyType>> function : functions) {
+                result.addAll(function.apply(element));
             }
         }
         return result;

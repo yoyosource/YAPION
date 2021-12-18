@@ -66,7 +66,9 @@ public class YAPIONPathParser {
                 continue;
             }
             if (c == '.' && !escaped && !regex && !array) {
-                ((YAPIONArray) elements).add(new YAPIONObject().add("", current.toString()));
+                if (s.charAt(index - 1) == '.' || current.length() > 0) {
+                    ((YAPIONArray) elements).add(new YAPIONObject().add("", current.toString()));
+                }
                 current = new StringBuilder();
                 index++;
                 continue;
@@ -183,7 +185,7 @@ public class YAPIONPathParser {
             if (array.length() == 1) {
                 String value = array.getObject(0).getPlainValue("");
                 if (value.startsWith("?")) {
-                    newPredicate = (Range<Integer>) parseIdentifier(value.substring(1));
+                    newPredicate = (Predicate<YAPIONAnyType>) parseIdentifier(value.substring(1));
                 }
             }
             if (newPredicate == null) {
