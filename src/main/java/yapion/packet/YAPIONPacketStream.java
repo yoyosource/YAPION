@@ -39,6 +39,7 @@ public final class YAPIONPacketStream {
     public static final int LOW_WAIT = 1;
     public static final int HIGH_WAIT = 1000;
 
+    @Getter
     private YAPIONSocket yapionSocket = null;
 
     @Getter
@@ -124,6 +125,7 @@ public final class YAPIONPacketStream {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
+                if (yapionPacketReceiver == null) continue;
                 if (handleAvailable() == 0) continue;
                 try {
                     HandleFailedPacket handleFailedPacket = handle();
@@ -156,6 +158,7 @@ public final class YAPIONPacketStream {
                 if (heartBeatMode == HeartBeatType.SEND_AND_RECEIVE && yapionOutputStream != null) {
                     yapionOutputStream.write(new HeartBeatPacket());
                 }
+                if (yapionPacketReceiver == null) continue;
                 if (System.currentTimeMillis() - lastHeartbeat > heartBeatTimeOut) {
                     LostHeartBeatPacket lostHeartBeatPacket = new LostHeartBeatPacket(lastHeartbeat, System.currentTimeMillis() - lastHeartbeat, heartBeatTimeOut);
                     if (yapionOutputStream != null) lostHeartBeatPacket.setYAPIONPacketStream(this);
@@ -177,6 +180,7 @@ public final class YAPIONPacketStream {
             for (int i = 0; i < byteList.size(); i++) {
                 bytes[i] = byteList.get(i);
             }
+            if (yapionPacketReceiver == null) return;
             DropPacket dropPacket = new DropPacket(bytes);
             if (yapionOutputStream != null) dropPacket.setYAPIONPacketStream(this);
             yapionPacketReceiver.handle(dropPacket, YAPIONPacketReceiver.Handler.DROP);

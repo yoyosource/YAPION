@@ -19,14 +19,14 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface YAPIONPacketHandler {
+public interface YAPIONPacketHandler<T extends YAPIONPacket> {
 
     /**
      * Handle a specific {@link YAPIONPacket}.
      *
      * @param yapionPacket the packet to handle.
      */
-    void handlePacket(YAPIONPacket yapionPacket);
+    void handlePacket(T yapionPacket);
 
     /**
      * Specifies if this handler should be run in a Thread.
@@ -96,10 +96,10 @@ public interface YAPIONPacketHandler {
      * @param ignoreException {@code true} if exceptions should be ignored, {@code false} otherwise
      * @return {@link YAPIONPacketHandler} instance
      */
-    static YAPIONPacketHandler createInstance(Consumer<YAPIONPacket> yapionPacketConsumer, boolean runThread, boolean daemonThread, boolean ignoreException) {
-        return new YAPIONPacketHandler() {
+    static <T extends YAPIONPacket> YAPIONPacketHandler<T> createInstance(Consumer<T> yapionPacketConsumer, boolean runThread, boolean daemonThread, boolean ignoreException) {
+        return new YAPIONPacketHandler<>() {
             @Override
-            public void handlePacket(YAPIONPacket yapionPacket) {
+            public void handlePacket(T yapionPacket) {
                 yapionPacketConsumer.accept(yapionPacket);
             }
 
@@ -128,10 +128,10 @@ public interface YAPIONPacketHandler {
      * @param ignoreException {@code true} if exceptions should be ignored, {@code false} otherwise
      * @return {@link YAPIONPacketHandler} instance
      */
-    static YAPIONPacketHandler createInstance(Consumer<YAPIONPacket> yapionPacketConsumer, boolean runThread, boolean ignoreException) {
-        return new YAPIONPacketHandler() {
+    static <T extends YAPIONPacket> YAPIONPacketHandler<T> createInstance(Consumer<T> yapionPacketConsumer, boolean runThread, boolean ignoreException) {
+        return new YAPIONPacketHandler<>() {
             @Override
-            public void handlePacket(YAPIONPacket yapionPacket) {
+            public void handlePacket(T yapionPacket) {
                 yapionPacketConsumer.accept(yapionPacket);
             }
 

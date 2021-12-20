@@ -61,7 +61,7 @@ task applySerializingProcessing {
     group "build"
 
     doLast {
-        shell("java -cp <Folder to YAPION jar>/YAPION-<VERSION>.jar yapion.serializing.annotationproccessing.SerializingApplier ${buildDir}/classes/java/main")
+        shell("java -cp <Folder to YAPION jar>/YAPION-<VERSION>.jar yapion.config.annotationproccessing.SerializingApplier ${buildDir}/classes/java/main")
     }
 }
 classes.finalizedBy applySerializingProcessing

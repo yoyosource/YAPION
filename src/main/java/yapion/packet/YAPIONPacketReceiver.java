@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 @Slf4j
 public class YAPIONPacketReceiver {
 
-    private final Map<String, YAPIONPacketHandler> handlerMap = new HashMap<>();
+    private final Map<String, YAPIONPacketHandler<?>> handlerMap = new HashMap<>();
     private final Map<String, Set<Predicate<YAPIONPacket>>> filterMap = new HashMap<>();
     private final Set<Predicate<YAPIONPacket>> packetFilters = new HashSet<>();
 
@@ -107,17 +107,10 @@ public class YAPIONPacketReceiver {
      * @param packetType the packet to handle
      * @param yapionPacketHandler the handler which handles the specified packet
      */
-    public YAPIONPacketReceiver add(@NonNull Class<? extends YAPIONPacket> packetType, @NonNull YAPIONPacketHandler yapionPacketHandler) {
+    public <T extends YAPIONPacket> YAPIONPacketReceiver add(@NonNull Class<T> packetType, @NonNull YAPIONPacketHandler<T> yapionPacketHandler) {
         handlerMap.put(packetType.getTypeName(), yapionPacketHandler);
         filterMap.put(packetType.getTypeName(), new HashSet<>());
         return this;
-    }
-
-    /**
-     * A wrapper function to {@link #add(Class, YAPIONPacketHandler)}
-     */
-    public YAPIONPacketReceiver add(@NonNull YAPIONPacketHandler yapionPacketHandler, @NonNull Class<? extends YAPIONPacket> packetType) {
-        return add(packetType, yapionPacketHandler);
     }
 
     /**
@@ -125,7 +118,7 @@ public class YAPIONPacketReceiver {
      *
      * @param yapionPacketHandler the {@link YAPIONPacketHandler} to set
      */
-    public YAPIONPacketReceiver setHandler(@NonNull Handler handler, @NonNull YAPIONPacketHandler yapionPacketHandler) {
+    public YAPIONPacketReceiver setHandler(@NonNull Handler handler, @NonNull YAPIONPacketHandler<YAPIONPacket> yapionPacketHandler) {
         if (handler == Handler.USER) {
             throw new SecurityException();
         }
@@ -138,15 +131,12 @@ public class YAPIONPacketReceiver {
         return this;
     }
 
-    public YAPIONPacketReceiver addPacketFilter(@NonNull Class<? extends YAPIONPacket> packetType, @NonNull Predicate<YAPIONPacket> yapionPacketFilter) {
+    public <T extends YAPIONPacket> YAPIONPacketReceiver addPacketFilter(@NonNull Class<T> packetType, @NonNull Predicate<T> yapionPacketFilter) {
         if (!filterMap.containsKey(packetType.getTypeName())) {
             throw new SecurityException("Packet Type needs to have a YAPIONPacketHandler before declaring filters");
         }
-        filterMap.get(packetType.getTypeName()).add(yapionPacketFilter);
+        filterMap.get(packetType.getTypeName()).add((Predicate<YAPIONPacket>) yapionPacketFilter);
         return this;
-    }
-    public YAPIONPacketReceiver addPacketFilter(@NonNull Predicate<YAPIONPacket> yapionPacketFilter, @NonNull Class<? extends YAPIONPacket> packetType) {
-        return addPacketFilter(packetType, yapionPacketFilter);
     }
 
     /**
