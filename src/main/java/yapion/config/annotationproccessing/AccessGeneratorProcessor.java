@@ -79,6 +79,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(YAPIONAccessGenerator.class);
         for (Element element : elements) {
+            messager.printMessage(Diagnostic.Kind.NOTE, "Processing " + element.getSimpleName());
             currentElement = element;
             if (element.getKind() != ElementKind.FIELD) {
                 error("Element needs to be field");
@@ -89,6 +90,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 continue;
             }
 
+            messager.printMessage(Diagnostic.Kind.NOTE, "Accessing YAPIONAccessGenerator on " + element.getSimpleName());
             YAPIONAccessGenerator yapionAccessGenerator = element.getAnnotation(YAPIONAccessGenerator.class);
             lombokToString.set(yapionAccessGenerator.lombokToString());
             setter.set(yapionAccessGenerator.setter());
@@ -107,8 +109,10 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             VariableElement variableElement = (VariableElement) element;
             YAPIONObject yapionObject;
             if (yapionAccessGenerator.inline()) {
+                messager.printMessage(Diagnostic.Kind.NOTE, "Inline parsing: " + variableElement.getConstantValue().toString());
                 yapionObject = YAPIONParser.parse(variableElement.getConstantValue().toString(), new ParseOptions().commentParsing(yapionAccessGenerator.commentParsing()).lazy(yapionAccessGenerator.lazy()));
             } else {
+                messager.printMessage(Diagnostic.Kind.NOTE, "File parsing: ./" + variableElement.getConstantValue().toString());
                 File file = new File("./" + variableElement.getConstantValue().toString());
                 try {
                     yapionObject = YAPIONParser.parse(file, new FileOptions().commentParsing(yapionAccessGenerator.commentParsing()).lazy(yapionAccessGenerator.lazy()));
@@ -122,8 +126,17 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 continue;
             }
 
-            ObjectContainer objectContainer = new ObjectContainer(yapionObject.getPlainValue("@name"), yapionObject);
+            messager.printMessage(Diagnostic.Kind.NOTE, "Generating ObjectContainer for " + element.getSimpleName());
+            ObjectContainer objectContainer;
+            try {
+                objectContainer = new ObjectContainer(yapionObject.getPlainValue("@name"), yapionObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+                error(e.getMessage());
+                continue;
+            }
 
+            messager.printMessage(Diagnostic.Kind.NOTE, "Generating " + element.getSimpleName());
             ClassGenerator classGenerator = new ClassGenerator(packageName, objectContainer.getClassName());
             classGenerator.addImport(YAPIONParser.class.getTypeName());
             yapionObject.getArrayOrDefault("@imports", new YAPIONArray()).forEach(yapionAnyType -> {
@@ -131,6 +144,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             });
 
             if (checkValueNeeded) {
+                messager.printMessage(Diagnostic.Kind.NOTE, "Generating checkValue method for " + element.getSimpleName());
                 FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkValue", "<T> void", new ParameterGenerator(YAPIONValue.class.getTypeName() + "<?>", "value"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Supplier.class.getTypeName() + "<T>", "defaultValue"), new ParameterGenerator(Consumer.class.getTypeName() + "<T>", "callback"), new ParameterGenerator(Predicate.class.getTypeName() + "<T>", "checkPredicate"));
                 functionGenerator.add("if (value == null) {");
                 functionGenerator.add("    if (defaultValue != null) {");
@@ -169,6 +183,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
 
             if (checkObjectNeeded) {
+                messager.printMessage(Diagnostic.Kind.NOTE, "Generating checkObject method for " + element.getSimpleName());
                 FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkObject", "<T> void", new ParameterGenerator(YAPIONObject.class.getTypeName(), "object"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator(Function.class.getTypeName() + "<" + YAPIONObject.class.getTypeName() + ", T>", "converter"), new ParameterGenerator(Consumer.class.getTypeName() + "<T>", "callback"));
                 functionGenerator.add("if (object == null) {");
                 functionGenerator.add("    if (nonNull) {");
@@ -187,6 +202,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
 
             if (checkArrayNeeded) {
+                messager.printMessage(Diagnostic.Kind.NOTE, "Generating checkArray method for " + element.getSimpleName());
                 FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkArray", "<T, K extends " + YAPIONAnyType.class.getTypeName() + "> void", new ParameterGenerator(YAPIONArray.class.getTypeName(), "array"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<K>", "yapionType"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Function.class.getTypeName() + "<K, T>", "converter"), new ParameterGenerator(Predicate.class.getTypeName() + "<T>", "checkPredicate"), new ParameterGenerator(Consumer.class.getTypeName() + "<" + List.class.getTypeName() + "<T>>", "callback"));
                 functionGenerator.add("if (array == null) {");
                 functionGenerator.add("    if (nonNull) {");
@@ -212,6 +228,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
 
             if (checkMapNeeded) {
+                messager.printMessage(Diagnostic.Kind.NOTE, "Generating checkMap method for " + element.getSimpleName());
                 FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkMap", "<T> void", new ParameterGenerator(YAPIONObject.class.getTypeName(), "object"), new ParameterGenerator("java.util.function.Predicate<String>", "keys"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Function.class.getTypeName() + "<" + YAPIONAnyType.class.getTypeName() + ", T>", "converter"), new ParameterGenerator(Consumer.class.getTypeName() + "<" + Map.class.getTypeName() + "<String, T>>", "callback"));
                 functionGenerator.add("java.util.Map<String, T> map = new java.util.HashMap<>();");
                 functionGenerator.add("object.allKeys().stream().filter(keys).forEach(s -> {");
@@ -233,8 +250,9 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
 
             if (lombokExtensionMethod.get()) {
+                messager.printMessage(Diagnostic.Kind.NOTE, "Generating extension annotation for " + element.getSimpleName());
                 List<String> strings = new ArrayList<>();
-                strings.add("yapion.config.ConstraintUtils.class");
+                strings.add("yapion.config.annotationproccessing.ConstraintUtils.class");
                 yapionObject.getArrayOrDefault("@extensions", new YAPIONArray()).forEach(yapionAnyType -> {
                     String current = ((YAPIONValue<String>) yapionAnyType).get();
                     if (current.endsWith(".class")) {
@@ -248,9 +266,18 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             if (lombokToString.get()) {
                 classGenerator.addAnnotation(ToString.class);
             }
-            classGenerator.addImport("static yapion.config.ConstraintUtils.*");
-            objectContainer.outputRoot(classGenerator);
+            messager.printMessage(Diagnostic.Kind.NOTE, "Generating import for 'static yapion.config.annotationproccessing.ConstraintUtils.*'");
+            classGenerator.addImport("static yapion.config.annotationproccessing.ConstraintUtils.*");
+            try {
+                messager.printMessage(Diagnostic.Kind.NOTE, "Writing generated hierarchy to ClassGenerator");
+                objectContainer.outputRoot(classGenerator);
+            } catch (Exception e) {
+                e.printStackTrace();
+                error(e.getMessage());
+                continue;
+            }
 
+            messager.printMessage(Diagnostic.Kind.NOTE, "Writing ClassGenerator to file");
             JavaFileObject f = processingEnv.getFiler().createSourceFile(classGenerator.getPackageName() + "." + classGenerator.getClassName());
             processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Creating " + f.toUri());
             PrintWriter pw = new PrintWriter(f.openWriter());
@@ -338,7 +365,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         @Override
         public String constructorCall() {
             containerElementList.forEach(containerElement -> {
-                if (containerElement.isNonNull() && !containerElement.isDefaultPresent()) {
+                if (containerElement.isNonNull() && isDefaultPresent()) {
                     if (!defaultValue.containsKey(containerElement.name)) {
                         error("Default of '" + className + "' does not define value for '" + containerElement.name + "'");
                     }
