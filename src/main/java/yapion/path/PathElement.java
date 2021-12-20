@@ -15,16 +15,10 @@ package yapion.path;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
-import java.util.List;
-
 public interface PathElement {
     default boolean check(YAPIONAnyType current) {
         return true;
     }
 
-    default List<YAPIONAnyType> apply(List<YAPIONAnyType> current) {
-        return apply(current, null);
-    }
-
-    List<YAPIONAnyType> apply(List<YAPIONAnyType> current, PathElement possibleNext);
+    PathContext apply(PathContext pathContext);
 }

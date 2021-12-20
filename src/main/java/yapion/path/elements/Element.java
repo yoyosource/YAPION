@@ -16,6 +16,7 @@ package yapion.path.elements;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.path.PathContext;
 import yapion.path.PathElement;
 
 import java.util.ArrayList;
@@ -94,13 +95,14 @@ public class Element implements PathElement {
     }
 
     @Override
-    public List<YAPIONAnyType> apply(List<YAPIONAnyType> current, PathElement possibleNext) {
+    public PathContext apply(PathContext pathContext) {
         List<YAPIONAnyType> result = new ArrayList<>();
-        for (YAPIONAnyType element : current) {
+        for (YAPIONAnyType element : pathContext.getCurrent()) {
             for (Function<YAPIONAnyType, List<YAPIONAnyType>> function : functions) {
                 result.addAll(function.apply(element));
             }
         }
-        return result;
+        pathContext.setCurrent(result);
+        return pathContext;
     }
 }

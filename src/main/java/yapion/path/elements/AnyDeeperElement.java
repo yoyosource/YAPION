@@ -16,6 +16,7 @@ package yapion.path.elements;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.path.PathContext;
 import yapion.path.PathElement;
 
 import java.util.ArrayList;
@@ -24,22 +25,24 @@ import java.util.List;
 public class AnyDeeperElement implements PathElement {
 
     @Override
-    public List<YAPIONAnyType> apply(List<YAPIONAnyType> current, PathElement possibleNext) {
-        if (possibleNext == null) {
-            return new ArrayList<>();
+    public PathContext apply(PathContext pathContext) {
+        if (pathContext.noPossibleNext()) {
+            pathContext.getCurrent().clear();
+            return pathContext;
         }
         List<YAPIONAnyType> finalResult = new ArrayList<>();
-        while (!current.isEmpty()) {
-            YAPIONAnyType element = current.remove(0);
-            if (possibleNext.check(element)) {
+        while (pathContext.isNotEmpty()) {
+            YAPIONAnyType element = pathContext.remove(0);
+            if (pathContext.check(element)) {
                 finalResult.add(element);
             }
             if (element instanceof YAPIONObject yapionObject) {
-                current.addAll(yapionObject.getAllValues());
+                pathContext.addAll(yapionObject.getAllValues());
             } else if (element instanceof YAPIONArray yapionArray) {
-                current.addAll(yapionArray.getAllValues());
+                pathContext.addAll(yapionArray.getAllValues());
             }
         }
-        return finalResult;
+        pathContext.setCurrent(finalResult);
+        return pathContext;
     }
 }

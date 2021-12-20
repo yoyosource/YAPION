@@ -14,9 +14,9 @@
 package yapion.path.elements;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.path.PathContext;
 import yapion.path.PathElement;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 public class ElementFilter implements PathElement {
@@ -28,8 +28,8 @@ public class ElementFilter implements PathElement {
     }
 
     @Override
-    public List<YAPIONAnyType> apply(List<YAPIONAnyType> current, PathElement possibleNext) {
-        current.removeIf(pathFilter.negate());
-        return current;
+    public PathContext apply(PathContext pathContext) {
+        pathContext.getCurrent().removeIf(pathFilter.negate());
+        return pathContext;
     }
 }

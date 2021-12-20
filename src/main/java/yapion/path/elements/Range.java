@@ -17,6 +17,7 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.path.PathContext;
 import yapion.path.PathElement;
 
 import java.math.BigDecimal;
@@ -80,13 +81,13 @@ public class Range<T extends Number & Comparable<T>> implements PathElement, Pre
     }
 
     @Override
-    public List<YAPIONAnyType> apply(List<YAPIONAnyType> current, PathElement possibleNext) {
+    public PathContext apply(PathContext pathContext) {
         if (min == null && max == null) {
             throw new IllegalArgumentException("min and max can't be null");
         }
         List<YAPIONAnyType> result = new ArrayList<>();
         int elementMin = Math.max(0, min != null ? min.intValue() : Integer.MIN_VALUE);
-        for (YAPIONAnyType element : current) {
+        for (YAPIONAnyType element : pathContext.getCurrent()) {
             if (element instanceof YAPIONArray yapionArray) {
                 int elementMax = Math.min(yapionArray.size(), max != null ? max.intValue() : Integer.MAX_VALUE);
                 for (int i = elementMin; i < elementMax; i++) {
@@ -94,7 +95,8 @@ public class Range<T extends Number & Comparable<T>> implements PathElement, Pre
                 }
             }
         }
-        return result;
+        pathContext.setCurrent(result);
+        return pathContext;
     }
 
     @Override

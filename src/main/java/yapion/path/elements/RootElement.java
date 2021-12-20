@@ -14,27 +14,18 @@
 package yapion.path.elements;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONObject;
 import yapion.path.PathContext;
 import yapion.path.PathElement;
 
-import java.util.ArrayList;
-import java.util.List;
+public class RootElement implements PathElement {
 
-public class AnyElement implements PathElement {
+    @Override
+    public boolean check(YAPIONAnyType current) {
+        return true;
+    }
 
     @Override
     public PathContext apply(PathContext pathContext) {
-        List<YAPIONAnyType> result = new ArrayList<>();
-        for (YAPIONAnyType element : pathContext.getCurrent()) {
-            if (element instanceof YAPIONObject yapionObject) {
-                result.addAll(yapionObject.getAllValues());
-            } else if (element instanceof YAPIONArray yapionArray) {
-                result.addAll(yapionArray.getAllValues());
-            }
-        }
-        pathContext.setCurrent(result);
-        return pathContext;
+        return pathContext.root();
     }
 }

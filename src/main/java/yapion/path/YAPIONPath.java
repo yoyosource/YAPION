@@ -38,10 +38,16 @@ public class YAPIONPath {
     }
 
     public List<YAPIONAnyType> apply(List<YAPIONAnyType> elements) {
+        PathContext pathContext = new PathContext(elements);
         for (int i = 0; i < pathElements.length; i++) {
-            elements = pathElements[i].apply(elements, i < pathElements.length - 1 ? pathElements[i + 1] : null);
+            if (i < pathElements.length - 1) {
+                pathContext.setPossibleNext(pathElements[i + 1]);
+            } else {
+                pathContext.setPossibleNext(null);
+            }
+            pathContext = pathElements[i].apply(pathContext);
         }
-        return elements;
+        return pathContext.getCurrent();
     }
 
 }

@@ -16,6 +16,7 @@ package yapion.path.elements;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.path.PathContext;
 import yapion.path.PathElement;
 
 import java.util.ArrayList;
@@ -51,9 +52,9 @@ public class RegexElement implements PathElement {
     }
 
     @Override
-    public List<YAPIONAnyType> apply(List<YAPIONAnyType> current, PathElement possibleNext) {
+    public PathContext apply(PathContext pathContext) {
         List<YAPIONAnyType> result = new ArrayList<>();
-        for (YAPIONAnyType element : current) {
+        for (YAPIONAnyType element : pathContext.getCurrent()) {
             if (element instanceof YAPIONObject yapionObject) {
                 check(yapionObject.allKeys()).forEach(s -> {
                     result.add(yapionObject.getAny(s));
@@ -64,6 +65,7 @@ public class RegexElement implements PathElement {
                 });
             }
         }
-        return result;
+        pathContext.setCurrent(result);
+        return pathContext;
     }
 }
