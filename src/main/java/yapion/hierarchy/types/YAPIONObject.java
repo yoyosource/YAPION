@@ -62,7 +62,6 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
     @Override
     protected long referenceValueProvider(ReferenceFunction referenceFunction) {
         ReferenceValue referenceValue = new ReferenceValue();
-        referenceValue.increment(getDepth());
         referenceValue.update(getType().getReferenceValue());
         for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
             referenceValue.update(entry.getKey().length());

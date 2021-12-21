@@ -46,7 +46,6 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     @Override
     protected long referenceValueProvider(ReferenceFunction referenceFunction) {
         ReferenceValue referenceValue = new ReferenceValue();
-        referenceValue.increment(getDepth());
         referenceValue.update(getType().getReferenceValue());
         for (int i = 0; i < array.size(); i++) {
             referenceValue.increment(i);
