@@ -113,6 +113,12 @@ public class YAPIONPacketReceiver {
         return this;
     }
 
+    public <T extends YAPIONPacket> YAPIONPacketReceiver remove(@NonNull Class<T> packetType) {
+        handlerMap.remove(packetType.getTypeName());
+        filterMap.remove(packetType.getTypeName());
+        return this;
+    }
+
     /**
      * Set the SpecialHandler {@link YAPIONPacketHandler} to do something.
      *
