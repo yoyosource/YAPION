@@ -268,7 +268,7 @@ public class YAPIONParserTest {
             while (st.length() < 50) st.append(" ");
             st.append(time).append("ms ");
             while (st.length() < 60) st.append(" ");
-            st.append(passed ? "passed" : (!unstableOutput.isEmpty() ? "unstable": "failed"));
+            st.append(passed ? "passed" : (!unstableOutput.isEmpty() ? "unstable" : "failed"));
 
             if (!passed) {
                 st.append("\n").append("  Expected: ");
@@ -586,5 +586,4 @@ public class YAPIONParserTest {
         YAPIONObject yapionObject = YAPIONParser.parse("{test(\\r\\\\r)}");
         assertThat(yapionObject.toYAPION(), is("{test(\\r\\\\r)}"));
     }
-
 }

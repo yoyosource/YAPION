@@ -176,7 +176,7 @@ final class YAPIONInternalParser {
             log.debug("pFinish  [init]");
             Map<Long, YAPIONDataType<?, ?>> yapionDataTypeHashMap = new HashMap<>();
             for (YAPIONDataType<?, ?> yapionDataType : yapionDataTypes) {
-                yapionDataTypeHashMap.put(yapionDataType.referenceValue(referenceFunction), yapionDataType);
+                yapionDataTypeHashMap.put(new YAPIONPointer(yapionDataType).getPointerID(), yapionDataType);
             }
             log.debug("pFinish  [setPointer]");
             for (YAPIONPointer yapionPointer : yapionPointerList) {

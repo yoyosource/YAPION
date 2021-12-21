@@ -416,7 +416,6 @@ public class ReflectionsUtils {
             if (superClass == null) return null;
             return getFieldCache(superClass).getField(name);
         }
-
     }
 
     private static FieldCache getFieldCache(Class<?> clazz) {
@@ -430,5 +429,4 @@ public class ReflectionsUtils {
     public static Field getField(Class<?> clazz, String name) {
         return getFieldCache(clazz).getField(name);
     }
-
 }
