@@ -53,7 +53,7 @@ class SerializerFuture {
         this.directLoad = data.getPlainValueOrDefault("dl", false);
     }
 
-    public Class<?> get() {
+    public synchronized Class<?> get() {
         if (clazz == null) {
             clazz = classLoader.apply(start, length);
         }

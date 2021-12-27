@@ -63,7 +63,7 @@ public final class MethodManager {
         step(clazz, objectCache -> objectCache.postDeserialization(object, contextManager, deserializationContext), true);
     }
 
-    private static void step(Class<?> clazz, Consumer<ObjectCache> objectCacheConsumer, boolean order) {
+    private static synchronized void step(Class<?> clazz, Consumer<ObjectCache> objectCacheConsumer, boolean order) {
         LinkedList<Class<?>> stepOrder = new LinkedList<>();
         while (clazz != null) {
             stepOrder.addLast(clazz);

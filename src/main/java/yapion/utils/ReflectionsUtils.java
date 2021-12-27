@@ -418,7 +418,7 @@ public class ReflectionsUtils {
         }
     }
 
-    private static FieldCache getFieldCache(Class<?> clazz) {
+    private static synchronized FieldCache getFieldCache(Class<?> clazz) {
         return fieldCacheMap.computeIfAbsent(clazz, FieldCache::new);
     }
 

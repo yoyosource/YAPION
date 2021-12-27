@@ -247,5 +247,4 @@ public final class YAPIONPacketStream {
     public void write(YAPIONPacket yapionPacket) {
         yapionOutputStream.write(yapionPacket);
     }
-
 }

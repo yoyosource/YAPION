@@ -18,12 +18,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.InternalAPI;
 import yapion.utils.IdentifierUtils;
+import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.*;
 import java.util.function.Predicate;
 
 @Slf4j
@@ -96,6 +100,80 @@ public class YAPIONPacketReceiver {
     public YAPIONPacketReceiver() {
         for (Handler handler : Handler.HANDLERS) {
             handlerMap.put(handler.identifier, yapionPacket -> {});
+        }
+        registerMethodStuff();
+    }
+
+    private void registerMethodStuff() {
+        Class<?> current = this.getClass();
+        while (current != YAPIONPacketReceiver.class) {
+            Method[] methods = current.getDeclaredMethods();
+            for (Method method : methods) {
+                Filter filter = method.getAnnotation(Filter.class);
+                if (filter != null) {
+                    if (method.getReturnType() != boolean.class) {
+                        continue;
+                    }
+                    Parameter[] parameters = method.getParameters();
+                    if (parameters.length != 1) {
+                        continue;
+                    }
+                    Parameter parameter = parameters[0];
+                    if (!YAPIONPacket.class.isAssignableFrom(parameter.getType())) {
+                        continue;
+                    }
+                    if (parameter.getType() == YAPIONPacket.class) {
+                        log.debug("Registering method '{}' as global filter", method);
+                        addPacketFilter(yapionPacket -> {
+                            return (boolean) ReflectionsUtils.invokeMethodObjectSystem(method, this, yapionPacket).get();
+                        });
+                    } else {
+                        log.debug("Registering method '{}' as filter for '{}'", method, parameter.getType());
+                        addPacketFilter((Class<? extends YAPIONPacket>) parameter.getType(), yapionPacket -> {
+                            return (boolean) ReflectionsUtils.invokeMethodObjectSystem(method, this, yapionPacket).get();
+                        });
+                    }
+                }
+                PacketHandler packetHandler = method.getAnnotation(PacketHandler.class);
+                if (packetHandler != null) {
+                    if (method.getReturnType() != void.class) {
+                        continue;
+                    }
+                    Parameter[] parameters = method.getParameters();
+                    if (parameters.length != 1) {
+                        continue;
+                    }
+                    Parameter parameter = parameters[0];
+                    if (!YAPIONPacket.class.isAssignableFrom(parameter.getType())) {
+                        continue;
+                    }
+                    log.debug("Registering method '{}' as handler for '{}'", method, parameter.getType());
+                    add((Class<? extends YAPIONPacket>) parameter.getType(), yapionPacket -> {
+                        ReflectionsUtils.invokeMethodObjectSystem(method, this, yapionPacket);
+                    });
+                }
+                OtherHandler otherHandler = method.getAnnotation(OtherHandler.class);
+                if (otherHandler != null) {
+                    if (method.getReturnType() != void.class) {
+                        continue;
+                    }
+                    Parameter[] parameters = method.getParameters();
+                    if (parameters.length != 1) {
+                        continue;
+                    }
+                    Parameter parameter = parameters[0];
+                    if (parameter.getType() != YAPIONPacket.class) {
+                        continue;
+                    }
+                    log.debug("Registering method '{}' as otherHandler for '{}'", method, Arrays.toString(otherHandler.value()));
+                    for (Handler handler : otherHandler.value()) {
+                        setHandler(handler, yapionPacket -> {
+                            ReflectionsUtils.invokeMethodObjectSystem(method, this, yapionPacket);
+                        });
+                    }
+                }
+            }
+            current = current.getSuperclass();
         }
     }
 
@@ -207,5 +285,21 @@ public class YAPIONPacketReceiver {
         } else {
             runnable.run();
         }
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    protected @interface Filter {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    protected @interface PacketHandler {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    protected @interface OtherHandler {
+        Handler[] value();
     }
 }
