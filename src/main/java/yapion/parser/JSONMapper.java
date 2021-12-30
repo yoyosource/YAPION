@@ -190,5 +190,4 @@ public class JSONMapper {
     private YAPIONValue<BigDecimal> mapBigDecimalValue(YAPIONObject yapionObject) {
         return new YAPIONValue<>(new BigDecimal((String) yapionObject.getValue(BIG_DECIMAL_IDENTIFIER).get()));
     }
-
 }

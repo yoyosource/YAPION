@@ -176,5 +176,4 @@ public class ReferenceValueCacheTest {
         yapionArray.removeAndGet(0);
         assertThat(yapionArray.referenceValue(), is(8428319342632167454L));
     }
-
 }
