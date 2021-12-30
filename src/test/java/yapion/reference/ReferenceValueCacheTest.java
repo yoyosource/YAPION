@@ -127,36 +127,36 @@ public class ReferenceValueCacheTest {
     public void testArrayReferenceValueDiscardOnSet() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONObject());
-        assertThat(yapionArray.referenceValue(), is(855368639465640934L));
+        assertThat(yapionArray.referenceValue(), is(855368639465640935L));
         yapionArray.set(0, new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(855368639465640934L));
+        assertThat(yapionArray.referenceValue(), not(855368639465640935L));
     }
 
     @Test
     public void testArrayReferenceValueDiscardOnSetOrPointer() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONObject());
-        assertThat(yapionArray.referenceValue(), is(855368639465640934L));
+        assertThat(yapionArray.referenceValue(), is(855368639465640935L));
         yapionArray.setOrPointer(0, new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(855368639465640934L));
+        assertThat(yapionArray.referenceValue(), not(855368639465640935L));
     }
 
     @Test
     public void testArrayReferenceValueDiscardOnAddWithIndex() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONObject());
-        assertThat(yapionArray.referenceValue(), is(855368639465640934L));
+        assertThat(yapionArray.referenceValue(), is(855368639465640935L));
         yapionArray.add(0, new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(855368639465640934L));
+        assertThat(yapionArray.referenceValue(), not(855368639465640935L));
     }
 
     @Test
     public void testArrayReferenceValueDiscardOnAddWithIndexOrPointer() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONObject());
-        assertThat(yapionArray.referenceValue(), is(855368639465640934L));
+        assertThat(yapionArray.referenceValue(), is(855368639465640935L));
         yapionArray.putOrPointerAndGetItself(0, new YAPIONValue<>(0));
-        assertThat(yapionArray.referenceValue(), not(855368639465640934L));
+        assertThat(yapionArray.referenceValue(), not(855368639465640935L));
     }
 
     @Test

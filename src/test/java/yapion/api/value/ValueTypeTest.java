@@ -30,12 +30,11 @@ public class ValueTypeTest {
 
     @Test
     public void testReferenceValue() {
-        assertThat(new YAPIONValue<>("").referenceValue(), is(4439669832890617833L));
+        assertThat(new YAPIONValue<>("").referenceValue(), is(4671151037072292195L));
     }
 
     @Test
     public void testReferenceValueSpecificFunction() {
-        assertThat(new YAPIONValue<>("").referenceValue(ReferenceIDUtils.REFERENCE_FUNCTION), is(4439669832890617833L));
+        assertThat(new YAPIONValue<>("").referenceValue(ReferenceIDUtils.REFERENCE_FUNCTION), is(4671151037072292195L));
     }
-
 }
