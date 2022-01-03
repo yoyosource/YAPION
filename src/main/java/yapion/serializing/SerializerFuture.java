@@ -14,7 +14,6 @@
 package yapion.serializing;
 
 import lombok.Getter;
-import yapion.hierarchy.types.YAPIONObject;
 
 import java.util.function.BiFunction;
 
@@ -41,16 +40,15 @@ class SerializerFuture {
 
     private Class<?> clazz = null;
 
-    public SerializerFuture(YAPIONObject data, BiFunction<Integer, Integer, Class<?>> classLoader) {
+    public SerializerFuture(int start, int length, String type, String classType, String interfaceType, String primitiveType, boolean directLoad, BiFunction<Integer, Integer, Class<?>> classLoader) {
         this.classLoader = classLoader;
-
-        this.start = data.getPlainValue("start");
-        this.length = data.getPlainValue("length");
-        this.type = data.getPlainValueOrDefault("t", null);
-        this.primitiveType = data.getPlainValueOrDefault("pt", null);
-        this.interfaceType = data.getPlainValueOrDefault("it", null);
-        this.classType = data.getPlainValueOrDefault("ct", null);
-        this.directLoad = data.getPlainValueOrDefault("dl", false);
+        this.start = start;
+        this.length = length;
+        this.type = type;
+        this.classType = classType;
+        this.interfaceType = interfaceType;
+        this.primitiveType = primitiveType;
+        this.directLoad = directLoad;
     }
 
     public synchronized Class<?> get() {

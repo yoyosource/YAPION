@@ -18,11 +18,23 @@ import yapion.serializing.api.YAPIONSerializerRegistrator;
 import yapion.utils.Packer;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * This class will be deleted by compile process
  */
 public class SerializerPacker {
+
+    // Entry End    : 0x00
+    // File         : 0x10 String
+    // Type         : 0x11 String
+    // PrimitiveType: 0x12 String
+    // InterfaceType: 0x13 String
+    // ClassType    : 0x14 String
+    // Start        : 0x20 int
+    // Length       : 0x21 int
+    // DirectLoad   : 0xF0
 
     public static void main(String[] args) throws Exception {
         String s = SerializerPacker.class.getProtectionDomain().getCodeSource().getLocation().getFile();
@@ -32,40 +44,62 @@ public class SerializerPacker {
         if (!source.exists()) return;
 
         File destination = new File(s.substring(0, s.lastIndexOf('/')), "serializer.pack");
+        File metaDestination = new File(s.substring(0, s.lastIndexOf('/')), "serializer.pack.meta");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(metaDestination));
         Packer.pack(source, destination, file -> !file.getName().equals("SerializerPacker.class"), true, false, name -> {
             name = name.substring(0, name.indexOf('.'));
             return name.replace('/', '.');
-        }, (file, metaData) -> {
+        }, (file, start, length) -> {
             try {
+                String name = file.getAbsolutePath().substring(source.getAbsolutePath().length() + 1).replace('/', '.').replace(".class", "");
                 String current = "yapion.serializing.serializer." + file.getAbsolutePath().substring(source.getAbsolutePath().length() + 1).replace('/', '.').replace(".class", "");
+                objectOutputStream.writeByte(0x10);
+                objectOutputStream.writeUTF(name);
+                objectOutputStream.writeByte(0x20);
+                objectOutputStream.writeInt(start);
+                objectOutputStream.writeByte(0x21);
+                objectOutputStream.writeInt(length);
+
                 Class<?> clazz = Class.forName(current);
                 if (!clazz.isInterface() && !clazz.isMemberClass()) {
                     Object object = clazz.getConstructor().newInstance();
                     if (object instanceof InternalSerializer internalSerializer) {
                         if (internalSerializer.type() != null) {
-                            metaData.put("t", internalSerializer.type().getTypeName()); // t -> type
+                            objectOutputStream.writeByte(0x11);
+                            objectOutputStream.writeUTF(internalSerializer.type().getTypeName());
                         }
                         if (internalSerializer.primitiveType() != null) {
-                            metaData.put("pt", internalSerializer.primitiveType().getTypeName()); // pt -> primitiveType
+                            objectOutputStream.writeByte(0x12);
+                            objectOutputStream.writeUTF(internalSerializer.primitiveType().getTypeName());
                         }
                         if (internalSerializer.interfaceType() != null) {
-                            metaData.put("it", internalSerializer.interfaceType().getTypeName()); // it -> interfaceType
+                            objectOutputStream.writeByte(0x13);
+                            objectOutputStream.writeUTF(internalSerializer.interfaceType().getTypeName());
                         }
                         if (internalSerializer.classType() != null) {
-                            metaData.put("ct", internalSerializer.classType().getTypeName()); // ct -> classType
+                            objectOutputStream.writeByte(0x14);
+                            objectOutputStream.writeUTF(internalSerializer.classType().getTypeName());
                         }
                     } else if (object instanceof YAPIONSerializerRegistrator) {
-                        metaData.put("dl", true); // dl -> directLoad
+                        objectOutputStream.writeByte(0x30);
                     }
                 }
                 if (current.contains("special")) {
-                    metaData.put("dl", true); // dl -> directLoad
+                    objectOutputStream.writeByte(0x30);
                 }
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new RuntimeException(e.getMessage(), e);
+            } finally {
+                try {
+                    objectOutputStream.writeByte(0x00);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
+        objectOutputStream.close();
     }
 }

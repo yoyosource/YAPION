@@ -15,11 +15,9 @@ package yapion.utils;
 
 import lombok.experimental.UtilityClass;
 import yapion.annotations.api.InternalAPI;
-import yapion.hierarchy.types.YAPIONObject;
 
 import java.io.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.zip.GZIPOutputStream;
@@ -28,7 +26,11 @@ import java.util.zip.GZIPOutputStream;
 @UtilityClass
 public class Packer {
 
-    public void pack(File source, File destination, Predicate<File> filter, boolean deleteAfterPack, boolean gzip, UnaryOperator<String> fileMapper, BiConsumer<File, YAPIONObject> metaDataConsumer) throws Exception {
+    public interface MetaDataConsumer {
+        void accept(File file, int start, int length);
+    }
+
+    public void pack(File source, File destination, Predicate<File> filter, boolean deleteAfterPack, boolean gzip, UnaryOperator<String> fileMapper, MetaDataConsumer metaDataConsumer) throws Exception {
         if (!source.exists()) return;
         if (!source.isDirectory()) return;
 
@@ -37,20 +39,17 @@ public class Packer {
         destination.createNewFile();
         System.out.println(destination.getAbsolutePath());
 
-        YAPIONObject metaData = new YAPIONObject();
         AtomicInteger index = new AtomicInteger();
 
         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(destination));
         OutputStream outputStream = gzip ? new GZIPOutputStream(bufferedOutputStream) : bufferedOutputStream;
 
         int substringLength = source.getAbsolutePath().length() + 1;
-        internalPack(outputStream, substringLength, source, filter, deleteAfterPack, metaData, index, fileMapper, metaDataConsumer);
+        internalPack(outputStream, substringLength, source, filter, deleteAfterPack, index, fileMapper, metaDataConsumer);
         outputStream.close();
-
-        metaData.toFile(new File(destination.getAbsolutePath() + ".meta"));
     }
 
-    private void internalPack(OutputStream outputStream, int substringLength, File file, Predicate<File> filter, boolean deleteAfterPack, YAPIONObject metaData, AtomicInteger index, UnaryOperator<String> fileMapper, BiConsumer<File, YAPIONObject> metaDataConsumer) throws IOException {
+    private void internalPack(OutputStream outputStream, int substringLength, File file, Predicate<File> filter, boolean deleteAfterPack, AtomicInteger index, UnaryOperator<String> fileMapper, MetaDataConsumer metaDataConsumer) throws IOException {
         if (file == null) return;
         File[] files = file.listFiles();
         if (files == null) return;
@@ -62,13 +61,7 @@ public class Packer {
             String fileName = f.getAbsolutePath().replace('\\', '/');
             fileName = fileName.substring(substringLength);
             System.out.println("Packing: " + fileName);
-            fileName = fileMapper.apply(fileName);
-
-            metaData.add(fileName, new YAPIONObject()
-                    .add("start", index.get())
-                    .add("length", (int) f.length())
-            );
-            metaDataConsumer.accept(f, metaData.getObject(fileName));
+            metaDataConsumer.accept(f, index.get(), (int) f.length());
 
             try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(f));) {
                 for (int i = 0; i < f.length(); i++) {
@@ -83,7 +76,7 @@ public class Packer {
 
         for (File f : files) {
             if (!f.isDirectory()) continue;
-            internalPack(outputStream, substringLength, f, filter, deleteAfterPack, metaData, index, fileMapper, metaDataConsumer);
+            internalPack(outputStream, substringLength, f, filter, deleteAfterPack, index, fileMapper, metaDataConsumer);
             if (deleteAfterPack) {
                 f.delete();
             }

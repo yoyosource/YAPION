@@ -14,17 +14,14 @@
 package yapion.serializing;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import yapion.annotations.api.InternalAPI;
 import yapion.annotations.object.YAPIONObjenesis;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONType;
 import yapion.hierarchy.types.YAPIONValue;
-import yapion.parser.YAPIONParser;
-import yapion.parser.options.StreamOptions;
 import yapion.serializing.api.InstanceFactory;
 import yapion.serializing.api.SerializerBase;
 import yapion.serializing.api.YAPIONSerializerRegistrator;
@@ -37,6 +34,7 @@ import yapion.utils.YAPIONClassLoader;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -98,25 +96,29 @@ public class SerializeManager {
 
     static {
         long time = System.currentTimeMillis();
-        YAPIONObject metaData;
-        byte[] bytes;
         try {
-            metaData = YAPIONParser.parse(new BufferedInputStream(SerializeManager.class.getResourceAsStream("serializer.pack.meta")),
-                    new StreamOptions()
-                            .forceOnlyYAPION(true)
-                            .disabledType(YAPIONType.ARRAY)
-                            .disabledType(YAPIONType.POINTER)
-                            .disabledType(YAPIONType.MAP)
-            );
+            ObjectInputStream objectInputStream = new ObjectInputStream(new BufferedInputStream(SerializeManager.class.getResourceAsStream("serializer.pack.meta")));
 
             BufferedInputStream inputStream = new BufferedInputStream(SerializeManager.class.getResourceAsStream("serializer.pack"));
-            bytes = readNBytes(inputStream, Integer.MAX_VALUE);
+            byte[] packBytes = readNBytes(inputStream, Integer.MAX_VALUE);
 
             YAPIONClassLoader yapionClassLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
-            List<SerializerFuture> toDirectLoad = new ArrayList<>(metaData.size());
-            metaData.forEach((s, yapionAnyType) -> {
-                String name = "yapion.serializing.serializer." + s;
-                SerializerFuture serializerFuture = new SerializerFuture((YAPIONObject) yapionAnyType, (start, length) -> yapionClassLoader.publicDefineClass(name, bytes, start, length));
+            List<SerializerFuture> toDirectLoad = new ArrayList<>();
+
+            Map<Integer, Object> entry;
+            while ((entry = readEntry(objectInputStream)) != null) {
+                String name = "yapion.serializing.serializer." + entry.get(0x10);
+
+                SerializerFuture serializerFuture = new SerializerFuture(
+                        (int) entry.get(0x20),
+                        (int) entry.get(0x21),
+                        (String) entry.getOrDefault(0x11, null),
+                        (String) entry.getOrDefault(0x14, null),
+                        (String) entry.getOrDefault(0x13, null),
+                        (String) entry.getOrDefault(0x12, null),
+                        (boolean) entry.getOrDefault(0xF0, false),
+                        (start, length) -> yapionClassLoader.publicDefineClass(name, packBytes, start, length)
+                );
                 yapionClassLoader.addData(name, serializerFuture::get);
                 if (serializerFuture.isDirectLoad()) {
                     toDirectLoad.add(serializerFuture);
@@ -133,11 +135,12 @@ public class SerializeManager {
                 if (serializerFuture.getClassType() != null) {
                     toLoadClassTypeSerializer.put(serializerFuture.getClassType(), serializerFuture);
                 }
-            });
+            }
             toDirectLoad.forEach(serializerFuture -> {
                 internalAdd(serializerFuture.get());
             });
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("No Serializer was loaded. Please inspect.");
             throw new YAPIONException("No Serializer was loaded. Please inspect.");
         }
@@ -147,6 +150,43 @@ public class SerializeManager {
 
         initialized = true;
         serializerGroups.add("java.");
+    }
+
+    // Entry End    : 0x00
+    // File         : 0x10 String
+    // Type         : 0x11 String
+    // PrimitiveType: 0x12 String
+    // InterfaceType: 0x13 String
+    // ClassType    : 0x14 String
+    // Start        : 0x20 int
+    // Length       : 0x21 int
+    // DirectLoad   : 0x30
+
+    @SneakyThrows
+    private static Map<Integer, Object> readEntry(ObjectInputStream objectInputStream) {
+        if (objectInputStream.available() == 0) {
+            return null;
+        }
+        Map<Integer, Object> values = new HashMap<>();
+        do {
+            int key = objectInputStream.readByte();
+            if (key == 0x00) {
+                return values;
+            }
+            switch (key) {
+                case 0x10, 0x11, 0x12, 0x13, 0x14:
+                    values.put(key, objectInputStream.readUTF());
+                    break;
+                case 0x20, 0x21:
+                    values.put(key, objectInputStream.readInt());
+                    break;
+                case 0x30:
+                    values.put(key, true);
+                    break;
+                default:
+                    throw new YAPIONException("Unknown key: " + key);
+            }
+        } while (true);
     }
 
     private static final int DEFAULT_BUFFER_SIZE = 8192;
@@ -305,7 +345,7 @@ public class SerializeManager {
     }
 
     @SuppressWarnings({"java:S1452"})
-    static InternalSerializer<?> getInternalSerializer(Class<?> type) {
+    static synchronized InternalSerializer<?> getInternalSerializer(Class<?> type) {
         if (type == null) return null;
         if (type.isArray()) {
             return ARRAY_SERIALIZER;
