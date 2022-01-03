@@ -34,7 +34,7 @@ public class SerializerPacker {
     // ClassType    : 0x14 String
     // Start        : 0x20 int
     // Length       : 0x21 int
-    // DirectLoad   : 0xF0
+    // DirectLoad   : 0x30
 
     public static void main(String[] args) throws Exception {
         String s = SerializerPacker.class.getProtectionDomain().getCodeSource().getLocation().getFile();

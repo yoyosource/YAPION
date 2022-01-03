@@ -116,7 +116,7 @@ public class SerializeManager {
                         (String) entry.getOrDefault(0x14, null),
                         (String) entry.getOrDefault(0x13, null),
                         (String) entry.getOrDefault(0x12, null),
-                        (boolean) entry.getOrDefault(0xF0, false),
+                        (boolean) entry.getOrDefault(0x30, false),
                         (start, length) -> yapionClassLoader.publicDefineClass(name, packBytes, start, length)
                 );
                 yapionClassLoader.addData(name, serializerFuture::get);
@@ -348,6 +348,7 @@ public class SerializeManager {
     static synchronized InternalSerializer<?> getInternalSerializer(Class<?> type) {
         if (type == null) return null;
         if (type.isArray()) {
+
             return ARRAY_SERIALIZER;
         }
         if (type.isEnum() || type == Enum.class) {
