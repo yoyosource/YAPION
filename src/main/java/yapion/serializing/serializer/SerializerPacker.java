@@ -51,8 +51,8 @@ public class SerializerPacker {
             return name.replace('/', '.');
         }, (file, start, length) -> {
             try {
-                String name = file.getAbsolutePath().substring(source.getAbsolutePath().length() + 1).replace('/', '.').replace(".class", "");
-                String current = "yapion.serializing.serializer." + file.getAbsolutePath().substring(source.getAbsolutePath().length() + 1).replace('/', '.').replace(".class", "");
+                String name = file.getAbsolutePath().substring(source.getAbsolutePath().length() + 1).replace('/', '.').replace('\\', '.').replace(".class", "");
+                String current = "yapion.serializing.serializer." + file.getAbsolutePath().substring(source.getAbsolutePath().length() + 1).replace('/', '.').replace('\\', '.').replace(".class", "");
                 objectOutputStream.writeByte(0x10);
                 objectOutputStream.writeUTF(name);
                 objectOutputStream.writeByte(0x20);
