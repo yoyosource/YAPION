@@ -14,7 +14,7 @@
 package yapion.hierarchy.api.groups;
 
 import yapion.annotations.api.InternalAPI;
-import yapion.hierarchy.api.internal.AdvancedOperations;
+import yapion.hierarchy.api.storage.AdvancedOperations;
 import yapion.hierarchy.api.internal.InternalAdd;
 import yapion.hierarchy.api.internal.InternalRemove;
 import yapion.hierarchy.api.internal.InternalRetrieve;
