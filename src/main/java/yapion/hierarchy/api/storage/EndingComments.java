@@ -15,11 +15,9 @@ package yapion.hierarchy.api.storage;
 
 import java.util.List;
 
-public interface EndingComments<T> {
+public interface EndingComments {
 
     List<String> getEndingComments();
-
-    T itself();
 
     default int endingCommentsSize() {
         return getEndingComments().size();
@@ -27,25 +25,5 @@ public interface EndingComments<T> {
 
     default boolean hasEndingComments() {
         return !getEndingComments().isEmpty();
-    }
-
-    default T addEndingComment(String comment) {
-        getEndingComments().add(comment);
-        return itself();
-    }
-
-    default T addEndingComment(String comment, int index) {
-        getEndingComments().add(index, comment);
-        return itself();
-    }
-
-    default T removeEndingComment(int index) {
-        getEndingComments().remove(index);
-        return itself();
-    }
-
-    default T cleaEndingComments() {
-        getEndingComments().clear();
-        return itself();
     }
 }

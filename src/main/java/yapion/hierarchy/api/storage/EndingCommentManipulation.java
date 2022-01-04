@@ -13,27 +13,27 @@
 
 package yapion.hierarchy.api.storage;
 
-public interface CommentManipulation<I> extends Comments {
+public interface EndingCommentManipulation<I> extends EndingComments {
 
     I itself();
 
-    default I addComment(String comment) {
-        getComments().add(comment);
+    default I addEndingComment(String comment) {
+        getEndingComments().add(comment);
         return itself();
     }
 
-    default I addComment(String comment, int index) {
-        getComments().add(index, comment);
+    default I addEndingComment(String comment, int index) {
+        getEndingComments().add(index, comment);
         return itself();
     }
 
-    default I removeComment(int index) {
-        getComments().remove(index);
+    default I removeEndingComment(int index) {
+        getEndingComments().remove(index);
         return itself();
     }
 
-    default I clearComments() {
-        getComments().clear();
+    default I clearEndingComments() {
+        getEndingComments().clear();
         return itself();
     }
 }
