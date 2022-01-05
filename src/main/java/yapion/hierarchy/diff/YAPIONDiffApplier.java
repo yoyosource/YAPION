@@ -131,7 +131,12 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
             yapionMap.add(YAPIONParser.parse(path[path.length - 1]), toInsert);
         }
         if (yapionAnyType instanceof YAPIONArray yapionArray) {
-            yapionArray.add(Integer.parseInt(path[path.length - 1]), toInsert);
+            int index = Integer.parseInt(path[path.length - 1]);
+            if (index == yapionArray.size()) {
+                yapionArray.add(toInsert);
+            } else {
+                yapionArray.add(index, toInsert);
+            }
         }
     }
 
@@ -141,16 +146,16 @@ public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
         }
         YAPIONAnyType toYapionAnyType = resolvePath(from);
         if (toYapionAnyType instanceof YAPIONObject yapionObject) {
-            YAPIONAnyType yapionAnyType = yapionObject.removeAndGet(to[to.length - 1]);
-            applyInsert(from, yapionAnyType);
+            YAPIONAnyType yapionAnyType = yapionObject.removeAndGet(from[from.length - 1]);
+            applyInsert(to, yapionAnyType);
         }
         if (toYapionAnyType instanceof YAPIONMap yapionMap) {
-            YAPIONAnyType yapionAnyType = yapionMap.removeAndGet(YAPIONParser.parse(to[to.length - 1]));
-            applyInsert(from, yapionAnyType);
+            YAPIONAnyType yapionAnyType = yapionMap.removeAndGet(YAPIONParser.parse(from[from.length - 1]));
+            applyInsert(to, yapionAnyType);
         }
         if (toYapionAnyType instanceof YAPIONArray yapionArray) {
-            YAPIONAnyType yapionAnyType = yapionArray.removeAndGet(Integer.parseInt(to[to.length - 1]));
-            applyInsert(from, yapionAnyType);
+            YAPIONAnyType yapionAnyType = yapionArray.removeAndGet(Integer.parseInt(from[from.length - 1]));
+            applyInsert(to, yapionAnyType);
         }
     }
 
