@@ -228,18 +228,14 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
         return this;
     }
 
-    public YAPIONObject add(@NonNull String key, @NonNull Class<?> value) {
-        return internalAdd(key, new YAPIONValue<>(value.getTypeName()));
-    }
-
     @Override
     public YAPIONAnyType internalAddAndGetPrevious(@NonNull String key, @NonNull YAPIONAnyType value) {
         check(value);
         discardReferenceValue();
-        if (variables.containsKey(key)) {
-            variables.get(key).removeParent();
-        }
         YAPIONAnyType yapionAnyType = variables.put(key, value);
+        if (yapionAnyType != null) {
+            yapionAnyType.removeParent();
+        }
         value.setParent(this);
         return yapionAnyType;
     }
@@ -344,7 +340,7 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
     }
 
     @Override
-    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(@NonNull String key) {
+    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> getViaPath(@NonNull String key) {
         if (getAnyType(key) == null) return Optional.empty();
         return Optional.of(new YAPIONSearchResult<>(getAnyType(key)));
     }

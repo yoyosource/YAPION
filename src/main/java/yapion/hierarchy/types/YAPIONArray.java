@@ -420,7 +420,7 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(@NonNull String key) {
+    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> getViaPath(@NonNull String key) {
         try {
             return Optional.of(new YAPIONSearchResult<>(getAnyType(Integer.parseInt(key))));
         } catch (NumberFormatException | YAPIONArrayIndexOutOfBoundsException e) {

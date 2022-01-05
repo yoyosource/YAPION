@@ -16,7 +16,6 @@ package yapion.api.array;
 import org.junit.Test;
 import yapion.hierarchy.api.ObjectSearch;
 import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONObject;
 
 import java.util.Optional;
 
@@ -28,27 +27,27 @@ public class ArraySearchTest {
     @Test
     public void getOne() {
         YAPIONArray yapionArray = new YAPIONArray();
-        assertThat(yapionArray.get("0"), is(Optional.empty()));
+        assertThat(yapionArray.getViaPath("0"), is(Optional.empty()));
     }
 
     @Test
     public void getOneValid() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONArray());
-        assertThat(yapionArray.get("0"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONArray()))));
+        assertThat(yapionArray.getViaPath("0"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONArray()))));
     }
 
     @Test
     public void getDepth() {
         YAPIONArray yapionArray = new YAPIONArray();
-        assertThat(yapionArray.get("0", "0"), is(Optional.empty()));
+        assertThat(yapionArray.getViaPath("0", "0"), is(Optional.empty()));
     }
 
     @Test
     public void getDepthValid() {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionArray.add(new YAPIONArray().add(new YAPIONArray()));
-        assertThat(yapionArray.get("0", "0"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONArray()))));
+        assertThat(yapionArray.getViaPath("0", "0"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONArray()))));
     }
 
 }

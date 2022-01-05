@@ -27,27 +27,27 @@ public class ObjectSearchTest {
     @Test
     public void getOne() {
         YAPIONObject yapionObject = new YAPIONObject();
-        assertThat(yapionObject.get(""), is(Optional.empty()));
+        assertThat(yapionObject.getViaPath(""), is(Optional.empty()));
     }
 
     @Test
     public void getOneValid() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("", new YAPIONObject());
-        assertThat(yapionObject.get(""), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONObject()))));
+        assertThat(yapionObject.getViaPath(""), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONObject()))));
     }
 
     @Test
     public void getDepth() {
         YAPIONObject yapionObject = new YAPIONObject();
-        assertThat(yapionObject.get("", ""), is(Optional.empty()));
+        assertThat(yapionObject.getViaPath("", ""), is(Optional.empty()));
     }
 
     @Test
     public void getDepthValid() {
         YAPIONObject yapionObject = new YAPIONObject();
         yapionObject.add("", new YAPIONObject().add("", new YAPIONObject()));
-        assertThat(yapionObject.get("", ""), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONObject()))));
+        assertThat(yapionObject.getViaPath("", ""), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONObject()))));
     }
 
 }

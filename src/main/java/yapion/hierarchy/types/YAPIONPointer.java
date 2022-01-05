@@ -106,7 +106,7 @@ public class YAPIONPointer extends YAPIONValueType<YAPIONPointer> {
     }
 
     @Override
-    public Optional<YAPIONSearchResult<?>> get(String key) {
+    public Optional<YAPIONSearchResult<?>> getViaPath(String key) {
         if (object == null) return Optional.empty();
         if (key.equals("@reference")) return Optional.of(new YAPIONSearchResult<>(object));
         return Optional.empty();

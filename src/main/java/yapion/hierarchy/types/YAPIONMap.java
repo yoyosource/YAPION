@@ -369,7 +369,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
-    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> get(@NonNull String key) {
+    public Optional<YAPIONSearchResult<? extends YAPIONAnyType>> getViaPath(@NonNull String key) {
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
             if (entry.getKey().toString().equals(key))
                 return Optional.of(new YAPIONSearchResult<>(entry.getValue()));

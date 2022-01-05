@@ -34,6 +34,10 @@ public interface ObjectAdd<I, K> extends InternalAdd<I, K> {
         return add(key, new YAPIONValue<>(value));
     }
 
+    default I add(@NonNull K key, @NonNull Class<?> value) {
+        return add(key, new YAPIONValue<>(value.getTypeName()));
+    }
+
     /**
      * Optional API.
      */

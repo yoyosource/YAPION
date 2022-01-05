@@ -28,27 +28,27 @@ public class MapSearchTest {
     @Test
     public void getOne() {
         YAPIONMap yapionMap = new YAPIONMap();
-        assertThat(yapionMap.get(""), is(Optional.empty()));
+        assertThat(yapionMap.getViaPath(""), is(Optional.empty()));
     }
 
     @Test
     public void getOneValid() {
         YAPIONMap yapionMap = new YAPIONMap();
         yapionMap.add("", new YAPIONMap());
-        assertThat(yapionMap.get("()"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONMap()))));
+        assertThat(yapionMap.getViaPath("()"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONMap()))));
     }
 
     @Test
     public void getDepth() {
         YAPIONMap yapionMap = new YAPIONMap();
-        assertThat(yapionMap.get("", ""), is(Optional.empty()));
+        assertThat(yapionMap.getViaPath("", ""), is(Optional.empty()));
     }
 
     @Test
     public void getDepthValid() {
         YAPIONMap yapionMap = new YAPIONMap();
         yapionMap.add("", new YAPIONMap().add(new YAPIONValue<>(""), new YAPIONMap()));
-        assertThat(yapionMap.get("()", "()"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONMap()))));
+        assertThat(yapionMap.getViaPath("()", "()"), is(Optional.of(new ObjectSearch.YAPIONSearchResult(new YAPIONMap()))));
     }
 
 }

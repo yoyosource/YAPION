@@ -136,7 +136,7 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     }
 
     // Traverse System
-    public final Optional<YAPIONSearchResult<?>> get(String... s) {
+    public final Optional<YAPIONSearchResult<?>> getViaPath(String... s) {
         if (s == null || s.length == 0) {
             return Optional.of(new YAPIONSearchResult<>(this));
         }
@@ -144,13 +144,13 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         for (String value : s) {
             if (value == null) return Optional.empty();
             if (!optional.isPresent()) return Optional.empty();
-            optional = optional.get().value.get(value);
+            optional = optional.get().value.getViaPath(value);
         }
         return optional;
     }
 
     @Override
-    public Optional<YAPIONSearchResult<?>> get(String key) {
+    public Optional<YAPIONSearchResult<?>> getViaPath(String key) {
         return Optional.empty();
     }
 

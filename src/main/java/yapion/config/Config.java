@@ -51,7 +51,7 @@ public class Config {
             String[] key = mutator.apply(yapionConfig.value(), field);
             Class<?> fieldType = field.getType();
             if (ClassUtils.isPrimitive(fieldType) || ClassUtils.isBoxedPrimitive(fieldType)) {
-                config.get(key).ifPresent(value -> {
+                config.getViaPath(key).ifPresent(value -> {
                     YAPIONAnyType yapionAnyType = value.value;
                     if (yapionAnyType instanceof YAPIONValue yapionValue) {
                         reflectionStrategy.set(field, object, yapionValue.get());

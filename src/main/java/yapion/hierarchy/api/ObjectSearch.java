@@ -21,9 +21,9 @@ import java.util.Optional;
 
 public interface ObjectSearch {
 
-    Optional<YAPIONSearchResult<?>> get(String... s);
+    Optional<YAPIONSearchResult<?>> getViaPath(String... s);
 
-    Optional<YAPIONSearchResult<?>> get(String key);
+    Optional<YAPIONSearchResult<?>> getViaPath(String key);
 
     @EqualsAndHashCode
     @ToString
@@ -34,6 +34,5 @@ public interface ObjectSearch {
         public YAPIONSearchResult(T value) {
             this.value = value;
         }
-
     }
 }
