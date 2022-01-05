@@ -129,6 +129,28 @@ public class YAPIONDiff {
                     .collect(Collectors.toList());
             diffs.add(new DiffMove(diffDelete.getPath(), diffInsert.getPath()));
         }
+
+        List<DiffChange> diffChanges = diffs.stream()
+                .filter(DiffChange.class::isInstance)
+                .map(DiffChange.class::cast)
+                .collect(Collectors.toList());
+        for (DiffChange diffChange : diffChanges) {
+            Optional<DiffChange> diffChangeOptional = diffs.stream()
+                    .filter(DiffChange.class::isInstance)
+                    .map(DiffChange.class::cast)
+                    .filter(d -> d.getFrom().equals(diffChange.getTo()))
+                    .filter(d -> d.getTo().equals(diffChange.getFrom()))
+                    .findFirst();
+            if (!diffChangeOptional.isPresent()) {
+                continue;
+            }
+            DiffChange diffChange2 = diffChangeOptional.get();
+
+            diffs = diffs.stream()
+                    .filter(d -> d != diffChange && d != diffChange2)
+                    .collect(Collectors.toList());
+            diffs.add(new DiffMove(diffChange.getPath(), diffChange2.getPath()));
+        }
     }
 
     private void diff(YAPIONAnyType first, YAPIONAnyType second) {
