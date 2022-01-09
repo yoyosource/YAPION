@@ -100,5 +100,4 @@ public class YAPIONInputStream implements AutoCloseable {
         if (closed) throw new YAPIONIOException("Reading from a closed Stream");
         return YAPIONDeserializer.deserialize(read(), typeReMapper);
     }
-
 }
