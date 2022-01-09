@@ -48,7 +48,7 @@ import static yapion.utils.ReflectionsUtils.*;
 public class SerializeManager {
 
     private final InternalSerializer<Object> defaultSerializer = null;
-    private final InternalSerializer<Void> defaultNullSerializer = new InternalSerializer<Void>() {
+    private final InternalSerializer<Void> defaultNullSerializer = new InternalSerializer<>() {
         @Override
         public Class<?> type() {
             return Void.class;
@@ -301,8 +301,9 @@ public class SerializeManager {
 
     private static void internalAdd(InternalSerializer<?> serializer) {
         serializer.init();
-        serializerMap.put(serializer.type(), serializer);
-
+        if (serializer.type() != null) {
+            serializerMap.put(serializer.type(), serializer);
+        }
         if (serializer.primitiveType() != null && serializer.type() != serializer.primitiveType()) {
             serializerMap.put(serializer.primitiveType(), serializer);
         }
@@ -348,7 +349,6 @@ public class SerializeManager {
     static synchronized InternalSerializer<?> getInternalSerializer(Class<?> type) {
         if (type == null) return null;
         if (type.isArray()) {
-
             return ARRAY_SERIALIZER;
         }
         if (type.isEnum() || type == Enum.class) {

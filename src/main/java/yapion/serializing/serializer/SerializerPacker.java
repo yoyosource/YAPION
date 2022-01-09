@@ -64,6 +64,13 @@ public class SerializerPacker {
                 if (!clazz.isInterface() && !clazz.isMemberClass()) {
                     Object object = clazz.getConstructor().newInstance();
                     if (object instanceof InternalSerializer internalSerializer) {
+                        if (object.getClass().getSuperclass() != Object.class) {
+                            try {
+                                internalSerializer.init();
+                            } catch (Exception e) {
+                                // ignore
+                            }
+                        }
                         if (internalSerializer.type() != null) {
                             objectOutputStream.writeByte(0x11);
                             objectOutputStream.writeUTF(internalSerializer.type().getTypeName());
