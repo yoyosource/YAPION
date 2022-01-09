@@ -30,13 +30,22 @@
 rosenduftgenießer(null)
 ```
 
-```O
+```E
+yapion.exceptions.parser.YAPIONParserException
+```
+
+# InputStream UTF-8 2
+```I stream type:utf8
+{rosenduftgenießer(null)}
+```
+
+```E
 {rosenduftgenießer(null)}
 ```
 
 # InputStream US-ASCII
 ```I stream type:ascii
-rosenduftgenießer(null)
+{rosenduftgenießer(null)}
 ```
 
 ```E

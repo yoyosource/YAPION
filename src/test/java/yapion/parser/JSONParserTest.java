@@ -14,6 +14,7 @@
 package yapion.parser;
 
 import org.junit.Test;
+import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 
@@ -46,9 +47,9 @@ public class JSONParserTest {
         assertThat(yapionObject.toYAPION(new StringOutput()).getResult(), is("{test{@mapping[]}}"));
     }
 
-    @Test
+    @Test(expected = YAPIONParserException.class)
     public void testJSONStartEnd() {
-        assertThat(YAPIONParser.parse("\"hello\": \"\"").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
+        YAPIONParser.parse("\"hello\": \"\"");
     }
 
     @Test

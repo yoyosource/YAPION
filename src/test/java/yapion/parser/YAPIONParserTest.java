@@ -450,14 +450,14 @@ public class YAPIONParserTest {
         YAPIONParser.parse(YAPIONParserTest.class.getResourceAsStream("/test.yapion"));
     }
 
-    @Test
+    @Test(expected = YAPIONParserException.class)
     public void testYAPIONStartEnd() {
-        assertThat(YAPIONParser.parse("hello()").toYAPION(new StringOutput()).getResult(), is("{hello()}"));
+        YAPIONParser.parse("hello()");
     }
 
-    @Test
+    @Test(expected = YAPIONParserException.class)
     public void testYAPIONStartEndObject() {
-        assertThat(YAPIONParser.parse("hello{}").toYAPION(new StringOutput()).getResult(), is("{hello{}}"));
+        YAPIONParser.parse("hello{}");
     }
 
     @Test(expected = YAPIONParserException.class)

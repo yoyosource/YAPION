@@ -39,8 +39,8 @@
 hello()
 ```
 
-```O
-{hello()}
+```E
+yapion.exceptions.utils.YAPIONIOException
 ```
 
 # Start-End Object 2
@@ -48,8 +48,8 @@ hello()
 hello{}
 ```
 
-```O
-{hello{}}
+```E
+yapion.exceptions.utils.YAPIONIOException
 ```
 
 # Start-End Object Error

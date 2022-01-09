@@ -30,8 +30,8 @@
 ()
 ```
 
-```O
-{()}
+```E
+yapion.exceptions.parser.YAPIONParserException
 ```
 
 # Pointer Input
@@ -39,6 +39,6 @@
 ->0000000000000000
 ```
 
-```O
-{->0000000000000000}
+```E
+yapion.exceptions.parser.YAPIONParserException
 ```

@@ -75,6 +75,15 @@
 1(#A000B)2(#a000B)
 ```
 
+```E
+yapion.exceptions.utils.YAPIONIOException
+```
+
+# Special Numbers 2
+```I
+{1(#A000B)2(#a000B)}
+```
+
 ```O
 {1(655371)2(655371)}
 ```
