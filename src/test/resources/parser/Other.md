@@ -40,7 +40,7 @@ hello()
 ```
 
 ```E
-yapion.exceptions.utils.YAPIONIOException
+yapion.exceptions.parser.YAPIONParserException
 ```
 
 # Start-End Object 2
@@ -49,7 +49,7 @@ hello{}
 ```
 
 ```E
-yapion.exceptions.utils.YAPIONIOException
+yapion.exceptions.parser.YAPIONParserException
 ```
 
 # Start-End Object Error

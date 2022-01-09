@@ -76,7 +76,7 @@
 ```
 
 ```E
-yapion.exceptions.utils.YAPIONIOException
+yapion.exceptions.parser.YAPIONParserException
 ```
 
 # Special Numbers 2

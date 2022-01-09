@@ -39,7 +39,7 @@ yapion.exceptions.parser.YAPIONParserException
 {rosenduftgenießer(null)}
 ```
 
-```E
+```O
 {rosenduftgenießer(null)}
 ```
 
