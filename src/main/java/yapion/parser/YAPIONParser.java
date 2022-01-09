@@ -643,10 +643,13 @@ public final class YAPIONParser {
      */
     public YAPIONObject resultObject() {
         YAPIONObject yapionObject = result();
+        if (yapionInternalParser.initialType != YAPIONType.OBJECT) {
+            throw new YAPIONException("The parsed YAPIONObject is more than an just one YAPIONObject");
+        }
         if (yapionObject.size() == 1 && yapionObject.containsKey("")) {
             return yapionObject.getObject("");
         }
-        throw new YAPIONException("The parsed YAPIONObject is more than an YAPIONArray");
+        return yapionObject;
     }
 
     /**
@@ -656,10 +659,10 @@ public final class YAPIONParser {
      */
     public YAPIONArray resultArray() {
         YAPIONObject yapionObject = result();
-        if (yapionObject.size() == 1 && yapionObject.containsKey("")) {
-            return yapionObject.getArray("");
+        if (yapionInternalParser.initialType != YAPIONType.ARRAY) {
+            throw new YAPIONException("The parsed YAPIONObject is more than an just one YAPIONArray");
         }
-        throw new YAPIONException("The parsed YAPIONObject is more than an YAPIONArray");
+        return yapionObject.getArray("");
     }
 
     /**
@@ -669,10 +672,10 @@ public final class YAPIONParser {
      */
     public YAPIONMap resultMap() {
         YAPIONObject yapionObject = result();
-        if (yapionObject.size() == 1 && yapionObject.containsKey("")) {
-            return yapionObject.getMap("");
+        if (yapionInternalParser.initialType != YAPIONType.MAP) {
+            throw new YAPIONException("The parsed YAPIONObject is more than an just one YAPIONMap");
         }
-        throw new YAPIONException("The parsed YAPIONObject is more than an YAPIONMap");
+        return yapionObject.getMap("");
     }
 
     private String generateErrorMessage() {

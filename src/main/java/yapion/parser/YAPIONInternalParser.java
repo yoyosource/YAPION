@@ -39,7 +39,7 @@ final class YAPIONInternalParser {
     private char lastChar = '\u0000';
 
     // Result object and current
-    private boolean hadInitial = true;
+    YAPIONType initialType = null;
     private MightValue mightValue = MightValue.FALSE;
     private YAPIONObject result = null;
     private YAPIONAnyType currentObject = null;
@@ -107,7 +107,8 @@ final class YAPIONInternalParser {
 
     void advance(char c) {
         log.debug("{} -> {}{}", typeStack, (int) c, (c >= ' ' && c <= '~' ? " '" + c + "'" : ""));
-        if (typeStack.isEmpty() && initialType(c)) {
+        if (typeStack.isEmpty()) {
+            initialType(c);
             count++;
             lastChar = c;
             return;
@@ -152,13 +153,6 @@ final class YAPIONInternalParser {
             result = new YAPIONObject();
             log.debug("finish   [done]");
             return;
-        }
-        if (!hadInitial) {
-            if (typeStack.isEmpty()) {
-                strings.add("You cannot close an Object that is implicitly opened beforehand");
-                throw new YAPIONParserException("Exception while finishing the current parsed Object\n- " + String.join("\n- ", strings));
-            }
-            typeStack.pop(YAPIONType.OBJECT);
         }
         if (typeStack.isNotEmpty()) {
             while (typeStack.isNotEmpty()) {
@@ -219,18 +213,34 @@ final class YAPIONInternalParser {
         key = "";
     }
 
-    private boolean initialType(char c) {
-        if (c == '{' && typeStack.isEmpty() && result == null) {
-            log.debug("initial  [CREATE]");
-        } else {
-            log.debug("initial  [CREATE] -> {}", (int) c);
-            hadInitial = false;
+    private void initialType(char c) {
+        if (result != null) {
+            throw new YAPIONParserException("A DataType was already parsed");
         }
+        log.debug("initial  [CREATE]");
         typeStack.push(YAPIONType.OBJECT, count);
         result = new YAPIONObject();
         yapionDataTypes.add(result);
         currentObject = result;
-        return hadInitial;
+        if (c == '{') {
+            initialType = YAPIONType.OBJECT;
+        } else if (c == '[') {
+            initialType = YAPIONType.ARRAY;
+            typeStack.push(YAPIONType.ARRAY, count);
+            YAPIONArray yapionArray = new YAPIONArray();
+            yapionDataTypes.add(yapionArray);
+            result.add("", yapionArray);
+            currentObject = yapionArray;
+        } else if (c == '<') {
+            initialType = YAPIONType.MAP;
+            typeStack.push(YAPIONType.MAP, count);
+            YAPIONMap yapionMap = new YAPIONMap();
+            yapionDataTypes.add(yapionMap);
+            result.add("", yapionMap);
+            currentObject = yapionMap;
+        } else {
+            throw new YAPIONParserException("The first character needs to be of a DataType which are '{' or '[' or '<'");
+        }
     }
 
     private void add(@NonNull String key, @NonNull YAPIONAnyType value) {
@@ -259,10 +269,10 @@ final class YAPIONInternalParser {
             }
             mightValue = MightValue.FALSE;
 
-            if (c == '{' || c == '[' || c == '<' || c == '"' || (c >= '0' && c <= '9') || c == '-' || c == 't' || c == 'n' || c == 'f') {
+            if (c == '{' || c == '[' || c == '"' || (c >= '0' && c <= '9') || c == '-' || c == 't' || c == 'n' || c == 'f') {
                 current.delete(current.length() - 2, current.length());
                 current.deleteCharAt(0);
-                if (c != '{' && c != '[' && c != '<') {
+                if (c != '{' && c != '[') {
                     log.debug("type     [JSON]");
                     push(YAPIONType.VALUE);
                     mightValue = MightValue.TRUE;
@@ -569,6 +579,9 @@ final class YAPIONInternalParser {
     }
 
     private void parsePointer(char c) {
+        if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))) {
+            throw new YAPIONParserException("Invalid pointer: " + c);
+        }
         current.append(c);
         if (current.length() == 16) {
             pop(YAPIONType.POINTER);
@@ -632,6 +645,10 @@ final class YAPIONInternalParser {
         ((YAPIONMap) currentObject).finishMapping();
         currentObject = currentObject.getParent();
         reset();
+        if (initialType == YAPIONType.MAP && typeStack.getStack().size() == 1) {
+            typeStack.pop(YAPIONType.OBJECT);
+            finished = true;
+        }
     }
 
     private void parseArray(char c, char lastChar) {
@@ -684,6 +701,10 @@ final class YAPIONInternalParser {
         }
         currentObject = currentObject.getParent();
         reset();
+        if (initialType == YAPIONType.ARRAY && typeStack.getStack().size() == 1) {
+            typeStack.pop(YAPIONType.OBJECT);
+            finished = true;
+        }
     }
 
     private void parseComment(char c, char lastChar) {
