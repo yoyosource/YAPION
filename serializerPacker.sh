@@ -17,7 +17,7 @@
 buildDir="./build"
 
 # Code
-crc32 -file `find ./src/main/java/yapion/serializing/serializer/ -type f` > $buildDir/tmp/serializerCache/serializer.crc32
+crc32 -file $(find ./src/main/java/yapion/serializing/serializer/ -type f) > $buildDir/tmp/serializerCache/serializer.crc32
 hash=$(crc32 $buildDir/tmp/serializerCache/serializer.crc32)
 echo "crc32Value: $hash"
 
