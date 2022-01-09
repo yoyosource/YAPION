@@ -14,6 +14,11 @@ group 'YAPION'
 def groupID = 'yoyosource'
 version 'SNAPSHOT'
 
+Properties versionProperties = new Properties()
+if (file("version.properties").exists()) {
+    versionProperties.load(file("version.properties").newDataInputStream())
+}
+
 ext {
     uberJarName = "${group}-${version}-all.jar"
     jarName = "${group}-${version}.jar"
@@ -21,6 +26,9 @@ ext {
 
     groupName = "${group}"
 
+    major = versionProperties.getProperty("major", "0")
+    minor = versionProperties.getProperty("minor", "0")
+    patch = versionProperties.getProperty("patch", "0")
     publication = major + "." + minor + "." + patch
 
     releasePath = "releases/${groupID}/${group}"
@@ -93,30 +101,30 @@ processResources {
     }
 }
 
-task buildClean {
-    description 'Clean classes Folder in build'
-    group "build"
-
-    doLast {
-        // deleteDirRecursively("${buildDir}/classes")
-    }
-}
-compileJava.dependsOn buildClean
-
 task compressClassFiles {
     description 'Compress Class Files'
     group "build"
 
     doLast {
         if (file("${buildDir}/classes/java/main/yapion/serializing/serializer/").exists()) {
-            String[] strings = shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker")
-            if (strings[2] == '0') {
-                print(strings[0])
+            if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+                String[] strings = shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker")
+                if (strings[2] == '0') {
+                    print(strings[0])
+                } else {
+                    print(strings[0])
+                    print(strings[1])
+                }
+                deleteDirRecursively("${buildDir}/classes/java/main/yapion/serializing/serializer")
             } else {
-                print(strings[0])
-                print(strings[1])
+                String[] strings = shell('./serializerPacker.sh')
+                if (strings[2] == '0') {
+                    print(strings[0])
+                } else {
+                    print(strings[0])
+                    print(strings[1])
+                }
             }
-            deleteDirRecursively("${buildDir}/classes/java/main/yapion/serializing/serializer")
         }
         deleteDirRecursively("${buildDir}/classes/java/main/yapion/utils/Packer.class")
     }
@@ -149,24 +157,6 @@ task processMetaINF {
     }
 }
 jar.finalizedBy(processMetaINF)
-
-/*
-task afterTest {
-    description 'Process Tests'
-    group "verification"
-
-    doLast {
-        File file = new File("${buildDir}/test-results/test/TEST-yapion.utils.ReflectionsTest.xml");
-        def line = 0;
-        file.withReader { reader ->
-            while ((line = reader.readLine()) != null) {
-                println "${line}"
-            }
-        }
-    }
-}
-test.finalizedBy(afterTest)
-*/
 
 shadowJar {
     manifest {
@@ -264,7 +254,7 @@ task incrementPatch {
 }
 
 private void save() {
-    File f = new File("${new File("${buildDir}").parentFile.toString()}/gradle.properties")
+    File f = new File("${new File("${buildDir}").parentFile.toString()}/version.properties")
     String[] strings = f.getText().split("\n")
     for (int i = 0; i < strings.length; i++) {
         if (strings[i].startsWith("major = ")) {
@@ -433,17 +423,3 @@ task testOutput {
     }
 }
 test.finalizedBy(testOutput)
-
-/*
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-*/
