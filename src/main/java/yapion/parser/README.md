@@ -22,19 +22,6 @@ This can also be written in prettified form like:
 }
 ```
 
-Because of the implicit YAPIONObject surrounding everything you can also just start writing your key-value-pairs.
-```
-test{}
-hello{}
-```
-This is parsed to with implicit YAPIONObject surrounding it:
-```
-{
-  test{}
-  hello{}
-}
-```
-
 Inside a YAPIONObject the key can also be omitted for one key-value-pair. It will then be represented as an empty string.
 ```
 {test{}{}}
@@ -187,16 +174,6 @@ This can also be written in prettified form like:
 ```
 {
   [
-    {}
-    {}
-    {}
-  ]
-}
-```
-And with commas:
-```
-{
-  [
     {},
     {},
     {}
@@ -245,23 +222,6 @@ This can also be written in prettified form like:
 }
 ```
 
-For more lazy writters the colon can be omitted.
-```
-<(key)(value)>
-```
-This is parsed to with implicit YAPIONObject surrounding it:
-```
-{<(key):(value)>}
-```
-This can also be written in prettified form like:
-```
-{
-  <
-    (key):(value)
-  >
-}
-```
-
 ## YAPIONPointer
 A YAPIONPointer is a reference to a YAPION type and starts with '->' and is followed by a 16 digit hex number without any prefix.
 
@@ -295,21 +255,6 @@ This can also be written in prettified form like:
 ```
 {
   /**/
-}
-```
-
-A Comment saying 'Hello World':
-```
-/* Hello World */
-```
-This is parsed to with implicit YAPIONObject surrounding it:
-```
-{/* Hello World */}
-```
-This can also be written in prettified form like:
-```
-{
-  /* Hello World */
 }
 ```
 
