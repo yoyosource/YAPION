@@ -617,6 +617,16 @@ final class YAPIONInternalParser {
     }
 
     private void parseMap(char c, char lastChar) {
+        boolean allowed = c == ':' || isWhiteSpace(c);
+        if (!disabledValue) allowed |= c == '(';
+        if (!disabledObject) allowed |= c == '{';
+        if (!disabledArray) allowed |= c == '[';
+        if (!disabledMap) allowed |= c == '<' || c == '>';
+        if (!disabledObject) allowed |= c == '-' || c == '>';
+        if (comments.isParse()) allowed |= c == '/' || c == '*';
+        if (!allowed) {
+            throw new YAPIONParserException("Invalid map char used: " + c);
+        }
         if (!everyType(c, lastChar) && c == '>') {
             parseEndMap();
         }
@@ -655,6 +665,7 @@ final class YAPIONInternalParser {
     }
 
     private void parseArray(char c, char lastChar) {
+        // TODO: Enforce syntax (Commas between elements!!!)
         key = "";
         if (!escaped && (c == ',' || c == ']')) {
             if (current.length() != 0) {
