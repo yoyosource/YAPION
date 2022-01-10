@@ -435,6 +435,9 @@ final class YAPIONInternalParser {
             return true;
         }
         if (unicode != null && unicode.length() < 4) {
+            if (!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z'))) {
+                throw new YAPIONParserException("Invalid UTF8 escape sequence");
+            }
             unicode.append(c);
             log.debug("UTF8     [{}]", unicode);
             if (unicode.length() == 4) {
