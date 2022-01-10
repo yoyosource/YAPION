@@ -627,6 +627,7 @@ final class YAPIONInternalParser {
         if (!allowed) {
             throw new YAPIONParserException("Invalid map char used: " + c);
         }
+        // TODO: Enforce syntax (':' between key value pairs)
         if (!everyType(c, lastChar) && c == '>') {
             parseEndMap();
         }
