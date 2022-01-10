@@ -15,7 +15,6 @@ package yapion.serializing;
 
 import org.junit.Test;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
-import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.value.ValueUtils;
 import yapion.parser.YAPIONParser;
@@ -25,7 +24,6 @@ import java.io.File;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static yapion.YAPIONAssertion.isYAPION;
 import static yapion.serializing.YAPIONTestObjects.*;
 
 public class YAPIONDeserializerTest {
@@ -38,7 +36,7 @@ public class YAPIONDeserializerTest {
 
     @Test
     public void testMap() {
-        Object object = YAPIONDeserializer.deserialize(YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestMap)stringStringMap{@type(java.util.HashMap)values<0:1#0(Hello1)#1(Hello1)2:3#2(Hello)#3(Hello)4:5#4(Hello2)#5(Hello2)>}hugoStringMap{@type(java.util.HashMap)values<>}hashMap{@type(java.util.HashMap)values<>}linkedHashMap{@type(java.util.LinkedHashMap)values<>}}"));
+        Object object = YAPIONDeserializer.deserialize(YAPIONParser.parse("{@type(yapion.serializing.YAPIONTestObjects$TestMap)stringStringMap{@type(java.util.HashMap)values<(Hello1):(Hello1)(Hello):(Hello)(Hello2):(Hello2)>}hugoStringMap{@type(java.util.HashMap)values<>}hashMap{@type(java.util.HashMap)values<>}linkedHashMap{@type(java.util.LinkedHashMap)values<>}}"));
         assertThat(object, is(new TestMap()));
     }
 
