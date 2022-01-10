@@ -96,6 +96,9 @@ def shell(String command) {
 - rmuller/infomas-asl (https://github.com/rmuller/infomas-asl)
   - [V] 3.0.5
   - [L] Apache-2.0
+- asm (https://gitlab.ow2.org/asm/asm)
+  - [V] 9.2
+  - [L] ???
 - eppleton/frgaal (https://github.com/eppleton/frgaal)
   - I am using the frgaal compiler to be able to use newer java features in an older environment.
   - [V] 15.0.0
