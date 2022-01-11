@@ -617,7 +617,7 @@ public final class YAPIONParser {
             log.debug("parse    [finished]");
         } catch (YAPIONParserException e) {
             log.debug("parse    [YAPIONParserException]");
-            throw new YAPIONParserException(((e.getMessage() != null ? e.getMessage() : "") + " (" + generateErrorMessage() + ")"), e);
+            throw wrapException(e);
         }
         return this;
     }
@@ -632,7 +632,15 @@ public final class YAPIONParser {
             return yapionInternalParser.finish();
         } catch (YAPIONParserException e) {
             log.debug("parse    [YAPIONParserException]");
-            throw new YAPIONParserException(((e.getMessage() != null ? e.getMessage() : "") + " (" + generateErrorMessage() + ")"), e);
+            throw wrapException(e);
+        }
+    }
+
+    private YAPIONParserException wrapException(YAPIONException e) {
+        if (e.getMessage() != null) {
+            return new YAPIONParserException(e.getMessage() + "\n" + generateErrorMessage(), e);
+        } else {
+            return new YAPIONParserException(generateErrorMessage(), e);
         }
     }
 
@@ -679,7 +687,22 @@ public final class YAPIONParser {
     }
 
     private String generateErrorMessage() {
-        return "Error after " + yapionInternalParser.count() + " reads";
+        StringBuilder st = new StringBuilder();
+        st.append("In line ").append(yapionInternalParser.line()).append(" at column ").append(yapionInternalParser.column()).append(" after ").append(yapionInternalParser.count()).append(" reads.");
+        if (!yapionInternalParser.getKey().isEmpty()) {
+            st.append("   Last read key: '").append(yapionInternalParser.getKey()).append("'");
+        }
+        if (yapionInternalParser.getCurrent().length() != 0) {
+            st.append("   Currently reading: '").append(yapionInternalParser.getCurrent()).append("'");
+        }
+        if (yapionInternalParser.getLastReadChar() != '\0') {
+            st.append("   Current char: '").append(yapionInternalParser.getLastReadChar()).append("'");
+        }
+        if (yapionInternalParser.getUnicode() != null) {
+            st.append("   Currently reading unicode: '").append(yapionInternalParser.getUnicode()).append("'");
+        }
+        st.append("   Type Stack: ").append(yapionInternalParser.getTypeStack());
+        return st.toString();
     }
 
     static class ParserSkipException extends RuntimeException {

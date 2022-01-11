@@ -13,6 +13,7 @@
 
 package yapion.parser;
 
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import yapion.exceptions.parser.YAPIONParserException;
@@ -34,8 +35,12 @@ final class YAPIONInternalParser {
 
     // Parse steps done
     private long count = 0;
+    private long line = 0;
+    private long column = 0;
 
     // last char
+    @Getter
+    private char lastReadChar = '\u0000';
     private char lastChar = '\u0000';
 
     // Result object and current
@@ -48,6 +53,7 @@ final class YAPIONInternalParser {
     private boolean finished = false;
 
     // The TypeStack
+    @Getter
     private final TypeStack typeStack = new TypeStack();
 
     // How the ReferenceValue should be computed
@@ -56,10 +62,15 @@ final class YAPIONInternalParser {
     // Unicode and Escaping variables
     private boolean escaped = false;
     private boolean lastCharEscaped = false;
+
+    @Getter
     private StringBuilder unicode = null;
 
     // Key and Value variables
+    @Getter
     private StringBuilder current = new StringBuilder();
+
+    @Getter
     private String key = "";
 
     // All Objects and Pointers
@@ -105,7 +116,22 @@ final class YAPIONInternalParser {
         return count;
     }
 
+    long line() {
+        return line;
+    }
+
+    long column() {
+        return column;
+    }
+
     void advance(char c) {
+        lastReadChar = c;
+        column++;
+        if (c == '\n') {
+            line++;
+            column = 0;
+        }
+
         log.debug("{} -> {}{}", typeStack, (int) c, (c >= ' ' && c <= '~' ? " '" + c + "'" : ""));
         if (typeStack.isEmpty()) {
             initialType(c);
