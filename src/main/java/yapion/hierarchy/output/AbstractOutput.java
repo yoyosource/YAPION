@@ -45,11 +45,13 @@ public abstract class AbstractOutput {
         return consumePrettified(indentator.indent(indentLevel));
     }
 
+    /*
     @InternalAPI
     public final AbstractOutput consumeIndentUnprettified(int indentLevel) {
         if (indentLevel < 0) return this;
         return consume(indentator.indent(indentLevel));
     }
+     */
 
     @InternalAPI
     public final AbstractOutput consumePrettified(String s) {
@@ -74,5 +76,4 @@ public abstract class AbstractOutput {
     protected final byte[] bytes(String s) {
         return s.getBytes(StandardCharsets.UTF_8);
     }
-
 }

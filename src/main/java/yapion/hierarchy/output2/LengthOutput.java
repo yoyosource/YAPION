@@ -11,7 +11,22 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.output.flavours;
+package yapion.hierarchy.output2;
 
-public class YAPIONConvertedJSONFlavour {
+import lombok.Getter;
+
+public class LengthOutput implements Output {
+
+    @Getter
+    private long length = 0;
+
+    @Override
+    public void internalConsume(String s) {
+        length += s.length();
+    }
+
+    @Override
+    public void internalConsumePrettified(String s) {
+        length += s.length();
+    }
 }
