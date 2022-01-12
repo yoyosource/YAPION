@@ -11,19 +11,9 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.output3;
+package yapion.hierarchy.output2;
 
-public interface Output<T> {
+public interface DecorativeOutput<T, K> extends Output<T> {
 
-    default void consume(T value) {
-        // do nothing
-    }
-
-    default void consumePrettified(T value) {
-        // do nothing
-    }
-
-    default void consumePrettified(int indent) {
-        // do nothing
-    }
+    Output<K> getWrapped();
 }

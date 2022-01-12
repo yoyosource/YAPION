@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.output3;
+package yapion.hierarchy.output2;
 
 public class StringToIntsOutput implements DecorativeOutput<String, Integer> {
 

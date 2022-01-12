@@ -13,27 +13,22 @@
 
 package yapion.hierarchy.output2;
 
-import yapion.annotations.api.InternalAPI;
+public interface Output<T> extends AutoCloseable {
 
-public interface Output {
-
-    @InternalAPI
-    void internalConsume(String s);
-
-    @InternalAPI
-    default void internalConsumePrettified(String s) {
-        internalConsume(s);
+    default void consume(T value) {
+        // do nothing
     }
 
-    default void consume(String text) {
-        internalConsume(text);
-    }
-
-    default void consumePrettified(String text) {
+    default void consumePrettified(T value) {
         // do nothing
     }
 
     default void consumePrettified(int indent) {
+        // do nothing
+    }
+
+    @Override
+    default void close() throws Exception {
         // do nothing
     }
 }

@@ -11,34 +11,32 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.output3;
+package yapion.hierarchy.output2;
 
-import java.nio.charset.StandardCharsets;
+public class StringToCharsOutput implements DecorativeOutput<String, Character> {
 
-public class StringToBytesOutput implements DecorativeOutput<String, Byte> {
-
-    private Output<Byte> byteOutput;
+    private Output<Character> characterOutput;
 
     @Override
-    public Output<Byte> getWrapped() {
-        return byteOutput;
+    public Output<Character> getWrapped() {
+        return characterOutput;
     }
 
-    public StringToBytesOutput(Output<Byte> byteOutput) {
-        this.byteOutput = byteOutput;
+    public StringToCharsOutput(Output<Character> characterOutput) {
+        this.characterOutput = characterOutput;
     }
 
     @Override
     public void consume(String value) {
-        for (byte b : value.getBytes(StandardCharsets.UTF_8)) {
-            byteOutput.consume(b);
+        for (char c : value.toCharArray()) {
+            characterOutput.consume(c);
         }
     }
 
     @Override
     public void consumePrettified(String value) {
-        for (byte b : value.getBytes(StandardCharsets.UTF_8)) {
-            byteOutput.consumePrettified(b);
+        for (char c : value.toCharArray()) {
+            characterOutput.consumePrettified(c);
         }
     }
 }

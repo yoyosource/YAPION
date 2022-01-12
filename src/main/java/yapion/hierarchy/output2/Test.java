@@ -16,10 +16,14 @@ package yapion.hierarchy.output2;
 public class Test {
 
     public static void main(String[] args) {
-        LengthOutput lengthOutput = new LengthOutput();
-        // PrettifyOutput prettifyOutput = new PrettifyOutput(lengthOutput);
-        lengthOutput.consume("Hello World");
-        lengthOutput.consumePrettified("Hello World");
-        System.out.println(lengthOutput.getLength());
+        CountOutput countOutput = new CountOutput();
+        StringToBytesOutput stringToBytesOutput = new StringToBytesOutput(countOutput);
+        stringToBytesOutput.consume("Hello World!");
+        PrettifyOutput prettifyOutput = new PrettifyOutput(stringToBytesOutput);
+        prettifyOutput.consume("Hello World!");
+        prettifyOutput.consumePrettified("Hello World!");
+        System.out.println(countOutput.getCount());
+
+        new PrettifyOutput(new StringToBytesOutput(new CountOutput()));
     }
 }

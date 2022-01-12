@@ -15,18 +15,13 @@ package yapion.hierarchy.output2;
 
 import lombok.Getter;
 
-public class LengthOutput implements Output {
+public class CountOutput implements Output {
 
     @Getter
-    private long length = 0;
+    private long count;
 
     @Override
-    public void internalConsume(String s) {
-        length += s.length();
-    }
-
-    @Override
-    public void internalConsumePrettified(String s) {
-        length += s.length();
+    public void consume(Object value) {
+        count++;
     }
 }

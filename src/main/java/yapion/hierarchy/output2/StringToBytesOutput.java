@@ -11,42 +11,34 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.output3;
+package yapion.hierarchy.output2;
 
-import yapion.hierarchy.output.Indentator;
+import java.nio.charset.StandardCharsets;
 
-public class PrettifyOutput implements DecorativeOutput<String, String> {
+public class StringToBytesOutput implements DecorativeOutput<String, Byte> {
 
-    private final Output<String> output;
-
-    private Indentator indentator = Indentator.DEFAULT;
+    private Output<Byte> byteOutput;
 
     @Override
-    public Output<String> getWrapped() {
-        return output;
+    public Output<Byte> getWrapped() {
+        return byteOutput;
     }
 
-    public PrettifyOutput(Output<String> output) {
-        this.output = output;
-    }
-
-    public PrettifyOutput(Output<String> output, Indentator indentator) {
-        this.output = output;
-        this.indentator = indentator;
+    public StringToBytesOutput(Output<Byte> byteOutput) {
+        this.byteOutput = byteOutput;
     }
 
     @Override
     public void consume(String value) {
-        output.consume(value);
+        for (byte b : value.getBytes(StandardCharsets.UTF_8)) {
+            byteOutput.consume(b);
+        }
     }
 
     @Override
     public void consumePrettified(String value) {
-        output.consume(value);
-    }
-
-    @Override
-    public void consumePrettified(int indent) {
-        output.consume(indentator.indent(indent));
+        for (byte b : value.getBytes(StandardCharsets.UTF_8)) {
+            byteOutput.consumePrettified(b);
+        }
     }
 }

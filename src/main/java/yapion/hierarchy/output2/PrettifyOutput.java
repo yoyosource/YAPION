@@ -15,26 +15,38 @@ package yapion.hierarchy.output2;
 
 import yapion.hierarchy.output.Indentator;
 
-public class PrettifyOutput extends DelegateOutput<Output> implements Output {
+public class PrettifyOutput implements DecorativeOutput<String, String> {
+
+    private final Output<String> output;
 
     private Indentator indentator = Indentator.DEFAULT;
 
-    public PrettifyOutput(Output delegate) {
-        super(delegate);
+    @Override
+    public Output<String> getWrapped() {
+        return output;
     }
 
-    public PrettifyOutput(Output delegate, Indentator indentator) {
-        super(delegate);
+    public PrettifyOutput(Output<String> output) {
+        this.output = output;
+    }
+
+    public PrettifyOutput(Output<String> output, Indentator indentator) {
+        this.output = output;
         this.indentator = indentator;
     }
 
     @Override
-    public void consumePrettified(String text) {
-        super.internalConsumePrettified(text);
+    public void consume(String value) {
+        output.consume(value);
+    }
+
+    @Override
+    public void consumePrettified(String value) {
+        output.consume(value);
     }
 
     @Override
     public void consumePrettified(int indent) {
-        super.consumePrettified(indentator.indent(indent));
+        output.consume(indentator.indent(indent));
     }
 }
