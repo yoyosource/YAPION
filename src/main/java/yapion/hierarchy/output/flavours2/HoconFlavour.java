@@ -14,36 +14,41 @@
 package yapion.hierarchy.output.flavours2;
 
 import yapion.hierarchy.output.AbstractOutput;
+import yapion.path.YAPIONPath;
 
-public class YAPIONFlavour extends YAPIONNoCommentFlavour {
+import java.util.function.Supplier;
+
+public class HoconFlavour extends JSON5Flavour {
+
+    @Override
+    public PrettifyBehaviour getPrettifyBehaviour() {
+        return PrettifyBehaviour.ALWAYS;
+    }
 
     @Override
     public void begin(HierarchyTypes hierarchyTypes, AbstractOutput output) {
-        switch (hierarchyTypes) {
-            case COMMENT:
-                output.consume("/*");
-                return;
+        if (hierarchyTypes == HierarchyTypes.COMMENT) {
+            output.consume("#");
         }
         super.begin(hierarchyTypes, output);
     }
 
     @Override
     public void end(HierarchyTypes hierarchyTypes, AbstractOutput output) {
-        switch (hierarchyTypes) {
-            case COMMENT:
-                output.consume("*/");
-                return;
+        if (hierarchyTypes == HierarchyTypes.COMMENT) {
+            return;
         }
         super.end(hierarchyTypes, output);
     }
 
     @Override
+    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name, Supplier<YAPIONPath> yapionPathSupplier) {
+        output.consume(name);
+        output.consume(": ");
+    }
+
+    @Override
     public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
-        switch (hierarchyTypes) {
-            case COMMENT:
-                output.consume((String) valueData.getValue());
-                return;
-        }
-        super.elementValue(hierarchyTypes, output, valueData);
+        output.consume(valueData.getValue().toString());
     }
 }

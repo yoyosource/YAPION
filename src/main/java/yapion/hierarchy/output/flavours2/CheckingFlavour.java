@@ -15,8 +15,10 @@ package yapion.hierarchy.output.flavours2;
 
 import lombok.AllArgsConstructor;
 import yapion.hierarchy.output.AbstractOutput;
+import yapion.path.YAPIONPath;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 @AllArgsConstructor
 public class CheckingFlavour implements Flavour {
@@ -66,21 +68,21 @@ public class CheckingFlavour implements Flavour {
     }
 
     @Override
-    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name) {
+    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name, Supplier<YAPIONPath> yapionPathSupplier) {
         checkType(hierarchyTypes);
-        flavour.beginElement(hierarchyTypes, output, name);
+        flavour.beginElement(hierarchyTypes, output, name, yapionPathSupplier);
     }
 
     @Override
-    public void endElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name) {
+    public void endElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name, Supplier<YAPIONPath> yapionPathSupplier) {
         checkType(hierarchyTypes);
-        flavour.endElement(hierarchyTypes, output, name);
+        flavour.endElement(hierarchyTypes, output, name, yapionPathSupplier);
     }
 
     @Override
-    public void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output) {
+    public void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output, boolean last) {
         checkType(hierarchyTypes);
-        flavour.elementSeparator(hierarchyTypes, output);
+        flavour.elementSeparator(hierarchyTypes, output, last);
     }
 
     @Override

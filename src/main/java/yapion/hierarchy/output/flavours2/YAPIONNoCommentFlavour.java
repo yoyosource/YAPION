@@ -13,93 +13,13 @@
 
 package yapion.hierarchy.output.flavours2;
 
-import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.types.YAPIONType;
-import yapion.hierarchy.types.value.ValueUtils;
+import java.util.HashSet;
+import java.util.Set;
 
-public class YAPIONNoCommentFlavour implements Flavour {
-
-    @Override
-    public void begin(HierarchyTypes hierarchyTypes, AbstractOutput output) {
-        switch (hierarchyTypes) {
-            case OBJECT:
-                output.consume("{");
-                break;
-            case ARRAY:
-                output.consume("[");
-                break;
-            case MAP:
-                output.consume("<");
-                break;
-            case VALUE:
-                output.consume("(");
-                break;
-            case POINTER:
-                output.consume("->");
-                break;
-        }
-    }
+public class YAPIONNoCommentFlavour extends YAPIONExceptionOnCommentFlavour {
 
     @Override
-    public void end(HierarchyTypes hierarchyTypes, AbstractOutput output) {
-        switch (hierarchyTypes) {
-            case OBJECT:
-                output.consume("}");
-                break;
-            case ARRAY:
-                output.consume("]");
-                break;
-            case MAP:
-                output.consume(">");
-                break;
-            case VALUE:
-                output.consume(")");
-                break;
-        }
-    }
-
-    @Override
-    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name) {
-        if (hierarchyTypes == HierarchyTypes.OBJECT) {
-            if (name.startsWith(" ") || name.startsWith(",")) {
-                output.consume("\\" + ValueUtils.stringToUTFEscapedString(name, ValueUtils.EscapeCharacters.KEY));
-            } else {
-                output.consume(ValueUtils.stringToUTFEscapedString(name, ValueUtils.EscapeCharacters.KEY));
-            }
-        }
-    }
-
-    @Override
-    public void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output) {
-        switch (hierarchyTypes) {
-            case ARRAY:
-                output.consume(",");
-                break;
-            case MAP:
-                output.consume(":");
-                break;
-        }
-    }
-
-    @Override
-    public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
-        switch (hierarchyTypes) {
-            case VALUE:
-                output.consume(valueData.getWrappedValue().getValueHandler().output(valueData.getValue(), YAPIONType.VALUE));
-                break;
-            case ARRAY:
-                String string = valueData.getWrappedValue().getValueHandler().output(valueData.getValue(), YAPIONType.ARRAY);
-                if (string.startsWith(" ") || string.startsWith("-")) {
-                    string = "\\" + string;
-                }
-                if (ValueUtils.startsWith(string, ValueUtils.EscapeCharacters.KEY) || string.isEmpty()) {
-                    begin(HierarchyTypes.VALUE, output);
-                    output.consume(string);
-                    end(HierarchyTypes.VALUE, output);
-                } else {
-                    output.consume(string);
-                }
-                break;
-        }
+    public Set<HierarchyTypes> unsupportedTypes() {
+        return new HashSet<>();
     }
 }

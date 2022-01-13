@@ -15,7 +15,24 @@ package yapion.hierarchy.output.flavours2;
 
 import yapion.hierarchy.output.AbstractOutput;
 
-public class YAPIONFlavour extends YAPIONNoCommentFlavour {
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+public class JSON5Flavour extends JSONFlavour {
+
+    private static Set<HierarchyTypes> unsupportedTypes = new HashSet<>();
+
+    static {
+        unsupportedTypes.add(HierarchyTypes.POINTER);
+        unsupportedTypes.add(HierarchyTypes.MAP);
+        unsupportedTypes = Collections.unmodifiableSet(unsupportedTypes);
+    }
+
+    @Override
+    public Set<HierarchyTypes> unsupportedTypes() {
+        return unsupportedTypes;
+    }
 
     @Override
     public void begin(HierarchyTypes hierarchyTypes, AbstractOutput output) {
@@ -39,10 +56,9 @@ public class YAPIONFlavour extends YAPIONNoCommentFlavour {
 
     @Override
     public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
-        switch (hierarchyTypes) {
-            case COMMENT:
-                output.consume((String) valueData.getValue());
-                return;
+        if (hierarchyTypes == HierarchyTypes.COMMENT) {
+            output.consume(valueData.getValue().toString());
+            return;
         }
         super.elementValue(hierarchyTypes, output, valueData);
     }

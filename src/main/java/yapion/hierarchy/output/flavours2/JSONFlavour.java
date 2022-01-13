@@ -23,12 +23,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class YAPIONExceptionOnCommentFlavour implements Flavour {
+public class JSONFlavour implements Flavour {
 
     private static Set<HierarchyTypes> unsupportedTypes = new HashSet<>();
 
     static {
         unsupportedTypes.add(HierarchyTypes.COMMENT);
+        unsupportedTypes.add(HierarchyTypes.POINTER);
+        unsupportedTypes.add(HierarchyTypes.MAP);
         unsupportedTypes = Collections.unmodifiableSet(unsupportedTypes);
     }
 
@@ -46,15 +48,6 @@ public class YAPIONExceptionOnCommentFlavour implements Flavour {
             case ARRAY:
                 output.consume("[");
                 break;
-            case MAP:
-                output.consume("<");
-                break;
-            case VALUE:
-                output.consume("(");
-                break;
-            case POINTER:
-                output.consume("->");
-                break;
         }
     }
 
@@ -67,57 +60,28 @@ public class YAPIONExceptionOnCommentFlavour implements Flavour {
             case ARRAY:
                 output.consume("]");
                 break;
-            case MAP:
-                output.consume(">");
-                break;
-            case VALUE:
-                output.consume(")");
-                break;
         }
     }
 
     @Override
     public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name, Supplier<YAPIONPath> yapionPathSupplier) {
-        if (hierarchyTypes == HierarchyTypes.OBJECT) {
-            if (name.startsWith(" ") || name.startsWith(",")) {
-                output.consume("\\" + ValueUtils.stringToUTFEscapedString(name, ValueUtils.EscapeCharacters.KEY));
-            } else {
-                output.consume(ValueUtils.stringToUTFEscapedString(name, ValueUtils.EscapeCharacters.KEY));
-            }
-        }
+        output.consume("\"" + name + "\":");
+        output.consumePrettified(" ");
     }
 
     @Override
     public void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output, boolean last) {
-        switch (hierarchyTypes) {
-            case ARRAY:
-                output.consume(",");
-                break;
-            case MAP:
-                output.consume(":");
-                break;
+        if (!last) {
+            output.consume(",");
         }
     }
 
     @Override
     public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
-        switch (hierarchyTypes) {
-            case VALUE:
-                output.consume(valueData.getWrappedValue().getValueHandler().output(valueData.getValue(), YAPIONType.VALUE));
-                break;
-            case ARRAY:
-                String string = valueData.getWrappedValue().getValueHandler().output(valueData.getValue(), YAPIONType.ARRAY);
-                if (string.startsWith(" ") || string.startsWith("-")) {
-                    string = "\\" + string;
-                }
-                if (ValueUtils.startsWith(string, ValueUtils.EscapeCharacters.KEY) || string.isEmpty()) {
-                    begin(HierarchyTypes.VALUE, output);
-                    output.consume(string);
-                    end(HierarchyTypes.VALUE, output);
-                } else {
-                    output.consume(string);
-                }
-                break;
+        String s = valueData.getWrappedValue().getValueHandler().output(valueData.getValue(), YAPIONType.VALUE);
+        if (valueData.getValue() instanceof String || valueData.getValue() instanceof Character) {
+            s = "\"" + valueData.getValue().toString() + "\"";
         }
+        output.consume(ValueUtils.stringToUTFEscapedString(s, ValueUtils.EscapeCharacters.JSON));
     }
 }

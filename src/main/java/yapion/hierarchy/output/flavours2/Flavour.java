@@ -19,9 +19,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.path.YAPIONPath;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public interface Flavour {
 
@@ -45,7 +47,7 @@ public interface Flavour {
     }
 
     default void checkType(HierarchyTypes hierarchyTypes) {
-        if (unsupportedTypes().contains(hierarchyTypes)) {
+        if (this.unsupportedTypes().contains(hierarchyTypes)) {
             throw new UnsupportedOperationException("Flavour " + this.getClass().getSimpleName() + " does not support " + hierarchyTypes.name());
         }
     }
@@ -100,12 +102,12 @@ public interface Flavour {
 
     /**
      * Begin an Element inside a {@link HierarchyTypes}
-     *
-     * @param hierarchyTypes the {@link HierarchyTypes} the element is inside
+     *  @param hierarchyTypes the {@link HierarchyTypes} the element is inside
      * @param output the output to write to
      * @param name the name of the element
+     * @param yapionPathSupplier the path of the element you are inside, so the parameter 'name' is not included
      */
-    default void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name) {
+    default void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name, Supplier<YAPIONPath> yapionPathSupplier) {
     }
 
     /**
@@ -114,8 +116,9 @@ public interface Flavour {
      * @param hierarchyTypes the {@link HierarchyTypes} the element is inside
      * @param output the output to write to
      * @param name the name of the element
+     * @param yapionPathSupplier the path of the element you are inside, so the parameter 'name' is not included
      */
-    default void endElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name) {
+    default void endElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name, Supplier<YAPIONPath> yapionPathSupplier) {
     }
 
     /**
@@ -123,8 +126,9 @@ public interface Flavour {
      *
      * @param hierarchyTypes the {@link HierarchyTypes} the element is inside
      * @param output the output to write to
+     * @param last if this is the last element of the surrounding object
      */
-    default void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output) {
+    default void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output, boolean last) {
     }
 
     /**
