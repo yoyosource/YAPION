@@ -3,11 +3,14 @@
 ## JavaDoc
 
 * 0.25.4 &nbsp; &nbsp; [JavaDoc](javadoc/v0.25.3/index.html) &nbsp; &nbsp; [Changelog](changelog/0.25.0.md)
-* 0.24.0 &nbsp; &nbsp; [JavaDoc](javadoc/v0.24.0/index.html) &nbsp; &nbsp; [Changelog](changelog/0.24.0.md)
-* 0.23.2 &nbsp; &nbsp; [JavaDoc](javadoc/v0.23.2/index.html) &nbsp; &nbsp; [Changelog](changelog/0.23.0.md)
-* 0.22.0 &nbsp; &nbsp; [JavaDoc](javadoc/v0.22.0/index.html) &nbsp; &nbsp; [Changelog](changelog/0.22.0.md)
-* 0.21.1 &nbsp; &nbsp; [JavaDoc](javadoc/v0.21.1/index.html) &nbsp; &nbsp; [Changelog](changelog/0.21.0.md)
-* 0.20.2 &nbsp; &nbsp; [JavaDoc](javadoc/v0.20.2/index.html) &nbsp; &nbsp; [Changelog](changelog/0.20.0.md)
+<details style="cursor:pointer;user-select:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;">
+<summary><h3 style="display:inline;">Older Versions</h3></summary>
+<ul>0.24.0 &nbsp; &nbsp; <a href="javadoc/v0.24.0/index.html">JavaDoc</a> &nbsp; &nbsp; <a href="changelog/0.24.0.md">Changelog</a></ul>
+<ul>0.23.2 &nbsp; &nbsp; <a href="javadoc/v0.23.2/index.html">JavaDoc</a> &nbsp; &nbsp; <a href="changelog/0.23.0.md">Changelog</a></ul>
+<ul>0.22.0 &nbsp; &nbsp; <a href="javadoc/v0.22.0/index.html">JavaDoc</a> &nbsp; &nbsp; <a href="changelog/0.22.0.md">Changelog</a></ul>
+<ul>0.21.1 &nbsp; &nbsp; <a href="javadoc/v0.21.1/index.html">JavaDoc</a> &nbsp; &nbsp; <a href="changelog/0.21.0.md">Changelog</a></ul>
+<ul>0.20.2 &nbsp; &nbsp; <a href="javadoc/v0.20.2/index.html">JavaDoc</a> &nbsp; &nbsp; <a href="changelog/0.20.0.md">Changelog</a></ul>
+</details>
 
 ## Dataflow [WIP]
 
