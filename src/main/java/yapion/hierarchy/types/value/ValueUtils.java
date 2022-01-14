@@ -47,14 +47,14 @@ public final class ValueUtils {
         if (bytes.length <= 1) {
             return false;
         }
-        char c = (char) ((bytes[0] << 8) | (bytes[1] & 0xFF));
+        char c = (char) ((((int) bytes[0]) << 8) | (bytes[1] & 0xFF));
         return escapeCharacters.contains(c);
     }
 
     public static boolean contains(String s, EscapeCharacters escapeCharacters) {
         byte[] bytes = s.getBytes(StandardCharsets.UTF_16BE);
         for (int i = 0; i < bytes.length; i += 2) {
-            char c = (char) ((bytes[i] << 8) | (bytes[i + 1] & 0xFF));
+            char c = (char) ((((int) bytes[i]) << 8) | (bytes[i + 1] & 0xFF));
             if (escapeCharacters.contains(c)) {
                 return true;
             }
@@ -67,7 +67,7 @@ public final class ValueUtils {
         byte[] bytes = s.getBytes(StandardCharsets.UTF_16BE);
         StringBuilder st = new StringBuilder();
         for (int i = 0; i < bytes.length; i += 2) {
-            st.append(charToUTFEscape((char) ((bytes[i] << 8) | (bytes[i + 1] & 0xFF)), escapeCharacters));
+            st.append(charToUTFEscape((char) ((((int) bytes[i]) << 8) | (bytes[i + 1] & 0xFF)), escapeCharacters));
         }
         return st.toString();
     }
