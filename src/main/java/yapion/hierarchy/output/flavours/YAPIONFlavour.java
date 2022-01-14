@@ -13,136 +13,37 @@
 
 package yapion.hierarchy.output.flavours;
 
-import yapion.hierarchy.types.YAPIONPointer;
-import yapion.hierarchy.types.YAPIONType;
-import yapion.hierarchy.types.YAPIONValue;
-import yapion.hierarchy.types.value.ValueUtils;
+import yapion.hierarchy.output.AbstractOutput;
 
-public class YAPIONFlavour implements Flavour {
+public class YAPIONFlavour extends YAPIONNoCommentFlavour {
 
     @Override
-    public PrettifyBehaviour getPrettifyBehaviour() {
-        return PrettifyBehaviour.CHOOSEABLE;
-    }
-
-    @Override
-    public String beginObject() {
-        return "{";
-    }
-
-    @Override
-    public String objectKeyPairStart(String key) {
-        if (key.startsWith(" ") || key.startsWith(",")) {
-            return "\\" + ValueUtils.stringToUTFEscapedString(key, ValueUtils.EscapeCharacters.KEY);
+    public void begin(HierarchyTypes hierarchyTypes, AbstractOutput output) {
+        switch (hierarchyTypes) {
+            case COMMENT:
+                output.consume("/*");
+                return;
         }
-        return ValueUtils.stringToUTFEscapedString(key, ValueUtils.EscapeCharacters.KEY);
+        super.begin(hierarchyTypes, output);
     }
 
     @Override
-    public String endObject() {
-        return "}";
-    }
-
-    @Override
-    public String beginArray() {
-        return "[";
-    }
-
-    @Override
-    public String arraySeparator() {
-        return ",";
-    }
-
-    @Override
-    public String arrayLastElementSeparatorIfPrettified() {
-        return ",";
-    }
-
-    @Override
-    public String endArray() {
-        return "]";
-    }
-
-    @Override
-    public String beginMap() {
-        return "<";
-    }
-
-    @Override
-    public String mapSeparator() {
-        return ":";
-    }
-
-    @Override
-    public String endMap() {
-        return ">";
-    }
-
-    @Override
-    public String beginValue() {
-        return "(";
-    }
-
-    @Override
-    public <T> String value(YAPIONValue<T> value) {
-        return value.getValueHandler().output(value.get(), YAPIONType.VALUE);
-    }
-
-    @Override
-    public String endValue() {
-        return ")";
-    }
-
-    @Override
-    public String beginArrayValue() {
-        return null;
-    }
-
-    @Override
-    public <T> String arrayValue(YAPIONValue<T> value) {
-        String string = value.getValueHandler().output(value.get(), YAPIONType.ARRAY);
-        if (string.startsWith(" ") || string.startsWith("-")) {
-            string = "\\" + string;
+    public void end(HierarchyTypes hierarchyTypes, AbstractOutput output) {
+        switch (hierarchyTypes) {
+            case COMMENT:
+                output.consume("*/");
+                return;
         }
-        if (ValueUtils.startsWith(string, ValueUtils.EscapeCharacters.KEY) || string.isEmpty()) {
-            return beginValue() + string + endValue();
-        } else {
-            return string;
+        super.end(hierarchyTypes, output);
+    }
+
+    @Override
+    public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
+        switch (hierarchyTypes) {
+            case COMMENT:
+                output.consume((String) valueData.getValue());
+                return;
         }
-    }
-
-    @Override
-    public String endArrayValue() {
-        return null;
-    }
-
-    @Override
-    public String beginPointer() {
-        return "->";
-    }
-
-    @Override
-    public String pointer(YAPIONPointer yapionPointer) {
-        return yapionPointer.getPointerIDString();
-    }
-
-    @Override
-    public String endPointer() {
-        return null;
-    }
-
-    @Override
-    public String beginComment() {
-        return "/*";
-    }
-
-    @Override
-    public String comment(String comment) {
-        return comment;
-    }
-
-    @Override
-    public String endComment() {
-        return "*/";
+        super.elementValue(hierarchyTypes, output, valueData);
     }
 }

@@ -11,55 +11,42 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.output.flavours2;
+package yapion.hierarchy.output.flavours;
 
 import yapion.hierarchy.output.AbstractOutput;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-public class JSON5Flavour extends JSONFlavour {
-
-    private static Set<HierarchyTypes> unsupportedTypes = new HashSet<>();
-
-    static {
-        unsupportedTypes.add(HierarchyTypes.POINTER);
-        unsupportedTypes.add(HierarchyTypes.MAP);
-        unsupportedTypes = Collections.unmodifiableSet(unsupportedTypes);
-    }
+public class HoconFlavour extends JSON5Flavour {
 
     @Override
-    public Set<HierarchyTypes> unsupportedTypes() {
-        return unsupportedTypes;
+    public PrettifyBehaviour getPrettifyBehaviour() {
+        return PrettifyBehaviour.ALWAYS;
     }
 
     @Override
     public void begin(HierarchyTypes hierarchyTypes, AbstractOutput output) {
-        switch (hierarchyTypes) {
-            case COMMENT:
-                output.consume("/*");
-                return;
+        if (hierarchyTypes == HierarchyTypes.COMMENT) {
+            output.consume("# ");
+            return;
         }
         super.begin(hierarchyTypes, output);
     }
 
     @Override
     public void end(HierarchyTypes hierarchyTypes, AbstractOutput output) {
-        switch (hierarchyTypes) {
-            case COMMENT:
-                output.consume("*/");
-                return;
+        if (hierarchyTypes == HierarchyTypes.COMMENT) {
+            return;
         }
         super.end(hierarchyTypes, output);
     }
 
     @Override
+    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
+        output.consume(elementData.getName());
+        output.consume(": ");
+    }
+
+    @Override
     public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
-        if (hierarchyTypes == HierarchyTypes.COMMENT) {
-            output.consume(valueData.getValue().toString());
-            return;
-        }
-        super.elementValue(hierarchyTypes, output, valueData);
+        output.consume(valueData.getValue().toString());
     }
 }

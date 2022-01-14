@@ -91,22 +91,23 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
 
     @Override
     public <T extends AbstractOutput> T output(T abstractOutput, Flavour flavour) {
+        flavour = convert(flavour);
         if (!hasParent()) {
-            abstractOutput.consume(flavour.header());
+            flavour.header(abstractOutput);
         }
         if (flavour.removeRootObject()) {
             if (hasParent()) {
-                abstractOutput.consume(flavour.beginObject());
+                flavour.begin(Flavour.HierarchyTypes.OBJECT, abstractOutput);
             }
         } else {
-            abstractOutput.consume(flavour.beginObject());
+            flavour.begin(Flavour.HierarchyTypes.OBJECT, abstractOutput);
         }
         final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + (flavour.removeRootObject() ? 0 : 1));
         Flavour.PrettifyBehaviour prettifyBehaviour = flavour.getPrettifyBehaviour();
         boolean b = false;
         for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
             if (b) {
-                abstractOutput.consume(flavour.objectFullKeyPairSeparator());
+                flavour.elementSeparator(Flavour.HierarchyTypes.OBJECT, abstractOutput, false);
             }
             b = true;
 
@@ -116,27 +117,28 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
             } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
                 abstractOutput.consume(indent);
             }
-            abstractOutput.consume(flavour.objectKeyPairStart(entry.getKey()));
+            Flavour.ElementData elementData = new Flavour.ElementData(entry.getKey(), this::getPath, entry.getValue().getType());
+            flavour.beginElement(Flavour.HierarchyTypes.OBJECT, abstractOutput, elementData);
             entry.getValue().output(abstractOutput, flavour);
-            abstractOutput.consume(flavour.objectKeyPairEnd(entry.getKey()));
+            flavour.endElement(Flavour.HierarchyTypes.OBJECT, abstractOutput, elementData);
         }
         outputComments(abstractOutput, flavour, prettifyBehaviour, getEndingComments(), indent);
         if (!variables.isEmpty() || hasEndingComments()) {
             if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
                 abstractOutput.consumePrettified("\n").consumeIndent(getDepth() - (flavour.removeRootObject() ? 1 : 0));
             } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
-                abstractOutput.consume("\n").consumeIndent(getDepth() - (flavour.removeRootObject() ? 1 : 0));
+                abstractOutput.consume("\n").consume(abstractOutput.getIndentator().indent(getDepth() - (flavour.removeRootObject() ? 1 : 0)));
             }
         }
         if (flavour.removeRootObject()) {
             if (hasParent()) {
-                abstractOutput.consume(flavour.endObject());
+                flavour.end(Flavour.HierarchyTypes.OBJECT, abstractOutput);
             }
         } else {
-            abstractOutput.consume(flavour.endObject());
+            flavour.end(Flavour.HierarchyTypes.OBJECT, abstractOutput);
         }
         if (!hasParent()) {
-            abstractOutput.consume(flavour.footer());
+            flavour.footer(abstractOutput);
         }
         return abstractOutput;
     }

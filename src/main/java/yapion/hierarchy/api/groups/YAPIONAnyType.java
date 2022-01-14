@@ -23,6 +23,7 @@ import yapion.hierarchy.api.ObjectType;
 import yapion.hierarchy.api.storage.Comments;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
+import yapion.hierarchy.output.flavours.CheckingFlavour;
 import yapion.hierarchy.output.flavours.Flavour;
 import yapion.hierarchy.types.YAPIONElementPath;
 import yapion.parser.YAPIONParser;
@@ -162,7 +163,7 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
             } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
                 abstractOutput.consume(indent);
             }
-            abstractOutput.consume(flavour.beginComment());
+            flavour.begin(Flavour.HierarchyTypes.COMMENT, abstractOutput);
             for (int i = 0; i < strings.length; i++) {
                 if (i != 0) {
                     if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
@@ -177,9 +178,9 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
                 while (index < current.length() && Character.isWhitespace(current.charAt(index))) {
                     index++;
                 }
-                abstractOutput.consume(flavour.comment(current.substring(index)));
+                flavour.elementValue(Flavour.HierarchyTypes.COMMENT, abstractOutput, new Flavour.ValueData<>(null, current.substring(index)));
             }
-            abstractOutput.consume(flavour.endComment());
+            flavour.end(Flavour.HierarchyTypes.COMMENT, abstractOutput);
         });
     }
 
@@ -202,6 +203,13 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
             }
             abstractOutput.consume("*/");
         });
+    }
+
+    protected final CheckingFlavour convert(Flavour flavour) {
+        if (flavour instanceof CheckingFlavour) {
+            return (CheckingFlavour) flavour;
+        }
+        return new CheckingFlavour(flavour);
     }
 
     public List<String> getComments() {

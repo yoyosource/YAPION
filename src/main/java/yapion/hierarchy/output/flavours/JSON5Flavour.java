@@ -13,84 +13,53 @@
 
 package yapion.hierarchy.output.flavours;
 
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.output.AbstractOutput;
 
-public class JSON5Flavour implements Flavour {
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-    @Override
-    public PrettifyBehaviour getPrettifyBehaviour() {
-        return PrettifyBehaviour.CHOOSEABLE;
+public class JSON5Flavour extends JSONFlavour {
+
+    private static Set<HierarchyTypes> unsupportedTypes = new HashSet<>();
+
+    static {
+        unsupportedTypes.add(HierarchyTypes.POINTER);
+        unsupportedTypes.add(HierarchyTypes.MAP);
+        unsupportedTypes = Collections.unmodifiableSet(unsupportedTypes);
     }
 
     @Override
-    public String beginObject() {
-        return "{";
+    public Set<HierarchyTypes> unsupportedTypes() {
+        return unsupportedTypes;
     }
 
     @Override
-    public String objectKeyPairStart(String key) {
-        return key + ": ";
-    }
-
-    @Override
-    public String objectFullKeyPairSeparator() {
-        return ",";
-    }
-
-    @Override
-    public String endObject() {
-        return "}";
-    }
-
-    @Override
-    public String beginArray() {
-        return "[";
-    }
-
-    @Override
-    public String arraySeparator() {
-        return ",";
-    }
-
-    @Override
-    public String endArray() {
-        return "]";
-    }
-
-    @Override
-    public String beginValue() {
-        return null;
-    }
-
-    @Override
-    public <T> String value(YAPIONValue<T> input) {
-        T value = input.get();
-        if (value == null) {
-            return "null";
+    public void begin(HierarchyTypes hierarchyTypes, AbstractOutput output) {
+        switch (hierarchyTypes) {
+            case COMMENT:
+                output.consume("/*");
+                return;
         }
-        if (value instanceof String || value instanceof Character) {
-            return "\"" + value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
+        super.begin(hierarchyTypes, output);
+    }
+
+    @Override
+    public void end(HierarchyTypes hierarchyTypes, AbstractOutput output) {
+        switch (hierarchyTypes) {
+            case COMMENT:
+                output.consume("*/");
+                return;
         }
-        return value.toString();
+        super.end(hierarchyTypes, output);
     }
 
     @Override
-    public String endValue() {
-        return null;
-    }
-
-    @Override
-    public String beginComment() {
-        return "/*";
-    }
-
-    @Override
-    public String comment(String comment) {
-        return comment;
-    }
-
-    @Override
-    public String endComment() {
-        return "*/";
+    public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
+        if (hierarchyTypes == HierarchyTypes.COMMENT) {
+            output.consume(valueData.getValue().toString());
+            return;
+        }
+        super.elementValue(hierarchyTypes, output, valueData);
     }
 }

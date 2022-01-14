@@ -63,9 +63,10 @@ public class YAPIONPointer extends YAPIONValueType<YAPIONPointer> {
 
     @Override
     public <T extends AbstractOutput> T output(T abstractOutput, Flavour flavour) {
-        abstractOutput.consume(flavour.beginPointer());
-        abstractOutput.consume(flavour.pointer(this));
-        abstractOutput.consume(flavour.endPointer());
+        flavour = convert(flavour);
+        flavour.begin(Flavour.HierarchyTypes.POINTER, abstractOutput);
+        flavour.elementValue(Flavour.HierarchyTypes.POINTER, abstractOutput, new Flavour.ValueData<>(getPointerIDString()));
+        flavour.end(Flavour.HierarchyTypes.POINTER, abstractOutput);
         return abstractOutput;
     }
 

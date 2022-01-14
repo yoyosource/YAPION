@@ -6,4 +6,20 @@ A Flavour defines the following:
 - How a YAPION object is outputed
 - If prettifying is possible
 
-As flavours are under development, they are not yet stable.
+## Types
+- YAPION -> default
+- YAPIONNoComment -> default but comments are just ignored
+- YAPIONExceptionOnComment -> default but if you write a comment an UnsupportedOperationException will be thrown
+- JSON
+- JSON5 -> JSON with comments
+- ThunderFile
+- HJSON
+- XML
+- YAML
+- TOML??
+- BSON?
+- Hocon?
+- ini???
+- properties??
+
+Everything with a Question mark might not be implemented. The more questions marks there are the more unlikely it is that it will be implemented.

@@ -67,23 +67,12 @@ public class YAPIONValue<T> extends YAPIONValueType<YAPIONValue<T>> {
         return (getType().getReferenceValue() ^ valueHandler.referenceValue(referenceFunction) ^ referenceFunction.stringToReferenceValue(value != null ? value.toString() : "null")) & 0x7FFFFFFFFFFFFFFFL;
     }
 
-    void toStrippedYAPION(AbstractOutput abstractOutput) {
-        String string = valueHandler.output(value, YAPIONType.ARRAY);
-        if (string.startsWith(" ") || string.startsWith("-")) {
-            string = "\\" + string;
-        }
-        if (ValueUtils.startsWith(string, ValueUtils.EscapeCharacters.KEY) || string.isEmpty()) {
-            abstractOutput.consume("(").consume(string).consume(")");
-        } else {
-            abstractOutput.consume(string);
-        }
-    }
-
     @Override
     public <T extends AbstractOutput> T output(T abstractOutput, Flavour flavour) {
-        abstractOutput.consume(flavour.beginValue());
-        abstractOutput.consume(flavour.value(this));
-        abstractOutput.consume(flavour.endValue());
+        flavour = convert(flavour);
+        flavour.begin(Flavour.HierarchyTypes.VALUE, abstractOutput);
+        flavour.elementValue(Flavour.HierarchyTypes.VALUE, abstractOutput, new Flavour.ValueData<>(this, get()));
+        flavour.end(Flavour.HierarchyTypes.VALUE, abstractOutput);
         return abstractOutput;
     }
 

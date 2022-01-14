@@ -56,14 +56,17 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
 
     @Override
     public <T extends AbstractOutput> T output(T abstractOutput, Flavour flavour) {
-        abstractOutput.consume(flavour.beginArray());
+        flavour = convert(flavour);
+        flavour.begin(Flavour.HierarchyTypes.ARRAY, abstractOutput);
 
         final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + (flavour.removeRootObject() ? 0 : 1));
         Flavour.PrettifyBehaviour prettifyBehaviour = flavour.getPrettifyBehaviour();
         boolean b = false;
         for (int i = 0; i < array.size(); i++) {
             YAPIONAnyType yapionAnyType = array.get(i);
-            if (b) abstractOutput.consume(flavour.arraySeparator());
+            if (b) {
+                flavour.elementSeparator(Flavour.HierarchyTypes.ARRAY, abstractOutput, false);
+            }
             b = true;
 
             outputComments(abstractOutput, flavour, prettifyBehaviour, yapionAnyType.getComments(), indent);
@@ -74,32 +77,31 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
                 abstractOutput.consume(indent);
             }
 
-            abstractOutput.consume(flavour.arrayElementBegin(i));
+            Flavour.ElementData elementData = new Flavour.ElementData(i + "", this::getPath, yapionAnyType.getType());
+            flavour.beginElement(Flavour.HierarchyTypes.ARRAY, abstractOutput, elementData);
             if (yapionAnyType instanceof YAPIONValue yapionValue) {
-                abstractOutput.consume(flavour.arrayValue(yapionValue));
+                flavour.elementValue(Flavour.HierarchyTypes.ARRAY, abstractOutput, new Flavour.ValueData<>(yapionValue, yapionValue.get()));
             } else {
                 yapionAnyType.output(abstractOutput, flavour);
             }
-            abstractOutput.consume(flavour.arrayElementEnd(i));
+            flavour.endElement(Flavour.HierarchyTypes.ARRAY, abstractOutput, elementData);
         }
 
         if (!array.isEmpty() || hasEndingComments()) {
             if (array.get(array.size() - 1) instanceof YAPIONValue) {
-                if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
-                    abstractOutput.consumePrettified(flavour.arrayLastElementSeparatorIfPrettified());
-                } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
-                    abstractOutput.consume(flavour.arrayLastElementSeparatorIfPrettified());
+                if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE || prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
+                    flavour.elementSeparator(Flavour.HierarchyTypes.ARRAY, abstractOutput, true);
                 }
             }
             outputComments(abstractOutput, flavour, prettifyBehaviour, getEndingComments(), indent);
             if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
                 abstractOutput.consumePrettified("\n").consumeIndent(getDepth() - (flavour.removeRootObject() ? 1 : 0));
             } else if (prettifyBehaviour == Flavour.PrettifyBehaviour.ALWAYS) {
-                abstractOutput.consume("\n").consumeIndent(getDepth() - (flavour.removeRootObject() ? 1 : 0));
+                abstractOutput.consume("\n").consume(abstractOutput.getIndentator().indent(getDepth() - (flavour.removeRootObject() ? 1 : 0)));
             }
         }
 
-        abstractOutput.consume(flavour.endArray());
+        flavour.end(Flavour.HierarchyTypes.ARRAY, abstractOutput);
         return abstractOutput;
     }
 

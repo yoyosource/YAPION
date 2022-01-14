@@ -11,17 +11,15 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.output.flavours2;
+package yapion.hierarchy.output.flavours;
 
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.YAPIONType;
 import yapion.hierarchy.types.value.ValueUtils;
-import yapion.path.YAPIONPath;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class YAPIONExceptionOnCommentFlavour implements Flavour {
 
@@ -77,21 +75,25 @@ public class YAPIONExceptionOnCommentFlavour implements Flavour {
     }
 
     @Override
-    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name, Supplier<YAPIONPath> yapionPathSupplier) {
+    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
         if (hierarchyTypes == HierarchyTypes.OBJECT) {
-            if (name.startsWith(" ") || name.startsWith(",")) {
-                output.consume("\\" + ValueUtils.stringToUTFEscapedString(name, ValueUtils.EscapeCharacters.KEY));
+            if (elementData.getName().startsWith(" ") || elementData.getName().startsWith(",")) {
+                output.consume("\\" + ValueUtils.stringToUTFEscapedString(elementData.getName(), ValueUtils.EscapeCharacters.KEY));
             } else {
-                output.consume(ValueUtils.stringToUTFEscapedString(name, ValueUtils.EscapeCharacters.KEY));
+                output.consume(ValueUtils.stringToUTFEscapedString(elementData.getName(), ValueUtils.EscapeCharacters.KEY));
             }
         }
     }
 
     @Override
-    public void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output, boolean last) {
+    public void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output, boolean afterLast) {
         switch (hierarchyTypes) {
             case ARRAY:
-                output.consume(",");
+                if (afterLast) {
+                    output.consumePrettified(",");
+                } else {
+                    output.consume(",");
+                }
                 break;
             case MAP:
                 output.consume(":");
@@ -102,6 +104,9 @@ public class YAPIONExceptionOnCommentFlavour implements Flavour {
     @Override
     public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
         switch (hierarchyTypes) {
+            case POINTER:
+                output.consume(valueData.getValue().toString());
+                break;
             case VALUE:
                 output.consume(valueData.getWrappedValue().getValueHandler().output(valueData.getValue(), YAPIONType.VALUE));
                 break;

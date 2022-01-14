@@ -15,13 +15,13 @@ package yapion.hierarchy.output.flavours;
 
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.YAPIONElementPath;
+import yapion.hierarchy.types.YAPIONType;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
 
-public class XMLFlavour implements Flavour {
+public class PropertiesFlavour implements Flavour {
 
     private static Set<HierarchyTypes> unsupportedTypes = new HashSet<>();
 
@@ -38,67 +38,39 @@ public class XMLFlavour implements Flavour {
 
     @Override
     public PrettifyBehaviour getPrettifyBehaviour() {
-        return PrettifyBehaviour.CHOOSEABLE;
+        return PrettifyBehaviour.NEVER;
     }
 
     @Override
-    public void header(AbstractOutput output) {
-        output.consume("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>");
-    }
-
-    @Override
-    public void footer(AbstractOutput output) {
-        output.consume("</root>");
+    public boolean removeRootObject() {
+        return true;
     }
 
     @Override
     public void begin(HierarchyTypes hierarchyTypes, AbstractOutput output) {
-        switch (hierarchyTypes) {
-            case COMMENT:
-                output.consume("<!--");
-                break;
-        }
-    }
-
-    @Override
-    public void end(HierarchyTypes hierarchyTypes, AbstractOutput output) {
-        switch (hierarchyTypes) {
-            case COMMENT:
-                output.consume("-->");
-                break;
+        if (hierarchyTypes == HierarchyTypes.COMMENT) {
+            output.consume("\n");
+            output.consume("# ");
         }
     }
 
     @Override
     public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
-        switch (hierarchyTypes) {
-            case OBJECT:
-                output.consume("<" + elementData.getName() + ">");
-                break;
-            case ARRAY:
-                output.consume("<element>");
-                break;
+        if (elementData.getFollowingYAPIONType() != YAPIONType.VALUE) {
+            return;
         }
-    }
-
-    @Override
-    public void endElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
-        switch (hierarchyTypes) {
-            case OBJECT:
-                output.consume("</" + elementData.getName() + ">");
-                break;
-            case ARRAY:
-                output.consume("</element>");
-                break;
+        output.consume("\n");
+        YAPIONElementPath yapionElementPath = elementData.getYapionPathSupplier().get();
+        output.consume(yapionElementPath.join("_"));
+        if (yapionElementPath.depth() != 0) {
+            output.consume("_");
         }
+        output.consume(elementData.getName());
+        output.consume(" = ");
     }
 
     @Override
     public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
-        if (valueData.getValue() == null) {
-            output.consume("null");
-        } else {
-            output.consume(valueData.getValue().toString());
-        }
+        output.consume(valueData.getValue().toString());
     }
 }

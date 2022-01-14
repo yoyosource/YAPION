@@ -13,10 +13,10 @@
 
 package yapion.hierarchy.output.flavours;
 
+import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.YAPIONType;
-import yapion.hierarchy.types.YAPIONValue;
 
-public class HJSONFlavour implements Flavour {
+public class HJSONFlavour extends JSON5Flavour {
 
     @Override
     public PrettifyBehaviour getPrettifyBehaviour() {
@@ -24,66 +24,24 @@ public class HJSONFlavour implements Flavour {
     }
 
     @Override
-    public String beginObject() {
-        return "{";
+    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
+        output.consume(elementData.getName());
+        output.consume(": ");
     }
 
     @Override
-    public String objectKeyPairStart(String key) {
-        return key + ": ";
-    }
-
-    @Override
-    public String endObject() {
-        return "}";
-    }
-
-    @Override
-    public String beginArray() {
-        return "[";
-    }
-
-    @Override
-    public String arraySeparator() {
-        return ",";
-    }
-
-    @Override
-    public String endArray() {
-        return "]";
-    }
-
-    @Override
-    public String beginValue() {
-        return null;
-    }
-
-    @Override
-    public <T> String value(YAPIONValue<T> value) {
-        String s = value.getValueHandler().output(value.get(), YAPIONType.VALUE);
-        if (s.startsWith(" ") || s.startsWith("{") || s.startsWith("[") || s.startsWith("]") || s.startsWith("}") || s.startsWith(",") || s.startsWith(":") || s.contains("\n") || s.contains("\r")) {
-            return "\"" + s + "\"";
+    public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
+        if (hierarchyTypes == HierarchyTypes.COMMENT) {
+            output.consume(valueData.getValue().toString());
+            return;
         }
-        return s;
-    }
-
-    @Override
-    public String endValue() {
-        return null;
-    }
-
-    @Override
-    public String beginComment() {
-        return "/*";
-    }
-
-    @Override
-    public String comment(String comment) {
-        return comment;
-    }
-
-    @Override
-    public String endComment() {
-        return "*/";
+        String s = valueData.getWrappedValue().getValueHandler().output(valueData.getValue(), YAPIONType.VALUE);
+        if (s.startsWith(" ") || s.startsWith("{") || s.startsWith("[") || s.startsWith("]") || s.startsWith("}") || s.startsWith(",") || s.startsWith(":") || s.contains("\n") || s.contains("\r")) {
+            output.consume("\"");
+            output.consume(s);
+            output.consume("\"");
+        } else {
+            output.consume(s);
+        }
     }
 }

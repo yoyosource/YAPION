@@ -13,69 +13,73 @@
 
 package yapion.hierarchy.output.flavours;
 
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.types.YAPIONType;
+import yapion.hierarchy.types.value.ValueUtils;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class JSONFlavour implements Flavour {
 
-    @Override
-    public PrettifyBehaviour getPrettifyBehaviour() {
-        return PrettifyBehaviour.CHOOSEABLE;
+    private static Set<HierarchyTypes> unsupportedTypes = new HashSet<>();
+
+    static {
+        unsupportedTypes.add(HierarchyTypes.COMMENT);
+        unsupportedTypes.add(HierarchyTypes.POINTER);
+        unsupportedTypes.add(HierarchyTypes.MAP);
+        unsupportedTypes = Collections.unmodifiableSet(unsupportedTypes);
     }
 
     @Override
-    public String beginObject() {
-        return "{";
+    public Set<HierarchyTypes> unsupportedTypes() {
+        return unsupportedTypes;
     }
 
     @Override
-    public String objectKeyPairStart(String key) {
-        return "\"" + key + "\": ";
-    }
-
-    @Override
-    public String objectFullKeyPairSeparator() {
-        return ",";
-    }
-
-    @Override
-    public String endObject() {
-        return "}";
-    }
-
-    @Override
-    public String beginArray() {
-        return "[";
-    }
-
-    @Override
-    public String arraySeparator() {
-        return ",";
-    }
-
-    @Override
-    public String endArray() {
-        return "]";
-    }
-
-    @Override
-    public String beginValue() {
-        return null;
-    }
-
-    @Override
-    public <T> String value(YAPIONValue<T> input) {
-        T value = input.get();
-        if (value == null) {
-            return "null";
+    public void begin(HierarchyTypes hierarchyTypes, AbstractOutput output) {
+        switch (hierarchyTypes) {
+            case OBJECT:
+                output.consume("{");
+                break;
+            case ARRAY:
+                output.consume("[");
+                break;
         }
-        if (value instanceof String || value instanceof Character) {
-            return "\"" + value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
-        }
-        return value.toString();
     }
 
     @Override
-    public String endValue() {
-        return null;
+    public void end(HierarchyTypes hierarchyTypes, AbstractOutput output) {
+        switch (hierarchyTypes) {
+            case OBJECT:
+                output.consume("}");
+                break;
+            case ARRAY:
+                output.consume("]");
+                break;
+        }
+    }
+
+    @Override
+    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
+        output.consume("\"" + elementData.getName() + "\":");
+        output.consumePrettified(" ");
+    }
+
+    @Override
+    public void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output, boolean afterLast) {
+        if (!afterLast) {
+            output.consume(",");
+        }
+    }
+
+    @Override
+    public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
+        String s = valueData.getWrappedValue().getValueHandler().output(valueData.getValue(), YAPIONType.VALUE);
+        if (valueData.getValue() instanceof String || valueData.getValue() instanceof Character) {
+            s = "\"" + valueData.getValue().toString() + "\"";
+        }
+        output.consume(ValueUtils.stringToUTFEscapedString(s, ValueUtils.EscapeCharacters.JSON));
     }
 }

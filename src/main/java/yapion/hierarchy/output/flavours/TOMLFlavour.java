@@ -11,15 +11,8 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.output.flavours2;
+package yapion.hierarchy.output.flavours;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class YAPIONNoCommentFlavour extends YAPIONExceptionOnCommentFlavour {
-
-    @Override
-    public Set<HierarchyTypes> unsupportedTypes() {
-        return new HashSet<>();
-    }
+// This could be removed any time in the future.
+public class TOMLFlavour {
 }

@@ -11,11 +11,11 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.output.flavours2;
+package yapion.hierarchy.output.flavours;
 
 import lombok.AllArgsConstructor;
 import yapion.hierarchy.output.AbstractOutput;
-import yapion.path.YAPIONPath;
+import yapion.hierarchy.types.YAPIONElementPath;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -68,21 +68,21 @@ public class CheckingFlavour implements Flavour {
     }
 
     @Override
-    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name, Supplier<YAPIONPath> yapionPathSupplier) {
+    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
         checkType(hierarchyTypes);
-        flavour.beginElement(hierarchyTypes, output, name, yapionPathSupplier);
+        flavour.beginElement(hierarchyTypes, output, elementData);
     }
 
     @Override
-    public void endElement(HierarchyTypes hierarchyTypes, AbstractOutput output, String name, Supplier<YAPIONPath> yapionPathSupplier) {
+    public void endElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
         checkType(hierarchyTypes);
-        flavour.endElement(hierarchyTypes, output, name, yapionPathSupplier);
+        flavour.endElement(hierarchyTypes, output, elementData);
     }
 
     @Override
-    public void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output, boolean last) {
+    public void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output, boolean afterLast) {
         checkType(hierarchyTypes);
-        flavour.elementSeparator(hierarchyTypes, output, last);
+        flavour.elementSeparator(hierarchyTypes, output, afterLast);
     }
 
     @Override

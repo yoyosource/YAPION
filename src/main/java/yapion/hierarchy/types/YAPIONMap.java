@@ -58,7 +58,8 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
 
     @Override
     public <T extends AbstractOutput> T output(T abstractOutput, Flavour flavour) {
-        abstractOutput.consume(flavour.beginMap());
+        flavour = convert(flavour);
+        flavour.begin(Flavour.HierarchyTypes.MAP, abstractOutput);
 
         final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + (flavour.removeRootObject() ? 0 : 1));
         Flavour.PrettifyBehaviour prettifyBehaviour = flavour.getPrettifyBehaviour();
@@ -72,7 +73,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
             }
 
             entry.getKey().output(abstractOutput, flavour);
-            abstractOutput.consume(flavour.mapSeparator());
+            flavour.elementSeparator(Flavour.HierarchyTypes.MAP, abstractOutput, false);
             outputComments(abstractOutput, flavour, prettifyBehaviour, entry.getValue().getComments(), indent);
             if (entry.getValue().hasComments()) {
                 if (prettifyBehaviour == Flavour.PrettifyBehaviour.CHOOSEABLE) {
@@ -89,7 +90,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
             abstractOutput.consumePrettified("\n").consumeIndent(getDepth() - (flavour.removeRootObject() ? 1 : 0));
         }
 
-        abstractOutput.consume(flavour.endMap());
+        flavour.end(Flavour.HierarchyTypes.MAP, abstractOutput);
         return abstractOutput;
     }
 

@@ -13,8 +13,15 @@
 
 package yapion.hierarchy.output.flavours;
 
-import yapion.hierarchy.types.YAPIONPointer;
+import lombok.*;
+import yapion.hierarchy.output.AbstractOutput;
+import yapion.hierarchy.types.YAPIONElementPath;
+import yapion.hierarchy.types.YAPIONType;
 import yapion.hierarchy.types.YAPIONValue;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Supplier;
 
 public interface Flavour {
 
@@ -24,85 +31,128 @@ public interface Flavour {
         NEVER
     }
 
-    PrettifyBehaviour getPrettifyBehaviour();
+    enum HierarchyTypes {
+        OBJECT,
+        ARRAY,
+        MAP,
+        VALUE,
+        POINTER,
+        COMMENT
+    }
+
+    default Set<HierarchyTypes> unsupportedTypes() {
+        return new HashSet<>();
+    }
+
+    default void checkType(HierarchyTypes hierarchyTypes) {
+        if (this.unsupportedTypes().contains(hierarchyTypes)) {
+            throw new UnsupportedOperationException("Flavour " + this.getClass().getSimpleName() + " does not support " + hierarchyTypes.name());
+        }
+    }
+
+    /**
+     * @return how prettify should be handled
+     */
+    default PrettifyBehaviour getPrettifyBehaviour() {
+        return PrettifyBehaviour.CHOOSEABLE;
+    }
+
+    /**
+     * @return if the root value should be removed from the output
+     */
     default boolean removeRootObject() {
         return false;
     }
 
-    default String header() {
-        return null;
+    /**
+     * Write an optional header if wanted.
+     *
+     * @param output the output to write to
+     */
+    default void header(AbstractOutput output) {
     }
 
-    String beginObject();
-    String objectKeyPairStart(String key);
-    default String objectKeyPairEnd(String key) {
-        return null;
-    }
-    default String objectFullKeyPairSeparator() {
-        return null;
-    }
-    String endObject();
-
-    String beginArray();
-    default String arrayElementBegin(int index) {
-        return null;
-    }
-    default String arrayElementEnd(int index) {
-        return null;
-    }
-    default String arraySeparator() {
-        return null;
-    }
-    default String arrayLastElementSeparatorIfPrettified() {
-        return null;
-    }
-    String endArray();
-
-    default String beginMap() {
-        throw new UnsupportedOperationException();
-    }
-    default String mapSeparator() {
-        throw new UnsupportedOperationException();
-    }
-    default String endMap() {
-        throw new UnsupportedOperationException();
+    /**
+     * Write an optional footer if wanted.
+     *
+     * @param output the output to write to
+     */
+    default void footer(AbstractOutput output) {
     }
 
-    String beginValue();
-    <T> String value(YAPIONValue<T> value);
-    String endValue();
-
-    default String beginArrayValue() {
-        return beginValue();
-    }
-    default <T> String arrayValue(YAPIONValue<T> value) {
-        return value(value);
-    }
-    default String endArrayValue() {
-        return endValue();
+    /**
+     * Begin a new {@link HierarchyTypes}
+     *
+     * @param hierarchyTypes the new {@link HierarchyTypes} to begin
+     * @param output the output to write to
+     */
+    default void begin(HierarchyTypes hierarchyTypes, AbstractOutput output) {
     }
 
-    default String beginPointer() {
-        throw new UnsupportedOperationException();
-    }
-    default String pointer(YAPIONPointer yapionPointer) {
-        throw new UnsupportedOperationException();
-    }
-    default String endPointer() {
-        throw new UnsupportedOperationException();
-    }
-
-    default String beginComment() {
-        return null;
-    }
-    default String comment(String comment) {
-        return null;
-    }
-    default String endComment() {
-        return null;
+    /**
+     * End a {@link HierarchyTypes}
+     *
+     * @param hierarchyTypes the {@link HierarchyTypes} to end
+     * @param output the output to write to
+     */
+    default void end(HierarchyTypes hierarchyTypes, AbstractOutput output) {
     }
 
-    default String footer() {
-        return null;
+    /**
+     * Begin an Element inside a {@link HierarchyTypes}
+     *
+     * @param hierarchyTypes the {@link HierarchyTypes} the element is inside
+     * @param output the output to write to
+     * @param elementData the needed data of the element
+     */
+    default void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
+    }
+
+    /**
+     * End an Element inside a {@link HierarchyTypes}
+     *
+     * @param hierarchyTypes the {@link HierarchyTypes} the element is inside
+     * @param output the output to write to
+     * @param elementData the needed data of the element
+     */
+    default void endElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @ToString
+    @EqualsAndHashCode
+    class ElementData {
+        private String name;
+        private Supplier<YAPIONElementPath> yapionPathSupplier;
+        private YAPIONType followingYAPIONType;
+    }
+
+    /**
+     * Separate an Element inside a {@link HierarchyTypes}
+     *
+     * @param hierarchyTypes the {@link HierarchyTypes} the element is inside
+     * @param output the output to write to
+     * @param afterLast if this is the afterLast element of the surrounding object
+     */
+    default void elementSeparator(HierarchyTypes hierarchyTypes, AbstractOutput output, boolean afterLast) {
+    }
+
+    /**
+     * @param hierarchyTypes can be either {@link HierarchyTypes#VALUE} or {@link HierarchyTypes#ARRAY} if the value is inside an array or {@link HierarchyTypes#COMMENT}, or even {@link HierarchyTypes#POINTER}
+     * @param output the output to write to
+     * @param valueData the data to write either as {@link ValueData<?>} or {@link ValueData<String>} the latter is only used with the {@link HierarchyTypes#COMMENT} and does not have the {@link ValueData#wrappedValue} set.
+     */
+    default <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
+    }
+
+    @RequiredArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @ToString
+    @EqualsAndHashCode
+    class ValueData<T> {
+        private YAPIONValue<T> wrappedValue;
+        private final T value;
     }
 }

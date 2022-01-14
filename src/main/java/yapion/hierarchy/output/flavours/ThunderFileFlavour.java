@@ -13,9 +13,26 @@
 
 package yapion.hierarchy.output.flavours;
 
-import yapion.hierarchy.types.YAPIONValue;
+import yapion.hierarchy.output.AbstractOutput;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ThunderFileFlavour implements Flavour {
+
+    private static Set<HierarchyTypes> unsupportedTypes = new HashSet<>();
+
+    static {
+        unsupportedTypes.add(HierarchyTypes.MAP);
+        unsupportedTypes.add(HierarchyTypes.POINTER);
+        unsupportedTypes = Collections.unmodifiableSet(unsupportedTypes);
+    }
+
+    @Override
+    public Set<HierarchyTypes> unsupportedTypes() {
+        return unsupportedTypes;
+    }
 
     @Override
     public PrettifyBehaviour getPrettifyBehaviour() {
@@ -28,50 +45,51 @@ public class ThunderFileFlavour implements Flavour {
     }
 
     @Override
-    public String beginObject() {
-        return "{";
-    }
-
-    @Override
-    public String objectKeyPairStart(String key) {
-        return key + " = ";
-    }
-
-    @Override
-    public String endObject() {
-        return "}";
-    }
-
-    @Override
-    public String beginArray() {
-        return "[";
-    }
-
-    @Override
-    public String arrayElementBegin(int index) {
-        return "- ";
-    }
-
-    @Override
-    public String endArray() {
-        return "]";
-    }
-
-    @Override
-    public String beginValue() {
-        return null;
-    }
-
-    @Override
-    public <T> String value(YAPIONValue<T> value) {
-        if (value.get() == null) {
-            return "null";
+    public void begin(HierarchyTypes hierarchyTypes, AbstractOutput output) {
+        switch (hierarchyTypes) {
+            case OBJECT:
+                output.consume("{");
+                break;
+            case ARRAY:
+                output.consume("[");
+                break;
+            case COMMENT:
+                output.consume("# ");
+                break;
         }
-        return value.get().toString();
     }
 
     @Override
-    public String endValue() {
-        return null;
+    public void end(HierarchyTypes hierarchyTypes, AbstractOutput output) {
+        switch (hierarchyTypes) {
+            case OBJECT:
+                output.consume("}");
+                break;
+            case ARRAY:
+                output.consume("]");
+                break;
+        }
+    }
+
+    @Override
+    public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
+        switch (hierarchyTypes) {
+            case OBJECT:
+                // TODO: Is this right?
+                output.consume(" = ");
+                break;
+            case ARRAY:
+                output.consume("- ");
+                break;
+        }
+    }
+
+    @Override
+    public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
+        if (valueData.getValue() == null) {
+            output.consume("null");
+        } else {
+            output.consume(valueData.getValue().toString());
+        }
     }
 }
