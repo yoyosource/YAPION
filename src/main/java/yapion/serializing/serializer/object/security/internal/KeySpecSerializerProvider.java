@@ -64,25 +64,25 @@ public class KeySpecSerializerProvider {
     public static YAPIONObject serializePrivateKey(SerializeData<?> serializeData, PrivateKey privateKey) throws GeneralSecurityException {
         KeySpecSerializer keySpecSerializer = retrieveKeySpecSerializer(privateKey.getClass());
         if (keySpecSerializer == null) throw new YAPIONSerializerException("Unknown PrivateKey type");
-        return keySpecSerializer.serializePrivateKey(serializeData.clone(privateKey));
+        return keySpecSerializer.serializePrivateKey(serializeData.copy(privateKey));
     }
 
     public static PrivateKey deserializePrivateKey(DeserializeData<?> deserializeData, Class<?> clazz, YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         KeySpecSerializer keySpecSerializer = retrieveKeySpecSerializer(clazz);
         if (keySpecSerializer == null) throw new YAPIONDeserializerException("Unknown PrivateKey type");
-        return keySpecSerializer.deserializePrivateKey(deserializeData.clone(yapionObject), algorithm);
+        return keySpecSerializer.deserializePrivateKey(deserializeData.copy(yapionObject), algorithm);
     }
 
     public static YAPIONObject serializePublicKey(SerializeData<?> serializeData, PublicKey publicKey) throws GeneralSecurityException {
         KeySpecSerializer keySpecSerializer = retrieveKeySpecSerializer(publicKey.getClass());
         if (keySpecSerializer == null) throw new YAPIONSerializerException("Unknown PublicKey type");
-        return keySpecSerializer.serializePublicKey(serializeData.clone(publicKey));
+        return keySpecSerializer.serializePublicKey(serializeData.copy(publicKey));
     }
 
     public static PublicKey deserializePublicKey(DeserializeData<?> deserializeData, Class<?> clazz, YAPIONObject yapionObject, String algorithm) throws GeneralSecurityException {
         KeySpecSerializer keySpecSerializer = retrieveKeySpecSerializer(clazz);
         if (keySpecSerializer == null) throw new YAPIONDeserializerException("Unknown PublicKey type");
-        return keySpecSerializer.deserializePublicKey(deserializeData.clone(yapionObject), algorithm);
+        return keySpecSerializer.deserializePublicKey(deserializeData.copy(yapionObject), algorithm);
     }
 
 }

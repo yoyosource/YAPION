@@ -37,7 +37,7 @@ public class DeserializeData<T extends YAPIONAnyType> {
     private final YAPIONDeserializer yapionDeserializer;
     public final TypeReMapper typeReMapper;
 
-    public <R extends YAPIONAnyType> DeserializeData<R> clone(R object) {
+    public <R extends YAPIONAnyType> DeserializeData<R> copy(R object) {
         return new DeserializeData<>(object, context, yapionDeserializer, typeReMapper);
     }
 

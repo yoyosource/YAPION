@@ -39,7 +39,7 @@ public class SerializeData<T> {
     @ToString.Exclude
     private final YAPIONSerializer yapionSerializer;
 
-    public <R> SerializeData<R> clone(R object) {
+    public <R> SerializeData<R> copy(R object) {
         return new SerializeData<>(object, context, yapionSerializer);
     }
 
