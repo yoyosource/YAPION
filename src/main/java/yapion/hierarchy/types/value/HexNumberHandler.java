@@ -59,6 +59,11 @@ public class HexNumberHandler {
         }
 
         @Override
+        public String outputJSON(Byte aByte, YAPIONType parent) {
+            return aByte + "";
+        }
+
+        @Override
         public MethodReturnValue<Byte> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.BYTE_HEX);
         }
@@ -109,6 +114,11 @@ public class HexNumberHandler {
         @Override
         public String output(Short aShort, YAPIONType parent) {
             return aShort + NumberSuffix.SHORT_HEX.getSuffix();
+        }
+
+        @Override
+        public String outputJSON(Short aShort, YAPIONType parent) {
+            return aShort + "";
         }
 
         @Override
@@ -165,6 +175,11 @@ public class HexNumberHandler {
         }
 
         @Override
+        public String outputJSON(Integer integer, YAPIONType parent) {
+            return integer + "";
+        }
+
+        @Override
         public MethodReturnValue<Integer> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.INTEGER_HEX);
         }
@@ -215,6 +230,11 @@ public class HexNumberHandler {
         @Override
         public String output(Long aLong, YAPIONType parent) {
             return aLong + NumberSuffix.LONG_HEX.getSuffix();
+        }
+
+        @Override
+        public String outputJSON(Long aLong, YAPIONType parent) {
+            return aLong + "";
         }
 
         @Override

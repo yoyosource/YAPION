@@ -61,6 +61,11 @@ public class FractionNumberHandler {
         }
 
         @Override
+        public String outputJSON(Float aFloat, YAPIONType parent) {
+            return aFloat + "";
+        }
+
+        @Override
         public MethodReturnValue<Float> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.FLOAT);
         }
@@ -109,6 +114,11 @@ public class FractionNumberHandler {
 
         @Override
         public String output(Double aDouble, YAPIONType parent) {
+            return aDouble + "";
+        }
+
+        @Override
+        public String outputJSON(Double aDouble, YAPIONType parent) {
             return aDouble + "";
         }
 
@@ -162,6 +172,11 @@ public class FractionNumberHandler {
         @Override
         public String output(BigDecimal bigDecimal, YAPIONType parent) {
             return bigDecimal + NumberSuffix.BIG_DECIMAL.getSuffix();
+        }
+
+        @Override
+        public String outputJSON(BigDecimal bigDecimal, YAPIONType parent) {
+            return bigDecimal + "";
         }
 
         @Override

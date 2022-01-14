@@ -29,6 +29,10 @@ public interface ValueHandler<T> {
 
     String output(T t, YAPIONType parent);
 
+    default String outputJSON(T t, YAPIONType parent) {
+        return output(t, parent);
+    }
+
     MethodReturnValue<T> preParse(String s);
 
     MethodReturnValue<T> parse(String s);

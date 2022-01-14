@@ -18,8 +18,7 @@ import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
 import static yapion.hierarchy.types.value.NumberSuffix.*;
-import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.ARRAY_VALUE;
-import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.VALUE;
+import static yapion.hierarchy.types.value.ValueUtils.EscapeCharacters.*;
 import static yapion.hierarchy.types.value.ValueUtils.stringToUTFEscapedString;
 
 public final class StringHandler implements ValueHandler<String> {
@@ -95,6 +94,11 @@ public final class StringHandler implements ValueHandler<String> {
         }
 
         return s;
+    }
+
+    @Override
+    public String outputJSON(String s, YAPIONType parent) {
+        return "\"" + stringToUTFEscapedString(s, JSON) + "\"";
     }
 
     @Override

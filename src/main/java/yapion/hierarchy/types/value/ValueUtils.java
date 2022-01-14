@@ -26,7 +26,7 @@ public final class ValueUtils {
         KEY('(', ')', '[', ']', '{', '}', '<', '>'),
         VALUE(),
         ARRAY_VALUE('[', ']', ','),
-        JSON();
+        JSON('\"');
 
         private char[] chars;
 

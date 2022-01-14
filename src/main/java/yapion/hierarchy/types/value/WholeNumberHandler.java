@@ -58,6 +58,11 @@ public class WholeNumberHandler {
         }
 
         @Override
+        public String outputJSON(Byte aByte, YAPIONType parent) {
+            return aByte + "";
+        }
+
+        @Override
         public MethodReturnValue<Byte> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.BYTE);
         }
@@ -107,6 +112,11 @@ public class WholeNumberHandler {
         }
 
         @Override
+        public String outputJSON(Short aShort, YAPIONType parent) {
+            return aShort + "";
+        }
+
+        @Override
         public MethodReturnValue<Short> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.SHORT);
         }
@@ -152,6 +162,11 @@ public class WholeNumberHandler {
 
         @Override
         public String output(Integer integer, YAPIONType parent) {
+            return integer + "";
+        }
+
+        @Override
+        public String outputJSON(Integer integer, YAPIONType parent) {
             return integer + "";
         }
 
@@ -205,6 +220,11 @@ public class WholeNumberHandler {
         }
 
         @Override
+        public String outputJSON(Long aLong, YAPIONType parent) {
+            return aLong + "";
+        }
+
+        @Override
         public MethodReturnValue<Long> preParse(String s) {
             return NumberSuffix.tryValueParse(s, NumberSuffix.LONG);
         }
@@ -250,6 +270,11 @@ public class WholeNumberHandler {
         @Override
         public String output(BigInteger bigInteger, YAPIONType parent) {
             return bigInteger + NumberSuffix.BIG_INTEGER.getSuffix();
+        }
+
+        @Override
+        public String outputJSON(BigInteger bigInteger, YAPIONType parent) {
+            return bigInteger + "";
         }
 
         @Override

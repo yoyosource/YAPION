@@ -63,6 +63,15 @@ public final class BooleanHandler implements ValueHandler<Boolean> {
     }
 
     @Override
+    public String outputJSON(Boolean aBoolean, YAPIONType parent) {
+        if (aBoolean) {
+            return "true";
+        } else {
+            return "false";
+        }
+    }
+
+    @Override
     public MethodReturnValue<Boolean> preParse(String s) {
         return MethodReturnValue.empty();
     }

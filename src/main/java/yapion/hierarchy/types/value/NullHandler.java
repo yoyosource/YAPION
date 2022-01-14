@@ -50,6 +50,11 @@ public final class NullHandler implements ValueHandler<Object> {
     }
 
     @Override
+    public String outputJSON(Object o, YAPIONType parent) {
+        return "null";
+    }
+
+    @Override
     public MethodReturnValue<Object> preParse(String s) {
         if (s.equals("null")) {
             return MethodReturnValue.of(null);

@@ -57,6 +57,11 @@ public final class CharacterHandler implements ValueHandler<Character> {
     }
 
     @Override
+    public String outputJSON(Character character, YAPIONType parent) {
+        return "\"" + charToUTFEscape(character, ARRAY_VALUE) + "\"";
+    }
+
+    @Override
     public MethodReturnValue<Character> preParse(String s) {
         return MethodReturnValue.empty();
     }

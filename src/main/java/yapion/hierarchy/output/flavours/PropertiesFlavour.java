@@ -49,7 +49,6 @@ public class PropertiesFlavour implements Flavour {
     @Override
     public void begin(HierarchyTypes hierarchyTypes, AbstractOutput output) {
         if (hierarchyTypes == HierarchyTypes.COMMENT) {
-            output.consume("\n");
             output.consume("# ");
         }
     }
@@ -59,7 +58,6 @@ public class PropertiesFlavour implements Flavour {
         if (elementData.getFollowingYAPIONType() != YAPIONType.VALUE) {
             return;
         }
-        output.consume("\n");
         YAPIONElementPath yapionElementPath = elementData.getYapionPathSupplier().get();
         output.consume(yapionElementPath.join("_"));
         if (yapionElementPath.depth() != 0) {
@@ -72,5 +70,6 @@ public class PropertiesFlavour implements Flavour {
     @Override
     public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
         output.consume(valueData.getValue().toString());
+        output.consume("\n");
     }
 }

@@ -63,8 +63,10 @@ public class JSONFlavour implements Flavour {
 
     @Override
     public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
-        output.consume("\"" + elementData.getName() + "\":");
-        output.consumePrettified(" ");
+        if (hierarchyTypes == HierarchyTypes.OBJECT) {
+            output.consume("\"").consume(elementData.getName()).consume("\":");
+            output.consumePrettified(" ");
+        }
     }
 
     @Override
@@ -76,10 +78,6 @@ public class JSONFlavour implements Flavour {
 
     @Override
     public <T> void elementValue(HierarchyTypes hierarchyTypes, AbstractOutput output, ValueData<T> valueData) {
-        String s = valueData.getWrappedValue().getValueHandler().output(valueData.getValue(), YAPIONType.VALUE);
-        if (valueData.getValue() instanceof String || valueData.getValue() instanceof Character) {
-            s = "\"" + valueData.getValue().toString() + "\"";
-        }
-        output.consume(ValueUtils.stringToUTFEscapedString(s, ValueUtils.EscapeCharacters.JSON));
+        output.consume(valueData.getWrappedValue().getValueHandler().outputJSON(valueData.getValue(), YAPIONType.VALUE));
     }
 }

@@ -32,9 +32,9 @@ public class Test {
                         .add("greetings", "hello")
                 )
                 .add(new YAPIONPointer(yapionObject))*/
-                .addComment("Just a comment")
+                // .addComment("Just a comment")
                 .add("Hello World")
         );
-        System.out.println(yapionObject.output(new StringOutput(false), new PropertiesFlavour()).getResult());
+        System.out.println(yapionObject.output(new StringOutput(true), new JSONFlavour()).getResult());
     }
 }

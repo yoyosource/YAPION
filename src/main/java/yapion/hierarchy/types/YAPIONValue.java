@@ -98,22 +98,13 @@ public class YAPIONValue<T> extends YAPIONValueType<YAPIONValue<T>> {
         return abstractOutput;
     }
 
-    private  <T extends AbstractOutput> T toJSONLossy(T abstractOutput, boolean bigAsStrings) {
-        if (value instanceof String || value instanceof Character) {
-            abstractOutput.consume("\"")
-                    .consume(value.toString().replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"))
-                    .consume("\"");
-            return abstractOutput;
-        }
-        if (value == null) {
-            abstractOutput.consume("null");
-            return abstractOutput;
-        }
+    private <T extends AbstractOutput> T toJSONLossy(T abstractOutput, boolean bigAsStrings) {
         if (bigAsStrings && (value instanceof BigInteger || value instanceof BigDecimal)) {
             abstractOutput.consume("\"").consume(value.toString()).consume("\"");
             return abstractOutput;
+        } else {
+            abstractOutput.consume(getValueHandler().outputJSON(value, YAPIONType.VALUE));
         }
-        abstractOutput.consume(value.toString());
         return abstractOutput;
     }
 
