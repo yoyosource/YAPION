@@ -1,4 +1,4 @@
-# Context
+# Context [WIP not up to date]
 
 Some YAPION annotation have a context array, that you can specify if desired. This is useful to create specific views onto a given object. You can use this for some api system as an example or just to load fewer data than you save. You can provide a context to either the YAPIONSerializer or YAPIONDeserializer as a String.
 

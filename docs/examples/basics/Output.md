@@ -77,3 +77,17 @@ public class ExampleSerializationTwo {
     }
 }
 ```
+
+You can also output to other flavours than just YAPION using the `Flavour` API:
+```java
+public class ExampleSerializationTwo {
+
+    public static void main(String[] args) {
+        YAPIONObject yapionObject = YAPIONSerializer.serialize(new ExampleTwo());
+        
+        // Using some kind of Flavour:
+        yapionObject.output(new StringOutput(), /*<Flavour>*/);
+        // All flavours you can use are located in 'yapion/hierarchy/output/flavours'
+    }
+}
+```

@@ -54,15 +54,13 @@ import yapion.exceptions.parser.YAPIONParserException;
 public class Example {
 
     public static void main(String[] args) {
-        try {
-            // This will throw you an exception
-            YAPIONObject yapionObject = YAPIONParser.parse("[0,1,\"Hello World\"]");
-        } catch (YAPIONException e) {
-            e.pringStackTrace();
-        }
-
-        // This works because there is an object as root object
-        YAPIONObject yapionObject = YAPIONParser.parse("{[0,1,\"Hello World\"]}");
+        YAPIONObject yapionObject = YAPIONParser.parse("[0,1,\"Hello World\"]"); // This will return an implicit YAPIONObject surrounding the array
+        yapionObject = YAPIONParser.parse("{[0,1,\"Hello World\"]}");
+        
+        // With a dynamic instance you can directly request the array via the `.resultArray()` method. The same is true for YAPIONMaps.
+        YAPIONParser yapionParser = new YAPIONParser("[0,1,\"Hello World\"]");
+        yapionParser.parse();
+        yapionObject = yapionParser.resultArray();
     }
 
 }

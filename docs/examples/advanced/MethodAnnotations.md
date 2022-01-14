@@ -33,4 +33,4 @@ public class ExampleMethodAnnotation {
 }
 ```
 
-Those methods should be without arguments, the visibility is not relevant, nor the return value. If a class extends another class for 'pre' steps the super 'pre' step will be called before yours is called. 'post' steps are called the other way around.
+Those methods can either be without arguments or take a `DeserializeData` or `SerializationData`, the visibility is not relevant, nor the return value. If a class extends another class for 'pre' steps the super 'pre' step will be called before yours is called. 'post' steps are called the other way around.
