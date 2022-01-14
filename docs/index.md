@@ -35,8 +35,8 @@
 ### Advanced
 
 * [Classes and Packages](examples/advanced/TypeReMapper.md)
-* [Viws](examples/advanced/Views.md)
-* [Mustators](examples/advanced/Mustators.md)
+* [Views](examples/advanced/Views.md)
+* [Mutators](examples/advanced/Mutators.md)
 * [Cascading](examples/advanced/Cascading.md)
 * [Deserializer Result](examples/advanced/DeserializationResult.md)
 * [Hooks into Serialization/Deserialization](examples/advanced/MethodAnnotations.md)
