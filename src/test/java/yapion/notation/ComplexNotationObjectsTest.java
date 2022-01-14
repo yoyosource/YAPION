@@ -34,7 +34,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testObjectObjectJSON() {
-        assertThat(new YAPIONObject().add("object", new YAPIONObject()).toJSONLossy(new StringOutput()).getResult(), is("{\"object\": {}}"));
+        assertThat(new YAPIONObject().add("object", new YAPIONObject()).toJSONLossy(new StringOutput()).getResult(), is("{\"object\":{}}"));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class ComplexNotationObjectsTest {
 
     @Test
     public void testObjectArrayJSON() {
-        assertThat(new YAPIONObject().add("array", new YAPIONArray()).toJSONLossy(new StringOutput()).getResult(), is("{\"array\": []}"));
+        assertThat(new YAPIONObject().add("array", new YAPIONArray()).toJSONLossy(new StringOutput()).getResult(), is("{\"array\":[]}"));
     }
 
     @Test
