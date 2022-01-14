@@ -20,8 +20,6 @@ import yapion.hierarchy.types.YAPIONValue;
 import yapion.path.PathContext;
 import yapion.path.PathElement;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -110,22 +108,8 @@ public class Range<T extends Number & Comparable<T>> implements PathElement, Pre
                 Object object = yapionValue.get();
                 if (object instanceof String value) {
                     return predicate.test((T) (Integer) value.length());
-                } else if (object instanceof Byte value) {
-                    return predicate.test((T) value);
-                } else if (object instanceof Short value) {
-                    return predicate.test((T) value);
-                } else if (object instanceof Integer value) {
-                    return predicate.test((T) value);
-                } else if (object instanceof Long value) {
-                    return predicate.test((T) value);
-                } else if (object instanceof BigInteger value) {
-                    return predicate.test((T) value);
-                } else if (object instanceof Float value) {
-                    return predicate.test((T) value);
-                } else if (object instanceof Double value) {
-                    return predicate.test((T) value);
-                } else if (object instanceof BigDecimal value) {
-                    return predicate.test((T) value);
+                } else {
+                    return predicate.test((T) object);
                 }
             }
             return false;
