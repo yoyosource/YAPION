@@ -14,26 +14,24 @@
 package yapion.hierarchy.output.flavours;
 
 import yapion.hierarchy.output.AbstractOutput;
-import yapion.hierarchy.types.YAPIONElementPath;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class XMLFlavour implements Flavour {
 
-    private static Set<HierarchyTypes> unsupportedTypes = new HashSet<>();
+    private static Set<HierarchyTypes> unsupportedTypesSet = new HashSet<>();
 
     static {
-        unsupportedTypes.add(HierarchyTypes.MAP);
-        unsupportedTypes.add(HierarchyTypes.POINTER);
-        unsupportedTypes = Collections.unmodifiableSet(unsupportedTypes);
+        unsupportedTypesSet.add(HierarchyTypes.MAP);
+        unsupportedTypesSet.add(HierarchyTypes.POINTER);
+        unsupportedTypesSet = Collections.unmodifiableSet(unsupportedTypesSet);
     }
 
     @Override
     public Set<HierarchyTypes> unsupportedTypes() {
-        return unsupportedTypes;
+        return unsupportedTypesSet;
     }
 
     @Override

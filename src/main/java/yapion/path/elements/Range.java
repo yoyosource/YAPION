@@ -50,19 +50,19 @@ public class Range<T extends Number & Comparable<T>> implements PathElement, Pre
         return new Range<>(min, max, t -> t.compareTo(min) >= 0 && t.compareTo(max) <= 0);
     }
 
-    private final T min;
-    private final T max;
+    private final T minValue;
+    private final T maxValue;
     private final Predicate<T> predicate;
 
-    private Range(T min, T max, Predicate<T> predicate) {
-        this.min = min;
-        this.max = max;
+    private Range(T minValue, T maxValue, Predicate<T> predicate) {
+        this.minValue = minValue;
+        this.maxValue = maxValue;
         this.predicate = predicate;
     }
 
     public Range(Predicate<T> predicate) {
-        this.min = null;
-        this.max = null;
+        this.minValue = null;
+        this.maxValue = null;
         this.predicate = predicate;
     }
 
@@ -80,14 +80,14 @@ public class Range<T extends Number & Comparable<T>> implements PathElement, Pre
 
     @Override
     public PathContext apply(PathContext pathContext) {
-        if (min == null && max == null) {
+        if (minValue == null && maxValue == null) {
             throw new IllegalArgumentException("min and max can't be null");
         }
         List<YAPIONAnyType> result = new ArrayList<>();
-        int elementMin = Math.max(0, min != null ? min.intValue() : Integer.MIN_VALUE);
+        int elementMin = Math.max(0, minValue != null ? minValue.intValue() : Integer.MIN_VALUE);
         for (YAPIONAnyType element : pathContext.getCurrent()) {
             if (element instanceof YAPIONArray yapionArray) {
-                int elementMax = Math.min(yapionArray.size(), max != null ? max.intValue() : Integer.MAX_VALUE);
+                int elementMax = Math.min(yapionArray.size(), maxValue != null ? maxValue.intValue() : Integer.MAX_VALUE);
                 for (int i = elementMin; i < elementMax; i++) {
                     result.add(yapionArray.getAny(i));
                 }

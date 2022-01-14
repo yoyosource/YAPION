@@ -23,17 +23,17 @@ import java.util.Set;
 
 public class PropertiesFlavour implements Flavour {
 
-    private static Set<HierarchyTypes> unsupportedTypes = new HashSet<>();
+    private static Set<HierarchyTypes> unsupportedTypesSet = new HashSet<>();
 
     static {
-        unsupportedTypes.add(HierarchyTypes.MAP);
-        unsupportedTypes.add(HierarchyTypes.POINTER);
-        unsupportedTypes = Collections.unmodifiableSet(unsupportedTypes);
+        unsupportedTypesSet.add(HierarchyTypes.MAP);
+        unsupportedTypesSet.add(HierarchyTypes.POINTER);
+        unsupportedTypesSet = Collections.unmodifiableSet(unsupportedTypesSet);
     }
 
     @Override
     public Set<HierarchyTypes> unsupportedTypes() {
-        return unsupportedTypes;
+        return unsupportedTypesSet;
     }
 
     @Override

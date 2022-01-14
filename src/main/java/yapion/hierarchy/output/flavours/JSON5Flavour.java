@@ -21,17 +21,17 @@ import java.util.Set;
 
 public class JSON5Flavour extends JSONFlavour {
 
-    private static Set<HierarchyTypes> unsupportedTypes = new HashSet<>();
+    private static Set<HierarchyTypes> unsupportedTypesSet = new HashSet<>();
 
     static {
-        unsupportedTypes.add(HierarchyTypes.POINTER);
-        unsupportedTypes.add(HierarchyTypes.MAP);
-        unsupportedTypes = Collections.unmodifiableSet(unsupportedTypes);
+        unsupportedTypesSet.add(HierarchyTypes.POINTER);
+        unsupportedTypesSet.add(HierarchyTypes.MAP);
+        unsupportedTypesSet = Collections.unmodifiableSet(unsupportedTypesSet);
     }
 
     @Override
     public Set<HierarchyTypes> unsupportedTypes() {
-        return unsupportedTypes;
+        return unsupportedTypesSet;
     }
 
     @Override

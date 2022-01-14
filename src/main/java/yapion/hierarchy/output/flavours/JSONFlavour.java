@@ -15,7 +15,6 @@ package yapion.hierarchy.output.flavours;
 
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.YAPIONType;
-import yapion.hierarchy.types.value.ValueUtils;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,18 +22,18 @@ import java.util.Set;
 
 public class JSONFlavour implements Flavour {
 
-    private static Set<HierarchyTypes> unsupportedTypes = new HashSet<>();
+    private static Set<HierarchyTypes> unsupportedTypesSet = new HashSet<>();
 
     static {
-        unsupportedTypes.add(HierarchyTypes.COMMENT);
-        unsupportedTypes.add(HierarchyTypes.POINTER);
-        unsupportedTypes.add(HierarchyTypes.MAP);
-        unsupportedTypes = Collections.unmodifiableSet(unsupportedTypes);
+        unsupportedTypesSet.add(HierarchyTypes.COMMENT);
+        unsupportedTypesSet.add(HierarchyTypes.POINTER);
+        unsupportedTypesSet.add(HierarchyTypes.MAP);
+        unsupportedTypesSet = Collections.unmodifiableSet(unsupportedTypesSet);
     }
 
     @Override
     public Set<HierarchyTypes> unsupportedTypes() {
-        return unsupportedTypes;
+        return unsupportedTypesSet;
     }
 
     @Override
