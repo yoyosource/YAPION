@@ -24,25 +24,55 @@
 
 ## Code Examples
 
-### Getting Started
-
-* [Notation](examples/basics/Notation.md)
-* [Parser](examples/basics/Parser.md)
-* [Serialization](examples/basics/Serialization.md)
-* [Output](examples/basics/Output.md)
-* [Deserialization](examples/basics/Deserialization.md)
-
-### Advanced
-
-* [Classes and Packages](examples/advanced/TypeReMapper.md)
-* [Views](examples/advanced/Views.md)
-* [Mutators](examples/advanced/Mutators.md)
-* [Cascading](examples/advanced/Cascading.md)
-* [Deserializer Result](examples/advanced/DeserializationResult.md)
-* [Hooks into Serialization/Deserialization](examples/advanced/MethodAnnotations.md)
-* [Annotations](examples/advanced/Annotation.md)
-* [Packet System](examples/advanced/YAPIONPacket.md)
-* [Factory](examples/advanced/FactoryAPI.md)
-* [Serializer](examples/advanced/SerializerAPI.md)
-* [YAPIONRegistrator](examples/advanced/YAPIONRegistrator.md)
-* [Annotation Processor](examples/advanced/AnnotationProcessor.md)
+<details style="cursor:pointer;user-select:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;">
+<summary><h3 style="display:inline;">Getting Started</h3></summary>
+<ul>
+<li><a href="examples/basics/Notation.html">Notation</a></li>
+<li><a href="examples/basics/Parser.html">Parser</a></li>
+<li><a href="examples/basics/Output.html">Output</a></li>
+</ul>
+</details>
+<div style="margin-top: 1em"></div>
+<details style="cursor:pointer;user-select:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;">
+<summary><h3 style="display:inline;">Saving and Loading</h3></summary>
+<ul>
+<li><a href="examples/lifecycle/Serialization.html">Serialization</a></li>
+<li><a href="examples/lifecycle/Deserialization.html">Deserialization</a></li>
+<li><a href="examples/lifecycle/Views.html">Views</a></li>
+</ul>
+</details>
+<div style="margin-top: 1em"></div>
+<details style="cursor:pointer;user-select:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;">
+<summary><h3 style="display:inline;">Using in existing Projects</h3></summary>
+<ul>
+<li><a href="examples/projects/Cascading.html">YAPIONData</a> and the 'cascading' flag</li>
+<li><a href="examples/projects/Annotation.html">Annotations</a> it is that simple</li>
+</ul>
+</details>
+<div style="margin-top: 1em"></div>
+<details style="cursor:pointer;user-select:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;">
+<summary><h3 style="display:inline;">Controlling the Data</h3></summary>
+<ul>
+<li><a href="examples/control/DeserializationResult.html">DeserializationResult</a></li>
+<li><a href="examples/control/TypeReMapper.html">TypeReMapper</a></li>
+<li><a href="examples/control/Mutators.html">Mutators</a> or another view on <a hred="examples/lifecycle/Views.html">Views</a></li>
+</ul>
+</details>
+<div style="margin-top: 1em"></div>
+<details style="cursor:pointer;user-select:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;">
+<summary><h3 style="display:inline;">Connecting to others</h3></summary>
+<ul>
+<li><a href="examples/internet/YAPIONPacket.html">YAPIONPacket</a></li>
+</ul>
+</details>
+<div style="margin-top: 1em"></div>
+<details style="cursor:pointer;user-select:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;">
+<summary><h3 style="display:inline;">Your own Serializer</h3></summary>
+<ul>
+<li><a href="examples/serializer/MethodAnnotations.html">MethodAnnotations</a> or even more control over <div style="display: inline; font-weight: bold">Saving and Loading</div></li>
+<li><a href="examples/serializer/FactoryAPI.html">FactoryAPI</a> speedup deserialization</li>
+<li><a href="examples/serializer/AnnotationProcessor.html">AnnotationProcessor</a> dont write the Serializer on your own!</li>
+<li><a href="examples/serializer/SerializerAPI.html">SerializerAPI</a> how about some <div style="display: inline; font-weight: bold">Reflections</div></li>
+<li><a href="examples/serializer/YAPIONRegistrator.html">YAPIONRegistrator</a> how about register stuff</li>
+</ul>
+</details>
