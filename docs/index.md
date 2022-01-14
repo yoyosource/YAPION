@@ -73,6 +73,6 @@
 <li><a href="examples/serializer/FactoryAPI.html">FactoryAPI</a> speedup deserialization</li>
 <li><a href="examples/serializer/AnnotationProcessor.html">AnnotationProcessor</a> dont write the Serializer on your own!</li>
 <li><a href="examples/serializer/SerializerAPI.html">SerializerAPI</a> how about some <div style="display: inline; font-weight: bold">Reflections</div></li>
-<li><a href="examples/serializer/YAPIONRegistrator.html">YAPIONRegistrator</a> how about register stuff</li>
+<li><a href="examples/serializer/YAPIONRegistrator.html">YAPIONRegistrator</a> registering is the last step</li>
 </ul>
 </details>
