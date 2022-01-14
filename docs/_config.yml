@@ -1,5 +1,4 @@
 theme: jekyll-theme-cayman
 title: YAPION Homepage
 description: Bookmark this to keep an eye on my project updates!
-include:
-  - 'docs/**/*.md'
+author: YoyoSource
