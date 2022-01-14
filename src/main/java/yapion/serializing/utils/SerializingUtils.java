@@ -31,6 +31,12 @@ public class SerializingUtils {
         YAPIONMap yapionMap = new YAPIONMap();
         yapionObject.add("values", yapionMap);
         for (Map.Entry<?, ?> entry : serializeData.object.entrySet()) {
+            if (entry.getKey() instanceof YAPIONAnyType) {
+                throw new IllegalArgumentException("Map key cannot be YAPIONAnyType. These are not allowed inside generic types.");
+            }
+            if (entry.getValue() instanceof YAPIONAnyType) {
+                throw new IllegalArgumentException("Map value cannot be YAPIONAnyType. These are not allowed inside generic types.");
+            }
             yapionMap.add(serializeData.serialize(entry.getKey()), serializeData.serialize(entry.getValue()));
         }
         return yapionObject;
@@ -40,6 +46,9 @@ public class SerializingUtils {
         YAPIONArray yapionArray = new YAPIONArray();
         yapionObject.add("values", yapionArray);
         for (Object o : serializeData.object) {
+            if (o instanceof YAPIONAnyType) {
+                throw new IllegalArgumentException("Collection element cannot be YAPIONAnyType. These are not allowed inside generic types.");
+            }
             yapionArray.add(serializeData.serialize(o));
         }
         return yapionObject;
