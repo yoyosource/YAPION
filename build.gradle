@@ -123,19 +123,6 @@ task compressClassFiles {
 }
 classes.finalizedBy(compressClassFiles)
 
-if (file("./libs/YAPION-SNAPSHOT.jar").exists()) {
-    task applySerializingProcessing {
-        description 'Finalize YAPIONAnnotationProcessing'
-        group "build"
-
-        doLast {
-            print(shell("java -cp libs/YAPION-SNAPSHOT.jar yapion.serializing.annotationproccessing.SerializingApplier ${buildDir}/classes/java/main")[0])
-        }
-    }
-    classes.finalizedBy applySerializingProcessing
-    compressClassFiles.dependsOn applySerializingProcessing
-}
-
 shadowJar {
     manifest {
         attributes(
