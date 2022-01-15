@@ -30,7 +30,6 @@ then
   if [[ -f "$buildDir/tmp/serializerCache/$hash/serializer.pack" ]]
   then
     echo "Using cached serializer."
-    rm -r $buildDir/classes/java/main/yapion/serializing/serializer
     cp -r $buildDir/tmp/serializerCache/$hash/* ./build/classes/java/main/yapion/serializing/
     exit 0
   fi
@@ -38,7 +37,6 @@ fi
 
 echo "Generating serializer."
 java -cp $buildDir/classes/java/main/ yapion/serializing/serializer/SerializerPacker
-rm $buildDir/classes/java/main/yapion/serializing/serializer/SerializerPacker
 
 echo "Creating cache for serializer."
 mkdir -p $buildDir/tmp/serializerCache/$hash

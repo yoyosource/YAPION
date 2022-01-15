@@ -104,6 +104,8 @@ processResources {
 task compressClassFiles {
     description 'Compress Class Files'
     group "build"
+    inputs.dir "${buildDir}/classes/java/main/yapion/serializing/serializer/"
+    outputs.files("${buildDir}/resources/main/yapion/serializing/serializer.pack", "${buildDir}/resources/main/yapion/serializing/serializer.pack.meta")
 
     doLast {
         if (file("${buildDir}/classes/java/main/yapion/serializing/serializer/").exists()) {
@@ -115,7 +117,6 @@ task compressClassFiles {
                     print(strings[0])
                     print(strings[1])
                 }
-                deleteDirRecursively("${buildDir}/classes/java/main/yapion/serializing/serializer")
             } else {
                 String[] strings = shell('./serializerPacker.sh')
                 if (strings[2] == '0') {
@@ -125,8 +126,9 @@ task compressClassFiles {
                     print(strings[1])
                 }
             }
+            file("${buildDir}/classes/java/main/yapion/serializing/serializer.pack").renameTo(file("${buildDir}/resources/main/yapion/serializing/serializer.pack"))
+            file("${buildDir}/classes/java/main/yapion/serializing/serializer.pack.meta").renameTo(file("${buildDir}/resources/main/yapion/serializing/serializer.pack.meta"))
         }
-        deleteDirRecursively("${buildDir}/classes/java/main/yapion/utils/Packer.class")
     }
 }
 classes.finalizedBy(compressClassFiles)
@@ -144,26 +146,15 @@ if (file("./libs/YAPION-SNAPSHOT.jar").exists()) {
     compressClassFiles.dependsOn applySerializingProcessing
 }
 
-task processMetaINF {
-    description 'Process META-INF'
-    group "build"
-
-    doLast {
-        File file = new File("${buildDir}/classes/java/main/META-INF/annotations/")
-        for (File f : file.listFiles()) {
-            f.delete()
-        }
-        file.delete()
-    }
-}
-jar.finalizedBy(processMetaINF)
-
 shadowJar {
     manifest {
         attributes(
                 'Main-Class': mainClassName
         )
     }
+    exclude 'yapion/utils/Packer.class'
+    exclude 'yapion/serializing/serializer/**'
+    exclude 'META-INF/annotations/**'
 }
 
 sourceSets {
