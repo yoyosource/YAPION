@@ -51,6 +51,15 @@ public class YAPIONClassLoader extends ClassLoader {
         return Class.forName(name);
     }
 
+    @Override
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        synchronized (getClassLoadingLock(name)) {
+            if (classes.containsKey(name)) {
+                return classes.get(name).get();
+            }
+        }
+        return super.loadClass(name, resolve);
+    }
 
     public Class<?> forName(String name) throws ClassNotFoundException {
         return findClass(name);
