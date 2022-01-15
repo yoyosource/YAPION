@@ -1,7 +1,4 @@
-remote_theme: yoyosource/cayman@v0.3.0
-plugins:
-  - jekyll-remote-theme # add this line to the plugins list if you already have one
-
+remote_theme: yoyosource/cayman
 title: YAPION Homepage
 description: Bookmark this to keep an eye on my project updates!
 author: YoyoSource
