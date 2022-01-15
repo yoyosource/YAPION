@@ -94,6 +94,8 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         return abstractOutput;
     }
 
+    // TODO: YAPIONConvertedJSONFlavour does not support Maps for the moment
+    /*
     @Override
     public <T extends AbstractOutput> T toJSON(T abstractOutput) {
         YAPIONObject yapionObject = new YAPIONObject();
@@ -114,6 +116,7 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         yapionObject.removeParent();
         return abstractOutput;
     }
+    */
 
     @Override
     public <U> U unwrap() {

@@ -30,6 +30,8 @@ import yapion.serializing.serializer.object.throwable.ErrorSerializer;
 import yapion.serializing.serializer.object.throwable.ThrowableSerializer;
 import yapion.serializing.serializer.special.EnumSerializer;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
@@ -206,4 +208,38 @@ public class IdentifierUtils {
      */
     public static final String BIG_DECIMAL_IDENTIFIER = "@bdecimal";
 
+    public static String toIdentifier(Class<?> clazz) {
+        if (clazz == null) {
+            return null;
+        }
+        clazz = ClassUtils.getBoxed(clazz);
+        if (clazz == Byte.class) {
+            return BYTE_IDENTIFIER;
+        }
+        if (clazz == Short.class) {
+            return SHORT_IDENTIFIER;
+        }
+        if (clazz == Character.class) {
+            return CHAR_IDENTIFIER;
+        }
+        if (clazz == Integer.class) {
+            return INT_IDENTIFIER;
+        }
+        if (clazz == Float.class) {
+            return FLOAT_IDENTIFIER;
+        }
+        if (clazz == Long.class) {
+            return LONG_IDENTIFIER;
+        }
+        if (clazz == Double.class) {
+            return DOUBLE_IDENTIFIER;
+        }
+        if (clazz == BigInteger.class) {
+            return BIG_INTEGER_IDENTIFIER;
+        }
+        if (clazz == BigDecimal.class) {
+            return BIG_DECIMAL_IDENTIFIER;
+        }
+        return null;
+    }
 }

@@ -22,12 +22,9 @@ import yapion.hierarchy.output.flavours.Flavour;
 import yapion.hierarchy.types.value.NullHandler;
 import yapion.hierarchy.types.value.ValueHandler;
 import yapion.hierarchy.types.value.ValueHandlerUtils;
-import yapion.hierarchy.types.value.ValueUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
@@ -73,38 +70,6 @@ public class YAPIONValue<T> extends YAPIONValueType<YAPIONValue<T>> {
         flavour.begin(Flavour.HierarchyTypes.VALUE, abstractOutput);
         flavour.elementValue(Flavour.HierarchyTypes.VALUE, abstractOutput, new Flavour.ValueData<>(this, get()));
         flavour.end(Flavour.HierarchyTypes.VALUE, abstractOutput);
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toJSON(T abstractOutput) {
-        if (value == null) {
-            abstractOutput.consume("null");
-            return abstractOutput;
-        }
-        if (value instanceof String s) {
-            abstractOutput.consume("\"")
-                    .consume(s.replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"))
-                    .consume("\"");
-            return abstractOutput;
-        }
-        if (ValueHandlerUtils.containsTypeIdentifier(type) || value instanceof Character) {
-            abstractOutput.consume("{\"").consume(ValueHandlerUtils.getTypeIdentifier(type)).consume("\":");
-            toJSONLossy(abstractOutput, true);
-            abstractOutput.consume("}");
-            return abstractOutput;
-        }
-        abstractOutput.consume(value.toString());
-        return abstractOutput;
-    }
-
-    private <T extends AbstractOutput> T toJSONLossy(T abstractOutput, boolean bigAsStrings) {
-        if (bigAsStrings && (value instanceof BigInteger || value instanceof BigDecimal)) {
-            abstractOutput.consume("\"").consume(value.toString()).consume("\"");
-            return abstractOutput;
-        } else {
-            abstractOutput.consume(getValueHandler().outputJSON(value, YAPIONType.VALUE));
-        }
         return abstractOutput;
     }
 

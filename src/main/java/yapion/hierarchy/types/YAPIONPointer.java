@@ -71,16 +71,6 @@ public class YAPIONPointer extends YAPIONValueType<YAPIONPointer> {
     }
 
     @Override
-    public <T extends AbstractOutput> T toJSON(T abstractOutput) {
-        abstractOutput.consume("{\"")
-                .consume(POINTER_IDENTIFIER)
-                .consume("\":\"")
-                .consume(getPointerIDString())
-                .consume("\"}");
-        return abstractOutput;
-    }
-
-    @Override
     public <U> U unwrap() {
         throw new UnsupportedOperationException("Pointers can not be unwrapped.");
     }

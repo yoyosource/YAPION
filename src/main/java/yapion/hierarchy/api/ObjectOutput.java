@@ -37,7 +37,9 @@ public interface ObjectOutput {
         return toYAPION(clazz.getConstructor().newInstance());
     }
 
-    <T extends AbstractOutput> T toJSON(T abstractOutput);
+    default <T extends AbstractOutput> T toJSON(T abstractOutput) {
+        return output(abstractOutput, new YAPIONConvertedJSONFlavour());
+    }
 
     @SneakyThrows
     default <T extends AbstractOutput & InstantiableOutput> T toJSON(Class<T> clazz) {

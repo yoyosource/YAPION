@@ -27,10 +27,13 @@ public class MapOutputTest {
         assertThat(new YAPIONMap().toYAPION(new StringOutput()).getResult(), is("<>"));
     }
 
+    // TODO: YAPIONConvertedJSONFlavour does not support Maps for the moment
+    /*
     @Test
     public void testJSON() {
         assertThat(new YAPIONMap().toJSON(new StringOutput()).getResult(), is("{\"@mapping\":[]}"));
     }
+     */
 
     @Test(expected = UnsupportedOperationException.class)
     public void testLossyJSON() {
@@ -42,10 +45,13 @@ public class MapOutputTest {
         assertThat(new YAPIONMap().toYAPION(new StringOutput(true)).getResult(), is("<>"));
     }
 
+    // TODO: YAPIONConvertedJSONFlavour does not support Maps for the moment
+    /*
     @Test
     public void testPrettifiedJSON() {
         assertThat(new YAPIONMap().toJSON(new StringOutput(true)).getResult(), is("{\n    \"@mapping\": []\n  }"));
     }
+     */
 
     @Test(expected = UnsupportedOperationException.class)
     public void testPrettifiedLossyJSON() {
@@ -57,10 +63,13 @@ public class MapOutputTest {
         assertThat(new YAPIONMap().add("", new YAPIONMap()).toYAPION(new StringOutput(true)).getResult(), is("<\n  ():<>\n>"));
     }
 
+    // TODO: YAPIONConvertedJSONFlavour does not support Maps for the moment
+    /*
     @Test
     public void testPrettifiedJSONDepth() {
         assertThat(new YAPIONMap().add("", new YAPIONMap()).toJSON(new StringOutput(true)).getResult(), is("{\n    \"@mapping\": [\n      \"0:1\"\n    ],\n    \"#0\": \"\",\n    \"#1\": {\n      \"@mapping\": []\n    }\n  }"));
     }
+     */
 
     @Test(expected = UnsupportedOperationException.class)
     public void testPrettifiedLossyJSONDepth() {

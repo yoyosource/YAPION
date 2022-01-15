@@ -106,27 +106,6 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public <T extends AbstractOutput> T toJSON(T abstractOutput) {
-        abstractOutput.consume("[");
-
-        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
-        boolean b = false;
-        for (YAPIONAnyType yapionAnyType : array) {
-            if (b) abstractOutput.consume(",");
-            abstractOutput.consumePrettified(indent);
-            yapionAnyType.toJSON(abstractOutput);
-            b = true;
-        }
-
-        if (!array.isEmpty()) {
-            abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
-        }
-
-        abstractOutput.consume("]");
-        return abstractOutput;
-    }
-
-    @Override
     public List<Object> unwrap() {
         List<Object> result = new ArrayList<>();
         for (YAPIONAnyType yapionAnyType : array) {

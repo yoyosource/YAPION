@@ -14,10 +14,7 @@
 package yapion.hierarchy.output.flavours;
 
 import yapion.hierarchy.output.StringOutput;
-import yapion.hierarchy.types.YAPIONArray;
-import yapion.hierarchy.types.YAPIONMap;
-import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONPointer;
+import yapion.hierarchy.types.*;
 
 public class Test {
 
@@ -31,10 +28,20 @@ public class Test {
                 /*.add(new YAPIONMap()
                         .add("greetings", "hello")
                 )
-                .add(new YAPIONPointer(yapionObject))*/
+                */
+                .add(new YAPIONPointer(yapionObject))
                 // .addComment("Just a comment")
                 .add("Hello World")
+                .add('c')
+                .add(0)
+                .add(0.0)
+                .add(true)
+                .add(false)
+                .add(new YAPIONValue<>(null))
+                .add(0.0F)
+                .add((byte) 0)
+                .add((short) 0)
         );
-        System.out.println(yapionObject.output(new StringOutput(true), new JSONFlavour()).getResult());
+        System.out.println(yapionObject.output(new StringOutput(true), new YAPIONConvertedJSONFlavour()).getResult());
     }
 }

@@ -16,7 +16,6 @@ package yapion.hierarchy.types;
 import lombok.NonNull;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.value.YAPIONRecursionException;
-import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.groups.SerializingType;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
@@ -31,8 +30,6 @@ import yapion.utils.RecursionUtils;
 import yapion.utils.ReferenceFunction;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
@@ -69,24 +66,6 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
             referenceValue.update(entry.getValue().referenceValue(referenceFunction));
         }
         return referenceValue.referenceValue;
-    }
-
-    private <T extends AbstractOutput> void outputSystem(T abstractOutput, Consumer<T> commaConsumer, BiConsumer<String, T> nameConsumer, BiConsumer<YAPIONAnyType, T> valueConsumer) {
-        abstractOutput.consume("{");
-        final String indent = "\n" + abstractOutput.getIndentator().indent(getDepth() + 1);
-        boolean b = false;
-        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
-            if (b) commaConsumer.accept(abstractOutput);
-            b = true;
-
-            outputComments(abstractOutput, entry.getValue().getComments(), indent);
-            abstractOutput.consumePrettified(indent);
-            nameConsumer.accept(entry.getKey(), abstractOutput);
-            valueConsumer.accept(entry.getValue(), abstractOutput);
-        }
-        outputComments(abstractOutput, getEndingComments(), indent);
-        if (!variables.isEmpty() || hasEndingComments()) abstractOutput.consumePrettified("\n").consumeIndent(getDepth());
-        abstractOutput.consume("}");
     }
 
     @Override
@@ -140,15 +119,6 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
         if (!hasParent()) {
             flavour.footer(abstractOutput);
         }
-        return abstractOutput;
-    }
-
-    @Override
-    public <T extends AbstractOutput> T toJSON(T abstractOutput) {
-        outputSystem(abstractOutput, t -> t.consume(","), (s, t) -> {
-            t.consume("\"").consume(s).consume("\":");
-            t.consumePrettified(" ");
-        }, ObjectOutput::toJSON);
         return abstractOutput;
     }
 
