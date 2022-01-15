@@ -46,7 +46,7 @@ public class SerializerPacker {
         File destination = new File(s.substring(0, s.lastIndexOf('/')), "serializer.pack");
         File metaDestination = new File(s.substring(0, s.lastIndexOf('/')), "serializer.pack.meta");
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(metaDestination));
-        Packer.pack(source, destination, file -> !file.getName().equals("SerializerPacker.class"), true, false, name -> {
+        Packer.pack(source, destination, file -> !file.getName().equals("SerializerPacker.class"), false, false, name -> {
             name = name.substring(0, name.indexOf('.'));
             return name.replace('/', '.');
         }, (file, start, length) -> {

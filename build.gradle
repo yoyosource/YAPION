@@ -109,22 +109,12 @@ task compressClassFiles {
 
     doLast {
         if (file("${buildDir}/classes/java/main/yapion/serializing/serializer/").exists()) {
-            if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-                String[] strings = shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker")
-                if (strings[2] == '0') {
-                    print(strings[0])
-                } else {
-                    print(strings[0])
-                    print(strings[1])
-                }
+            String[] strings = shell("java -cp ${buildDir}/classes/java/main/ yapion/serializing/serializer/SerializerPacker")
+            if (strings[2] == '0') {
+                print(strings[0])
             } else {
-                String[] strings = shell('./serializerPacker.sh')
-                if (strings[2] == '0') {
-                    print(strings[0])
-                } else {
-                    print(strings[0])
-                    print(strings[1])
-                }
+                print(strings[0])
+                print(strings[1])
             }
             file("${buildDir}/classes/java/main/yapion/serializing/serializer.pack").renameTo(file("${buildDir}/resources/main/yapion/serializing/serializer.pack"))
             file("${buildDir}/classes/java/main/yapion/serializing/serializer.pack.meta").renameTo(file("${buildDir}/resources/main/yapion/serializing/serializer.pack.meta"))

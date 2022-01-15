@@ -18,11 +18,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import yapion.annotations.object.YAPIONData;
-import yapion.annotations.registration.YAPIONSerializing;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
 @YAPIONData
-@YAPIONSerializing
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
