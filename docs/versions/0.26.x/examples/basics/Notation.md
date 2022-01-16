@@ -27,7 +27,7 @@ The example above contain every thing that is supported by YAPION. You can see s
     Comments are syntactic sugar which are not needed fot the serialization and deserialization but are quite useful for the programmer if they want to use YAPION as a configuration format.
 </div>
 
-### The building blocks
+### The building blocks 
 YAPION itself is composed of the following building blocks:
 - **Objects**: Identified by the `{` and `}` characters. Present in JSON
 - **Arrays**: Identified by the `[` and `]` characters. Present in JSON
@@ -47,7 +47,7 @@ Objects are very similar to JSON objects. They start with `{` and end with `}`. 
 
 <div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
     <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b>Warning:</b> There is no need for any seperator between the key and the value. And the keys are not inside of quotes. The example above would translate to something like this in JSON:
+    <b style="color: #ffaa00">Warning:</b> There is no need for any seperator between the key and the value. And the keys are not inside of quotes. The example above would translate to something like this in JSON:
     <pre class="highlight"><code>{<br>    "key": {}<br>}</code></pre>
 </div>
 
@@ -73,7 +73,7 @@ Maps start with `<` and end with `>`. They contain a list of key-value pairs. Th
 
 <div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
     <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b>Warning:</b> This is not available in JSON syntax and is mainly used to be able to serialize Java maps.
+    <b style="color: #ffaa00">Warning:</b> This is not available in JSON syntax and is mainly used to be able to serialize Java maps.
 </div>
 
 ## Pointers
@@ -85,7 +85,7 @@ Pointers start with `->`. They are used to identify a building block in the YAPI
 
 <div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
     <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b>Warning:</b> This is not available in JSON syntax and is mainly used to be able to serialize Java references to other Objects in the same hierarchy. The benefit of using pointers is that you can have multiple objects with the same value in the hierarchy and only store the object once. This building block is also used during the deserializing of an object to recreate all reference in the given hierarchy correctly.
+    <b style="color: #ffaa00">Warning:</b> This is not available in JSON syntax and is mainly used to be able to serialize Java references to other Objects in the same hierarchy. The benefit of using pointers is that you can have multiple objects with the same value in the hierarchy and only store the object once. This building block is also used during the deserializing of an object to recreate all reference in the given hierarchy correctly.
 </div>
 
 ## Comments
@@ -99,7 +99,7 @@ Comments start with `/*` and end with `*/`. They are used to add comments to the
 
 <div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
     <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b>Warning:</b> Comments are not supported by JSON. The YAPIONParser does not parse comments by default.
+    <b style="color: #ffaa00">Warning:</b> Comments are not supported by JSON. The YAPIONParser does not parse comments by default.
 </div>
 
 ## Values
@@ -107,5 +107,5 @@ Values start with `(` and end with `)`. They are used to identify a value in the
 
 <div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
     <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b>Warning:</b> YAPIONValues are defined differently inside an Array!
+    <b style="color: #ffaa00">Warning:</b> YAPIONValues are defined differently inside of Arrays!
 </div>
