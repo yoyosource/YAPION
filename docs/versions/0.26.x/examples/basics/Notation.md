@@ -90,9 +90,19 @@ Maps start with `<` and end with `>`. They contain a list of key-value pairs. Th
 >
 ```
 
-<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
-    <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b style="color: #ffaa00">Warning:</b> This is not available in JSON syntax and is mainly used to be able to serialize Java maps.
+<div class="box">
+    <details>
+        <summary>
+            <div>
+                <strong class="warning">Warning:</strong>
+                No maps in JSON
+            </div>
+            <img src="../../../../icons/exclamation.png" alt="">
+        </summary>
+        <div>
+            This is not available in JSON syntax and is mainly used to be able to serialize Java maps.
+        </div>
+    </details>
 </div>
 
 ## Pointers
@@ -102,9 +112,19 @@ Pointers start with `->`. They are used to identify a building block in the YAPI
 ->0000000000000000
 ```
 
-<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
-    <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b style="color: #ffaa00">Warning:</b> This is not available in JSON syntax and is mainly used to be able to serialize Java references to other Objects in the same hierarchy. The benefit of using pointers is that you can have multiple objects with the same value in the hierarchy and only store the object once. This building block is also used during the deserializing of an object to recreate all reference in the given hierarchy correctly.
+<div class="box">
+    <details>
+        <summary>
+            <div>
+                <strong class="warning">Warning:</strong>
+                References like in YAML
+            </div>
+            <img src="../../../../icons/exclamation.png" alt="">
+        </summary>
+        <div>
+            This is not available in JSON syntax and is mainly used to be able to serialize Java references to other Objects in the same hierarchy. The benefit of using pointers is that you can have multiple objects with the same value in the hierarchy and only store the object once. This building block is also used during the deserializing of an object to recreate all reference in the given hierarchy correctly.
+        </div>
+    </details>
 </div>
 
 ## Comments
@@ -116,15 +136,35 @@ Comments start with `/*` and end with `*/`. They are used to add comments to the
 */
 ```
 
-<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
-    <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b style="color: #ffaa00">Warning:</b> Comments are not supported by JSON. The YAPIONParser does not parse comments by default.
+<div class="box">
+    <details>
+        <summary>
+            <div>
+                <strong class="warning">Warning:</strong>
+                Comments in JSON
+            </div>
+            <img src="../../../../icons/exclamation.png" alt="">
+        </summary>
+        <div>
+            Comments are not supported by JSON. The YAPIONParser does not parse comments by default.
+        </div>
+    </details>
 </div>
 
 ## Values
 Values start with `(` and end with `)`. They are used to identify a value in the YAPION hierarchy.
 
-<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
-    <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b style="color: #ffaa00">Warning:</b> YAPIONValues are defined differently inside of Arrays!
+<div class="box">
+    <details>
+        <summary>
+            <div>
+                <strong class="warning">Warning:</strong>
+                YAPIONValue: Changes from Object and Map to Array
+            </div>
+            <img src="../../../../icons/exclamation.png" alt="">
+        </summary>
+        <div>
+            YAPIONValues are defined differently inside of Arrays!
+        </div>
+    </details>
 </div>
