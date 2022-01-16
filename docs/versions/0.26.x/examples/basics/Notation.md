@@ -20,7 +20,7 @@
 
 The example above contain every thing that is supported by YAPION. You can see some similarities between the YAPION notation and the JSON notation. Since YAPION is a superset of JSON, any JSON file is a valid YAPION file.
 
-<div style="padding: 10px; background-color: #00000010; border-radius: 5px;">
+<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
     <img src="../../../../icons/question.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
     What is the difference between YAPION and JSON?<br>
     The main difference is that YAPION supports more types than JSON. This is needed to support serialization and deserialization of Java objects.
@@ -45,7 +45,7 @@ Objects are very similar to JSON objects. They start with `{` and end with `}`. 
 }
 ```
 
-<div style="padding: 10px; background-color: #00000010; border-radius: 5px;">
+<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
     <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
     <b>Warning:</b> There is no need for any seperator between the key and the value. And the keys are not inside of quotes. The example above would translate to something like this in JSON:
     <pre class="highlight"><code>{<br>    "key": {}<br>}</code></pre>
@@ -71,7 +71,7 @@ Maps start with `<` and end with `>`. They contain a list of key-value pairs. Th
 >
 ```
 
-<div style="padding: 10px; background-color: #00000010; border-radius: 5px;">
+<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
     <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
     <b>Warning:</b> This is not available in JSON syntax and is mainly used to be able to serialize Java maps.
 </div>
@@ -83,7 +83,7 @@ Pointers start with `->`. They are used to identify a building block in the YAPI
 ->0000000000000000
 ```
 
-<div style="padding: 10px; background-color: #00000010; border-radius: 5px;">
+<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
     <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
     <b>Warning:</b> This is not available in JSON syntax and is mainly used to be able to serialize Java references to other Objects in the same hierarchy. The benefit of using pointers is that you can have multiple objects with the same value in the hierarchy and only store the object once. This building block is also used during the deserializing of an object to recreate all reference in the given hierarchy correctly.
 </div>
@@ -97,7 +97,7 @@ Comments start with `/*` and end with `*/`. They are used to add comments to the
 */
 ```
 
-<div style="padding: 10px; background-color: #00000010; border-radius: 5px;">
+<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
     <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
     <b>Warning:</b> Comments are not supported by JSON. The YAPIONParser does not parse comments by default.
 </div>
