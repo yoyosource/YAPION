@@ -64,7 +64,7 @@
 <img src="../../icons/add.png" width="22px" style="vertical-align: middle; margin-right: 3px"> <code>SerializableSerializer</code>
 </div>
 <div style="margin-bottom: 1px">
-<img src="../../icons/add.png" width="22px" style="vertical-align: middle; margin-right: 3px"> <code>B../../iconsumerSerializer</code>
+<img src="../../icons/add.png" width="22px" style="vertical-align: middle; margin-right: 3px"> <code>BiConsumerSerializer</code>
 </div>
 <div style="margin-bottom: 1px">
 <img src="../../icons/add.png" width="22px" style="vertical-align: middle; margin-right: 3px"> <code>BiFunctionSerializer</code>
