@@ -20,29 +20,6 @@
 
 The example above contain every thing that is supported by YAPION. You can see some similarities between the YAPION notation and the JSON notation. Since YAPION is a superset of JSON, any JSON file is a valid YAPION file.
 
-<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
-    <img src="../../../../icons/question.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    What is the difference between YAPION and JSON?<br>
-    The main difference is that YAPION supports more types than JSON. This is needed to support serialization and deserialization of Java objects.
-    Comments are syntactic sugar which are not needed fot the serialization and deserialization but are quite useful for the programmer if they want to use YAPION as a configuration format.
-</div>
-
-<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
-    <details style="cursor:pointer;">
-        <summary style="list-style: none; user-select:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;">
-            <div style="display: inline">
-                <strong style="color: #379BA1">Info:</strong>
-                Difference between YAPION and JSON
-            </div>
-            <img src="../../../../icons/question.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right;">
-        </summary>
-        <div style="margin-top: 5px">
-            The main difference is that YAPION supports more types than JSON. This is needed to support serialization and deserialization of Java objects.
-            Comments are syntactic sugar which are not needed fot the serialization and deserialization but are quite useful for the programmer if they want to use YAPION as a configuration format.
-        </div>
-    </details>
-</div>
-
 <div class="box">
     <details>
         <summary>
