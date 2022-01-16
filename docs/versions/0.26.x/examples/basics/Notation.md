@@ -34,9 +34,25 @@ The example above contain every thing that is supported by YAPION. You can see s
                 <strong style="color: #379BA1">Info:</strong>
                 Difference between YAPION and JSON
             </div>
-            <img src="../../../../icons/question.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right; transform: translateY(-2px)">
+            <img src="../../../../icons/question.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right;">
         </summary>
         <div style="margin-top: 5px">
+            The main difference is that YAPION supports more types than JSON. This is needed to support serialization and deserialization of Java objects.
+            Comments are syntactic sugar which are not needed fot the serialization and deserialization but are quite useful for the programmer if they want to use YAPION as a configuration format.
+        </div>
+    </details>
+</div>
+
+<div class="box">
+    <details>
+        <summary>
+            <div>
+                <strong class="info">Info:</strong>
+                Difference between YAPION and JSON
+            </div>
+            <img src="../../../../icons/question.png" alt="">
+        </summary>
+        <div>
             The main difference is that YAPION supports more types than JSON. This is needed to support serialization and deserialization of Java objects.
             Comments are syntactic sugar which are not needed fot the serialization and deserialization but are quite useful for the programmer if they want to use YAPION as a configuration format.
         </div>
