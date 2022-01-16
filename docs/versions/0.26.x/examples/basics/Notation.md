@@ -103,3 +103,9 @@ Comments start with `/*` and end with `*/`. They are used to add comments to the
 </div>
 
 ## Values
+Values start with `(` and end with `)`. They are used to identify a value in the YAPION hierarchy.
+
+<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
+    <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
+    <b>Warning:</b> YAPIONValues are defined differently inside an Array!
+</div>
