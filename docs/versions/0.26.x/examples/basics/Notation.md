@@ -54,10 +54,20 @@ Objects are very similar to JSON objects. They start with `{` and end with `}`. 
 }
 ```
 
-<div style="padding: 10px; background-color: var(--info-box-bg-color); border-radius: 5px;">
-    <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b style="color: #ffaa00">Warning:</b> There is no need for any seperator between the key and the value. And the keys are not inside of quotes. The example above would translate to something like this in JSON:
-    <pre class="highlight"><code>{<br>    "key": {}<br>}</code></pre>
+<div class="box">
+    <details>
+        <summary>
+            <div>
+                <strong class="warning">Warning:</strong>
+                Object Notation differences
+            </div>
+            <img src="../../../../icons/exclamation.png" alt="">
+        </summary>
+        <div>
+            There is no need for any separator between the key and the value. And the keys are not inside of quotes. The example above would translate to something like this in JSON:
+            <pre class="highlight"><code>{<br>    "key": {}<br>}</code></pre>
+        </div>
+    </details>
 </div>
 
 ## Arrays
