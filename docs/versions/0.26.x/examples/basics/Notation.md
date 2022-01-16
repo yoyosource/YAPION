@@ -22,11 +22,12 @@ The example above contain every thing that is supported by YAPION. You can see s
 
 <div style="padding: 10px; background-color: #00000010; border-radius: 5px;">
     <img src="../../../../icons/question.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    What is the difference between YAPION and JSON?
+    What is the difference between YAPION and JSON?<br>
+    The main difference is that YAPION supports more types than JSON. This is needed to support serialization and deserialization of Java objects.
+    Comments are syntactic sugar which are not needed fot the serialization and deserialization but are quite useful for the programmer if they want to use YAPION as a configuration format.
 </div>
 
 ### The building blocks
-
 YAPION itself is composed of the following building blocks:
 - **Objects**: Identified by the `{` and `}` characters. Present in JSON
 - **Arrays**: Identified by the `[` and `]` characters. Present in JSON
@@ -72,7 +73,7 @@ Maps start with `<` and end with `>`. They contain a list of key-value pairs. Th
 
 <div style="padding: 10px; background-color: #00000010; border-radius: 5px;">
     <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b>Warning:</b> There is not available in JSON syntax and is mainly used to be able to serialize Java maps.
+    <b>Warning:</b> This is not available in JSON syntax and is mainly used to be able to serialize Java maps.
 </div>
 
 ## Pointers
@@ -84,7 +85,7 @@ Pointers start with `->`. They are used to identify a building block in the YAPI
 
 <div style="padding: 10px; background-color: #00000010; border-radius: 5px;">
     <img src="../../../../icons/exclamation.png" width="22" alt="" style="vertical-align: middle; margin-left: 5px; float: right">
-    <b>Warning:</b> There is not available in JSON syntax and is mainly used to be able to serialize Java references to other Objects in the same hierarchy. The benefit of using pointers is that you can have multiple objects with the same value in the hierarchy and only store the object once. This building block is also used during the deserializing of an object to recreate all reference in the given hierarchy correctly.
+    <b>Warning:</b> This is not available in JSON syntax and is mainly used to be able to serialize Java references to other Objects in the same hierarchy. The benefit of using pointers is that you can have multiple objects with the same value in the hierarchy and only store the object once. This building block is also used during the deserializing of an object to recreate all reference in the given hierarchy correctly.
 </div>
 
 ## Comments
