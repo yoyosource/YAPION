@@ -154,7 +154,7 @@ Comments start with `/*` and end with `*/`. They are used to add comments to the
 ## Values
 Values start with `(` and end with `)`. They are used to identify a value in the YAPION hierarchy.
 
-// TODO: Finish this section
+// TODO: Finish this section with examples and code as well as array examples
 
 <div class="box">
     <details>
