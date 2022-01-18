@@ -79,7 +79,9 @@ public class ClassSerializer implements FinalInternalSerializer<Class<?>> {
             }
             gzipOutputStream.close();
 
-            yapionObject.add("byteCode", Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray()));
+            String byteCode = Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
+            byteCodes.put(serializeData.object, byteCode);
+            yapionObject.add("byteCode", byteCode);
         } catch (IOException e) {
             throw new YAPIONSerializerException(e.getMessage(), e);
         }

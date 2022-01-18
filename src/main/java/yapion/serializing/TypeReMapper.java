@@ -172,7 +172,7 @@ public class TypeReMapper {
      */
     public TypeReMapper copy() {
         TypeReMapper typeReMapper = new TypeReMapper();
-        typeMappings.forEach((s, s2) -> typeReMapper.typeMappings.put(s, s2));
+        typeReMapper.typeMappings.putAll(typeMappings);
         return typeReMapper;
     }
 

@@ -16,7 +16,9 @@ package yapion.serializing;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.security.KeyPair;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,37 +31,57 @@ public final class YAPIONFlag {
     static final Map<String, YAPIONFlag> YAPION_FLAG_KEYS = new HashMap<>();
 
     /**
-     * The key to specify if data loss should be handled silently {@code false} or should throw an exception {@code true}.
+     * The key is used to specify if data loss should be handled silently {@code false} or should throw an exception {@code true}.
      */
     public static final YAPIONFlag DATA_LOSS_EXCEPTION = new YAPIONFlag("base.dataLoss.exception").setFlagDefault(false);
 
     /**
-     * The key to specify if a {@link PrivateKey} should be serialized {@code false} or should result in an thrown exception {@code true}.
+     * The key is used to specify if a {@link KeyPair} should be serialized {@code false} or should result in a thrown exception {@code true}.
+     */
+    public static final YAPIONFlag KEY_PAIR_EXCEPTION = new YAPIONFlag("base.keyPair.exception").setFlagDefault(false);
+
+    /**
+     * The key is used to specify if a {@link KeyPair} should be serialized as {@code null} {@code true} or serialized properly {@code false}.
+     */
+    public static final YAPIONFlag KEY_PAIR_AS_NULL = new YAPIONFlag("base.keyPair.as.null").setFlagDefault(false);
+
+    /**
+     * The key is used to specify if a {@link PublicKey} should be serialized {@code false} or should result in a thrown exception {@code true}.
+     */
+    public static final YAPIONFlag PUBLIC_KEY_EXCEPTION = new YAPIONFlag("base.publicKey.exception").setFlagDefault(false);
+
+    /**
+     * The key is used to specify if a {@link PublicKey} should be serialized as {@code null} {@code true} or serialized properly {@code false}.
+     */
+    public static final YAPIONFlag PUBLIC_KEY_AS_NULL = new YAPIONFlag("base.publicKey.as.null").setFlagDefault(false);
+
+    /**
+     * The key is used to specify if a {@link PrivateKey} should be serialized {@code false} or should result in a thrown exception {@code true}.
      */
     public static final YAPIONFlag PRIVATE_KEY_EXCEPTION = new YAPIONFlag("base.privateKey.exception").setFlagDefault(true);
 
     /**
-     * The key to specify if a {@link PrivateKey} should be serialized as {@code null} {@code true} or serialized properly {@code false}.
+     * The key is used to specify if a {@link PrivateKey} should be serialized as {@code null} {@code true} or serialized properly {@code false}.
      */
     public static final YAPIONFlag PRIVATE_KEY_AS_NULL = new YAPIONFlag("base.privateKey.as.null").setFlagDefault(false);
 
     /**
-     * The key to specify if a {@link Error} should be handled silently {@code false} or should throw an exception {@code true}.
+     * The key is used to specify if a {@link Error} should be handled silently {@code false} or should throw an exception {@code true}.
      */
     public static final YAPIONFlag ERROR_EXCEPTION = new YAPIONFlag("base.error.exception").setFlagDefault(false);
 
     /**
-     * The key to specify if a Reflection should be serialized {@code false} or should result in an thrown exception {@code true}.
+     * The key is used to specify if a Reflection should be serialized {@code false} or should result in an thrown exception {@code true}.
      */
     public static final YAPIONFlag REFLECTION_EXCEPTION = new YAPIONFlag("base.reflection.exception").setFlagDefault(true);
 
     /**
-     * The key to specify if a Reflection should be serialized as {@code null} {@code true} or serialized properly {@code false}.
+     * The key is used to specify if a Reflection should be serialized as {@code null} {@code true} or serialized properly {@code false}.
      */
     public static final YAPIONFlag REFLECTION_AS_NULL = new YAPIONFlag("base.reflection.as.null").setFlagDefault(false);
 
     /**
-     * The key to specify a Class should serialize its byteCode {@code true} or not {@code false}.
+     * The key is used to specify a Class should serialize its byteCode {@code true} or not {@code false}.
      */
     public static final YAPIONFlag CLASS_INJECTION = new YAPIONFlag("base.reflection.class.injection").setFlagDefault(false);
 

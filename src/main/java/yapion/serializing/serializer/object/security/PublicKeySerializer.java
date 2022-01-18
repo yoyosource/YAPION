@@ -14,10 +14,12 @@
 package yapion.serializing.serializer.object.security;
 
 import yapion.annotations.api.SerializerImplementation;
+import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
@@ -26,6 +28,7 @@ import yapion.serializing.serializer.object.security.internal.KeySpecSerializerP
 import java.security.GeneralSecurityException;
 import java.security.PublicKey;
 
+import static yapion.serializing.YAPIONFlag.*;
 import static yapion.utils.IdentifierUtils.KEY_IDENTIFIER;
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -44,6 +47,13 @@ public class PublicKeySerializer implements FinalInternalSerializer<PublicKey> {
 
     @Override
     public YAPIONAnyType serialize(SerializeData<PublicKey> serializeData) {
+        serializeData.isSet(PUBLIC_KEY_EXCEPTION, () -> {
+            throw new YAPIONDataLossException("PUBLIC_KEY_EXCEPTION does not allow public key to be saved");
+        });
+        if (serializeData.getYAPIONFlags().isSet(PUBLIC_KEY_AS_NULL)) {
+            return new YAPIONValue<>(null);
+        }
+
         YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         yapionObject.add("algorithm", serializeData.object.getAlgorithm());
 
