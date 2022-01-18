@@ -23,11 +23,11 @@ The example above contain every thing that is supported by YAPION. You can see s
 <div class="box">
     <details>
         <summary>
+            <img src="../../../../icons/question.png" alt="">
             <div>
                 <strong class="info">Info:</strong>
                 Difference between YAPION and JSON
             </div>
-            <img src="../../../../icons/question.png" alt="">
         </summary>
         <div>
             The main difference is that YAPION supports more types than JSON. This is needed to support serialization and deserialization of Java objects.
@@ -57,11 +57,11 @@ Objects are very similar to JSON objects. They start with `{` and end with `}`. 
 <div class="box">
     <details>
         <summary>
+            <img src="../../../../icons/exclamation.png" alt="">
             <div>
                 <strong class="warning">Warning:</strong>
                 Object Notation differences
             </div>
-            <img src="../../../../icons/exclamation.png" alt="">
         </summary>
         <div>
             There is no need for any separator between the key and the value. And the keys are not inside of quotes. The example above would translate to something like this in JSON:
@@ -93,11 +93,11 @@ Maps start with `<` and end with `>`. They contain a list of key-value pairs. Th
 <div class="box">
     <details>
         <summary>
+            <img src="../../../../icons/exclamation.png" alt="">
             <div>
                 <strong class="warning">Warning:</strong>
                 No maps in JSON
             </div>
-            <img src="../../../../icons/exclamation.png" alt="">
         </summary>
         <div>
             This is not available in JSON syntax and is mainly used to be able to serialize Java maps.
@@ -115,11 +115,11 @@ Pointers start with `->`. They are used to identify a building block in the YAPI
 <div class="box">
     <details>
         <summary>
+            <img src="../../../../icons/exclamation.png" alt="">
             <div>
                 <strong class="warning">Warning:</strong>
                 References like in YAML
             </div>
-            <img src="../../../../icons/exclamation.png" alt="">
         </summary>
         <div>
             This is not available in JSON syntax and is mainly used to be able to serialize Java references to other Objects in the same hierarchy. The benefit of using pointers is that you can have multiple objects with the same value in the hierarchy and only store the object once. This building block is also used during the deserializing of an object to recreate all reference in the given hierarchy correctly.
@@ -139,11 +139,11 @@ Comments start with `/*` and end with `*/`. They are used to add comments to the
 <div class="box">
     <details>
         <summary>
+            <img src="../../../../icons/exclamation.png" alt="">
             <div>
                 <strong class="warning">Warning:</strong>
                 Comments in JSON
             </div>
-            <img src="../../../../icons/exclamation.png" alt="">
         </summary>
         <div>
             Comments are not supported by JSON. The YAPIONParser does not parse comments by default.
@@ -154,16 +154,16 @@ Comments start with `/*` and end with `*/`. They are used to add comments to the
 ## Values
 Values start with `(` and end with `)`. They are used to identify a value in the YAPION hierarchy.
 
-// TODO: Finish this section
+// TODO: Finish this section with examples and code as well as array examples
 
 <div class="box">
     <details>
         <summary>
+            <img src="../../../../icons/exclamation.png" alt="">
             <div>
                 <strong class="warning">Warning:</strong>
                 YAPIONValue: Changes from Object and Map to Array
             </div>
-            <img src="../../../../icons/exclamation.png" alt="">
         </summary>
         <div>
             YAPIONValues are defined differently inside of Arrays!
