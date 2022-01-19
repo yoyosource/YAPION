@@ -38,14 +38,14 @@ public class SerializationMutationContext {
         return new SerializationMutationContext(fieldName, value);
     }
 
-    public <T extends Object> SerializationMutationContext valueMutator(Class<T> clazz, Consumer<T> valueMutator) {
+    public <T> SerializationMutationContext valueMutator(Class<T> clazz, Consumer<T> valueMutator) {
         return valueMutator(clazz, t -> {
             valueMutator.accept(t);
             return t;
         });
     }
 
-    public <T extends Object> SerializationMutationContext valueMutator(Class<T> clazz, Function<T, Object> valueMutator) {
+    public <T> SerializationMutationContext valueMutator(Class<T> clazz, Function<T, Object> valueMutator) {
         if (value == null) return this;
         if (clazz.isInstance(value)) {
             Object o = valueMutator.apply(clazz.cast(value));
