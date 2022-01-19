@@ -18,7 +18,6 @@ import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.types.*;
-import yapion.serializing.data.DeserializationMutationContext;
 import yapion.serializing.data.SerializationContext;
 import yapion.serializing.data.SerializationMutationContext;
 import yapion.serializing.data.SerializeData;
@@ -29,7 +28,6 @@ import yapion.utils.MethodReturnValue;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
-import java.rmi.ServerError;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -181,7 +179,17 @@ public final class YAPIONSerializer {
 
         boolean saveWithoutAnnotation = serializer != null && serializer.saveWithoutAnnotation();
         if (!contextManager.is(object).save && !saveWithoutAnnotation) {
-            throw new YAPIONSerializerException("No suitable serializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
+            if (yapionFlags.isSet(YAPIONFlag.CLASSES_WITHOUT_ANNOTATION_EXCEPTION)) {
+                throw new YAPIONSerializerException("No suitable serializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
+            }
+            if (yapionFlags.isSet(YAPIONFlag.CLASSES_WITHOUT_ANNOTATION_AS_NULL)) {
+                result = new YAPIONValue<>(null);
+                return this;
+            }
+            if (!yapionFlags.isSet(YAPIONFlag.CLASSES_SAVE_WITHOUT_ANNOTATION)) {
+                throw new YAPIONSerializerException("No suitable serializer found, maybe class (" + object.getClass().getTypeName() + ") is missing YAPION annotations");
+            }
+            saveWithoutAnnotation = true;
         }
 
         YAPIONObject yapionObject = (YAPIONObject) result;

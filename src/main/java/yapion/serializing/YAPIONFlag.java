@@ -15,6 +15,8 @@ package yapion.serializing;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import yapion.annotations.object.YAPIONData;
+import yapion.annotations.object.YAPIONObjenesis;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -29,6 +31,26 @@ import java.util.Map;
 public final class YAPIONFlag {
 
     static final Map<String, YAPIONFlag> YAPION_FLAG_KEYS = new HashMap<>();
+
+    /**
+     * The key is used to specify what should happen if a class without annotations is found, either it throws an exception {@code true} or it is ignored {@code false}.
+     */
+    public static final YAPIONFlag CLASSES_WITHOUT_ANNOTATION_EXCEPTION = new YAPIONFlag("base.classes.without.annotation.exception").setFlagDefault(true);
+
+    /**
+     * The key is used to specify what should happen if a class without annotations is found, either it is serializes or deserialized as {@code null} or it is ignored {@code false}.
+     */
+    public static final YAPIONFlag CLASSES_WITHOUT_ANNOTATION_AS_NULL = new YAPIONFlag("base.classes.without.annotation.as.null").setFlagDefault(false);
+
+    /**
+     * The key is used to specify what should happen if a class without annotations is found, either just save it as it has a {@link YAPIONData} annotation {@code true} or it is ignored {@code false}.
+     */
+    public static final YAPIONFlag CLASSES_SAVE_WITHOUT_ANNOTATION = new YAPIONFlag("base.classes.save.without.annotation").setFlagDefault(false);
+
+    /**
+     * The key is used to specify what should happen if a class without annotations is found, either just load it as it has a {@link YAPIONData} annotation and {@link YAPIONObjenesis} {@code true} or it is ignored {@code false}.
+     */
+    public static final YAPIONFlag CLASSES_LOAD_WITHOUT_ANNOTATION = new YAPIONFlag("base.classes.load.without.annotation").setFlagDefault(false);
 
     /**
      * The key is used to specify if data loss should be handled silently {@code false} or should throw an exception {@code true}.

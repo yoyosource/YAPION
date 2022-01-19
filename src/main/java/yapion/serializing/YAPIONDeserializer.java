@@ -28,8 +28,8 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.DeserializationContext;
-import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.DeserializationMutationContext;
+import yapion.serializing.data.DeserializeData;
 import yapion.serializing.views.Mutator;
 import yapion.serializing.views.View;
 import yapion.utils.ClassUtils;
@@ -37,9 +37,6 @@ import yapion.utils.MethodReturnValue;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -251,7 +248,18 @@ public final class YAPIONDeserializer {
         boolean createWithObjenesis = serializer != null && serializer.createWithObjenesis();
 
         if (!contextManager.is(clazz).load && !loadWithoutAnnotation) {
-            throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
+            if (yapionFlags.isSet(YAPIONFlag.CLASSES_WITHOUT_ANNOTATION_EXCEPTION)) {
+                throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
+            }
+            if (yapionFlags.isSet(YAPIONFlag.CLASSES_WITHOUT_ANNOTATION_AS_NULL)) {
+                object = null;
+                return this;
+            }
+            if (!yapionFlags.isSet(YAPIONFlag.CLASSES_LOAD_WITHOUT_ANNOTATION)) {
+                throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
+            }
+            loadWithoutAnnotation = true;
+            createWithObjenesis = true;
         }
         if (serializer == null || serializer.finished() || serializer.empty()) {
             try {
