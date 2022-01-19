@@ -13,12 +13,17 @@
 
 package yapion.serializing.views;
 
+import yapion.serializing.data.DeserializationMutationContext;
+import yapion.serializing.data.SerializationContext;
+
 /**
- * A mutator is used to change the value of a serialized object while deserializing.
- * The mutator itself is only called when the view allows it. That is why a Mutator is a special {@link View}.
+ * A mutator is used to change a value of a serialized object while deserializing or change it while serializing.
+ * THe mutator itself is only called when the view allows it. That is why a Mutator is a special {@link View}.
  * To create a mutation you need to create a method inside your mutator class that has the name of the field to mutate,
- * has a {@link yapion.serializing.data.MutationContext} as parameter and either return {@code void} or another {@link yapion.serializing.data.MutationContext}.
- * When you want to change the field into which the value should be written the returned field should be inside the {@link View} constraints, otherwise nothing will be deserialized.
+ * has a {@link DeserializationMutationContext} as parameter and either return {@code void} or another {@link DeserializationMutationContext}
+ * for deserialization Mutation. Use {@link SerializationContext} as parameter for a mutation applied during serialization.
+ * Methods with that parameter can return {@code void} or a {@link SerializationContext}.
+ * When you want to change the field while deserialization the new field should be inside the {@link View} constraints used for deserialization.
  */
 public interface Mutator extends View {
 }

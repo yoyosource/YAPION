@@ -29,7 +29,7 @@ import yapion.hierarchy.types.YAPIONPointer;
 import yapion.hierarchy.types.YAPIONValue;
 import yapion.serializing.data.DeserializationContext;
 import yapion.serializing.data.DeserializeData;
-import yapion.serializing.data.MutationContext;
+import yapion.serializing.data.DeserializationMutationContext;
 import yapion.serializing.views.Mutator;
 import yapion.serializing.views.View;
 import yapion.utils.ClassUtils;
@@ -261,24 +261,7 @@ public final class YAPIONDeserializer {
             }
         }
         Class<? extends Mutator> mutatorClass = contextManager.getMutator(clazz);
-        Object mutator = null;
-        Map<String, Method> mutatorMethods = new HashMap<>();
-        if (mutatorClass != null) {
-            mutator = ReflectionsUtils.constructObjectObjenesis(mutatorClass);
-            for (Method method : mutatorClass.getDeclaredMethods()) {
-                if (method.getReturnType() != MutationContext.class && method.getReturnType() != void.class) {
-                    continue;
-                }
-                Parameter[] parameters = method.getParameters();
-                if (parameters.length != 1) {
-                    continue;
-                }
-                if (parameters[0].getType() != MutationContext.class) {
-                    continue;
-                }
-                mutatorMethods.put(method.getName(), method);
-            }
-        }
+        MutationManager mutationManager = new MutationManager(mutatorClass, DeserializationMutationContext.class);
 
         DeserializationContext deserializationContext = new DeserializationContext(this, yapionObject);
         MethodManager.preDeserializationStep(object, object.getClass(), contextManager, deserializationContext);
@@ -287,19 +270,18 @@ public final class YAPIONDeserializer {
         for (String fieldName : yapionObject.getKeys()) {
             if (fieldName.equals(TYPE_IDENTIFIER)) continue;
 
-            Method mutatorMethod = mutatorMethods.get(fieldName);
             YAPIONAnyType yapionAnyType = yapionObject.getAnyType(fieldName);
-            if (mutatorMethod != null) {
-                MutationContext mutationContext = new MutationContext(fieldName, yapionAnyType.internalCopy());
-                MethodReturnValue<Object> methodReturnValue = ReflectionsUtils.invokeMethodObjectSystem(mutatorMethod, mutator, mutationContext);
+            if (mutationManager.hasMutation(fieldName)) {
+                DeserializationMutationContext deserializationMutationContext = new DeserializationMutationContext(fieldName, yapionAnyType.internalCopy());
+                MethodReturnValue<Object> methodReturnValue = mutationManager.mutate(fieldName, deserializationMutationContext);
                 if (methodReturnValue.isPresent()) {
-                    mutationContext = (MutationContext) methodReturnValue.get();
+                    deserializationMutationContext = (DeserializationMutationContext) methodReturnValue.get();
                 }
-                if (mutationContext.fieldName == null) {
+                if (deserializationMutationContext.fieldName == null) {
                     continue;
                 }
-                fieldName = mutationContext.fieldName;
-                yapionAnyType = mutationContext.value;
+                fieldName = deserializationMutationContext.fieldName;
+                yapionAnyType = deserializationMutationContext.value;
             }
 
             Field field = ReflectionsUtils.getField(clazz, fieldName);

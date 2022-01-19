@@ -18,13 +18,18 @@ import yapion.exceptions.serializing.YAPIONSerializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.types.*;
+import yapion.serializing.data.DeserializationMutationContext;
 import yapion.serializing.data.SerializationContext;
+import yapion.serializing.data.SerializationMutationContext;
 import yapion.serializing.data.SerializeData;
+import yapion.serializing.views.Mutator;
 import yapion.serializing.views.View;
 import yapion.utils.ClassUtils;
+import yapion.utils.MethodReturnValue;
 import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
+import java.rmi.ServerError;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -186,6 +191,9 @@ public final class YAPIONSerializer {
         if (serializer == null || serializer.empty()) {
             yapionObject.add(TYPE_IDENTIFIER, new YAPIONValue<>(object.getClass().getTypeName()));
         }
+        Class<? extends Mutator> mutatorClass = contextManager.getMutator(type);
+        MutationManager mutationManager = new MutationManager(mutatorClass, SerializationMutationContext.class);
+
         SerializationContext serializationContext = new SerializationContext(this, yapionObject);
         MethodManager.preSerializationStep(object, object.getClass(), contextManager, serializationContext);
 
@@ -201,6 +209,23 @@ public final class YAPIONSerializer {
 
             String name = field.getName();
             Object fieldObject = SerializeManager.getReflectionStrategy().get(field, object);
+
+            if (mutationManager.hasMutation(name)) {
+                SerializationMutationContext serializationMutationContext = new SerializationMutationContext(name, fieldObject);
+                MethodReturnValue<Object> methodReturnValue = mutationManager.mutate(name, serializationMutationContext);
+                if (methodReturnValue.isPresent()) {
+                    serializationMutationContext = (SerializationMutationContext) methodReturnValue.get();
+                }
+                if (serializationMutationContext.fieldName == null) {
+                    continue;
+                }
+                name = serializationMutationContext.fieldName;
+                fieldObject = serializationMutationContext.value;
+            }
+            if (name == null) {
+                continue;
+            }
+
             if (fieldObject == null) {
                 if (!yapionInfo.optimize) {
                     yapionObject.add(name, new YAPIONValue<>(null));

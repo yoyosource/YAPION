@@ -22,30 +22,30 @@ import java.util.function.Function;
 
 @AllArgsConstructor
 @ToString
-public class MutationContext {
+public class DeserializationMutationContext {
     public final String fieldName;
     public final YAPIONAnyType value;
 
-    public MutationContext ignore() {
-        return new MutationContext(null, null);
+    public DeserializationMutationContext ignore() {
+        return new DeserializationMutationContext(null, null);
     }
 
-    public MutationContext withFieldName(String fieldName) {
-        return new MutationContext(fieldName, value);
+    public DeserializationMutationContext withFieldName(String fieldName) {
+        return new DeserializationMutationContext(fieldName, value);
     }
 
-    public MutationContext withValue(YAPIONAnyType value) {
-        return new MutationContext(fieldName, value);
+    public DeserializationMutationContext withValue(YAPIONAnyType value) {
+        return new DeserializationMutationContext(fieldName, value);
     }
 
-    public <T extends YAPIONAnyType> MutationContext valueMutator(Class<T> clazz, Consumer<T> valueMutator) {
+    public <T extends YAPIONAnyType> DeserializationMutationContext valueMutator(Class<T> clazz, Consumer<T> valueMutator) {
         return valueMutator(clazz, t -> {
             valueMutator.accept(t);
             return t;
         });
     }
 
-    public <T extends YAPIONAnyType> MutationContext valueMutator(Class<T> clazz, Function<T, YAPIONAnyType> valueMutator) {
+    public <T extends YAPIONAnyType> DeserializationMutationContext valueMutator(Class<T> clazz, Function<T, YAPIONAnyType> valueMutator) {
         if (value == null) return this;
         if (clazz.isInstance(value)) {
             YAPIONAnyType yapionAnyType = valueMutator.apply(clazz.cast(value));
