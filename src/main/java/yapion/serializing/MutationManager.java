@@ -25,16 +25,10 @@ import java.util.Map;
 
 public class MutationManager {
 
-    private Class<? extends Mutator> mutatorClass;
-    private Class<?> mutationType;
-
     private Object mutator;
     private Map<String, Method> mutatorMethods = new HashMap<>();
 
     MutationManager(Class<? extends Mutator> mutatorClass, Class<?> mutationType) {
-        this.mutatorClass = mutatorClass;
-        this.mutationType = mutationType;
-
         if (mutatorClass != null) {
             mutator = ReflectionsUtils.constructObjectObjenesis(mutatorClass);
             for (Method method : mutatorClass.getDeclaredMethods()) {
