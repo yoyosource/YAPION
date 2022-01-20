@@ -259,7 +259,9 @@ public final class YAPIONDeserializer {
                 throw new YAPIONDeserializerException("No suitable deserializer found, maybe class (" + type + ") is missing YAPION annotations");
             }
             loadWithoutAnnotation = true;
-            createWithObjenesis = true;
+            if (yapionFlags.isSet(YAPIONFlag.CLASSES_INSTANCE_WITH_OBJENESIS_ANNOTATION)) {
+                createWithObjenesis = true;
+            }
         }
         if (serializer == null || serializer.finished() || serializer.empty()) {
             try {

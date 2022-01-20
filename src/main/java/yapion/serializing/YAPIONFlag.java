@@ -48,9 +48,14 @@ public final class YAPIONFlag {
     public static final YAPIONFlag CLASSES_SAVE_WITHOUT_ANNOTATION = new YAPIONFlag("base.classes.save.without.annotation").setFlagDefault(false);
 
     /**
-     * The key is used to specify what should happen if a class without annotations is found, either just load it as it has a {@link YAPIONData} annotation and {@link YAPIONObjenesis} {@code true} or it is ignored {@code false}.
+     * The key is used to specify what should happen if a class without annotations is found, either just load it as it has a {@link YAPIONData} annotation {@code true} or it is ignored {@code false}.
      */
     public static final YAPIONFlag CLASSES_LOAD_WITHOUT_ANNOTATION = new YAPIONFlag("base.classes.load.without.annotation").setFlagDefault(false);
+
+    /**
+     * The key is used to specify what should happen if a class without annotations is found, either just load it as it has a {@link YAPIONObjenesis} annotation {@code true} or it is ignored {@code false}.
+     */
+    public static final YAPIONFlag CLASSES_INSTANCE_WITH_OBJENESIS_ANNOTATION = new YAPIONFlag("base.classes.instance.with.objenesis.annotation").setFlagDefault(false);
 
     /**
      * The key is used to specify if data loss should be handled silently {@code false} or should throw an exception {@code true}.
