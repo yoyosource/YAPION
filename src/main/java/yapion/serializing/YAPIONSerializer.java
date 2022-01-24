@@ -236,13 +236,13 @@ public final class YAPIONSerializer {
 
             if (fieldObject == null) {
                 if (!yapionInfo.optimize) {
-                    yapionObject.add(name, new YAPIONValue<>(null));
+                    yapionObject.putIfAbsent(name, new YAPIONValue<>(null));
                 }
                 continue;
             }
 
             if (pointerMap.containsKey(fieldObject)) {
-                yapionObject.add(name, pointerMap.get(fieldObject));
+                yapionObject.putIfAbsent(name, pointerMap.get(fieldObject));
                 continue;
             }
 
@@ -253,7 +253,7 @@ public final class YAPIONSerializer {
             if (yapionAnyType.getType() == YAPIONType.OBJECT) {
                 pointerMap.put(fieldObject, new YAPIONPointer((YAPIONObject) yapionAnyType));
             }
-            yapionObject.add(name, yapionAnyType);
+            yapionObject.putIfAbsent(name, yapionAnyType);
         }
         MethodManager.postSerializationStep(object, object.getClass(), contextManager, serializationContext);
         return this;

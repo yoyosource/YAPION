@@ -31,31 +31,43 @@ public interface AdvancedOperations<I, K> extends InternalAdd<I, K>, InternalRet
 
     I itself();
 
-    @SuppressWarnings("unchecked")
     @OptionalAPI
-    default <T extends YAPIONAnyType> T addIfAbsent(@NonNull K key, @NonNull T value) {
-        if (internalContainsKey(key, YAPIONType.ANY)) {
-            return (T) internalGetAnyType(key);
+    default <T extends YAPIONAnyType> I addIfAbsent(@NonNull K key, @NonNull T value) {
+        if (!internalContainsKey(key, YAPIONType.ANY)) {
+            internalAdd(key, value);
         }
-        return getOrSetDefault(key, value);
+        return itself();
     }
 
-    @SuppressWarnings("unchecked")
     @OptionalAPI
-    default <T extends YAPIONAnyType> T addIfAbsent(@NonNull K key, @NonNull YAPIONType yapionType, @NonNull T value) {
-        if (internalContainsKey(key, yapionType)) {
-            return (T) internalGetAnyType(key);
-        }
-        return getOrSetDefault(key, value);
+    default <T extends YAPIONAnyType> I putIfAbsent(@NonNull K key, @NonNull T value) {
+        return addIfAbsent(key, value);
     }
 
-    @SuppressWarnings("unchecked")
     @OptionalAPI
-    default <@YAPIONPrimitive T> YAPIONValue<T> addIfAbsent(@NonNull K key, @NonNull Class<T> type, @NonNull T value) {
-        if (internalContainsKey(key, YAPIONType.VALUE)) {
-            return (YAPIONValue<T>) internalGetAnyType(key);
+    default <T extends YAPIONAnyType> I addIfAbsent(@NonNull K key, @NonNull YAPIONType yapionType, @NonNull T value) {
+        if (!internalContainsKey(key, yapionType)) {
+            internalAdd(key, value);
         }
-        return getOrSetDefault(key, new YAPIONValue<>(value));
+        return itself();
+    }
+
+    @OptionalAPI
+    default <T extends YAPIONAnyType> I putIfAbsent(@NonNull K key, @NonNull YAPIONType yapionType, @NonNull T value) {
+        return addIfAbsent(key, yapionType, value);
+    }
+
+    @OptionalAPI
+    default <@YAPIONPrimitive T> I addIfAbsent(@NonNull K key, @NonNull Class<T> type, @NonNull T value) {
+        if (!internalContainsKey(key, type)) {
+            internalAdd(key, new YAPIONValue<>(value));
+        }
+        return itself();
+    }
+
+    @OptionalAPI
+    default <@YAPIONPrimitive T> I putIfAbsent(@NonNull K key, @NonNull Class<T> type, @NonNull T value) {
+        return addIfAbsent(key, type, value);
     }
 
     @SuppressWarnings("unchecked")
