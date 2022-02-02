@@ -13,6 +13,7 @@
 
 package yapion.parser;
 
+import yapion.hierarchy.output.SystemOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.options.ParseOptions;
 
@@ -35,6 +36,21 @@ public class Test {
                       Hello World,
                     ]
                     """);
+            System.out.println(yapionObject);
+        }
+        {
+            YAPIONObject yapionObject = YAPIONParser.parse(
+                    """
+                    <
+                      (Hello World):(Hello World)
+                      /*Hello World*/
+                      {}:(Test)
+                      []:->0000000000000000
+                      <>:{}
+                    >
+                    """,
+                    new ParseOptions().commentParsing(CommentParsing.KEEP)
+            );
             System.out.println(yapionObject);
         }
         {

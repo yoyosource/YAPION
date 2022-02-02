@@ -229,16 +229,6 @@ Example:
 ```
 ->1234567890ABCDEF
 ```
-This is parsed to with implicit YAPIONObject surrounding it:
-```
-{->1234567890ABCDEF}
-```
-This can also be written in prettified form like:
-```
-{
-  ->1234567890ABCDEF
-}
-```
 
 ## Comments
 Comments are started with '/\*' and end with '\*/'. They can be on their own line or on the same line as the YAPION type. They can be in between the key from a YAPIONObject or at the start of any Object or end.

@@ -26,8 +26,6 @@ import yapion.utils.ReferenceIDUtils;
 import java.util.Objects;
 import java.util.Optional;
 
-import static yapion.utils.IdentifierUtils.POINTER_IDENTIFIER;
-
 public class YAPIONPointer extends YAPIONValueType<YAPIONPointer> {
 
     private long pointerID;
@@ -58,6 +56,7 @@ public class YAPIONPointer extends YAPIONValueType<YAPIONPointer> {
 
     @Override
     public long referenceValue(@NonNull ReferenceFunction referenceFunction) {
+        this.referenceFunction = referenceFunction;
         return getType().getReferenceValue();
     }
 
