@@ -317,6 +317,11 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
         return Optional.of(new YAPIONSearchResult<>(getAnyType(key)));
     }
 
+    @Override
+    public Optional<YAPIONObject> asObject() {
+        return Optional.of(this);
+    }
+
     /**
      * Modifying this is an unsafe operation. When you edit this you are on your own!
      *

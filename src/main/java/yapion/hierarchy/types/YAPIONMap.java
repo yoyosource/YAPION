@@ -33,8 +33,6 @@ import yapion.utils.ReferenceFunction;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static yapion.utils.IdentifierUtils.MAP_IDENTIFIER;
-
 public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implements MapAdd<YAPIONMap, YAPIONAnyType>, MapRemove<YAPIONMap, YAPIONAnyType>, MapRetrieve<YAPIONAnyType> {
 
     private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
@@ -379,6 +377,11 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
                 return Optional.of(new YAPIONSearchResult<>(entry.getValue()));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<YAPIONMap> asMap() {
+        return Optional.of(this);
     }
 
     /**

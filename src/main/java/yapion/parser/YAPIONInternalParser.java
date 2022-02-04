@@ -99,6 +99,9 @@ final class YAPIONInternalParser {
 
     Map<CallbackType<?>, ParseCallback<?>> parseCallbackMap = new HashMap<>();
 
+    // YAPIONArray
+    private boolean typeClosedInArray = false;
+
     void setReferenceFunction(ReferenceFunction referenceFunction) {
         this.referenceFunction = referenceFunction;
     }
@@ -196,7 +199,7 @@ final class YAPIONInternalParser {
             log.debug("pFinish  [init]");
             Map<Long, YAPIONDataType<?, ?>> yapionDataTypeHashMap = new HashMap<>();
             for (YAPIONDataType<?, ?> yapionDataType : yapionDataTypes) {
-                yapionDataTypeHashMap.put(new YAPIONPointer(yapionDataType).getPointerID(), yapionDataType);
+                yapionDataTypeHashMap.put(new YAPIONPointer(yapionDataType, referenceFunction).getPointerID(), yapionDataType);
             }
             log.debug("pFinish  [setPointer]");
             for (YAPIONPointer yapionPointer : yapionPointerList) {
@@ -228,6 +231,7 @@ final class YAPIONInternalParser {
     private void pop(YAPIONType yapionType) {
         log.debug("pop      [{}]", yapionType);
         typeStack.pop(yapionType);
+        typeClosedInArray = true;
         if (yapionType == YAPIONType.OBJECT || yapionType == YAPIONType.ARRAY || yapionType == YAPIONType.MAP) {
             addComments(currentObject, true);
         }
@@ -615,6 +619,7 @@ final class YAPIONInternalParser {
         if (current.length() == 16) {
             pop(YAPIONType.POINTER);
             YAPIONPointer yapionPointer = new YAPIONPointer(stringBuilderToUTF8String(current));
+            yapionPointer.referenceValue(referenceFunction);
             ParseCallback<YAPIONPointer> callback = (ParseCallback<YAPIONPointer>) parseCallbackMap.get(CallbackType.POINTER);
             if (callback != null) {
                 CallbackResult callbackResult = callback.onParse(key, yapionPointer);
@@ -699,21 +704,32 @@ final class YAPIONInternalParser {
                 add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             }
             if (c == ',') {
+                typeClosedInArray = false;
                 current = new StringBuilder();
                 valueHandlerList.clear();
                 valueHandlerList.addAll(YAPIONValue.allValueHandlers());
                 return;
             }
+            typeClosedInArray = false;
             parseEndArray();
             return;
         }
         if (!lastCharEscaped && current.length() == 0 && everyType(c, lastChar)) {
+            if (typeClosedInArray) {
+                throw new YAPIONParserException("Invalid array syntax: " + c);
+            }
             return;
         }
         if (!lastCharEscaped && current.length() == 1 && (lastChar == '-' || lastChar == '/') && everyType(c, lastChar)) {
+            if (typeClosedInArray) {
+                throw new YAPIONParserException("Invalid array syntax: " + c);
+            }
             return;
         }
         if (current.length() == 0 && isWhiteSpace(c) && !escaped) {
+            if (typeClosedInArray) {
+                throw new YAPIONParserException("Invalid array syntax: " + c);
+            }
             return;
         }
         parseValue(c, lastChar);

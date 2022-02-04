@@ -108,6 +108,11 @@ public class YAPIONPointer extends YAPIONValueType<YAPIONPointer> {
     }
 
     @Override
+    public Optional<YAPIONPointer> asPointer() {
+        return Optional.of(this);
+    }
+
+    @Override
     public String toString() {
         StringOutput stringOutput = new StringOutput();
         toYAPION(stringOutput);

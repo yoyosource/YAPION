@@ -16,10 +16,7 @@ package yapion.hierarchy.api.groups;
 import lombok.NonNull;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.YAPIONException;
-import yapion.hierarchy.api.ObjectOutput;
-import yapion.hierarchy.api.ObjectPath;
-import yapion.hierarchy.api.ObjectSearch;
-import yapion.hierarchy.api.ObjectType;
+import yapion.hierarchy.api.*;
 import yapion.hierarchy.api.storage.Comments;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
@@ -37,7 +34,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @InternalAPI
-public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectType, ObjectOutput, Comments {
+public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectType, ObjectOutput, Comments, TypeConversion {
 
     // Reference Value System
     private AtomicReference<Long> referenceValue = new AtomicReference<>(null);

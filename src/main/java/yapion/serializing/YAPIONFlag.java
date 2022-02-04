@@ -98,7 +98,7 @@ public final class YAPIONFlag {
     public static final YAPIONFlag ERROR_EXCEPTION = new YAPIONFlag("base.error.exception").setFlagDefault(false);
 
     /**
-     * The key is used to specify if a Reflection should be serialized {@code false} or should result in an thrown exception {@code true}.
+     * The key is used to specify if a Reflection should be serialized {@code false} or should result in a thrown exception {@code true}.
      */
     public static final YAPIONFlag REFLECTION_EXCEPTION = new YAPIONFlag("base.reflection.exception").setFlagDefault(true);
 
@@ -111,6 +111,8 @@ public final class YAPIONFlag {
      * The key is used to specify a Class should serialize its byteCode {@code true} or not {@code false}.
      */
     public static final YAPIONFlag CLASS_INJECTION = new YAPIONFlag("base.reflection.class.injection").setFlagDefault(false);
+
+    public static final YAPIONFlag FILE_CREATIONG = new YAPIONFlag("base.file.create").setFlagDefault(false);
 
     @Getter
     private final String keyName;

@@ -409,6 +409,11 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         }
     }
 
+    @Override
+    public Optional<YAPIONArray> asArray() {
+        return Optional.of(this);
+    }
+
     /**
      * Modifying this is an unsafe operation. When you edit this you are on your own!
      *

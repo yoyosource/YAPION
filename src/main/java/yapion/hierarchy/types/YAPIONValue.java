@@ -15,6 +15,7 @@ package yapion.hierarchy.types;
 
 import lombok.Getter;
 import yapion.exceptions.YAPIONException;
+import yapion.hierarchy.api.ValueTypeConversion;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
@@ -25,10 +26,13 @@ import yapion.hierarchy.types.value.ValueHandlerUtils;
 import yapion.utils.MethodReturnValue;
 import yapion.utils.ReferenceFunction;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
-public class YAPIONValue<T> extends YAPIONValueType<YAPIONValue<T>> {
+public class YAPIONValue<T> extends YAPIONValueType<YAPIONValue<T>> implements ValueTypeConversion {
 
     public static List<ValueHandler<?>> allValueHandlers() {
         return ValueHandlerUtils.allValueHandlers();
@@ -152,6 +156,110 @@ public class YAPIONValue<T> extends YAPIONValueType<YAPIONValue<T>> {
     @Override
     public YAPIONValue<T> itself() {
         return this;
+    }
+
+    @Override
+    public Optional<YAPIONValue<?>> asValue() {
+        return Optional.of(this);
+    }
+
+    @Override
+    public Optional<String> asString() {
+        if (isValidCastType(String.class)) {
+            return Optional.of(value != null ? value.toString() : "null");
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Character> asCharacter() {
+        if (isValidCastType(Character.class)) {
+            return Optional.of(value != null ? (Character) value : '\0');
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Boolean> asBoolean() {
+        if (isValidCastType(Boolean.class)) {
+            return Optional.of(value != null ? (Boolean) value : false);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Byte> asByte() {
+        if (isValidCastType(Byte.class)) {
+            return Optional.of(value != null ? (Byte) value : (byte) 0);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Short> asShort() {
+        if (isValidCastType(Short.class)) {
+            return Optional.of(value != null ? (Short) value : (short) 0);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Integer> asInteger() {
+        if (isValidCastType(Integer.class)) {
+            return Optional.of(value != null ? (Integer) value : 0);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Long> asLong() {
+        if (isValidCastType(Long.class)) {
+            return Optional.of(value != null ? (Long) value : 0L);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<BigInteger> asBigInteger() {
+        if (isValidCastType(BigInteger.class)) {
+            return Optional.of(value != null ? (BigInteger) value : BigInteger.ZERO);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Float> asFloat() {
+        if (isValidCastType(Float.class)) {
+            return Optional.of(value != null ? (Float) value : 0f);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Double> asDouble() {
+        if (isValidCastType(Double.class)) {
+            return Optional.of(value != null ? (Double) value : 0d);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<BigDecimal> asBigDecimal() {
+        if (isValidCastType(BigDecimal.class)) {
+            return Optional.of(value != null ? (BigDecimal) value : BigDecimal.ZERO);
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override

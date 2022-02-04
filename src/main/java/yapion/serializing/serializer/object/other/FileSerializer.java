@@ -14,8 +14,10 @@
 package yapion.serializing.serializer.object.other;
 
 import yapion.annotations.api.SerializerImplementation;
+import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.YAPIONFlag;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
@@ -34,13 +36,29 @@ public class FileSerializer implements FinalInternalSerializer<File> {
     public YAPIONAnyType serialize(SerializeData<File> serializeData) {
         YAPIONObject yapionObject = new YAPIONObject(type());
         yapionObject.add("path", serializeData.object.getPath());
+        yapionObject.add("directory", serializeData.object.isDirectory());
         return yapionObject;
     }
 
     @Override
     public File deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
-        return new File(yapionObject.getValue("path", "").get());
+        File file = new File(yapionObject.getString("path"));
+        if (file.exists()) {
+            return file;
+        }
+        deserializeData.isSet(YAPIONFlag.FILE_CREATIONG, () -> {
+            if (yapionObject.getBooleanOrDefault("directory", false)) {
+                file.mkdirs();
+            } else {
+                file.getParentFile().mkdirs();
+                try {
+                    file.createNewFile();
+                } catch (Exception e) {
+                    throw new YAPIONDeserializerException(e.getMessage(), e);
+                }
+            }
+        });
+        return file;
     }
-
 }
