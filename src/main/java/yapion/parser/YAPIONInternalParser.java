@@ -715,21 +715,27 @@ final class YAPIONInternalParser {
             return;
         }
         if (!lastCharEscaped && current.length() == 0 && everyType(c, lastChar)) {
+            /*
             if (typeClosedInArray) {
                 throw new YAPIONParserException("Invalid array syntax: " + c);
             }
+             */
             return;
         }
         if (!lastCharEscaped && current.length() == 1 && (lastChar == '-' || lastChar == '/') && everyType(c, lastChar)) {
+            /*
             if (typeClosedInArray) {
                 throw new YAPIONParserException("Invalid array syntax: " + c);
             }
+             */
             return;
         }
         if (current.length() == 0 && isWhiteSpace(c) && !escaped) {
+            /*
             if (typeClosedInArray) {
                 throw new YAPIONParserException("Invalid array syntax: " + c);
             }
+             */
             return;
         }
         parseValue(c, lastChar);
