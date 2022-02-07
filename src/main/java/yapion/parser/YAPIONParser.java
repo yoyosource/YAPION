@@ -22,6 +22,9 @@ import yapion.hierarchy.api.ObjectOutput;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.types.*;
+import yapion.parser.charreader.ASCIIInputStreamCharReader;
+import yapion.parser.charreader.Latin1InputStreamCharReader;
+import yapion.parser.charreader.UTF8InputStreamCharReader;
 import yapion.parser.options.FileOptions;
 import yapion.parser.options.ParseOptions;
 import yapion.parser.options.StreamOptions;
@@ -494,8 +497,7 @@ public final class YAPIONParser {
      * @param streamOptions the parse options
      */
     public YAPIONParser(@NonNull byte[] bytes, StreamOptions streamOptions) {
-        charReader = new InputStreamCharReader(new ByteArrayInputStream(bytes), streamOptions.isStopOnStreamEnd(), streamOptions.getCharset());
-        setupInternalParser(streamOptions);
+        this(new ByteArrayInputStream(bytes), streamOptions);
     }
 
     /**
@@ -554,8 +556,17 @@ public final class YAPIONParser {
                 : new BufferedInputStream(new FileInputStream(file)), fileOptions, true);
     }
 
+    public YAPIONParser(@NonNull CharReader charReader, ParseOptions parseOptions) {
+        this.charReader = charReader;
+        setupInternalParser(parseOptions);
+    }
+
     private YAPIONParser(InputStream inputStream, StreamOptions streamOptions, boolean closeAfterRead) {
-        charReader = new InputStreamCharReader(inputStream, streamOptions.isStopOnStreamEnd(), streamOptions.getCharset());
+        charReader = switch (streamOptions.getCharset()) {
+            case US_ASCII -> new ASCIIInputStreamCharReader(inputStream, streamOptions.isStopOnStreamEnd());
+            case LATIN_1, EXTENDED_US_ASCII -> new Latin1InputStreamCharReader(inputStream, streamOptions.isStopOnStreamEnd());
+            case UTF_8 -> new UTF8InputStreamCharReader(inputStream, streamOptions.isStopOnStreamEnd());
+        };
         if (closeAfterRead) {
             finishRunnable = () -> {
                 try {
@@ -705,7 +716,7 @@ public final class YAPIONParser {
         return st.toString();
     }
 
-    static class ParserSkipException extends RuntimeException {
+    public static class ParserSkipException extends RuntimeException {
     }
 
     /**

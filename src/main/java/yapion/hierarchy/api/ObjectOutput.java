@@ -32,45 +32,20 @@ public interface ObjectOutput {
         return output(abstractOutput, new YAPIONFlavour());
     }
 
-    @SneakyThrows
-    default <T extends AbstractOutput & InstantiableOutput> T toYAPION(Class<T> clazz) {
-        return toYAPION(clazz.getConstructor().newInstance());
-    }
-
     default <T extends AbstractOutput> T toJSON(T abstractOutput) {
         return output(abstractOutput, new YAPIONConvertedJSONFlavour());
-    }
-
-    @SneakyThrows
-    default <T extends AbstractOutput & InstantiableOutput> T toJSON(Class<T> clazz) {
-        return toJSON(clazz.getConstructor().newInstance());
     }
 
     default <T extends AbstractOutput> T toJSONLossy(T abstractOutput) {
         return output(abstractOutput, new JSONFlavour());
     }
 
-    @SneakyThrows
-    default <T extends AbstractOutput & InstantiableOutput> T toJSONLossy(Class<T> clazz) {
-        return toJSONLossy(clazz.getConstructor().newInstance());
-    }
-
     default <T extends AbstractOutput> T toThunderFile(T abstractOutput) {
         return output(abstractOutput, new ThunderFileFlavour());
     }
 
-    @SneakyThrows
-    default <T extends AbstractOutput & InstantiableOutput> T toThunderFile(Class<T> clazz) {
-        return toThunderFile(clazz.getConstructor().newInstance());
-    }
-
     default <T extends AbstractOutput> T toXML(T abstractOutput) {
         return output(abstractOutput, new XMLFlavour());
-    }
-
-    @SneakyThrows
-    default <T extends AbstractOutput & InstantiableOutput> T toXML(Class<T> clazz) {
-        return toXML(clazz.getConstructor().newInstance());
     }
 
     /**

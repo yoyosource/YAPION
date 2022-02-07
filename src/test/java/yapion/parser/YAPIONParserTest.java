@@ -17,6 +17,8 @@ import org.junit.Test;
 import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.*;
+import yapion.parser.charreader.ASCIIInputStreamCharReader;
+import yapion.parser.charreader.UTF8InputStreamCharReader;
 import yapion.parser.options.StreamOptions;
 
 import java.io.*;
@@ -112,7 +114,7 @@ public class YAPIONParserTest {
                                 testCase.lazy = true;
                             }
                         } else if (blockType.contains("O")) {
-                            InputStreamCharReader inputStreamCharReader = new InputStreamCharReader(new ByteArrayInputStream(st.toString().getBytes()), true, InputStreamCharsets.UTF_8);
+                            UTF8InputStreamCharReader inputStreamCharReader = new UTF8InputStreamCharReader(new ByteArrayInputStream(st.toString().getBytes()), true);
                             st = new StringBuilder();
                             while (inputStreamCharReader.hasNext()) {
                                 st.append(inputStreamCharReader.next());

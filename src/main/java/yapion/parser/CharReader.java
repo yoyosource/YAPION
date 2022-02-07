@@ -13,7 +13,7 @@
 
 package yapion.parser;
 
-interface CharReader {
+public interface CharReader {
     char next();
     boolean hasNext();
 }

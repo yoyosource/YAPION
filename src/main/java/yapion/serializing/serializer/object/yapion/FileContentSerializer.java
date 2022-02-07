@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.NoSuchElementException;
 
 @SerializerImplementation(since = "0.26.0")
 public class FileContentSerializer implements FinalInternalSerializer<FileContent> {
@@ -63,7 +64,7 @@ public class FileContentSerializer implements FinalInternalSerializer<FileConten
             YAPIONArray yapionArray = yapionObject.getArray("content");
             try (OutputStream outputStream = fileContent.getOutputStream()) {
                 yapionArray.forEach(yapionAnyType -> {
-                    int value = yapionAnyType.asValue().flatMap(YAPIONValue::asInt).orElseThrow();
+                    int value = yapionAnyType.asValue().flatMap(YAPIONValue::asInt).orElseThrow(NoSuchElementException::new);
                     try {
                         outputStream.write(value);
                     } catch (IOException e) {

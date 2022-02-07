@@ -11,7 +11,11 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.output;
+package yapion.parser.charreader;
 
-public interface InstantiableOutput {
+import java.io.IOException;
+
+@FunctionalInterface
+interface CharSupplier {
+    char read() throws IOException;
 }

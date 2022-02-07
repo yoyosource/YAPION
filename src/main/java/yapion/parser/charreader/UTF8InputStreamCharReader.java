@@ -11,15 +11,17 @@
  * limitations under the License.
  */
 
-package yapion.parser;
+package yapion.parser.charreader;
 
 import lombok.SneakyThrows;
 import yapion.exceptions.utils.YAPIONIOException;
+import yapion.parser.CharReader;
+import yapion.parser.YAPIONParser;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class InputStreamCharReader implements CharReader {
+public class UTF8InputStreamCharReader implements CharReader {
 
     private int available = -1;
     private InputStream inputStream;
@@ -27,50 +29,10 @@ public class InputStreamCharReader implements CharReader {
 
     private CharSupplier reader;
 
-    @FunctionalInterface
-    private interface CharSupplier {
-        char read() throws IOException;
-    }
-
-    public InputStreamCharReader(InputStream inputStream, boolean stopOnStreamEnd, InputStreamCharsets charset) {
+    public UTF8InputStreamCharReader(InputStream inputStream, boolean stopOnStreamEnd) {
         this.inputStream = inputStream;
         this.stopOnStreamEnd = stopOnStreamEnd;
-        if (charset == InputStreamCharsets.US_ASCII) {
-            reader = US_ASCII();
-        } else if (charset == InputStreamCharsets.LATIN_1 || charset == InputStreamCharsets.EXTENDED_US_ASCII) {
-            reader = LATIN_1();
-        } else {
-            reader = UTF_8();
-        }
-    }
-
-    private CharSupplier US_ASCII() {
-        return () -> {
-            int i = inputStream.read();
-            if (i == -1 && !stopOnStreamEnd) {
-                throw new YAPIONParser.ParserSkipException();
-            }
-            available--;
-            if (i > 0x7F) {
-                throw new YAPIONIOException("Unrecognized US-ASCII Sequence");
-            }
-            return (char) i;
-        };
-    }
-
-    private CharSupplier LATIN_1() {
-        return () -> {
-            int i = inputStream.read();
-            if (i == -1 && !stopOnStreamEnd) {
-                throw new YAPIONParser.ParserSkipException();
-            }
-            available--;
-            return (char) i;
-        };
-    }
-
-    private CharSupplier UTF_8() {
-        return () -> {
+        reader = () -> {
             int i = inputStream.read();
             if (i == -1 && !stopOnStreamEnd) {
                 throw new YAPIONParser.ParserSkipException();

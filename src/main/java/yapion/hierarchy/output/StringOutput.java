@@ -13,7 +13,7 @@
 
 package yapion.hierarchy.output;
 
-public class StringOutput extends StringBuilderOutput implements InstantiableOutput {
+public class StringOutput extends StringBuilderOutput {
 
     public StringOutput() {
         super(new StringBuilder());
