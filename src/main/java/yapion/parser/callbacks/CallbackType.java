@@ -17,7 +17,7 @@ import lombok.Getter;
 import yapion.hierarchy.types.*;
 
 @Getter
-public class CallbackType<T> {
+public final class CallbackType<T> {
     public static final CallbackType<YAPIONObject> OBJECT = new CallbackType<>(YAPIONObject.class);
     public static final CallbackType<YAPIONArray> ARRAY = new CallbackType<>(YAPIONArray.class);
     public static final CallbackType<YAPIONMap> MAP = new CallbackType<>(YAPIONMap.class);
