@@ -13,7 +13,6 @@
 
 package yapion.parser;
 
-import yapion.hierarchy.output.SystemOutput;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.parser.options.ParseOptions;
 
@@ -23,32 +22,33 @@ public class Test {
         {
             YAPIONObject yapionObject = YAPIONParser.parse(
                     """
-                    {
-                      Hello(World)
-                    }
-                    """);
+                            {
+                              Hello(World)
+                            }
+                            """);
             System.out.println(yapionObject);
         }
         {
             YAPIONObject yapionObject = YAPIONParser.parse(
                     """
-                    [
-                      Hello World,
-                    ]
-                    """);
+                            [
+                              /*Hello World*/
+                              Hello World,
+                            ]
+                            """, new ParseOptions().commentParsing(CommentParsing.KEEP));
             System.out.println(yapionObject);
         }
         {
             YAPIONObject yapionObject = YAPIONParser.parse(
                     """
-                    <
-                      (Hello World):(Hello World)
-                      /*Hello World*/
-                      {}:(Test)
-                      []:->0000000000000000
-                      <>:{}
-                    >
-                    """,
+                            <
+                              (Hello World):(Hello World)
+                              /*Hello World*/
+                              {}:(Test)
+                              []:->0000000000000000
+                              <>:{}
+                            >
+                            """,
                     new ParseOptions().commentParsing(CommentParsing.KEEP)
             );
             System.out.println(yapionObject);
@@ -56,14 +56,14 @@ public class Test {
         {
             YAPIONObject yapionObject = YAPIONParser.parse(
                     """
-                    <
-                      (Hello World):(Hello World)
-                      /*Hello World*/
-                      {}:(Test)
-                      []:->0000000000000000
-                      <>:{}
-                    >
-                    """,
+                            <
+                              (Hello World):(Hello World)
+                              /*Hello World*/
+                              {}:(Test)
+                              []:->0000000000000000
+                              <>:{}
+                            >
+                            """,
                     new ParseOptions().commentParsing(CommentParsing.KEEP)
             );
             System.out.println(yapionObject);
@@ -72,22 +72,10 @@ public class Test {
             try {
                 YAPIONParser.parse(
                         """
-                        {
-                          Hello(\\u99kk)
-                        }
-                        """);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        {
-            try {
-            YAPIONParser.parse(
-                    """
-                    {
-                      [{},{},{}{}]
-                    }
-                    """);
+                                {
+                                  Hello(\\u99kk)
+                                }
+                                """);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -96,10 +84,22 @@ public class Test {
             try {
                 YAPIONParser.parse(
                         """
-                        {
-                          [[{},{},{}],[]]
-                        }
-                        """);
+                                {
+                                  [{},{},{}{}]
+                                }
+                                """);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            try {
+                YAPIONParser.parse(
+                        """
+                                {
+                                  [[{},{},{}],[]]
+                                }
+                                """);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -133,6 +133,63 @@ public class Test {
                           strings2{@type(java.util.ArrayList)values[Hello World,Hello World1,Hello World2,Hello World3]}
                           strings3{@type(java.util.LinkedList)values[Hello World,Hello World1,Hello World2,Hello World3]}}
                         """);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            try {
+                YAPIONParser.parse("""
+                        {
+                          <::>
+                        }
+                        """);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            try {
+                YAPIONParser.parse("""
+                        {
+                          <()::>
+                        }
+                        """);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            try {
+                YAPIONParser.parse("""
+                        {
+                          <(): :>
+                        }
+                        """);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            try {
+                YAPIONObject yapionObject = YAPIONParser.parse("""
+                        {
+                          <(a):(b)(c):(d)>
+                        }
+                        """);
+                System.out.println(yapionObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            try {
+                YAPIONObject yapionObject = YAPIONParser.parse("""
+                        {
+                          <(a)(b)(c):(d)>
+                        }
+                        """);
+                System.out.println(yapionObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }

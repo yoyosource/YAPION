@@ -366,6 +366,12 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         }
     }
 
+    // Internal method for Parser
+    @InternalAPI
+    public int parsedSize() {
+        return yapionParserMapValues.size();
+    }
+
     public YAPIONAnyType get(@NonNull YAPIONAnyType key) {
         return variables.get(key);
     }

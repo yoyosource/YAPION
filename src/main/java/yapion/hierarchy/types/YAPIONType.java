@@ -59,5 +59,4 @@ public enum YAPIONType {
     public interface TriConsumer<T, R, K> {
         void accept(T t, R r, K k);
     }
-
 }

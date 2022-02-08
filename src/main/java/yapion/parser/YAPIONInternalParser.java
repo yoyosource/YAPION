@@ -35,7 +35,7 @@ final class YAPIONInternalParser {
 
     // Parse steps done
     private long count = 0;
-    private long line = 0;
+    private long line = 1;
     private long column = 0;
 
     // last char
@@ -101,6 +101,9 @@ final class YAPIONInternalParser {
 
     // YAPIONArray
     private boolean typeClosedInArray = false;
+
+    // YAPIONMap
+    private boolean mapHasColon = false;
 
     void setReferenceFunction(ReferenceFunction referenceFunction) {
         this.referenceFunction = referenceFunction;
@@ -660,9 +663,26 @@ final class YAPIONInternalParser {
         if (!allowed) {
             throw new YAPIONParserException("Invalid map char used: " + c);
         }
-        // TODO: Enforce syntax (':' between key value pairs)
-        if (!everyType(c, lastChar) && c == '>') {
+        YAPIONMap currentMap = (YAPIONMap) currentObject;
+        if (everyType(c, lastChar)) {
+            if (typeStack.isNotEmpty() && typeStack.peek() == YAPIONType.COMMENT) {
+                return;
+            }
+            int countDiff = (typeStack.isNotEmpty() && typeStack.peek() == YAPIONType.VALUE) ? 1 : 0;
+            if (!lazy && !mapHasColon && (currentMap.parsedSize() - countDiff) % 2 == 0) {
+                throw new YAPIONParserException("Key does not have a value");
+            }
+            mapHasColon = false;
+        } else if (c == '>') {
+            if (!lazy && mapHasColon) {
+                throw new YAPIONParserException("Key does not have a value");
+            }
             parseEndMap();
+        } else if (c == ':') {
+            if (!lazy && mapHasColon) {
+                throw new YAPIONParserException("Double colon in map");
+            }
+            mapHasColon = true;
         }
     }
 
