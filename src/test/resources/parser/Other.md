@@ -71,7 +71,7 @@ yapion.exceptions.parser.YAPIONParserException
 ```
 
 # Array removed Separator
-```I
+```I lazy
 {[{}{}]}
 ```
 
@@ -80,7 +80,7 @@ yapion.exceptions.parser.YAPIONParserException
 ```
 
 # Array removed Separator 2
-```I
+```I lazy
 {[{}{}HelloWorld,->0000000000000000]}
 ```
 

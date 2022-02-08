@@ -231,7 +231,9 @@ final class YAPIONInternalParser {
     private void pop(YAPIONType yapionType) {
         log.debug("pop      [{}]", yapionType);
         typeStack.pop(yapionType);
-        typeClosedInArray = true;
+        if (!lazy && typeStack.isNotEmpty() && typeStack.peek() == YAPIONType.ARRAY) {
+            typeClosedInArray = true;
+        }
         if (yapionType == YAPIONType.OBJECT || yapionType == YAPIONType.ARRAY || yapionType == YAPIONType.MAP) {
             addComments(currentObject, true);
         }
@@ -697,45 +699,34 @@ final class YAPIONInternalParser {
     }
 
     private void parseArray(char c, char lastChar) {
-        // TODO: Enforce syntax (Commas between elements!!!)
         key = "";
         if (!escaped && (c == ',' || c == ']')) {
             if (current.length() != 0) {
                 add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             }
+            typeClosedInArray = false;
             if (c == ',') {
-                typeClosedInArray = false;
                 current = new StringBuilder();
                 valueHandlerList.clear();
                 valueHandlerList.addAll(YAPIONValue.allValueHandlers());
                 return;
             }
-            typeClosedInArray = false;
             parseEndArray();
             return;
         }
         if (!lastCharEscaped && current.length() == 0 && everyType(c, lastChar)) {
-            /*
             if (typeClosedInArray) {
-                throw new YAPIONParserException("Invalid array syntax: " + c);
+                throw new YAPIONParserException("Invalid array syntax. Started " + typeStack.peek().name() + " without separator");
             }
-             */
             return;
         }
         if (!lastCharEscaped && current.length() == 1 && (lastChar == '-' || lastChar == '/') && everyType(c, lastChar)) {
-            /*
             if (typeClosedInArray) {
-                throw new YAPIONParserException("Invalid array syntax: " + c);
+                throw new YAPIONParserException("Invalid array syntax. Started " + typeStack.peek().name() + " without separator");
             }
-             */
             return;
         }
         if (current.length() == 0 && isWhiteSpace(c) && !escaped) {
-            /*
-            if (typeClosedInArray) {
-                throw new YAPIONParserException("Invalid array syntax: " + c);
-            }
-             */
             return;
         }
         parseValue(c, lastChar);

@@ -81,7 +81,61 @@ public class Test {
             }
         }
         {
-            YAPIONParser.parse("{regions{as41{prototype(as)flagStorage{COLOR(WHITE)}skin(AirShip)}wg12{prototype(wg)flagStorage{COLOR(WHITE)TNT(DENY)}skin(WarGear)}wg11{prototype(wg)flagStorage{}skin(Pro WarGear)}mwg23{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}mwg22{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}ws12{prototype(ws_inner)flagStorage{COLOR(WHITE)}skin(WarShip)}mwg21{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}mwg43{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}ws11{prototype(ws)flagStorage{COLOR(WHITE)}skin(WarShip)}mwg42{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}mwg41{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}ws_rahmen{prototype(ws_rahmen)flagStorage{COLOR(WHITE)TNT(DENY)}skin(WarShip Rahmen)}wg32{prototype(wg)flagStorage{COLOR(WHITE)FREEZE(ACTIVE)}skin(WarGear)}wg31{prototype(wg)flagStorage{COLOR(WHITE)}skin(Prestige WarGear)}as21{prototype(as)flagStorage{COLOR(WHITE)}skin(AirShip)}as42{prototype(as)flagStorage{COLOR(WHITE)}skin(AirShip)}as22{prototype(as)flagStorage{COLOR(WHITE)}skin(AirShip)}wg22{prototype(wg)flagStorage{COLOR(WHITE)FREEZE(ACTIVE)}skin(WarGear)}mwg13{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}mwg12{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}mwg11{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}mwg33{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}mwg32{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}ws22{prototype(ws_inner)flagStorage{COLOR(WHITE)}skin(WarShip)}mwg31{prototype(mwg)flagStorage{COLOR(WHITE)}skin(Steam Cliffs)}mwg53{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}ws21{prototype(ws)flagStorage{COLOR(WHITE)}skin(WarShip)}mwg52{prototype(mwg)flagStorage{COLOR(WHITE)}skin(MiniWarGear)}mwg51{prototype(mwg)flagStorage{COLOR(WHITE)}skin(Nethers-Reichtum)}ws_rumpf{prototype(ws_rumpf)flagStorage{COLOR(WHITE)TNT(DENY)}skin(WarShip Rumpf)}wg21{prototype(wg)flagStorage{COLOR(WHITE)}skin(Nethers-Reichtum)}as32{prototype(as)flagStorage{COLOR(WHITE)}skin(AirShip)}as31{prototype(as)flagStorage{COLOR(WHITE)}skin(AirShip)}as12{prototype(as)flagStorage{COLOR(WHITE)}skin(AirShip)}as11{prototype(as)flagStorage{COLOR(WHITE)}skin(AirShip)}global{flagStorage{TNT(DENY)CHANGED()}skin(null)}}warps{}}").toYAPION(new SystemOutput(true));
+            try {
+            YAPIONParser.parse(
+                    """
+                    {
+                      [{},{},{}{}]
+                    }
+                    """);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            try {
+                YAPIONParser.parse(
+                        """
+                        {
+                          [[{},{},{}],[]]
+                        }
+                        """);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            try {
+                YAPIONParser.parse("""
+                        {
+                          @type(yapion.serializing.YAPIONTestObjects$TestArray)
+                          strings[
+                            Hello World,
+                            null
+                          ]
+                          strings1[
+                            [
+                              Hello World,
+                              null,
+                              null
+                            ],
+                            [
+                              null,
+                              Hello World2,
+                              null
+                            ],
+                            [
+                              null,
+                              null,
+                              Hello World3
+                            ]
+                          ]
+                          strings2{@type(java.util.ArrayList)values[Hello World,Hello World1,Hello World2,Hello World3]}
+                          strings3{@type(java.util.LinkedList)values[Hello World,Hello World1,Hello World2,Hello World3]}}
+                        """);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

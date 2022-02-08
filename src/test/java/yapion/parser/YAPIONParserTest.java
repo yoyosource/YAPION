@@ -19,6 +19,7 @@ import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.types.*;
 import yapion.parser.charreader.ASCIIInputStreamCharReader;
 import yapion.parser.charreader.UTF8InputStreamCharReader;
+import yapion.parser.options.ParseOptions;
 import yapion.parser.options.StreamOptions;
 
 import java.io.*;
@@ -479,13 +480,13 @@ public class YAPIONParserTest {
 
     @Test
     public void testArraySupportWithoutSeparator() {
-        YAPIONObject yapionObject = YAPIONParser.parse("{[{}{}]}");
+        YAPIONObject yapionObject = YAPIONParser.parse("{[{}{}]}", new ParseOptions().lazy(true));
         assertThat(yapionObject, isYAPION("{[{},{}]}"));
     }
 
     @Test
     public void testArrayStringWithoutSeparator() {
-        YAPIONObject yapionObject = YAPIONParser.parse("{[{}{}HelloWorld,->0000000000000000]}");
+        YAPIONObject yapionObject = YAPIONParser.parse("{[{}{}HelloWorld,->0000000000000000]}", new ParseOptions().lazy(true));
         assertThat(yapionObject.getArray("").getAnyType(2), instanceOf(YAPIONValue.class));
         assertThat(yapionObject.getArray("").getAnyType(3), instanceOf(YAPIONPointer.class));
         assertThat(yapionObject.toString(), is("{[{},{},HelloWorld,->0000000000000000]}"));
