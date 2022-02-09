@@ -18,8 +18,8 @@ A Flavour defines the following:
 - YAML
 - TOML??
 - BSON?
-- Hocon?
+- Hocon
 - ini???
-- properties??
+- properties
 
 Everything with a Question mark might not be implemented. The more questions marks there are the more unlikely it is that it will be implemented.
