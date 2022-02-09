@@ -97,7 +97,7 @@ public class ParsingUtils {
         java.util.Map<String, T> map = new java.util.HashMap<>();
         object.allKeys().stream().filter(keys).forEach(s -> {
             try {
-                map.put(s, converter.apply(object.getYAPIONAnyType(s)));
+                map.put(s, converter.apply(object.getAnyType(s)));
             } catch (Exception e) {
                 // Ignored
             }
