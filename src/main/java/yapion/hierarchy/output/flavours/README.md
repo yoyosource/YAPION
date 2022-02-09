@@ -16,10 +16,10 @@ A Flavour defines the following:
 - HJSON
 - XML
 - YAML
-- TOML??
+- TOML?
 - BSON?
 - Hocon
-- ini???
+- ini??
 - properties
 
 Everything with a Question mark might not be implemented. The more questions marks there are the more unlikely it is that it will be implemented.
