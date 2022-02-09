@@ -145,108 +145,22 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
             if (checkValueNeeded) {
                 messager.printMessage(Diagnostic.Kind.NOTE, "Generating checkValue method for " + element.getSimpleName());
-                FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkValue", "<T> void", new ParameterGenerator(YAPIONValue.class.getTypeName() + "<?>", "value"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Supplier.class.getTypeName() + "<T>", "defaultValue"), new ParameterGenerator(Consumer.class.getTypeName() + "<T>", "callback"), new ParameterGenerator(Predicate.class.getTypeName() + "<T>", "checkPredicate"));
-                functionGenerator.add("if (value == null) {");
-                functionGenerator.add("    if (defaultValue != null) {");
-                functionGenerator.add("        callback.accept(defaultValue.get());");
-                functionGenerator.add("        return;");
-                functionGenerator.add("    }");
-                functionGenerator.add("    if (nonNull) {");
-                functionGenerator.add("        throw new yapion.exceptions.YAPIONException(\"Value is not present\");");
-                functionGenerator.add("    } else {");
-                functionGenerator.add("        callback.accept(null);");
-                functionGenerator.add("        return;");
-                functionGenerator.add("    }");
-                functionGenerator.add("}");
-                functionGenerator.add("T t = (T) value.get();");
-                functionGenerator.add("if (t == null) {");
-                functionGenerator.add("    if (defaultValue != null) {");
-                functionGenerator.add("        callback.accept(defaultValue.get());");
-                functionGenerator.add("        return;");
-                functionGenerator.add("    }");
-                functionGenerator.add("    if (nonNull) {");
-                functionGenerator.add("        throw new yapion.exceptions.YAPIONException(\"Value is null\");");
-                functionGenerator.add("    } else {");
-                functionGenerator.add("        callback.accept(null);");
-                functionGenerator.add("        return;");
-                functionGenerator.add("    }");
-                functionGenerator.add("}");
-                functionGenerator.add("if (!checkPredicate.test(t)) {");
-                functionGenerator.add("    if (defaultValue != null) {");
-                functionGenerator.add("        callback.accept(defaultValue.get());");
-                functionGenerator.add("        return;");
-                functionGenerator.add("    }");
-                functionGenerator.add("    throw new yapion.exceptions.YAPIONException(\"Checks failed\");");
-                functionGenerator.add("}");
-                functionGenerator.add("callback.accept(t);");
-                classGenerator.add(functionGenerator);
+                classGenerator.addImport("static yapion.config.annotationproccessing.ParsingUtils.checkValue");
             }
 
             if (checkObjectNeeded) {
                 messager.printMessage(Diagnostic.Kind.NOTE, "Generating checkObject method for " + element.getSimpleName());
-                FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkObject", "<T> void", new ParameterGenerator(YAPIONObject.class.getTypeName(), "object"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator(Function.class.getTypeName() + "<" + YAPIONObject.class.getTypeName() + ", T>", "converter"), new ParameterGenerator(Consumer.class.getTypeName() + "<T>", "callback"));
-                functionGenerator.add("if (object == null) {");
-                functionGenerator.add("    if (nonNull) {");
-                functionGenerator.add("        throw new yapion.exceptions.YAPIONException(\"Object is not present\");");
-                functionGenerator.add("    } else {");
-                functionGenerator.add("        callback.accept(null);");
-                functionGenerator.add("        return;");
-                functionGenerator.add("    }");
-                functionGenerator.add("}");
-                functionGenerator.add("T t = converter.apply(object);");
-                functionGenerator.add("if (t == null && nonNull) {");
-                functionGenerator.add("    throw new yapion.exceptions.YAPIONException(\"Object is null\");");
-                functionGenerator.add("}");
-                functionGenerator.add("callback.accept(t);");
-                classGenerator.add(functionGenerator);
+                classGenerator.addImport("static yapion.config.annotationproccessing.ParsingUtils.checkObject");
             }
 
             if (checkArrayNeeded) {
                 messager.printMessage(Diagnostic.Kind.NOTE, "Generating checkArray method for " + element.getSimpleName());
-                FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkArray", "<T, K extends " + YAPIONAnyType.class.getTypeName() + "> void", new ParameterGenerator(YAPIONArray.class.getTypeName(), "array"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<K>", "yapionType"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Function.class.getTypeName() + "<K, T>", "converter"), new ParameterGenerator(Predicate.class.getTypeName() + "<T>", "checkPredicate"), new ParameterGenerator(Consumer.class.getTypeName() + "<" + List.class.getTypeName() + "<T>>", "callback"));
-                functionGenerator.add("if (array == null) {");
-                functionGenerator.add("    if (nonNull) {");
-                functionGenerator.add("        throw new yapion.exceptions.YAPIONException(\"Array is not present\");");
-                functionGenerator.add("    } else {");
-                functionGenerator.add("        callback.accept(null);");
-                functionGenerator.add("        return;");
-                functionGenerator.add("    }");
-                functionGenerator.add("}");
-                functionGenerator.add("java.util.List<T> list = new java.util.ArrayList<>();");
-                functionGenerator.add("array.forEach(yapionAnyType -> {");
-                functionGenerator.add("    if (!yapionType.isInstance(yapionAnyType)) {");
-                functionGenerator.add("        throw new yapion.exceptions.YAPIONException(\"Illegal Instance\");");
-                functionGenerator.add("    }");
-                functionGenerator.add("    T converted = converter.apply((K) yapionAnyType);");
-                functionGenerator.add("    if (checkPredicate != null && !checkPredicate.test(converted)) {");
-                functionGenerator.add("        throw new yapion.exceptions.YAPIONException(\"Checks failed\");");
-                functionGenerator.add("    }");
-                functionGenerator.add("    list.add(converted);");
-                functionGenerator.add("});");
-                functionGenerator.add("callback.accept(list);");
-                classGenerator.add(functionGenerator);
+                classGenerator.addImport("static yapion.config.annotationproccessing.ParsingUtils.checkArray");
             }
 
             if (checkMapNeeded) {
                 messager.printMessage(Diagnostic.Kind.NOTE, "Generating checkMap method for " + element.getSimpleName());
-                FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PRIVATE, ModifierType.STATIC), "checkMap", "<T> void", new ParameterGenerator(YAPIONObject.class.getTypeName(), "object"), new ParameterGenerator("java.util.function.Predicate<String>", "keys"), new ParameterGenerator("boolean", "nonNull"), new ParameterGenerator("Class<T>", "type"), new ParameterGenerator(Function.class.getTypeName() + "<" + YAPIONAnyType.class.getTypeName() + ", T>", "converter"), new ParameterGenerator(Consumer.class.getTypeName() + "<" + Map.class.getTypeName() + "<String, T>>", "callback"));
-                functionGenerator.add("java.util.Map<String, T> map = new java.util.HashMap<>();");
-                functionGenerator.add("object.allKeys().stream().filter(keys).forEach(s -> {");
-                functionGenerator.add("    try {");
-                functionGenerator.add("        map.put(s, converter.apply(object.getYAPIONAnyType(s)));");
-                functionGenerator.add("    } catch (Exception e) {");
-                functionGenerator.add("        // Ignored");
-                functionGenerator.add("    }");
-                functionGenerator.add("});");
-                functionGenerator.add("if (nonNull && map.isEmpty()) {");
-                functionGenerator.add("    throw new yapion.exceptions.YAPIONException(\"Map is empty (null)\");");
-                functionGenerator.add("}");
-                functionGenerator.add("if (map.isEmpty()) {");
-                functionGenerator.add("    callback.accept(null);");
-                functionGenerator.add("} else {");
-                functionGenerator.add("    callback.accept(map);");
-                functionGenerator.add("}");
-                classGenerator.add(functionGenerator);
+                classGenerator.addImport("static yapion.config.annotationproccessing.ParsingUtils.checkMap");
             }
 
             if (lombokExtensionMethod.get()) {
