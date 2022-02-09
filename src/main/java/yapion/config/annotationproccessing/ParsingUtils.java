@@ -14,11 +14,20 @@
 package yapion.config.annotationproccessing;
 
 import lombok.experimental.UtilityClass;
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @UtilityClass
 public class ParsingUtils {
 
-    public static <T> void checkValue(yapion.hierarchy.types.YAPIONValue<?> value, boolean nonNull, Class<T> type, java.util.function.Supplier<T> defaultValue, java.util.function.Consumer<T> callback, java.util.function.Predicate<T> checkPredicate) {
+    public static <T> void checkValue(YAPIONValue<?> value, boolean nonNull, Class<T> type, Supplier<T> defaultValue, Consumer<T> callback, Predicate<T> checkPredicate) {
         if (value == null) {
             if (defaultValue != null) {
                 callback.accept(defaultValue.get());
@@ -54,7 +63,7 @@ public class ParsingUtils {
         callback.accept(t);
     }
 
-    public static <T> void checkObject(yapion.hierarchy.types.YAPIONObject object, boolean nonNull, java.util.function.Function<yapion.hierarchy.types.YAPIONObject, T> converter, java.util.function.Consumer<T> callback) {
+    public static <T> void checkObject(YAPIONObject object, boolean nonNull, Function<YAPIONObject, T> converter, Consumer<T> callback) {
         if (object == null) {
             if (nonNull) {
                 throw new yapion.exceptions.YAPIONException("Object is not present");
@@ -70,7 +79,7 @@ public class ParsingUtils {
         callback.accept(t);
     }
 
-    public static <T, K extends yapion.hierarchy.api.groups.YAPIONAnyType> void checkArray(yapion.hierarchy.types.YAPIONArray array, boolean nonNull, Class<K> yapionType, Class<T> type, java.util.function.Function<K, T> converter, java.util.function.Predicate<T> checkPredicate, java.util.function.Consumer<java.util.List<T>> callback) {
+    public static <T, K extends YAPIONAnyType> void checkArray(YAPIONArray array, boolean nonNull, Class<K> yapionType, Class<T> type, Function<K, T> converter, Predicate<T> checkPredicate, Consumer<java.util.List<T>> callback) {
         if (array == null) {
             if (nonNull) {
                 throw new yapion.exceptions.YAPIONException("Array is not present");
@@ -93,7 +102,7 @@ public class ParsingUtils {
         callback.accept(list);
     }
 
-    public static <T> void checkMap(yapion.hierarchy.types.YAPIONObject object, java.util.function.Predicate<String> keys, boolean nonNull, Class<T> type, java.util.function.Function<yapion.hierarchy.api.groups.YAPIONAnyType, T> converter, java.util.function.Consumer<java.util.Map<String, T>> callback) {
+    public static <T> void checkMap(YAPIONObject object, Predicate<String> keys, boolean nonNull, Class<T> type, Function<YAPIONAnyType, T> converter, Consumer<java.util.Map<String, T>> callback) {
         java.util.Map<String, T> map = new java.util.HashMap<>();
         object.allKeys().stream().filter(keys).forEach(s -> {
             try {
