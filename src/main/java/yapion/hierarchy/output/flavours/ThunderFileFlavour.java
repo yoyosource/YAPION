@@ -75,8 +75,7 @@ public class ThunderFileFlavour implements Flavour {
     public void beginElement(HierarchyTypes hierarchyTypes, AbstractOutput output, ElementData elementData) {
         switch (hierarchyTypes) {
             case OBJECT:
-                // TODO: Is this right?
-                output.consume(" = ");
+                output.consume(elementData.getName()).consume(" = ");
                 break;
             case ARRAY:
                 output.consume("- ");
