@@ -407,11 +407,18 @@ final class YAPIONInternalParser {
         escaped = false;
     }
 
+    private String getKeyOfCurrent() {
+        if (currentObject.getParent() == null) {
+            return null;
+        }
+        return currentObject.getParent().getPath(currentObject);
+    }
+
     private void parseEndObject() {
         pop(YAPIONType.OBJECT);
         ParseCallback<YAPIONObject> callback = (ParseCallback<YAPIONObject>) parseCallbackMap.get(CallbackType.OBJECT);
         if (callback != null) {
-            CallbackResult callbackResult = callback.onParse(key, (YAPIONObject) currentObject);
+            CallbackResult callbackResult = callback.onParse(getKeyOfCurrent(), (YAPIONObject) currentObject);
             if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
                 typeStack.clear();
                 finished = true;
@@ -586,7 +593,7 @@ final class YAPIONInternalParser {
     private void shortenJSON(StringBuilder now) {
         while (true) {
             char temp = now.charAt(now.length() - 1);
-            if (!(temp == ' ' || temp == '\t' || temp == '\n')) {
+            if (!(temp == ' ' || temp == '\t' || temp == '\n' || temp == '\r')) {
                 break;
             }
             now.deleteCharAt(now.length() - 1);
@@ -598,7 +605,26 @@ final class YAPIONInternalParser {
         log.debug("END char -> {}", c);
         pop(YAPIONType.VALUE);
         shortenJSON(current);
-        add(key, YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
+        YAPIONValue yapionValue = YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList);
+        ParseCallback<YAPIONValue> callback = (ParseCallback<YAPIONValue>) parseCallbackMap.get(CallbackType.VALUE);
+        if (callback != null) {
+            CallbackResult callbackResult = callback.onParse(key, yapionValue);
+            if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                typeStack.clear();
+                finished = true;
+            }
+            if (callbackResult == CallbackResult.IGNORE || callbackResult == CallbackResult.IGNORE_AND_STOP) {
+                currentObject = currentObject.getParent();
+                reset();
+                return;
+            }
+            if (callbackResult == CallbackResult.STOP) {
+                add(key, yapionValue);
+                reset();
+                return;
+            }
+        }
+        add(key, yapionValue);
         reset();
         mightValue = MightValue.FALSE;
         switch (c) {
@@ -690,7 +716,7 @@ final class YAPIONInternalParser {
         pop(YAPIONType.MAP);
         ParseCallback<YAPIONMap> callback = (ParseCallback<YAPIONMap>) parseCallbackMap.get(CallbackType.MAP);
         if (callback != null) {
-            CallbackResult callbackResult = callback.onParse(key, (YAPIONMap) currentObject);
+            CallbackResult callbackResult = callback.onParse(getKeyOfCurrent(), (YAPIONMap) currentObject);
             if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
                 typeStack.clear();
                 finished = true;
@@ -722,6 +748,9 @@ final class YAPIONInternalParser {
         key = "";
         if (!escaped && (c == ',' || c == ']')) {
             if (current.length() != 0) {
+                if (forceOnlyJSON) {
+                    shortenJSON(current);
+                }
                 add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             }
             typeClosedInArray = false;
@@ -756,7 +785,7 @@ final class YAPIONInternalParser {
         pop(YAPIONType.ARRAY);
         ParseCallback<YAPIONArray> callback = (ParseCallback<YAPIONArray>) parseCallbackMap.get(CallbackType.ARRAY);
         if (callback != null) {
-            CallbackResult callbackResult = callback.onParse(key, (YAPIONArray) currentObject);
+            CallbackResult callbackResult = callback.onParse(getKeyOfCurrent(), (YAPIONArray) currentObject);
             if (callbackResult == CallbackResult.STOP || callbackResult == CallbackResult.IGNORE_AND_STOP) {
                 typeStack.clear();
                 finished = true;
