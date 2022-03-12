@@ -299,13 +299,17 @@ final class YAPIONInternalParser {
             return false;
         }
         if (!disabledValue && !forceOnlyYAPION && mightValue != MightValue.FALSE) {
-            if (c == ' ') {
+            if (isWhiteSpace(c)) {
                 return true;
             }
             mightValue = MightValue.FALSE;
 
             if (c == '{' || c == '[' || c == '"' || (c >= '0' && c <= '9') || c == '-' || c == 't' || c == 'n' || c == 'f') {
-                current.delete(current.length() - 2, current.length());
+                current.deleteCharAt(current.length() - 1);
+                if (lazy) {
+                    current = new StringBuilder(current.toString().trim());
+                }
+                current.deleteCharAt(current.length() - 1);
                 current.deleteCharAt(0);
                 if (c != '{' && c != '[') {
                     log.debug("type     [JSON]");
@@ -371,10 +375,13 @@ final class YAPIONInternalParser {
             key = "";
             return true;
         }
-        if (!disabledValue && !forceOnlyYAPION && c == ':' && typeStack.peek() == YAPIONType.OBJECT && current.length() > 2 && current.charAt(0) == '"' && current.charAt(current.length() - 1) == '"') {
-            log.debug("type     [JSON ?]");
-            mightValue = MightValue.MIGHT;
-            return false;
+        if (!disabledValue && !forceOnlyYAPION && c == ':' && typeStack.peek() == YAPIONType.OBJECT) {
+            String temp = current.toString().trim();
+            if (temp.length() > 2 && temp.charAt(0) == '"' && temp.charAt(temp.length() - 1) == '"') {
+                log.debug("type     [JSON ?]");
+                mightValue = MightValue.MIGHT;
+                return false;
+            }
         }
         return false;
     }
@@ -564,13 +571,13 @@ final class YAPIONInternalParser {
         shortenJSON(now);
         log.debug("shortened StringBuilder '{}'", now);
 
+        valueHandlerList.clear();
+        valueHandlerList.addAll(YAPIONValue.allValueHandlers());
         if (now.length() > 0 && now.charAt(0) == '"' && now.charAt(now.length() - 1) == '"') {
             parseValueJSONEnd(c);
             return true;
         }
         String st = now.toString();
-        valueHandlerList.clear();
-        valueHandlerList.addAll(YAPIONValue.allValueHandlers());
         if (st.equals("false")) {
             parseValueJSONEnd(c);
             return true;
@@ -591,7 +598,8 @@ final class YAPIONInternalParser {
     }
 
     private void shortenJSON(StringBuilder now) {
-        while (true) {
+        log.debug("Shorten  '{}'", now);
+        while (now.length() > 0) {
             char temp = now.charAt(now.length() - 1);
             if (!(temp == ' ' || temp == '\t' || temp == '\n' || temp == '\r')) {
                 break;
@@ -748,10 +756,14 @@ final class YAPIONInternalParser {
         key = "";
         if (!escaped && (c == ',' || c == ']')) {
             if (current.length() != 0) {
-                if (forceOnlyJSON) {
-                    shortenJSON(current);
+                typeStack.push(YAPIONType.VALUE, count);
+                if (!tryParseValueJSONEnd(c, lastChar)) {
+                    add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
+                    pop(YAPIONType.VALUE);
+                } else {
+                    typeClosedInArray = false;
+                    return;
                 }
-                add("", YAPIONValue.parseValue(stringBuilderToUTF8String(current), valueHandlerList));
             }
             typeClosedInArray = false;
             if (c == ',') {

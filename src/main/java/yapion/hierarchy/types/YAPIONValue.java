@@ -89,6 +89,7 @@ public class YAPIONValue<T> extends YAPIONValueType<YAPIONValue<T>> implements V
 
     @SuppressWarnings({"java:S3740", "java:S2789"})
     public static YAPIONValue parseValue(String s, Iterable<ValueHandler<?>> valueHandlerIterator) {
+        System.out.println("Parsing " + s);
         for (ValueHandler<?> valueHandler : valueHandlerIterator) {
             MethodReturnValue<?> optional = valueHandler.preParse(s);
             if (optional.isPresent() && !optional.nonNullValuePresent()) {
@@ -98,12 +99,14 @@ public class YAPIONValue<T> extends YAPIONValueType<YAPIONValue<T>> implements V
                 return new YAPIONValue<>(optional.get());
             }
         }
+        System.out.println("Parsing failed");
         for (ValueHandler<?> valueHandler : valueHandlerIterator) {
             MethodReturnValue<?> optional = valueHandler.parse(s);
             if (optional.isPresent()) {
                 return new YAPIONValue<>(optional.get());
             }
         }
+        System.out.println("Fallback");
         return new YAPIONValue<>(s);
     }
 
