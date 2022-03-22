@@ -62,5 +62,4 @@ public class RecursionUtils {
         }
         return new RecursionResult(RecursionType.NONE, null);
     }
-
 }

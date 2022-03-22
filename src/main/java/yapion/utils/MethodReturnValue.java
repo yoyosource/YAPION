@@ -17,13 +17,9 @@ import java.util.Optional;
 
 public final class MethodReturnValue<T> {
 
-    private static final MethodReturnValue<?> EMPTY = new MethodReturnValue<>();
+    private static final MethodReturnValue<?> EMPTY = new MethodReturnValue<>(null);
 
     private final T value;
-
-    private MethodReturnValue() {
-        value = null;
-    }
 
     private MethodReturnValue(T value) {
         this.value = value;
