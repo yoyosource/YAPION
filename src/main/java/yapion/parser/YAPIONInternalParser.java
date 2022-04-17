@@ -702,7 +702,7 @@ final class YAPIONInternalParser {
             if (typeStack.isNotEmpty() && typeStack.peek() == YAPIONType.COMMENT) {
                 return;
             }
-            int countDiff = (typeStack.isNotEmpty() && typeStack.peek() == YAPIONType.VALUE) ? 1 : 0;
+            int countDiff = (typeStack.isNotEmpty() && (typeStack.peek() == YAPIONType.VALUE || typeStack.peek() == YAPIONType.POINTER)) ? 1 : 0;
             if (!lazy && !mapHasColon && (currentMap.parsedSize() - countDiff) % 2 == 0) {
                 throw new YAPIONParserException("Key does not have a value");
             }

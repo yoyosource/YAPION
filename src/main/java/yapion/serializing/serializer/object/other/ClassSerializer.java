@@ -23,6 +23,7 @@ import yapion.serializing.YAPIONFlag;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
+import yapion.utils.ClassUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.ByteArrayInputStream;
@@ -93,8 +94,8 @@ public class ClassSerializer implements FinalInternalSerializer<Class<?>> {
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
         YAPIONException yapionException;
         try {
-            return Class.forName(yapionObject.getPlainValue("class"));
-        } catch (ClassNotFoundException e) {
+            return ClassUtils.getClass(yapionObject.getString("class"));
+        } catch (YAPIONException e) {
             yapionException = new YAPIONDeserializerException(e.getMessage(), e);
         }
 

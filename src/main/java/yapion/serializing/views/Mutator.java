@@ -18,7 +18,7 @@ import yapion.serializing.data.SerializationContext;
 
 /**
  * A mutator is used to change a value of a serialized object while deserializing or change it while serializing.
- * THe mutator itself is only called when the view allows it. That is why a Mutator is a special {@link View}.
+ * The mutator itself is only called when the view allows it. That is why a Mutator is a special {@link View}.
  * To create a mutation you need to create a method inside your mutator class that has the name of the field to mutate,
  * has a {@link DeserializationMutationContext} as parameter and either return {@code void} or another {@link DeserializationMutationContext}
  * for deserialization Mutation. Use {@link SerializationContext} as parameter for a mutation applied during serialization.

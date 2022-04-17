@@ -119,6 +119,7 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     public final void removeParent() {
         parent = null;
         valuePresent = false;
+        discardReferenceValue();
     }
 
     public final YAPIONAnyType getParent() {
