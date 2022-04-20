@@ -107,9 +107,35 @@ def shell(String command) {
 * [V] Version
 * [L] License
 
-## YAPION datatypes
-- [Minecraft](https://github.com/yoyosource/YAPION-datatypes-mc) datatypes and serialization of those.
-- [pcollections](https://github.com/yoyosource/YAPION-datatypes-pcollections) datatypes and serialization of those.
+## YAPION Modules
+- YAPION-Hierarchy
+- YAPION-Parser
+  - Dependencies:
+    - YAPION-Hierarchy
+- YAPION-Serializer
+  - Dependencies:
+    - YAPION-Hierarchy
+- YAPION-IO
+  - Dependencies:
+    - YAPION-Hierarchy
+    - YAPION-Parser
+    - YAPION-Serializer
+- YAPION-Other
+  - Dependencies:
+    - YAPION-Hierarchy
+    - YAPION-Parser
+    - YAPION-Serializer
+
+## YAPION Databindings
+- YAPION-Databind-JavaAtomic
+- YAPION-Databind-JavaBase
+- YAPION-Databind-JavaCollections
+- YAPION-Databind-JavaFunction
+- YAPION-Databind-JavaOther
+- YAPION-Databind-JavaSecurity
+- YAPION-Databind-JavaTime
+
+All YAPION databindings need the YAPION-Serializer depdenency. When adding a new databinding, you need to add the name to the YAPION-Serializer 'yapion/serializing/SerializeManagerDataBindings.java' BINDINGS array.
 
 # Structure
 YAPION is heavily inspired by JSON and you can see some similarities between those object notations.

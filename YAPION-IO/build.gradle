@@ -1,0 +1,130 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow'
+
+    id 'org.frgaal.compiler'
+}
+
+group 'YAPION'
+version 'SNAPSHOT'
+
+ext {
+    uberJarName = "${group}-IO-${version}-all.jar"
+    jarName = "${group}-IO-${version}.jar"
+    libs = "${buildDir}/libs"
+
+    groupName = "${group}"
+}
+
+repositories {
+    mavenCentral()
+}
+
+targetCompatibility = '1.8'
+sourceCompatibility = '15'
+
+compileJava.options.encoding = 'UTF-8'
+compileJava {
+    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
+}
+
+compileTestJava.options.encoding = 'UTF-8'
+compileTestJava {
+    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
+}
+
+mainClassName = ''
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    compileOnly project(":YAPION-Hierarchy")
+    compileOnly project(":YAPION-Parser")
+    compileOnly project(":YAPION-Serializer")
+
+    implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
+}
+
+task buildProject {
+    description 'Build this repo'
+    group "Build"
+
+    doLast {
+        if ("${buildDir}" == null) {
+            return
+        }
+        delete fileTree("${libs}").matching {
+            exclude("${uberJarName}")
+        }
+        file(libs + "/" + uberJarName).renameTo(file(libs + "/" + jarName))
+
+        long size = file(libs + "/" + jarName).size()
+        println("Size: " + (size / 1024.0) + "kB")
+    }
+}
+build.finalizedBy(buildProject)
+assemble.finalizedBy(buildProject)
+
+task compressClassFiles {
+    description 'Compress Class Files'
+    group "build"
+    inputs.dir "${buildDir}/classes/java/main/yapion/serializing/serializer/"
+    outputs.files("${buildDir}/resources/main/yapion/serializing/yapion-io.pack", "${buildDir}/resources/main/yapion/serializing/yapion-io.pack.meta")
+
+    doLast {
+        if (file("${buildDir}/classes/java/main/yapion/serializing/serializer/").exists()) {
+            def command
+            if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
+                command = "java -cp ${buildDir}/classes/java/main/:${project(":YAPION-Serializer").buildDir}/classes/java/main:${project(":YAPION-Hierarchy").buildDir}/classes/java/main  yapion/serializing/serializer/YAPIONIOPacker"
+            } else {
+                command = "java -cp ${buildDir}/classes/java/main/;${project(":YAPION-Serializer").buildDir}/classes/java/main;${project(":YAPION-Hierarchy").buildDir}/classes/java/main  yapion/serializing/serializer/YAPIONIOPacker"
+            }
+            String[] strings = shell(command)
+            if (strings[2] == '0') {
+                print(strings[0])
+            } else {
+                print(strings[0])
+                print(strings[1])
+            }
+            file("${buildDir}/classes/java/main/yapion/serializing/yapion-io.pack").renameTo(file("${buildDir}/resources/main/yapion/serializing/yapion-io.pack"))
+            file("${buildDir}/classes/java/main/yapion/serializing/yapion-io.pack.meta").renameTo(file("${buildDir}/resources/main/yapion/serializing/yapion-io.pack.meta"))
+        }
+    }
+}
+classes.finalizedBy(compressClassFiles)
+
+shadowJar {
+    manifest {
+        attributes(
+                'Main-Class': mainClassName
+        )
+    }
+    exclude 'yapion/serializing/serializer/**'
+}
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+/**
+ * Executes a shell command and returns the stdout result.
+ *
+ * @param command the command to execute (cannot contain pipes)
+ * @return the trimmed result from stdout, stderr and the exit value
+ */
+def shell(String command) {
+    def proc
+    if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
+        proc = ['bash', '-c', command].execute()
+    } else {
+        proc = ["cmd", "/c", command].execute()
+    }
+    def out = new StringBuilder()
+    def err = new StringBuilder()
+    proc.waitForProcessOutput(out, err)
+    return [out.toString().trim(), err.toString().trim(), proc.exitValue()]
+}

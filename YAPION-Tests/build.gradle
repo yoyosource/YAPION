@@ -1,0 +1,73 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow'
+
+    id 'org.frgaal.compiler'
+}
+
+group 'YAPION'
+version 'SNAPSHOT'
+
+ext {
+    uberJarName = "${group}-Serializer-${version}-all.jar"
+    jarName = "${group}-Serializer-${version}.jar"
+    libs = "${buildDir}/libs"
+
+    groupName = "${group}"
+}
+
+repositories {
+    mavenCentral()
+}
+
+targetCompatibility = '1.8'
+sourceCompatibility = '15'
+
+compileJava.options.encoding = 'UTF-8'
+compileJava {
+    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
+}
+
+compileTestJava.options.encoding = 'UTF-8'
+compileTestJava {
+    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
+}
+
+mainClassName = ''
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    testImplementation project(':YAPION-Hierarchy')
+    testImplementation project(':YAPION-Parser')
+    testImplementation project(':YAPION-Serializer')
+    testImplementation project(':YAPION-IO')
+    testImplementation project(':YAPION-Databind-JavaBase')
+    testImplementation project(':YAPION-Databind-JavaCollections')
+    testImplementation project(':YAPION-Databind-JavaOther')
+    testImplementation project(':YAPION-Databind-JavaSecurity')
+    testImplementation project(':YAPION-Databind-JavaTime')
+    testImplementation project(':YAPION-Databind-JavaFunction')
+    testImplementation project(':YAPION-Databind-JavaAtomic')
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+    testImplementation 'ch.qos.logback:logback-classic:1.3.0-alpha5'
+
+    testImplementation 'eu.infomas:annotation-detector:3.0.5'
+}
+
+sourceSets {
+    test {
+        java {
+            srcDirs = ['src/java/']
+        }
+        resources {
+            srcDirs = ['src/resources/']
+        }
+    }
+}
