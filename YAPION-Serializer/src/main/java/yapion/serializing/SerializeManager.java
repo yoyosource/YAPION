@@ -25,6 +25,7 @@ import yapion.serializing.api.SerializerBase;
 import yapion.serializing.api.YAPIONSerializerRegistrator;
 import yapion.serializing.reflection.PureStrategy;
 import yapion.utils.ReflectionsUtils;
+import yapion.utils.YAPIONClassLoader;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -66,7 +67,8 @@ public class SerializeManager {
     }
 
     static {
-        SerializeManagerDataBindings.init(toLoadSerializerMap, toLoadInterfaceTypeSerializer, toLoadClassTypeSerializer, SerializeManager::internalAdd);
+        YAPIONClassLoader yapionClassLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
+        SerializeManagerDataBindings.init(toLoadSerializerMap, toLoadInterfaceTypeSerializer, toLoadClassTypeSerializer, SerializeManager::internalAdd, yapionClassLoader);
         initialized = true;
     }
 
@@ -278,12 +280,24 @@ public class SerializeManager {
         return new HashSet<>(serializerMap.keySet());
     }
 
+    public static Set<String> listToLoadRegisteredSerializer() {
+        return new HashSet<>(toLoadSerializerMap.keySet());
+    }
+
     public static Set<Class<?>> listRegisteredInterfaceSerializer() {
         return interfaceTypeSerializer.stream().map(InternalSerializer::interfaceType).collect(Collectors.toSet());
     }
 
+    public static Set<String> listToLoadRegisteredInterfaceSerializer() {
+        return new HashSet<>(toLoadInterfaceTypeSerializer.keySet());
+    }
+
     public static Set<Class<?>> listRegisteredClassSerializer() {
         return classTypeSerializer.stream().map(InternalSerializer::classType).collect(Collectors.toSet());
+    }
+
+    public static Set<String> listToLoadClassSerializer() {
+        return new HashSet<>(toLoadClassTypeSerializer.keySet());
     }
 
     public static void setReflectionStrategy(ReflectionStrategy reflectionStrategy) {

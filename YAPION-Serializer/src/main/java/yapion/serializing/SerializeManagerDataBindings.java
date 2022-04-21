@@ -43,6 +43,8 @@ class SerializeManagerDataBindings {
             "java-time",
 
             // Third party data bindings
+            "bukkit",
+            "guava",
     };
 
     String getDataBindings() {
@@ -54,11 +56,14 @@ class SerializeManagerDataBindings {
     private Map<String, SerializerFuture> toLoadClassTypeSerializer;
     private Consumer<Class<?>> internalAddConsumer;
 
-    void init(Map<String, SerializerFuture> toLoadSerializerMap, Map<String, SerializerFuture> toLoadInterfaceTypeSerializer, Map<String, SerializerFuture> toLoadClassTypeSerializer, Consumer<Class<?>> internalAddConsumer) {
+    private YAPIONClassLoader yapionClassLoader;
+
+    void init(Map<String, SerializerFuture> toLoadSerializerMap, Map<String, SerializerFuture> toLoadInterfaceTypeSerializer, Map<String, SerializerFuture> toLoadClassTypeSerializer, Consumer<Class<?>> internalAddConsumer, YAPIONClassLoader yapionClassLoader) {
         SerializeManagerDataBindings.toLoadSerializerMap = toLoadSerializerMap;
         SerializeManagerDataBindings.toLoadInterfaceTypeSerializer = toLoadInterfaceTypeSerializer;
         SerializeManagerDataBindings.toLoadClassTypeSerializer = toLoadClassTypeSerializer;
         SerializeManagerDataBindings.internalAddConsumer = internalAddConsumer;
+        SerializeManagerDataBindings.yapionClassLoader = yapionClassLoader;
 
         long time = System.currentTimeMillis();
         for (String s : BINDINGS) {
@@ -85,7 +90,6 @@ class SerializeManagerDataBindings {
             BufferedInputStream inputStream = new BufferedInputStream(packInputStream);
             byte[] packBytes = readNBytes(inputStream, Integer.MAX_VALUE);
 
-            YAPIONClassLoader yapionClassLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
             List<SerializerFuture> toDirectLoad = new ArrayList<>();
 
             Map<Integer, Object> entry;

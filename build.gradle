@@ -55,7 +55,7 @@ mainClassName = ''
 
 dependencies {
     project.allprojects.each {
-        if (it.name != 'YAPION') {
+        if (it.name != 'YAPION' && it.name != 'YAPION-Tests') {
             implementation it
         }
     }

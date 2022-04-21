@@ -29,6 +29,6 @@ public class JavaBasePacker {
         if (!source.exists()) return;
 
         File destination = new File(s.substring(0, s.lastIndexOf('/')), "java-base.pack");
-        Packer.pack(source, destination, file -> !file.getName().equals(clazz.getSimpleName() + ".class"), fileName -> true);
+        Packer.pack(source, destination, file -> !file.getName().equals(clazz.getSimpleName() + ".class"), fileName -> false);
     }
 }

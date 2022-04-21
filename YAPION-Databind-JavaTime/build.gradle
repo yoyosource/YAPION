@@ -81,9 +81,9 @@ task compressClassFiles {
         if (file("${buildDir}/classes/java/main/yapion/serializing/serializer/").exists()) {
             def command
             if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
-                command = "java -cp ${buildDir}/classes/java/main/:${project(":YAPION-Serializer").buildDir}/classes/java/main:${project(":YAPION-Hierarchy").buildDir}/classes/java/main  yapion/serializing/serializer/${databindName}Packer"
+                command = "java -cp ${buildDir}/classes/java/main/:${configurations.compileClasspath.join(":")}  yapion/serializing/serializer/${databindName}Packer"
             } else {
-                command = "java -cp ${buildDir}/classes/java/main/;${project(":YAPION-Serializer").buildDir}/classes/java/main;${project(":YAPION-Hierarchy").buildDir}/classes/java/main  yapion/serializing/serializer/${databindName}Packer"
+                command = "java -cp ${buildDir}/classes/java/main/;${configurations.compileClasspath.join(";")}  yapion/serializing/serializer/${databindName}Packer"
             }
             String[] strings = shell(command)
             if (strings[2] == '0') {

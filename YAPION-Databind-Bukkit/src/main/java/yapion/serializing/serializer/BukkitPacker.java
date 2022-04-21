@@ -17,7 +17,7 @@ import yapion.utils.Packer;
 
 import java.io.File;
 
-public class JavaCollectionsPacker {
+public class BukkitPacker {
 
     public static void main(String[] args) throws Exception {
         Class<?> clazz = Class.forName(Thread.currentThread().getStackTrace()[1].getClassName());
@@ -28,7 +28,7 @@ public class JavaCollectionsPacker {
         File source = new File(s);
         if (!source.exists()) return;
 
-        File destination = new File(s.substring(0, s.lastIndexOf('/')), "java-collections.pack");
+        File destination = new File(s.substring(0, s.lastIndexOf('/')), "bukkit.pack");
         Packer.pack(source, destination, file -> !file.getName().equals(clazz.getSimpleName() + ".class"), fileName -> false);
     }
 }

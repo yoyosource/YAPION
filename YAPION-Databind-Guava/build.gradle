@@ -12,8 +12,8 @@ group 'YAPION'
 version 'SNAPSHOT'
 
 ext {
-    databindName = "JavaFunction"
-    packName = "java-function"
+    databindName = "Guava"
+    packName = "guava"
 
     uberJarName = "${group}-Databind-${databindName}-${version}-all.jar"
     jarName = "${group}-Databind-${databindName}-${version}.jar"
@@ -48,7 +48,16 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     compileOnly project(":YAPION-Hierarchy")
+    testImplementation project(":YAPION-Hierarchy")
     compileOnly project(":YAPION-Serializer")
+    testImplementation project(":YAPION-Serializer")
+
+    testImplementation project(":YAPION-Databind-JavaCollections")
+
+    compileOnly 'com.google.guava:guava:23.0'
+    testImplementation 'com.google.guava:guava:23.0'
+
+    testImplementation 'ch.qos.logback:logback-classic:1.3.0-alpha5'
 }
 
 task buildProject {

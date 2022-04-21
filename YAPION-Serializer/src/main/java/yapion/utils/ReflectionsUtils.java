@@ -361,6 +361,7 @@ public class ReflectionsUtils {
         Class<?>[] interfaces = toCheck.getInterfaces();
         for (Class<?> i : interfaces) {
             consumer.accept(i);
+            traverseInterfaceClasses(i, consumer);
         }
         if (toCheck.getSuperclass() != null) {
             traverseInterfaceClasses(toCheck.getSuperclass(), consumer);
