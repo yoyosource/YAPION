@@ -146,7 +146,21 @@ Comments start with `/*` and end with `*/`. They are used to add comments to the
             </div>
         </summary>
         <div>
-            Comments are not supported by JSON. The YAPIONParser does not parse comments by default.
+            Comments are not supported by JSON.
+        </div>
+    </details>
+</div>
+<div class="box">
+    <details>
+        <summary>
+            <img src="../../../../icons/exclamation.png" alt="">
+            <div>
+                <strong class="warning">Warning:</strong>
+                Parsing of comments
+            </div>
+        </summary>
+        <div>
+            The YAPIONParser defaults to ignoring the comments as the JavaDoc for CommentParsing suggests.
         </div>
     </details>
 </div>
