@@ -23,6 +23,10 @@ public class ContainsFilter implements Predicate<YAPIONAnyType> {
 
     YAPIONPath yapionPath;
 
+    public ContainsFilter(YAPIONPath yapionPath) {
+        this.yapionPath = yapionPath;
+    }
+
     public ContainsFilter(PathElement... pathElements) {
         yapionPath = new YAPIONPath(pathElements);
     }

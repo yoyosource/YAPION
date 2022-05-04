@@ -1,0 +1,68 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow'
+
+    id 'org.frgaal.compiler'
+}
+
+group 'YAPION'
+version 'SNAPSHOT'
+
+ext {
+    uberJarName = "${group}-Path-${version}-all.jar"
+    jarName = "${group}-Path-${version}.jar"
+    libs = "${buildDir}/libs"
+
+    groupName = "${group}"
+}
+
+repositories {
+    mavenCentral()
+}
+
+targetCompatibility = '1.8'
+sourceCompatibility = '15'
+
+compileJava.options.encoding = 'UTF-8'
+compileJava {
+    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
+}
+
+compileTestJava.options.encoding = 'UTF-8'
+compileTestJava {
+    options.compilerArgs << '-Xlint:deprecation' << '--enable-preview'
+}
+
+mainClassName = ''
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    compileOnly project(":YAPION-Hierarchy")
+
+    implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
+}
+
+task buildProject {
+    description 'Build this repo'
+    group "Build"
+
+    doLast {
+        if ("${buildDir}" == null) {
+            return
+        }
+        delete fileTree("${libs}").matching {
+            exclude("${uberJarName}")
+        }
+        file(libs + "/" + uberJarName).renameTo(file(libs + "/" + jarName))
+
+        long size = file(libs + "/" + jarName).size()
+        println("Size: " + (size / 1024.0) + "kB")
+    }
+}
+build.finalizedBy(buildProject)
+assemble.finalizedBy(buildProject)
