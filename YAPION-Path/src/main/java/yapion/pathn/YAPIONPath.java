@@ -11,14 +11,14 @@
  * limitations under the License.
  */
 
-package yapion.path;
+package yapion.pathn;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-// TODO: Implement YAPIONPath like xPath or jsonPath
 public class YAPIONPath {
 
     private PathElement[] pathElements;
@@ -31,22 +31,26 @@ public class YAPIONPath {
         this.pathElements = pathElements;
     }
 
-    public List<YAPIONAnyType> apply(YAPIONAnyType element) {
+    public PathResult apply(YAPIONAnyType element) {
         List<YAPIONAnyType> elements = new ArrayList<>();
         elements.add(element);
         return apply(elements);
     }
 
-    public List<YAPIONAnyType> apply(List<YAPIONAnyType> elements) {
-        PathContext pathContext = new PathContext(elements);
+    public PathResult apply(List<YAPIONAnyType> elements) {
+        PathContext pathContext = PathContext.of(elements);
+        long time = System.nanoTime();
         for (int i = 0; i < pathElements.length; i++) {
-            if (i < pathElements.length - 1) {
-                pathContext.setPossibleNext(pathElements[i + 1]);
-            } else {
-                pathContext.setPossibleNext(null);
-            }
-            pathContext = pathElements[i].apply(pathContext);
+            Optional<PathElement> possibleNextPathElement = Optional.ofNullable(getPathElement(i));
+            pathContext = pathElements[i].apply(pathContext, possibleNextPathElement);
         }
-        return pathContext.getCurrent();
+        List<YAPIONAnyType> result = pathContext.eval();
+        long time2 = System.nanoTime();
+        return new PathResult(result, time2 - time);
+    }
+
+    private PathElement getPathElement(int index) {
+        if (index >= pathElements.length) return null;
+        return pathElements[index];
     }
 }

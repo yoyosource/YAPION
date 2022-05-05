@@ -42,7 +42,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-    compileOnly project(":YAPION-Hierarchy")
+    // compileOnly project(":YAPION-Hierarchy")
+    implementation project(":YAPION-Hierarchy")
 
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
 }

@@ -33,11 +33,11 @@ public class YAPIONTreeIterator implements Iterator<YAPIONAnyType>, Closeable {
     private LinkedList<YAPIONAnyType> yapionAnyTypes = new LinkedList<>();
     private YAPIONTreeIteratorOption option;
 
-    public YAPIONTreeIterator(YAPIONObject yapionObject) {
+    public YAPIONTreeIterator(YAPIONDataType yapionObject) {
         this(yapionObject, YAPIONTreeIteratorOption.TRAVERSE_ALL);
     }
 
-    public YAPIONTreeIterator(YAPIONObject yapionObject, YAPIONTreeIteratorOption option) {
+    public YAPIONTreeIterator(YAPIONDataType yapionObject, YAPIONTreeIteratorOption option) {
         this.option = option;
         add(yapionObject);
     }
