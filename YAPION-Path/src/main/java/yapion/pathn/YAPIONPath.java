@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class YAPIONPath {
+public class YAPIONPath implements PathElement {
 
     private PathElement[] pathElements;
 
@@ -52,5 +52,16 @@ public class YAPIONPath {
     private PathElement getPathElement(int index) {
         if (index >= pathElements.length) return null;
         return pathElements[index];
+    }
+
+    @Override
+    public boolean check(YAPIONAnyType yapionAnyType) {
+        if (pathElements.length == 0) return true;
+        return pathElements[0].check(yapionAnyType);
+    }
+
+    @Override
+    public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
+        return pathContext.map(yapionAnyType -> apply(yapionAnyType).yapionAnyTypeList);
     }
 }

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,12 +61,24 @@ public class PathContext {
         return new PathContext(rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(List::stream));
     }
 
+    public PathContext streamMap(Function<YAPIONAnyType, Stream<YAPIONAnyType>> mapper) {
+        return new PathContext(rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(Function.identity()));
+    }
+
     public PathContext mapViaPathContext(Function<YAPIONAnyType, Stream<PathContext>> mapper) {
-        return new PathContext(rootElements, current.flatMap(mapper).flatMap(pathContext -> pathContext.current));
+        return new PathContext(rootElements, current.flatMap(mapper).filter(Objects::nonNull).flatMap(pathContext -> pathContext.current));
     }
 
     public PathContext distinct() {
         return new PathContext(rootElements, current.distinct());
+    }
+
+    public Stream<YAPIONAnyType> stream() {
+        return current;
+    }
+
+    public PathContext stream(UnaryOperator<Stream<YAPIONAnyType>> streamer) {
+        return new PathContext(rootElements, streamer.apply(current));
     }
 
     public PathContext with(List<YAPIONAnyType> elements) {

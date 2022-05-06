@@ -16,6 +16,7 @@ package yapion.pathn;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.pathn.builder.Selector;
 import yapion.pathn.impl.*;
 import yapion.pathn.impl.object.Contains;
 import yapion.pathn.impl.object.Regex;
@@ -73,8 +74,78 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (true) {
+        if (false) {
             YAPIONPath yapionPath = new YAPIONPath(new Regex(Pattern.compile("test1.*")), new Element(0));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) {
+            YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new YAPIONPath(new Element("test0"), new Element(0)), new Contains("1")));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) {
+            YAPIONPath yapionPath = new YAPIONPath(new AllWith(new Contains("0"), new Contains("1")));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) {
+            YAPIONPath yapionPath = new YAPIONPath(new Spread(), new AllWith(new Contains("0"), new Contains("1")));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (true) {
+            YAPIONPath yapionPath = new YAPIONPath(
+                    new Spread(),
+                    new AllWith(
+                            new Contains("0"),
+                            new Contains("1")
+                    ),
+                    new AnyElement(),
+                    new Spread(),
+                    new AnyOf(
+                            new AllWith(
+                                    new Contains("0"),
+                                    new Contains("1")
+                            ),
+                            new AllWith(
+                                    new Contains("0"),
+                                    new Contains("2")
+                            )
+                    ),
+                    new AnyElement()
+            );
+            yapionPath = new Selector()
+                    .streamEntries()
+                    .allWith()
+                        .contains("0")
+                        .contains("1")
+                    .build()
+                    .each()
+                    .streamEntries()
+                    .anyOf()
+                        .allWith()
+                            .contains("0")
+                            .contains("1")
+                        .build()
+                        .allWith()
+                            .contains("0")
+                            .contains("2")
+                        .build()
+                    .build()
+                    .each()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (true) {
+            YAPIONPath yapionPath = new Selector()
+                    .streamEntries()
+                    .anyWith()
+                        .contains("0")
+                        .contains("1")
+                    .build()
+                    .build();
             output(yapionPath.apply(yapionObject));
         }
     }

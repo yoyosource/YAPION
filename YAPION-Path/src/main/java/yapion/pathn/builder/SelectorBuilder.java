@@ -13,5 +13,91 @@
 
 package yapion.pathn.builder;
 
-public interface SelectorBuilder {
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.pathn.PathElement;
+import yapion.pathn.impl.*;
+import yapion.pathn.impl.object.Contains;
+import yapion.pathn.impl.object.EndsWith;
+import yapion.pathn.impl.object.Regex;
+import yapion.pathn.impl.object.StartWith;
+
+public interface SelectorBuilder<I extends SelectorBuilder<I, B>, B> {
+
+    I add(PathElement pathElement);
+
+    I itself();
+
+    default I select(String selector) {
+        return add(new Element(selector));
+    }
+    default I select(int selector) {
+        return add(new Element(selector));
+    }
+
+    default I contains(String selector) {
+        return add(new Contains(selector));
+    }
+    default I endsWith(String selector) {
+        return add(new EndsWith(selector));
+    }
+    default I startsWith(String selector) {
+        return add(new StartWith(selector));
+    }
+    default I regex(String selector) {
+        return add(new Regex(selector));
+    }
+
+    default I each() {
+        return add(new AnyElement());
+    }
+    default I any() {
+        return each();
+    }
+    default I eachAndDeeper() {
+        return add(new AnyDeeperElement());
+    }
+    default I anyDeeper() {
+        return eachAndDeeper();
+    }
+
+    default I distinct() {
+        return add(new DistinctElements());
+    }
+    default I identityDistinct() {
+        return add(new IdentityDistinctElements());
+    }
+
+    default I type(Class<? extends YAPIONAnyType> type) {
+        return add(new ElementType(type));
+    }
+
+    default I root() {
+        return add(new RootElement());
+    }
+
+    default I streamEntries() {
+        return add(new Spread());
+    }
+    default I spread() {
+        return streamEntries();
+    }
+
+    default SubSelector<I> subselect() {
+        return new SubSelector<>(itself());
+    }
+
+    default AnyOfSelector<I> anyOf() {
+        return new AnyOfSelector<>(itself());
+    }
+    default AllOfSelector<I> allOf() {
+        return new AllOfSelector<>(itself());
+    }
+    default AllWithSelector<I> allWith() {
+        return new AllWithSelector<>(itself());
+    }
+    default AnyWithSelector<I> anyWith() {
+        return new AnyWithSelector<>(itself());
+    }
+
+    B build();
 }
