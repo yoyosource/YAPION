@@ -16,6 +16,7 @@ package yapion.pathn.builder;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.pathn.PathElement;
 import yapion.pathn.impl.*;
+import yapion.pathn.impl.array.Range;
 import yapion.pathn.impl.object.Contains;
 import yapion.pathn.impl.object.EndsWith;
 import yapion.pathn.impl.object.Regex;
@@ -45,6 +46,16 @@ public interface SelectorBuilder<I extends SelectorBuilder<I, B>, B> {
     }
     default I regex(String selector) {
         return add(new Regex(selector));
+    }
+
+    default I min(int min) {
+        return add(Range.min(min));
+    }
+    default I max(int max) {
+        return add(Range.max(max));
+    }
+    default I range(int min, int max) {
+        return add(Range.range(min, max));
     }
 
     default I each() {

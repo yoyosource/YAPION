@@ -16,6 +16,7 @@ package yapion.pathn;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,10 +39,17 @@ public class YAPIONPath implements PathElement {
     }
 
     public PathResult apply(List<YAPIONAnyType> elements) {
+        return apply(elements, Optional.empty());
+    }
+
+    private PathResult apply(List<YAPIONAnyType> elements, Optional<PathElement> possibleNextPathElementOuter) {
         PathContext pathContext = PathContext.of(elements);
         long time = System.nanoTime();
         for (int i = 0; i < pathElements.length; i++) {
             Optional<PathElement> possibleNextPathElement = Optional.ofNullable(getPathElement(i));
+            if (i == pathElements.length - 1) {
+                possibleNextPathElement = possibleNextPathElementOuter;
+            }
             pathContext = pathElements[i].apply(pathContext, possibleNextPathElement);
         }
         List<YAPIONAnyType> result = pathContext.eval();
@@ -62,6 +70,6 @@ public class YAPIONPath implements PathElement {
 
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
-        return pathContext.map(yapionAnyType -> apply(yapionAnyType).yapionAnyTypeList);
+        return pathContext.map(yapionAnyType -> apply(Arrays.asList(yapionAnyType), possibleNextPathElement).yapionAnyTypeList);
     }
 }

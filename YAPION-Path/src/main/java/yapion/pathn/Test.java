@@ -94,28 +94,8 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (true) {
-            YAPIONPath yapionPath = new YAPIONPath(
-                    new Spread(),
-                    new AllWith(
-                            new Contains("0"),
-                            new Contains("1")
-                    ),
-                    new AnyElement(),
-                    new Spread(),
-                    new AnyOf(
-                            new AllWith(
-                                    new Contains("0"),
-                                    new Contains("1")
-                            ),
-                            new AllWith(
-                                    new Contains("0"),
-                                    new Contains("2")
-                            )
-                    ),
-                    new AnyElement()
-            );
-            yapionPath = new Selector()
+        if (false) {
+            YAPIONPath yapionPath = new Selector()
                     .streamEntries()
                     .allWith()
                         .contains("0")
@@ -138,13 +118,21 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (true) {
+        if (false) {
             YAPIONPath yapionPath = new Selector()
                     .streamEntries()
                     .anyWith()
                         .contains("0")
                         .contains("1")
                     .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (true) {
+            YAPIONPath yapionPath = new Selector()
+                    .select("test0")
+                    .range(10, 20)
                     .build();
             output(yapionPath.apply(yapionObject));
         }
