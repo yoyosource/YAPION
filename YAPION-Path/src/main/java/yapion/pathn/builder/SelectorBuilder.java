@@ -14,6 +14,9 @@
 package yapion.pathn.builder;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONArray;
+import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.pathn.PathElement;
 import yapion.pathn.impl.*;
 import yapion.pathn.impl.array.Range;
@@ -81,6 +84,15 @@ public interface SelectorBuilder<I extends SelectorBuilder<I, B>, B> {
     default I type(Class<? extends YAPIONAnyType> type) {
         return add(new ElementType(type));
     }
+    default I objects() {
+        return type(YAPIONObject.class);
+    }
+    default I arrays() {
+        return type(YAPIONArray.class);
+    }
+    default I values() {
+        return type(YAPIONValue.class);
+    }
 
     default I root() {
         return add(new RootElement());
@@ -108,6 +120,10 @@ public interface SelectorBuilder<I extends SelectorBuilder<I, B>, B> {
     }
     default AnyWithSelector<I> anyWith() {
         return new AnyWithSelector<>(itself());
+    }
+
+    default WhenSelector<I> when() {
+        return new WhenSelector<>(itself());
     }
 
     B build();

@@ -27,6 +27,7 @@ public class Test {
 
     public static void main(String[] args) {
         YAPIONObject yapionObject = new YAPIONObject();
+        yapionObject.add("element", new YAPIONValue<>(0));
         for (int i = 0; i < 100; i++) {
             YAPIONArray yapionArray = new YAPIONArray();
             for (int j = 0; j < 100; j++) {
@@ -129,10 +130,39 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (true) {
+        if (false) {
             YAPIONPath yapionPath = new Selector()
                     .select("test0")
                     .range(10, 20)
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) {
+            // yapionObject.remove("element");
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .allWith()
+                        .select("10")
+                        .subselect()
+                            .root()
+                            .select("element")
+                        .build()
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (true) {
+            yapionObject.remove("element");
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .when()
+                        .subselect()
+                            .root()
+                            .select("element")
+                        .build()
+                    .build()
                     .build();
             output(yapionPath.apply(yapionObject));
         }

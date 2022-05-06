@@ -31,22 +31,23 @@ import java.util.stream.Stream;
 public class PathContext {
 
     public static PathContext of(YAPIONAnyType... yapionAnyTypes) {
-        return new PathContext(Arrays.asList(yapionAnyTypes), Arrays.asList(yapionAnyTypes).stream());
+        return new PathContext(true, Arrays.asList(yapionAnyTypes), Arrays.asList(yapionAnyTypes).stream());
     }
 
     public static PathContext of(List<YAPIONAnyType> yapionAnyTypes) {
-        return new PathContext(new ArrayList<>(yapionAnyTypes), new ArrayList<>(yapionAnyTypes).stream());
+        return new PathContext(true, new ArrayList<>(yapionAnyTypes), new ArrayList<>(yapionAnyTypes).stream());
     }
 
+    private boolean isRoot;
     private List<YAPIONAnyType> rootElements;
     private Stream<YAPIONAnyType> current;
 
     public PathContext root() {
-        return new PathContext(rootElements, rootElements.stream());
+        return new PathContext(true, rootElements, rootElements.stream());
     }
 
     public PathContext empty() {
-        return new PathContext(rootElements, Stream.empty());
+        return new PathContext(false, rootElements, Stream.empty());
     }
 
     public PathContext removeIf(Predicate<YAPIONAnyType> filter) {
@@ -54,23 +55,23 @@ public class PathContext {
     }
 
     public PathContext retainIf(Predicate<YAPIONAnyType> filter) {
-        return new PathContext(rootElements, current.filter(filter));
+        return new PathContext(false, rootElements, current.filter(filter));
     }
 
     public PathContext map(Function<YAPIONAnyType, List<YAPIONAnyType>> mapper) {
-        return new PathContext(rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(List::stream));
+        return new PathContext(false, rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(List::stream));
     }
 
     public PathContext streamMap(Function<YAPIONAnyType, Stream<YAPIONAnyType>> mapper) {
-        return new PathContext(rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(Function.identity()));
+        return new PathContext(false, rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(Function.identity()));
     }
 
     public PathContext mapViaPathContext(Function<YAPIONAnyType, Stream<PathContext>> mapper) {
-        return new PathContext(rootElements, current.flatMap(mapper).filter(Objects::nonNull).flatMap(pathContext -> pathContext.current));
+        return new PathContext(false, rootElements, current.flatMap(mapper).filter(Objects::nonNull).flatMap(pathContext -> pathContext.current));
     }
 
     public PathContext distinct() {
-        return new PathContext(rootElements, current.distinct());
+        return new PathContext(false, rootElements, current.distinct());
     }
 
     public Stream<YAPIONAnyType> stream() {
@@ -78,14 +79,23 @@ public class PathContext {
     }
 
     public PathContext stream(UnaryOperator<Stream<YAPIONAnyType>> streamer) {
-        return new PathContext(rootElements, streamer.apply(current));
+        return new PathContext(false, rootElements, streamer.apply(current));
     }
 
     public PathContext with(List<YAPIONAnyType> elements) {
-        return new PathContext(rootElements, elements.stream());
+        return new PathContext(false, rootElements, elements.stream());
     }
 
     public List<YAPIONAnyType> eval() {
         return current.collect(Collectors.toList());
+    }
+
+    @Override
+    public String toString() {
+        return "PathContext{" +
+                "isRoot=" + isRoot +
+                ", rootElements=" + rootElements +
+                ", current=" + current +
+                '}';
     }
 }

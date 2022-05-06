@@ -43,15 +43,8 @@ public class YAPIONPath implements PathElement {
     }
 
     private PathResult apply(List<YAPIONAnyType> elements, Optional<PathElement> possibleNextPathElementOuter) {
-        PathContext pathContext = PathContext.of(elements);
         long time = System.nanoTime();
-        for (int i = 0; i < pathElements.length; i++) {
-            Optional<PathElement> possibleNextPathElement = Optional.ofNullable(getPathElement(i));
-            if (i == pathElements.length - 1) {
-                possibleNextPathElement = possibleNextPathElementOuter;
-            }
-            pathContext = pathElements[i].apply(pathContext, possibleNextPathElement);
-        }
+        PathContext pathContext = apply(PathContext.of(elements), possibleNextPathElementOuter);
         List<YAPIONAnyType> result = pathContext.eval();
         long time2 = System.nanoTime();
         return new PathResult(result, time2 - time);
@@ -69,7 +62,14 @@ public class YAPIONPath implements PathElement {
     }
 
     @Override
-    public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
-        return pathContext.map(yapionAnyType -> apply(Arrays.asList(yapionAnyType), possibleNextPathElement).yapionAnyTypeList);
+    public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElementOuter) {
+        for (int i = 0; i < pathElements.length; i++) {
+            Optional<PathElement> possibleNextPathElement = Optional.ofNullable(getPathElement(i));
+            if (i == pathElements.length - 1) {
+                possibleNextPathElement = possibleNextPathElementOuter;
+            }
+            pathContext = pathElements[i].apply(pathContext, possibleNextPathElement);
+        }
+        return pathContext;
     }
 }
