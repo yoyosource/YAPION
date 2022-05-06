@@ -96,13 +96,13 @@ public class Test {
 
         if (false) {
             YAPIONPath yapionPath = new Selector()
-                    .streamEntries()
+                    .spread()
                     .allWith()
                         .contains("0")
                         .contains("1")
                     .build()
-                    .each()
-                    .streamEntries()
+                    .any()
+                    .spread()
                     .anyOf()
                         .allWith()
                             .contains("0")
@@ -113,14 +113,14 @@ public class Test {
                             .contains("2")
                         .build()
                     .build()
-                    .each()
+                    .any()
                     .build();
             output(yapionPath.apply(yapionObject));
         }
 
         if (false) {
             YAPIONPath yapionPath = new Selector()
-                    .streamEntries()
+                    .spread()
                     .anyWith()
                         .contains("0")
                         .contains("1")
