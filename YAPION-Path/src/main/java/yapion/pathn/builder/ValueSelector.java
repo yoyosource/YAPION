@@ -13,35 +13,35 @@
 
 package yapion.pathn.builder;
 
-import yapion.pathn.PathElement;
-import yapion.pathn.YAPIONPath;
+import yapion.pathn.impl.value.Value;
+import yapion.pathn.impl.value.ValueElement;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubSelector<R extends SelectorBuilder<?, ?>> implements SelectorBuilder<SubSelector<R>, R> {
+public class ValueSelector<R extends SelectorBuilder<?, ?>> implements ValueSelectorBuilder<ValueSelector<R>, R> {
 
     private R parent;
-    private List<PathElement> pathElementList = new ArrayList<>();
+    private List<ValueElement> pathElementList = new ArrayList<>();
 
-    protected SubSelector(R parent) {
+    public ValueSelector(R parent) {
         this.parent = parent;
     }
 
     @Override
-    public SubSelector<R> add(PathElement pathElement) {
-        pathElementList.add(pathElement);
+    public ValueSelector<R> add(ValueElement valueElement) {
+        pathElementList.add(valueElement);
         return this;
     }
 
     @Override
-    public SubSelector<R> itself() {
+    public ValueSelector<R> itself() {
         return this;
     }
 
     @Override
     public R build() {
-        parent.add(new YAPIONPath(pathElementList));
+        parent.add(new Value(pathElementList));
         return parent;
     }
 }

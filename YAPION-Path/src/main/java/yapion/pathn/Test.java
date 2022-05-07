@@ -27,7 +27,7 @@ public class Test {
 
     public static void main(String[] args) {
         YAPIONObject yapionObject = new YAPIONObject();
-        yapionObject.add("element", new YAPIONValue<>(0));
+        yapionObject.add("element", 0);
         for (int i = 0; i < 100; i++) {
             YAPIONArray yapionArray = new YAPIONArray();
             for (int j = 0; j < 100; j++) {
@@ -35,6 +35,8 @@ public class Test {
             }
             yapionObject.add("test" + i, yapionArray);
         }
+        // yapionObject.remove("element");
+        yapionObject.put("element", 1);
 
         if (false) {
             YAPIONPath yapionPath = new YAPIONPath(new AnyDeeperElement(), new AnyElement()); // 7376ms
@@ -153,14 +155,64 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (true) {
-            yapionObject.remove("element");
+        if (false) {
             YAPIONPath yapionPath = new Selector()
                     .spread()
                     .when()
                         .subselect()
                             .root()
                             .select("element")
+                        .build()
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (true) {
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .anyOf()
+                        .subselect()
+                            .when()
+                                .subselect()
+                                    .root()
+                                    .select("element")
+                                .build()
+                            .build()
+                            .select("test0")
+                        .build()
+                        .subselect()
+                            .when()
+                                .subselect()
+                                    .root()
+                                    .select("element")
+                                .build()
+                            .build()
+                            .select("test1")
+                        .build()
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (true) {
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .anyOf()
+                        .subselect()
+                            .when()
+                                .subselect()
+                                    .root()
+                                    .select("element")
+                                    .value()
+                                        .equalTo(0)
+                                    .build()
+                                .build()
+                            .build()
+                            .anyOf()
+                                .select("test0")
+                                .select("test1")
+                            .build()
                         .build()
                     .build()
                     .build();

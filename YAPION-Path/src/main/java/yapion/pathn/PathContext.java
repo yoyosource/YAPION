@@ -55,19 +55,19 @@ public class PathContext {
     }
 
     public PathContext retainIf(Predicate<YAPIONAnyType> filter) {
-        return new PathContext(false, rootElements, current.filter(filter));
+        return new PathContext(false, rootElements, current.filter(filter).filter(Objects::nonNull));
     }
 
     public PathContext map(Function<YAPIONAnyType, List<YAPIONAnyType>> mapper) {
-        return new PathContext(false, rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(List::stream));
+        return new PathContext(false, rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(List::stream).filter(Objects::nonNull));
     }
 
     public PathContext streamMap(Function<YAPIONAnyType, Stream<YAPIONAnyType>> mapper) {
-        return new PathContext(false, rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(Function.identity()));
+        return new PathContext(false, rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(Function.identity()).filter(Objects::nonNull));
     }
 
     public PathContext mapViaPathContext(Function<YAPIONAnyType, Stream<PathContext>> mapper) {
-        return new PathContext(false, rootElements, current.flatMap(mapper).filter(Objects::nonNull).flatMap(pathContext -> pathContext.current));
+        return new PathContext(false, rootElements, current.flatMap(mapper).filter(Objects::nonNull).flatMap(pathContext -> pathContext.current).filter(Objects::nonNull));
     }
 
     public PathContext distinct() {
@@ -79,7 +79,7 @@ public class PathContext {
     }
 
     public PathContext stream(UnaryOperator<Stream<YAPIONAnyType>> streamer) {
-        return new PathContext(false, rootElements, streamer.apply(current));
+        return new PathContext(false, rootElements, streamer.apply(current).filter(Objects::nonNull));
     }
 
     public PathContext with(List<YAPIONAnyType> elements) {

@@ -126,5 +126,9 @@ public interface SelectorBuilder<I extends SelectorBuilder<I, B>, B> {
         return new WhenSelector<>(itself());
     }
 
+    default ValueSelector<I> value() {
+        return new ValueSelector<>(itself());
+    }
+
     B build();
 }

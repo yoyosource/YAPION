@@ -11,37 +11,38 @@
  * limitations under the License.
  */
 
-package yapion.pathn.builder;
+package yapion.pathn.builder.value;
 
-import yapion.pathn.PathElement;
-import yapion.pathn.YAPIONPath;
+import yapion.pathn.builder.ValueSelectorBuilder;
+import yapion.pathn.impl.value.ValueAnd;
+import yapion.pathn.impl.value.ValueElement;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubSelector<R extends SelectorBuilder<?, ?>> implements SelectorBuilder<SubSelector<R>, R> {
+public class AndValueImplSelector<R extends ValueSelectorBuilder<?, ?>> implements ValueSelectorBuilder<AndValueImplSelector<R>, R> {
 
     private R parent;
-    private List<PathElement> pathElementList = new ArrayList<>();
+    private List<ValueElement> valueElementList = new ArrayList<>();
 
-    protected SubSelector(R parent) {
+    public AndValueImplSelector(R parent) {
         this.parent = parent;
     }
 
     @Override
-    public SubSelector<R> add(PathElement pathElement) {
-        pathElementList.add(pathElement);
+    public AndValueImplSelector<R> add(ValueElement valueElement) {
+        valueElementList.add(valueElement);
         return this;
     }
 
     @Override
-    public SubSelector<R> itself() {
+    public AndValueImplSelector<R> itself() {
         return this;
     }
 
     @Override
     public R build() {
-        parent.add(new YAPIONPath(pathElementList));
+        parent.add(new ValueAnd(valueElementList));
         return parent;
     }
 }
