@@ -24,7 +24,7 @@ public class ValueSelector<R extends SelectorBuilder<?, ?>> implements ValueSele
     private R parent;
     private List<ValueElement> pathElementList = new ArrayList<>();
 
-    public ValueSelector(R parent) {
+    protected ValueSelector(R parent) {
         this.parent = parent;
     }
 

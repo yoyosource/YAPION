@@ -13,10 +13,9 @@
 
 package yapion.pathn.builder;
 
-import yapion.pathn.builder.value.AndValueImplSelector;
-import yapion.pathn.builder.value.OrValueImplSelector;
 import yapion.pathn.impl.value.ValueElement;
 import yapion.pathn.impl.value.impl.ValueEquals;
+import yapion.pathn.impl.value.impl.ValueRange;
 
 public interface ValueSelectorBuilder<I extends ValueSelectorBuilder<I, B>, B> {
 
@@ -28,11 +27,21 @@ public interface ValueSelectorBuilder<I extends ValueSelectorBuilder<I, B>, B> {
         return add(new ValueEquals<>(value));
     }
 
-    default AndValueImplSelector<I> and() {
-        return new AndValueImplSelector<>(itself());
+    default <T extends Number & Comparable<T>> I min(T min) {
+        return add(ValueRange.min(min));
     }
-    default OrValueImplSelector<I> or() {
-        return new OrValueImplSelector<>(itself());
+    default <T extends Number & Comparable<T>> I max(T max) {
+        return add(ValueRange.max(max));
+    }
+    default <T extends Number & Comparable<T>> I range(T min, T max) {
+        return add(ValueRange.range(min, max));
+    }
+
+    default AndValueSelector<I> and() {
+        return new AndValueSelector<>(itself());
+    }
+    default OrValueSelector<I> or() {
+        return new OrValueSelector<>(itself());
     }
 
     B build();
