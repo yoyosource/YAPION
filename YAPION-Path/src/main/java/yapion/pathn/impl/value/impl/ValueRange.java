@@ -61,7 +61,7 @@ public class ValueRange<T extends Number & Comparable<T>> implements ValueElemen
         if (min != null && numberValue.compareTo(min) < 0) {
             return false;
         }
-        if (max != null && numberValue.compareTo(max) >= 0) {
+        if (max != null && numberValue.compareTo(max) > 0) {
             return false;
         }
         return true;
