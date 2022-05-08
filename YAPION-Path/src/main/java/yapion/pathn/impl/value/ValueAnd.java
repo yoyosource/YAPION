@@ -53,7 +53,7 @@ public class ValueAnd implements ValueElement {
             if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
                 return false;
             }
-            PathContext innerPathContext = pathContext.with(Arrays.asList(yapionValue));
+            PathContext innerPathContext = pathContext.with(yapionValue);
             for (ValueElement valueElement : valueElements) {
                 innerPathContext = valueElement.apply(innerPathContext, possibleNextPathElement);
             }

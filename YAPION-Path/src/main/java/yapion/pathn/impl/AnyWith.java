@@ -48,7 +48,7 @@ public class AnyWith implements PathElement {
         return pathContext.retainIf(yapionAnyType -> {
             boolean retain = false;
             for (PathElement pathElement : pathElements) {
-                PathContext innerContext = pathContext.with(Arrays.asList(yapionAnyType));
+                PathContext innerContext = pathContext.with(yapionAnyType);
                 if (pathElement.apply(innerContext, possibleNextPathElement).stream().count() > 0) {
                     retain = true;
                     break;

@@ -17,39 +17,17 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
-public class AnyOf implements PathElement {
-
-    private PathElement[] pathElements;
-
-    public AnyOf(PathElement... pathElements) {
-        this.pathElements = pathElements;
-    }
-
-    public AnyOf(List<PathElement> pathElementList) {
-        this.pathElements = pathElementList.toArray(new PathElement[0]);
-    }
+public class CurrentElement implements PathElement {
 
     @Override
     public boolean check(YAPIONAnyType yapionAnyType) {
-        for (PathElement pathElement : pathElements) {
-            if (pathElement.check(yapionAnyType)) {
-                return true;
-            }
-        }
-        return false;
+        return true;
     }
 
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
-        return pathContext.mapViaPathContext(yapionAnyType -> {
-            return Arrays.stream(pathElements).map(pathElement -> {
-                PathContext innerContext = pathContext.with(yapionAnyType);
-                return pathElement.apply(innerContext, possibleNextPathElement);
-            });
-        });
+        return pathContext.current();
     }
 }

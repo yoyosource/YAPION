@@ -54,7 +54,7 @@ public class ValueOr implements ValueElement {
                 return false;
             }
             for (ValueElement valueElement : valueElements) {
-                PathContext innerPathContext = pathContext.with(Arrays.asList(yapionValue));
+                PathContext innerPathContext = pathContext.with(yapionValue);
                 innerPathContext = valueElement.apply(innerPathContext, possibleNextPathElement);
                 if (!innerPathContext.eval().isEmpty()) {
                     return true;

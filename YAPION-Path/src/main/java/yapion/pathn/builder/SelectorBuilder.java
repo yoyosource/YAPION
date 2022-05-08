@@ -97,6 +97,9 @@ public interface SelectorBuilder<I extends SelectorBuilder<I, B>, B> {
     default I root() {
         return add(new RootElement());
     }
+    default I current() {
+        return add(new CurrentElement());
+    }
 
     default I streamEntries() {
         return add(new Spread());

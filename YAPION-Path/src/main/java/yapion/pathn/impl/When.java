@@ -38,7 +38,7 @@ public class When implements PathElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.removeIf(yapionAnyType -> {
-            PathContext innerPathContext = pathContext.with(Arrays.asList(yapionAnyType));
+            PathContext innerPathContext = pathContext.with(yapionAnyType);
             List<YAPIONAnyType> yapionAnyTypeList = pathElement.apply(innerPathContext, possibleNextPathElement).eval();
             yapionAnyTypeList.removeIf(Objects::isNull);
             return yapionAnyTypeList.isEmpty();

@@ -48,7 +48,7 @@ public class AllOf implements PathElement {
         return pathContext.mapViaPathContext(yapionAnyType -> {
             boolean retained = true;
             for (PathElement pathElement : pathElements) {
-                PathContext innerContext = pathContext.with(Arrays.asList(yapionAnyType));
+                PathContext innerContext = pathContext.with(yapionAnyType);
                 if (pathElement.apply(innerContext, possibleNextPathElement).stream().count() > 0) {
                     retained = false;
                     break;
@@ -58,7 +58,7 @@ public class AllOf implements PathElement {
                 return null;
             }
             return Arrays.stream(pathElements).map(pathElement -> {
-                PathContext innerContext = pathContext.with(Arrays.asList(yapionAnyType));
+                PathContext innerContext = pathContext.with(yapionAnyType);
                 return pathElement.apply(innerContext, possibleNextPathElement);
             });
         });

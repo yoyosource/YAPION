@@ -31,23 +31,28 @@ import java.util.stream.Stream;
 public class PathContext {
 
     public static PathContext of(YAPIONAnyType... yapionAnyTypes) {
-        return new PathContext(true, Arrays.asList(yapionAnyTypes), Arrays.asList(yapionAnyTypes).stream());
+        return new PathContext(true, Arrays.asList(yapionAnyTypes), new ArrayList<>(), Arrays.asList(yapionAnyTypes).stream());
     }
 
     public static PathContext of(List<YAPIONAnyType> yapionAnyTypes) {
-        return new PathContext(true, new ArrayList<>(yapionAnyTypes), new ArrayList<>(yapionAnyTypes).stream());
+        return new PathContext(true, new ArrayList<>(yapionAnyTypes), new ArrayList<>(), new ArrayList<>(yapionAnyTypes).stream());
     }
 
     private boolean isRoot;
     private List<YAPIONAnyType> rootElements;
+    private List<YAPIONAnyType> currentElement;
     private Stream<YAPIONAnyType> current;
 
     public PathContext root() {
-        return new PathContext(true, rootElements, rootElements.stream());
+        return new PathContext(true, rootElements, currentElement, rootElements.stream());
+    }
+
+    public PathContext current() {
+        return new PathContext(false, rootElements, currentElement, currentElement.stream());
     }
 
     public PathContext empty() {
-        return new PathContext(false, rootElements, Stream.empty());
+        return new PathContext(false, rootElements, currentElement, Stream.empty());
     }
 
     public PathContext removeIf(Predicate<YAPIONAnyType> filter) {
@@ -55,7 +60,7 @@ public class PathContext {
     }
 
     public PathContext retainIf(Predicate<YAPIONAnyType> filter) {
-        return new PathContext(false, rootElements, current.filter(filter).filter(Objects::nonNull));
+        return new PathContext(false, rootElements, currentElement, current.filter(filter).filter(Objects::nonNull));
     }
 
     public PathContext map(Function<YAPIONAnyType, List<YAPIONAnyType>> mapper) {
@@ -63,15 +68,15 @@ public class PathContext {
     }
 
     public PathContext streamMap(Function<YAPIONAnyType, Stream<YAPIONAnyType>> mapper) {
-        return new PathContext(false, rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(Function.identity()).filter(Objects::nonNull));
+        return new PathContext(false, rootElements, currentElement, current.map(mapper).filter(Objects::nonNull).flatMap(Function.identity()).filter(Objects::nonNull));
     }
 
     public PathContext mapViaPathContext(Function<YAPIONAnyType, Stream<PathContext>> mapper) {
-        return new PathContext(false, rootElements, current.flatMap(mapper).filter(Objects::nonNull).flatMap(pathContext -> pathContext.current).filter(Objects::nonNull));
+        return new PathContext(false, rootElements, currentElement, current.flatMap(mapper).filter(Objects::nonNull).flatMap(pathContext -> pathContext.current).filter(Objects::nonNull));
     }
 
     public PathContext distinct() {
-        return new PathContext(false, rootElements, current.distinct());
+        return new PathContext(false, rootElements, currentElement, current.distinct());
     }
 
     public Stream<YAPIONAnyType> stream() {
@@ -79,11 +84,11 @@ public class PathContext {
     }
 
     public PathContext stream(UnaryOperator<Stream<YAPIONAnyType>> streamer) {
-        return new PathContext(false, rootElements, streamer.apply(current).filter(Objects::nonNull));
+        return new PathContext(false, rootElements, currentElement, streamer.apply(current).filter(Objects::nonNull));
     }
 
-    public PathContext with(List<YAPIONAnyType> elements) {
-        return new PathContext(false, rootElements, elements.stream());
+    public PathContext with(YAPIONAnyType element) {
+        return new PathContext(false, rootElements, Arrays.asList(element), Stream.of(element));
     }
 
     public List<YAPIONAnyType> eval() {
@@ -94,6 +99,7 @@ public class PathContext {
     public String toString() {
         return "PathContext{" +
                 "isRoot=" + isRoot +
+                ", currentElement=" + currentElement +
                 ", rootElements=" + rootElements +
                 ", current=" + current +
                 '}';
