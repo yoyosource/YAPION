@@ -229,13 +229,13 @@ public class Test {
                                 .select("element")
                                 .value()
                                     .min(1)
+                                .build()
                             .build()
                             .subselect()
                                 .current()
                                 .contains("0")
                             .build()
                         .build()
-                    .build()
                     .build()
                     .build();
             output(yapionPath.apply(yapionObject));
