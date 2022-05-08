@@ -64,7 +64,7 @@ public class PathContext {
     }
 
     public PathContext map(Function<YAPIONAnyType, List<YAPIONAnyType>> mapper) {
-        return new PathContext(false, rootElements, current.map(mapper).filter(Objects::nonNull).flatMap(List::stream).filter(Objects::nonNull));
+        return new PathContext(false, rootElements, currentElement, current.map(mapper).filter(Objects::nonNull).flatMap(List::stream).filter(Objects::nonNull));
     }
 
     public PathContext streamMap(Function<YAPIONAnyType, Stream<YAPIONAnyType>> mapper) {
