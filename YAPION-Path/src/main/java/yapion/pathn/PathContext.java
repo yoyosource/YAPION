@@ -88,6 +88,10 @@ public class PathContext {
     }
 
     public PathContext with(YAPIONAnyType element) {
+        return new PathContext(false, rootElements, currentElement, Stream.of(element));
+    }
+
+    public PathContext withAndSetCurrent(YAPIONAnyType element) {
         return new PathContext(false, rootElements, Arrays.asList(element), Stream.of(element));
     }
 

@@ -218,6 +218,28 @@ public class Test {
                     .build();
             output(yapionPath.apply(yapionObject));
         }
+
+        if (true) {
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .when()
+                        .allOf()
+                            .subselect()
+                                .root()
+                                .select("element")
+                                .value()
+                                    .min(1)
+                            .build()
+                            .subselect()
+                                .current()
+                                .contains("0")
+                            .build()
+                        .build()
+                    .build()
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
     }
 
     private static void output(PathResult result) {
