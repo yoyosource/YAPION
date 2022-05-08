@@ -44,5 +44,9 @@ public interface ValueSelectorBuilder<I extends ValueSelectorBuilder<I, B>, B> {
         return new OrValueSelector<>(itself());
     }
 
+    default ValueSetSelector<I> set() {
+        return new ValueSetSelector<>(itself());
+    }
+
     B build();
 }
