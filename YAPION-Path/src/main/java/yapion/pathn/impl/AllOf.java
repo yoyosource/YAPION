@@ -49,7 +49,7 @@ public class AllOf implements PathElement {
             boolean retained = true;
             for (PathElement pathElement : pathElements) {
                 PathContext innerContext = pathContext.with(yapionAnyType);
-                if (pathElement.apply(innerContext, possibleNextPathElement).stream().count() > 0) {
+                if (!pathElement.apply(innerContext, possibleNextPathElement).stream().findAny().isPresent()) {
                     retained = false;
                     break;
                 }
