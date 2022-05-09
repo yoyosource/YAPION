@@ -18,10 +18,10 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Regex implements PathElement {
 
@@ -38,16 +38,16 @@ public class Regex implements PathElement {
     @Override
     public boolean check(YAPIONAnyType yapionAnyType) {
         if (yapionAnyType instanceof YAPIONObject yapionObject) {
-            return yapionObject.getKeys().stream().anyMatch(matchPredicate);
+            return yapionObject.unsafe().keySet().stream().anyMatch(matchPredicate);
         }
         return false;
     }
 
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
-        return pathContext.map(yapionAnyType -> {
+        return pathContext.streamMap(yapionAnyType -> {
             if (yapionAnyType instanceof YAPIONObject yapionObject) {
-                return yapionObject.getKeys().stream().filter(matchPredicate).map(yapionObject::get).collect(Collectors.toList());
+                return yapionObject.unsafe().entrySet().stream().filter(matchPredicate).map(Map.Entry::getValue);
             }
             return null;
         });
