@@ -107,6 +107,12 @@ public interface SelectorBuilder<I extends SelectorBuilder<I, B>, B> {
     default I spread() {
         return streamEntries();
     }
+    default I flattenEntries() {
+        return add(new Flatten());
+    }
+    default I flatten() {
+        return flattenEntries();
+    }
 
     default SubSelector<I> subselect() {
         return new SubSelector<>(itself());

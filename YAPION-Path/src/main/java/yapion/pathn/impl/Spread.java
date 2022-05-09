@@ -31,13 +31,18 @@ public class Spread implements PathElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.streamMap(yapionAnyType -> {
+            long identifier = pathContext.getReverseIdentifier();
             if (yapionAnyType instanceof YAPIONArray yapionArray) {
                 return yapionArray.allKeys().stream().map(integer -> {
-                    return new YAPIONObject().putAndGetItself(integer + "", yapionArray.get(integer));
+                    YAPIONAnyType element = yapionArray.get(integer);
+                    pathContext.setReverseIdentifier(element, identifier);
+                    return new YAPIONObject().putAndGetItself(integer + "", element);
                 });
             } else if (yapionAnyType instanceof YAPIONObject yapionObject) {
                 return yapionObject.allKeys().stream().map(string -> {
-                    return new YAPIONObject().putAndGetItself(string, yapionObject.get(string));
+                    YAPIONAnyType element = yapionObject.get(string);
+                    pathContext.setReverseIdentifier(element, identifier);
+                    return new YAPIONObject().putAndGetItself(string, element);
                 });
             }
             return null;

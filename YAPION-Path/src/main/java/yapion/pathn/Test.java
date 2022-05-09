@@ -236,7 +236,30 @@ public class Test {
                                 .contains("0")
                             .build()
                         .build()
+                    .build() // .flatten() -> reverse from .spread()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (true) {
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .when()
+                        .allOf()
+                            .subselect()
+                                .root()
+                                .select("element")
+                                .value()
+                                    .min(1)
+                                .build()
+                            .build()
+                            .subselect()
+                                .current()
+                                .contains("0")
+                            .build()
+                        .build()
                     .build()
+                    .flatten()
                     .build();
             output(yapionPath.apply(yapionObject));
         }

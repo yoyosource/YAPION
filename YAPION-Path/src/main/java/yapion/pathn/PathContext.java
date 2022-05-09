@@ -17,10 +17,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -31,11 +29,11 @@ import java.util.stream.Stream;
 public class PathContext {
 
     public static PathContext of(YAPIONAnyType... yapionAnyTypes) {
-        return new PathContext(true, Arrays.asList(yapionAnyTypes), false, new ArrayList<>(), Arrays.asList(yapionAnyTypes).stream());
+        return new PathContext(true, Arrays.asList(yapionAnyTypes), false, new ArrayList<>(), Arrays.asList(yapionAnyTypes).stream(), new AtomicLong(), new IdentityHashMap<>());
     }
 
     public static PathContext of(List<YAPIONAnyType> yapionAnyTypes) {
-        return new PathContext(true, new ArrayList<>(yapionAnyTypes), false, new ArrayList<>(), new ArrayList<>(yapionAnyTypes).stream());
+        return new PathContext(true, new ArrayList<>(yapionAnyTypes), false, new ArrayList<>(), new ArrayList<>(yapionAnyTypes).stream(), new AtomicLong(), new IdentityHashMap<>());
     }
 
     private boolean isRoot;
@@ -43,17 +41,19 @@ public class PathContext {
     private boolean isCurrent;
     private List<YAPIONAnyType> currentElement;
     private Stream<YAPIONAnyType> current;
+    private AtomicLong reverseIdentifier;
+    private Map<YAPIONAnyType, Long> reverseSpreadMap;
 
     public PathContext root() {
-        return new PathContext(true, rootElements, false, currentElement, rootElements.stream());
+        return new PathContext(true, rootElements, false, currentElement, rootElements.stream(), reverseIdentifier, reverseSpreadMap);
     }
 
     public PathContext current() {
-        return new PathContext(false, rootElements, true, currentElement, currentElement.stream());
+        return new PathContext(false, rootElements, true, currentElement, currentElement.stream(), reverseIdentifier, reverseSpreadMap);
     }
 
     public PathContext empty() {
-        return new PathContext(false, rootElements, false, currentElement, Stream.empty());
+        return new PathContext(false, rootElements, false, currentElement, Stream.empty(), reverseIdentifier, reverseSpreadMap);
     }
 
     public PathContext removeIf(Predicate<YAPIONAnyType> filter) {
@@ -61,23 +61,23 @@ public class PathContext {
     }
 
     public PathContext retainIf(Predicate<YAPIONAnyType> filter) {
-        return new PathContext(false, rootElements, false, currentElement, current.filter(filter).filter(Objects::nonNull));
+        return new PathContext(false, rootElements, false, currentElement, current.filter(filter).filter(Objects::nonNull), reverseIdentifier, reverseSpreadMap);
     }
 
     public PathContext map(Function<YAPIONAnyType, List<YAPIONAnyType>> mapper) {
-        return new PathContext(false, rootElements, false, currentElement, current.map(mapper).filter(Objects::nonNull).flatMap(List::stream).filter(Objects::nonNull));
+        return new PathContext(false, rootElements, false, currentElement, current.map(mapper).filter(Objects::nonNull).flatMap(List::stream).filter(Objects::nonNull), reverseIdentifier, reverseSpreadMap);
     }
 
     public PathContext streamMap(Function<YAPIONAnyType, Stream<YAPIONAnyType>> mapper) {
-        return new PathContext(false, rootElements, false, currentElement, current.map(mapper).filter(Objects::nonNull).flatMap(Function.identity()).filter(Objects::nonNull));
+        return new PathContext(false, rootElements, false, currentElement, current.map(mapper).filter(Objects::nonNull).flatMap(Function.identity()).filter(Objects::nonNull), reverseIdentifier, reverseSpreadMap);
     }
 
     public PathContext mapViaPathContext(Function<YAPIONAnyType, Stream<PathContext>> mapper) {
-        return new PathContext(false, rootElements, false, currentElement, current.flatMap(mapper).filter(Objects::nonNull).flatMap(pathContext -> pathContext.current).filter(Objects::nonNull));
+        return new PathContext(false, rootElements, false, currentElement, current.flatMap(mapper).filter(Objects::nonNull).flatMap(pathContext -> pathContext.current).filter(Objects::nonNull), reverseIdentifier, reverseSpreadMap);
     }
 
     public PathContext distinct() {
-        return new PathContext(false, rootElements, false, currentElement, current.distinct());
+        return new PathContext(false, rootElements, false, currentElement, current.distinct(), reverseIdentifier, reverseSpreadMap);
     }
 
     public Stream<YAPIONAnyType> stream() {
@@ -85,15 +85,31 @@ public class PathContext {
     }
 
     public PathContext stream(UnaryOperator<Stream<YAPIONAnyType>> streamer) {
-        return new PathContext(false, rootElements, false, currentElement, streamer.apply(current).filter(Objects::nonNull));
+        return new PathContext(false, rootElements, false, currentElement, streamer.apply(current).filter(Objects::nonNull), reverseIdentifier, reverseSpreadMap);
     }
 
     public PathContext with(YAPIONAnyType element) {
-        return new PathContext(false, rootElements, false, currentElement, Stream.of(element));
+        return new PathContext(false, rootElements, false, currentElement, Stream.of(element), reverseIdentifier, reverseSpreadMap);
+    }
+
+    public PathContext with(List<YAPIONAnyType> elements) {
+        return new PathContext(false, rootElements, false, currentElement, elements.stream(), reverseIdentifier, reverseSpreadMap);
     }
 
     public PathContext withAndSetCurrent(YAPIONAnyType element) {
-        return new PathContext(false, rootElements, true, Arrays.asList(element), Stream.of(element));
+        return new PathContext(false, rootElements, true, Arrays.asList(element), Stream.of(element), reverseIdentifier, reverseSpreadMap);
+    }
+
+    public long getReverseIdentifier() {
+        return reverseIdentifier.getAndIncrement();
+    }
+
+    public void setReverseIdentifier(YAPIONAnyType element, long reverseIdentifier) {
+        reverseSpreadMap.put(element, reverseIdentifier);
+    }
+
+    public long getReverseIdentifier(YAPIONAnyType element) {
+        return reverseSpreadMap.getOrDefault(element, -1L);
     }
 
     public List<YAPIONAnyType> eval() {
@@ -108,6 +124,8 @@ public class PathContext {
                 ", isCurrent=" + isCurrent +
                 ", currentElement=" + currentElement.size() +
                 ", current=" + current +
+                ", reverseIdentifier=" + reverseIdentifier +
+                ", reverseSpreads=" + reverseSpreadMap.size() +
                 '}';
     }
 }
