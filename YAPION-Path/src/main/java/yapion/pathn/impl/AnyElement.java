@@ -18,17 +18,18 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class AnyElement implements PathElement {
 
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
-        return pathContext.map(yapionAnyType -> {
+        return pathContext.streamMap(yapionAnyType -> {
             if (yapionAnyType instanceof YAPIONObject yapionObject) {
-                return yapionObject.getAllValues();
+                return yapionObject.unsafe().values().stream();
             } else if (yapionAnyType instanceof YAPIONArray yapionArray) {
-                return yapionArray.getAllValues();
+                return yapionArray.unsafe().stream();
             }
             return null;
         });

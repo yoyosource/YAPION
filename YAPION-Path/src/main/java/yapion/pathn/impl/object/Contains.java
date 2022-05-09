@@ -18,6 +18,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,16 +33,16 @@ public class Contains implements PathElement {
     @Override
     public boolean check(YAPIONAnyType yapionAnyType) {
         if (yapionAnyType instanceof YAPIONObject yapionObject) {
-            return yapionObject.getKeys().stream().anyMatch(key -> key.contains(check));
+            return yapionObject.unsafe().keySet().stream().anyMatch(s -> s.contains(check));
         }
         return false;
     }
 
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
-        return pathContext.map(yapionAnyType -> {
+        return pathContext.streamMap(yapionAnyType -> {
             if (yapionAnyType instanceof YAPIONObject yapionObject) {
-                return yapionObject.getKeys().stream().filter(s -> s.contains(check)).map(yapionObject::get).collect(Collectors.toList());
+                return yapionObject.unsafe().entrySet().stream().filter(entry -> entry.getKey().contains(check)).map(Map.Entry::getValue);
             }
             return null;
         });

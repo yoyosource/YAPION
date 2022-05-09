@@ -20,6 +20,7 @@ import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Spread implements PathElement {
 
@@ -33,16 +34,17 @@ public class Spread implements PathElement {
         return pathContext.streamMap(yapionAnyType -> {
             long identifier = pathContext.getReverseIdentifier();
             if (yapionAnyType instanceof YAPIONArray yapionArray) {
-                return yapionArray.allKeys().stream().map(integer -> {
-                    YAPIONAnyType element = yapionArray.get(integer);
+                AtomicLong counter = new AtomicLong(0);
+                return yapionArray.unsafe().stream().map(element -> {
+                    long id = counter.getAndIncrement();
                     pathContext.setReverseIdentifier(element, identifier);
-                    return new YAPIONObject().putAndGetItself(integer + "", element);
+                    return new YAPIONObject().add(id + "", element);
                 });
             } else if (yapionAnyType instanceof YAPIONObject yapionObject) {
-                return yapionObject.allKeys().stream().map(string -> {
-                    YAPIONAnyType element = yapionObject.get(string);
+                return yapionObject.unsafe().entrySet().stream().map(entry -> {
+                    YAPIONAnyType element = entry.getValue();
                     pathContext.setReverseIdentifier(element, identifier);
-                    return new YAPIONObject().putAndGetItself(string, element);
+                    return new YAPIONObject().add(entry.getKey(), element);
                 });
             }
             return null;

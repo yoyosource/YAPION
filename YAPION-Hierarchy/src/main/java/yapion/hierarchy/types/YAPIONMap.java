@@ -400,6 +400,16 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         return variables;
     }
 
+    /**
+     * Modifying this is an unsafe operation. When you edit this you are on your own!
+     *
+     * @return the internal backed map
+     */
+    @InternalAPI
+    public Map<YAPIONAnyType, YAPIONAnyType> unsafe() {
+        return variables;
+    }
+
     @Override
     public String toString() {
         StringOutput stringOutput = new StringOutput();

@@ -17,7 +17,6 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -36,11 +35,8 @@ public class When implements PathElement {
 
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
-        return pathContext.removeIf(yapionAnyType -> {
-            PathContext innerPathContext = pathContext.withAndSetCurrent(yapionAnyType);
-            List<YAPIONAnyType> yapionAnyTypeList = pathElement.apply(innerPathContext, possibleNextPathElement).eval();
-            yapionAnyTypeList.removeIf(Objects::isNull);
-            return yapionAnyTypeList.isEmpty();
+        return pathContext.retainIf(yapionAnyType -> {
+            return pathElement.apply(pathContext.withAndSetCurrent(yapionAnyType), possibleNextPathElement).stream().anyMatch(Objects::nonNull);
         });
     }
 }

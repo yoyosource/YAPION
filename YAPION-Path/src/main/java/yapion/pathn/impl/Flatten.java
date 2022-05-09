@@ -18,10 +18,7 @@ import yapion.hierarchy.types.YAPIONObject;
 import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Flatten implements PathElement {
@@ -33,7 +30,13 @@ public class Flatten implements PathElement {
 
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
+        return apply1(pathContext, possibleNextPathElement);
+    }
+
+    private PathContext apply2(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
+        long time = System.nanoTime();
         List<YAPIONAnyType> elements = pathContext.eval();
+        System.out.println((System.nanoTime() - time) / 1000000.0 + "ms");
         Map<Long, Map<String, YAPIONAnyType>> map = new HashMap<>();
         for (YAPIONAnyType element : elements) {
             if (element instanceof YAPIONObject yapionObject && yapionObject.size() == 1) {
@@ -51,5 +54,25 @@ public class Flatten implements PathElement {
             return yapionObject;
         }).collect(Collectors.toList());
         return pathContext.with(elements);
+    }
+
+    private PathContext apply1(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
+        Map<Long, YAPIONObject> map = new HashMap<>();
+        pathContext.stream().forEach(yapionAnyType -> {
+            if (!(yapionAnyType instanceof YAPIONObject yapionObject)) {
+                return;
+            }
+            if (yapionObject.size() != 1) {
+                return;
+            }
+            String key = yapionObject.getKeys().get(0);
+            YAPIONAnyType value = yapionObject.get(key);
+            long identifier = pathContext.getReverseIdentifier(value);
+            if (identifier == -1) {
+                return;
+            }
+            map.computeIfAbsent(identifier, ignore -> new YAPIONObject()).put(key, value);
+        });
+        return pathContext.with(new ArrayList<>(map.values()));
     }
 }

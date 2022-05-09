@@ -424,6 +424,16 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
         return array;
     }
 
+    /**
+     * Modifying this is an unsafe operation. When you edit this you are on your own!
+     *
+     * @return the internal backed array
+     */
+    @InternalAPI
+    public List<YAPIONAnyType> unsafe() {
+        return array;
+    }
+
     @Override
     public String toString() {
         StringOutput stringOutput = new StringOutput();
