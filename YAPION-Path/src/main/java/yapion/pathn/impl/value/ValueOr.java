@@ -50,17 +50,22 @@ public class ValueOr implements ValueElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.removeIf(yapionAnyType -> {
-            if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
-                return false;
-            }
-            for (ValueElement valueElement : valueElements) {
-                PathContext innerPathContext = pathContext.with(yapionValue);
-                innerPathContext = valueElement.apply(innerPathContext, possibleNextPathElement);
-                if (!innerPathContext.eval().isEmpty()) {
-                    return true;
+            long time = System.nanoTime();
+            try {
+                if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
+                    return false;
                 }
+                for (ValueElement valueElement : valueElements) {
+                    PathContext innerPathContext = pathContext.with(yapionValue);
+                    innerPathContext = valueElement.apply(innerPathContext, possibleNextPathElement);
+                    if (!innerPathContext.eval().isEmpty()) {
+                        return true;
+                    }
+                }
+                return false;
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
             }
-            return false;
         });
     }
 }

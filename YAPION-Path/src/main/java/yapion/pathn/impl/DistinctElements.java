@@ -13,15 +13,28 @@
 
 package yapion.pathn.impl;
 
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class DistinctElements implements PathElement {
 
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
-        return pathContext.distinct();
+        Map<YAPIONAnyType, Void> set = new HashMap<>();
+        return pathContext.removeIf(yapionAnyType -> {
+            long time = System.nanoTime();
+            try {
+                if (set.containsKey(yapionAnyType)) return true;
+                set.put(yapionAnyType, null);
+                return false;
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
+            }
+        });
     }
 }

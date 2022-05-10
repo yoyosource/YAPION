@@ -46,15 +46,20 @@ public class AnyWith implements PathElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.retainIf(yapionAnyType -> {
-            boolean retain = false;
-            for (PathElement pathElement : pathElements) {
-                PathContext innerContext = pathContext.with(yapionAnyType);
-                if (pathElement.apply(innerContext, possibleNextPathElement).stream().count() > 0) {
-                    retain = true;
-                    break;
+            long time = System.nanoTime();
+            try {
+                boolean retain = false;
+                for (PathElement pathElement : pathElements) {
+                    PathContext innerContext = pathContext.with(yapionAnyType);
+                    if (pathElement.apply(innerContext, possibleNextPathElement).stream().count() > 0) {
+                        retain = true;
+                        break;
+                    }
                 }
+                return retain;
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
             }
-            return retain;
         });
     }
 }

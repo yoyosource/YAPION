@@ -21,6 +21,7 @@ import yapion.pathn.impl.*;
 import yapion.pathn.impl.object.Contains;
 import yapion.pathn.impl.object.Regex;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Test {
@@ -168,7 +169,7 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (true) {
+        if (false) {
             YAPIONPath yapionPath = new Selector()
                     .spread()
                     .anyOf()
@@ -195,7 +196,7 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (true) {
+        if (false) {
             YAPIONPath yapionPath = new Selector()
                     .spread()
                     .anyOf()
@@ -219,7 +220,7 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (true) {
+        if (false) {
             YAPIONPath yapionPath = new Selector()
                     .spread()
                     .when()
@@ -273,13 +274,25 @@ public class Test {
                     .build()
                     .flatten()
                     .build();
-            output(yapionPath.apply(yapionObject));
+            long total = 0;
+            for (int i = 0; i < 10000; i++) {
+                total += yapionPath.apply(yapionObject).nanoTime;
+            }
+            System.out.println((total / 1000 / 1000.0 / 10000) + "ms/iteration");
         }
     }
 
     private static void output(PathResult result) {
         System.out.println(result.size());
         System.out.println(result.nanoTime / 1000000 + "ms");
+        StringBuilder st = new StringBuilder();
+        for (Map.Entry<PathElement, Long> entry : result.timingMap.entrySet()) {
+            if (st.length() != 0) {
+                st.append(", ");
+            }
+            st.append(entry.getKey().toString()).append("=").append(entry.getValue() / 1000000.0).append("ms");
+        }
+        System.out.println(st);
         System.out.println(result.yapionAnyTypeList);
     }
 }

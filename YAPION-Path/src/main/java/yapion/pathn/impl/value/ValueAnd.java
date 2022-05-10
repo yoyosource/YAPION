@@ -50,14 +50,19 @@ public class ValueAnd implements ValueElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.removeIf(yapionAnyType -> {
-            if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
-                return false;
+            long time = System.nanoTime();
+            try {
+                if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
+                    return false;
+                }
+                PathContext innerPathContext = pathContext.with(yapionValue);
+                for (ValueElement valueElement : valueElements) {
+                    innerPathContext = valueElement.apply(innerPathContext, possibleNextPathElement);
+                }
+                return innerPathContext.eval().isEmpty();
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
             }
-            PathContext innerPathContext = pathContext.with(yapionValue);
-            for (ValueElement valueElement : valueElements) {
-                innerPathContext = valueElement.apply(innerPathContext, possibleNextPathElement);
-            }
-            return innerPathContext.eval().isEmpty();
         });
     }
 }

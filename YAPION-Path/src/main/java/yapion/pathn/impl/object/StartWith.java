@@ -41,10 +41,15 @@ public class StartWith implements PathElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.streamMap(yapionAnyType -> {
-            if (yapionAnyType instanceof YAPIONObject yapionObject) {
-                return yapionObject.unsafe().entrySet().stream().filter(entry -> entry.getKey().startsWith(check)).map(Map.Entry::getValue);
+            long time = System.nanoTime();
+            try {
+                if (yapionAnyType instanceof YAPIONObject yapionObject) {
+                    return yapionObject.unsafe().entrySet().stream().filter(entry -> entry.getKey().startsWith(check)).map(Map.Entry::getValue);
+                }
+                return null;
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
             }
-            return null;
         });
     }
 }

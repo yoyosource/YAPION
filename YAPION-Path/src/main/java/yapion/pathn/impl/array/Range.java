@@ -61,20 +61,25 @@ public class Range implements PathElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.map(yapionAnyType -> {
-            if (!check(yapionAnyType)) {
-                return null;
-            }
-            if (yapionAnyType instanceof YAPIONArray yapionArray) {
-                int size = yapionArray.size();
-                int min = this.min == null ? 0 : this.min;
-                int max = this.max == null ? size : this.max;
-                List<YAPIONAnyType> elements = new ArrayList<>();
-                for (int i = min; i < max; i++) {
-                    elements.add(yapionArray.get(i));
+            long time = System.nanoTime();
+            try {
+                if (!check(yapionAnyType)) {
+                    return null;
                 }
-                return elements;
+                if (yapionAnyType instanceof YAPIONArray yapionArray) {
+                    int size = yapionArray.size();
+                    int min = this.min == null ? 0 : this.min;
+                    int max = this.max == null ? size : this.max;
+                    List<YAPIONAnyType> elements = new ArrayList<>();
+                    for (int i = min; i < max; i++) {
+                        elements.add(yapionArray.get(i));
+                    }
+                    return elements;
+                }
+                return null;
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
             }
-            return null;
         });
     }
 }

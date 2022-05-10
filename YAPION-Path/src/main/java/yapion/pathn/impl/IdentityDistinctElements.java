@@ -27,9 +27,14 @@ public class IdentityDistinctElements implements PathElement {
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         Map<YAPIONAnyType, Void> set = new IdentityHashMap<>();
         return pathContext.removeIf(yapionAnyType -> {
-            if (set.containsKey(yapionAnyType)) return true;
-            set.put(yapionAnyType, null);
-            return false;
+            long time = System.nanoTime();
+            try {
+                if (set.containsKey(yapionAnyType)) return true;
+                set.put(yapionAnyType, null);
+                return false;
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
+            }
         });
     }
 }

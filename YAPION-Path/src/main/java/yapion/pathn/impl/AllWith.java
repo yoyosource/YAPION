@@ -45,10 +45,15 @@ public class AllWith implements PathElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.stream(yapionAnyTypeStream -> {
-            for (PathElement pathElement : pathElements) {
-                yapionAnyTypeStream = yapionAnyTypeStream.filter(pathElement::check);
+            long time = System.nanoTime();
+            try {
+                for (PathElement pathElement : pathElements) {
+                    yapionAnyTypeStream = yapionAnyTypeStream.filter(pathElement::check);
+                }
+                return yapionAnyTypeStream;
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
             }
-            return yapionAnyTypeStream;
         });
     }
 }

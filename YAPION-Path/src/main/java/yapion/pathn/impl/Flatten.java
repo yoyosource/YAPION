@@ -59,19 +59,24 @@ public class Flatten implements PathElement {
     private PathContext apply1(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         Map<Long, YAPIONObject> map = new HashMap<>();
         pathContext.stream().forEach(yapionAnyType -> {
-            if (!(yapionAnyType instanceof YAPIONObject yapionObject)) {
-                return;
+            long time = System.nanoTime();
+            try {
+                if (!(yapionAnyType instanceof YAPIONObject yapionObject)) {
+                    return;
+                }
+                if (yapionObject.size() != 1) {
+                    return;
+                }
+                String key = yapionObject.getKeys().get(0);
+                YAPIONAnyType value = yapionObject.get(key);
+                long identifier = pathContext.getReverseIdentifier(value);
+                if (identifier == -1) {
+                    return;
+                }
+                map.computeIfAbsent(identifier, ignore -> new YAPIONObject()).put(key, value);
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
             }
-            if (yapionObject.size() != 1) {
-                return;
-            }
-            String key = yapionObject.getKeys().get(0);
-            YAPIONAnyType value = yapionObject.get(key);
-            long identifier = pathContext.getReverseIdentifier(value);
-            if (identifier == -1) {
-                return;
-            }
-            map.computeIfAbsent(identifier, ignore -> new YAPIONObject()).put(key, value);
         });
         return pathContext.with(new ArrayList<>(map.values()));
     }

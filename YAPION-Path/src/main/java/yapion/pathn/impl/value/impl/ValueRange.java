@@ -69,6 +69,13 @@ public class ValueRange<T extends Number & Comparable<T>> implements ValueElemen
 
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
-        return pathContext.retainIf(this::check);
+        return pathContext.retainIf(yapionAnyType -> {
+            long time = System.nanoTime();
+            try {
+                return check(yapionAnyType);
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
+            }
+        });
     }
 }

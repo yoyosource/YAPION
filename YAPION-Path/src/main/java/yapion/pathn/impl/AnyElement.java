@@ -26,12 +26,17 @@ public class AnyElement implements PathElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.streamMap(yapionAnyType -> {
-            if (yapionAnyType instanceof YAPIONObject yapionObject) {
-                return yapionObject.unsafe().values().stream();
-            } else if (yapionAnyType instanceof YAPIONArray yapionArray) {
-                return yapionArray.unsafe().stream();
+            long time = System.nanoTime();
+            try {
+                if (yapionAnyType instanceof YAPIONObject yapionObject) {
+                    return yapionObject.unsafe().values().stream();
+                } else if (yapionAnyType instanceof YAPIONArray yapionArray) {
+                    return yapionArray.unsafe().stream();
+                }
+                return null;
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
             }
-            return null;
         });
     }
 }

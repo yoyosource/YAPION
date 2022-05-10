@@ -16,16 +16,14 @@ package yapion.pathn;
 import lombok.RequiredArgsConstructor;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class PathResult implements List<YAPIONAnyType> {
 
     public final List<YAPIONAnyType> yapionAnyTypeList;
     public final long nanoTime;
+    public final Map<PathElement, Long> timingMap;
 
     @Override
     public int size() {
@@ -147,6 +145,7 @@ public class PathResult implements List<YAPIONAnyType> {
         return "PathResult{" +
                 "nanoTime=" + nanoTime + "ns" +
                 ", milliseconds=" + (nanoTime / 1000000) + "ms" +
+                ", timingMap=" + timingMap +
                 ", count=" + yapionAnyTypeList.size() +
                 ", elements=" + yapionAnyTypeList +
                 '}';

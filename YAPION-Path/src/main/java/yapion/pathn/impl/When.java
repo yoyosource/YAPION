@@ -36,7 +36,14 @@ public class When implements PathElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.retainIf(yapionAnyType -> {
-            return pathElement.apply(pathContext.withAndSetCurrent(yapionAnyType), possibleNextPathElement).stream().anyMatch(Objects::nonNull);
+            long time = System.nanoTime();
+            try {
+                PathContext innerPathContext = pathContext.withAndSetCurrent(yapionAnyType);
+                PathContext nextPathContext = pathElement.apply(innerPathContext, possibleNextPathElement);
+                return nextPathContext.stream().filter(Objects::nonNull).findFirst().isPresent();
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
+            }
         });
     }
 }

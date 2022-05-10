@@ -46,10 +46,15 @@ public class AnyOf implements PathElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.mapViaPathContext(yapionAnyType -> {
-            return Arrays.stream(pathElements).map(pathElement -> {
-                PathContext innerContext = pathContext.with(yapionAnyType);
-                return pathElement.apply(innerContext, possibleNextPathElement);
-            });
+            long time = System.nanoTime();
+            try {
+                return Arrays.stream(pathElements).map(pathElement -> {
+                    PathContext innerContext = pathContext.with(yapionAnyType);
+                    return pathElement.apply(innerContext, possibleNextPathElement);
+                });
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
+            }
         });
     }
 }

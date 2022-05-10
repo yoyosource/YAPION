@@ -31,15 +31,20 @@ public class AnyDeeperElement implements PathElement {
             return pathContext.empty();
         }
         return pathContext.map(yapionAnyType -> {
-            List<YAPIONAnyType> result = new ArrayList<>();
-            if (yapionAnyType instanceof YAPIONDataType yapionDataType) {
-                new YAPIONTreeIterator(yapionDataType).forEachRemaining(element -> {
-                    if (possibleNextPathElement.get().check(element)) {
-                        result.add(element);
-                    }
-                });
+            long time = System.nanoTime();
+            try {
+                List<YAPIONAnyType> result = new ArrayList<>();
+                if (yapionAnyType instanceof YAPIONDataType yapionDataType) {
+                    new YAPIONTreeIterator(yapionDataType).forEachRemaining(element -> {
+                        if (possibleNextPathElement.get().check(element)) {
+                            result.add(element);
+                        }
+                    });
+                }
+                return result;
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
             }
-            return result;
         });
     }
 }

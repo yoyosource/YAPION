@@ -16,7 +16,6 @@ package yapion.pathn;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +46,7 @@ public class YAPIONPath implements PathElement {
         PathContext pathContext = apply(PathContext.of(elements), possibleNextPathElementOuter);
         List<YAPIONAnyType> result = pathContext.eval();
         long time2 = System.nanoTime();
-        return new PathResult(result, time2 - time);
+        return new PathResult(result, time2 - time, pathContext.getTimingMap());
     }
 
     private PathElement getPathElement(int index) {

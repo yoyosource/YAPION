@@ -57,15 +57,20 @@ public class Element implements PathElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.map(yapionAnyType -> {
-            if (index.isPresent() && yapionAnyType instanceof YAPIONArray yapionArray) {
-                int index = this.index.get();
-                if (index < 0) index = yapionArray.size() + index;
-                return Arrays.asList(yapionArray.get(index));
+            long time = System.nanoTime();
+            try {
+                if (index.isPresent() && yapionAnyType instanceof YAPIONArray yapionArray) {
+                    int index = this.index.get();
+                    if (index < 0) index = yapionArray.size() + index;
+                    return Arrays.asList(yapionArray.get(index));
+                }
+                if (yapionAnyType instanceof YAPIONObject yapionObject) {
+                    return Arrays.asList(yapionObject.get(key));
+                }
+                return null;
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
             }
-            if (yapionAnyType instanceof YAPIONObject yapionObject) {
-                return Arrays.asList(yapionObject.get(key));
-            }
-            return null;
         });
     }
 }

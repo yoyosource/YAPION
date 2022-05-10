@@ -32,22 +32,27 @@ public class Spread implements PathElement {
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.streamMap(yapionAnyType -> {
-            long identifier = pathContext.getReverseIdentifier();
-            if (yapionAnyType instanceof YAPIONArray yapionArray) {
-                AtomicLong counter = new AtomicLong(0);
-                return yapionArray.unsafe().stream().map(element -> {
-                    long id = counter.getAndIncrement();
-                    pathContext.setReverseIdentifier(element, identifier);
-                    return new YAPIONObject().add(id + "", element);
-                });
-            } else if (yapionAnyType instanceof YAPIONObject yapionObject) {
-                return yapionObject.unsafe().entrySet().stream().map(entry -> {
-                    YAPIONAnyType element = entry.getValue();
-                    pathContext.setReverseIdentifier(element, identifier);
-                    return new YAPIONObject().add(entry.getKey(), element);
-                });
+            long time = System.nanoTime();
+            try {
+                long identifier = pathContext.getReverseIdentifier();
+                if (yapionAnyType instanceof YAPIONArray yapionArray) {
+                    AtomicLong counter = new AtomicLong(0);
+                    return yapionArray.unsafe().stream().map(element -> {
+                        long id = counter.getAndIncrement();
+                        pathContext.setReverseIdentifier(element, identifier);
+                        return new YAPIONObject().add(id + "", element);
+                    });
+                } else if (yapionAnyType instanceof YAPIONObject yapionObject) {
+                    return yapionObject.unsafe().entrySet().stream().map(entry -> {
+                        YAPIONAnyType element = entry.getValue();
+                        pathContext.setReverseIdentifier(element, identifier);
+                        return new YAPIONObject().add(entry.getKey(), element);
+                    });
+                }
+                return null;
+            } finally {
+                pathContext.addTiming(this, System.nanoTime() - time);
             }
-            return null;
         });
     }
 }
