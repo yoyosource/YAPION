@@ -13,7 +13,6 @@
 
 package yapion.pathn;
 
-import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
@@ -22,9 +21,10 @@ import yapion.pathn.impl.*;
 import yapion.pathn.impl.object.Contains;
 import yapion.pathn.impl.object.Regex;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Test {
 
@@ -283,20 +283,30 @@ public class Test {
             yapionObject.remove("element");
             YAPIONPath yapionPath = new Selector()
                     .any()
-                    .add((pathContext, possibleNextPathElement) -> pathContext.map(yapionAnyType -> {
-                        YAPIONArray yapionArray = (YAPIONArray) yapionAnyType;
-                        YAPIONObject result = new YAPIONObject();
-                        for (int i = 0; i < yapionArray.size(); i++) {
-                            String key = i + "";
-                            if (key.contains("0")) {
-                                result.add(key, yapionArray.get(i));
-                            }
+                    .add(new PathElement() {
+                        @Override
+                        public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
+                            return pathContext.map(yapionAnyType -> {
+                                long time = System.nanoTime();
+                                try {
+                                    YAPIONArray yapionArray = (YAPIONArray) yapionAnyType;
+                                    YAPIONObject result = new YAPIONObject();
+                                    for (int i = 0; i < yapionArray.size(); i++) {
+                                        String key = i + "";
+                                        if (key.contains("0")) {
+                                            result.add(key, yapionArray.get(i));
+                                        }
+                                    }
+                                    if (result.isEmpty()) {
+                                        return null;
+                                    }
+                                    return Arrays.asList(result);
+                                } finally {
+                                    pathContext.addTiming(this, System.nanoTime() - time);
+                                }
+                            });
                         }
-                        if (result.isEmpty()) {
-                            return null;
-                        }
-                        return Arrays.asList(result);
-                    }))
+                    })
                     .build();
             output(yapionPath.apply(yapionObject));
             long total = 0;
