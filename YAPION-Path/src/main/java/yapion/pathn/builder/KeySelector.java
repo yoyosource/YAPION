@@ -42,7 +42,11 @@ public class KeySelector<R extends SelectorBuilder<?, ?>> implements ValueSelect
 
     @Override
     public R build() {
-        parent.add(new KeySelection(new ValueAnd(valueElementList)));
+        if (valueElementList.size() == 1) {
+            parent.add(new KeySelection(valueElementList.get(0)));
+        } else {
+            parent.add(new KeySelection(new ValueAnd(valueElementList)));
+        }
         return parent;
     }
 }

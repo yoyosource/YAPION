@@ -41,7 +41,11 @@ public class AndValueSelector<R extends ValueSelectorBuilder<?, ?>> implements V
 
     @Override
     public R build() {
-        parent.add(new ValueAnd(valueElementList));
+        if (valueElementList.size() == 1) {
+            parent.add(valueElementList.get(0));
+        } else {
+            parent.add(new ValueAnd(valueElementList));
+        }
         return parent;
     }
 }

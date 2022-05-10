@@ -35,12 +35,9 @@ public class ValueOr implements ValueElement {
     }
 
     @Override
-    public boolean check(YAPIONAnyType yapionAnyType) {
-        if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
-            return true;
-        }
+    public boolean check(Object object) {
         for (ValueElement valueElement : valueElements) {
-            if (valueElement.check(yapionAnyType)) {
+            if (valueElement.check(object)) {
                 return true;
             }
         }

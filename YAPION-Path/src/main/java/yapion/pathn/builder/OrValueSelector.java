@@ -41,7 +41,11 @@ public class OrValueSelector<R extends ValueSelectorBuilder<?, ?>> implements Va
 
     @Override
     public R build() {
-        parent.add(new ValueOr(valueElementList));
+        if (valueElementList.size() == 1) {
+            parent.add(valueElementList.get(0));
+        } else {
+            parent.add(new ValueOr(valueElementList));
+        }
         return parent;
     }
 }

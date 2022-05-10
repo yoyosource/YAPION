@@ -13,8 +13,6 @@
 
 package yapion.pathn.impl.value.impl;
 
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONValue;
 import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 import yapion.pathn.impl.value.ValueElement;
@@ -44,12 +42,8 @@ public class ValueRange<T extends Number & Comparable<T>> implements ValueElemen
     }
 
     @Override
-    public boolean check(YAPIONAnyType yapionAnyType) {
-        if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
-            return true;
-        }
-        Object value = yapionValue.get();
-        if (!(value instanceof Number number)) {
+    public boolean check(Object object) {
+        if (!(object instanceof Number number)) {
             return false;
         }
         T numberValue;

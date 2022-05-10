@@ -13,8 +13,6 @@
 
 package yapion.pathn.impl.value.impl;
 
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONValue;
 import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 import yapion.pathn.impl.value.ValueElement;
@@ -34,15 +32,8 @@ public class ValueSet<T> implements ValueElement {
     }
 
     @Override
-    public boolean check(YAPIONAnyType yapionAnyType) {
-        if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
-            return true;
-        }
-        try {
-            return values.contains((T) yapionValue.get());
-        } catch (ClassCastException e) {
-            return false;
-        }
+    public boolean check(Object object) {
+        return values.contains((T) object);
     }
 
     @Override

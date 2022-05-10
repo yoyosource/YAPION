@@ -16,15 +16,12 @@ package yapion.pathn.impl;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.hierarchy.types.YAPIONValue;
 import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 import yapion.pathn.impl.value.ValueElement;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
 public class KeySelection implements PathElement {
 
@@ -49,14 +46,14 @@ public class KeySelection implements PathElement {
                     AtomicInteger atomicInteger = new AtomicInteger();
                     for (YAPIONAnyType element : yapionArray.getAllValues()) {
                         int i = atomicInteger.getAndIncrement();
-                        if (valueElement.check(new YAPIONValue<>(i))) {
-                            result.put(i + "", element);
+                        if (valueElement.check(i)) {
+                            result.unsafe().put(i + "", element);
                         }
                     }
                 } else if (yapionAnyType instanceof YAPIONObject yapionObject) {
                     for (String key : yapionObject.unsafe().keySet()) {
-                        if (valueElement.check(new YAPIONValue<>(key))) {
-                            result.add(key, yapionObject.get(key));
+                        if (valueElement.check(key)) {
+                            result.unsafe().put(key, yapionObject.get(key));
                         }
                     }
                 }

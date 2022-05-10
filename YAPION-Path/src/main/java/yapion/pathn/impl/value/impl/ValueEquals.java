@@ -47,6 +47,20 @@ public class ValueEquals<T> implements ValueElement {
     }
 
     @Override
+    public boolean check(Object object) {
+        if (object == null && value == null) {
+            return true;
+        }
+        if (object == null) {
+            return false;
+        }
+        if (value == null) {
+            return false;
+        }
+        return object.equals(value);
+    }
+
+    @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
         return pathContext.retainIf(yapionAnyType -> {
             long time = System.nanoTime();

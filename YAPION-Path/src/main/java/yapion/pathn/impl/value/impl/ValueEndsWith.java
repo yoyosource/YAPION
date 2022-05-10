@@ -30,12 +30,8 @@ public class ValueEndsWith implements ValueElement {
     }
 
     @Override
-    public boolean check(YAPIONAnyType yapionAnyType) {
-        if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
-            return true;
-        }
-        Object value = yapionValue.get();
-        String stringValue = value == null ? "null" : value.toString();
+    public boolean check(Object object) {
+        String stringValue = object == null ? "null" : object.toString();
         return stringValue.endsWith(this.value);
     }
 

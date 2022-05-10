@@ -19,9 +19,18 @@ import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
 import yapion.pathn.impl.value.ValueElement;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class ValueContains implements ValueElement {
+
+    private Map<Object, Boolean> cache = new LinkedHashMap<>() {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<Object, Boolean> eldest) {
+            return size() > 100;
+        }
+    };
 
     private String value;
 
@@ -30,12 +39,8 @@ public class ValueContains implements ValueElement {
     }
 
     @Override
-    public boolean check(YAPIONAnyType yapionAnyType) {
-        if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
-            return true;
-        }
-        Object value = yapionValue.get();
-        String stringValue = value == null ? "null" : value.toString();
+    public boolean check(Object object) {
+        String stringValue = object == null ? "null" : object.toString();
         return stringValue.contains(this.value);
     }
 

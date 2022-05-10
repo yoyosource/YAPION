@@ -13,7 +13,21 @@
 
 package yapion.pathn.impl.value;
 
+import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.pathn.PathElement;
 
 public interface ValueElement extends PathElement {
+
+    default boolean check(Object object) {
+        return true;
+    }
+
+    @Override
+    default boolean check(YAPIONAnyType yapionAnyType) {
+        if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
+            return false;
+        }
+        return check(yapionValue.get());
+    }
 }
