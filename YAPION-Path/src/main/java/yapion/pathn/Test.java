@@ -13,6 +13,7 @@
 
 package yapion.pathn;
 
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
@@ -21,8 +22,9 @@ import yapion.pathn.impl.*;
 import yapion.pathn.impl.object.Contains;
 import yapion.pathn.impl.object.Regex;
 
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Test {
 
@@ -242,7 +244,7 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (true) {
+        if (false) {
             YAPIONPath yapionPath = new Selector()
                     .spread()
                     .when()
@@ -274,6 +276,44 @@ public class Test {
                     .build()
                     .flatten()
                     .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (true) {
+            yapionObject.remove("element");
+            YAPIONPath yapionPath = new Selector()
+                    .any()
+                    .add((pathContext, possibleNextPathElement) -> pathContext.map(yapionAnyType -> {
+                        YAPIONArray yapionArray = (YAPIONArray) yapionAnyType;
+                        YAPIONObject result = new YAPIONObject();
+                        for (int i = 0; i < yapionArray.size(); i++) {
+                            String key = i + "";
+                            if (key.contains("0")) {
+                                result.add(key, yapionArray.get(i));
+                            }
+                        }
+                        if (result.isEmpty()) {
+                            return null;
+                        }
+                        return Arrays.asList(result);
+                    }))
+                    .build();
+            output(yapionPath.apply(yapionObject));
+            long total = 0;
+            for (int i = 0; i < 10000; i++) {
+                total += yapionPath.apply(yapionObject).nanoTime;
+            }
+            System.out.println((total / 1000 / 1000.0 / 10000) + "ms/iteration");
+        }
+
+        if (true) {
+            YAPIONPath yapionPath = new Selector()
+                    .any()
+                    .keySelector()
+                        .contains("0")
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
             long total = 0;
             for (int i = 0; i < 10000; i++) {
                 total += yapionPath.apply(yapionObject).nanoTime;
@@ -284,7 +324,7 @@ public class Test {
 
     private static void output(PathResult result) {
         System.out.println(result.size());
-        System.out.println(result.nanoTime / 1000000 + "ms");
+        System.out.println(result.nanoTime / 10000 / 100.0 + "ms");
         StringBuilder st = new StringBuilder();
         for (Map.Entry<PathElement, Long> entry : result.timingMap.entrySet()) {
             if (st.length() != 0) {

@@ -23,7 +23,7 @@ import yapion.pathn.impl.array.Range;
 import yapion.pathn.impl.object.Contains;
 import yapion.pathn.impl.object.EndsWith;
 import yapion.pathn.impl.object.Regex;
-import yapion.pathn.impl.object.StartWith;
+import yapion.pathn.impl.object.StartsWith;
 
 public interface SelectorBuilder<I extends SelectorBuilder<I, B>, B> {
 
@@ -45,7 +45,7 @@ public interface SelectorBuilder<I extends SelectorBuilder<I, B>, B> {
         return add(new EndsWith(selector));
     }
     default I startsWith(String selector) {
-        return add(new StartWith(selector));
+        return add(new StartsWith(selector));
     }
     default I regex(String selector) {
         return add(new Regex(selector));
@@ -129,6 +129,9 @@ public interface SelectorBuilder<I extends SelectorBuilder<I, B>, B> {
     }
     default AnyWithSelector<I> anyWith() {
         return new AnyWithSelector<>(itself());
+    }
+    default KeySelector<I> keySelector() {
+        return new KeySelector<>(itself());
     }
 
     default WhenSelector<I> when() {

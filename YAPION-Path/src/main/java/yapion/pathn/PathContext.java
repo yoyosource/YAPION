@@ -65,6 +65,10 @@ public class PathContext {
         return new PathContext(false, rootElements, false, currentElement, current.filter(filter).filter(Objects::nonNull), reverseIdentifier, reverseSpreadMap, timingMap);
     }
 
+    public PathContext singleMap(Function<YAPIONAnyType, YAPIONAnyType> mapper) {
+        return new PathContext(false, rootElements, false, currentElement, current.map(mapper).filter(Objects::nonNull), reverseIdentifier, reverseSpreadMap, timingMap);
+    }
+
     public PathContext map(Function<YAPIONAnyType, List<YAPIONAnyType>> mapper) {
         return new PathContext(false, rootElements, false, currentElement, current.map(mapper).filter(Objects::nonNull).flatMap(List::stream).filter(Objects::nonNull), reverseIdentifier, reverseSpreadMap, timingMap);
     }

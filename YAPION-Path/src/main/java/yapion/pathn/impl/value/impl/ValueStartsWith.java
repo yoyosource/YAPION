@@ -11,42 +11,40 @@
  * limitations under the License.
  */
 
-package yapion.pathn.impl.object;
+package yapion.pathn.impl.value.impl;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONObject;
+import yapion.hierarchy.types.YAPIONValue;
 import yapion.pathn.PathContext;
 import yapion.pathn.PathElement;
+import yapion.pathn.impl.value.ValueElement;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-public class StartWith implements PathElement {
+public class ValueStartsWith implements ValueElement {
 
-    private String check;
+    private String value;
 
-    public StartWith(String check) {
-        this.check = check;
+    public ValueStartsWith(String value) {
+        this.value = value;
     }
 
     @Override
     public boolean check(YAPIONAnyType yapionAnyType) {
-        if (yapionAnyType instanceof YAPIONObject yapionObject) {
-            return yapionObject.unsafe().keySet().stream().anyMatch(s -> s.startsWith(check));
+        if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
+            return true;
         }
-        return false;
+        Object value = yapionValue.get();
+        String stringValue = value == null ? "null" : value.toString();
+        return stringValue.startsWith(this.value);
     }
 
     @Override
     public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
-        return pathContext.streamMap(yapionAnyType -> {
+        return pathContext.retainIf(yapionAnyType -> {
             long time = System.nanoTime();
             try {
-                if (yapionAnyType instanceof YAPIONObject yapionObject) {
-                    return yapionObject.unsafe().entrySet().stream().filter(entry -> entry.getKey().startsWith(check)).map(Map.Entry::getValue);
-                }
-                return null;
+                return check(yapionAnyType);
             } finally {
                 pathContext.addTiming(this, System.nanoTime() - time);
             }

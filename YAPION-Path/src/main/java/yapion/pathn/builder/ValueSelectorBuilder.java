@@ -14,8 +14,7 @@
 package yapion.pathn.builder;
 
 import yapion.pathn.impl.value.ValueElement;
-import yapion.pathn.impl.value.impl.ValueEquals;
-import yapion.pathn.impl.value.impl.ValueRange;
+import yapion.pathn.impl.value.impl.*;
 
 public interface ValueSelectorBuilder<I extends ValueSelectorBuilder<I, B>, B> {
 
@@ -35,6 +34,19 @@ public interface ValueSelectorBuilder<I extends ValueSelectorBuilder<I, B>, B> {
     }
     default <T extends Number & Comparable<T>> I range(T min, T max) {
         return add(ValueRange.range(min, max));
+    }
+
+    default I contains(String value) {
+        return add(new ValueContains(value));
+    }
+    default I startsWith(String value) {
+        return add(new ValueStartsWith(value));
+    }
+    default I endsWith(String value) {
+        return add(new ValueEndsWith(value));
+    }
+    default I regex(String value) {
+        return add(new ValueRegex(value));
     }
 
     default AndValueSelector<I> and() {
