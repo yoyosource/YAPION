@@ -13,6 +13,7 @@
 
 package yapion.pathn;
 
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
@@ -21,9 +22,9 @@ import yapion.pathn.impl.*;
 import yapion.pathn.impl.object.Contains;
 import yapion.pathn.impl.object.Regex;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 public class Test {
@@ -52,7 +53,7 @@ public class Test {
             System.out.println(timeTotal / 1000000 + "ms");
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Element("test0"), new Element("test1")), new AnyOf(new Element(0), new Element(1), new Element(0)));
             output(yapionPath.apply(yapionObject));
         }
@@ -62,20 +63,20 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Contains("0"), new Contains("1")), new Element(0));
             output(yapionPath.apply(yapionObject));
         }
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Contains("0"), new Contains("1")), new IdentityDistinctElements(), new Element(0));
             output(yapionPath.apply(yapionObject));
         }
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Contains("0"), new Contains("1")), new DistinctElements(), new Element(0));
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Contains("0"), new Contains("1")), new ElementType(YAPIONObject.class), new Element(0));
             output(yapionPath.apply(yapionObject));
         }
@@ -85,22 +86,22 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new YAPIONPath(new Element("test0"), new Element(0)), new Contains("1")));
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new YAPIONPath(new AllWith(new Contains("0"), new Contains("1")));
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new YAPIONPath(new Spread(), new AllWith(new Contains("0"), new Contains("1")));
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new Selector()
                     .spread()
                     .allWith()
@@ -124,7 +125,7 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new Selector()
                     .spread()
                     .anyWith()
@@ -143,7 +144,7 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             // yapionObject.remove("element");
             YAPIONPath yapionPath = new Selector()
                     .spread()
@@ -171,7 +172,7 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new Selector()
                     .spread()
                     .anyOf()
@@ -198,7 +199,7 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new Selector()
                     .spread()
                     .anyOf()
@@ -222,7 +223,7 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new Selector()
                     .spread()
                     .when()
@@ -244,7 +245,7 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) {
+        if (false) { // NEEDED
             YAPIONPath yapionPath = new Selector()
                     .spread()
                     .when()
@@ -267,7 +268,7 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (true) {
+        if (false) {
             YAPIONPath yapionPath = new Selector()
                     .any()
                     .spread()
@@ -279,28 +280,29 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (true) {
+        if (false) {
             yapionObject.remove("element");
             YAPIONPath yapionPath = new Selector()
                     .any()
                     .add(new PathElement() {
                         @Override
                         public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
-                            return pathContext.map(yapionAnyType -> {
+                            return pathContext.singleMap(yapionAnyType -> {
                                 long time = System.nanoTime();
                                 try {
                                     YAPIONArray yapionArray = (YAPIONArray) yapionAnyType;
                                     YAPIONObject result = new YAPIONObject();
-                                    for (int i = 0; i < yapionArray.size(); i++) {
-                                        String key = i + "";
+                                    AtomicInteger i = new AtomicInteger();
+                                    for (YAPIONAnyType element : yapionArray.getAllValues()) {
+                                        String key = i.getAndIncrement() + "";
                                         if (key.contains("0")) {
-                                            result.add(key, yapionArray.get(i));
+                                            result.add(key, element);
                                         }
                                     }
                                     if (result.isEmpty()) {
                                         return null;
                                     }
-                                    return Arrays.asList(result);
+                                    return result;
                                 } finally {
                                     pathContext.addTiming(this, System.nanoTime() - time);
                                 }
@@ -316,7 +318,7 @@ public class Test {
             System.out.println((total / 1000 / 1000.0 / 10000) + "ms/iteration");
         }
 
-        if (true) {
+        if (false) {
             YAPIONPath yapionPath = new Selector()
                     .any()
                     .keySelector()
