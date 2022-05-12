@@ -32,11 +32,11 @@ Index select:
 | KeySelection     | `!`                       | KeySelection Element(s) with direct `and` group afterwards                                                 | Only in non `Value`                               |
 | Spread           | `!*`                      | Spread Element(s)                                                                                          | Only in non `Value`                               |
 | Flatten          | `:`                       | Flatten Element(s)                                                                                         | Only in non `Value`                               |
-| StartsWith       | `*\<Text>`                | StartsWith Element(s)                                                                                      | All                                               |
-| EndsWith         | `\<Text>*`                | EndsWith Element(s)                                                                                        | All                                               |
+| StartsWith       | `\<Text>*`                | StartsWith Element(s)                                                                                      | All                                               |
+| EndsWith         | `*\<Text>`                | EndsWith Element(s)                                                                                        | All                                               |
 | Contains         | `*\<Text>*`               | Contains Element(s)                                                                                        | All                                               |
 | Regex            | `/\<Regex>/`              | Regex Element(s)                                                                                           | All                                               |
-| ValueSet         | `{`, `}`                  | Set Element(s)                                                                                             | Only in `Value`                                   |
+| ValueSet         | `{`, `}`                  | Set Element(s), comma seperated                                                                            | Only in `Value`                                   |
 | Distinct         | `=`                       | Distinct Element(s)                                                                                        | Only in non `Value`                               |
 | IdentityDistinct | `@=`                      | IdentityDistinct Element(s)                                                                                | Only in non `Value`                               |
 | Min              | `[\<Number>...]`          | Min Value                                                                                                  | All                                               |
