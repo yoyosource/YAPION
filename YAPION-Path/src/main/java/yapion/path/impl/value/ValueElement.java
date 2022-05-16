@@ -11,16 +11,23 @@
  * limitations under the License.
  */
 
-package yapion.path;
+package yapion.path.impl.value;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONValue;
+import yapion.path.PathElement;
 
-import java.util.Optional;
+public interface ValueElement extends PathElement {
 
-public interface PathElement {
-    default boolean check(YAPIONAnyType yapionAnyType) {
+    default boolean check(Object object) {
         return true;
     }
 
-    PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement);
+    @Override
+    default boolean check(YAPIONAnyType yapionAnyType) {
+        if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
+            return false;
+        }
+        return check(yapionValue.get());
+    }
 }

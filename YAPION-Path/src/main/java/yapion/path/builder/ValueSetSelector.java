@@ -11,16 +11,29 @@
  * limitations under the License.
  */
 
-package yapion.path;
+package yapion.path.builder;
 
-import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.path.impl.value.impl.ValueSet;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface PathElement {
-    default boolean check(YAPIONAnyType yapionAnyType) {
-        return true;
+public class ValueSetSelector<R extends ValueSelectorBuilder<?, ?>> {
+
+    private R parent;
+    private List<Object> objectList = new ArrayList<>();
+
+    protected ValueSetSelector(R parent) {
+        this.parent = parent;
     }
 
-    PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement);
+    public <T> ValueSetSelector<R> add(T value) {
+        objectList.add(value);
+        return this;
+    }
+
+    public R build() {
+        parent.add(new ValueSet<>(objectList));
+        return parent;
+    }
 }

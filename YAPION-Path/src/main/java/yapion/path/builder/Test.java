@@ -11,16 +11,14 @@
  * limitations under the License.
  */
 
-package yapion.path;
+package yapion.path.builder;
 
-import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.path.YAPIONPath;
 
-import java.util.Optional;
+public class Test {
 
-public interface PathElement {
-    default boolean check(YAPIONAnyType yapionAnyType) {
-        return true;
+    public static void main(String[] args) {
+        YAPIONPath yapionPath = new Selector().select("test0").build();
+        System.out.println(yapionPath);
     }
-
-    PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement);
 }

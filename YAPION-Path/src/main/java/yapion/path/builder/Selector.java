@@ -11,16 +11,31 @@
  * limitations under the License.
  */
 
-package yapion.path;
+package yapion.path.builder;
 
-import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.path.PathElement;
+import yapion.path.YAPIONPath;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface PathElement {
-    default boolean check(YAPIONAnyType yapionAnyType) {
-        return true;
+public class Selector implements SelectorBuilder<Selector, YAPIONPath> {
+
+    private List<PathElement> pathElementList = new ArrayList<>();
+
+    @Override
+    public Selector add(PathElement pathElement) {
+        pathElementList.add(pathElement);
+        return this;
     }
 
-    PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement);
+    @Override
+    public Selector itself() {
+        return this;
+    }
+
+    @Override
+    public YAPIONPath build() {
+        return new YAPIONPath(pathElementList);
+    }
 }

@@ -13,14 +13,25 @@
 
 package yapion.path;
 
+import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.path.builder.Selector;
+import yapion.path.impl.*;
+import yapion.path.impl.object.Contains;
+import yapion.path.impl.object.Regex;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 public class Test {
 
     public static void main(String[] args) {
         YAPIONObject yapionObject = new YAPIONObject();
+        yapionObject.add("element", 0);
         for (int i = 0; i < 100; i++) {
             YAPIONArray yapionArray = new YAPIONArray();
             for (int j = 0; j < 100; j++) {
@@ -28,8 +39,312 @@ public class Test {
             }
             yapionObject.add("test" + i, yapionArray);
         }
+        // yapionObject.remove("element");
+        yapionObject.put("element", 1);
 
-        YAPIONPath yapionPath = new Selector().array().select("test0").select("test1").done().array().select(0).select(1).select(2).done().build();
-        System.out.println(yapionPath.apply(yapionObject));
+        if (false) {
+            YAPIONPath yapionPath = new YAPIONPath(new AnyDeeperElement(), new AnyElement()); // 7376ms
+            // YAPIONPath yapionPath = new YAPIONPath(new AnyElement(), new AnyElement()); // 846ms
+            long timeTotal = 0;
+            for (int i = 0; i < 10000; i++) {
+                PathResult result = yapionPath.apply(yapionObject);
+                timeTotal += result.nanoTime;
+            }
+            System.out.println(timeTotal / 1000000 + "ms");
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Element("test0"), new Element("test1")), new AnyOf(new Element(0), new Element(1), new Element(0)));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) {
+            YAPIONPath yapionPath = new YAPIONPath(new Contains("0"), new Element(0));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Contains("0"), new Contains("1")), new Element(0));
+            output(yapionPath.apply(yapionObject));
+        }
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Contains("0"), new Contains("1")), new IdentityDistinctElements(), new Element(0));
+            output(yapionPath.apply(yapionObject));
+        }
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Contains("0"), new Contains("1")), new DistinctElements(), new Element(0));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Contains("0"), new Contains("1")), new ElementType(YAPIONObject.class), new Element(0));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) {
+            YAPIONPath yapionPath = new YAPIONPath(new Regex(Pattern.compile("test1.*")), new Element(0));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new YAPIONPath(new Element("test0"), new Element(0)), new Contains("1")));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new YAPIONPath(new AllWith(new Contains("0"), new Contains("1")));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new YAPIONPath(new Spread(), new AllWith(new Contains("0"), new Contains("1")));
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .allWith()
+                        .contains("0")
+                        .contains("1")
+                    .build()
+                    .any()
+                    .spread()
+                    .anyOf()
+                        .allWith()
+                            .contains("0")
+                            .contains("1")
+                        .build()
+                        .allWith()
+                            .contains("0")
+                            .contains("2")
+                        .build()
+                    .build()
+                    .any()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .anyWith()
+                        .contains("0")
+                        .contains("1")
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) {
+            YAPIONPath yapionPath = new Selector()
+                    .select("test0")
+                    .range(10, 20)
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            // yapionObject.remove("element");
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .allWith()
+                        .select("10")
+                        .subselect()
+                            .root()
+                            .select("element")
+                        .build()
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) {
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .when()
+                        .subselect()
+                            .root()
+                            .select("element")
+                        .build()
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .anyOf()
+                        .subselect()
+                            .when()
+                                .subselect()
+                                    .root()
+                                    .select("element")
+                                .build()
+                            .build()
+                            .select("test0")
+                        .build()
+                        .subselect()
+                            .when()
+                                .subselect()
+                                    .root()
+                                    .select("element")
+                                .build()
+                            .build()
+                            .select("test1")
+                        .build()
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .anyOf()
+                        .subselect()
+                            .when()
+                                .subselect()
+                                    .root()
+                                    .select("element")
+                                    .value()
+                                        .min(1)
+                                    .build()
+                                .build()
+                            .build()
+                            .anyOf()
+                                .select("test0")
+                                .select("test1")
+                            .build()
+                        .build()
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .when()
+                        .allOf()
+                            .subselect()
+                                .root()
+                                .select("element")
+                                .value()
+                                    .min(1)
+                                .build()
+                            .build()
+                            .subselect()
+                                .current()
+                                .contains("0")
+                            .build()
+                        .build()
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) { // NEEDED
+            YAPIONPath yapionPath = new Selector()
+                    .spread()
+                    .when()
+                        .allOf()
+                            .subselect()
+                                .root()
+                                .select("element")
+                                .value()
+                                    .min(1)
+                                .build()
+                            .build()
+                            .subselect()
+                                .current()
+                                .contains("0")
+                            .build()
+                        .build()
+                    .build()
+                    .flatten()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) {
+            YAPIONPath yapionPath = new Selector()
+                    .any()
+                    .spread()
+                    .when()
+                        .contains("0")
+                    .build()
+                    .flatten()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+        }
+
+        if (false) {
+            yapionObject.remove("element");
+            YAPIONPath yapionPath = new Selector()
+                    .any()
+                    .add(new PathElement() {
+                        @Override
+                        public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElement) {
+                            return pathContext.singleMap(yapionAnyType -> {
+                                long time = System.nanoTime();
+                                try {
+                                    YAPIONArray yapionArray = (YAPIONArray) yapionAnyType;
+                                    YAPIONObject result = new YAPIONObject();
+                                    AtomicInteger i = new AtomicInteger();
+                                    for (YAPIONAnyType element : yapionArray.getAllValues()) {
+                                        String key = i.getAndIncrement() + "";
+                                        if (key.contains("0")) {
+                                            result.add(key, element);
+                                        }
+                                    }
+                                    if (result.isEmpty()) {
+                                        return null;
+                                    }
+                                    return result;
+                                } finally {
+                                    pathContext.addTiming(this, System.nanoTime() - time);
+                                }
+                            });
+                        }
+                    })
+                    .build();
+            output(yapionPath.apply(yapionObject));
+            long total = 0;
+            for (int i = 0; i < 10000; i++) {
+                total += yapionPath.apply(yapionObject).nanoTime;
+            }
+            System.out.println((total / 1000 / 1000.0 / 10000) + "ms/iteration");
+        }
+
+        if (false) {
+            YAPIONPath yapionPath = new Selector()
+                    .any()
+                    .keySelector()
+                        .contains("0")
+                    .build()
+                    .build();
+            output(yapionPath.apply(yapionObject));
+            long total = 0;
+            for (int i = 0; i < 10000; i++) {
+                total += yapionPath.apply(yapionObject).nanoTime;
+            }
+            System.out.println((total / 1000 / 1000.0 / 10000) + "ms/iteration");
+        }
+    }
+
+    private static void output(PathResult result) {
+        System.out.println(result.size());
+        System.out.println(result.nanoTime / 10000 / 100.0 + "ms");
+        StringBuilder st = new StringBuilder();
+        for (Map.Entry<PathElement, Long> entry : result.timingMap.entrySet()) {
+            if (st.length() != 0) {
+                st.append(", ");
+            }
+            st.append(entry.getKey().toString()).append("=").append(entry.getValue() / 1000000.0).append("ms");
+        }
+        System.out.println(st);
+        System.out.println(result.yapionAnyTypeList);
     }
 }

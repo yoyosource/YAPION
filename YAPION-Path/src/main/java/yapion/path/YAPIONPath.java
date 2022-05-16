@@ -17,9 +17,9 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-// TODO: Implement YAPIONPath like xPath or jsonPath
-public class YAPIONPath {
+public class YAPIONPath implements PathElement {
 
     private PathElement[] pathElements;
 
@@ -31,22 +31,44 @@ public class YAPIONPath {
         this.pathElements = pathElements;
     }
 
-    public List<YAPIONAnyType> apply(YAPIONAnyType element) {
+    public PathResult apply(YAPIONAnyType element) {
         List<YAPIONAnyType> elements = new ArrayList<>();
         elements.add(element);
         return apply(elements);
     }
 
-    public List<YAPIONAnyType> apply(List<YAPIONAnyType> elements) {
-        PathContext pathContext = new PathContext(elements);
+    public PathResult apply(List<YAPIONAnyType> elements) {
+        return apply(elements, Optional.empty());
+    }
+
+    private PathResult apply(List<YAPIONAnyType> elements, Optional<PathElement> possibleNextPathElementOuter) {
+        long time = System.nanoTime();
+        PathContext pathContext = apply(PathContext.of(elements), possibleNextPathElementOuter);
+        List<YAPIONAnyType> result = pathContext.eval();
+        long time2 = System.nanoTime();
+        return new PathResult(result, time2 - time, pathContext.getTimingMap());
+    }
+
+    private PathElement getPathElement(int index) {
+        if (index >= pathElements.length) return null;
+        return pathElements[index];
+    }
+
+    @Override
+    public boolean check(YAPIONAnyType yapionAnyType) {
+        if (pathElements.length == 0) return true;
+        return pathElements[0].check(yapionAnyType);
+    }
+
+    @Override
+    public PathContext apply(PathContext pathContext, Optional<PathElement> possibleNextPathElementOuter) {
         for (int i = 0; i < pathElements.length; i++) {
-            if (i < pathElements.length - 1) {
-                pathContext.setPossibleNext(pathElements[i + 1]);
-            } else {
-                pathContext.setPossibleNext(null);
+            Optional<PathElement> possibleNextPathElement = Optional.ofNullable(getPathElement(i));
+            if (i == pathElements.length - 1) {
+                possibleNextPathElement = possibleNextPathElementOuter;
             }
-            pathContext = pathElements[i].apply(pathContext);
+            pathContext = pathElements[i].apply(pathContext, possibleNextPathElement);
         }
-        return pathContext.getCurrent();
+        return pathContext;
     }
 }
