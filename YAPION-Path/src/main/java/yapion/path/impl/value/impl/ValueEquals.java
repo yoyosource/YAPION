@@ -13,8 +13,6 @@
 
 package yapion.path.impl.value.impl;
 
-import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.types.YAPIONValue;
 import yapion.path.PathContext;
 import yapion.path.PathElement;
 import yapion.path.impl.value.ValueElement;
@@ -27,23 +25,6 @@ public class ValueEquals<T> implements ValueElement {
 
     public ValueEquals(T value) {
         this.value = value;
-    }
-
-    @Override
-    public boolean check(YAPIONAnyType yapionAnyType) {
-        if (!(yapionAnyType instanceof YAPIONValue yapionValue)) {
-            return true;
-        }
-        if (yapionValue.get() == null && value == null) {
-            return true;
-        }
-        if (yapionValue.get() == null) {
-            return false;
-        }
-        if (value == null) {
-            return false;
-        }
-        return yapionValue.get().equals(value);
     }
 
     @Override
