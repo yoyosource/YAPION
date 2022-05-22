@@ -24,6 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -31,8 +35,8 @@ import java.util.stream.Collectors;
 @Slf4j
 class SerializeManagerDataBindings {
 
-    private final String[] BINDINGS = new String[]{
-            "base",
+    final String[] BINDINGS = new String[]{
+            "yapion-base",
             "yapion-io",
             "java-base",
             "java-other",
@@ -58,20 +62,21 @@ class SerializeManagerDataBindings {
 
     private YAPIONClassLoader yapionClassLoader;
 
-    void init(Map<String, SerializerFuture> toLoadSerializerMap, Map<String, SerializerFuture> toLoadInterfaceTypeSerializer, Map<String, SerializerFuture> toLoadClassTypeSerializer, Consumer<Class<?>> internalAddConsumer, YAPIONClassLoader yapionClassLoader) {
+    void init(Map<String, SerializerFuture> toLoadSerializerMap, Map<String, SerializerFuture> toLoadInterfaceTypeSerializer, Map<String, SerializerFuture> toLoadClassTypeSerializer, Consumer<Class<?>> internalAddConsumer, YAPIONClassLoader yapionClassLoader, CountDownLatch initialized) {
         SerializeManagerDataBindings.toLoadSerializerMap = toLoadSerializerMap;
         SerializeManagerDataBindings.toLoadInterfaceTypeSerializer = toLoadInterfaceTypeSerializer;
         SerializeManagerDataBindings.toLoadClassTypeSerializer = toLoadClassTypeSerializer;
         SerializeManagerDataBindings.internalAddConsumer = internalAddConsumer;
         SerializeManagerDataBindings.yapionClassLoader = yapionClassLoader;
 
-        long time = System.currentTimeMillis();
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 4, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<>(BINDINGS.length));
         for (String s : BINDINGS) {
-            initSingleBind(s);
+            threadPoolExecutor.execute(() -> {
+                initSingleBind(s);
+                initialized.countDown();
+            });
         }
-        time = System.currentTimeMillis() - time;
-        log.debug("SerializerManager initialized in {}ms", time);
-        System.out.println("Serializer init took: " + time + "ms");
+        threadPoolExecutor.shutdown();
     }
 
     private void initSingleBind(String s) {

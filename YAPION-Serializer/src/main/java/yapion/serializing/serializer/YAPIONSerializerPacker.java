@@ -26,7 +26,7 @@ public class YAPIONSerializerPacker {
         File source = new File(s);
         if (!source.exists()) return;
 
-        File destination = new File(s.substring(0, s.lastIndexOf('/')), "base.pack");
+        File destination = new File(s.substring(0, s.lastIndexOf('/')), "yapion-base.pack");
         Packer.pack(source, destination, file -> !file.getName().equals("YAPIONSerializerPacker.class") && !file.getName().endsWith("FinalInternalSerializer.class"), fileName -> fileName.contains("special"));
     }
 }

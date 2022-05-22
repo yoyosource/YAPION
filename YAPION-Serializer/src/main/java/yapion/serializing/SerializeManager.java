@@ -28,6 +28,7 @@ import yapion.utils.ReflectionsUtils;
 import yapion.utils.YAPIONClassLoader;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -60,7 +61,7 @@ public class SerializeManager {
     private ReflectionStrategy reflectionStrategy = new PureStrategy();
 
     private Class<?> FinalInternalSerializerClass = null;
-    private final boolean initialized;
+    private final CountDownLatch initialized = new CountDownLatch(SerializeManagerDataBindings.BINDINGS.length);
 
     void init() {
         // Init from YAPIONSerializerFlagDefault
@@ -68,8 +69,7 @@ public class SerializeManager {
 
     static {
         YAPIONClassLoader yapionClassLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
-        SerializeManagerDataBindings.init(toLoadSerializerMap, toLoadInterfaceTypeSerializer, toLoadClassTypeSerializer, SerializeManager::internalAdd, yapionClassLoader);
-        initialized = true;
+        SerializeManagerDataBindings.init(toLoadSerializerMap, toLoadInterfaceTypeSerializer, toLoadClassTypeSerializer, SerializeManager::internalAdd, yapionClassLoader, initialized);
     }
 
     private static void internalAdd(Class<?> clazz) {
@@ -135,7 +135,7 @@ public class SerializeManager {
     }
 
     private static boolean checkOverrideable(InternalSerializer<?> serializer) {
-        if (!initialized) {
+        if (initialized.getCount() > 0) {
             return true;
         }
         if (!serializerMap.containsKey(serializer.type()) && !toLoadSerializerMap.containsKey(serializer.type().getTypeName())) {
@@ -166,6 +166,17 @@ public class SerializeManager {
 
     @SuppressWarnings({"java:S1452"})
     static synchronized InternalSerializer<?> getInternalSerializer(Class<?> type) {
+        while (initialized.getCount() != 0) {
+            try {
+                long time = System.currentTimeMillis();
+                initialized.await();
+                time = System.currentTimeMillis() - time;
+                log.debug("SerializerManager initialized in {}ms", time);
+                System.out.println("Serializer init took: " + time + "ms");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
         if (type == null) return null;
         if (type.isArray()) {
             return ARRAY_SERIALIZER;
