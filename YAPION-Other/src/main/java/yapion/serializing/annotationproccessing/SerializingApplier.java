@@ -61,7 +61,7 @@ public class SerializingApplier {
         String innerClassName = classData.getSimpleName() + "Serializer";
 
         ClassReader classReader = new ClassReader(new FileInputStream(file));
-        ClassWriter classWriter = new ClassWriter(classReader, 0);
+        ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS);
         classReader.accept(new ClassVisitor(Opcodes.ASM9, classWriter) {
             @Override
             public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
