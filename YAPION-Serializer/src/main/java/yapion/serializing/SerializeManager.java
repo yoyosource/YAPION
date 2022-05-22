@@ -63,12 +63,15 @@ public class SerializeManager {
     private Class<?> FinalInternalSerializerClass = null;
     private final CountDownLatch initialized = new CountDownLatch(SerializeManagerDataBindings.BINDINGS.length);
 
+    private long time;
+
     void init() {
         // Init from YAPIONSerializerFlagDefault
     }
 
     static {
         YAPIONClassLoader yapionClassLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
+        time = System.currentTimeMillis();
         SerializeManagerDataBindings.init(toLoadSerializerMap, toLoadInterfaceTypeSerializer, toLoadClassTypeSerializer, SerializeManager::internalAdd, yapionClassLoader, initialized);
     }
 
@@ -168,7 +171,6 @@ public class SerializeManager {
     static synchronized InternalSerializer<?> getInternalSerializer(Class<?> type) {
         while (initialized.getCount() != 0) {
             try {
-                long time = System.currentTimeMillis();
                 initialized.await();
                 time = System.currentTimeMillis() - time;
                 log.debug("SerializerManager initialized in {}ms", time);

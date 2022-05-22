@@ -24,10 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -69,7 +66,7 @@ class SerializeManagerDataBindings {
         SerializeManagerDataBindings.internalAddConsumer = internalAddConsumer;
         SerializeManagerDataBindings.yapionClassLoader = yapionClassLoader;
 
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 4, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<>(BINDINGS.length));
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 4, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
         for (String s : BINDINGS) {
             threadPoolExecutor.execute(() -> {
                 initSingleBind(s);
