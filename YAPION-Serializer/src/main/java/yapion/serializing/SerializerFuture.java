@@ -13,45 +13,26 @@
 
 package yapion.serializing;
 
-import lombok.Getter;
+import lombok.*;
 
 import java.util.function.BiFunction;
 
+@NoArgsConstructor
+@ToString
 class SerializerFuture {
 
+    @Setter(AccessLevel.PACKAGE)
     private BiFunction<Integer, Integer, Class<?>> classLoader;
+
+    @Setter(AccessLevel.PACKAGE)
     private int start;
+
+    @Setter(AccessLevel.PACKAGE)
     private int length;
-
-    @Getter
-    private String type;
-
-    @Getter
-    private String classType;
-
-    @Getter
-    private String interfaceType;
-
-    @Getter
-    private String primitiveType;
-
-    @Getter
-    private boolean directLoad;
 
     private Class<?> clazz = null;
 
-    public SerializerFuture(int start, int length, String type, String classType, String interfaceType, String primitiveType, boolean directLoad, BiFunction<Integer, Integer, Class<?>> classLoader) {
-        this.classLoader = classLoader;
-        this.start = start;
-        this.length = length;
-        this.type = type;
-        this.classType = classType;
-        this.interfaceType = interfaceType;
-        this.primitiveType = primitiveType;
-        this.directLoad = directLoad;
-    }
-
-    public synchronized Class<?> get() {
+    public Class<?> get() {
         if (clazz == null) {
             clazz = classLoader.apply(start, length);
         }

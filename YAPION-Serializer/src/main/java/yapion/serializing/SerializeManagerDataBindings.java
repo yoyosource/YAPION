@@ -19,13 +19,17 @@ import lombok.extern.slf4j.Slf4j;
 import yapion.exceptions.YAPIONException;
 import yapion.utils.YAPIONClassLoader;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.util.*;
-import java.util.concurrent.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -94,41 +98,19 @@ class SerializeManagerDataBindings {
 
             List<SerializerFuture> toDirectLoad = new ArrayList<>();
 
-            Map<Integer, Object> entry;
-            while ((entry = readEntry(objectInputStream)) != null) {
+            String name;
+            SerializerFuture serializerFuture = new SerializerFuture();
+            while ((name = readEntry(serializerFuture, toDirectLoad, objectInputStream)) != null) {
                 elements++;
-                String name = "yapion.serializing.serializer." + entry.get(0x10);
+                String finalName = "yapion.serializing.serializer." + name;
+                serializerFuture.setClassLoader((start, length) -> yapionClassLoader.publicDefineClass(finalName, packBytes, start, length));
 
-                SerializerFuture serializerFuture = new SerializerFuture(
-                        (int) entry.get(0x20),
-                        (int) entry.get(0x21),
-                        (String) entry.getOrDefault(0x11, null),
-                        (String) entry.getOrDefault(0x14, null),
-                        (String) entry.getOrDefault(0x13, null),
-                        (String) entry.getOrDefault(0x12, null),
-                        (boolean) entry.getOrDefault(0x30, false),
-                        (start, length) -> yapionClassLoader.publicDefineClass(name, packBytes, start, length)
-                );
-                yapionClassLoader.addData(name, serializerFuture::get);
-                if (serializerFuture.isDirectLoad()) {
-                    toDirectLoad.add(serializerFuture);
-                }
-                if (serializerFuture.getType() != null) {
-                    toLoadSerializerMap.put(serializerFuture.getType(), serializerFuture);
-                }
-                if (serializerFuture.getPrimitiveType() != null) {
-                    toLoadSerializerMap.put(serializerFuture.getPrimitiveType(), serializerFuture);
-                }
-                if (serializerFuture.getInterfaceType() != null) {
-                    toLoadInterfaceTypeSerializer.put(serializerFuture.getInterfaceType(), serializerFuture);
-                }
-                if (serializerFuture.getClassType() != null) {
-                    toLoadClassTypeSerializer.put(serializerFuture.getClassType(), serializerFuture);
-                }
+                yapionClassLoader.addData(finalName, serializerFuture::get);
+                serializerFuture = new SerializerFuture();
             }
 
-            toDirectLoad.forEach(serializerFuture -> {
-                internalAddConsumer.accept(serializerFuture.get());
+            toDirectLoad.forEach(future -> {
+                internalAddConsumer.accept(future.get());
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -152,25 +134,40 @@ class SerializeManagerDataBindings {
     // DirectLoad   : 0x30
 
     @SneakyThrows
-    private Map<Integer, Object> readEntry(ObjectInputStream objectInputStream) {
+    private String readEntry(SerializerFuture serializerFuture, List<SerializerFuture> toDirectLoad, ObjectInputStream objectInputStream) {
         if (objectInputStream.available() == 0) {
             return null;
         }
-        Map<Integer, Object> values = new HashMap<>();
+        String name = null;
         do {
             int key = objectInputStream.readByte();
             if (key == 0x00) {
-                return values;
+                if (name == null) {
+                    throw new SecurityException("");
+                }
+                return name;
             }
             switch (key) {
-                case 0x10, 0x11, 0x12, 0x13, 0x14:
-                    values.put(key, objectInputStream.readUTF());
+                case 0x10:
+                    name = objectInputStream.readUTF();
                     break;
-                case 0x20, 0x21:
-                    values.put(key, objectInputStream.readInt());
+                case 0x11, 0x12:
+                    toLoadSerializerMap.put(objectInputStream.readUTF(), serializerFuture);
+                    break;
+                case 0x13:
+                    toLoadInterfaceTypeSerializer.put(objectInputStream.readUTF(), serializerFuture);
+                    break;
+                case 0x14:
+                    toLoadClassTypeSerializer.put(objectInputStream.readUTF(), serializerFuture);
+                    break;
+                case 0x20:
+                    serializerFuture.setStart(objectInputStream.readInt());
+                    break;
+                case 0x21:
+                    serializerFuture.setLength(objectInputStream.readInt());
                     break;
                 case 0x30:
-                    values.put(key, true);
+                    toDirectLoad.add(serializerFuture);
                     break;
                 default:
                     throw new YAPIONException("Unknown key: " + key);
