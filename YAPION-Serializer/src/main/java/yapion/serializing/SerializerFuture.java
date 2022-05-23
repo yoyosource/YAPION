@@ -30,6 +30,10 @@ class SerializerFuture {
     @Setter(AccessLevel.PACKAGE)
     private int length;
 
+    @Setter(AccessLevel.PACKAGE)
+    @Getter
+    private String name;
+
     private Class<?> clazz = null;
 
     public Class<?> get() {

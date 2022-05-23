@@ -98,15 +98,13 @@ class SerializeManagerDataBindings {
 
             List<SerializerFuture> toDirectLoad = new ArrayList<>();
 
-            String name;
-            SerializerFuture serializerFuture = new SerializerFuture();
-            while ((name = readEntry(serializerFuture, toDirectLoad, objectInputStream)) != null) {
+            SerializerFuture serializerFuture;
+            while ((serializerFuture = readEntry(toDirectLoad, objectInputStream)) != null) {
                 elements++;
-                String finalName = "yapion.serializing.serializer." + name;
+                String finalName = "yapion.serializing.serializer." + serializerFuture.getName();
                 serializerFuture.setClassLoader((start, length) -> yapionClassLoader.publicDefineClass(finalName, packBytes, start, length));
 
                 yapionClassLoader.addData(finalName, serializerFuture::get);
-                serializerFuture = new SerializerFuture();
             }
 
             toDirectLoad.forEach(future -> {
@@ -134,22 +132,19 @@ class SerializeManagerDataBindings {
     // DirectLoad   : 0x30
 
     @SneakyThrows
-    private String readEntry(SerializerFuture serializerFuture, List<SerializerFuture> toDirectLoad, ObjectInputStream objectInputStream) {
+    private SerializerFuture readEntry(List<SerializerFuture> toDirectLoad, ObjectInputStream objectInputStream) {
         if (objectInputStream.available() == 0) {
             return null;
         }
-        String name = null;
+        SerializerFuture serializerFuture = new SerializerFuture();
         do {
             int key = objectInputStream.readByte();
             if (key == 0x00) {
-                if (name == null) {
-                    throw new SecurityException("");
-                }
-                return name;
+                return serializerFuture;
             }
             switch (key) {
                 case 0x10:
-                    name = objectInputStream.readUTF();
+                    serializerFuture.setName(objectInputStream.readUTF());
                     break;
                 case 0x11, 0x12:
                     toLoadSerializerMap.put(objectInputStream.readUTF(), serializerFuture);
