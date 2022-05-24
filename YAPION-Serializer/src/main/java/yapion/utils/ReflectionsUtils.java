@@ -59,7 +59,7 @@ public class ReflectionsUtils {
     }
 
     /**
-     * Discard the cache used by {@link }
+     * Discard the cache used by {@link #getFields(Class)}
      */
     public static void discardCache() {
         fieldCacheMap.clear();
