@@ -19,6 +19,7 @@ fun main() {
             this["0"] = yapionObject { }
         }
         "j"() with yapionObject {  }
+        "k" with yapionObject {  }
         "j" {
             yapionObject {
 
@@ -57,4 +58,5 @@ fun main() {
         "tst" Pointer(this@yapionObject)
     }
     println(value)
+    println(value.toYAPION(true))
 }
