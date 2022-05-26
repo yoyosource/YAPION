@@ -48,16 +48,6 @@ public class ValueHandlerUtils {
         return allowedTypes.toArray(new String[0]);
     }
 
-    @InternalAPI
-    public static boolean containsTypeIdentifier(String type) {
-        return typeIdentifier.containsKey(type);
-    }
-
-    @InternalAPI
-    public static String getTypeIdentifier(String type) {
-        return typeIdentifier.get(type);
-    }
-
     static {
         internalAdd(new BooleanHandler());
         internalAdd(new CharacterHandler());

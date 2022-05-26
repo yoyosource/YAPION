@@ -136,7 +136,7 @@ public final class YAPIONSerializer {
      * @return the {@link YAPIONAnyType} of the Object inputted
      */
     @SuppressWarnings({"java:S3740"})
-    public YAPIONAnyType parse(Object object) {
+    public YAPIONAnyType parse(String fieldName, Object outerObject, Object object) {
         if (pointerMap.containsKey(object)) {
             return pointerMap.get(object);
         }
@@ -146,7 +146,7 @@ public final class YAPIONSerializer {
         Class<?> type = object.getClass();
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
-            YAPIONAnyType yapionAnyType = serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
+            YAPIONAnyType yapionAnyType = serializer.serialize(new SerializeData<>(fieldName, outerObject, object, contextManager.get(), this));
             if (yapionAnyType instanceof YAPIONObject || yapionAnyType instanceof YAPIONArray || yapionAnyType instanceof YAPIONMap) {
                 pointerMap.put(object, new YAPIONPointer((YAPIONDataType<?, ?>) yapionAnyType));
             }
@@ -157,7 +157,7 @@ public final class YAPIONSerializer {
     }
 
     @SuppressWarnings({"java:S3740", "java:S3011", "java:S1117", "unchecked"})
-    private YAPIONSerializer parseObject(Object object) {
+    private YAPIONSerializer parseObject(String fieldName, Object outerObject, Object object) {
         if (object.getClass().getSimpleName().contains("$")) {
             throw new YAPIONSerializerException("Simple class name (" + object.getClass().getTypeName() + ") is not allowed to contain '$'");
         }
@@ -166,7 +166,7 @@ public final class YAPIONSerializer {
         Class<?> type = object.getClass();
         InternalSerializer serializer = SerializeManager.getInternalSerializer(type);
         if (serializer != null && !serializer.empty()) {
-            this.result = serializer.serialize(new SerializeData<>(object, contextManager.get(), this));
+            this.result = serializer.serialize(new SerializeData<>(fieldName, outerObject, object, contextManager.get(), this));
             if (result instanceof YAPIONObject || result instanceof YAPIONArray || result instanceof YAPIONMap) {
                 pointerMap.put(object, new YAPIONPointer((YAPIONDataType<?, ?>) result));
             }
@@ -174,7 +174,7 @@ public final class YAPIONSerializer {
                 return this;
             }
         } else if (GeneratedSerializerLoader.loadSerializerIfNeeded(type)) {
-            return parseObject(object);
+            return parseObject(fieldName, outerObject, object);
         }
 
         boolean saveWithoutAnnotation = serializer != null && serializer.saveWithoutAnnotation();
@@ -246,7 +246,7 @@ public final class YAPIONSerializer {
                 continue;
             }
 
-            YAPIONAnyType yapionAnyType = parse(fieldObject);
+            YAPIONAnyType yapionAnyType = parse(name, object, fieldObject);
             if (yapionAnyType == null) {
                 continue;
             }
@@ -272,7 +272,7 @@ public final class YAPIONSerializer {
      * Parses the Object to the YAPIONObject.
      */
     public YAPIONSerializer parse() {
-        return parseObject(object);
+        return parseObject(null, null, object);
     }
 
     /**

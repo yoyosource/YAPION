@@ -23,6 +23,10 @@ import yapion.hierarchy.types.YAPIONValue;
 
 public interface ObjectAdd<I, K> extends InternalAdd<I, K> {
 
+    default I set(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return internalAdd(key, value);
+    }
+
     default I add(@NonNull K key, @NonNull YAPIONAnyType value) {
         return internalAdd(key, value);
     }

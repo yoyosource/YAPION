@@ -33,6 +33,8 @@ import java.lang.reflect.Field;
 @ToString
 public class SerializeData<T> {
 
+    public final String fieldName;
+    public final Object outerObject;
     public final T object;
     public final Class<? extends View> context;
 
@@ -40,11 +42,11 @@ public class SerializeData<T> {
     private final YAPIONSerializer yapionSerializer;
 
     public <R> SerializeData<R> copy(R object) {
-        return new SerializeData<>(object, context, yapionSerializer);
+        return new SerializeData<>(null, this.object, object, context, yapionSerializer);
     }
 
     public final YAPIONAnyType serializeField(Field field) {
-        return serialize(getField(field));
+        return yapionSerializer.parse(field.getName(), object, getField(field));
     }
 
     public final YAPIONAnyType serializeField(String fieldName) {
@@ -52,7 +54,7 @@ public class SerializeData<T> {
     }
 
     public final YAPIONAnyType serialize(Object o) {
-        return yapionSerializer.parse(o);
+        return yapionSerializer.parse(null, object, o);
     }
 
     public final void serialize(YAPIONObject yapionObject, Field field) {

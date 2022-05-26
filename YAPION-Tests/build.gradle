@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+
     id 'application'
     id 'com.github.johnrengelman.shadow'
 
@@ -42,6 +44,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib"
+
     testImplementation project(':YAPION-Hierarchy')
     testImplementation project(':YAPION-Parser')
     testImplementation project(':YAPION-Serializer')
@@ -53,6 +57,7 @@ dependencies {
     testImplementation project(':YAPION-Databind-JavaTime')
     testImplementation project(':YAPION-Databind-JavaFunction')
     testImplementation project(':YAPION-Databind-JavaAtomic')
+    testImplementation project(':YAPION-Databind-Kotlin')
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.hamcrest:hamcrest:2.2'

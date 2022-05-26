@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+
     id 'application'
     id 'com.github.johnrengelman.shadow'
 
@@ -37,6 +39,8 @@ compileTestJava {
 mainClassName = ''
 
 dependencies {
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib"
+
     compileOnly 'org.projectlombok:lombok:1.18.22'
     testCompileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'

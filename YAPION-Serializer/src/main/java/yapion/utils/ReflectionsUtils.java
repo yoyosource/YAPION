@@ -106,6 +106,18 @@ public class ReflectionsUtils {
     }
 
     /**
+     * Invokes a method with no arguments on a given object
+     * and return the possible return value.
+     *
+     * @param name the name of the method to be called
+     * @param object the object on which the method should be called
+     * @return the possible return value
+     */
+    public static MethodReturnValue<Object> invokeMethod(String name, Object object) {
+        return invokeMethod(name, object, new Object[0]);
+    }
+
+    /**
      * Invokes a method with the given arguments on a given object
      * and return the possible return value.
      *

@@ -35,4 +35,5 @@ include 'YAPION-Databind-JavaFunction'
 include 'YAPION-Databind-JavaOther'
 include 'YAPION-Databind-JavaSecurity'
 include 'YAPION-Databind-JavaTime'
+include 'YAPION-Databind-Kotlin'
 

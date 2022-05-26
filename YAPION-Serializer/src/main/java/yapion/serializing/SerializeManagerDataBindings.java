@@ -47,6 +47,8 @@ class SerializeManagerDataBindings {
             "java-security",
             "java-time",
 
+            "kotlin",
+
             // Third party data bindings
             "bukkit",
             "guava",
