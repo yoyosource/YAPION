@@ -66,6 +66,20 @@ interface YAPIONBuilder<K, T : YAPIONDataType<*, *>>: Builder<T> {
     infix fun <@YAPIONPrimitive T> K.with(value: T) {
         add(this, YAPIONValue(value))
     }
+
+    operator fun IntRange.times(element: YAPIONBuilder<K, T>.(Int) -> Unit) {
+        this.forEach {
+            this@YAPIONBuilder.element(it)
+        }
+    }
+
+    operator fun Int.times(element: YAPIONBuilder<K, T>.(Int) -> Unit) = (0 until this) * element
+
+    fun <V> Values(value: (Int) -> V): YAPIONBuilder<K, T>.(Int) -> Unit {
+        return {
+            YAPIONValue(value(it))
+        }
+    }
 }
 
 class Key<K>(internal val key: K, internal val yapionBuilder: YAPIONBuilder<K, *>)
