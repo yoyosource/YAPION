@@ -1,4 +1,5 @@
-import yapion.*
+import yapion.with
+import yapion.yapionObject
 
 /*
  * Copyright 2019,2020,2021 yoyosource
@@ -20,6 +21,7 @@ fun main() {
         }
         "j"() with yapionObject {  }
         "k" with yapionObject {  }
+        "lel" with 0
         "j" {
             yapionObject {
 
@@ -32,23 +34,29 @@ fun main() {
             + "0" with yapionObject {  }
         }
         "hello" Map {
-            yapionObject {
+            Object {
 
+            } with Object {
+
+            }
+            Object {
+                "j" Value "Hello World"
             } Object {
 
             }
-            yapionMap {
+            Map {
 
             } Map {
 
             }
-            yapionArray {
+            Array {
 
             } Array {
 
             }
-            yapionValue("") Value("")
-            yapionPointer(this.yapionDataType) Pointer(this@yapionObject)
+            Value("") with Value("")
+            "Hello" with ""
+            Pointer(this.yapionDataType) with Pointer(this@yapionObject)
         }
         "array" Array {
             Object {

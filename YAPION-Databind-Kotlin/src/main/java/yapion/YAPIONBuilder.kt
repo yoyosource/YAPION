@@ -55,8 +55,16 @@ interface YAPIONBuilder<K, T : YAPIONDataType<*, *>>: Builder<T> {
         add(this, YAPIONPointer(pointer.yapionDataType))
     }
 
+    infix fun K.Pointer(value: YAPIONDataType<*, *>) {
+        add(this, YAPIONPointer(value))
+    }
+
     infix fun K.with(value: YAPIONAnyType) {
         add(this, value)
+    }
+
+    infix fun <@YAPIONPrimitive T> K.with(value: T) {
+        add(this, YAPIONValue(value))
     }
 }
 
@@ -96,6 +104,10 @@ class YAPIONArrayBuilder : Builder<YAPIONArray> {
     fun Pointer(pointer: Builder<*>) {
         yapionArray.add(YAPIONPointer(pointer.yapionDataType))
     }
+
+    fun Pointer(value: YAPIONDataType<*, *>) {
+        yapionArray.add(YAPIONPointer(value))
+    }
 }
 
 class YAPIONMapBuilder : YAPIONBuilder<YAPIONAnyType, YAPIONMap> {
@@ -106,6 +118,22 @@ class YAPIONMapBuilder : YAPIONBuilder<YAPIONAnyType, YAPIONMap> {
 
     override fun add(key: YAPIONAnyType, value: YAPIONAnyType) {
         yapionMap.add(key, value)
+    }
+
+    fun Object(init: YAPIONObjectBuilder.() -> Unit) = initPattern(YAPIONObjectBuilder(), init).yapionObject
+
+    fun Array(init: YAPIONArrayBuilder.() -> Unit) = initPattern(YAPIONArrayBuilder(), init).yapionArray
+
+    fun Map(init: YAPIONMapBuilder.() -> Unit) = initPattern(YAPIONMapBuilder(), init).yapionMap
+
+    fun <@YAPIONPrimitive T> Value(value: T?) = YAPIONValue(value)
+
+    fun Pointer(pointer: Builder<*>) = YAPIONPointer(pointer.yapionDataType)
+    fun Pointer(value: YAPIONDataType<*, *>) = YAPIONPointer(value)
+
+    @JvmName("with1")
+    infix fun <@YAPIONPrimitive T> T.with(value: T) {
+        add(YAPIONValue(this), YAPIONValue(value))
     }
 }
 
