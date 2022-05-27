@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package yapion
+package yapion.hierarchy
 
 import yapion.annotations.api.YAPIONPrimitive
 import yapion.hierarchy.api.groups.YAPIONAnyType

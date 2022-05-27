@@ -24,6 +24,8 @@ include 'YAPION-IO'
 include 'YAPION-Other'
 include 'YAPION-Tests'
 
+include 'YAPION-Kotlin'
+
 include 'YAPION-Test'
 
 include 'YAPION-Databind-Bukkit'

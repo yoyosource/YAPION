@@ -1,5 +1,5 @@
-import yapion.with
-import yapion.yapionObject
+import yapion.hierarchy.with
+import yapion.hierarchy.yapionObject
 
 /*
  * Copyright 2019,2020,2021 yoyosource

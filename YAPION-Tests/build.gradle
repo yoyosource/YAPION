@@ -50,6 +50,7 @@ dependencies {
     testImplementation project(':YAPION-Parser')
     testImplementation project(':YAPION-Serializer')
     testImplementation project(':YAPION-IO')
+    testImplementation project(':YAPION-Kotlin')
     testImplementation project(':YAPION-Databind-JavaBase')
     testImplementation project(':YAPION-Databind-JavaCollections')
     testImplementation project(':YAPION-Databind-JavaOther')
