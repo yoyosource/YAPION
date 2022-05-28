@@ -18,11 +18,15 @@ import yapion.hierarchy.api.groups.YAPIONAnyType
 import yapion.hierarchy.api.groups.YAPIONDataType
 import yapion.hierarchy.types.*
 
-interface Builder<T : YAPIONDataType<*, *>> {
+@DslMarker
+annotation class YAPIONHierarchyBuilderMarker
+
+@YAPIONHierarchyBuilderMarker
+interface Builder<T : YAPIONAnyType> {
     val yapionDataType: T
 }
 
-interface YAPIONBuilder<K, T : YAPIONDataType<*, *>>: Builder<T> {
+interface YAPIONBuilder<K, T : YAPIONDataType<*, *>> : Builder<T> {
     fun add(key: K, value: YAPIONAnyType)
 
     operator fun K.unaryPlus(): Key<K> {
@@ -41,17 +45,20 @@ interface YAPIONBuilder<K, T : YAPIONDataType<*, *>>: Builder<T> {
         add(key, value)
     }
 
-    infix fun K.Object(init: YAPIONObjectBuilder.() -> Unit) = add(this, initPattern(YAPIONObjectBuilder(), init).yapionObject)
+    infix fun K.Object(init: YAPIONObjectBuilder.() -> Unit) =
+        add(this, initPattern(YAPIONObjectBuilder(), init).yapionObject)
 
-    infix fun K.Array(init: YAPIONArrayBuilder.() -> Unit) = add(this, initPattern(YAPIONArrayBuilder(), init).yapionArray)
+    infix fun K.Array(init: YAPIONArrayBuilder.() -> Unit) =
+        add(this, initPattern(YAPIONArrayBuilder(), init).yapionArray)
 
-    infix fun K.Map(init: YAPIONMapBuilder.() -> Unit) = add(this, initPattern(YAPIONMapBuilder(), init).yapionMap)
+    infix fun K.Map(init: YAPIONMapBuilder.() -> Unit) =
+        add(this, initPattern(YAPIONMapBuilder(), init).yapionMap)
 
     infix fun <@YAPIONPrimitive T> K.Value(value: T?) {
         add(this, YAPIONValue(value))
     }
 
-    infix fun K.Pointer(pointer: Builder<*>) {
+    infix fun <L : YAPIONDataType<*, *>> K.Pointer(pointer: Builder<L>) {
         add(this, YAPIONPointer(pointer.yapionDataType))
     }
 
@@ -73,11 +80,43 @@ interface YAPIONBuilder<K, T : YAPIONDataType<*, *>>: Builder<T> {
         }
     }
 
-    operator fun Int.times(element: YAPIONBuilder<K, T>.(Int) -> Unit) = (0 until this) * element
+    operator fun Int.times(element: YAPIONBuilder<K, T>.(Int) -> Unit) =
+        (0 until this) * element
 
-    fun <V> Values(value: (Int) -> V): YAPIONBuilder<K, T>.(Int) -> Unit {
+    fun Objects(value: YAPIONObjectBuilder.(Int) -> K): YAPIONBuilder<K, T>.(Int) -> Unit {
         return {
-            YAPIONValue(value(it))
+            var key: K? = null
+            val result = initPattern(YAPIONObjectBuilder()) {
+                key = this.value(it)
+            }
+            this@YAPIONBuilder.add(key!!, result.yapionDataType)
+        }
+    }
+
+    fun Arrays(value: YAPIONArrayBuilder.(Int) -> K): YAPIONBuilder<K, T>.(Int) -> Unit {
+        return {
+            var key: K? = null
+            val result = initPattern(YAPIONArrayBuilder()) {
+                key = this.value(it)
+            }
+            this@YAPIONBuilder.add(key!!, result.yapionDataType)
+        }
+    }
+
+    fun Maps(value: YAPIONMapBuilder.(Int) -> K): YAPIONBuilder<K, T>.(Int) -> Unit {
+        return {
+            var key: K? = null
+            val result = initPattern(YAPIONMapBuilder()) {
+                key = this.value(it)
+            }
+            this@YAPIONBuilder.add(key!!, result.yapionDataType)
+        }
+    }
+
+    fun <V> Values(value: (Int) -> Pair<K, V>): YAPIONArrayBuilder.(Int) -> Unit {
+        return {
+            val result = value(it)
+            this@YAPIONBuilder.add(result.first, YAPIONValue(result.second))
         }
     }
 }
@@ -88,7 +127,7 @@ infix fun <K> Key<K>.with(value: YAPIONAnyType) {
     this.yapionBuilder.add(this.key, value)
 }
 
-class YAPIONObjectBuilder : YAPIONBuilder<String, YAPIONObject> {
+open class YAPIONObjectBuilder : YAPIONBuilder<String, YAPIONObject> {
     internal val yapionObject = YAPIONObject()
 
     override val yapionDataType: YAPIONObject
@@ -99,32 +138,77 @@ class YAPIONObjectBuilder : YAPIONBuilder<String, YAPIONObject> {
     }
 }
 
-class YAPIONArrayBuilder : Builder<YAPIONArray> {
+open class YAPIONArrayBuilder : Builder<YAPIONArray> {
     internal val yapionArray = YAPIONArray()
 
     override val yapionDataType: YAPIONArray
         get() = yapionArray
 
-    fun Object(init: YAPIONObjectBuilder.() -> Unit) = yapionArray.add(initPattern(YAPIONObjectBuilder(), init).yapionObject)
+    fun Object(init: YAPIONObjectBuilder.() -> Unit) =
+        yapionArray.add(initPattern(YAPIONObjectBuilder(), init).yapionObject)
 
-    fun Array(init: YAPIONArrayBuilder.() -> Unit) = yapionArray.add(initPattern(YAPIONArrayBuilder(), init).yapionArray)
+    fun Array(init: YAPIONArrayBuilder.() -> Unit) =
+        yapionArray.add(initPattern(YAPIONArrayBuilder(), init).yapionArray)
 
-    fun Map(init: YAPIONMapBuilder.() -> Unit) = yapionArray.add(initPattern(YAPIONMapBuilder(), init).yapionMap)
+    fun Map(init: YAPIONMapBuilder.() -> Unit) =
+        yapionArray.add(initPattern(YAPIONMapBuilder(), init).yapionMap)
 
     fun <@YAPIONPrimitive T> Value(value: T?) {
         yapionArray.add(YAPIONValue(value))
     }
 
-    fun Pointer(pointer: Builder<*>) {
+    fun <L : YAPIONDataType<*, *>> Pointer(pointer: Builder<L>) {
         yapionArray.add(YAPIONPointer(pointer.yapionDataType))
     }
 
     fun Pointer(value: YAPIONDataType<*, *>) {
         yapionArray.add(YAPIONPointer(value))
     }
+
+    operator fun IntRange.times(element: YAPIONArrayBuilder.(Int) -> Unit) {
+        this.forEach {
+            this@YAPIONArrayBuilder.element(it)
+        }
+    }
+
+    operator fun Int.times(element: YAPIONArrayBuilder.(Int) -> Unit) =
+        (0 until this) * element
+
+    fun Objects(value: YAPIONObjectBuilder.(Int) -> Unit): Builder<YAPIONArray>.(Int) -> Unit {
+        return {
+            val result = initPattern(YAPIONObjectBuilder()) {
+                this.value(it)
+            }
+            this@YAPIONArrayBuilder.yapionArray.add(result.yapionDataType)
+        }
+    }
+
+    fun Arrays(value: YAPIONArrayBuilder.(Int) -> Unit): Builder<YAPIONArray>.(Int) -> Unit {
+        return {
+            val result = initPattern(YAPIONArrayBuilder()) {
+                this.value(it)
+            }
+            this@YAPIONArrayBuilder.yapionArray.add(result.yapionDataType)
+        }
+    }
+
+    fun Maps(value: YAPIONMapBuilder.(Int) -> Unit): Builder<YAPIONArray>.(Int) -> Unit {
+        return {
+            val result = initPattern(YAPIONMapBuilder()) {
+                this.value(it)
+            }
+            this@YAPIONArrayBuilder.yapionArray.add(result.yapionDataType)
+        }
+    }
+
+    fun <V> Values(value: (Int) -> V): YAPIONArrayBuilder.(Int) -> Unit {
+        return {
+            Value(value(it))
+        }
+    }
 }
 
-class YAPIONMapBuilder : YAPIONBuilder<YAPIONAnyType, YAPIONMap> {
+open class YAPIONMapBuilder : YAPIONBuilder<YAPIONAnyType, YAPIONMap> {
     internal val yapionMap = YAPIONMap()
 
     override val yapionDataType: YAPIONMap
@@ -134,16 +218,23 @@ class YAPIONMapBuilder : YAPIONBuilder<YAPIONAnyType, YAPIONMap> {
         yapionMap.add(key, value)
     }
 
-    fun Object(init: YAPIONObjectBuilder.() -> Unit) = initPattern(YAPIONObjectBuilder(), init).yapionObject
+    fun Object(init: YAPIONObjectBuilder.() -> Unit) =
+        initPattern(YAPIONObjectBuilder(), init).yapionObject
 
-    fun Array(init: YAPIONArrayBuilder.() -> Unit) = initPattern(YAPIONArrayBuilder(), init).yapionArray
+    fun Array(init: YAPIONArrayBuilder.() -> Unit) =
+        initPattern(YAPIONArrayBuilder(), init).yapionArray
 
-    fun Map(init: YAPIONMapBuilder.() -> Unit) = initPattern(YAPIONMapBuilder(), init).yapionMap
+    fun Map(init: YAPIONMapBuilder.() -> Unit) =
+        initPattern(YAPIONMapBuilder(), init).yapionMap
 
-    fun <@YAPIONPrimitive T> Value(value: T?) = YAPIONValue(value)
+    fun <@YAPIONPrimitive T> Value(value: T?) =
+        YAPIONValue(value)
 
-    fun Pointer(pointer: Builder<*>) = YAPIONPointer(pointer.yapionDataType)
-    fun Pointer(value: YAPIONDataType<*, *>) = YAPIONPointer(value)
+    fun <L : YAPIONDataType<*, *>> Pointer(pointer: Builder<L>) =
+        YAPIONPointer(pointer.yapionDataType)
+
+    fun Pointer(value: YAPIONDataType<*, *>) =
+        YAPIONPointer(value)
 
     @JvmName("with1")
     infix fun <@YAPIONPrimitive T> T.with(value: T) {
@@ -156,11 +247,14 @@ fun <P> initPattern(p: P, init: P.() -> Unit): P {
     return p
 }
 
-fun yapionObject(init: YAPIONObjectBuilder.() -> Unit): YAPIONObject = initPattern(YAPIONObjectBuilder(), init).yapionObject
+fun yapionObject(init: YAPIONObjectBuilder.() -> Unit): YAPIONObject =
+    initPattern(YAPIONObjectBuilder(), init).yapionObject
 
-fun yapionArray(init: YAPIONArrayBuilder.() -> Unit): YAPIONArray = initPattern(YAPIONArrayBuilder(), init).yapionArray
+fun yapionArray(init: YAPIONArrayBuilder.() -> Unit): YAPIONArray =
+    initPattern(YAPIONArrayBuilder(), init).yapionArray
 
-fun yapionMap(init: YAPIONMapBuilder.() -> Unit): YAPIONMap = initPattern(YAPIONMapBuilder(), init).yapionMap
+fun yapionMap(init: YAPIONMapBuilder.() -> Unit): YAPIONMap =
+    initPattern(YAPIONMapBuilder(), init).yapionMap
 
 fun <@YAPIONPrimitive T> yapionValue(value: T?): YAPIONValue<T> {
     return YAPIONValue(value)

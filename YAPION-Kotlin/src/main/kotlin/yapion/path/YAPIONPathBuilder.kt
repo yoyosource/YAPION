@@ -250,6 +250,19 @@ fun main() {
         println(yapionObject)
     }
 
+    if (true) {
+        val yapionObject = yapionObject {
+            "element" with 0
+            100 * Arrays {
+                100 * Values { it }
+                "test$it"
+            }
+        }
+        yapionObject.put("element", 1)
+        yapionObject.remove("element")
+        println(yapionObject)
+    }
+
     val yapionObject = YAPIONObject()
     yapionObject.add("element", 0)
     for (i in 0..99) {
