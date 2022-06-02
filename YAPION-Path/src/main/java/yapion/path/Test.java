@@ -318,7 +318,7 @@ public class Test {
             System.out.println((total / 1000 / 1000.0 / 10000) + "ms/iteration");
         }
 
-        if (false) {
+        if (true) {
             YAPIONPath yapionPath = new Selector()
                     .any()
                     .keySelector()
@@ -331,6 +331,12 @@ public class Test {
                 total += yapionPath.apply(yapionObject).nanoTime;
             }
             System.out.println((total / 1000 / 1000.0 / 10000) + "ms/iteration");
+        }
+        
+        if (true) {
+            YAPIONPath yapionPath = YAPIONPathParser.parse("*.!(*0*)");
+            // YAPIONPath yapionPath = YAPIONPathParser.parse("*.!*.?(*0*).:");
+            output(yapionPath.apply(yapionObject));
         }
     }
 

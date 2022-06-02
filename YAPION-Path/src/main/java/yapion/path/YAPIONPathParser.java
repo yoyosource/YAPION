@@ -11,11 +11,9 @@
  * limitations under the License.
  */
 
-package yapion.path.parser;
+package yapion.path;
 
 import yapion.exceptions.YAPIONException;
-import yapion.path.PathElement;
-import yapion.path.YAPIONPath;
 import yapion.path.impl.*;
 import yapion.path.impl.array.Range;
 import yapion.path.impl.object.Contains;
@@ -47,7 +45,7 @@ public class YAPIONPathParser {
     public static YAPIONPath parse(String path) {
         YAPIONPathParser parser = new YAPIONPathParser(path);
         Collection<Object> objects = parser.parse(0, new ArrayList<>());
-        System.out.println(objects);
+        // System.out.println(objects);
         return (YAPIONPath) parser.parse(objects, false);
     }
 
@@ -226,6 +224,7 @@ public class YAPIONPathParser {
             List<List<PathElement>> splittedAndParsed = split(collections).stream()
                     .map(objects -> objects.stream().map(o -> parse(o, finalIsValue)).collect(Collectors.toList()))
                     .collect(Collectors.toList());
+            // System.out.println(splittedAndParsed);
 
             if (check) {
                 for (List<PathElement> pathElements : splittedAndParsed) {
@@ -257,6 +256,9 @@ public class YAPIONPathParser {
                 }
                 if (splittedAndParsed.size() != 1) {
                     throw new YAPIONException("Invalid path element: " + collections);
+                }
+                if (collections instanceof WhenGroup) {
+                    return new When(new YAPIONPath(splittedAndParsed.get(0).toArray(new PathElement[0])));
                 }
                 return new YAPIONPath(splittedAndParsed.get(0).toArray(new PathElement[0]));
             }
