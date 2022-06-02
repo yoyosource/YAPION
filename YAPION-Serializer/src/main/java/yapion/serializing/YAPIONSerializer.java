@@ -67,23 +67,23 @@ public final class YAPIONSerializer {
      * Serialize an Object to an YAPION Object.
      *
      * @param object to serialize
-     * @param context the context for serialization
+     * @param view the view for serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, Class<? extends View> context) {
-        return new YAPIONSerializer(object, context).parse().getYAPIONObject();
+    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, Class<? extends View> view) {
+        return new YAPIONSerializer(object, view).parse().getYAPIONObject();
     }
 
     /**
      * Serialize an Object to an YAPION Object.
      *
      * @param object to serialize
-     * @param context the context for serialization
+     * @param view the view for serialization
      * @param yapionFlags the flags used for this serialization
      * @return YAPIONObject from the object to serialize
      */
-    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, Class<? extends View> context, YAPIONFlags yapionFlags) {
-        return new YAPIONSerializer(object, context, yapionFlags).parse().getYAPIONObject();
+    public static <T extends YAPIONAnyType> T serialize(@NonNull Object object, Class<? extends View> view, YAPIONFlags yapionFlags) {
+        return new YAPIONSerializer(object, view, yapionFlags).parse().getYAPIONObject();
     }
 
     /**
@@ -97,25 +97,25 @@ public final class YAPIONSerializer {
     }
 
     /**
-     * Creates a YAPIONSerializer for serializing an Object with a specified context.
+     * Creates a YAPIONSerializer for serializing an Object with a specified view.
      *
      * @param object to serialize
-     * @param context the context for serialization
+     * @param view the view for serialization
      */
-    public YAPIONSerializer(@NonNull Object object, Class<? extends View> context) {
-        contextManager = new ContextManager(context);
+    public YAPIONSerializer(@NonNull Object object, Class<? extends View> view) {
+        contextManager = new ContextManager(view);
         this.object = object;
     }
 
     /**
-     * Creates a YAPIONSerializer for serializing an Object with a specified context.
+     * Creates a YAPIONSerializer for serializing an Object with a specified view.
      *
      * @param object to serialize
-     * @param context the context for serialization
+     * @param view the view for serialization
      * @param yapionFlags the flags used for this serialization
      */
-    public YAPIONSerializer(@NonNull Object object, Class<? extends View> context, YAPIONFlags yapionFlags) {
-        contextManager = new ContextManager(context);
+    public YAPIONSerializer(@NonNull Object object, Class<? extends View> view, YAPIONFlags yapionFlags) {
+        contextManager = new ContextManager(view);
         this.object = object;
         this.yapionFlags = yapionFlags;
     }

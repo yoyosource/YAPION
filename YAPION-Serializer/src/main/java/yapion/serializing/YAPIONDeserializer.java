@@ -94,46 +94,46 @@ public final class YAPIONDeserializer {
      * Serialize an YAPION Object to an Object.
      *
      * @param serializingType to deserialize
-     * @param context the context for deserialization
+     * @param view the view for deserialization
      * @return Object from the YAPIONObject to deserialize
      */
-    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, Class<? extends View> context) {
-        return (T) new YAPIONDeserializer(serializingType, context).parse().getObject();
+    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, Class<? extends View> view) {
+        return (T) new YAPIONDeserializer(serializingType, view).parse().getObject();
     }
 
     /**
      * Serialize an YAPION Object to an Object.
      *
      * @param serializingType to deserialize
-     * @param context the context for deserialization
+     * @param view the view for deserialization
      * @return Object from the YAPIONObject to deserialize
      */
-    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, Class<? extends View> context, @NonNull YAPIONFlags yapionFlags) {
-        return (T) new YAPIONDeserializer(serializingType, context, new TypeReMapper(), yapionFlags).parse().getObject();
+    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, Class<? extends View> view, @NonNull YAPIONFlags yapionFlags) {
+        return (T) new YAPIONDeserializer(serializingType, view, new TypeReMapper(), yapionFlags).parse().getObject();
     }
 
     /**
      * Serialize an YAPION Object to an Object.
      *
      * @param serializingType to deserialize
-     * @param context the context for deserialization
+     * @param view the view for deserialization
      * @param typeReMapper the mapper to remap any '@type' variable to a new class
      * @return Object from the YAPIONObject to deserialize
      */
-    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, Class<? extends View> context, @NonNull TypeReMapper typeReMapper) {
-        return (T) new YAPIONDeserializer(serializingType, context, typeReMapper).parse().getObject();
+    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, Class<? extends View> view, @NonNull TypeReMapper typeReMapper) {
+        return (T) new YAPIONDeserializer(serializingType, view, typeReMapper).parse().getObject();
     }
 
     /**
      * Serialize an YAPION Object to an Object.
      *
      * @param serializingType to deserialize
-     * @param context the context for deserialization
+     * @param view the view for deserialization
      * @param typeReMapper the mapper to remap any '@type' variable to a new class
      * @return Object from the YAPIONObject to deserialize
      */
-    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, Class<? extends View> context, @NonNull TypeReMapper typeReMapper, @NonNull YAPIONFlags yapionFlags) {
-        return (T) new YAPIONDeserializer(serializingType, context, typeReMapper, yapionFlags).parse().getObject();
+    public static <T, K extends YAPIONDataType<?, ?> & SerializingType> T deserialize(@NonNull K serializingType, Class<? extends View> view, @NonNull TypeReMapper typeReMapper, @NonNull YAPIONFlags yapionFlags) {
+        return (T) new YAPIONDeserializer(serializingType, view, typeReMapper, yapionFlags).parse().getObject();
     }
 
     /**
@@ -147,38 +147,38 @@ public final class YAPIONDeserializer {
     }
 
     /**
-     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.
+     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified view.
      *
      * @param serializingType to deserialize
-     * @param context the context for deserialization
+     * @param view the view for deserialization
      */
-    public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, Class<? extends View> context) {
-        contextManager = new ContextManager(context);
+    public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, Class<? extends View> view) {
+        contextManager = new ContextManager(view);
         this.serializingType = serializingType;
     }
 
     /**
-     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.
+     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified view.
      *
      * @param serializingType to deserialize
-     * @param context the context for deserialization
+     * @param view the view for deserialization
      * @param typeReMapper the mapper to remap any '@type' variable to a new class
      */
-    public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, Class<? extends View> context, @NonNull TypeReMapper typeReMapper) {
-        contextManager = new ContextManager(context);
+    public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, Class<? extends View> view, @NonNull TypeReMapper typeReMapper) {
+        contextManager = new ContextManager(view);
         this.serializingType = (K) serializingType.copy();
         this.typeReMapper = new TypeReMapper.FinalTypeReMapper(typeReMapper);
     }
 
     /**
-     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified context.
+     * Creates a YAPIONDeserializer for deserializing a YAPIONObject with a specified view.
      *
      * @param serializingType to deserialize
-     * @param context the context for deserialization
+     * @param view the view for deserialization
      * @param typeReMapper the mapper to remap any '@type' variable to a new class
      */
-    public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, Class<? extends View> context, @NonNull TypeReMapper typeReMapper, @NonNull YAPIONFlags yapionFlags) {
-        contextManager = new ContextManager(context);
+    public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, Class<? extends View> view, @NonNull TypeReMapper typeReMapper, @NonNull YAPIONFlags yapionFlags) {
+        contextManager = new ContextManager(view);
         this.serializingType = (K) serializingType.copy();
         this.typeReMapper = new TypeReMapper.FinalTypeReMapper(typeReMapper);
         this.yapionFlags = yapionFlags;
