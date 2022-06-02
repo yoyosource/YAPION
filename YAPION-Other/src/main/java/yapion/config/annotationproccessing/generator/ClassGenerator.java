@@ -42,6 +42,8 @@ public class ClassGenerator {
     private List<FunctionGenerator> functions = new ArrayList<>();
     private List<ClassGenerator> internalClasses = new ArrayList<>();
 
+    private boolean toString = false;
+
     public ClassGenerator(ModifierGenerator modifierGenerator, String packageName, String className) {
         this.modifierGenerator = modifierGenerator;
         this.packageName = packageName;
@@ -50,6 +52,11 @@ public class ClassGenerator {
 
     public ClassGenerator addImport(String importName) {
         imports.add(importName);
+        return this;
+    }
+
+    public ClassGenerator toString(boolean toString) {
+        this.toString = toString;
         return this;
     }
 
@@ -139,6 +146,22 @@ public class ClassGenerator {
             }
             strings.addAll(current);
         });
+        if (toString) {
+            FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "toString", String.class.getTypeName());
+            functionGenerator.add("java.lang.StringBuilder sb = new java.lang.StringBuilder();");
+            functionGenerator.add("sb.append(\"" + className + " {\");");
+            for (int i = 0; i < fields.size(); i++) {
+                FieldGenerator field = fields.get(i);
+                if (i == fields.size() - 1) {
+                    functionGenerator.add("sb.append(\"" + field.getName() + "=\").append(" + field.getName() + ");");
+                } else {
+                    functionGenerator.add("sb.append(\"" + field.getName() + "=\").append(" + field.getName() + ").append(\", \");");
+                }
+            }
+            functionGenerator.add("sb.append(\"}\");");
+            functionGenerator.add("return sb.toString();");
+            functions.add(new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), "toString", String.class.getTypeName()).add("return \"" + className + "\";"));
+        }
         functions.forEach(functionGenerator -> {
             strings.add("");
             strings.addAll(functionGenerator.output(indent + 1));

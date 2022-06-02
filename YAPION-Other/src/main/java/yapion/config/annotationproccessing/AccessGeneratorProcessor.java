@@ -42,9 +42,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ProcessorImplementation
@@ -54,7 +51,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
     private Messager messager;
     private Element currentElement;
     private final AtomicInteger index = new AtomicInteger(0);
-    private final AtomicBoolean lombokToString = new AtomicBoolean(false);
+    private final AtomicBoolean toString = new AtomicBoolean(false);
     private final AtomicBoolean setter = new AtomicBoolean(false);
     private final AtomicBoolean lombokExtensionMethod = new AtomicBoolean(false);
 
@@ -92,7 +89,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
 
             messager.printMessage(Diagnostic.Kind.NOTE, "Accessing YAPIONAccessGenerator on " + element.getSimpleName());
             YAPIONAccessGenerator yapionAccessGenerator = element.getAnnotation(YAPIONAccessGenerator.class);
-            lombokToString.set(yapionAccessGenerator.lombokToString());
+            toString.set(yapionAccessGenerator.generateToString());
             setter.set(yapionAccessGenerator.setter());
             lombokExtensionMethod.set(yapionAccessGenerator.lombokExtensionMethods());
             index.set(0);
@@ -177,9 +174,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
                 });
                 classGenerator.addAnnotation("@lombok.experimental.ExtensionMethod({" + String.join(", ", strings) + "})");
             }
-            if (lombokToString.get()) {
-                classGenerator.addAnnotation(ToString.class);
-            }
+            classGenerator.toString(toString.get());
             messager.printMessage(Diagnostic.Kind.NOTE, "Generating import for 'static yapion.config.annotationproccessing.ConstraintUtils.*'");
             classGenerator.addImport("static yapion.config.annotationproccessing.ConstraintUtils.*");
             try {
@@ -323,9 +318,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
-            if (lombokToString.get()) {
-                currentGenerator.addAnnotation(ToString.class);
-            }
+            classGenerator.toString(toString.get());
             classGenerator.add(currentGenerator);
             classGenerator = currentGenerator;
             FunctionGenerator functionGenerator = new FunctionGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName(), new ParameterGenerator(YAPIONObject.class.getTypeName(), "yapionObject"));
@@ -437,9 +430,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
-            if (lombokToString.get()) {
-                currentGenerator.addAnnotation(ToString.class);
-            }
+            classGenerator.toString(toString.get());
             currentGenerator.setExtendsString(reference);
             classGenerator.add(currentGenerator);
             classGenerator = currentGenerator;
@@ -533,9 +524,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
             }
 
             ClassGenerator currentGenerator = new ClassGenerator(new ModifierGenerator(ModifierType.PUBLIC), null, getClassName());
-            if (lombokToString.get()) {
-                currentGenerator.addAnnotation(ToString.class);
-            }
+            classGenerator.toString(toString.get());
             currentGenerator.setExtendsString(reference);
             classGenerator.add(currentGenerator);
             classGenerator = currentGenerator;

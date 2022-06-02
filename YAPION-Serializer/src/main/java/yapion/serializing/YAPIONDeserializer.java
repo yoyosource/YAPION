@@ -38,7 +38,9 @@ import yapion.utils.ReflectionsUtils;
 
 import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static yapion.utils.IdentifierUtils.TYPE_IDENTIFIER;
 
@@ -276,6 +278,9 @@ public final class YAPIONDeserializer {
         DeserializationContext deserializationContext = new DeserializationContext(this, yapionObject);
         MethodManager.preDeserializationStep(object, object.getClass(), contextManager, deserializationContext);
         pointerMap.put(yapionObject, object);
+
+        List<String> missingFields = ReflectionsUtils.getFields(clazz).stream().map(Field::getName).filter(s -> !yapionObject.unsafe().containsKey(s)).collect(Collectors.toList());
+        deserializeResult.add(object, missingFields);
 
         for (String fieldName : yapionObject.getKeys()) {
             if (fieldName.equals(TYPE_IDENTIFIER)) continue;

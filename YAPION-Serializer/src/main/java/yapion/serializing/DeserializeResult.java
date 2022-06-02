@@ -24,6 +24,7 @@ import java.util.*;
 public final class DeserializeResult {
 
     private Map<Object, List<DeserializeField>> resultMap = new IdentityHashMap<>();
+    private Map<Object, List<String>> missingFields = new IdentityHashMap<>();
 
     /**
      * Retrieve all ignored fields for a given {@link Object}. This method will return {@code null} if none are present.
@@ -33,6 +34,10 @@ public final class DeserializeResult {
      */
     public List<DeserializeField> ignoredFields(Object object) {
         return resultMap.get(object);
+    }
+
+    public List<String> missingFields(Object object) {
+        return missingFields.get(object);
     }
 
     /**
@@ -45,17 +50,29 @@ public final class DeserializeResult {
         return resultMap.containsKey(object);
     }
 
+    public boolean hasMissingFields(Object object) {
+        return missingFields.containsKey(object);
+    }
+
     /**
      * Retrieve all {@link Object}'s that have ignored fields present.
      *
      * @return all {@link Object}'s with ignored fields
      */
-    public Set<Object> objects() {
+    public Set<Object> ignored() {
         return resultMap.keySet();
+    }
+
+    public Set<Object> missing() {
+        return missingFields.keySet();
     }
 
     void add(Object object, String fieldName, YAPIONAnyType ignoredValue) {
         resultMap.computeIfAbsent(object, fields -> new ArrayList<>())
                 .add(new DeserializeField(fieldName, ignoredValue));
+    }
+
+    void add(Object object, List<String> missingFields) {
+        this.missingFields.put(object, missingFields);
     }
 }

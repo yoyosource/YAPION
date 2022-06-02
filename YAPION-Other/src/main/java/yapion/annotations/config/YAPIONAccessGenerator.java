@@ -44,7 +44,7 @@ public @interface YAPIONAccessGenerator {
      *
      * @return {@code true} for toString generation, {@code false} otherwise.
      */
-    boolean lombokToString() default false;
+    boolean generateToString() default false;
 
     /**
      * Apply the {@link lombok.experimental.ExtensionMethod} annotation to the root class with the {@link ConstraintUtils} class parameter.
