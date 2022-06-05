@@ -49,7 +49,7 @@ public interface YAPIONPacketHandler<T extends YAPIONPacket> {
     }
 
     /**
-     * Specifies if exceptions should be ignores and not processes by the
+     * Specifies if exceptions should be ignored and not processed by the
      * '@exception' handler.
      *
      * @return {@code true} if exceptions should be ignored, {@code false} otherwise
