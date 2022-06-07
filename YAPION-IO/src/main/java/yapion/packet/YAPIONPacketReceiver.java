@@ -41,7 +41,7 @@ public class YAPIONPacketReceiver {
     public enum Handler {
 
         /**
-         * Used when any {@link Handler} except {@link #HEART_BEAT} or {@link #LOST_HEART_BEAT} threw an exception.
+         * Used when any {@link Handler} threw an exception.
          */
         ERROR("@error", null),
 
@@ -76,14 +76,9 @@ public class YAPIONPacketReceiver {
         HANDLE_FAILED("@handle", ERROR),
 
         /**
-         * Used when an heartbeat packet arrived.
+         * Used when no packet is received in a given time.
          */
-        HEART_BEAT("@heartbeat", EXCEPTION),
-
-        /**
-         * Used when the heartbeat packet was not received in the given amount of time.
-         */
-        LOST_HEART_BEAT("@lost_heartbeat", EXCEPTION),
+        TIMEOUT("@timeout", ERROR),
 
         @InternalAPI
         USER("", EXCEPTION);
@@ -162,7 +157,7 @@ public class YAPIONPacketReceiver {
                         continue;
                     }
                     Parameter parameter = parameters[0];
-                    if (parameter.getType() != YAPIONPacket.class) {
+                    if (!YAPIONPacket.class.isAssignableFrom(parameter.getType())) {
                         continue;
                     }
                     log.debug("Registering method '{}' as otherHandler for '{}'", method, Arrays.toString(otherHandler.value()));
@@ -278,10 +273,14 @@ public class YAPIONPacketReceiver {
             }
         };
         if (handler.runThread()) {
-            Thread thread = new Thread(runnable);
-            thread.setName("Packet handler Thread (" + yapionPacket.getType() + ")");
-            thread.setDaemon(handler.daemonThread());
-            thread.start();
+            if (yapionPacket.getYAPIONPacketStream() != null && yapionPacket.getYAPIONPacketStream().executor != null) {
+                yapionPacket.getYAPIONPacketStream().executor.executorService.submit(runnable);
+            } else {
+                Thread thread = new Thread(runnable);
+                thread.setName("Packet handler Thread (" + yapionPacket.getType() + ")");
+                thread.setDaemon(handler.daemonThread());
+                thread.start();
+            }
         } else {
             runnable.run();
         }

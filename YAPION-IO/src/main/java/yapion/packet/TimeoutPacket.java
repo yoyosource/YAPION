@@ -14,16 +14,9 @@
 package yapion.packet;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-public class DropPacket extends YAPIONPacket {
-
-    private final byte[] droppedBytes;
-    private final int length;
-
-    DropPacket(byte[] droppedBytes) {
-        this.droppedBytes = droppedBytes;
-        this.length = droppedBytes.length;
-    }
-
+@RequiredArgsConstructor
+public class TimeoutPacket extends YAPIONPacket {
 }
