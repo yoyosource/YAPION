@@ -271,7 +271,20 @@ public class YAPIONPathParser {
                     return new ValueOr(elements);
                 } else if (collections instanceof KeySelectionGroup) {
                     return new KeySelection(new ValueAnd(elements));
-                } else if (collections instanceof AllOf) {
+                } else {
+                    throw new YAPIONException("Invalid value path element: " + collections);
+                }
+            } else if (collections instanceof AllOf || collections instanceof AllWith || collections instanceof AnyOf || collections instanceof AnyWith) {
+                for (List<PathElement> pathElements : splittedAndParsed) {
+                    if (pathElements.size() != 1) {
+                        throw new YAPIONException("Invalid path element: " + pathElements);
+                    }
+                }
+                PathElement[] elements = new PathElement[splittedAndParsed.size()];
+                for (int i = 0; i < elements.length; i++) {
+                    elements[i] = splittedAndParsed.get(i).get(0);
+                }
+                if (collections instanceof AllOf) {
                     return new yapion.path.impl.AllOf(elements);
                 } else if (collections instanceof AllWith) {
                     return new yapion.path.impl.AllWith(elements);
@@ -279,8 +292,6 @@ public class YAPIONPathParser {
                     return new yapion.path.impl.AnyOf(elements);
                 } else if (collections instanceof AnyWith) {
                     return new yapion.path.impl.AnyWith(elements);
-                } else {
-                    throw new YAPIONException("Invalid value path element: " + collections);
                 }
             } else {
                 if (splittedAndParsed.isEmpty()) {
