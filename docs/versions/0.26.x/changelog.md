@@ -19,7 +19,7 @@
 <img src="../../icons/add.png" width="22px" style="vertical-align: middle; margin-right: 3px"> Add more AdvancedOperations
 </div>
 <div style="margin-bottom: 1px">
-<img src="../../icons/streamline.png" width="22px" style="vertical-align: middle; margin-right: 3px"> Mode <code>internal</code> to <code>api</code> from <code>api/storage</code>
+<img src="../../icons/streamline.png" width="22px" style="vertical-align: middle; margin-right: 3px"> Move <code>internal</code> to <code>api</code> from <code>api/storage</code>
 </div>
 <div style="margin-bottom: 1px">
 <img src="../../icons/add.png" width="22px" style="vertical-align: middle; margin-right: 3px"> <code>DiffMove</code> to <code>YAPIONDiff</code> system
@@ -53,9 +53,6 @@
 </div>
 <div style="margin-bottom: 1px">
 <img src="../../icons/remove.png" width="22px" style="vertical-align: middle; margin-right: 3px"> Remove validation API
-</div>
-<div style="margin-bottom: 1px">
-<img src="../../icons/add.png" width="22px" style="vertical-align: middle; margin-right: 3px"> Remove validation API
 </div>
 <div style="margin-bottom: 1px">
 <img src="../../icons/add.png" width="22px" style="vertical-align: middle; margin-right: 3px"> <code>ExternalizableSerializer</code>

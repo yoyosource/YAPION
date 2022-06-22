@@ -31,7 +31,7 @@ The example above contain every thing that is supported by YAPION. You can see s
         </summary>
         <div>
             The main difference is that YAPION supports more types than JSON. This is needed to support serialization and deserialization of Java objects.
-            Comments are syntactic sugar which are not needed fot the serialization and deserialization but are quite useful for the programmer if they want to use YAPION as a configuration format.
+            Comments are syntactic sugar which are not needed for the serialization and deserialization but are quite useful for the programmer if they want to use YAPION as a configuration format.
         </div>
     </details>
 </div>
