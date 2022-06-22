@@ -290,7 +290,7 @@ public class YAPIONPathParser {
                     return new yapion.path.impl.AllWith(elements);
                 } else if (collections instanceof AnyOf) {
                     return new yapion.path.impl.AnyOf(elements);
-                } else if (collections instanceof AnyWith) {
+                } else {
                     return new yapion.path.impl.AnyWith(elements);
                 }
             } else {
