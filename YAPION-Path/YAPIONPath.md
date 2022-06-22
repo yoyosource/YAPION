@@ -46,8 +46,8 @@ Index select:
 | Min              | `[\<Number>-]`          | Min Value                                                  | All                                               |
 | Max              | `[-\<Number>]`          | Max Value                                                  | All                                               |
 | Range            | `[\<Number>-\<Number>]` | Range Value                                                | All                                               |
-| AllOf            | ?                       | AllOf Element(s)                                           | Only in non `Value`                               |
-| AllWith          | ?                       | AllWith Element(s)                                         | Only in non `Value`                               |
-| AnyOf            | ?                       | AnyOf Element(s)                                           | Only in non `Value`                               |
-| AnyWith          | ?                       | AnyWith Element(s)                                         | Only in non `Value`                               |
+| AllOf            | `u&(`, `)`              | AllOf Element(s)                                           | Only in non `Value`                               |
+| AllWith          | `u&vert;(`, `)`         | AllWith Element(s)                                         | Only in non `Value`                               |
+| AnyOf            | `v&(`, `)`              | AnyOf Element(s)                                           | Only in non `Value`                               |
+| AnyWith          | `v&vert;(`, `)`         | AnyWith Element(s)                                         | Only in non `Value`                               |
 | ElementType      | ?                       | Type of Element(s)                                         | Only in non `Value`                               |

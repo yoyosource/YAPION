@@ -83,35 +83,54 @@ public class YAPIONPathParser {
             }
             if (c == '(' || c == '{') {
                 String type = current.toString();
-                switch (type) {
-                    case "&":
-                        objects.add(parse(depth + 1, new AndGroup<>()));
-                        break;
-                    case "|":
-                        objects.add(parse(depth + 1, new OrGroup<>()));
-                        break;
-                    case "#":
-                        objects.add(parse(depth + 1, new ValueGroup<>()));
-                        break;
-                    case "?":
-                        objects.add(parse(depth + 1, new WhenGroup<>()));
-                        break;
-                    case "!":
-                        objects.add(parse(depth + 1, new KeySelectionGroup<>()));
-                        break;
-                    default:
-                        if (current.length() > 0) {
-                            objects.add(type);
-                        }
-                        if (c == '{') {
-                            objects.add(parse(depth + 1, new HashSet<>()));
-                        } else {
-                            objects.add(parse(depth + 1, new ArrayList<>()));
-                        }
+                boolean defaultMatched = c == '{';
+                if (c == '(') {
+                    switch (type) {
+                        case "u&":
+                            objects.add(parse(depth + 1, new AllOf<>()));
+                            break;
+                        case "v&":
+                            objects.add(parse(depth + 1, new AnyOf<>()));
+                            break;
+                        case "&":
+                            objects.add(parse(depth + 1, new AndGroup<>()));
+                            break;
+                        case "u|":
+                            objects.add(parse(depth + 1, new AllWith<>()));
+                            break;
+                        case "v|":
+                            objects.add(parse(depth + 1, new AnyWith<>()));
+                            break;
+                        case "|":
+                            objects.add(parse(depth + 1, new OrGroup<>()));
+                            break;
+                        case "#":
+                            objects.add(parse(depth + 1, new ValueGroup<>()));
+                            break;
+                        case "?":
+                            objects.add(parse(depth + 1, new WhenGroup<>()));
+                            break;
+                        case "!":
+                            objects.add(parse(depth + 1, new KeySelectionGroup<>()));
+                            break;
+                        default:
+                            defaultMatched = true;
+                    }
+                }
+                if (defaultMatched) {
+                    if (current.length() > 0) {
+                        objects.add(type);
+                    }
+                    if (c == '{') {
+                        objects.add(parse(depth + 1, new HashSet<>()));
+                    } else {
+                        objects.add(parse(depth + 1, new ArrayList<>()));
+                    }
                 }
                 current = new StringBuilder();
                 continue;
             }
+            
             if (objects instanceof List && c == ')' && depth > 0) break;
             if (objects instanceof Set && c == '}' && depth > 0) break;
             if (c == '.') {
@@ -134,6 +153,11 @@ public class YAPIONPathParser {
     private static class ValueGroup<T> extends ArrayList<T> {}
     private static class WhenGroup<T> extends ArrayList<T> {}
     private static class KeySelectionGroup<T> extends ArrayList<T> {}
+
+    private static class AllOf<T> extends ArrayList<T> {}
+    private static class AllWith<T> extends ArrayList<T> {}
+    private static class AnyOf<T> extends ArrayList<T> {}
+    private static class AnyWith<T> extends ArrayList<T> {}
 
     private PathElement parse(Object element, boolean insideOfValue) {
         if (element instanceof String string) {
@@ -247,6 +271,14 @@ public class YAPIONPathParser {
                     return new ValueOr(elements);
                 } else if (collections instanceof KeySelectionGroup) {
                     return new KeySelection(new ValueAnd(elements));
+                } else if (collections instanceof AllOf) {
+                    return new yapion.path.impl.AllOf(elements);
+                } else if (collections instanceof AllWith) {
+                    return new yapion.path.impl.AllWith(elements);
+                } else if (collections instanceof AnyOf) {
+                    return new yapion.path.impl.AnyOf(elements);
+                } else if (collections instanceof AnyWith) {
+                    return new yapion.path.impl.AnyWith(elements);
                 } else {
                     throw new YAPIONException("Invalid value path element: " + collections);
                 }
