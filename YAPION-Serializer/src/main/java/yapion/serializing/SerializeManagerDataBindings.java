@@ -69,6 +69,15 @@ class SerializeManagerDataBindings {
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 4, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
         for (String s : BINDINGS) {
             threadPoolExecutor.execute(() -> {
+                synchronized (toLoadSerializerMaps) {
+                    toLoadSerializerMaps.putIfAbsent(Thread.currentThread(), new HashMap<>());
+                }
+                synchronized (toLoadClassTypeSerializerMaps) {
+                    toLoadClassTypeSerializerMaps.putIfAbsent(Thread.currentThread(), new HashMap<>());
+                }
+                synchronized (toLoadInterfaceTypeSerializerMaps) {
+                    toLoadInterfaceTypeSerializerMaps.putIfAbsent(Thread.currentThread(), new HashMap<>());
+                }
                 initSingleBind(s);
                 initialized.countDown();
             });
@@ -155,13 +164,13 @@ class SerializeManagerDataBindings {
                     serializerFuture.setName(objectInputStream.readUTF());
                     break;
                 case 0x11, 0x12:
-                    toLoadSerializerMaps.computeIfAbsent(Thread.currentThread(), thread -> new HashMap<>()).put(objectInputStream.readUTF(), serializerFuture);
+                    toLoadSerializerMaps.get(Thread.currentThread()).put(objectInputStream.readUTF(), serializerFuture);
                     break;
                 case 0x13:
-                    toLoadInterfaceTypeSerializerMaps.computeIfAbsent(Thread.currentThread(), thread -> new HashMap<>()).put(objectInputStream.readUTF(), serializerFuture);
+                    toLoadInterfaceTypeSerializerMaps.get(Thread.currentThread()).put(objectInputStream.readUTF(), serializerFuture);
                     break;
                 case 0x14:
-                    toLoadClassTypeSerializerMaps.computeIfAbsent(Thread.currentThread(), thread -> new HashMap<>()).put(objectInputStream.readUTF(), serializerFuture);
+                    toLoadClassTypeSerializerMaps.get(Thread.currentThread()).put(objectInputStream.readUTF(), serializerFuture);
                     break;
                 case 0x20:
                     serializerFuture.setStart(objectInputStream.readInt());
