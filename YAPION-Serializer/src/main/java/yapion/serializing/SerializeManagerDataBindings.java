@@ -20,10 +20,7 @@ import yapion.exceptions.YAPIONException;
 import yapion.utils.YAPIONClassLoader;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -58,17 +55,14 @@ class SerializeManagerDataBindings {
         return Arrays.stream(BINDINGS).collect(Collectors.joining(", "));
     }
 
-    private Map<String, SerializerFuture> toLoadSerializerMap;
-    private Map<String, SerializerFuture> toLoadInterfaceTypeSerializer;
-    private Map<String, SerializerFuture> toLoadClassTypeSerializer;
+    private Map<Thread, Map<String, SerializerFuture>> toLoadSerializerMaps = new HashMap<>();
+    private Map<Thread, Map<String, SerializerFuture>> toLoadInterfaceTypeSerializerMaps = new HashMap<>();
+    private Map<Thread, Map<String, SerializerFuture>> toLoadClassTypeSerializerMaps = new HashMap<>();
     private Consumer<Class<?>> internalAddConsumer;
 
     private YAPIONClassLoader yapionClassLoader;
 
-    void init(Map<String, SerializerFuture> toLoadSerializerMap, Map<String, SerializerFuture> toLoadInterfaceTypeSerializer, Map<String, SerializerFuture> toLoadClassTypeSerializer, Consumer<Class<?>> internalAddConsumer, YAPIONClassLoader yapionClassLoader, CountDownLatch initialized) {
-        SerializeManagerDataBindings.toLoadSerializerMap = toLoadSerializerMap;
-        SerializeManagerDataBindings.toLoadInterfaceTypeSerializer = toLoadInterfaceTypeSerializer;
-        SerializeManagerDataBindings.toLoadClassTypeSerializer = toLoadClassTypeSerializer;
+    void init(Consumer<Class<?>> internalAddConsumer, YAPIONClassLoader yapionClassLoader, CountDownLatch initialized) {
         SerializeManagerDataBindings.internalAddConsumer = internalAddConsumer;
         SerializeManagerDataBindings.yapionClassLoader = yapionClassLoader;
 
@@ -80,6 +74,18 @@ class SerializeManagerDataBindings {
             });
         }
         threadPoolExecutor.shutdown();
+    }
+
+    void finish(Map<String, SerializerFuture> toLoadSerializerMap, Map<String, SerializerFuture> toLoadInterfaceTypeSerializer, Map<String, SerializerFuture> toLoadClassTypeSerializer) {
+        toLoadSerializerMaps.forEach((thread, stringSerializerFutureMap) -> {
+            toLoadSerializerMap.putAll(stringSerializerFutureMap);
+        });
+        toLoadInterfaceTypeSerializerMaps.forEach((thread, stringSerializerFutureMap) -> {
+            toLoadInterfaceTypeSerializer.putAll(stringSerializerFutureMap);
+        });
+        toLoadClassTypeSerializerMaps.forEach((thread, stringSerializerFutureMap) -> {
+            toLoadClassTypeSerializer.putAll(stringSerializerFutureMap);
+        });
     }
 
     private void initSingleBind(String s) {
@@ -149,13 +155,13 @@ class SerializeManagerDataBindings {
                     serializerFuture.setName(objectInputStream.readUTF());
                     break;
                 case 0x11, 0x12:
-                    toLoadSerializerMap.put(objectInputStream.readUTF(), serializerFuture);
+                    toLoadSerializerMaps.computeIfAbsent(Thread.currentThread(), thread -> new HashMap<>()).put(objectInputStream.readUTF(), serializerFuture);
                     break;
                 case 0x13:
-                    toLoadInterfaceTypeSerializer.put(objectInputStream.readUTF(), serializerFuture);
+                    toLoadInterfaceTypeSerializerMaps.computeIfAbsent(Thread.currentThread(), thread -> new HashMap<>()).put(objectInputStream.readUTF(), serializerFuture);
                     break;
                 case 0x14:
-                    toLoadClassTypeSerializer.put(objectInputStream.readUTF(), serializerFuture);
+                    toLoadClassTypeSerializerMaps.computeIfAbsent(Thread.currentThread(), thread -> new HashMap<>()).put(objectInputStream.readUTF(), serializerFuture);
                     break;
                 case 0x20:
                     serializerFuture.setStart(objectInputStream.readInt());

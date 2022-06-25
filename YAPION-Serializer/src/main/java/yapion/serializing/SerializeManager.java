@@ -72,10 +72,10 @@ public class SerializeManager {
     static {
         YAPIONClassLoader yapionClassLoader = new YAPIONClassLoader(Thread.currentThread().getContextClassLoader());
         time = System.currentTimeMillis();
-        SerializeManagerDataBindings.init(toLoadSerializerMap, toLoadInterfaceTypeSerializer, toLoadClassTypeSerializer, SerializeManager::internalAdd, yapionClassLoader, initialized);
+        SerializeManagerDataBindings.init(SerializeManager::internalAdd, yapionClassLoader, initialized);
     }
 
-    private static void internalAdd(Class<?> clazz) {
+    private static synchronized void internalAdd(Class<?> clazz) {
         if (clazz.getTypeName().equals("yapion.serializing.serializer.FinalInternalSerializer") && FinalInternalSerializerClass == null) {
             FinalInternalSerializerClass = clazz;
         }
@@ -168,15 +168,18 @@ public class SerializeManager {
     }
 
     @SuppressWarnings({"java:S1452"})
-    static synchronized InternalSerializer<?> getInternalSerializer(Class<?> type) {
-        while (initialized.getCount() != 0) {
-            try {
-                initialized.await();
-                time = System.currentTimeMillis() - time;
-                log.debug("SerializerManager initialized in {}ms", time);
-                System.out.println("Serializer init took: " + time + "ms");
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+    static InternalSerializer<?> getInternalSerializer(Class<?> type) {
+        synchronized (initialized) {
+            while (initialized.getCount() != 0) {
+                try {
+                    initialized.await();
+                    SerializeManagerDataBindings.finish(toLoadSerializerMap, toLoadInterfaceTypeSerializer, toLoadClassTypeSerializer);
+                    time = System.currentTimeMillis() - time;
+                    log.debug("SerializerManager initialized in {}ms", time);
+                    System.out.println("Serializer init took: " + time + "ms");
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
         if (type == null) return null;
