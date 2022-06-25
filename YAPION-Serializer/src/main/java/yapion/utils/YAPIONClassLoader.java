@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 @Slf4j
 public class YAPIONClassLoader extends ClassLoader {
 
-    private Map<String, Supplier<Class<?>>> classes = new HashMap<>();
+    private final Map<String, Supplier<Class<?>>> classes = new HashMap<>();
     private ClassLoader parent;
 
     public YAPIONClassLoader(ClassLoader parent) {
@@ -33,7 +33,9 @@ public class YAPIONClassLoader extends ClassLoader {
     }
 
     public void addData(String name, Supplier<Class<?>> supplier) {
-        classes.put(name, supplier);
+        synchronized (classes) {
+            classes.put(name, supplier);
+        }
     }
 
     @Override
