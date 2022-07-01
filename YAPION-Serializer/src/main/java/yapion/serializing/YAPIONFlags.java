@@ -13,6 +13,8 @@
 
 package yapion.serializing;
 
+import lombok.Builder;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,9 +94,43 @@ public final class YAPIONFlags {
      * Returns if a given special serialization denoted by <b>key</b> is set to {@code true}.
      *
      * @param key the special serialization to check
-     * @return {@code true} if set to true, {@code false} otherwise
+     * @return {@code true} if set to true, {@code key.getFlagDefault()} otherwise
      */
     public boolean isSet(YAPIONFlag key) {
-        return flags.getOrDefault(key, false);
+        return flags.getOrDefault(key, key.getFlagDefault());
+    }
+
+    public void isSet(YAPIONFlag key, Runnable allowed) {
+        isSet(key, allowed, () -> {});
+    }
+
+    public void isNotSet(YAPIONFlag key, Runnable disallowed) {
+        isSet(key, () -> {}, disallowed);
+    }
+
+    public void isSet(YAPIONFlag key, Runnable allowed, Runnable disallowed) {
+        if (isSet(key)) {
+            allowed.run();
+        } else {
+            disallowed.run();
+        }
+    }
+
+    @Builder
+    public static class CheckOptions<T> {
+        private T allowedValue;
+        private T disallowedValue;
+        private Runnable allowedRunnable;
+        private Runnable disallowedRunnable;
+    }
+
+    public <T> T isSet(YAPIONFlag key, CheckOptions<T> checkOptions) {
+        if (isSet(key)) {
+            if (checkOptions.allowedRunnable != null) checkOptions.allowedRunnable.run();
+            return checkOptions.allowedValue;
+        } else {
+            if (checkOptions.disallowedRunnable != null) checkOptions.disallowedRunnable.run();
+            return checkOptions.disallowedValue;
+        }
     }
 }

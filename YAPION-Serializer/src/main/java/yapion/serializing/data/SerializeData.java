@@ -15,6 +15,7 @@ package yapion.serializing.data;
 
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Delegate;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.serializing.YAPIONDataLossException;
 import yapion.exceptions.serializing.YAPIONSerializerException;
@@ -78,24 +79,13 @@ public class SerializeData<T> {
         return SerializeManager.getReflectionStrategy().checkGet(field, object);
     }
 
+    @Delegate
     public YAPIONFlags getYAPIONFlags() {
         return yapionSerializer.getYAPIONFlags();
     }
 
-    public void isSet(YAPIONFlag key, Runnable allowed) {
-        isSet(key, allowed, () -> {});
-    }
-
-    public void isSet(YAPIONFlag key, Runnable allowed, Runnable disallowed) {
-        if (yapionSerializer.getYAPIONFlags().isSet(key)) {
-            allowed.run();
-        } else {
-            disallowed.run();
-        }
-    }
-
     public void signalDataLoss() {
-        isSet(YAPIONFlag.DATA_LOSS_EXCEPTION, () -> {
+        yapionSerializer.getYAPIONFlags().isSet(YAPIONFlag.DATA_LOSS_EXCEPTION, () -> {
             throw new YAPIONDataLossException("Some data would be discarded by serialization");
         });
     }

@@ -68,7 +68,7 @@ public class AbstractFunctionSerializer<T> {
     public T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {
         if (!deserializeData.getYAPIONFlags().isSet(YAPIONFlag.CLASS_INJECTION)) {
             deserializeData.signalDataLoss();
-            throw new YAPIONSerializerException("ClassInjection is not turned on");
+            throw new YAPIONDeserializerException("ClassInjection is not turned on");
         }
         YAPIONObject yapionObject = (YAPIONObject) deserializeData.object;
 

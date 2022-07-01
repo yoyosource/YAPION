@@ -13,8 +13,10 @@
 
 package yapion.io;
 
+import lombok.SneakyThrows;
 import yapion.exceptions.utils.YAPIONIOException;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.parser.InputStreamCharsets;
 import yapion.parser.YAPIONParser;
 import yapion.parser.options.StreamOptions;
 import yapion.serializing.TypeReMapper;
@@ -70,9 +72,18 @@ public class YAPIONInputStream implements AutoCloseable {
      *
      * @throws YAPIONIOException if the inputStream was closed
      */
+    @SneakyThrows
     public synchronized YAPIONObject read() {
         if (closed) throw new YAPIONIOException("Reading from a closed Stream");
-        return YAPIONParser.parse(inputStream, new StreamOptions().stopOnStreamEnd(false));
+        StringBuilder st = new StringBuilder();
+        while (inputStream.available() > 0) {
+            int c = inputStream.read();
+            if (c == -1) break;
+            st.append((char) c);
+        }
+        System.out.println("READ: " + st.toString());
+        return YAPIONParser.parse(st.toString());
+        // return YAPIONParser.parse(inputStream, new StreamOptions().stopOnStreamEnd(false).charset(InputStreamCharsets.UTF_8));
     }
 
     /**
