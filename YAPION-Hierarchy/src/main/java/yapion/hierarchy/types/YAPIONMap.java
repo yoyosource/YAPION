@@ -437,11 +437,12 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
     }
 
     @Override
-    public YAPIONMap copy() {
-        YAPIONMap copy = new YAPIONMap();
+    public YAPIONMap copy(Map<Long, YAPIONDataType<?, ?>> referenceMap) {
+        YAPIONMap yapionMap = new YAPIONMap();
+        referenceMap.put(referenceValue(), yapionMap);
         for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
-            copy.variables.put(entry.getKey().copy(), entry.getValue().copy());
+            yapionMap.variables.put(entry.getKey().copy(referenceMap), entry.getValue().copy(referenceMap));
         }
-        return copy;
+        return yapionMap;
     }
 }

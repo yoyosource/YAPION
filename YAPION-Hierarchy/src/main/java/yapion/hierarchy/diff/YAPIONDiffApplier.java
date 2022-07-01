@@ -23,7 +23,7 @@ import yapion.hierarchy.types.YAPIONObject;
 
 import java.util.Arrays;
 
-public class YAPIONDiffApplier<I, K, T extends YAPIONDataType<I, K>> {
+public class YAPIONDiffApplier<I extends YAPIONDataType<I, K>, K, T extends YAPIONDataType<I, K>> {
 
     public static YAPIONDiffApplier<YAPIONObject, String, YAPIONObject> diffApplierObject(YAPIONObject yapionObject) {
         return new YAPIONDiffApplier<>(yapionObject);

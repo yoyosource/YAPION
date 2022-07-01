@@ -459,9 +459,12 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
-    public YAPIONArray copy() {
+    public YAPIONArray copy(Map<Long, YAPIONDataType<?, ?>> referenceMap) {
         YAPIONArray yapionArray = new YAPIONArray();
-        array.stream().map(YAPIONAnyType::copy).forEach(yapionArray::add);
+        referenceMap.put(referenceValue(), yapionArray);
+        for (YAPIONAnyType yapionAnyType : array) {
+            yapionArray.add(yapionAnyType.copy(referenceMap));
+        }
         return yapionArray;
     }
 }

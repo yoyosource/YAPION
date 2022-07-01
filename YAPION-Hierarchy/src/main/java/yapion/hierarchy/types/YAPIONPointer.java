@@ -23,6 +23,7 @@ import yapion.hierarchy.output.flavours.Flavour;
 import yapion.utils.ReferenceFunction;
 import yapion.utils.ReferenceIDUtils;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -47,6 +48,10 @@ public class YAPIONPointer extends YAPIONValueType<YAPIONPointer> {
             throw new YAPIONPointerException("Invalid pointer id " + pointerID + " needs to be a HEX number");
         }
         this.pointerID = Long.parseLong(pointerID.toUpperCase(), 16);
+    }
+
+    private YAPIONPointer(long pointerID) {
+        this.pointerID = pointerID;
     }
 
     @Override
@@ -135,5 +140,12 @@ public class YAPIONPointer extends YAPIONValueType<YAPIONPointer> {
     @Override
     public YAPIONPointer copy() {
         return new YAPIONPointer(getPointerIDString());
+    }
+
+    @Override
+    public YAPIONPointer copy(Map<Long, YAPIONDataType<?, ?>> referenceMap) {
+        YAPIONPointer yapionPointer = new YAPIONPointer(getPointerID());
+        yapionPointer.set(referenceMap.get(getPointerID()));
+        return yapionPointer;
     }
 }

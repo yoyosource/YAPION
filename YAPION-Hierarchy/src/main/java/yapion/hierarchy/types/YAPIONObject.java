@@ -367,9 +367,12 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
     }
 
     @Override
-    public YAPIONObject copy() {
+    public YAPIONObject copy(Map<Long, YAPIONDataType<?, ?>> referenceMap) {
         YAPIONObject yapionObject = new YAPIONObject();
-        variables.forEach((s, yapionAnyType) -> yapionObject.put(s, yapionAnyType.copy()));
+        referenceMap.put(referenceValue(), yapionObject);
+        for (Map.Entry<String, YAPIONAnyType> entry : variables.entrySet()) {
+            yapionObject.add(entry.getKey(), entry.getValue().copy(referenceMap));
+        }
         return yapionObject;
     }
 }

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @InternalAPI
-public abstract class YAPIONDataType<I, K> extends YAPIONAnyType implements InternalAdd<I, K>, AdvancedOperations<I, K>, InternalRemove<I, K>, InternalRetrieve<K>, CommentManipulation<I>, EndingCommentManipulation<I> {
+public abstract class YAPIONDataType<I extends YAPIONDataType<I, K>, K> extends YAPIONAnyType implements InternalAdd<I, K>, AdvancedOperations<I, K>, InternalRemove<I, K>, InternalRetrieve<K>, CommentManipulation<I>, EndingCommentManipulation<I> {
 
     private final List<String> endingComments = new ArrayList<>();
 
@@ -53,5 +53,10 @@ public abstract class YAPIONDataType<I, K> extends YAPIONAnyType implements Inte
 
     public List<String> getEndingComments() {
         return endingComments;
+    }
+
+    @Override
+    public I copy() {
+        return (I) super.copy();
     }
 }

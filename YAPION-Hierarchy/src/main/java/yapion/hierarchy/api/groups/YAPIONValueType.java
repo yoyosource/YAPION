@@ -17,5 +17,10 @@ import yapion.annotations.api.InternalAPI;
 import yapion.hierarchy.api.storage.CommentManipulation;
 
 @InternalAPI
-public abstract class YAPIONValueType<I> extends YAPIONAnyType implements CommentManipulation<I> {
+public abstract class YAPIONValueType<I extends YAPIONAnyType> extends YAPIONAnyType implements CommentManipulation<I> {
+
+    @Override
+    public I copy() {
+        return (I) super.copy();
+    }
 }

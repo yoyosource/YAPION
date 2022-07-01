@@ -16,6 +16,7 @@ package yapion.hierarchy.types;
 import lombok.Getter;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.ValueTypeConversion;
+import yapion.hierarchy.api.groups.YAPIONDataType;
 import yapion.hierarchy.api.groups.YAPIONValueType;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
@@ -29,6 +30,7 @@ import yapion.utils.ReferenceFunction;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -286,7 +288,7 @@ public class YAPIONValue<T> extends YAPIONValueType<YAPIONValue<T>> implements V
     }
 
     @Override
-    public YAPIONValue<T> copy() {
+    public YAPIONValue<T> copy(Map<Long, YAPIONDataType<?, ?>> referenceMap) {
         return new YAPIONValue<>(value);
     }
 }

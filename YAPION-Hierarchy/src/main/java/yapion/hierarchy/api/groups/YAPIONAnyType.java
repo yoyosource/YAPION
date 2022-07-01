@@ -24,9 +24,7 @@ import yapion.hierarchy.output.flavours.Flavour;
 import yapion.hierarchy.types.YAPIONElementPath;
 import yapion.utils.ReferenceFunction;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @InternalAPI
@@ -78,7 +76,11 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
     }
 
     public YAPIONAnyType copy() {
-        throw new YAPIONException("No copy available");
+        return copy(new HashMap<>());
+    }
+
+    public YAPIONAnyType copy(Map<Long, YAPIONDataType<?, ?>> referenceMap) {
+        throw new YAPIONException("No copy method available");
     }
 
     // Depth System / Pretty YAPION String
