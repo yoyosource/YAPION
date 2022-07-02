@@ -16,26 +16,11 @@ pluginManagement {
 
 rootProject.name = 'YAPION'
 
-include 'YAPION-Hierarchy'
-include 'YAPION-Path'
-include 'YAPION-Parser'
-include 'YAPION-Serializer'
-include 'YAPION-IO'
-include 'YAPION-Other'
-include 'YAPION-Tests'
-
-include 'YAPION-Kotlin'
-
-include 'YAPION-Test'
-
-include 'YAPION-Databind-Bukkit'
-include 'YAPION-Databind-Guava'
-include 'YAPION-Databind-JavaAtomic'
-include 'YAPION-Databind-JavaBase'
-include 'YAPION-Databind-JavaCollections'
-include 'YAPION-Databind-JavaFunction'
-include 'YAPION-Databind-JavaOther'
-include 'YAPION-Databind-JavaSecurity'
-include 'YAPION-Databind-JavaTime'
-include 'YAPION-Databind-Kotlin'
-
+file('.').listFiles().each {
+    if (!it.isDirectory()) {
+        return
+    }
+    if (new File(it, "build.gradle").exists()) {
+        include(it.name)
+    }
+}
