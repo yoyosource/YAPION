@@ -79,5 +79,4 @@ public class EnumSerializer implements FinalInternalSerializer<Enum<?>> { // Thi
         }
         return type;
     }
-
 }

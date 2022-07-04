@@ -166,7 +166,7 @@ public final class YAPIONDeserializer {
      */
     public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, Class<? extends View> view, @NonNull TypeReMapper typeReMapper) {
         contextManager = new ContextManager(view);
-        this.serializingType = (K) serializingType.copy();
+        this.serializingType = serializingType;
         this.typeReMapper = new TypeReMapper.FinalTypeReMapper(typeReMapper);
     }
 
@@ -179,7 +179,7 @@ public final class YAPIONDeserializer {
      */
     public <K extends YAPIONDataType<?, ?> & SerializingType> YAPIONDeserializer(@NonNull K serializingType, Class<? extends View> view, @NonNull TypeReMapper typeReMapper, @NonNull YAPIONFlags yapionFlags) {
         contextManager = new ContextManager(view);
-        this.serializingType = (K) serializingType.copy();
+        this.serializingType = serializingType;
         this.typeReMapper = new TypeReMapper.FinalTypeReMapper(typeReMapper);
         this.yapionFlags = yapionFlags;
     }
