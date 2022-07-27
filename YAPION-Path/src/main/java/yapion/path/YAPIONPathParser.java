@@ -160,6 +160,7 @@ public class YAPIONPathParser {
     private static class AnyWith<T> extends ArrayList<T> {}
 
     private PathElement parse(Object element, boolean insideOfValue) {
+        System.out.println(element);
         if (element instanceof String string) {
             if (!insideOfValue) {
                 switch (string) {
@@ -248,7 +249,7 @@ public class YAPIONPathParser {
             List<List<PathElement>> splittedAndParsed = split(collections).stream()
                     .map(objects -> objects.stream().map(o -> parse(o, finalIsValue)).collect(Collectors.toList()))
                     .collect(Collectors.toList());
-            // System.out.println(splittedAndParsed);
+            System.out.println(splittedAndParsed);
 
             if (check) {
                 for (List<PathElement> pathElements : splittedAndParsed) {
@@ -276,13 +277,17 @@ public class YAPIONPathParser {
                 }
             } else if (collections instanceof AllOf || collections instanceof AllWith || collections instanceof AnyOf || collections instanceof AnyWith) {
                 for (List<PathElement> pathElements : splittedAndParsed) {
-                    if (pathElements.size() != 1) {
+                    if (pathElements.isEmpty()) {
                         throw new YAPIONException("Invalid path element: " + pathElements);
                     }
                 }
                 PathElement[] elements = new PathElement[splittedAndParsed.size()];
                 for (int i = 0; i < elements.length; i++) {
-                    elements[i] = splittedAndParsed.get(i).get(0);
+                    if (splittedAndParsed.get(i).size() == 1) {
+                        elements[i] = splittedAndParsed.get(i).get(0);
+                    } else {
+                        elements[i] = new YAPIONPath(splittedAndParsed.get(i).toArray(new PathElement[0]));
+                    }
                 }
                 if (collections instanceof AllOf) {
                     return new yapion.path.impl.AllOf(elements);

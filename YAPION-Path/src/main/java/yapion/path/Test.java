@@ -53,7 +53,7 @@ public class Test {
             System.out.println(timeTotal / 1000000 + "ms");
         }
 
-        if (false) { // NEEDED
+        if (false) {
             YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Element("test0"), new Element("test1")), new AnyOf(new Element(0), new Element(1), new Element(0)));
             output(yapionPath.apply(yapionObject));
         }
@@ -63,15 +63,15 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) { // NEEDED
+        if (false) {
             YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Contains("0"), new Contains("1")), new Element(0));
             output(yapionPath.apply(yapionObject));
         }
-        if (false) { // NEEDED
+        if (false) {
             YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Contains("0"), new Contains("1")), new IdentityDistinctElements(), new Element(0));
             output(yapionPath.apply(yapionObject));
         }
-        if (false) { // NEEDED
+        if (false) {
             YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new Contains("0"), new Contains("1")), new DistinctElements(), new Element(0));
             output(yapionPath.apply(yapionObject));
         }
@@ -86,8 +86,12 @@ public class Test {
             output(yapionPath.apply(yapionObject));
         }
 
-        if (false) { // NEEDED
+        if (true) { // NEEDED
             YAPIONPath yapionPath = new YAPIONPath(new AnyOf(new YAPIONPath(new Element("test0"), new Element(0)), new Contains("1")));
+            output(yapionPath.apply(yapionObject));
+            yapionPath = YAPIONPathParser.parse("v&(test0.0).*1*");
+            output(yapionPath.apply(yapionObject));
+            yapionPath = YAPIONPathParser.parse("v&((test0.0)).*1*");
             output(yapionPath.apply(yapionObject));
         }
 
@@ -318,7 +322,7 @@ public class Test {
             System.out.println((total / 1000 / 1000.0 / 10000) + "ms/iteration");
         }
 
-        if (true) {
+        if (false) {
             YAPIONPath yapionPath = new Selector()
                     .any()
                     .keySelector()
@@ -333,7 +337,7 @@ public class Test {
             System.out.println((total / 1000 / 1000.0 / 10000) + "ms/iteration");
         }
         
-        if (true) {
+        if (false) {
             YAPIONPath yapionPath = YAPIONPathParser.parse("*.!(*0*)");
             // YAPIONPath yapionPath = YAPIONPathParser.parse("*.!*.?(*0*).:");
             output(yapionPath.apply(yapionObject));
