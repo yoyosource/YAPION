@@ -14,7 +14,6 @@
 package yapion.serializing
 
 import yapion.hierarchy.types.YAPIONArray
-import yapion.hierarchy.types.YAPIONMap
 import yapion.hierarchy.types.YAPIONObject
 
 fun <T> serialize(value: Array<T>): YAPIONArray {
