@@ -4,6 +4,7 @@ plugins {
     id 'com.github.johnrengelman.shadow'
 
     id 'org.frgaal.compiler'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
 }
 
 group 'YAPION'
@@ -46,6 +47,7 @@ dependencies {
     implementation project(':YAPION-Parser')
     implementation project(':YAPION-Serializer')
     implementation project(':YAPION-IO')
+    implementation project(':YAPION-Kotlin')
     implementation project(':YAPION-Databind-JavaBase')
     implementation project(':YAPION-Databind-JavaCollections')
     implementation project(':YAPION-Databind-JavaOther')
@@ -53,8 +55,20 @@ dependencies {
     implementation project(':YAPION-Databind-JavaTime')
     implementation project(':YAPION-Databind-JavaFunction')
     implementation project(':YAPION-Databind-JavaAtomic')
+    implementation project(':YAPION-Databind-Kotlin')
 
     // implementation 'ch.qos.logback:logback-classic:1.3.0-alpha5'
 
     implementation 'eu.infomas:annotation-detector:3.0.5'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
