@@ -209,7 +209,7 @@ task projectCommit {
 
         println("Adding new files to git")
         shell("git add ${releasePath}/${major}.${minor}.${patch}/")
-        shell("git add gradle.properties")
+        shell("git add version.properties")
         shell("git add ${releasePath}/maven-metadata.xml")
         shell("git add ${releasePath}/maven-metadata.xml.md5")
         shell("git add ${releasePath}/maven-metadata.xml.sha1")
