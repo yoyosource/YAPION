@@ -697,6 +697,15 @@ public final class YAPIONParser {
         return yapionObject.getMap("");
     }
 
+    /**
+     * Returns how many characters have been read.
+     *
+     * @return the number of characters read
+     */
+    public long getReadCharCount() {
+        return yapionInternalParser.count();
+    }
+
     private String generateErrorMessage() {
         StringBuilder st = new StringBuilder();
         st.append("In line ").append(yapionInternalParser.line()).append(" at column ").append(yapionInternalParser.column()).append(" after ").append(yapionInternalParser.count()).append(" reads.");
