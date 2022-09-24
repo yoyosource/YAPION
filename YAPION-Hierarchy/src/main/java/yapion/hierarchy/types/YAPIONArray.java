@@ -125,6 +125,16 @@ public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements
     }
 
     @Override
+    public Object getPathObject(YAPIONAnyType yapionAnyType) {
+        for (int i = 0; i < array.size(); i++) {
+            if (array.get(i) == yapionAnyType) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public boolean internalContainsKey(@NonNull Integer key, YAPIONType yapionType) {
         try {
             YAPIONAnyType yapionAnyType = getAnyType(key);

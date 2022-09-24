@@ -104,6 +104,11 @@ public abstract class YAPIONAnyType implements ObjectSearch, ObjectPath, ObjectT
         return "";
     }
 
+    @Override
+    public Object getPathObject(YAPIONAnyType yapionAnyType) {
+        return null;
+    }
+
     public final void setParent(YAPIONAnyType yapionAnyType) {
         if (valuePresent) {
             return;

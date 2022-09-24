@@ -134,6 +134,19 @@ public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implemen
         return "";
     }
 
+    @Override
+    public Object getPathObject(YAPIONAnyType yapionAnyType) {
+        for (Map.Entry<YAPIONAnyType, YAPIONAnyType> entry : variables.entrySet()) {
+            if (entry.getValue() == yapionAnyType) {
+                return entry.getKey();
+            }
+            if (entry.getKey() == yapionAnyType) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
     public List<YAPIONAnyType> getKeys() {
         return new ArrayList<>(variables.keySet());
     }

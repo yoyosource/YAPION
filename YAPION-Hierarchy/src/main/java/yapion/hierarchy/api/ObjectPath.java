@@ -20,6 +20,8 @@ public interface ObjectPath {
 
     String getPath(YAPIONAnyType yapionAnyType);
 
+    Object getPathObject(YAPIONAnyType yapionAnyType);
+
     YAPIONElementPath getPath();
 
     int getDepth();

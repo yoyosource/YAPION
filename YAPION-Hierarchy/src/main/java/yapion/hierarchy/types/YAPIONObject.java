@@ -139,6 +139,11 @@ public class YAPIONObject extends YAPIONDataType<YAPIONObject, String> implement
         return "";
     }
 
+    @Override
+    public Object getPathObject(YAPIONAnyType yapionAnyType) {
+        return getPath(yapionAnyType);
+    }
+
     public List<String> getKeys() {
         return new ArrayList<>(variables.keySet());
     }
