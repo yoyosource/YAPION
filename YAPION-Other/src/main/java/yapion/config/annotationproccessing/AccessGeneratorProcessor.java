@@ -274,7 +274,7 @@ public class AccessGeneratorProcessor extends AbstractProcessor {
         @Override
         public String constructorCall() {
             containerElementList.forEach(containerElement -> {
-                if (containerElement.isNonNull() && isDefaultPresent()) {
+                if (containerElement.isNonNull() && !isDefaultPresent()) {
                     if (!defaultValue.containsKey(containerElement.name)) {
                         error("Default of '" + className + "' does not define value for '" + containerElement.name + "'");
                     }
