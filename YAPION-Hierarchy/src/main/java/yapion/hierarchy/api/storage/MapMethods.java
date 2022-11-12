@@ -15,17 +15,116 @@ package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
 import yapion.annotations.api.DeprecationInfo;
+import yapion.annotations.api.OptionalAPI;
 import yapion.annotations.api.YAPIONEveryType;
 import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.internal.InternalRetrieve;
+import yapion.hierarchy.api.internal.InternalMethods;
 import yapion.hierarchy.types.*;
 import yapion.utils.ClassUtils;
 
 import java.util.function.Consumer;
 
-public interface MapRetrieve<K> extends InternalRetrieve<K> {
+public interface MapMethods<I, K> extends InternalMethods<I, K> {
+
+    // -------- Add --------
+
+    default <@YAPIONEveryType C, @YAPIONEveryType V> I add(@NonNull C key, @NonNull V value) {
+        if (YAPIONValue.validType(key)) {
+            return add(new YAPIONValue<>(key), value);
+        } else if (!(key instanceof YAPIONAnyType)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
+        }
+        if (YAPIONValue.validType(value)) {
+            return add(key, new YAPIONValue<>(value));
+        } else if (!(value instanceof YAPIONAnyType)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
+        }
+        return internalAdd((K) key, (YAPIONAnyType) value);
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default <@YAPIONEveryType C> I addOrPointer(@NonNull C key, @NonNull YAPIONAnyType value) {
+        throw new UnsupportedOperationException();
+    }
+
+    default <@YAPIONEveryType C, @YAPIONEveryType V> YAPIONAnyType addAndGetPrevious(@NonNull C key, @NonNull V value) {
+        if (YAPIONValue.validType(key)) {
+            return addAndGetPrevious(new YAPIONValue<>(key), value);
+        } else if (!(key instanceof YAPIONAnyType)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
+        }
+        if (YAPIONValue.validType(value)) {
+            return addAndGetPrevious(key, new YAPIONValue<>(value));
+        } else if (!(value instanceof YAPIONAnyType)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
+        }
+        return internalAddAndGetPrevious((K) key, (YAPIONAnyType) value);
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default <@YAPIONEveryType C> YAPIONAnyType addOrPointerAndGetPrevious(@NonNull C key, @NonNull YAPIONAnyType value) {
+        throw new UnsupportedOperationException();
+    }
+
+    default <@YAPIONEveryType C, @YAPIONEveryType V> I putAndGetItself(@NonNull C key, @NonNull V value) {
+        return add(key, value);
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default <@YAPIONEveryType C> I putOrPointerAndGetItself(@NonNull C key, @NonNull YAPIONAnyType value) {
+        return addOrPointer(key, value);
+    }
+
+    default <@YAPIONEveryType C, @YAPIONEveryType V> YAPIONAnyType put(@NonNull C key, @NonNull V value) {
+        return addAndGetPrevious(key, value);
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default <@YAPIONEveryType C> YAPIONAnyType putOrPointer(@NonNull C key, @NonNull YAPIONAnyType value) {
+        return addOrPointerAndGetPrevious(key, value);
+    }
+
+    // -------- Remove --------
+
+    default <@YAPIONEveryType T> I remove(@NonNull T key) {
+        if (key instanceof YAPIONAnyType) {
+            return internalRemove((K) key);
+        }
+        if (!YAPIONValue.validType(key)) {
+            throw new YAPIONClassTypeException("The type '" + key.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
+        }
+        return internalRemove((K) new YAPIONValue<>(key));
+    }
+
+    default <@YAPIONEveryType T> YAPIONAnyType removeAndGet(@NonNull T key) {
+        if (key instanceof YAPIONAnyType) {
+            return internalRemoveAndGet((K) key);
+        }
+        if (!YAPIONValue.validType(key)) {
+            throw new YAPIONClassTypeException("The type '" + key.getClass().getTypeName() + "' is not a valid YAPIONEveryType");
+        }
+        return internalRemoveAndGet((K) new YAPIONValue<>(key));
+    }
+
+    default I clear() {
+        return internalClear();
+    }
+
+    // -------- Get --------
 
     default <@YAPIONEveryType T> boolean containsKey(@NonNull T key) {
         return containsKey(key, YAPIONType.ANY);

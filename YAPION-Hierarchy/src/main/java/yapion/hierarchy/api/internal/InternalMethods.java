@@ -14,13 +14,36 @@
 package yapion.hierarchy.api.internal;
 
 import lombok.NonNull;
-import yapion.annotations.api.InternalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.hierarchy.types.YAPIONType;
 
-@InternalAPI
-public interface InternalAdd<I, K> {
+public interface InternalMethods<I, K> {
+
+    // -------- Add --------
 
     I internalAdd(@NonNull K key, @NonNull YAPIONAnyType value);
 
     YAPIONAnyType internalAddAndGetPrevious(@NonNull K key, @NonNull YAPIONAnyType value);
+
+    // -------- Remove --------
+
+    I internalRemove(@NonNull K key);
+
+    YAPIONAnyType internalRemoveAndGet(@NonNull K key);
+
+    I internalClear();
+
+    // -------- Get --------
+
+    default boolean internalContainsKey(@NonNull K key) {
+        return internalContainsKey(key, YAPIONType.ANY);
+    }
+
+    boolean internalContainsKey(@NonNull K key, YAPIONType yapionType);
+
+    <T> boolean internalContainsKey(@NonNull K key, Class<T> type);
+
+    boolean internalContainsValue(@NonNull YAPIONAnyType yapionAnyType);
+
+    YAPIONAnyType internalGetAnyType(@NonNull K key);
 }

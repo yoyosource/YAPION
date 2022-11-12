@@ -21,9 +21,7 @@ import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
-import yapion.hierarchy.api.storage.MapAdd;
-import yapion.hierarchy.api.storage.MapRemove;
-import yapion.hierarchy.api.storage.MapRetrieve;
+import yapion.hierarchy.api.storage.MapMethods;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.output.flavours.Flavour;
@@ -33,7 +31,7 @@ import yapion.utils.ReferenceFunction;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implements MapAdd<YAPIONMap, YAPIONAnyType>, MapRemove<YAPIONMap, YAPIONAnyType>, MapRetrieve<YAPIONAnyType> {
+public class YAPIONMap extends YAPIONDataType<YAPIONMap, YAPIONAnyType> implements MapMethods<YAPIONMap, YAPIONAnyType> {
 
     private final Map<YAPIONAnyType, YAPIONAnyType> variables = new LinkedHashMap<>();
 

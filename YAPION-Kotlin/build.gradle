@@ -44,7 +44,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-    if (false) {
+    if (true) {
         compileOnly project(":YAPION-Hierarchy")
         compileOnly project(":YAPION-Parser")
         compileOnly project(":YAPION-Path")

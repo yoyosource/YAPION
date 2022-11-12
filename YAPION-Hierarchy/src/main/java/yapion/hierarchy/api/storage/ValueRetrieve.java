@@ -17,14 +17,13 @@ import lombok.NonNull;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.internal.InternalAdd;
-import yapion.hierarchy.api.internal.InternalRetrieve;
+import yapion.hierarchy.api.internal.InternalMethods;
 import yapion.hierarchy.types.YAPIONValue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public interface ValueRetrieve<I, K> extends InternalRetrieve<K>, InternalAdd<I, K> {
+public interface ValueRetrieve<I, K> extends InternalMethods<I, K> {
 
     @InternalAPI
     default <T> T genericGet(K key, @NonNull Class<T> type) {

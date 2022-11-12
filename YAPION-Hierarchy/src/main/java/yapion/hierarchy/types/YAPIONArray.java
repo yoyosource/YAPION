@@ -21,9 +21,7 @@ import yapion.exceptions.value.YAPIONRecursionException;
 import yapion.hierarchy.api.groups.SerializingType;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.api.groups.YAPIONDataType;
-import yapion.hierarchy.api.storage.ArrayAdd;
-import yapion.hierarchy.api.storage.ArrayRemove;
-import yapion.hierarchy.api.storage.ArrayRetrieve;
+import yapion.hierarchy.api.storage.ArrayMethods;
 import yapion.hierarchy.output.AbstractOutput;
 import yapion.hierarchy.output.StringOutput;
 import yapion.hierarchy.output.flavours.Flavour;
@@ -34,7 +32,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements ArrayAdd<YAPIONArray, Integer>, ArrayRemove<YAPIONArray, Integer>, ArrayRetrieve<Integer>, SerializingType {
+public class YAPIONArray extends YAPIONDataType<YAPIONArray, Integer> implements ArrayMethods<YAPIONArray, Integer>, SerializingType<YAPIONArray> {
 
     private final List<YAPIONAnyType> array = new ArrayList<>();
 

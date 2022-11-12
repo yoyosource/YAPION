@@ -15,15 +15,120 @@ package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
 import yapion.annotations.api.DeprecationInfo;
+import yapion.annotations.api.OptionalAPI;
+import yapion.annotations.api.YAPIONPrimitive;
+import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.internal.InternalRetrieve;
+import yapion.hierarchy.api.internal.InternalMethods;
 import yapion.hierarchy.types.*;
 import yapion.utils.ClassUtils;
 
 import java.util.function.Consumer;
 
-public interface ObjectRetrieve<K> extends InternalRetrieve<K> {
+public interface ObjectMethods<I, K> extends InternalMethods<I, K> {
+
+    // -------- Add --------
+
+    default I set(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return internalAdd(key, value);
+    }
+
+    default I add(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return internalAdd(key, value);
+    }
+
+    default <@YAPIONPrimitive T> I add(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
+        }
+        return add(key, new YAPIONValue<>(value));
+    }
+
+    default I add(@NonNull K key, @NonNull Class<?> value) {
+        return add(key, new YAPIONValue<>(value.getTypeName()));
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default I addOrPointer(@NonNull K key, @NonNull YAPIONAnyType value) {
+        throw new UnsupportedOperationException();
+    }
+
+    default YAPIONAnyType addAndGetPrevious(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return internalAddAndGetPrevious(key, value);
+    }
+
+    default <@YAPIONPrimitive T> YAPIONAnyType addAndGetPrevious(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
+        }
+        return addAndGetPrevious(key, new YAPIONValue<>(value));
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default YAPIONAnyType addOrPointerAndGetPrevious(@NonNull K key, @NonNull YAPIONAnyType value) {
+        throw new UnsupportedOperationException();
+    }
+
+    default I putAndGetItself(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return add(key, value);
+    }
+
+    default <@YAPIONPrimitive T> I putAndGetItself(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
+        }
+        return putAndGetItself(key, new YAPIONValue<>(value));
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default I putOrPointerAndGetItself(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return addOrPointer(key, value);
+    }
+
+    default YAPIONAnyType put(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return addAndGetPrevious(key, value);
+    }
+
+    default <@YAPIONPrimitive T> YAPIONAnyType put(@NonNull K key, T value) {
+        if (!YAPIONValue.validType(value)) {
+            throw new YAPIONClassTypeException("The type '" + value.getClass().getTypeName() + "' is not a valid YAPIONPrimitive");
+        }
+        return put(key, new YAPIONValue<>(value));
+    }
+
+    /**
+     * Optional API.
+     */
+    @OptionalAPI
+    default YAPIONAnyType putOrPointer(@NonNull K key, @NonNull YAPIONAnyType value) {
+        return addOrPointerAndGetPrevious(key, value);
+    }
+
+    // -------- Remove --------
+
+    default I remove(@NonNull K key) {
+        return internalRemove(key);
+    }
+
+    default YAPIONAnyType removeAndGet(@NonNull K key) {
+        return internalRemoveAndGet(key);
+    }
+
+    default I clear() {
+        return internalClear();
+    }
+
+    // -------- Get --------
 
     default boolean containsKey(@NonNull K key) {
         return containsKey(key, YAPIONType.ANY);

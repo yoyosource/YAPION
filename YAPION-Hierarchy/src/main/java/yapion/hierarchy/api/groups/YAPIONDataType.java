@@ -14,9 +14,7 @@
 package yapion.hierarchy.api.groups;
 
 import yapion.annotations.api.InternalAPI;
-import yapion.hierarchy.api.internal.InternalAdd;
-import yapion.hierarchy.api.internal.InternalRemove;
-import yapion.hierarchy.api.internal.InternalRetrieve;
+import yapion.hierarchy.api.internal.InternalMethods;
 import yapion.hierarchy.api.storage.AdvancedOperations;
 import yapion.hierarchy.api.storage.CommentManipulation;
 import yapion.hierarchy.api.storage.EndingCommentManipulation;
@@ -25,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @InternalAPI
-public abstract class YAPIONDataType<I extends YAPIONDataType<I, K>, K> extends YAPIONAnyType implements InternalAdd<I, K>, AdvancedOperations<I, K>, InternalRemove<I, K>, InternalRetrieve<K>, CommentManipulation<I>, EndingCommentManipulation<I> {
+public abstract class YAPIONDataType<I extends YAPIONDataType<I, K>, K> extends YAPIONAnyType implements InternalMethods<I, K>, AdvancedOperations<I, K>, CommentManipulation<I>, EndingCommentManipulation<I> {
 
     private final List<String> endingComments = new ArrayList<>();
 

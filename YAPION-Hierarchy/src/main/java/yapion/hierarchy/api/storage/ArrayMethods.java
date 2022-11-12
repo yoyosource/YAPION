@@ -15,12 +15,15 @@ package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
 import yapion.annotations.api.OptionalAPI;
+import yapion.annotations.api.YAPIONEveryType;
 import yapion.annotations.api.YAPIONPrimitive;
 import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
 
-public interface ArrayAdd<I, K> extends ObjectAdd<I, K> {
+public interface ArrayMethods<I, K> extends ObjectMethods<I, K> {
+
+    // -------- Add --------
 
     I add(@NonNull YAPIONAnyType value);
 
@@ -55,4 +58,24 @@ public interface ArrayAdd<I, K> extends ObjectAdd<I, K> {
     default I setOrPointer(@NonNull K key, @NonNull YAPIONAnyType value) {
         throw new UnsupportedOperationException();
     }
+
+    // -------- Remove --------
+
+    default I remove(@NonNull K key) {
+        return internalRemove(key);
+    }
+
+    default YAPIONAnyType removeAndGet(@NonNull K key) {
+        return internalRemoveAndGet(key);
+    }
+
+    default I clear() {
+        return internalClear();
+    }
+
+    // -------- Get --------
+
+    <@YAPIONEveryType T> int indexOf(T element);
+
+    <@YAPIONEveryType T> int lastIndexOf(T element);
 }
