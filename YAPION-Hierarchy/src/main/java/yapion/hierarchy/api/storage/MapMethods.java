@@ -20,7 +20,6 @@ import yapion.annotations.api.YAPIONEveryType;
 import yapion.exceptions.serializing.YAPIONClassTypeException;
 import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.internal.InternalMethods;
 import yapion.hierarchy.types.*;
 import yapion.utils.ClassUtils;
 

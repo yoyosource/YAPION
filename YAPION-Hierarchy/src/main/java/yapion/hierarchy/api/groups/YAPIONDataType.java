@@ -14,7 +14,7 @@
 package yapion.hierarchy.api.groups;
 
 import yapion.annotations.api.InternalAPI;
-import yapion.hierarchy.api.internal.InternalMethods;
+import yapion.hierarchy.api.storage.InternalMethods;
 import yapion.hierarchy.api.storage.AdvancedOperations;
 import yapion.hierarchy.api.storage.CommentManipulation;
 import yapion.hierarchy.api.storage.EndingCommentManipulation;

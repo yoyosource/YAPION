@@ -17,7 +17,6 @@ import lombok.NonNull;
 import yapion.annotations.api.OptionalAPI;
 import yapion.annotations.api.YAPIONPrimitive;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.internal.InternalMethods;
 import yapion.hierarchy.types.*;
 
 import java.util.*;

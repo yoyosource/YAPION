@@ -17,7 +17,6 @@ import lombok.NonNull;
 import yapion.annotations.api.InternalAPI;
 import yapion.exceptions.utils.YAPIONRetrieveException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
-import yapion.hierarchy.api.internal.InternalMethods;
 import yapion.hierarchy.types.YAPIONValue;
 
 import java.math.BigDecimal;

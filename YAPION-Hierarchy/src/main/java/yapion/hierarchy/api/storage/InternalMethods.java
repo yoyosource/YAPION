@@ -1,5 +1,5 @@
 /*
- * Copyright 2019,2020,2021 yoyosource
+ * Copyright 2022 yoyosource
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -11,12 +11,14 @@
  * limitations under the License.
  */
 
-package yapion.hierarchy.api.internal;
+package yapion.hierarchy.api.storage;
 
 import lombok.NonNull;
+import yapion.annotations.api.InternalAPI;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONType;
 
+@InternalAPI
 public interface InternalMethods<I, K> {
 
     // -------- Add --------
