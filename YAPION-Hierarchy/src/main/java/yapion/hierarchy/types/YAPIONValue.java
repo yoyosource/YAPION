@@ -171,7 +171,7 @@ public class YAPIONValue<T> extends YAPIONValueType<YAPIONValue<T>> implements V
     @Override
     public Optional<String> asString() {
         if (isValidCastType(String.class)) {
-            return Optional.of(value != null ? value.toString() : "null");
+            return Optional.of(value != null ? value.toString() : "");
         } else {
             return Optional.empty();
         }
