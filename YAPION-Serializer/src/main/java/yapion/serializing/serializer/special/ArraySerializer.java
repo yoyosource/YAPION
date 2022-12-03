@@ -18,6 +18,9 @@ import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONArray;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.serializing.DependencySupplier;
+import yapion.serializing.Pair;
+import yapion.serializing.ResolutionGraph;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
@@ -45,6 +48,16 @@ public class ArraySerializer implements FinalInternalSerializer<Object> {
             yapionArray.add(serializeData.serialize(object));
         }
         return yapionArray;
+    }
+
+    @Override
+    public void serialize(SerializeData<Object> serializeData, ResolutionGraph<Object, YAPIONAnyType> resolutionGraph) {
+        DependencySupplier<Integer, Object> supplier = resolutionGraph.register(serializeData.object, new YAPIONArray(), (self, resolution) -> {
+            self.add(resolution.v);
+        });
+        for (int i = 0; i < Array.getLength(serializeData.object); i++) {
+            supplier.depends(i, Array.get(serializeData.object, i));
+        }
     }
 
     @Override

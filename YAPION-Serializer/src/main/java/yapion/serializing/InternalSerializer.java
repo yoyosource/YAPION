@@ -72,5 +72,9 @@ public interface InternalSerializer<T> {
 
     YAPIONAnyType serialize(SerializeData<T> serializeData);
 
+    default void serialize(SerializeData<T> serializeData, ResolutionGraph<Object, YAPIONAnyType> resolutionGraph) {}
+
     T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData);
+
+    default void deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData, ResolutionGraph<YAPIONAnyType, Object> resolutionGraph) {}
 }

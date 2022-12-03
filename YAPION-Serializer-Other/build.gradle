@@ -10,8 +10,8 @@ group 'YAPION'
 version 'SNAPSHOT'
 
 ext {
-    uberJarName = "${group}-Serializer-${version}-all.jar"
-    jarName = "${group}-Serializer-${version}.jar"
+    uberJarName = "${group}-Serializer-Other-${version}-all.jar"
+    jarName = "${group}-Serializer-Other-${version}.jar"
     libs = "${buildDir}/libs"
 
     groupName = "${group}"
@@ -42,15 +42,13 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-    // compileOnly project(":YAPION-Hierarchy")
-    // compileOnly project(":YAPION-Serializer-Other")
-
     implementation project(":YAPION-Hierarchy")
-    implementation project(":YAPION-Serializer-Other")
 
     implementation 'org.objenesis:objenesis:3.2'
     implementation 'eu.infomas:annotation-detector:3.0.5'
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
+
+    testImplementation 'ch.qos.logback:logback-classic:1.3.0-beta0'
 }
 
 task buildProject {
@@ -99,7 +97,7 @@ task compressClassFiles {
         }
     }
 }
-classes.finalizedBy(compressClassFiles)
+// classes.finalizedBy(compressClassFiles)
 
 shadowJar {
     manifest {

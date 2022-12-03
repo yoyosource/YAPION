@@ -15,6 +15,7 @@ package yapion.serializing.serializer.object.yapion.types;
 
 import yapion.annotations.api.SerializerImplementation;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
+import yapion.serializing.ResolutionGraph;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
@@ -35,6 +36,11 @@ public class YAPIONAnyTypeSerializer implements FinalInternalSerializer<YAPIONAn
     @Override
     public YAPIONAnyType serialize(SerializeData<YAPIONAnyType> serializeData) {
         return serializeData.object;
+    }
+
+    @Override
+    public void serialize(SerializeData<YAPIONAnyType> serializeData, ResolutionGraph<Object, YAPIONAnyType> resolutionGraph) {
+        resolutionGraph.register(serializeData.object, serializeData.object);
     }
 
     @Override

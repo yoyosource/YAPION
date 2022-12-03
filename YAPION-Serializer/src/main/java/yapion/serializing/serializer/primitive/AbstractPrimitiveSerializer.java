@@ -15,6 +15,7 @@ package yapion.serializing.serializer.primitive;
 
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.serializing.ResolutionGraph;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.utils.ClassUtils;
@@ -33,6 +34,10 @@ public class AbstractPrimitiveSerializer<T> {
 
     public YAPIONAnyType serialize(SerializeData<T> serializeData) {
         return new YAPIONValue<>(serializeData.object);
+    }
+
+    public void serialize(SerializeData<T> serializeData, ResolutionGraph<Object, YAPIONAnyType> resolutionGraph) {
+        resolutionGraph.register(serializeData.object, new YAPIONValue<>(serializeData.object));
     }
 
     public T deserialize(DeserializeData<? extends YAPIONAnyType> deserializeData) {

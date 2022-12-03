@@ -18,6 +18,7 @@ import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.serializing.YAPIONDeserializerException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.ResolutionGraph;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
 import yapion.serializing.serializer.FinalInternalSerializer;
@@ -40,6 +41,13 @@ public class EnumSerializer implements FinalInternalSerializer<Enum<?>> { // Thi
         yapionObject.add("value", serializeData.object.name());
         yapionObject.add("ordinal", serializeData.object.ordinal());
         return yapionObject;
+    }
+
+    @Override
+    public void serialize(SerializeData<Enum<?>> serializeData, ResolutionGraph<Object, YAPIONAnyType> resolutionGraph) {
+        resolutionGraph.<String, YAPIONObject>register(serializeData.object, new YAPIONObject(serializeData.object.getClass()), (self, resolution) -> {
+            self.add(resolution.k, resolution.v);
+        }).depends("value", serializeData.object.name()).depends("ordinal", serializeData.object.ordinal());
     }
 
     @Override

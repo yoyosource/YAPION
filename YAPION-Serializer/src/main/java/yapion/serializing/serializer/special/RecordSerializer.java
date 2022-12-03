@@ -17,6 +17,7 @@ import yapion.annotations.api.SerializerImplementation;
 import yapion.exceptions.YAPIONException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
+import yapion.serializing.ResolutionGraph;
 import yapion.serializing.SerializeManager;
 import yapion.serializing.data.DeserializeData;
 import yapion.serializing.data.SerializeData;
@@ -67,6 +68,13 @@ public class RecordSerializer implements FinalInternalSerializer<Object> {
         YAPIONObject yapionObject = new YAPIONObject(serializeData.object.getClass());
         yapionObject.add("recordValues", serializeData.serialize(recordComponents(serializeData.object.getClass(), serializeData.object)));
         return yapionObject;
+    }
+
+    @Override
+    public void serialize(SerializeData<Object> serializeData, ResolutionGraph<Object, YAPIONAnyType> resolutionGraph) {
+        resolutionGraph.register(serializeData.object, new YAPIONObject(serializeData.object.getClass()), (self, resolution) -> {
+            ((YAPIONObject) self).add("recordValues", resolution.v);
+        }).depends("recordValues", recordComponents(serializeData.object.getClass(), serializeData.object));
     }
 
     @Override
