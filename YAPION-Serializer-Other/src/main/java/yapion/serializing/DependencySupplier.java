@@ -16,4 +16,5 @@ package yapion.serializing;
 public interface DependencySupplier<K, V> {
 
     DependencySupplier<K, V> depends(K key, V value);
+    DependencySupplier<K, V> finalizer(Runnable runnable);
 }

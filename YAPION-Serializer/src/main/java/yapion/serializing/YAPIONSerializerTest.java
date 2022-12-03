@@ -196,7 +196,8 @@ public final class YAPIONSerializerTest {
 
             dependencySupplier.depends(name, fieldObject);
         }
-
-        // MethodManager.postSerializationStep(object, object.getClass(), contextManager, serializationContext);
+        dependencySupplier.finalizer(() -> {
+            // MethodManager.postSerializationStep(object, object.getClass(), contextManager, serializationContext);
+        });
     }
 }

@@ -23,6 +23,7 @@ import java.util.function.BiFunction;
 public class ResolutionGraph<I, O> {
 
     private Map<I, O> results = new IdentityHashMap<>();
+    private Map<I, Runnable> finalizers = new IdentityHashMap<>();
     private Map<I, Resolver<?, ?, O>> resolvers = new IdentityHashMap<>();
     private Map<I, List<Pair<?, I>>> dependencies = new IdentityHashMap<>();
 
@@ -34,14 +35,6 @@ public class ResolutionGraph<I, O> {
         this.mutator = mutator;
     }
 
-    public <K, S extends O> void register(I current, O result, Resolver<S, K, O> resolver, List<Pair<K, I>> dependencies) {
-        results.put(current, result);
-        supplier.accept(current, result);
-        resolvers.put(current, resolver);
-        this.dependencies.computeIfAbsent(current, k -> new LinkedList<>()).addAll(dependencies);
-        resolve();
-    }
-
     public <K, S extends O> DependencySupplier<K, I> register(I current, S result, Resolver<S, K, O> resolver) {
         results.put(current, result);
         supplier.accept(current, result);
@@ -50,6 +43,12 @@ public class ResolutionGraph<I, O> {
             @Override
             public DependencySupplier<K, I> depends(K key, I value) {
                 ResolutionGraph.this.dependencies.computeIfAbsent(current, k -> new LinkedList<>()).add(new Pair<>(key, value));
+                return this;
+            }
+
+            @Override
+            public DependencySupplier<K, I> finalizer(Runnable runnable) {
+                finalizers.put(current, runnable);
                 return this;
             }
         };
@@ -87,6 +86,10 @@ public class ResolutionGraph<I, O> {
                 resolver.accept(results.get(entry.getKey()), new Pair(pair.k, mutator.apply(pair.v, results.get(pair.v))));
                 System.out.println("Resolved " + results.get(entry.getKey()) + " with " + pair);
                 values.remove(0);
+            }
+            if (values.isEmpty()) {
+                Runnable runnable = finalizers.get(entry.getKey());
+                if (runnable != null) runnable.run();
             }
         }
     }
