@@ -16,9 +16,7 @@ package yapion.io;
 import lombok.SneakyThrows;
 import yapion.exceptions.utils.YAPIONIOException;
 import yapion.hierarchy.types.YAPIONObject;
-import yapion.parser.InputStreamCharsets;
 import yapion.parser.YAPIONParser;
-import yapion.parser.options.StreamOptions;
 import yapion.serializing.TypeReMapper;
 import yapion.serializing.YAPIONDeserializer;
 
@@ -81,7 +79,7 @@ public class YAPIONInputStream implements AutoCloseable {
             if (c == -1) break;
             st.append((char) c);
         }
-        System.out.println("READ: " + st.toString());
+        // System.out.println("READ: " + st.toString());
         return YAPIONParser.parse(st.toString());
         // return YAPIONParser.parse(inputStream, new StreamOptions().stopOnStreamEnd(false).charset(InputStreamCharsets.UTF_8));
     }

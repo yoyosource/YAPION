@@ -13,19 +13,22 @@
 
 package yapion.packet;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import yapion.exceptions.parser.YAPIONParserException;
 import yapion.hierarchy.api.groups.YAPIONAnyType;
 import yapion.hierarchy.types.YAPIONObject;
 import yapion.hierarchy.types.YAPIONValue;
+import yapion.io.YAPIONInputStream;
+import yapion.parser.YAPIONParser;
+import yapion.parser.options.StreamOptions;
 import yapion.serializing.YAPIONDeserializer;
 import yapion.utils.IdentifierUtils;
 import yapion.utils.ReflectionsUtils;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.InputStream;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,7 +45,7 @@ public class YAPIONPacketExecutor {
     final ExecutorService executorService;
 
     private long timeout = -1;
-    private Map<YAPIONPacketStream, Long> lastPacketTime = new HashMap<>();
+    private final Map<YAPIONPacketStream, Long> lastPacketTime = new HashMap<>();
 
     public YAPIONPacketExecutor() {
         this(4);
@@ -69,16 +72,20 @@ public class YAPIONPacketExecutor {
             throw new IllegalArgumentException("Stream is already registered!");
         }
         synchronized (streams) {
-            streams.add(stream);
-            lastPacketTime.put(stream, System.currentTimeMillis());
+            synchronized (lastPacketTime) {
+                streams.add(stream);
+                lastPacketTime.put(stream, System.currentTimeMillis());
+            }
         }
         stream.executor = this;
     }
 
     public void unregister(YAPIONPacketStream stream) {
         synchronized (streams) {
-            streams.remove(stream);
-            lastPacketTime.remove(stream);
+            synchronized (lastPacketTime) {
+                streams.remove(stream);
+                lastPacketTime.remove(stream);
+            }
         }
         if (stream.executor == this) {
             stream.executor = null;
@@ -112,15 +119,17 @@ public class YAPIONPacketExecutor {
             }
 
             timeouted.clear();
-            lastPacketTime.forEach((stream, time) -> {
-                if (toHandle.contains(stream)) {
-                    return;
-                }
-                long staleTime = System.currentTimeMillis() - time;
-                if ((timeout != -1 && staleTime > timeout) || (stream.getTimeout() != -1 && staleTime > stream.getTimeout())) {
-                    timeouted.add(stream);
-                }
-            });
+            synchronized (lastPacketTime) {
+                lastPacketTime.forEach((stream, time) -> {
+                    if (toHandle.contains(stream)) {
+                        return;
+                    }
+                    long staleTime = System.currentTimeMillis() - time;
+                    if ((timeout != -1 && staleTime > timeout) || (stream.getTimeout() != -1 && staleTime > stream.getTimeout())) {
+                        timeouted.add(stream);
+                    }
+                });
+            }
             timeouted.forEach(stream -> {
                 log.warn("Stream {} timed out!", stream);
                 TimeoutPacket timeoutPacket = new TimeoutPacket();
@@ -130,7 +139,9 @@ public class YAPIONPacketExecutor {
 
             if (toHandle.isEmpty()) continue;
             toHandle.forEach(stream -> {
-                lastPacketTime.put(stream, System.currentTimeMillis());
+                synchronized (lastPacketTime) {
+                    lastPacketTime.put(stream, System.currentTimeMillis());
+                }
                 synchronized (awaitHandle) {
                     awaitHandle.add(stream);
                 }
@@ -160,9 +171,30 @@ public class YAPIONPacketExecutor {
         }
     }
 
+    @SneakyThrows
     private HandleFailedPacket handlePacket(YAPIONPacketStream yapionPacketStream) {
         if (yapionPacketStream.getYapionPacketReceiver() == null) return null;
-        YAPIONObject yapionObject = yapionPacketStream.getYapionInputStream().read();
+        YAPIONInputStream inputStream = yapionPacketStream.getYapionInputStream();
+        List<Integer> read = new ArrayList<>();
+        YAPIONObject yapionObject;
+        try {
+            yapionObject = YAPIONParser.parse(new InputStream() {
+                @Override
+                public int available() throws IOException {
+                    return inputStream.available();
+                }
+
+                @Override
+                public int read() throws IOException {
+                    int i = inputStream.readByte();
+                    read.add(i);
+                    return i;
+                }
+            }, new StreamOptions().stopOnStreamEnd(true));
+        } catch (YAPIONParserException e) {
+            System.out.println("Failed to parse: " + read + " dropped: " + read);
+            return null;
+        }
         YAPIONAnyType yapionAnyType = yapionObject.getAnyType(IdentifierUtils.TYPE_IDENTIFIER);
         if (yapionAnyType == null) return new HandleFailedPacket(yapionObject);
         if (!(yapionAnyType instanceof YAPIONValue)) return new HandleFailedPacket(yapionObject);
